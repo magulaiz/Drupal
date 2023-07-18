@@ -404,7 +404,7 @@ abstract class Schema implements PlaceholderInterface {
     $fixed_key_fields = [];
     foreach ($key_fields as $key_field) {
       if (is_array($key_field)) {
-        @trigger_error('Specification of primary key with column length is deprecated in drupal:10.2.0 and is throwing a SchemaException from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
+        @trigger_error('Specification of primary key with column length is deprecated in drupal:10.2.0 and will throw a SchemaException from drupal:11.0.0. Specify full columns for a primary key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
         $fixed_key_fields[] = $key_field[0];
       }
       else {
@@ -489,7 +489,7 @@ abstract class Schema implements PlaceholderInterface {
   protected function validateUniqueKeySchema(array $key_fields, array $fields = []): void {
     foreach ($key_fields as $key_field) {
       if (is_array($key_field)) {
-        @trigger_error('Specification of unique keys with column length is deprecated in drupal:10.2.0 and is throwing a SchemaException from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
+        @trigger_error('Specification of unique keys with column length is deprecated in drupal:10.2.0 and will throw a SchemaException from drupal:11.0.0. Specify full columns for an unique key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
       }
     }
   }
