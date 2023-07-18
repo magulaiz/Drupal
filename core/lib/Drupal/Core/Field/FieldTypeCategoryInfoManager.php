@@ -44,7 +44,6 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
     'class' => FieldTypeCategoryInfo::class,
   ];
 
-
   /**
    * Constructs a new FieldTypeCategoryInfoManager.
    *
