@@ -67,7 +67,7 @@ class PerformanceTestBase extends WebDriverTestBase {
    * umamiFrontPageColdCache. Or FALSE to prevent telemetry data from being
    * sent, for example when warming caches.
    */
-  protected false|string $telemetryServiceNAme = FALSE;
+  protected false|string $telemetryServiceName = FALSE;
 
   /**
    * {@inheritdoc}
