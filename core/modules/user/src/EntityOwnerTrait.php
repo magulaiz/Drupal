@@ -83,13 +83,14 @@ trait EntityOwnerTrait {
    * @return mixed
    *   A default value for the owner field.
    *
-   * @deprecated in 10.2.x and is removed from 11.0.x. Use service method
-   *   notation to get the current user ID as a default value.
+   * @deprecated in drupal:10.2.0 and is removed from 11.0.0. Use service method
+   *   notation 'current_user:id' as a default value callback to get the current
+   *   user ID as a default value.
    *
    * @see https://www.drupal.org/node/3374738
    */
   public static function getDefaultEntityOwner() {
-    @trigger_error('The ::getDefaultEntityOwner method is deprecated in 10.2.x and will be removed before 11.0.0.', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 is removed from drupal:11.0.0. Use service method notation \'current_user:id\' as a default value callback instead.', E_USER_DEPRECATED);
     return \Drupal::currentUser()->id();
   }
 
