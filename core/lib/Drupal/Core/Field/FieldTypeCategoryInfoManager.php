@@ -44,12 +44,6 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
     'class' => FieldTypeCategoryInfo::class,
   ];
 
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
 
   /**
    * Constructs a new FieldTypeCategoryInfoManager.
@@ -61,8 +55,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
-    $this->root = $root;
+  public function __construct(protected readonly string $root, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
     $this->moduleHandler = $module_handler;
     $this->alterInfo('field_type_category_info');
     $this->setCacheBackend($cache_backend, 'field_type_category_info_plugins');
@@ -86,7 +79,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
   /**
    * {@inheritdoc}
    */
-  public function getFallbackPluginId($plugin_id, array $configuration = []) {
+  public function getFallbackPluginId($plugin_id, array $configuration = []): string {
     return 'general';
   }
 
