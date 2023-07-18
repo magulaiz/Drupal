@@ -2460,6 +2460,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
+  public function preparePreview() {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preview() {
     return $this->view->render();
   }
