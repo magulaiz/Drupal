@@ -85,7 +85,6 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     $this->resetAll();
     $this->rebuildContainer();
 
-
     $this->drupalGet('admin/people/permissions');
     $items = array_map(fn($item) => $item->getAttribute('for'),
       $this->getSession()->getPage()->findAll('css', 'tbody label[for^="edit-anonymous"], tbody label[for^="edit-authenticated"]'));
