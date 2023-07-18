@@ -1,7 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words downcasted linkimageediting emptyelement downcastdispatcher
+// cSpell:words linkimageediting emptyelement downcastdispatcher drupalimagealignment drupalimagesize drupalimagecaption
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
+import viewCaptionToCaptionAttribute from './drupalimagecaption';
+import modelImageStyleToDataAttribute from './drupalimagealignment';
+import {
+  modelImageWidthToAttribute,
+  modelImageHeightToAttribute,
+} from './drupalimagesize';
 
 /**
  * @typedef {function} converterHandler
@@ -111,108 +117,6 @@ const alignmentMapping = [
 ];
 
 /**
- * Downcasts `caption` model to `data-caption` attribute with its content
- * downcasted to plain HTML.
- *
- * This is needed because CKEditor 5 uses the `<caption>` element internally in
- * various places, which differs from Drupal which uses an attribute. For now
- * to support that we have to manually repeat work done in the
- * DowncastDispatcher's private methods.
- *
- * @param {module:core/editor/editor~Editor} editor
- *  The editor instance to use.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function viewCaptionToCaptionAttribute(editor) {
-  return (dispatcher) => {
-    dispatcher.on(
-      'insert:caption',
-      /**
-       * @type {converterHandler}
-       */
-      (event, data, conversionApi) => {
-        const { consumable, writer, mapper } = conversionApi;
-        const imageUtils = editor.plugins.get('ImageUtils');
-
-        if (
-          !imageUtils.isImage(data.item.parent) ||
-          !consumable.consume(data.item, 'insert')
-        ) {
-          return;
-        }
-
-        const range = editor.model.createRangeIn(data.item);
-        const viewDocumentFragment = writer.createDocumentFragment();
-
-        // Bind caption model element to the detached view document fragment so
-        // all content of the caption will be downcasted into that document
-        // fragment.
-        mapper.bindElements(data.item, viewDocumentFragment);
-
-        // eslint-disable-next-line no-restricted-syntax
-        for (const { item } of Array.from(range)) {
-          const itemData = {
-            item,
-            range: editor.model.createRangeOn(item),
-          };
-
-          // The following lines are extracted from
-          // DowncastDispatcher._convertInsertWithAttributes().
-          const eventName = `insert:${item.name || '$text'}`;
-
-          editor.data.downcastDispatcher.fire(
-            eventName,
-            itemData,
-            conversionApi,
-          );
-
-          // eslint-disable-next-line no-restricted-syntax
-          for (const key of item.getAttributeKeys()) {
-            Object.assign(itemData, {
-              attributeKey: key,
-              attributeOldValue: null,
-              attributeNewValue: itemData.item.getAttribute(key),
-            });
-
-            editor.data.downcastDispatcher.fire(
-              `attribute:${key}`,
-              itemData,
-              conversionApi,
-            );
-          }
-        }
-
-        // Unbind all the view elements that were downcasted to the document
-        // fragment.
-        // eslint-disable-next-line no-restricted-syntax
-        for (const child of writer
-          .createRangeIn(viewDocumentFragment)
-          .getItems()) {
-          mapper.unbindViewElement(child);
-        }
-
-        mapper.unbindViewElement(viewDocumentFragment);
-
-        // Stringify view document fragment to HTML string.
-        const captionText = editor.data.processor.toData(viewDocumentFragment);
-
-        if (captionText) {
-          const imageViewElement = mapper.toViewElement(data.item.parent);
-
-          writer.setAttribute('data-caption', captionText, imageViewElement);
-        }
-      },
-      // Override default caption converter.
-      { priority: 'high' },
-    );
-  };
-}
-
-/**
  * Generates a callback that saves the entity type value to an attribute on
  * data downcast.
  *
@@ -251,147 +155,6 @@ function modelEntityTypeToDataAttribute() {
 
   return (dispatcher) => {
     dispatcher.on('attribute:dataEntityType', converter);
-  };
-}
-
-/**
- * Generates a callback that saves the align value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageStyleToDataAttribute() {
-  /**
-   * Callback for the attribute:imageStyle event.
-   *
-   * Saves the alignment value to the data-align attribute.
-   *
-   * @type {converterHandler}
-   */
-  function converter(event, data, conversionApi) {
-    const { item } = data;
-    const { consumable, writer } = conversionApi;
-
-    const mappedAlignment = alignmentMapping.find(
-      (value) => value.modelValue === data.attributeNewValue,
-    );
-
-    // Consume only for the values that can be converted into data-align.
-    if (!mappedAlignment || !consumable.consume(item, event.name)) {
-      return;
-    }
-
-    const viewElement = conversionApi.mapper.toViewElement(item);
-    const imageInFigure = Array.from(viewElement.getChildren()).find(
-      (child) => child.name === 'img',
-    );
-
-    writer.setAttribute(
-      'data-align',
-      mappedAlignment.dataValue,
-      imageInFigure || viewElement,
-    );
-  }
-
-  return (dispatcher) => {
-    dispatcher.on('attribute:imageStyle', converter, { priority: 'high' });
-  };
-}
-
-/**
- * Generates a callback that saves the width value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageWidthToAttribute() {
-  /**
-   * Callback for the attribute:width event.
-   *
-   * Saves the width value to the width attribute.
-   *
-   * @type {converterHandler}
-   */
-  function converter(event, data, conversionApi) {
-    const { item } = data;
-    const { consumable, writer } = conversionApi;
-
-    if (!consumable.consume(item, event.name)) {
-      return;
-    }
-
-    const viewElement = conversionApi.mapper.toViewElement(item);
-    const imageInFigure = Array.from(viewElement.getChildren()).find(
-      (child) => child.name === 'img',
-    );
-
-    writer.setAttribute(
-      'width',
-      data.attributeNewValue.replace('px', ''),
-      imageInFigure || viewElement,
-    );
-  }
-
-  return (dispatcher) => {
-    dispatcher.on('attribute:width:imageInline', converter, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:width:imageBlock', converter, {
-      priority: 'high',
-    });
-  };
-}
-
-/**
- * Generates a callback that saves the height value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageHeightToAttribute() {
-  /**
-   * Callback for the attribute:height event.
-   *
-   * Saves the height value to the height attribute.
-   *
-   * @type {converterHandler}
-   */
-  function converter(event, data, conversionApi) {
-    const { item } = data;
-    const { consumable, writer } = conversionApi;
-
-    if (!consumable.consume(item, event.name)) {
-      return;
-    }
-
-    const viewElement = conversionApi.mapper.toViewElement(item);
-    const imageInFigure = Array.from(viewElement.getChildren()).find(
-      (child) => child.name === 'img',
-    );
-
-    writer.setAttribute(
-      'height',
-      data.attributeNewValue.replace('px', ''),
-      imageInFigure || viewElement,
-    );
-  }
-
-  return (dispatcher) => {
-    dispatcher.on('attribute:height:imageInline', converter, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:height:imageBlock', converter, {
-      priority: 'high',
-    });
   };
 }
 
