@@ -40,4 +40,6 @@ final class UserEvents {
    */
   const FLOOD_BLOCKED_IP = 'user.flood_blocked_ip';
 
+  const PERMISSIONS_LIST_FILTER = 'user.permissions_list_filter';
+
 }

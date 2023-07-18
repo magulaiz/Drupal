@@ -176,10 +176,6 @@ function hook_user_logout(AccountInterface $account) {
     ->execute();
 }
 
-function hook_user_permission_list_alter(array &$permissions) {
-
-}
-
 /**
  * @} End of "addtogroup hooks".
  */

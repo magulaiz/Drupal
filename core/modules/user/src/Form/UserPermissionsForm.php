@@ -6,9 +6,12 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Event\PermissionsListFilterEvent;
+use Drupal\user\Event\UserEvents;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides the user permissions administration form.
@@ -39,6 +42,13 @@ class UserPermissionsForm extends FormBase {
   protected $moduleHandler;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a new UserPermissionsForm.
    *
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
@@ -47,10 +57,12 @@ class UserPermissionsForm extends FormBase {
    *   The role storage.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
+  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
     $this->permissionHandler = $permission_handler;
     $this->roleStorage = $role_storage;
     $this->moduleHandler = $module_handler;
@@ -58,6 +70,11 @@ class UserPermissionsForm extends FormBase {
       @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
       $this->moduleExtensionList = \Drupal::service('extension.list.module');
     }
+    if (is_null($event_dispatcher)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $eventDispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $event_dispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -68,6 +85,7 @@ class UserPermissionsForm extends FormBase {
       $container->get('user.permissions'),
       $container->get('entity_type.manager')->getStorage('user_role'),
       $container->get('module_handler'),
+      $container->get('event_dispatcher'),
       $container->get('extension.list.module'),
     );
   }
@@ -98,6 +116,9 @@ class UserPermissionsForm extends FormBase {
    */
   protected function permissionsByProvider(): array {
     $permissions = $this->permissionHandler->getFilteredPermissions();
+    $event = new PermissionsListFilterEvent($permissions);
+    $this->eventDispatcher->dispatch($event, UserEvents::PERMISSIONS_LIST_FILTER);
+    $permissions = $event->getPermissions();
     $permissions_by_provider = [];
     foreach ($permissions as $permission_name => $permission) {
       $permissions_by_provider[$permission['provider']][$permission_name] = $permission;

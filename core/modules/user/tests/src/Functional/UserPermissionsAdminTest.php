@@ -61,4 +61,46 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     ], $role->getPermissions());
   }
 
+  /**
+   * Confirms that PermissionsListFilter can filter the permissions UI listing.
+   */
+  public function testFilterPermissionsEvent() {
+    \Drupal::service('module_installer')->install(['user_permissions_test']);
+    $this->resetAll();
+    $this->rebuildContainer();
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer permissions',
+    ]));
+    $this->drupalGet('admin/people/permissions');
+    $items = array_map(fn($item) => $item->getAttribute('for'),
+      $this->getSession()->getPage()->findAll('css', 'tbody label[for^="edit-anonymous"], tbody label[for^="edit-authenticated"]'));
+
+    // Just assert there are greater than 6 permissions available so we know
+    // there are more overall permissions than what appears once the event
+    // subscriber in `user_filtered_permissions_test` is running.
+    $this->assertGreaterThan(6, $items);
+
+    // Enable a module that filters all but permissions a, b, c.
+    \Drupal::service('module_installer')->install(['user_filtered_permissions_test']);
+    $this->resetAll();
+    $this->rebuildContainer();
+
+
+    $this->drupalGet('admin/people/permissions');
+    $items = array_map(fn($item) => $item->getAttribute('for'),
+      $this->getSession()->getPage()->findAll('css', 'tbody label[for^="edit-anonymous"], tbody label[for^="edit-authenticated"]'));
+    sort($items);
+    $this->assertCount(6, $items);
+
+    // The PermissionsListFilterSubscriber
+    $this->assertEquals([
+      'edit-anonymous-a',
+      'edit-anonymous-b',
+      'edit-anonymous-c',
+      'edit-authenticated-a',
+      'edit-authenticated-b',
+      'edit-authenticated-c',
+    ], $items);
+  }
+
 }
