@@ -6,7 +6,9 @@ use Drupal\user\Event\UserEvents;
 use Drupal\user\Event\PermissionsListFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
+/**
+ * A subscriber for testing PermissionsListFilterEvent.
+ */
 class PermissionsListFilterSubscriber implements EventSubscriberInterface {
 
   /**
@@ -23,11 +25,6 @@ class PermissionsListFilterSubscriber implements EventSubscriberInterface {
    */
   public function processPermissions(PermissionsListFilterEvent $event) {
     $permissions = $event->getPermissions();
-    foreach ($permissions as $key => $value) {
-      if (!in_array($key, ['a', 'b', 'c'])) {
-        unset($permissions[$key]);
-      }
-    }
     $permissions = array_filter($permissions, fn($key) => in_array($key, ['a', 'b', 'c']), ARRAY_FILTER_USE_KEY);
     $event->setPermissions($permissions);
   }
