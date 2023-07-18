@@ -104,5 +104,4 @@
 
     return dialog;
   };
-  // eslint-disable-next-line no-undef
 })(jQuery, Drupal, drupalSettings, bodyScrollLock);
