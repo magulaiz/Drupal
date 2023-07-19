@@ -136,7 +136,7 @@ class DateArgumentDefaultTest extends NodeTestBase {
     $view = Views::getView('test_argument_node_date');
     $view->setDisplay('block_1');
     $view->initHandlers();
-    self::assertFalse($view->argument['created']->getDefaultArgument());
+    $this->assertFalse($view->argument['created']->getDefaultArgument());
   }
 
   /**
@@ -183,7 +183,7 @@ class DateArgumentDefaultTest extends NodeTestBase {
     $view = Views::getView('test_argument_node_date');
     $view->setDisplay('block_2');
     $view->initHandlers();
-    self::assertFalse($view->argument['changed']->getDefaultArgument());
+    $this->assertFalse($view->argument['changed']->getDefaultArgument());
   }
 
 }

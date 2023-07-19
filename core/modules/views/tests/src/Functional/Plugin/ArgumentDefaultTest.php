@@ -149,7 +149,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     $view->initHandlers();
 
     $expected = $date_formatter->format($request_time, 'custom', 'Y-m-d');
-    self::assertEquals($expected, $view->argument['null']->getDefaultArgument(), 'Current date argument should be used by default.');
+    $this->assertEquals($expected, $view->argument['null']->getDefaultArgument(), 'Current date argument should be used by default.');
 
     // Update the View to use the Ym format argument.
     $view = Views::getView('test_argument_default_date');
@@ -166,7 +166,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     $view->initHandlers();
 
     $expected = $date_formatter->format($request_time, 'custom', 'Ym');
-    self::assertEquals($expected, $view->argument['null']->getDefaultArgument(), 'Current date argument should be used by default.');
+    $this->assertEquals($expected, $view->argument['null']->getDefaultArgument(), 'Current date argument should be used by default.');
   }
 
   /**
@@ -250,10 +250,10 @@ class ArgumentDefaultTest extends ViewTestBase {
     // Check that the page is not cached with date argument default.
     $this->drupalGet('path-page-1');
     $this->assertSession()->statusCodeEquals(200);
-    self::assertEquals('UNCACHEABLE', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertEquals('UNCACHEABLE', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
     // Double check.
     $this->drupalGet('path-page-1');
-    self::assertEquals('UNCACHEABLE', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertEquals('UNCACHEABLE', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
 
     // Change the argument to some cached option.
     $view = Views::getView('test_argument_default_date');
@@ -270,9 +270,9 @@ class ArgumentDefaultTest extends ViewTestBase {
     // Check that the page is cached without date argument default.
     $this->drupalGet('path-page-1');
     $this->assertSession()->statusCodeEquals(200);
-    self::assertEquals('MISS', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertEquals('MISS', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
     $this->drupalGet('path-page-1');
-    self::assertEquals('HIT', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertEquals('HIT', $this->getSession()->getResponseHeader(DynamicPageCacheSubscriber::HEADER));
   }
 
 }
