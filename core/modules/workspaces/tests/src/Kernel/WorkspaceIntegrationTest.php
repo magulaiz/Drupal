@@ -827,6 +827,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
+   * Tests creating a sample image item in a non-default workspace.
    */
   public function testImageItemSampleValue(): void {
     \Drupal::service('module_installer')->install(['image']);
