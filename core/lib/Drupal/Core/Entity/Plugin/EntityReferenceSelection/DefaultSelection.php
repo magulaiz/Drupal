@@ -200,7 +200,10 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       ];
     }
 
-    $selected_bundles = array_intersect_key($this->getBundleOptions($bundles), array_filter((array) $configuration['target_bundles']));
+    $selected_bundles = [];
+    if (!empty($configuration['target_bundles'])) {
+      $selected_bundles = array_intersect_key($this->getBundleOptions($bundles), array_filter((array) $configuration['target_bundles']));
+    }
     if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $options = $entity_type->hasKey('bundle') ? $selected_bundles : $bundles;
       $fields = [];
