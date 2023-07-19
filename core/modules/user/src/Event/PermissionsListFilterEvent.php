@@ -7,7 +7,7 @@ use Drupal\Component\EventDispatcher\Event;
 class PermissionsListFilterEvent extends Event {
 
   /**
-   * Permissions as returned by PermissionHandlerInterface::getPermissions().
+   * The permissions to filter.
    *
    * @var array
    */
@@ -17,7 +17,7 @@ class PermissionsListFilterEvent extends Event {
    * Constructs a permissions list filter event object.
    *
    * @param array $permissions
-   *   Permissions as returned by PermissionHandlerInterface::getPermissions().
+   *   The permissions to filter.
    */
   public function __construct(array $permissions) {
     $this->permissions = $permissions;
