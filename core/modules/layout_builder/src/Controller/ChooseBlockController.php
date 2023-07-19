@@ -255,10 +255,12 @@ class ChooseBlockController implements ContainerInjectionInterface {
    */
   protected function getAjaxAttributes() {
     if ($this->isAjax()) {
+      $width = \Drupal::config('system.site')->get('off_canvas.width');
       return [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'dialog',
         'data-dialog-renderer' => 'off_canvas',
+        'data-dialog-options' => "{\"width\": $width}",
       ];
     }
     return [];

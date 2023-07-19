@@ -5,6 +5,7 @@
  * Provides hook implementations for Layout Builder.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
@@ -64,6 +65,20 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
       ]) . '</dd>';
       $output .= '</dl>';
       return $output;
+  }
+}
+
+/**
+ * Implements hook_contextual_links_alter().
+ */
+function layout_builder_contextual_links_alter(array &$links, $group, array $route_parameters) {
+  if ($group === 'layout_builder_block') {
+    // Alter the contextual links for layout builder blocks to use the width
+    // for off-canvas defined in config.
+    $width = \Drupal::config('system.site')->get('off_canvas.width');
+    foreach ($links as &$link) {
+      $link['localized_options']['attributes']['data-dialog-options'] = Json::encode(['width' => $width]);
+    }
   }
 }
 

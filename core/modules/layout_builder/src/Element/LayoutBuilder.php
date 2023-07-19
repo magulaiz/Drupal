@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Element;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -193,6 +194,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
               ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
+              'data-dialog-options' => $this->getDataDialogOptions(),
             ],
           ]
         ),
@@ -277,6 +279,8 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
               ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
+              'data-dialog-options' => $this->getDataDialogOptions(),
+
             ],
           ]
         ),
@@ -348,6 +352,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           ],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',
+          'data-dialog-options' => $this->getDataDialogOptions(),
         ],
       ],
       // The section label is added to sections without a "Configure section"
@@ -373,10 +378,19 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           ],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',
+          'data-dialog-options' => $this->getDataDialogOptions(),
         ],
       ],
       'layout-builder__section' => $build,
     ];
+  }
+
+  protected function getOffCanvasWidth() {
+    return \Drupal::config('system.site')->get('off_canvas.width');
+  }
+
+  protected function getDataDialogOptions() {
+    return Json::encode(['width' => $this->getOffCanvasWidth()]);
   }
 
 }
