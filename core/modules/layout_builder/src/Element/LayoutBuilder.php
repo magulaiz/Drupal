@@ -385,10 +385,22 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     ];
   }
 
+  /**
+   * Get the configured off-canvas width.
+   *
+   * @return array|mixed|null
+   *   The width.
+   */
   protected function getOffCanvasWidth() {
     return \Drupal::config('system.site')->get('off_canvas.width');
   }
 
+  /**
+   * Get the serialized array of data-dialog-options.
+   *
+   * @return false|string
+   *   The options.
+   */
   protected function getDataDialogOptions() {
     return Json::encode(['width' => $this->getOffCanvasWidth()]);
   }

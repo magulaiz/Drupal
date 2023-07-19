@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -260,7 +261,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
         'class' => ['use-ajax'],
         'data-dialog-type' => 'dialog',
         'data-dialog-renderer' => 'off_canvas',
-        'data-dialog-options' => "{\"width\": $width}",
+        'data-dialog-options' => Json::encode(['width' => $width]),
       ];
     }
     return [];
