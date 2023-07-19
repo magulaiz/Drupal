@@ -331,8 +331,8 @@ class NestedArray {
         if (is_int($key) && !$preserve_integer_keys) {
           $result[] = $value;
         }
-        // Allow empty arrays to be set
-        elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value) && empty($value)) {
+        // Allow empty arrays to be set. Indicate this with a value of \EmptyIterator().
+        elseif (isset($result[$key]) && is_array($result[$key]) && $value instanceof \EmptyIterator) {
           $result[$key] = $value;
         }
         // Recurse when both values are arrays.

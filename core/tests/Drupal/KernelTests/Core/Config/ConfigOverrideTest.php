@@ -47,7 +47,7 @@ class ConfigOverrideTest extends KernelTestBase {
     // Add a new value to the array.
     $overrides['config_test.system']['colors'] = ['red', 'orange', 'yellow'];
     // Empty the existing array values.
-    $overrides['config_test.system']['planets'] = [];
+    $overrides['config_test.system']['planets'] = new \EmptyIterator();
     $GLOBALS['config'] = $overrides;
 
     $this->installConfig(['config_test']);
