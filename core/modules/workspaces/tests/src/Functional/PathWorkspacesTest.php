@@ -93,6 +93,10 @@ class PathWorkspacesTest extends BrowserTestBase {
     $path = $edit['path[0][alias]'];
     $this->assertAccessiblePaths([$path]);
 
+    // The \Drupal\path_alias\AliasWhitelist service performs cache clears after
+    // Drupal has flushed the response to the client; wait for this to finish.
+    sleep(1);
+
     // Check that the 'preload-paths' cache includes the active workspace ID in
     // the cache key.
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:stage:/node/1'));
@@ -132,6 +136,10 @@ class PathWorkspacesTest extends BrowserTestBase {
     // Check that the node can be accessed in Stage with the given alias.
     $path = $edit['path[0][alias]'];
     $this->assertAccessiblePaths([$path]);
+
+    // The \Drupal\path_alias\AliasWhitelist service performs cache clears after
+    // Drupal has flushed the response to the client; wait for this to finish.
+    sleep(1);
 
     // Check that the 'preload-paths' cache includes the active workspace ID in
     // the cache key.
