@@ -122,8 +122,9 @@ class RandomTest extends TestCase {
    */
   public function testRandomMachineNamesUniqueness(): void {
     $names = [];
+    $random = new Random();
     for ($i = 0; $i <= 25; $i++) {
-      $str = (new Random())->machineName(1, TRUE);
+      $str = $random->machineName(1, TRUE);
       $this->assertArrayNotHasKey($str, $names, 'Generated duplicate random name ' . $str);
       $names[$str] = TRUE;
     }
@@ -138,8 +139,9 @@ class RandomTest extends TestCase {
     // There are fewer than 100 possibilities so an exception should occur to
     // prevent infinite loops.
     $this->expectException(\RuntimeException::class);
+    $random = new Random()
     for ($i = 0; $i <= 100; $i++) {
-      (new Random())->machineName(1, TRUE);
+      $random->machineName(1, TRUE);
     }
   }
 
