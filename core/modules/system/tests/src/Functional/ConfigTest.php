@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\system\Functional;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
@@ -15,6 +16,7 @@ use Drupal\user\UserInterface;
  * @group system
  */
 class ConfigTest extends BrowserTestBase {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
