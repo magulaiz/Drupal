@@ -30,6 +30,7 @@ filter.format.*:
       type: integer
       label: 'Weight'
     roles:
+      requiredKey: false
       type: sequence
       label: 'Roles'
       sequence:
@@ -52,7 +53,7 @@ filter_settings.*:
     label: 'Value'
 
 filter_settings.filter_html:
-  type: filter
+  type: mapping
   label: 'Filter HTML'
   mapping:
     allowed_html:
@@ -67,7 +68,7 @@ filter_settings.filter_html:
 
 
 filter_settings.filter_url:
-  type: filter
+  type: mapping
   label: 'Filter URL'
   mapping:
     filter_url_length:

@@ -257,6 +257,7 @@ trait UserCreationTrait {
     $role = Role::create([
       'id' => $rid,
       'label' => $name,
+      'is_admin' => FALSE,
     ]);
     if (isset($weight)) {
       $role->set('weight', $weight);

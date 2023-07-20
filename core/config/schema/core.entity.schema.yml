@@ -77,6 +77,8 @@ field_formatter:
       type: field.formatter.settings.[%parent.type]
       label: 'Settings'
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension point.
+      requiredKey: false
       type: sequence
       label: 'Third party settings'
       sequence:
@@ -91,6 +93,16 @@ field_formatter.entity_view_display:
     region:
       type: string
       label: 'Region'
+  constraints:
+    # TRICKY: to support the special `links` case, we must not inherit additionally required
+    # keys from `type: field_formatter`.
+    # @todo Improve: only allow this exemption in the `links` case?
+    RequiredKeys:
+      requiredKeys: '<infer>'
+      markInheritedKeysAsOptional:
+        - type
+        - label
+        - settings
 
 # Overview configuration information for form mode displays.
 core.entity_form_display.*.*.*:
@@ -120,6 +132,9 @@ core.entity_form_display.*.*.*:
         label: 'Field widget'
         mapping:
           type:
+            # TRICKY: to support the special `author` case, we must not require this key.
+            # @todo Improve: somehow only allow this exemption in the `author` case?
+            requiredKey: false
             type: string
             label: 'Widget type machine name'
           weight:
@@ -129,9 +144,14 @@ core.entity_form_display.*.*.*:
             type: string
             label: 'Region'
           settings:
+            # TRICKY: to support the special `author` case, we must not require this key.
+            # @todo Improve: somehow only allow this exemption in the `author` case?
+            requiredKey: false
             type: field.widget.settings.[%parent.type]
             label: 'Settings'
           third_party_settings:
+            # Third party settings are always optional: they're an optional extension point.
+            requiredKey: false
             type: sequence
             label: 'Third party settings'
             sequence:
@@ -146,10 +166,14 @@ core.entity_form_display.*.*.*:
 # Default schema for entity display field with undefined type.
 field.formatter.settings.*:
   type: mapping
+  # No settings by default.
+  mapping: {}
 
 # Default schema for entity form display field with undefined type.
 field.widget.settings.*:
   type: mapping
+  # No settings by default.
+  mapping: {}
 
 field.widget.settings.string_textfield:
   type: mapping
@@ -198,6 +222,7 @@ field.widget.settings.email_default:
 field.widget.settings.datetime_timestamp:
   type: mapping
   label: 'Datetime timestamp display format settings'
+  mapping: {}
 
 field.widget.settings.boolean_checkbox:
   type: mapping

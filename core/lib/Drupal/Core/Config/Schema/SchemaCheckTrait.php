@@ -9,6 +9,7 @@ use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Provides a trait for checking configuration schema.
@@ -57,6 +58,23 @@ trait SchemaCheckTrait {
       $errors[] = $this->checkValue($key, $value);
     }
     $errors = array_merge(...$errors);
+    // Also perform explicit validation. Note this does NOT require every node
+    // in the config schema tree to have validation constraints defined.
+    $violations = $this->schema->validate();
+    $ignored_validation_constraint_messages = [];
+    $filtered_violations = array_filter(
+      iterator_to_array($violations),
+      fn (ConstraintViolation $v) => preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
+    );
+    $validation_errors = array_map(
+      fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
+      $filtered_violations
+    );
+    // @todo Remove this. Views config schema is as complex as all other config combined.
+    if (str_starts_with($config_name, 'views.')) {
+      $validation_errors = [];
+    }
+    $errors = array_merge($errors, $validation_errors);
     if (empty($errors)) {
       return TRUE;
     }
@@ -86,6 +104,14 @@ trait SchemaCheckTrait {
     }
 
     if ($element instanceof Undefined) {
+      // Allow older Drupal extensions to test on older versions of Drupal core
+      // and other Drupal extensions, which means that during tests we should be
+      // forgiving about keys present in the config data that the test setup's
+      // config schema may not know about.
+      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraintValidator
+      if (self::convertViolationsToDeprecation($this->schema->getRoot())) {
+        return [];
+      }
       return [$error_key => 'missing schema'];
     }
 
@@ -107,8 +133,10 @@ trait SchemaCheckTrait {
           // Null values are allowed for all primitive types.
           ($value === NULL);
       }
-      // Array elements can also opt-in for allowing a NULL value.
-      elseif ($element instanceof ArrayElement && $element->isNullable() && $value === NULL) {
+      // Array elements can also opt-in for allowing a NULL value, and
+      // disallowed NULL values are detect through validation.
+      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraintValidator::validate
+      elseif ($element instanceof ArrayElement) {
         $success = TRUE;
       }
       $class = get_class($element);
@@ -136,6 +164,20 @@ trait SchemaCheckTrait {
     }
     // No errors found.
     return [];
+  }
+
+  /**
+   * Whether violations should be mapped to a deprecation instead.
+   *
+   * @param \Drupal\Core\Config\Schema\Mapping $root
+   *   The root of the config to check.
+   *
+   * @return bool
+   */
+  private static function convertViolationsToDeprecation(Mapping $root): bool {
+    assert($root === $root->getRoot());
+    $config_data = $root->getValue();
+    return isset($config_data['_core']) && isset($config_data['_core']['test']) && $config_data['_core']['test'] === TRUE;
   }
 
 }

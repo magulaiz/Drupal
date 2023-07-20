@@ -156,6 +156,7 @@ class StandardTest extends BrowserTestBase {
     $role = Role::create([
       'id' => 'admin_theme',
       'label' => 'Admin theme',
+      'is_admin' => FALSE,
     ]);
     $role->grantPermission('view the administration theme');
     $role->save();
@@ -224,6 +225,7 @@ class StandardTest extends BrowserTestBase {
     $role = Role::create([
       'id' => 'admin_workflows',
       'label' => 'Admin workflow',
+      'is_admin' => FALSE,
     ]);
     $role->grantPermission('administer workflows');
     $role->save();
@@ -244,6 +246,7 @@ class StandardTest extends BrowserTestBase {
     $role = Role::create([
       'id' => 'admin_media',
       'label' => 'Admin media',
+      'is_admin' => FALSE,
     ]);
     $role->grantPermission('administer media');
     $role->grantPermission('administer media display');

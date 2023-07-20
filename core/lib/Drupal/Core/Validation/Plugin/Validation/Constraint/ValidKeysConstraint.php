@@ -71,6 +71,8 @@ class ValidKeysConstraint extends Constraint {
     }
     // The only other value we'll accept is the string `<infer>`.
     elseif ($this->allowedKeys === '<infer>') {
+      // Important! This infers keys from the config schema definition, not the
+      // provided data.
       return static::inferKeys($context->getObject());
     }
     throw new InvalidArgumentException("'$this->allowedKeys' is not a valid set of allowed keys.");

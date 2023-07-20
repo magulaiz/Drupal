@@ -21,6 +21,7 @@ field.formatter.settings.comment_default:
 field.widget.settings.comment_default:
   type: mapping
   label: 'Comment display format settings'
+  mapping: {}
 
 action.configuration.comment_unpublish_by_keyword_action:
   type: mapping
@@ -74,6 +75,7 @@ field.value.comment:
     last_comment_name:
       type: integer
       label: 'Last comment name'
+      nullable: true
     last_comment_uid:
       type: integer
       label: 'Last comment user ID'

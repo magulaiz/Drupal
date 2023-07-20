@@ -39,7 +39,9 @@ field.value.text:
 
 field.storage_settings.text_long:
   label: 'Text (formatted, long) settings'
-  type: field.field_settings.text
+  # TRICKY: this used to inherit the config schema for the field INSTANCE, which contains the `allowed_formats` setting!
+  type: mapping
+  mapping: {}
 
 field.field_settings.text_long:
   label: 'Text (formatted, long) settings'
@@ -65,6 +67,7 @@ field.value.text_long:
 field.storage_settings.text_with_summary:
   label: 'Text (formatted, long, with summary) settings'
   type: mapping
+  mapping: {}
 
 field.field_settings.text_with_summary:
   type: mapping
@@ -99,6 +102,7 @@ field.value.text_with_summary:
 field.formatter.settings.text_default:
   type: mapping
   label: 'Formatted text default display format settings'
+  mapping: {}
 
 field.formatter.settings.text_summary_or_trimmed:
   type: mapping

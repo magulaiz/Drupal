@@ -354,6 +354,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $config_to_create[$name] = [
             '_core' => [
               'default_config_hash' => Crypt::hashBase64(serialize($config_to_create[$name])),
+              'test' => drupal_valid_test_ua() !== FALSE,
             ],
           ] + $config_to_create[$name];
         }

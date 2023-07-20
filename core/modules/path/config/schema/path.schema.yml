@@ -3,3 +3,4 @@
 field.widget.settings.path:
   type: mapping
   label: 'Link format settings'
+  mapping: {}

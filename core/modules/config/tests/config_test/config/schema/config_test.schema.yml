@@ -13,12 +13,33 @@ config_test_dynamic:
       type: integer
       label: 'Weight'
     style:
+      # TRICKY: Because \Drupal\config_test\Entity\ConfigTest always sets this, this does not cause
+      # YAML exports without this key to trigger validation errors for the key. But without `nullable`,
+      # it would then complain about the default NULL value.
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
+      nullable: true
       type: string
       label: 'style'
     size:
+      # TRICKY: Because \Drupal\config_test\Entity\ConfigTest always sets this, this does not cause
+      # YAML exports without this key to trigger validation errors for the key. But without `nullable`,
+      # it would then complain about the default NULL value.
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
+      nullable: true
       type: string
       label: 'Size'
     size_value:
+      # TRICKY: Because \Drupal\config_test\Entity\ConfigTest always sets this, this does not cause
+      # YAML exports without this key to trigger validation errors for the key. But without `nullable`,
+      # it would then complain about the default NULL value.
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
+      nullable: true
       type: string
       label: 'Size value'
     protected_property:
@@ -90,6 +111,8 @@ config_test.types:
       type: integer
       label: 'Integer'
     octal:
+      # @see https://www.drupal.org/project/drupal/issues/3205480
+      requiredKey: false
       type: integer
       label: 'Octal'
     string:
@@ -98,6 +121,50 @@ config_test.types:
     string_int:
       type: string
       label: 'String integer'
+    # All the above types, but now nullable.
+    nullable_array:
+      type: sequence
+      label: 'Nullable array'
+      nullable: true
+      sequence:
+        type: string
+        label: 'Item'
+    nullable_boolean:
+      type: boolean
+      label: 'Nullable boolean'
+      nullable: true
+    nullable_exp:
+      type: float
+      label: 'Nullable exponential'
+      nullable: true
+    nullable_float:
+      type: float
+      label: 'Nullable float'
+      nullable: true
+    nullable_float_as_integer:
+      type: float
+      label: 'Float'
+      nullable: true
+    nullable_hex:
+      type: integer
+      label: 'Nullable hexadecimal'
+      nullable: true
+    nullable_int:
+      type: integer
+      label: 'Nullable integer'
+      nullable: true
+    nullable_octal:
+      type: integer
+      label: 'Nullable octal'
+      nullable: true
+    nullable_string:
+      type: string
+      label: 'Nullable string'
+      nullable: true
+    nullable_string_int:
+      type: string
+      label: 'Nullable string integer'
+      nullable: true
 
 config_test.no_status.default:
   type: config_object
@@ -121,6 +188,9 @@ config_test.system:
       type: string
       label: 'Foo'
     baz:
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
       type: string
       label: 'Baz'
     '404':

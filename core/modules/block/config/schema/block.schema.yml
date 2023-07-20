@@ -24,6 +24,8 @@ block.block.*:
     provider:
       type: string
       label: 'Provider'
+      # Blocks created by the user through the UI have no provider.
+      nullable: true
     plugin:
       type: string
       label: 'Plugin'
