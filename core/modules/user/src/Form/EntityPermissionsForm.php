@@ -48,6 +48,13 @@ class EntityPermissionsForm extends UserPermissionsForm {
   protected $bundle;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a new EntityPermissionsForm.
    *
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
