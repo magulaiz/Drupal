@@ -3,6 +3,7 @@
 namespace Drupal\Component\Utility;
 
 use Masterminds\HTML5;
+use Masterminds\HTML5\Serializer\Traverser;
 
 /**
  * Provides DOMDocument helpers for parsing and serializing HTML strings.
@@ -314,12 +315,17 @@ EOD;
         static::escapeCdataElement($node, '/*', '*/');
       }
 
-      // Instantiate the HTML5 parser, but without the HTML5 namespace being
-      // added to the DOM document.
-      $html5 = new HTML5(['disable_html_ns' => TRUE]);
+      // Serialize the body using our custom set of rules.
+      // @see \Masterminds\HTML5::saveHTML()
+      $stream = fopen('php://temp', 'wb');
+      $rules = new HtmlSerializerRules($stream);
       foreach ($body_node->childNodes as $node) {
-        $html .= $html5->saveHTML($node);
+        $traverser = new Traverser($node, $stream, $rules);
+        $traverser->walk();
       }
+      $rules->unsetTraverser();
+      $html = stream_get_contents($stream, -1, 0);
+      fclose($stream);
     }
 
     // Normalize all newlines.
