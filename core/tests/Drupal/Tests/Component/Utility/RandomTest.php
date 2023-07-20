@@ -139,7 +139,7 @@ class RandomTest extends TestCase {
     // There are fewer than 100 possibilities so an exception should occur to
     // prevent infinite loops.
     $this->expectException(\RuntimeException::class);
-    $random = new Random()
+    $random = new Random();
     for ($i = 0; $i <= 100; $i++) {
       $random->machineName(1, TRUE);
     }
