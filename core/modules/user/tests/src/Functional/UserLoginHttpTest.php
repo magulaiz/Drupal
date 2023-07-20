@@ -546,8 +546,35 @@ class UserLoginHttpTest extends BrowserTestBase {
     $response = $this->passwordRequest(['name' => $account->getAccountName()], $format);
     $this->assertEquals(200, $response->getStatusCode());
 
+    // Check that the proper warning has been logged.
+    $arguments = [
+      '%identifier' => $account->getAccountName(),
+    ];
+    $logged = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['variables'])
+      ->condition('type', 'user')
+      ->condition('message', 'Unable to send password reset email for blocked or not yet activated user %identifier.')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(serialize($arguments), $logged);
+
     $response = $this->passwordRequest(['mail' => $account->getEmail()], $format);
     $this->assertEquals(200, $response->getStatusCode());
+
+    // Check that the proper warning has been logged.
+    $arguments = [
+      '%identifier' => $account->getEmail(),
+    ];
+
+    $logged = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['variables'])
+      ->condition('type', 'user')
+      ->condition('message', 'Unable to send password reset email for blocked or not yet activated user %identifier.')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(serialize($arguments), $logged);
 
     $account
       ->activate()
