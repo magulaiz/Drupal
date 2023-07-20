@@ -3,6 +3,7 @@
 namespace Drupal\Component\DependencyInjection\Dumper;
 
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -304,6 +305,9 @@ class OptimizedPhpArrayDumper extends Dumper {
     $code = [];
 
     foreach ($collection as $key => $value) {
+      if ($value instanceof IteratorArgument) {
+        $value = $value->getValues();
+      }
       if (is_array($value)) {
         $resolve_collection = FALSE;
         $code[$key] = $this->dumpCollection($value, $resolve_collection);
