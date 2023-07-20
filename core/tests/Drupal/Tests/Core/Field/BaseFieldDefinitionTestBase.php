@@ -39,13 +39,13 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
       ->with($module_name)
       ->willReturn(TRUE);
     $typed_data_manager = $this->createMock(TypedDataManagerInterface::class);
-    $field_type_category_info = $this->createMock(PluginManagerInterface::class);
+    $field_type_categories = $this->createMock(PluginManagerInterface::class);
     $plugin_manager = new FieldTypePluginManager(
       $namespaces,
       $this->createMock('Drupal\Core\Cache\CacheBackendInterface'),
       $module_handler,
       $typed_data_manager,
-      $field_type_category_info,
+      $field_type_categories,
     );
 
     $container = new ContainerBuilder();

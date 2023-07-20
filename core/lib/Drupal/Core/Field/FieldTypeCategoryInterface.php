@@ -7,7 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Provides an object that returns the category info about the field type.
  */
-interface FieldTypeCategoryInfoInterface {
+interface FieldTypeCategoryInterface {
 
   /**
    * Returns the field group label.

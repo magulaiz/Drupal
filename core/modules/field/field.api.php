@@ -423,7 +423,7 @@ function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
  *   An associative array of field type categories, keyed by category machine
  *    name.
  *
- * @see \Drupal\Core\Field\FieldTypeCategoryInfoManager
+ * @see \Drupal\Core\Field\FieldTypeCategoryManager
  */
 function hook_field_type_category_info_alter(array &$categories) {
   // Modify or add field type categories.

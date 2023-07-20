@@ -9,7 +9,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FallbackFieldTypeCategoryInfo;
+use Drupal\Core\Field\FallbackFieldTypeCategory;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -88,15 +88,19 @@ class FieldStorageAddForm extends FormBase {
    *   (optional) The entity field manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   (optional) The entity display repository.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $fieldTypeCategoryInfoManager
-   *   The field type category info plugin manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface|null $fieldTypeCategoryManager
+   *   The field type category plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entity_display_repository, protected PluginManagerInterface $fieldTypeCategoryInfoManager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entity_display_repository, protected ?PluginManagerInterface $fieldTypeCategoryManager = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
     $this->entityFieldManager = $entity_field_manager;
     $this->entityDisplayRepository = $entity_display_repository;
+    if ($this->fieldTypeCategoryManager === NULL) {
+      @trigger_error('Calling FieldStorageAddForm::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
+      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field_type_categories');
+    }
   }
 
   /**
@@ -116,7 +120,7 @@ class FieldStorageAddForm extends FormBase {
       $container->get('config.factory'),
       $container->get('entity_field.manager'),
       $container->get('entity_display.repository'),
-      $container->get('plugin.manager.field_type_category_info'),
+      $container->get('plugin.manager.field_type_categories'),
     );
   }
 
@@ -157,8 +161,8 @@ class FieldStorageAddForm extends FormBase {
     foreach ($grouped_definitions as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
         $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
-        if ($this->fieldTypeCategoryInfoManager->hasDefinition($category)) {
-          $category_plugin = $this->fieldTypeCategoryInfoManager->createInstance($category, $unique_definitions[$category][$name]);
+        if ($this->fieldTypeCategoryManager->hasDefinition($category)) {
+          $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name]);
           $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
         }
       }
@@ -177,9 +181,9 @@ class FieldStorageAddForm extends FormBase {
     ];
     $field_type_options_radios = [];
     foreach ($field_type_options as $field_option => $val) {
-      /** @var  \Drupal\Core\Field\FieldTypeCategoryInfoInterface $category_info */
-      $category_info = $this->fieldTypeCategoryInfoManager->createInstance($val['category'], $val);
-      $display_as_group = !($category_info instanceof FallbackFieldTypeCategoryInfo);
+      /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
+      $category_info = $this->fieldTypeCategoryManager->createInstance($val['category'], $val);
+      $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
       $cleaned_class_name = Html::getClass($val['unique_identifier']);
       $field_type_options_radios[$field_option] = [
         '#type' => 'container',

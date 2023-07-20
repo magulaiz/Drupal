@@ -3,15 +3,14 @@
 namespace Drupal\Core\Field;
 
 /**
- * Fallback plugin class for FieldTypeCategoryInfoManager.
+ * Fallback plugin class for FieldTypeCategoryManager.
  */
-class FallbackFieldTypeCategoryInfo extends FieldTypeCategoryInfo {
+class FallbackFieldTypeCategory extends FieldTypeCategory {
 
   /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration) {
-
     $plugin_definition = [
       'label' => $configuration['label'] ?? '',
       'description' => $configuration['description'] ?? '',

@@ -6,11 +6,11 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Default object used for field_type_category_info plugins.
+ * Default object used for field_type_categories plugins.
  *
- * @see \Drupal\Core\Field\FieldTypeCategoryInfoManager
+ * @see \Drupal\Core\Field\FieldTypeCategoryManager
  */
-class FieldTypeCategoryInfo extends PluginBase implements FieldTypeCategoryInfoInterface {
+class FieldTypeCategory extends PluginBase implements FieldTypeCategoryInterface {
 
   /**
    * {@inheritdoc}

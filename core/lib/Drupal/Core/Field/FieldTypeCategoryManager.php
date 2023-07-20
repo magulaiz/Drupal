@@ -12,7 +12,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * Defines a field type category info plugin manager.
  *
  * A module can define field type categories in a
- * MODULE_NAME.field_type_category_info.yml file contained in the module's
+ * MODULE_NAME.field_type_categories.yml file contained in the module's
  * base directory. Each plugin has the following structure:
  * @code
  *   CATEGORY_NAME:
@@ -28,11 +28,11 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *   weight: 2
  * @endcode
  *
- * @see \Drupal\Core\Field\FieldTypeCategoryInfoInterface
- * @see \Drupal\Core\Field\FieldTypeCategoryInfo
+ * @see \Drupal\Core\Field\FieldTypeCategoryInterface
+ * @see \Drupal\Core\Field\FieldTypeCategory
  * @see \hook_field_type_category_info_alter
  */
-class FieldTypeCategoryInfoManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
+class FieldTypeCategoryManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 
   /**
    * {@inheritdoc}
@@ -41,11 +41,11 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
     'label' => '',
     'description' => '',
     'weight' => 0,
-    'class' => FieldTypeCategoryInfo::class,
+    'class' => FieldTypeCategory::class,
   ];
 
   /**
-   * Constructs a new FieldTypeCategoryInfoManager.
+   * Constructs a new FieldTypeCategoryManager.
    *
    * @param string $root
    *   The app root.
@@ -67,7 +67,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
     if (!isset($this->discovery)) {
       $directories = ['core' => $this->root . '/core'];
       $directories += $this->moduleHandler->getModuleDirectories();
-      $this->discovery = new YamlDiscovery('field_type_category_info', $directories);
+      $this->discovery = new YamlDiscovery('field_type_categories', $directories);
       $this->discovery
         ->addTranslatableProperty('label')
         ->addTranslatableProperty('description');
