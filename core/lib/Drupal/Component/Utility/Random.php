@@ -38,7 +38,7 @@ class Random {
    *
    * @var string[]
    */
-  protected $machineNames;
+  protected array $machineNames = [];
 
   /**
    * Generates a random string of ASCII characters of codes 32 to 126.
