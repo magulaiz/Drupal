@@ -265,15 +265,14 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // An anchor.
-    $input = '<img data-caption="This is a &lt;a href=&quot;https://www.drupal.org&quot;&gt;quick&lt;/a&gt; test…" src="llama.jpg" />';
+    $input = '<img data-caption="This is a &lt;a href=&quot;https://www.drupal.org&quot;&gt;quick&lt;/a&gt; test…" src="llama.jpg">';
     $expected = '<figure role="group">
 <img src="llama.jpg">
 <figcaption>This is a <a href="https://www.drupal.org">quick</a> test…</figcaption>
 </figure>
 ';
     $this->assertSame($expected, $test_with_html_filter($input));
-    $expected_xss_filtered = '<img data-caption="This is a <a href=&quot;https://www.drupal.org&quot;>quick</a> test…" src="llama.jpg">';
-    $this->assertSame($expected_xss_filtered, $test_editor_xss_filter($input));
+    $this->assertSame($input, $test_editor_xss_filter($input));
 
     // A plain URL surrounded by parentheses.
     $input = '<img data-caption="(https://www.drupal.org)" src="llama.jpg">';
@@ -323,7 +322,7 @@ class FilterKernelTest extends KernelTestBase {
 </figure>
 ';
     $this->assertSame($expected, $test_with_html_filter($input));
-    $expected_xss_filtered = '<img data-caption="This is an <a href=&quot;alert();&quot;>evil</a> test…" src="llama.jpg">';
+    $expected_xss_filtered = '<img data-caption="This is an &lt;a href=&quot;alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg">';
     $this->assertSame($expected_xss_filtered, $test_editor_xss_filter($input));
   }
 
