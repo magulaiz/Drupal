@@ -453,4 +453,15 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    */
   abstract protected function setProjectInstalledVersion($version);
 
+  /**
+   * Tests a secure project release with a newer security update available.
+   */
+  public function testSecureReleaseBeforeSecurityUpdate(): void {
+    $this->setProjectInstalledVersion('8.1.0');
+    $this->refreshUpdateStatus([$this->updateProject => 'secure_release_before_security_update']);
+    $this->standardTests();
+    $this->assertUpdateTableTextContains('Update available');
+    $this->assertUpdateTableTextNotContains('Security update required!');
+  }
+
 }
