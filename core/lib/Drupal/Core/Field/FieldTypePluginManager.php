@@ -3,7 +3,6 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -47,17 +46,17 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   The module handler.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface|null $fieldTypeCategoryManager
+   * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
    *   The field type category plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, protected ?PluginManagerInterface $fieldTypeCategoryManager = NULL) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
     $this->typedDataManager = $typed_data_manager;
     if ($this->fieldTypeCategoryManager === NULL) {
       @trigger_error('Calling FieldTypePluginManager::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375737', E_USER_DEPRECATED);
-      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field_type_categories');
+      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
     }
   }
 

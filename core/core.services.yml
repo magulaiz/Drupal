@@ -744,8 +744,12 @@ services:
   Drupal\Core\Block\BlockManagerInterface: '@plugin.manager.block'
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager', '@plugin.manager.field_type_categories']
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager', '@plugin.manager.field.field_type_category']
   Drupal\Core\Field\FieldTypePluginManagerInterface: '@plugin.manager.field.field_type'
+  plugin.manager.field.field_type_category:
+    class: \Drupal\Core\Field\FieldTypeCategoryManager
+    arguments: [ '%app.root%', '@module_handler', '@cache.discovery' ]
+  Drupal\Core\Field\FieldTypeCategoryManagerInterface: '@plugin.manager.field.field_type_category'
   plugin.manager.field.widget:
     class: Drupal\Core\Field\WidgetPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@plugin.manager.field.field_type']
@@ -762,9 +766,6 @@ services:
   plugin.manager.menu.link:
     class: Drupal\Core\Menu\MenuLinkManager
     arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
-  plugin.manager.field_type_categories:
-    class: \Drupal\Core\Field\FieldTypeCategoryManager
-    arguments: ['%app.root%', '@module_handler', '@cache.discovery' ]
   Drupal\Core\Menu\MenuLinkManagerInterface: '@plugin.manager.menu.link'
   menu.link_tree:
     class: Drupal\Core\Menu\MenuLinkTree

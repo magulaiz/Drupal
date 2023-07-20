@@ -24,7 +24,7 @@ class FieldTypeCategoryDiscoveryTest extends KernelTestBase {
    * Tests custom field type categories created by modules.
    */
   public function testFieldTypeCategories() {
-    $category = \Drupal::service('plugin.manager.field_type_categories')->createInstance('test_category');
+    $category = \Drupal::service('plugin.manager.field.field_type_category')->createInstance('test_category');
     $expected = [
       'Test category',
       'This is a test field type category.',

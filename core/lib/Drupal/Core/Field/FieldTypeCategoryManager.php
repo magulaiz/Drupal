@@ -32,7 +32,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Field\FieldTypeCategory
  * @see \hook_field_type_category_info_alter
  */
-class FieldTypeCategoryManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
+class FieldTypeCategoryManager extends DefaultPluginManager implements FieldTypeCategoryManagerInterface, FallbackPluginManagerInterface {
 
   /**
    * {@inheritdoc}
