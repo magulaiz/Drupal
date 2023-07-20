@@ -2,6 +2,8 @@ module.exports = {
   '@tags': ['core', 'ckeditor5'],
   before(browser) {
     browser.drupalInstall({ installProfile: 'minimal' });
+    // Set fixed (desktop-ish) size to ensure a maximum viewport.
+    browser.resizeWindow(1920, 1080);
   },
   after(browser) {
     browser.drupalUninstall();
@@ -96,6 +98,71 @@ module.exports = {
             browser.assert.ok(
               result.value,
               'Source editing height is set to 9 rows (default).',
+            );
+          },
+        )
+
+        // Navigate to the create content page and measure max-height of the editor.
+        .drupalRelativeURL('/node/add/test')
+        .execute(
+          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+          function () {
+            window.Drupal.CKEditor5Instances.forEach((instance) => {
+              instance.setData('<p>Llamas are cute.</p>'.repeat(100));
+            });
+
+            const height = document.querySelector(
+              '.ck-editor__editable',
+            ).clientHeight;
+
+            return height < window.innerHeight;
+          },
+          [],
+          (result) => {
+            browser.assert.ok(
+              result.value,
+              'Editor area should never exceed full viewport.',
+            );
+          },
+        )
+        // Source Editor textarea should have vertical scrollbar when needed.
+        .click('.ck-source-editing-button')
+        .waitForElementVisible('.ck-source-editing-area')
+        .execute(
+          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+          function () {
+            function isScrollableY(element) {
+              const style = window.getComputedStyle(element);
+
+              if (
+                element.scrollHeight > element.clientHeight &&
+                style.overflow !== 'hidden' &&
+                style['overflow-y'] !== 'hidden' &&
+                style.overflow !== 'clip' &&
+                style['overflow-y'] !== 'clip'
+              ) {
+                if (
+                  element === document.scrollingElement ||
+                  (style.overflow !== 'visible' &&
+                    style['overflow-y'] !== 'visible')
+                ) {
+                  return true;
+                }
+              }
+
+              return false;
+            }
+
+            return isScrollableY(
+              document.querySelector('.ck-source-editing-area textarea'),
+            );
+          },
+          [],
+          (result) => {
+            browser.assert.strictEqual(
+              result.value,
+              true,
+              'Source Editor textarea should have vertical scrollbar when needed.',
             );
           },
         )

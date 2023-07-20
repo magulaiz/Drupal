@@ -62,7 +62,7 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
   /**
    * Test current revision is indicated.
    *
-   * @covers \Drupal\Core\Entity\Controller\RevisionControllerTrait::revisionOverview
+   * @covers \Drupal\Core\Entity\Controller\VersionHistoryController::revisionOverview
    */
   public function testCurrentRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -105,6 +105,25 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     $this->drupalGet($entity->toUrl('version-history'));
     $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', '02/02/2013 - 16:00');
     $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', $user->getAccountName());
+  }
+
+  /**
+   * Test description with entity implementing revision log, with empty values.
+   *
+   * @covers ::getRevisionDescription
+   */
+  public function testDescriptionRevLogNullValues(): void {
+    $entity = EntityTestWithRevisionLog::create(['type' => 'entity_test_revlog']);
+    $entity->setName('view all revisions')->save();
+
+    // Check entity values are still null after saving; they did not receive
+    // values from currentUser or some other global context.
+    $this->assertNull($entity->getRevisionUser());
+    $this->assertNull($entity->getRevisionUserId());
+    $this->assertNull($entity->getRevisionLogMessage());
+
+    $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'by Anonymous (not verified)');
   }
 
   /**
