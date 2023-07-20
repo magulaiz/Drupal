@@ -18,6 +18,7 @@ use Drupal\user\Form\EntityPermissionsForm;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the permissions administration form for a bundle.
@@ -76,8 +77,10 @@ class EntityPermissionsFormTest extends UnitTestCase {
     $prophecy->getDefinition('entity_type')
       ->willReturn($entity_type);
     $entity_type_manager = $prophecy->reveal();
+    $prophecy = $this->prophesize(EventDispatcherInterface::class);
+    $event_dispatcher = $prophecy->reveal();
 
-    $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager, $module_extension_list);
+    $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager, $event_dispatcher, $module_extension_list);
 
     // Mock the method parameters.
     $route = new Route('some.path');
