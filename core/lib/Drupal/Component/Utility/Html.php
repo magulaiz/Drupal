@@ -278,18 +278,9 @@ class Html {
 <!DOCTYPE html>
 <html>
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
-<body>!html</body>
+<body>$html</body>
 </html>
 EOD;
-
-    // PHP's \DOMDocument::saveXML() encodes carriage returns as &#13; so
-    // normalize all newlines to line feeds.
-    $html = str_replace(["\r\n", "\r"], "\n", $html);
-
-    // PHP's \DOMDocument serialization adds extra whitespace when the markup
-    // of the wrapping document contains newlines, so ensure we remove all
-    // newlines before injecting the actual HTML body to be processed.
-    $document = strtr($document, ["\n" => '', '!html' => $html]);
 
     // Instantiate the HTML5 parser, but without the HTML5 namespace being
     // added to the DOM document.
@@ -330,6 +321,10 @@ EOD;
         $html .= $html5->saveHTML($node);
       }
     }
+
+    // Normalize all newlines.
+    $html = str_replace(["\r\n", "\r"], "\n", $html);
+
     return $html;
   }
 
