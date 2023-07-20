@@ -29,7 +29,8 @@ class SimpleConfigValidationTest extends KernelTestBase {
     $config = $this->config('system.site');
     $this->assertFalse($config->isNew());
     $data = $config->get();
-    $this->assertNotEmpty($data['_core']['default_config_hash']);
+    $original_hash = $data['_core']['default_config_hash'];
+    $this->assertNotEmpty($original_hash);
 
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
     $typed_config_manager = $this->container->get('config.typed');
@@ -42,14 +43,25 @@ class SimpleConfigValidationTest extends KernelTestBase {
     $this->assertSame('_core.default_config_hash', $violations[0]->getPropertyPath());
     $this->assertSame('This value should not be null.', (string) $violations[0]->getMessage());
 
-    $data['_core']['default_config_hash'] = 'Ever seen an evil hash?';
+    // Config hashes must be 43 characters long.
+    $data['_core']['default_config_hash'] = $original_hash . '-long';
+    $violations = $typed_config_manager->createFromNameAndData($config->getName(), $data)
+      ->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame('_core.default_config_hash', $violations[0]->getPropertyPath());
+    $this->assertSame('This value should have exactly <em class="placeholder">43</em> characters.', (string) $violations[0]->getMessage());
+
+    // Config hashes can only contain certain characters, and spaces aren't one
+    // of them. If we replace the final character of the original hash with a
+    // space, we should get an error.
+    $data['_core']['default_config_hash'] = substr($original_hash, 0, -1) . ' ';
     $violations = $typed_config_manager->createFromNameAndData($config->getName(), $data)
       ->validate();
     $this->assertCount(1, $violations);
     $this->assertSame('_core.default_config_hash', $violations[0]->getPropertyPath());
     $this->assertSame('This value is not valid.', (string) $violations[0]->getMessage());
 
-    $data['_core']['default_config_hash'] = 'abc123';
+    $data['_core']['default_config_hash'] = $original_hash;
     $data['_core']['invalid_key'] = 'Hello';
     $violations = $typed_config_manager->createFromNameAndData($config->getName(), $data)
       ->validate();
