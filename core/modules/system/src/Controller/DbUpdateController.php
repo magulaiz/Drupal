@@ -641,7 +641,8 @@ class DbUpdateController extends ControllerBase {
     if ($post_updates) {
       // Now we rebuild all caches and after that execute the hook_post_update()
       // functions.
-      $batch_builder->addOperation('drupal_flush_all_caches', []);
+      $callable = \Drupal::service('callable_resolver')->getCallableFromDefinition('cache.chain_cache_clearer:clearCache');
+      $batch_builder->addOperation($callable, []);
       foreach ($post_updates as $function) {
         $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
