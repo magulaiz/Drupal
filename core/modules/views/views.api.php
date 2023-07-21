@@ -76,9 +76,9 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Analyze a view to provide warnings about its configuration.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
- * 
+ *
  * @param \Drupal\views\ViewExecutable $view
  *   The view being executed.
  *
@@ -98,7 +98,7 @@ function hook_views_analyze(\Drupal\views\ViewExecutable $view) {
 
 /**
  * Describe data tables and fields (or the equivalent) to Views.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * The table and fields are processed in Views using various plugins. See
@@ -443,7 +443,7 @@ function hook_views_data() {
 
 /**
  * Alter the table and field information from hook_views_data().
- * 
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * @param array $data
@@ -506,7 +506,7 @@ function hook_views_data_alter(array &$data) {
 
 /**
  * Override the default Views data for a Field API field.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * When collecting the views data, views_views_data() invokes this hook for each
@@ -546,7 +546,7 @@ function hook_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_
 
 /**
  * Alter the Views data for a single Field API field.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This is called on all modules even if there is no hook_field_views_data()
@@ -596,7 +596,7 @@ function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageCon
 
 /**
  * Alter the Views data on a per field basis.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * The Views module's implementation of hook_views_data_alter() invokes this for
@@ -655,7 +655,7 @@ function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\Fiel
 
 /**
  * Replace special strings in the query before it is executed.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * The idea is that certain dynamic values can be placed in a query when it is
@@ -683,7 +683,7 @@ function hook_views_query_substitutions(ViewExecutable $view) {
 
 /**
  * Replace special strings when processing a view with form elements.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * @return array
@@ -699,7 +699,7 @@ function hook_views_form_substitutions() {
 
 /**
  * Alter a view at the very beginning of Views processing.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * Output can be added to the view by setting $view->attachment_before
@@ -726,7 +726,7 @@ function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
 /**
  * Act on the view before the query is built, but after displays are attached.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * Output can be added to the view by setting $view->attachment_before
@@ -749,7 +749,7 @@ function hook_views_pre_build(ViewExecutable $view) {
 
 /**
  * Act on the view immediately after the query is built.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * Output can be added to the view by setting $view->attachment_before
@@ -776,7 +776,7 @@ function hook_views_post_build(ViewExecutable $view) {
 
 /**
  * Act on the view after the query is built and just before it is executed.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * Output can be added to the view by setting $view->attachment_before
@@ -801,7 +801,7 @@ function hook_views_pre_execute(ViewExecutable $view) {
 
 /**
  * Act on the view immediately after the query has been executed.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * At this point the query has been executed, but the preRender() phase has
@@ -827,7 +827,7 @@ function hook_views_post_execute(ViewExecutable $view) {
 
 /**
  * Act on the view immediately before rendering it.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * At this point the query has been executed, and the preRender() phase has
@@ -851,7 +851,7 @@ function hook_views_pre_render(ViewExecutable $view) {
 
 /**
  * Post-process any render data.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * The module or theme may add, modify or remove elements in $output after
@@ -893,7 +893,7 @@ function hook_views_post_render(ViewExecutable $view, array &$output, CachePlugi
 
 /**
  * Alter the query before it is executed.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * @param \Drupal\views\ViewExecutable $view
@@ -928,7 +928,7 @@ function hook_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
 
 /**
  * Alter the view preview information.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * The view preview information is optionally displayed when a view is
@@ -960,7 +960,7 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
 
 /**
  * Allow modules to respond to the invalidation of the Views cache.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook will fire whenever a view is enabled, disabled, created,
@@ -974,7 +974,7 @@ function hook_views_invalidate_cache() {
 
 /**
  * Modify the list of available views access plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -992,7 +992,7 @@ function hook_views_plugins_access_alter(array &$plugins) {
 
 /**
  * Modify the list of available views default argument plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1010,7 +1010,7 @@ function hook_views_plugins_argument_default_alter(array &$plugins) {
 
 /**
  * Modify the list of available views argument validation plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1028,7 +1028,7 @@ function hook_views_plugins_argument_validator_alter(array &$plugins) {
 
 /**
  * Modify the list of available views cache plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1046,7 +1046,7 @@ function hook_views_plugins_cache_alter(array &$plugins) {
 
 /**
  * Modify the list of available views display extender plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1064,7 +1064,7 @@ function hook_views_plugins_display_extenders_alter(array &$plugins) {
 
 /**
  * Modify the list of available views display plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1082,7 +1082,7 @@ function hook_views_plugins_display_alter(array &$plugins) {
 
 /**
  * Modify the list of available views exposed form plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1100,7 +1100,7 @@ function hook_views_plugins_exposed_form_alter(array &$plugins) {
 
 /**
  * Modify the list of available views join plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1118,7 +1118,7 @@ function hook_views_plugins_join_alter(array &$plugins) {
 
 /**
  * Modify the list of available views pager plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1136,7 +1136,7 @@ function hook_views_plugins_pager_alter(array &$plugins) {
 
 /**
  * Modify the list of available views query plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1154,7 +1154,7 @@ function hook_views_plugins_query_alter(array &$plugins) {
 
 /**
  * Modify the list of available views row plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1173,7 +1173,7 @@ function hook_views_plugins_row_alter(array &$plugins) {
 
 /**
  * Modify the list of available views style plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify plugin properties after they have been
@@ -1191,9 +1191,9 @@ function hook_views_plugins_style_alter(array &$plugins) {
 
 /**
  * Modify the list of available views wizard plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
- * 
+ *
  * This hook may be used to modify plugin properties after they have been
  * specified by other modules.
  *
@@ -1209,9 +1209,9 @@ function hook_views_plugins_wizard_alter(array &$plugins) {
 
 /**
  * Modify the list of available views area handler plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
- * 
+ *
  * This hook may be used to modify handler properties after they have been
  * specified by other modules.
  *
@@ -1227,7 +1227,7 @@ function hook_views_plugins_area_alter(array &$plugins) {
 
 /**
  * Modify the list of available views argument handler plugins.
- * 
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify handler properties after they have been
@@ -1245,9 +1245,9 @@ function hook_views_plugins_argument_alter(array &$plugins) {
 
 /**
  * Modify the list of available views field handler plugins.
- *  
+ *
  * Implementations of this hook should be placed in MODULE_NAME.views.inc.
- * 
+ *
  * This hook may be used to modify handler properties after they have been
  * specified by other modules.
  *
