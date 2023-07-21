@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Cache;
 
+/**
+ * Collects a chain of cache clearers to be called in priority order.
+ */
 class ChainCacheClearer implements CacheClearerInterface {
 
   /**

@@ -359,7 +359,9 @@ class DbUpdateController extends ControllerBase {
       ];
 
       // No updates to run, so caches won't get flushed later.  Clear them now.
-      drupal_flush_all_caches();
+      /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
+      $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+      $cacheClearer->clearCache();
     }
     else {
       $build['help'] = [
@@ -668,7 +670,9 @@ class DbUpdateController extends ControllerBase {
    */
   public static function batchFinished($success, $results, $operations) {
     // No updates to run, so caches won't get flushed later.  Clear them now.
-    drupal_flush_all_caches();
+    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
+    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    $cacheClearer->clearCache();
 
     $session = \Drupal::request()->getSession();
     $session->set('update_results', $results);
