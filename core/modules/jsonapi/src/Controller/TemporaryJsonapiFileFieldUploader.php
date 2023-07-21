@@ -21,6 +21,7 @@ use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Validation\FileValidatorInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -131,7 +132,18 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
    *   The file validator.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL) {
+  public function __construct(
+    LoggerInterface $logger,
+    FileSystemInterface $file_system,
+    #[Autowire('@file.mime_type.guesser')]
+    $mime_type_guesser,
+    Token $token,
+    #[Autowire('@lock')]
+    LockBackendInterface $lock,
+    ConfigFactoryInterface $config_factory,
+    EventDispatcherInterface $event_dispatcher = NULL,
+    FileValidatorInterface $file_validator = NULL
+  ) {
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
