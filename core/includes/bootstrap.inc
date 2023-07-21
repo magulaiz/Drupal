@@ -371,6 +371,17 @@ function _drupal_exception_handler($exception) {
 }
 
 /**
+ * Shutdown handler to avoid a white screen.
+ */
+function _drupal_shutdown_handler() {
+  $lasterror = error_get_last();
+  if (($lasterror['type'] == E_ERROR) || ($lasterror['type'] == E_PARSE)) {
+    // @TODO: Display this as the maintenance page?
+    print(t('Sorry, this page has encountered a fatal error. Please contact a site administrator and try again later.'));
+  }
+}
+
+/**
  * Displays any additional errors caught while handling an exception.
  *
  * @param \Exception|\Throwable $exception
