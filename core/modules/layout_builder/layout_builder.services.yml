@@ -39,6 +39,7 @@ services:
       - { name: cache.context }
   layout_builder.extra_fields.invalidator:
     class: Drupal\layout_builder\Cache\ExtraFieldBlockCacheTagInvalidator
+    arguments: ['@plugin.manager.block']
     public: false
     tags:
       - { name: cache_tags_invalidator }

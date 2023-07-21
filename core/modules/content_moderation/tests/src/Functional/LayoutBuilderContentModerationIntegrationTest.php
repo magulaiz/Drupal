@@ -64,9 +64,9 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
       'type' => 'bundle_with_section_field',
       'title' => 'Pre-workflow node',
       'body' => [
-            [
-              'value' => 'The first node body',
-            ],
+        [
+          'value' => 'The first node body',
+        ],
       ],
     ]);
     // View the node to ensure the new extra field blocks are not cached when
