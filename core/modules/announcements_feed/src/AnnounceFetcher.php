@@ -13,6 +13,7 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Service to fetch announcements from the external feed.
@@ -52,8 +53,10 @@ final class AnnounceFetcher {
   public function __construct(
     protected ClientInterface $httpClient,
     ConfigFactoryInterface $config,
+    #[Autowire('@keyvalue.expirable')]
     KeyValueExpirableFactoryInterface $temp_store,
     protected LoggerInterface $logger,
+    #[Autowire('%announcements_feed.feed_json_url%')]
     protected string $feedUrl
   ) {
     $this->config = $config->get('announcements_feed.settings');
