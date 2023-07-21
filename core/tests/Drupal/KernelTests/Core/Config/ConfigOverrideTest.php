@@ -70,7 +70,7 @@ class ConfigOverrideTest extends KernelTestBase {
     $this->assertSame($overrides['config_test.system']['baz'], $config->get('baz'));
     $this->assertSame($overrides['config_test.system']['404'], $config->get('404'));
     $this->assertSame($overrides['config_test.system']['colors'], $config->get('colors'));
-    $this->assertSame($overrides['config_test.system']['planets'], $config->get('planets'));
+    $this->assertSame([], $config->get('planets'));
 
     // Get the configuration object which does not have overrides.
     $config = \Drupal::configFactory()->getEditable('config_test.system');
