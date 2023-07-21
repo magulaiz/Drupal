@@ -27,7 +27,6 @@ class HtmlTest extends TestCase {
     parent::setUp();
 
     $property = new \ReflectionProperty('Drupal\Component\Utility\Html', 'seenIdsInit');
-    $property->setAccessible(TRUE);
     $property->setValue(NULL);
   }
 
@@ -90,7 +89,7 @@ class HtmlTest extends TestCase {
   /**
    * Tests that Html::getClass() cleans the class name properly.
    *
-   * @coversDefaultClass ::getClass
+   * @covers ::getClass
    */
   public function testHtmlClass() {
     // Verify Drupal coding standards are enforced.
