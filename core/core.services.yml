@@ -685,7 +685,7 @@ services:
   Drupal\Core\Extension\ThemeHandlerInterface: '@theme_handler'
   cache.theme_cache_clearer:
     class: Drupal\Core\Extension\ThemeCacheClearer
-    arguments: ['@extension.list.theme', '@theme_handler']
+    arguments: ['@extension.list.theme', '@theme_handler', '@theme.manager']
     tags:
       - { name: cache_clearer, priority: 50 }
   theme_installer:
