@@ -333,7 +333,7 @@ class NestedArray {
         }
         // Allow empty arrays to be set. Indicate this with a value of \EmptyIterator().
         elseif (isset($result[$key]) && is_array($result[$key]) && $value instanceof \EmptyIterator) {
-          $result[$key] = $value;
+          $result[$key] = [];
         }
         // Recurse when both values are arrays.
         elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
