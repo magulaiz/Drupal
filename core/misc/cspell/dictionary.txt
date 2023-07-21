@@ -207,6 +207,8 @@ classmaps
 classname
 classtype
 cldr
+clearer
+clearers
 clearfix
 cleartype
 clicksorter

@@ -466,8 +466,15 @@ function show(&$element) {
  *   the container if this is passed in. Sometimes drupal_flush_all_caches is
  *   used as a batch operation so $kernel will be an array, in this instance it
  *   will be treated as if it is NULL.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * \Drupal\Core\Cache\Rebuilder::rebuildAll() instead.
+ *
+ * @see https://www.drupal.org/node/3014783
+ * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  */
 function drupal_flush_all_caches($kernel = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
   // This is executed based on old/previously known information if $kernel is
   // not passed in, which is sufficient, since new extensions cannot have any
   // primed caches yet.
