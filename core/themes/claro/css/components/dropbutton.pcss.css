@@ -227,6 +227,7 @@
  */
 .dropbutton__item:first-of-type > * {
   display: inline-block;
+  height: var(--dropbutton-toggle-size);
   margin: 0;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
   cursor: pointer;
@@ -249,6 +250,7 @@
 
 /* Variants */
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type > * {
+  height: var(--dropbutton-small-toggle-size);
   padding-top: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
   padding-bottom: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-small-font-size);
@@ -256,6 +258,7 @@
 }
 
 .no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type > * {
+  height: var(--dropbutton-extrasmall-toggle-size);
   padding-top: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
   padding-bottom: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-extrasmall-font-size);
