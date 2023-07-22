@@ -151,8 +151,8 @@ class RandomTest extends TestCase {
    * @covers ::machineName
    */
   public function testRandomMachineNameNonUnique(): void {
-    // There are fewer than 100 possibilities if we were forcing uniqueness so
-    // exception would occur.
+    // There are fewer than 100 possibilities meaning if uniqueness was
+    // enforced, there would be an exception.
     $random = new Random();
     for ($i = 0; $i <= 100; $i++) {
       $random->machineName(1);
