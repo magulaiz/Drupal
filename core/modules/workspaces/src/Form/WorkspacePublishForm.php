@@ -55,8 +55,6 @@ class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInter
     if ($redirectDestination === NULL) {
       $this->redirectDestination = \Drupal::service('redirect.destination');
       @trigger_error('Calling' . __METHOD__ . '() without the $redirectDestination argument is deprecated in drupal:10.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3343983', E_USER_DEPRECATED);
-    } else {
-      $this->redirectDestination = $redirectDestination;
     }
   }
 
