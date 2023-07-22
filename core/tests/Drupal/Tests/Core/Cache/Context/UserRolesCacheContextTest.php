@@ -15,7 +15,7 @@ class UserRolesCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testCalculatedRole() {
+  public function testCalculatedRole(): void {
     $current_user = $this->prophesize(AccountInterface::class);
     // Ensure the ID is not 1. This cache context gives user 1 a special superuser value.
     $current_user->id()->willReturn(2);
