@@ -1416,6 +1416,9 @@ services:
   transliteration:
     class: Drupal\Core\Transliteration\PhpTransliteration
     arguments: [null, '@module_handler']
+  remove_diacritics:
+    class: Drupal\Core\Transliteration\RemoveDiacritics
+    arguments: ['@module_handler']
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
     arguments: ['@database', '@request_stack']

@@ -210,6 +210,9 @@ clicksorter
 clist
 closethick
 cnenzrgre
+cnfi
+cochez
+codepoints
 codesniffer
 colgroups
 colinodell
