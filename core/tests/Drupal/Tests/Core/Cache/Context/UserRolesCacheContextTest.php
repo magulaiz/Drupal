@@ -21,8 +21,8 @@ class UserRolesCacheContextTest extends UnitTestCase {
     $current_user->id()->willReturn(2);
     $current_user->getRoles()->willReturn(['role1', 'role2']);
     $cache_context = new UserRolesCacheContext($current_user->reveal());
-    $this->assertSame($cache_context->getContext('role1'), 'true');
-    $this->assertSame($cache_context->getContext('role-not-held'), 'false');
+    $this->assertSame('true', $cache_context->getContext('role1'));
+    $this->assertSame('false', $cache_context->getContext('role-not-held'));
   }
 
 }
