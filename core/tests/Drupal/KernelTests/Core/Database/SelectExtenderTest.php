@@ -166,7 +166,7 @@ class SelectExtenderTest extends KernelTestBase {
    * @group legacy
    */
   public function testExtendWithLocalClasses(string $expected, string $namespace, string $extend): void {
-    $this->expectDeprecation('Invoking Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\%A outside of a backend overrideable service is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Include the driver class in a backend overrideable service instead. See https://www.drupal.org/node/3217534');
+    $this->expectDeprecation('Invoking Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\%A outside of a backend overridable service is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Include the driver class in a backend overridable service instead. See https://www.drupal.org/node/3217534');
     $this->expectDeprecation('Calling %A::__construct without the %A argument is deprecated in drupal:9.4.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001');
 
     $additional_class_loader = new ClassLoader();
