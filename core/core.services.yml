@@ -1791,3 +1791,17 @@ services:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
   Drupal\Core\Pager\PagerParametersInterface: '@pager.parameters'
+  select_extender_factory.pager:
+    class: Drupal\Core\Database\Query\PagerSelectExtenderFactory
+    arguments: ['@pager.manager']
+    tags:
+      - { name: backend_overridable }
+  Drupal\Core\Database\Query\PagerSelectExtenderFactory: '@select_extender_factory.pager'
+  Drupal\Core\Database\Query\PagerSelectExtender: '@select_extender_factory.pager'
+  select_extender_factory.table_sort:
+    class: Drupal\Core\Database\Query\TableSortExtenderFactory
+    arguments: ['@request_stack']
+    tags:
+      - { name: backend_overridable }
+  Drupal\Core\Database\Query\TableSortExtenderFactory: '@select_extender_factory.table_sort'
+  Drupal\Core\Database\Query\TableSortExtender: '@select_extender_factory.table_sort'

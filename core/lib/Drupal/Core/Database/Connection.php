@@ -899,21 +899,7 @@ abstract class Connection {
    *   The name of the class that should be used for this driver.
    */
   public function getDriverClass($class) {
-    match($class) {
-      'Install\\Tasks',
-      'ExceptionHandler',
-      'Select',
-      'Insert',
-      'Merge',
-      'Upsert',
-      'Update',
-      'Delete',
-      'Truncate',
-      'Schema',
-      'Condition',
-      'Transaction' => @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED),
-      default => NULL,
-    };
+    @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     if (empty($this->driverClasses[$class])) {
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
       if (class_exists($driver_class)) {
@@ -1901,8 +1887,14 @@ abstract class Connection {
    *
    * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    *   If the container has not been initialized yet.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
+   *   dependency injection instead.
+   *
+   * @see https://www.drupal.org/node/3218001
    */
   public function getPagerManager(): PagerManagerInterface {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.4.0 and will be required in drupal:10.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
     return \Drupal::service('pager.manager');
   }
 

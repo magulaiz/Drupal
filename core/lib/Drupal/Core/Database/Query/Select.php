@@ -331,6 +331,13 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
+    // @todo remove the BC layer in Drupal 10.
+    // @see https://www.drupal.org/project/drupal/issues/3260284
+    if (\Drupal::hasService($extender_name)) {
+      return \Drupal::service($extender_name)->get($this, $this->connection);
+    }
+
+    // BC layer.
     $parts = explode('\\', $extender_name);
     $class = end($parts);
     $driver_class = $this->connection->getDriverClass($class);

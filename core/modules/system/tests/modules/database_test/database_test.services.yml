@@ -3,3 +3,7 @@ services:
   Drupal\database_test\EventSubscriber\DatabaseEventSubscriber:
     tags:
       - { name: event_subscriber }
+  select_extender_factory.test_extender:
+    class: Drupal\database_test\TestExtenderFactory
+    tags:
+      - { name: backend_overridable }
