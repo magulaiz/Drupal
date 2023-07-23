@@ -14,12 +14,14 @@ class PerformanceTest extends PerformanceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $profile = 'demo_umami';
+  protected $defaultTheme = 'stark';
 
   /**
-   * Just load the front page.
+   * Load the front page as a user with access to Tours.
    */
-  public function testFrontPage(): void {
+  public function testFrontPageTour(): void {
+    $admin_user = $this->drupalCreateUser(['access tour']);
+    $this->drupalLogin($admin_user);
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $this->stylesheetCount);
