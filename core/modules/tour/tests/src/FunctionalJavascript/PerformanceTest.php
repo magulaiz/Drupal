@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\demo_umami\FunctionalJavascript;
+namespace Drupal\Tests\tour\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
@@ -14,7 +14,12 @@ class PerformanceTest extends PerformanceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['tour'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $profile = 'demo_umami';
 
   /**
    * Load the front page as a user with access to Tours.
