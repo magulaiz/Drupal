@@ -325,21 +325,7 @@ class ConnectionTest extends UnitTestCase {
 
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
-    match($class) {
-      'Install\\Tasks',
-      'ExceptionHandler',
-      'Select',
-      'Insert',
-      'Merge',
-      'Upsert',
-      'Update',
-      'Delete',
-      'Truncate',
-      'Schema',
-      'Condition',
-      'Transaction' => $this->expectDeprecation('Calling Drupal\\Core\\Database\\Connection::getDriverClass() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534'),
-      default => NULL,
-    };
+    $this->expectDeprecation('Calling Drupal\\Core\\Database\\Connection::getDriverClass() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534');
     $this->assertEquals($expected, $connection->getDriverClass($class));
   }
 

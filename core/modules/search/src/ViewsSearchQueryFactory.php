@@ -39,6 +39,13 @@ class ViewsSearchQueryFactory {
    *   A query extender for views search queries.
    */
   public function get(SelectInterface $query, Connection $connection): ViewsSearchQuery {
+    // @todo remove this BC layer in drupal:11.0.0.
+    $class = $connection->getConnectionOptions()['namespace'] . '\\ViewsSearchQuery';
+    if (class_exists($class)) {
+      @trigger_error("Invoking {$class} outside of a backend overrideable service is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Include the driver class in a backend overrideable service instead. See https://www.drupal.org/node/3217534", E_USER_DEPRECATED);
+      return new $class($query, $connection);
+    }
+    // @todo end
     return new ViewsSearchQuery($query, $connection, $this->configFactory, $this->searchTextProcessor);
   }
 

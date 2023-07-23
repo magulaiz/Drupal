@@ -223,8 +223,9 @@ class SelectExtender implements SelectInterface {
     // instead of creating list of objects that extend each other.
     // @todo remove the BC layer in Drupal 10.
     // @see https://www.drupal.org/project/drupal/issues/3260284
-    if (\Drupal::hasService($extender_name)) {
-      return \Drupal::service($extender_name)->get($this, $this->connection);
+    $serviceName = ltrim($extender_name, '\\');
+    if (\Drupal::hasService($serviceName)) {
+      return \Drupal::service($serviceName)->get($this, $this->connection);
     }
 
     // BC layer.

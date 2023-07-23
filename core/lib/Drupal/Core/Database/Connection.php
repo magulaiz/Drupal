@@ -897,6 +897,11 @@ abstract class Connection {
    *
    * @return string
    *   The name of the class that should be used for this driver.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   standard autoloading in the methods that return database operations.
+   *
+   * @see https://www.drupal.org/node/3217534
    */
   public function getDriverClass($class) {
     @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
