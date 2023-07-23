@@ -13,10 +13,8 @@ class TableSortExtender extends SelectExtender {
 
   /**
    * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $requestStack;
+  protected RequestStack $requestStack;
 
   /**
    * Constructs a TableSortExtender object.

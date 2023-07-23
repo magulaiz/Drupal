@@ -199,7 +199,7 @@ class SearchQuery extends SelectExtender {
   protected $multiply = [];
 
   /**
-   * Constructs a TableSortExtender object.
+   * Constructs a SearchQuery object.
    *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   Select query object.
