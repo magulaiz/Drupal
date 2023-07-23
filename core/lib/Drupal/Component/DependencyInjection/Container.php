@@ -129,6 +129,8 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function get($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): ?object {
+    $t0 = microtime(TRUE) * 1000;
+    $dts = [];
     if ($this->hasParameter('_deprecated_service_list')) {
       if ($deprecation = $this->getParameter('_deprecated_service_list')[$id] ?? '') {
         @trigger_error($deprecation, E_USER_DEPRECATED);
@@ -164,17 +166,23 @@ class Container implements ContainerInterface, ResetInterface {
       return NULL;
     }
 
+    $t0 += ($dts['init'] = microtime(TRUE) * 1000 - $t0);
+
     // Definition is a keyed array, so [0] is only defined when it is a
     // serialized string.
     if (isset($definition[0])) {
       $definition = unserialize($definition);
     }
 
+    $t0 += ($dts['unserialize'] = microtime(TRUE) * 1000 - $t0);
+
     // Now create the service.
     $this->loading[$id] = TRUE;
 
     try {
       $service = $this->createService($definition, $id);
+
+      $t0 += ($dts['createService'] = microtime(TRUE) * 1000 - $t0);
     }
     catch (\Exception $e) {
       unset($this->loading[$id]);
@@ -188,6 +196,13 @@ class Container implements ContainerInterface, ResetInterface {
     }
 
     unset($this->loading[$id]);
+
+    if ($id === 'event_dispatcher') {
+      $dts['total'] = array_sum($dts);
+      print __METHOD__ . '()' . "\n";
+      print_r($dts);
+      print "\n";
+    }
 
     return $service;
   }
@@ -225,6 +240,8 @@ class Container implements ContainerInterface, ResetInterface {
    *   and cannot be instantiated.
    */
   protected function createService(array $definition, $id) {
+    $t0 = microtime(TRUE) * 1000;
+    $dts = [];
     if (isset($definition['synthetic']) && $definition['synthetic'] === TRUE) {
       throw new RuntimeException(sprintf('You have requested a synthetic service ("%s"). The service container does not know how to construct this service. The service will need to be set before it is first used.', $id));
     }
@@ -237,6 +254,7 @@ class Container implements ContainerInterface, ResetInterface {
         $arguments = $this->resolveServicesAndParameters($arguments);
       }
     }
+    $t0 += ($dts['arguments'] = microtime(TRUE) * 1000 - $t0);
 
     if (isset($definition['file'])) {
       $file = $this->frozen ? $definition['file'] : current($this->resolveServicesAndParameters([$definition['file']]));
@@ -256,12 +274,19 @@ class Container implements ContainerInterface, ResetInterface {
     }
     else {
       $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
+      $t0 += ($dts['class'] = microtime(TRUE) * 1000 - $t0);
+      if ($id === 'event_dispatcher') {
+        class_exists($class);
+        $t0 += ($dts['class - exists'] = microtime(TRUE) * 1000 - $t0);
+      }
       $service = new $class(...$arguments);
+      $t0 += ($dts['class - new'] = microtime(TRUE) * 1000 - $t0);
     }
 
     if (!isset($definition['shared']) || $definition['shared'] !== FALSE) {
       $this->services[$id] = $service;
     }
+    $t0 += ($dts['shared'] = microtime(TRUE) * 1000 - $t0);
 
     if (isset($definition['calls'])) {
       foreach ($definition['calls'] as $call) {
@@ -276,6 +301,7 @@ class Container implements ContainerInterface, ResetInterface {
         call_user_func_array([$service, $method], $arguments);
       }
     }
+    $t0 += ($dts['calls'] = microtime(TRUE) * 1000 - $t0);
 
     if (isset($definition['properties'])) {
       if ($definition['properties'] instanceof \stdClass) {
@@ -297,6 +323,15 @@ class Container implements ContainerInterface, ResetInterface {
       }
 
       call_user_func($callable, $service);
+    }
+    $t0 += ($dts['end'] = microtime(TRUE) * 1000 - $t0);
+    if ($id === 'event_dispatcher') {
+      $dts['total'] = array_sum($dts);
+      print __METHOD__ . '()' . "\n";
+      print_r($dts);
+      print "\n";
+      print count($definition['calls'] ?? []) . ' calls';
+      print "\n";
     }
 
     return $service;
