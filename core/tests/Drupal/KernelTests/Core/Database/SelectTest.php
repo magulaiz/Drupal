@@ -15,6 +15,11 @@ use Drupal\Core\Database\Query\SelectExtender;
 class SelectTest extends DatabaseTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['database_test'];
+
+  /**
    * Tests rudimentary SELECT statements.
    */
   public function testSimpleSelect() {

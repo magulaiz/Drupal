@@ -17,6 +17,11 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
 class SelectExtenderTest extends KernelTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['database_test', 'search'];
+
+  /**
    * Data provider for testExtend().
    *
    * @return array

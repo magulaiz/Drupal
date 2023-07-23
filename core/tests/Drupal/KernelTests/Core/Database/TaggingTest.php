@@ -15,6 +15,11 @@ use Drupal\Core\Database\Query\SelectExtender;
 class TaggingTest extends DatabaseTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['database_test'];
+
+  /**
    * Confirms that a query has a tag added to it.
    */
   public function testHasTag() {
