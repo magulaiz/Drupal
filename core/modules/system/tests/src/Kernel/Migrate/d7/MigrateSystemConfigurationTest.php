@@ -107,6 +107,9 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
         '404' => '/node',
         'front' => '/node',
       ],
+      'off_canvas' => [
+        'width' => 300,
+      ],
       'admin_compact_mode' => TRUE,
       'weight_select_max' => 100,
       'default_langcode' => 'en',

@@ -106,6 +106,9 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
         '404' => '/page-not-found',
         'front' => '/node',
       ],
+      'off_canvas' => [
+        'width' => 300,
+      ],
       'admin_compact_mode' => FALSE,
       'weight_select_max' => 100,
       'default_langcode' => 'en',
