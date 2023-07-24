@@ -91,7 +91,6 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     sort($items);
     $this->assertCount(6, $items);
 
-    // The PermissionsListFilterSubscriber
     $this->assertEquals([
       'edit-anonymous-a',
       'edit-anonymous-b',

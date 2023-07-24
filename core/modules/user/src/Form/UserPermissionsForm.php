@@ -117,7 +117,7 @@ class UserPermissionsForm extends FormBase {
   protected function permissionsByProvider(): array {
     $permissions = $this->permissionHandler->getFilteredPermissions();
     $event = new PermissionsListFilterEvent($permissions);
-    $this->eventDispatcher->dispatch($event, UserEvents::PERMISSIONS_LIST_FILTER);
+    $this->eventDispatcher->dispatch($event);
     $permissions = $event->getPermissions();
     $permissions_by_provider = [];
     foreach ($permissions as $permission_name => $permission) {

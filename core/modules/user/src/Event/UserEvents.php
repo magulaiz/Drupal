@@ -40,15 +40,4 @@ final class UserEvents {
    */
   const FLOOD_BLOCKED_IP = 'user.flood_blocked_ip';
 
-  /**
-   * The event fired when retrieving a list of permissions for the UI.
-   *
-   * @Event
-   *
-   * @see: \Drupal\user\Form\UserPermissionsForm::permissionsByProvider
-   *
-   * @var string
-   */
-  const PERMISSIONS_LIST_FILTER = 'user.permissions_list_filter';
-
 }

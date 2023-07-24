@@ -15,7 +15,7 @@ class PermissionsListFilterSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    return [UserEvents::PERMISSIONS_LIST_FILTER => 'processPermissions'];
+    return [PermissionsListFilterEvent::class => 'processPermissions'];
   }
 
   /**

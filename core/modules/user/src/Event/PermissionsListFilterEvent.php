@@ -24,17 +24,17 @@ class PermissionsListFilterEvent extends Event {
   }
 
   /**
-   * Sets the permissions property to a new value.
+   * Updates permissions.
    *
    * @param array $permissions
-   *   The value the permissions property will be updated to.
+   *   The updated permissions.
    */
   public function setPermissions($permissions) {
     $this->permissions = $permissions;
   }
 
   /**
-   * Gets the permission property value.
+   * Gets the permissions.
    *
    * @return array
    *   The value of the permission property.
