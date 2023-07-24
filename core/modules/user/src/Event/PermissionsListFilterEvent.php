@@ -34,10 +34,10 @@ class PermissionsListFilterEvent extends Event {
   }
 
   /**
-   * Gets the permissions.
+   * Gets the available permissions.
    *
    * @return array
-   *   The value of the permission property.
+   *   The available permissions.
    */
   public function getPermissions() {
     return $this->permissions;
