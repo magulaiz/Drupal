@@ -466,8 +466,10 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $expected_labels = [
       'My Cool Section',
+      'Administration links for My Cool Section',
       'Content region in My Cool Section',
       'Section 2',
+      'Administration links for Section 2',
       'Content region in Section 2',
     ];
     $labels = [];
