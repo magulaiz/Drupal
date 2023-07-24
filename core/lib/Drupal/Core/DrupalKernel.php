@@ -1333,12 +1333,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->setParameter('site.path', $this->getSitePath());
 
     $container->compile();
-
-    $t0 = microtime(TRUE);
-    $container->get('event_dispatcher');
-    $t1 = microtime(TRUE);
-    print "\n duration to get event_dispatcher in DrupalKernel: " . (($t1 - $t0) * 1000) . "\n";
-
     return $container;
   }
 
