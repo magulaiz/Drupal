@@ -547,8 +547,6 @@ function hook_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_
 /**
  * Alter the Views data for a single Field API field.
  *
- * Implementations of this hook should be placed in MODULE_NAME.views.inc.
- *
  * This is called on all modules even if there is no hook_field_views_data()
  * implementation for the field, and therefore may be used to alter the
  * default data that views_field_default_views_data() supplies for the
@@ -596,8 +594,6 @@ function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageCon
 
 /**
  * Alter the Views data on a per field basis.
- *
- * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * The Views module's implementation of hook_views_data_alter() invokes this for
  * each field storage, in the module that defines the field type. It is not
@@ -655,8 +651,6 @@ function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\Fiel
 
 /**
  * Replace special strings in the query before it is executed.
- *
- * Implementations of this hook should be placed in MODULE_NAME.views_execution.inc.
  *
  * The idea is that certain dynamic values can be placed in a query when it is
  * built, and substituted at run-time, allowing the query to be cached and
@@ -1264,6 +1258,8 @@ function hook_views_plugins_field_alter(array &$plugins) {
 /**
  * Modify the list of available views filter handler plugins.
  *
+ * Implementations of this hook should be placed in MODULE_NAME.views.inc.
+ *
  * This hook may be used to modify handler properties after they have been
  * specified by other modules.
  *
@@ -1280,6 +1276,8 @@ function hook_views_plugins_filter_alter(array &$plugins) {
 /**
  * Modify the list of available views relationship handler plugins.
  *
+ * Implementations of this hook should be placed in MODULE_NAME.views.inc.
+ *
  * This hook may be used to modify handler properties after they have been
  * specified by other modules.
  *
@@ -1295,6 +1293,8 @@ function hook_views_plugins_relationship_alter(array &$plugins) {
 
 /**
  * Modify the list of available views sort handler plugins.
+ *
+ * Implementations of this hook should be placed in MODULE_NAME.views.inc.
  *
  * This hook may be used to modify handler properties after they have been
  * specified by other modules.
