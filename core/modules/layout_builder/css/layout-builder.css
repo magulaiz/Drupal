@@ -129,83 +129,6 @@
   line-height: 1.4;
 }
 
-.layout-builder--content-preview-disabled .layout-builder-block {
-  margin: 0;
-  border-bottom: 2px dashed #979797;
-}
-
-#drupal-off-canvas .layout-selection li {
-  display: block;
-  padding-bottom: 1em;
-}
-
-#drupal-off-canvas .layout-selection li a {
-  display: block;
-  padding-top: 0.55em;
-}
-
-.layout_builder__region-mapping__toggle-wrapper {
-  text-align: right;
-}
-[dir="rtl"] .layout_builder__region-mapping__toggle-wrapper {
-  text-align: left;
-}
-
-.layout-builder__region-mapping {
-  margin-top: 10px;
-}
-
-.layout-builder__region-mapping__region {
-  margin-bottom: 1.5em;
-  padding-bottom: 1.5em;
-  text-align: center;
-  outline: 2px dashed #979797;
-}
-
-.layout-builder__region-mapping__region-label {
-  margin-bottom: 0.5em;
-}
-
-.layout-builder__region-mapping__block {
-  margin: 0.5em;
-  padding: 0.5em;
-  cursor: move;
-  border: 2px solid #333;
-  font-size: 1.5em;
-}
-
-/* END */
-
-#drupal-off-canvas .inline-block-create-button {
-  display: block;
-  padding: 24px;
-  padding-left: 44px;
-  color: #eee;
-  border-bottom: 1px solid #333;
-  background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
-  font-size: 16px;
-}
-
-#drupal-off-canvas .inline-block-create-button,
-#drupal-off-canvas .inline-block-list__item {
-  margin: 0 -20px;
-  background-color: #444;
-}
-
-#drupal-off-canvas .inline-block-create-button:hover,
-#drupal-off-canvas .inline-block-list__item:hover {
-  background-color: #333;
-}
-
-#drupal-off-canvas .inline-block-list {
-  margin-bottom: 15px;
-}
-
-#drupal-off-canvas .inline-block-list__item {
-  display: block;
-  padding: 15px 0 15px 25px;
-}
-
 .layout-builder__add-section.is-layout-builder-highlighted {
   margin-bottom: calc(1.5em - 0.5rem);
   outline: none;
@@ -254,4 +177,35 @@
 
 .layout-builder-components-table .tabledrag-changed-warning {
   display: none !important;
+}
+
+.layout_builder__region-mapping__toggle-wrapper {
+  text-align: right;
+}
+
+[dir="rtl"] .layout_builder__region-mapping__toggle-wrapper {
+  text-align: left;
+}
+
+.layout-builder__region-mapping {
+  margin-top: 0.625rem;
+}
+
+.layout-builder__region-mapping__region {
+  margin-bottom: 1.5em;
+  padding-bottom: 1.5em;
+  text-align: center;
+  outline: 2px dashed #979797;
+}
+
+.layout-builder__region-mapping__region-label {
+  margin-bottom: 0.5em;
+}
+
+.layout-builder__region-mapping__block {
+  margin: 0.5em;
+  padding: 0.5em;
+  cursor: move;
+  border: 2px solid #333;
+  font-size: 1.5em;
 }
