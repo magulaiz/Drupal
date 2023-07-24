@@ -2,6 +2,8 @@
 
 namespace Drupal\views;
 
+use \Drupal\views\Plugin\views\display\Page;
+
 /**
  * Static service container wrapper for views.
  */
@@ -532,7 +534,7 @@ class Views {
     // links to the overall page array. This allows them to be rendered directly
     // next to the page title.
     \Drupal::moduleHandler()->load('views');
-    if ($view = views_get_page_view()) {
+    if ($view = Page::getPageRenderArray()) {
       views_add_contextual_links($element, 'page', $view, $view->current_display);
     }
     return $element;

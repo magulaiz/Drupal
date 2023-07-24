@@ -1,7 +1,6 @@
 <?php
 
 namespace Drupal\module_test\Controller;
-use Drupal\module_autoload_test\SomeClass;
 
 use Drupal\module_autoload_test\SomeClass;
 
