@@ -42,8 +42,8 @@ layout_builder.configure_section:
 layout_builder.change_section_layout:
   path: '/layout_builder/change_layout/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:
-   _controller: '\Drupal\layout_builder\Controller\ChangeSectionLayoutController::build'
-   _title: 'Change layout for this section'
+    _controller: '\Drupal\layout_builder\Controller\ChangeSectionLayoutController::build'
+    _title: 'Change layout for this section'
   requirements:
     _layout_builder_access: 'view'
   options:
