@@ -24,13 +24,13 @@ class PermissionsListFilterEvent extends Event {
   }
 
   /**
-   * Updates permissions.
+   * Filters the permissions with a provided callback function.
    *
-   * @param array $permissions
-   *   The updated permissions.
+   * @param callable $callback
+   *   The filter callback.
    */
-  public function setPermissions($permissions) {
-    $this->permissions = $permissions;
+  public function filter(callable $callback): void {
+    $this->permissions = array_filter($this->permissions, $callback, ARRAY_FILTER_USE_KEY);
   }
 
   /**
