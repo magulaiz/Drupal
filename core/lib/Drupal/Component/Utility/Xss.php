@@ -46,7 +46,7 @@ class Xss {
    *   The string with raw HTML in it. It will be stripped of everything that
    *   can cause an XSS attack.
    * @param string[]|null $allowed_html_tags
-   *   An array of allowed html tags.
+   *   An array of allowed HTML tags.
    *
    * @return string
    *   An XSS safe version of $string, or an empty string if $string is not
