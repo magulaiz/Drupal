@@ -33,6 +33,13 @@ class MenuAccessTest extends BrowserTestBase {
   protected $testUser;
 
   /**
+   * A test role with permission to access administration pages.
+   *
+   * @var \Drupal\user\RoleInterface
+   */
+  protected $testRole;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
