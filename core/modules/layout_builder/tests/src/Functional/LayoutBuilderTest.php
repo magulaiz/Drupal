@@ -1259,8 +1259,38 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->clickLink('Layout Builder Test Plugin');
     $page->pressButton('Add section');
     // See \Drupal\layout_builder_test\Plugin\Layout\LayoutBuilderTestPlugin::build().
-    $assert_session->elementExists('css', '.go-birds');
+    $assert_session->elementExists('css', 'div[aria-label="Section 1"] .go-birds');
   }
+
+  /**
+   * Tests that editing sections keep custom attributes.
+   */
+  public function testEditingSectionWithCustomAttributes() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
+    // See \Drupal\layout_builder_test\Plugin\Layout\LayoutBuilderTestPlugin::build().
+    $assert_session->elementExists('css', 'div[aria-label="Section 1"] .go-birds');
+
+    $page->clickLink('Change layout for Section 1');
+    $page->clickLink('Two column');
+    $page->pressButton('Update');
+    // TODO: Should we notify user?
+    $assert_session->elementExists('css', 'div[aria-label="Section 1"] .layout--twocol-section');
+    $assert_session->elementNotExists('css', 'div[aria-label="Section 1"] .go-birds');
+  }
+
 
   /**
    * Tests the usage of placeholders for empty blocks.
