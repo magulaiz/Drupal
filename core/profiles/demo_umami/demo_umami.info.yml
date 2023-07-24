@@ -45,7 +45,6 @@ install:
   - locale
   - config_translation
   - content_translation
-  - sdc
 themes:
   - claro
   - umami
