@@ -337,6 +337,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
         '#attributes' => [
           'class' => ['layout-builder__section_links'],
           'role' => 'group',
+          'aria-label' => $this->t('Administration links for @section', ['@section' => $section_label]),
         ],
         'remove' => [
           '#type' => 'link',
