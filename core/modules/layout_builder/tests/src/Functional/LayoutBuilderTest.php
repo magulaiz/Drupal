@@ -1291,7 +1291,6 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementNotExists('css', 'div[aria-label="Section 1"] .go-birds');
   }
 
-
   /**
    * Tests the usage of placeholders for empty blocks.
    *
