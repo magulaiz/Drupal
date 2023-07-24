@@ -24,7 +24,7 @@ class PermissionsListFilterSubscriber implements EventSubscriberInterface {
    *   The permissions filter list event.
    */
   public function filterPermissions(PermissionsListFilterEvent $event) {
-    $event->filter(fn(array$permission_data, string $permission_name) => in_array($permission_name, ['a', 'b', 'c']));
+    $event->filter(fn(array $permission_data, string $permission_name) => in_array($permission_name, ['a', 'b', 'c']));
   }
 
 }
