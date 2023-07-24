@@ -23,7 +23,7 @@ class PermissionsListFilterSubscriber implements EventSubscriberInterface {
    * @param \Drupal\user\Event\PermissionsListFilterEvent $event
    *   The permissions filter list event.
    */
-  public function filterPermissions(PermissionsListFilterEvent $event) {
+  public function filterPermissions(PermissionsListFilterEvent $event):void {
     $event->filter(fn(array $permission_data, string $permission_name) => in_array($permission_name, ['a', 'b', 'c']));
   }
 
