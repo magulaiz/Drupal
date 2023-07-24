@@ -73,6 +73,7 @@ class ImportForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $languages = $this->languageManager->getLanguages();
+    \Drupal::moduleHandler()->load('locale');
 
     // Initialize a language list to the ones available, including English if we
     // are to translate Drupal to English as well.

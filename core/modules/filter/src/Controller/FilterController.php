@@ -23,6 +23,7 @@ class FilterController {
    */
   public function filterTips(FilterFormatInterface $filter_format = NULL) {
     $tips = $filter_format ? $filter_format->id() : -1;
+    \Drupal::moduleHandler()->load('filter');
 
     $build = [
       '#theme' => 'filter_tips',

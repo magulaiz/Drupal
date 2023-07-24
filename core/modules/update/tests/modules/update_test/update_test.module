@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Extension\Extension;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Implements hook_system_info_alter().

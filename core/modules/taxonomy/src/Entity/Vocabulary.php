@@ -63,6 +63,21 @@ use Drupal\taxonomy\VocabularyInterface;
 class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
 
   /**
+   * Denotes that no term in the vocabulary has a parent.
+   */
+  const HIERARCHY_DISABLED = 0;
+
+  /**
+   * Denotes that one or more terms in the vocabulary has a single parent.
+   */
+  const HIERARCHY_SINGLE = 1;
+
+  /**
+   * Denotes that one or more terms in the vocabulary have multiple parents.
+   */
+  const HIERARCHY_MULTIPLE = 2;
+
+  /**
    * The taxonomy vocabulary ID.
    *
    * @var string

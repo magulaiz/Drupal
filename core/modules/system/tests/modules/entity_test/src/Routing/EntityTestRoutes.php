@@ -16,6 +16,7 @@ class EntityTestRoutes {
    *   An array of route objects.
    */
   public function routes() {
+    \Drupal::moduleHandler()->load('entity_test');
     $types = entity_test_entity_types(ENTITY_TEST_TYPES_ROUTING);
 
     $routes = [];

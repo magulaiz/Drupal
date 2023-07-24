@@ -31,6 +31,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testLargePercentage() {
+    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
 
     batch_set(_batch_test_batch_5());
@@ -61,6 +62,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testNoForm() {
+    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
 
     batch_set(_batch_test_batch_1());
@@ -114,6 +116,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testThemeBatch() {
+    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
     $batch = [
       'operations' => [

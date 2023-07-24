@@ -88,27 +88,10 @@ class MenuTestController extends ControllerBase {
   }
 
   /**
-   * Page callback: Tests the theme negotiation functionality.
-   *
-   * @param bool $inherited
-   *   TRUE when the requested page is intended to inherit
-   *   the theme of its parent.
-   *
-   * @return string
-   *   A string describing the requested custom theme and actual
-   *   theme being used
-   *   for the current page request.
+   * @todo Remove menu_test_theme_page_callback().
    */
   public function themePage($inherited) {
-    $theme_key = $this->themeManager->getActiveTheme()->getName();
-    // Now we check what the theme negotiator service returns.
-    $active_theme = $this->themeNegotiator
-      ->determineActiveTheme($this->routeMatch);
-    $output = "Active theme: $active_theme. Actual theme: $theme_key.";
-    if ($inherited) {
-      $output .= ' Theme negotiation inheritance is being tested.';
-    }
-    return ['#markup' => $output];
+    return menu_test_theme_page_callback($inherited);
   }
 
   /**

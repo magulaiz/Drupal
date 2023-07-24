@@ -360,6 +360,7 @@ class UserController extends ControllerBase {
    *   A redirection to home page.
    */
   public function logout() {
+    \Drupal::moduleHandler()->load('user');
     if ($this->currentUser()->isAuthenticated()) {
       user_logout();
     }

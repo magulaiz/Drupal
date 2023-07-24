@@ -160,6 +160,7 @@ abstract class TranslateFormBase extends FormBase {
     $this->languageManager->reset();
     $languages = $this->languageManager->getLanguages();
     $language_options = [];
+    \Drupal::moduleHandler()->load('locale');
     foreach ($languages as $langcode => $language) {
       if (locale_is_translatable($langcode)) {
         $language_options[$langcode] = $language->getName();
