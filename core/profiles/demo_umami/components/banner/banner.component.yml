@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+
+# The human readable name.
+name: Banner
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    background_image:
+      type: string
+      title: background image
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: attributes
+    title_attributes:
+      type: Drupal\Core\Template\Attribute
+      title: title attributes
+    label:
+      type: string
+      title: label
+    title_prefix:
+      type: array
+      title: title prefix
+    title_suffix:
+      type: array
+      title: title suffix
+
+# Slots always hold arbitrary markup. We know that beforehand, so no need for
+# a schema for slots.
+slots:
+  content:
+    field_media_image:
+      type: string
+      title: field media image

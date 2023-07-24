@@ -37,18 +37,15 @@
 
 {% set background_image = file_url(content.field_media_image[0]['#media'].field_media_image.entity.uri.value) %}
 
-<div{{ attributes.addClass(classes) }} style="background-image: url({{ background_image }})">
-  <div class="block-inner">
-    {{ title_prefix }}
-    {% if label %}
-      <h2{{ title_attributes }}>{{ label }}</h2>
-    {% endif %}
-    {{ title_suffix }}
-    {% block content %}
-      {{ content.field_media_image }}
-      <div class="summary">
-        {{ content|without('field_media_image') }}
-      </div>
-    {% endblock %}
-  </div>
-</div>
+{% embed 'demo_umami:banner' with {
+  background_image: background_image,
+  attributes: attributes,
+  title_attributes: title_attributes,
+  content: content,
+  field_media_image: field_media_image,
+  classes: classes,
+  title_prefix: title_prefix,
+  title_suffix: title_suffix,
+  label: label,
+} %}
+{% endembed %}
