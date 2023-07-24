@@ -58,7 +58,7 @@
   background-color: #ffd;
 }
 
-.layout-builder__section .layout-builder__section_links a.layout-builder__link:not(:first-child):not(:last-child)::after {
+.layout-builder__section .layout-builder__section_links a.layout-builder__link:not(:first-child, :last-child)::after {
   content: " | ";
 }
 
