@@ -30,7 +30,7 @@ class PermissionsListFilterEvent extends Event {
    *   The filter callback.
    */
   public function filter(callable $callback): void {
-    $this->permissions = array_filter($this->permissions, $callback, ARRAY_FILTER_USE_KEY);
+    $this->permissions = array_filter($this->permissions, $callback, ARRAY_FILTER_USE_BOTH);
   }
 
   /**
