@@ -2,7 +2,6 @@
 
 namespace Drupal\user_filtered_permissions_test\EventSubscriber;
 
-use Drupal\user\Event\UserEvents;
 use Drupal\user\Event\PermissionsListFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
