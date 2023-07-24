@@ -1121,6 +1121,11 @@ parameters:
 			path: modules/file/file.install
 
 		-
+			message: "#^Variable \\$file_upload in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: modules/file/src/Element/ManagedFile.php
+
+		-
 			message: "#^Variable \\$message might not be defined\\.$#"
 			count: 1
 			path: modules/file/file.module

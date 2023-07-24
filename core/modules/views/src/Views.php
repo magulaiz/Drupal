@@ -2,7 +2,7 @@
 
 namespace Drupal\views;
 
-use \Drupal\views\Plugin\views\display\Page;
+use Drupal\views\Plugin\views\display\Page;
 
 /**
  * Static service container wrapper for views.
