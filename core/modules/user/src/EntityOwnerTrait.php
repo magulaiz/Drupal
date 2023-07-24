@@ -83,9 +83,9 @@ trait EntityOwnerTrait {
    * @return mixed
    *   A default value for the owner field.
    *
-   * @deprecated in drupal:10.2.0 and is removed from 11.0.0. Use service method
-   *   notation 'current_user:id' as a default value callback to get the current
-   *   user ID as a default value.
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use service
+   *   method notation 'current_user:id' as a default value callback to get the
+   *   current user ID as a default value.
    *
    * @see https://www.drupal.org/node/3374738
    */
