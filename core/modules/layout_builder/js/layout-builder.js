@@ -188,7 +188,7 @@
       const regionMapperSelector = '.js-layout-builder-region-mapping';
       Array.prototype.forEach.call(
         context.querySelectorAll(regionMapperSelector),
-        function (regionMapper) {
+        (regionMapper) => {
           const $valuesElement = $(
             '[data-drupal-selector="edit-region-mapping-values"]',
             regionMapper,
@@ -216,7 +216,7 @@
           const regionSelector = '.js-layout-builder-region-mapping-region';
           Array.prototype.forEach.call(
             regionMapper.querySelectorAll(regionSelector),
-            function (region) {
+            (region) => {
               Sortable.create(region, {
                 draggable: '.js-layout-builder-region-mapping-block',
                 ghostClass: 'ui-state-drop',
