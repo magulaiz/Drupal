@@ -23,6 +23,7 @@ class LanguageConfigurationElementTest extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    \Drupal::moduleHandler()->load('language');
     $form['langcode'] = [
       '#title' => t('Language select'),
       '#type' => 'language_select',

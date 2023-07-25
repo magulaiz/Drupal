@@ -19,6 +19,7 @@ use Drupal\Core\Logger\RfcLogLevel;
  *   - options: Array of options for the select list for the filter.
  */
 function dblog_filters() {
+  \Drupal::moduleHandler()->load('dblog');
   $filters = [];
 
   foreach (_dblog_get_message_types() as $type) {
