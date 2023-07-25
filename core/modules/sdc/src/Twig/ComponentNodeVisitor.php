@@ -45,45 +45,51 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
     if (!$node instanceof ModuleNode) {
       return $node;
     }
+
     $component = $this->getComponent($node);
     if (!$component) {
       return $node;
     }
+
     $line = $node->getTemplateLine();
-    $print_nodes = [];
     $component_id = $component->getPluginId();
     $emoji = static::emojiForString($component_id);
+
+    $start_nodes = iterator_to_array($node->getNode('display_start'));
     if ($env->isDebug()) {
-      $print_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component start: %s -->', $emoji, $component_id), $line), $line);
+      $start_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component start: %s -->', $emoji, $component_id), $line), $line);
     }
-    $print_nodes[] = new PrintNode(new FunctionExpression(
+    $start_nodes[] = new PrintNode(new FunctionExpression(
       'attach_library',
       new Node([new ConstantExpression($component->getLibraryName(), $line)]),
       $line
     ), $line);
-    $print_nodes[] = new PrintNode(new FunctionExpression(
+    $start_nodes[] = new PrintNode(new FunctionExpression(
       'sdc_additional_context',
       new Node([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
-    $print_nodes[] = new PrintNode(new FunctionExpression(
+    $start_nodes[] = new PrintNode(new FunctionExpression(
       'sdc_validate_props',
       new Node([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
-    foreach ($print_nodes as $index => $print_node) {
-      $node->getNode('display_start')->setNode((string) $index, $print_node);
+    foreach ($start_nodes as $index => $start_node) {
+      $node->getNode('display_start')->setNode((string) $index, $start_node);
     }
+
+    $end_nodes = iterator_to_array($node->getNode('display_end'));
     if ($env->isDebug()) {
-      $node->getNode('display_end')
-        ->setNode(
-          '0',
-          new PrintNode(new ConstantExpression(sprintf('<!-- %s Component end: %s -->', $emoji, $component_id), $line), $line)
-        );
+      $end_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component end: %s -->', $emoji, $component_id), $line), $line);
     }
+    foreach ($end_nodes as $index => $end_node) {
+      $node->getNode('display_end')->setNode((string) $index, $end_node);
+    }
+
     // Slots can be validated at compile time, we don't need to add nodes to
     // execute functions during display with the actual data.
     $this->validateSlots($component, $node->getNode('blocks'));
+
     return $node;
   }
 
