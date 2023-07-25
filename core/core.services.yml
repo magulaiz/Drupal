@@ -1558,6 +1558,8 @@ services:
   access_policy_chain:
     class: Drupal\Core\Session\AccessPolicyChain
     arguments: ['@variation_cache.access_policy', '@variation_cache.access_policy_memory', '@cache.access_policy_memory', '@account_switcher']
+    tags:
+      - { name: service_collector, call: addAccessPolicy, tag: access_policy }
   Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_chain'
   permission_checker:
     class: Drupal\Core\Session\PermissionChecker
