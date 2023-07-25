@@ -134,6 +134,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testTitleBatch() {
+    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
     $batch = [
       'title' => 'Batch Test',
