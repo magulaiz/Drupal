@@ -240,6 +240,8 @@ services:
     arguments: ['@cache_tags.invalidator.checksum']
   cache.backend.memory:
     class: Drupal\Core\Cache\MemoryBackendFactory
+  cache.backend.memory_fast:
+    class: Drupal\Core\Cache\MemoryFastBackendFactory
   # A special cache bin that does not persist beyond the length of the request.
   cache.static:
     class: Drupal\Core\Cache\CacheBackendInterface
@@ -283,6 +285,18 @@ services:
       - { name: cache.bin }
     factory: ['@cache_factory', 'get']
     arguments: [render]
+  cache.access_policy:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: ['@cache_factory', 'get']
+    arguments: [access_policy]
+  cache.access_policy_memory:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin, default_backend: 'cache.backend.memory_fast' }
+    factory: [ '@cache_factory', 'get' ]
+    arguments: [access_policy_memory]
   cache.data:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -295,6 +309,14 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
+  variation_cache.access_policy:
+    class: Drupal\Core\Cache\VariationCacheInterface
+    factory: ['@variation_cache_factory', 'get']
+    arguments: [access_policy]
+  variation_cache.access_policy_memory:
+    class: Drupal\Core\Cache\VariationCacheInterface
+    factory: ['@variation_cache_factory', 'get']
+    arguments: [access_policy_memory]
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
@@ -1533,6 +1555,10 @@ services:
     class: Drupal\Core\Session\AccountSwitcher
     arguments: ['@current_user', '@session_handler.write_safe']
   Drupal\Core\Session\AccountSwitcherInterface: '@account_switcher'
+  access_policy_chain:
+    class: Drupal\Core\Session\AccessPolicyChain
+    arguments: ['@variation_cache.access_policy', '@variation_cache.access_policy_memory', '@cache.access_policy_memory', '@account_switcher']
+  Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_chain'
   permission_checker:
     class: Drupal\Core\Session\PermissionChecker
     arguments: ['@entity_type.manager']
