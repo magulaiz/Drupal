@@ -22,7 +22,7 @@ interface AccessPolicyChainInterface extends AccessPolicyInterface {
    * Gets all added access policies.
    *
    * @return \Drupal\Core\Session\AccessPolicyInterface[]
-   *   The calculators.
+   *   The access policies.
    */
   public function getAccessPolicies(): array;
 
