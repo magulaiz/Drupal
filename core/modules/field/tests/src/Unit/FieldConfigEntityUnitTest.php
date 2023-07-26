@@ -132,7 +132,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->with('test_field')
       ->willReturn(['provider' => 'test_module', 'config_dependencies' => ['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
 
-    $this->fieldStorage->expects($this->atLeastOnce())
+    $this->fieldStorage->expects($this->once())
       ->method('getConfigDependencyName')
       ->willReturn('field.storage.test_entity_type.test_field');
 
@@ -245,9 +245,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'default_value' => [],
       'default_value_callback' => '',
       'settings' => [],
-      'dependencies' => [
-        'config' => [NULL],
-      ],
+      'dependencies' => [],
       'field_type' => 'test_field',
     ];
     $this->entityTypeManager->expects($this->any())
@@ -273,7 +271,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   public function testGetType() {
     // Ensure that FieldConfig::getType() is not delegated to
     // FieldStorage.
-    $this->entityFieldManager->expects($this->atLeastOnce())
+    $this->entityFieldManager->expects($this->never())
       ->method('getFieldStorageDefinitions');
     $this->fieldStorage->expects($this->never())
       ->method('getType');
