@@ -408,6 +408,9 @@ loadjs:
 drupal.autocomplete:
   version: VERSION
   js:
+    # These JavaScript assets previously came from core/jquery.ui, a deprecated
+    # library.
+    # @todo replace with solution in https://drupal.org/node/3076171
     assets/vendor/jquery.ui/ui/version-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { minified: true }
@@ -425,9 +428,7 @@ drupal.autocomplete:
     assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/labels-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/menu-min.js: { minified: true }
-    # @todo replace with solution in https://drupal.org/node/3076171
-    # deprecated library.
-    # The remaining JavaScript assets previously came from core/jquery.ui, a
+
     misc/autocomplete.js: {}
   # All CSS assets previously came from core/jquery.ui, a deprecated library.
   # @todo replace with solution found in https://drupal.org/node/3076171
@@ -506,7 +507,6 @@ drupal.dialog:
     # These JavaScript assets previously came from core/jquery.ui, a deprecated
     # library.
     # @todo replace with solution in https://drupal.org/node/2158943
-    assets/vendor/tua-body-scroll-lock/tua-bsl.umd.min.js: { minified: true }
     assets/vendor/jquery.ui/ui/version-min.js: { minified: true }
 
     assets/vendor/jquery.ui/ui/data-min.js: { minified: true }
@@ -534,9 +534,12 @@ drupal.dialog:
 
     assets/vendor/jquery.ui/ui/widgets/button-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { minified: true }
-    misc/dialog/dialog.jquery-ui.js: {}
-    misc/dialog/dialog.position.js: {}
+
+    assets/vendor/tua-body-scroll-lock/tua-bsl.umd.min.js: { minified: true }
+
     misc/dialog/dialog.js: {}
+    misc/dialog/dialog.position.js: {}
+    misc/dialog/dialog.jquery-ui.js: {}
   # All CSS assets previously came from core/jquery.ui, a deprecated library.
   # @todo replace with solution found in https://drupal.org/node/2158943
   css:
