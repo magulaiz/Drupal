@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @see _batch_shutdown()
  */
 function _batch_page(Request $request) {
-  \Drupal::moduleHandler()->load('node');
   $batch = &batch_get();
 
   if (!($request_id = $request->query->get('id'))) {

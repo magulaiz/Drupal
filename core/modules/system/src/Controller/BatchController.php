@@ -46,6 +46,8 @@ class BatchController implements ContainerInjectionInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function batchPage(Request $request) {
+    \Drupal::moduleHandler()->load('update');
+    \Drupal::moduleHandler()->load('node');
     $output = _batch_page($request);
 
     if ($output === FALSE) {
