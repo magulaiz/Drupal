@@ -29,14 +29,14 @@ class PerformanceTestBase extends WebDriverTestBase {
    *
    * @var int
    */
-  const NANOSECONDS_PER_SECOND = 1000000000;
+  const NANOSECONDS_PER_SECOND = 1000_000_000;
 
   /**
    * The number of nanoseconds in a second.
    *
    * @var int
    */
-  const NANOSECONDS_PER_MILLISECOND = 1000000;
+  const NANOSECONDS_PER_MILLISECOND = 1000_000;
 
   /**
    * The number of nanoseconds in a second.
