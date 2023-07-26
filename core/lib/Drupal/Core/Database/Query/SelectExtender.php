@@ -221,14 +221,17 @@ class SelectExtender implements SelectInterface {
     // We cannot call $this->query->extend(), because with multiple extenders
     // you will replace all the earlier extenders with the last extender,
     // instead of creating list of objects that extend each other.
-    // @todo remove the BC layer in Drupal 10.
-    // @see https://www.drupal.org/project/drupal/issues/3260284
     $serviceName = ltrim($extender_name, '\\');
+
+    // @todo remove the BC layer in Drupal 11, remove the if wrapper and just
+    // leave the return.
+    // @see https://www.drupal.org/project/drupal/issues/3260284
     if (\Drupal::hasService($serviceName)) {
       return \Drupal::service($serviceName)->get($this, $this->connection);
     }
 
-    // BC layer.
+    // @todo remove the BC layer in Drupal 11.
+    // Start of BC layer.
     $parts = explode('\\', $extender_name);
     $class = end($parts);
     $driver_class = $this->connection->getDriverClass($class);
@@ -236,6 +239,7 @@ class SelectExtender implements SelectInterface {
       return new $driver_class($this, $this->connection);
     }
     return new $extender_name($this, $this->connection);
+    // End of BC layer.
   }
 
   /* Alter accessors to expose the query data to alter hooks. */
