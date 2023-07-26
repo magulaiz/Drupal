@@ -11,8 +11,9 @@ use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\RouteProvider;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -31,7 +32,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'settings_tray' => FALSE,
   ]
 )]
-class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
+class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, ContainerFactoryPluginInterface {
 
   /**
    * The page title: a string (plain title) or a render array (formatted title).
@@ -55,7 +56,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
    *   The route match.
    * @param \Drupal\Core\Menu\LocalTaskManager $localTaskManager
    *   The local task manager.
-   * @param \Drupal\Core\Routing\RouteProvider $routeProvider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
@@ -73,7 +74,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
     protected TitleResolverInterface $titleResolver,
     protected RouteMatchInterface $routeMatch,
     protected LocalTaskManager $localTaskManager,
-    protected RouteProvider $routeProvider,
+    protected RouteProviderInterface $routeProvider,
     protected RequestStack $requestStack,
     protected InboundPathProcessorInterface $pathProcessor,
     protected CurrentPathStack $currentPath,
@@ -95,7 +96,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
       $container->get('plugin.manager.menu.local_task'),
       $container->get('router.route_provider'),
       $container->get('request_stack'),
-      $container->get('path_alias.path_processor'),
+      $container->get('path_processor_manager'),
       $container->get('path.current'),
       $container->get('router.no_access_checks'),
     );
