@@ -15,8 +15,8 @@ settings:
   id: page_title_block
   label: 'Page title'
   label_display: '0'
-  contextualize_title: false
   provider: core
+  contextualize_title: false
 visibility:
   request_path:
     id: request_path
