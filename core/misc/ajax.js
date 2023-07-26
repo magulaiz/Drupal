@@ -1835,9 +1835,21 @@
       while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
         scrollTarget = $(scrollTarget).parent();
       }
-      // Only scroll upward.
-      if (offset.top - 10 < $(scrollTarget).scrollTop()) {
-        $(scrollTarget).animate({ scrollTop: offset.top - 10 }, 500);
+
+      let scrollOffset = offset.top;
+      if (scrollTarget.length > 0 && scrollTarget.offset().top > 0) {
+        scrollOffset =
+          scrollOffset +
+          $(scrollTarget).scrollTop() -
+          scrollTarget.offset().top;
+      }
+      if (scrollOffset - 10 < $(scrollTarget).scrollTop()) {
+        $(scrollTarget).animate(
+          {
+            scrollTop: scrollOffset - 10,
+          },
+          500,
+        );
       }
     },
   };
