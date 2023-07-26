@@ -58,10 +58,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
 
     $item = new CalculatedPermissionsItem($scope, 'foo', ['baz']);
     $calculated_permissions->addItem($item, TRUE);
-    $this->assertEquals(['bar', 'baz'], $calculated_permissions->getItem($scope, 'foo')->getPermissions(), 'Could not overwrite item in build mode.');
-
-    $calculated_permissions->disableBuildMode();
-    $calculated_permissions->addItem($item, TRUE);
     $this->assertEquals(['baz'], $calculated_permissions->getItem($scope, 'foo')->getPermissions(), 'Successfully overwrote an item that was already in the list.');
   }
 
@@ -77,11 +73,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
 
     $calculated_permissions = new RefinableCalculatedPermissions();
     $calculated_permissions->addItem($item);
-
-    $calculated_permissions->removeItem($scope, 'foo');
-    $this->assertNotFalse($calculated_permissions->getItem($scope, 'foo'), 'Could not remove item in build mode.');
-
-    $calculated_permissions->disableBuildMode();
     $calculated_permissions->removeItem($scope, 'foo');
     $this->assertFalse($calculated_permissions->getItem($scope, 'foo'), 'Could not retrieve a removed item.');
   }
@@ -100,10 +91,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $calculated_permissions->addItem($item);
 
     $calculated_permissions->removeItems();
-    $this->assertNotFalse($calculated_permissions->getItem($scope, 'foo'), 'Could not remove items in build mode.');
-
-    $calculated_permissions->disableBuildMode();
-    $calculated_permissions->removeItems();
     $this->assertFalse($calculated_permissions->getItem($scope, 'foo'), 'Could not retrieve a removed item.');
   }
 
@@ -120,14 +107,10 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $item_a = new CalculatedPermissionsItem($scope_a, 'foo', ['bar']);
     $item_b = new CalculatedPermissionsItem($scope_b, 1, ['baz']);
 
-    $calculated_permissions = new RefinableCalculatedPermissions();
-    $calculated_permissions
+    $calculated_permissions = (new RefinableCalculatedPermissions())
       ->addItem($item_a)
-      ->addItem($item_b)
-      ->removeItemsByScope($scope_a);
-    $this->assertNotFalse($calculated_permissions->getItem($scope_a, 'foo'), 'Could not remove items in build mode.');
+      ->addItem($item_b);
 
-    $calculated_permissions->disableBuildMode();
     $calculated_permissions->removeItemsByScope($scope_a);
     $this->assertFalse($calculated_permissions->getItem($scope_a, 'foo'), 'Could not retrieve a removed item.');
     $this->assertNotFalse($calculated_permissions->getItem($scope_b, 1), 'Untouched scope item was found.');

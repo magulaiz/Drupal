@@ -125,7 +125,6 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
       }
 
       // Alter mode, allow all calculators to alter the complete build.
-      $calculated_permissions->disableBuildMode();
       foreach ($this->getAccessPolicies() as $access_policy) {
         if (!$access_policy->applies($scope)) {
           continue;

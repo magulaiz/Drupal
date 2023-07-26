@@ -285,7 +285,6 @@ class AccessPolicyChainTest extends UnitTestCase {
     $bar_calculator = new BarAccessPolicy();
     $bar_permissions = $bar_calculator->calculatePermissions($account, $scope);
     $bar_permissions->addCacheTags(['access_policies']);
-    $bar_permissions->disableBuildMode();
     $bar_permissions = new CalculatedPermissions($bar_permissions);
 
     $cache_static = $this->prophesize(VariationCacheInterface::class);
