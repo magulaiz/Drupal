@@ -342,24 +342,29 @@ class AccessPolicyChainTest extends UnitTestCase {
     CacheBackendInterface $cache_static = NULL,
     AccountSwitcherInterface $account_switcher = NULL
   ) {
+    // Prophecy does not accept a willReturn call on a mocked method if said
+    // method has a return type of void. However, without willReturn() or any
+    // other will* call, the method mock will not be registered.
+    $prophecy_workaround = function () {};
+
     if (!isset($variation_cache)) {
       $variation_cache = $this->prophesize(VariationCacheInterface::class);
       $variation_cache->get(Argument::cetera())->willReturn(FALSE);
-      $variation_cache->set(Argument::cetera())->will(function(){});
+      $variation_cache->set(Argument::cetera())->will($prophecy_workaround);
       $variation_cache = $variation_cache->reveal();
     }
 
     if (!isset($variation_cache_static)) {
       $variation_cache_static = $this->prophesize(VariationCacheInterface::class);
       $variation_cache_static->get(Argument::cetera())->willReturn(FALSE);
-      $variation_cache_static->set(Argument::cetera())->will(function(){});
+      $variation_cache_static->set(Argument::cetera())->will($prophecy_workaround);
       $variation_cache_static = $variation_cache_static->reveal();
     }
 
     if (!isset($cache_static)) {
       $cache_static = $this->prophesize(CacheBackendInterface::class);
       $cache_static->get(Argument::cetera())->willReturn(FALSE);
-      $cache_static->set(Argument::cetera())->will(function(){});
+      $cache_static->set(Argument::cetera())->will($prophecy_workaround);
       $cache_static = $cache_static->reveal();
     }
 
