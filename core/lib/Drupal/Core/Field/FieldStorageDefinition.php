@@ -58,6 +58,13 @@ class FieldStorageDefinition extends DataDefinition implements FieldStorageDefin
   protected $fieldTypeManager;
 
   /**
+   * A static cache of the generated schema array.
+   *
+   * @var array
+   */
+  protected $schema;
+
+  /**
    * Creates a new field storage definition.
    *
    * @param string $type
@@ -279,8 +286,7 @@ class FieldStorageDefinition extends DataDefinition implements FieldStorageDefin
     if (!isset($this->schema)) {
       // Get the schema from the field item class.
       $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getType());
-      $class = $this->getItemClass();
-      $schema = $class::schema($this);
+      $schema = $definition->getSchema();
       // Fill in default values.
       $schema += [
         'columns' => [],

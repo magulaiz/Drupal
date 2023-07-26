@@ -50,6 +50,8 @@ class FieldStorageDefinitionTest extends UnitTestCase implements OptionsProvider
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->fieldType = $this->randomMachineName();
     $this->fieldTypeDefinition = [
       'id' => $this->fieldType,
