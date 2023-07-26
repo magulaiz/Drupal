@@ -7,9 +7,9 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinition;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 
@@ -2030,21 +2030,13 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
  * @see https://www.drupal.org/node/3034742
  */
 function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
-  if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
-    // Query by filtering on the ID as this is more efficient than filtering
-    // on the entity_type property directly.
-    $ids = \Drupal::entityQuery('field_storage_config')
-      ->condition('id', $entity_type->id() . '.', 'STARTS_WITH')
-      ->execute();
-    // Fetch all fields and key them by field name.
-    $field_storages = FieldStorageConfig::loadMultiple($ids);
-    $result = [];
-    foreach ($field_storages as $field_storage) {
-      $result[$field_storage->getName()] = $field_storage;
-    }
-
-    return $result;
+  $definitions = [];
+  if ($entity_type->id() === 'mymodule_entity_type') {
+    $definitions['mymodule_bundle_field'] = FieldStorageDefinition::create('string')
+      ->setName('mymodule_bundle_field')
+      ->setTargetEntityTypeId('mymodule_entity_type');
   }
+  return $definitions;
 }
 
 /**

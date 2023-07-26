@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\Functional\Entity\Traits;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\entity_test\FieldStorageDefinition;
+use Drupal\Core\Field\FieldStorageDefinition;
 
 /**
  * Provides some test methods used to update existing entity definitions.

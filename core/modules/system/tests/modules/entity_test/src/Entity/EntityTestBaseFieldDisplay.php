@@ -4,7 +4,7 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\entity_test\FieldStorageDefinition;
+use Drupal\Core\Field\FieldStorageDefinition;
 
 /**
  * Defines a test entity class for base fields display.

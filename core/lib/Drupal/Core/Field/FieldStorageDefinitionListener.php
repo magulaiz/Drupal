@@ -122,10 +122,14 @@ class FieldStorageDefinitionListener implements FieldStorageDefinitionListenerIn
 
     // Keep the field definition in the deleted fields repository so we can use
     // it later during field_purge_batch(), but only if the field has data.
-    if ($storage_definition instanceof BaseFieldDefinition && $storage instanceof FieldableEntityStorageInterface && $storage->countFieldData($storage_definition, TRUE)) {
+    if (($storage_definition instanceof BaseFieldDefinition || $storage_definition instanceof FieldStorageDefinition) && $storage instanceof FieldableEntityStorageInterface && $storage->countFieldData($storage_definition, TRUE)) {
       $deleted_storage_definition = clone $storage_definition;
       $deleted_storage_definition->setDeleted(TRUE);
-      $this->deletedFieldsRepository->addFieldDefinition($deleted_storage_definition);
+
+      if ($storage_definition instanceof BaseFieldDefinition) {
+        $this->deletedFieldsRepository->addFieldDefinition($deleted_storage_definition);
+      }
+
       $this->deletedFieldsRepository->addFieldStorageDefinition($deleted_storage_definition);
     }
 
