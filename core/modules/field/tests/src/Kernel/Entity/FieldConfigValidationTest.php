@@ -136,8 +136,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     // recalculated until the target bundle exists, or we'll get an exception.
     // So, for testing purposes, use reflection to access the protected
     // addDependency() method and add the field storage as a dependency.
-    // @see \Drupal\field\Entity\FieldConfig::calculateDependencies() and
-    //   ::getFieldStorageDefinition()
+    // @see \Drupal\Core\Field\FieldConfigBase::calculateDependencies()
     (new \ReflectionMethod($this->entity, 'addDependency'))
       ->invoke($this->entity, 'config', $field_storage_config->getConfigDependencyName());
     $this->assertValidationErrors([
