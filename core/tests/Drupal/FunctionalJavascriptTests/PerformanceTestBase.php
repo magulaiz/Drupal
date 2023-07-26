@@ -256,7 +256,7 @@ class PerformanceTestBase extends WebDriverTestBase {
         $route = $route_provider->getRouteByName($match[0]);
         $route_path = $route->getPath();
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
       }
     }
 
