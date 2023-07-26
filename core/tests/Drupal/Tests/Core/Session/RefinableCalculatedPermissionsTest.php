@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Session\Unit;
+namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Session\CalculatedPermissionsItem;
