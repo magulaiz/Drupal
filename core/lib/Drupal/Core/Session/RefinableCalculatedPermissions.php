@@ -15,25 +15,9 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
   use RefinableCacheableDependencyTrait;
 
   /**
-   * Whether the object is currently building permissions.
-   *
-   * @var bool
-   */
-  protected bool $buildMode = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function disableBuildMode(): void {
-    $this->buildMode = FALSE;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function addItem(CalculatedPermissionsItemInterface $item, bool $overwrite = FALSE): self {
-    // Only allow overwriting when not in build mode.
-    $overwrite = $overwrite && !$this->buildMode;
     if (!$overwrite && $existing = $this->getItem($item->getScope(), $item->getIdentifier())) {
       $item = $this->mergeItems($existing, $item);
     }
@@ -45,9 +29,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    * {@inheritdoc}
    */
   public function removeItem(string $scope, string|int $identifier): self {
-    if (!$this->buildMode) {
-      unset($this->items[$scope][$identifier]);
-    }
+    unset($this->items[$scope][$identifier]);
     return $this;
   }
 
@@ -55,9 +37,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    * {@inheritdoc}
    */
   public function removeItems(): self {
-    if (!$this->buildMode) {
-      $this->items = [];
-    }
+    $this->items = [];
     return $this;
   }
 
@@ -65,9 +45,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    * {@inheritdoc}
    */
   public function removeItemsByScope(string $scope): self {
-    if (!$this->buildMode) {
-      unset($this->items[$scope]);
-    }
+    unset($this->items[$scope]);
     return $this;
   }
 
@@ -98,7 +76,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    *   mismatching items.
    */
   protected function mergeItems(CalculatedPermissionsItemInterface $a, CalculatedPermissionsItemInterface $b): CalculatedPermissionsItemInterface {
-    if ($a->getScope() != $b->getScope()) {
+    if ($a->getScope() !== $b->getScope()) {
       throw new \LogicException('Trying to merge two items of different scopes.');
     }
 
