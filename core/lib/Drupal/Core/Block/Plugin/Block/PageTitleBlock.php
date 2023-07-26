@@ -41,6 +41,14 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
   protected $title = '';
 
   /**
+   * Constructs a new PageTitleBlock.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver.
    * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
@@ -58,7 +66,19 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
    *   The dynamic router service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected TitleResolverInterface $titleResolver, protected RouteMatchInterface $routeMatch, protected LocalTaskManager $localTaskManager, protected RouteProvider $routeProvider, protected RequestStack $requestStack, protected InboundPathProcessorInterface $pathProcessor, protected CurrentPathStack $currentPath, protected RequestMatcherInterface $router) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected TitleResolverInterface $titleResolver,
+    protected RouteMatchInterface $routeMatch,
+    protected LocalTaskManager $localTaskManager,
+    protected RouteProvider $routeProvider,
+    protected RequestStack $requestStack,
+    protected InboundPathProcessorInterface $pathProcessor,
+    protected CurrentPathStack $currentPath,
+    protected RequestMatcherInterface $router,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
