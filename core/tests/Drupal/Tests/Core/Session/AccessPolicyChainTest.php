@@ -45,9 +45,9 @@ class AccessPolicyChainTest extends UnitTestCase {
    * Tests that access policies are properly added and returned.
    *
    * @covers ::addAccessPolicy
-   * @covers ::getCalculators
+   * @covers ::getAccessPolicies
    */
-  public function testAddCalculator() {
+  public function testAddAccessPolicy() {
     $chain_calculator = $this->setUpAccessPolicyChain();
     $calculators = [
       new FooAccessPolicy(),
