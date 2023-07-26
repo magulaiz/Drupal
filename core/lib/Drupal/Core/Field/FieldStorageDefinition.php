@@ -148,7 +148,7 @@ class FieldStorageDefinition extends DataDefinition implements FieldStorageDefin
    * {@inheritdoc}
    */
   public function isQueryable() {
-    @trigger_error('FieldStorageDefinitionInterface::isQueryable() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use ::hasCustomStorage(). See https://www.drupal.org/node/2856563.', E_USER_DEPRECATED);
+    @trigger_error('FieldStorageDefinitionInterface::isQueryable() is deprecated in Drupal 10.1.0 and will be removed before Drupal 11.0.0. Instead, you should use ::hasCustomStorage(). See https://www.drupal.org/node/2856563.', E_USER_DEPRECATED);
     return !$this->hasCustomStorage();
   }
 

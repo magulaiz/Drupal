@@ -49,7 +49,7 @@ class FieldStorageDefinitionTest extends UnitTestCase implements OptionsProvider
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->fieldType = $this->randomMachineName();
     $this->fieldTypeDefinition = [
       'id' => $this->fieldType,
@@ -148,7 +148,7 @@ class FieldStorageDefinitionTest extends UnitTestCase implements OptionsProvider
   /**
    * @covers ::isQueryable
    * @group legacy
-   * @expectedDeprecation FieldStorageDefinitionInterface::isQueryable() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use ::hasCustomStorage(). See https://www.drupal.org/node/2856563.
+   * @expectedDeprecation FieldStorageDefinitionInterface::isQueryable() is deprecated in Drupal 10.1.0 and will be removed before Drupal 11.0.0. Instead, you should use ::hasCustomStorage(). See https://www.drupal.org/node/2856563.
    */
   public function testIsQueryable() {
     $definition = FieldStorageDefinition::create($this->fieldType);
