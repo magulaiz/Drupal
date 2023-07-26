@@ -41,7 +41,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $this->assertTrue($calculated_permissions->getItem($scope, 'foo')->isAdmin(), 'Merging in a calculated permissions item with admin rights flags the result as having admin rights.');
   }
 
-
   /**
    * Tests the overwriting of a calculated permissions item.
    *
