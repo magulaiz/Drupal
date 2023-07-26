@@ -7,6 +7,7 @@ use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;
@@ -114,19 +115,44 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['label_display' => FALSE];
+    return [
+      'label_display' => FALSE,
+      'contextualize_title' => FALSE,
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
-    $this->setConfigurationForTitle();
+    if ($this->configuration['contextualize_title']) {
+      $this->setConfigurationForTitle();
+    }
     $title = $this->configuration['title_when_base_route_is_available'] ?? $this->title;
     return [
       '#type' => 'page_title',
       '#title' => $title,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    $form['contextualize_title'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Contextualize title based on page hierarchy'),
+      '#default_value' => $this->configuration['contextualize_title'],
+      '#description' => $this->t('@todo Explain how this works'),
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['contextualize_title'] = $form_state->getValue('contextualize_title');
   }
 
   private function setConfigurationForTitle() {

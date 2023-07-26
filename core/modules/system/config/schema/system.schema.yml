@@ -380,6 +380,14 @@ system.advisories:
       type: integer
       label: 'How often to check for security advisories, in hours'
 
+block.settings.page_title_block:
+  type: block_settings
+  label: 'Page title block'
+  mapping:
+    contextualize_title:
+      type: boolean
+      label: 'Contextualize title'
+
 block.settings.system_branding_block:
   type: block_settings
   label: 'Branding block'
