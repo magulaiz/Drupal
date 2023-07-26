@@ -133,10 +133,6 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     }
 
     parent::__construct($values, $entity_type);
-
-    // For this to be a valid config entity, at the very least a dependency on a
-    // FieldStorageConfig entity must be present.
-    $this->addDependency('config', $this->getFieldStorageDefinition()->getConfigDependencyName());
   }
 
   /**

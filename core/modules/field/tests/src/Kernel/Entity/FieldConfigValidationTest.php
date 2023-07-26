@@ -128,17 +128,26 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
     // Try to create an instance of this field on a bundle that does not exist.
     $this->entity = FieldConfig::create([
-      'entity_type' => $entity_type_id,
-      'field_name' => $field_name,
-      'field_type' => $field_storage_config->getType(),
       'bundle' => 'non_existent',
+      'field_storage' => $field_storage_config,
     ]);
+    // The field storage is not listed in the entity's config dependencies,
+    // because the dependencies have not been recalculated yet. They can't be
+    // recalculated until the target bundle exists, or we'll get an exception.
+    // So, for testing purposes, use reflection to access the protected
+    // addDependency() method and add the field storage as a dependency.
+    // @see \Drupal\field\Entity\FieldConfig::calculateDependencies() and
+    //   ::getFieldStorageDefinition()
+    (new \ReflectionMethod($this->entity, 'addDependency'))
+      ->invoke($this->entity, 'config', $field_storage_config->getConfigDependencyName());
     $this->assertValidationErrors([
       'bundle' => "The 'non_existent' bundle does not exist on the 'entity_test_mul_with_bundle' entity type.",
     ]);
 
-    // Next, try to create it on a bundle that does exist.
-    $this->entity->set('bundle', 'one');
+    // Next, try to create it on a bundle that *does* exist. We need to
+    // recalculate dependencies because that's how we check whether or not the
+    // bundle exists.
+    $this->entity->set('bundle', 'one')->calculateDependencies();
     $this->assertValidationErrors([]);
   }
 
