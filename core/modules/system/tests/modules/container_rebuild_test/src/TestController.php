@@ -21,6 +21,7 @@ class TestController extends ControllerBase {
     $module_handler = \Drupal::moduleHandler();
     $module_message = $module . ': ';
     if ($module_handler->moduleExists($module)) {
+      $module_handler->load($module);
       $module_message .= \Drupal::moduleHandler()->getModule($module)->getPath();
     }
     else {
