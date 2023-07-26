@@ -117,12 +117,7 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
         }
 
         $policy_permissions = $access_policy->calculatePermissions($account, $scope);
-        $policy_scopes = $policy_permissions->getScopes();
-
-        // Validate that only the requested scope was returned. An empty result
-        // is allowed, however, as it might be that the access policy had
-        // nothing to say for this scope.
-        if (!empty($policy_scopes) && (count($policy_scopes) > 1 || reset($policy_scopes) !== $scope)) {
+        if (!$this->validateScope($scope, $policy_permissions)) {
           throw new AccessPolicyScopeException(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', get_class($access_policy), $scope));
         }
 
@@ -132,7 +127,14 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
       // Alter mode, allow all calculators to alter the complete build.
       $calculated_permissions->disableBuildMode();
       foreach ($this->getAccessPolicies() as $access_policy) {
+        if (!$access_policy->applies($scope)) {
+          continue;
+        }
+
         $access_policy->alterPermissions($calculated_permissions);
+        if (!$this->validateScope($scope, $calculated_permissions)) {
+          throw new AccessPolicyScopeException(sprintf('The access policy "%s" altered permissions in a scope other than "%s".', get_class($access_policy), $scope));
+        }
       }
 
       // Apply a cache tag to easily flush the calculated permissions.
@@ -188,5 +190,29 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
    * {@inheritdoc}
    */
   public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {}
+
+  /**
+   * Validates if calculated permissions all match a single scope.
+   *
+   * @param string $scope
+   *   The scope to match.
+   * @param \Drupal\Core\Session\CalculatedPermissionsInterface $calculated_permissions
+   *   The calculated permissions that should match the scope.
+   *
+   * @return bool
+   *   Whether the calculated permissions match the scope.
+   */
+  protected function validateScope(string $scope, CalculatedPermissionsInterface $calculated_permissions): bool {
+    $actual_scopes = $calculated_permissions->getScopes();
+
+    // Validate that only the requested scope was returned. An empty result is
+    // allowed, however, as it might be that the calculator had nothing to say
+    // for this scope.
+    if (!empty($actual_scopes) && (count($actual_scopes) > 1 || reset($actual_scopes) !== $scope)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
 
 }
