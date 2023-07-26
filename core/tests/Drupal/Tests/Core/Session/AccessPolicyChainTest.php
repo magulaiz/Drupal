@@ -345,21 +345,21 @@ class AccessPolicyChainTest extends UnitTestCase {
     if (!isset($variation_cache)) {
       $variation_cache = $this->prophesize(VariationCacheInterface::class);
       $variation_cache->get(Argument::cetera())->willReturn(FALSE);
-      $variation_cache->set(Argument::cetera());
+      $variation_cache->set(Argument::cetera())->will(function(){});
       $variation_cache = $variation_cache->reveal();
     }
 
     if (!isset($variation_cache_static)) {
       $variation_cache_static = $this->prophesize(VariationCacheInterface::class);
       $variation_cache_static->get(Argument::cetera())->willReturn(FALSE);
-      $variation_cache_static->set(Argument::cetera());
+      $variation_cache_static->set(Argument::cetera())->will(function(){});
       $variation_cache_static = $variation_cache_static->reveal();
     }
 
     if (!isset($cache_static)) {
       $cache_static = $this->prophesize(CacheBackendInterface::class);
       $cache_static->get(Argument::cetera())->willReturn(FALSE);
-      $cache_static->set(Argument::cetera());
+      $cache_static->set(Argument::cetera())->will(function(){});
       $cache_static = $cache_static->reveal();
     }
 
