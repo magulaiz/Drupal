@@ -900,6 +900,11 @@ services:
     arguments: ['@kernel']
     tags:
       - { name: http_middleware, priority: 100 }
+  http_middleware.pre_session:
+    class: Drupal\Core\StackMiddleware\PreSessionHandler
+    arguments: ['@kernel']
+    tags:
+      - { name: http_middleware, priority: 60 }
   http_middleware.session:
     class: Drupal\Core\StackMiddleware\Session
     tags:
