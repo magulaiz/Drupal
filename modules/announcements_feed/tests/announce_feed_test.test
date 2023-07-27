@@ -121,7 +121,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     set_announce_feed_test_endpoint($this->emptyJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
     $this->drupalLogin($this->user);
-    // Only no annoucnements available message should show.
+    // Only no announcements available message should show.
     $this->clickLink('Announcements');
     $this->assertText('No announcements available');
   }
@@ -284,6 +284,75 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $this->drupalLogin($account);
     $this->drupalGet('/admin/announcements_feed');
     $this->assertText('You are not authorized to access this page.');
+  }
+
+}
+/**
+ * Testing the invalid JSON URL for announcements feed test cases.
+ */
+class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Invalid Feed / Unkown JSON feed URL',
+      'description' => 'Testing announcements feed when json is invalid or URL not found.',
+      'group' => 'Announcements Feed',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    global $base_url;
+    global $base_path;
+    $module_path = drupal_get_path('module', 'announcements_feed');
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    $this->drupalLogin($this->user);
+    $this->responseJson = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
+    // This file not present, to check the URL not found for JSON.
+    $this->unknownJson = $base_url . $base_path . $module_path . '/tests/announce_feed/unknown.json';
+    $this->invalidJson = $base_url . $base_path . $module_path . '/tests/announce_feed/invalid-feeds.json';
+    set_announce_feed_test_endpoint($this->responseJson);
+  }
+
+  /**
+   * Test the announcements feed when the response is invalid/unknown JSON.
+   */
+  public function testUnkownFeedResponse() {
+    // Test when the JSON URL is not found.
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    set_announce_feed_test_endpoint($this->unknownJson);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalGet('/admin/announcements_feed');
+    $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
+
+    // Test when the JSON feeds are invalid i.e. Json not formatted.
+    $this->drupalLogout();
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    set_announce_feed_test_endpoint($this->invalidJson);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalGet('/admin/announcements_feed');
+    $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
+
+    $this->drupalLogout();
   }
 
 }
