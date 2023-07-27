@@ -66,7 +66,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests that the persistent cache contexts are returned properly.
    *
-   * @covers ::applies
    * @covers ::getPersistentCacheContexts
    */
   public function testGetPersistentCacheContexts() {
@@ -99,7 +98,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests that access policies that do not apply are not processed.
    *
-   * @covers ::applies
    * @covers ::processAccessPolicies
    */
   public function testCalculatePermissionsNoApply() {
