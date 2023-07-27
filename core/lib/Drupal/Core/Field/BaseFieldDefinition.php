@@ -839,7 +839,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function getFieldItemClass() {
     return $this->getItemDefinition()->getClass();

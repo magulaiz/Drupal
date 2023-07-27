@@ -1072,11 +1072,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * Apply field storage mappings to the record to be stored.
    *
-   * @param ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity object.
    * @param string $field_name
    *   Field name.
-   * @param TableMappingInterface $table_mapping
+   * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
    *   Table mapping.
    * @param string $table_name
    *   Table name.
@@ -1899,6 +1899,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   Field name.
    * @param array|null $property_values
    *   Property values, or NULL.
+   *
    * @return array|null
    *   Values keyed by column, or NULL if nothing to save.
    */
