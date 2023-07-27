@@ -7,7 +7,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 /**
  * Represents a calculated set of permissions with cacheable metadata.
  *
- * @see \Drupal\Core\Session\AccessPolicyChain
+ * @see \Drupal\Core\Session\AccessPolicyProcessor
  */
 class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsInterface {
 

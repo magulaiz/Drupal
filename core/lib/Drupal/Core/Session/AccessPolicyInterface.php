@@ -29,7 +29,7 @@ interface AccessPolicyInterface {
    *   The scope to check for.
    *
    * @return bool
-   *   Whether this calculator applies to the given scope.
+   *   Whether this access policy applies to the given scope.
    */
   public function applies(string $scope): bool;
 
