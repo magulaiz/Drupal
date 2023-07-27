@@ -25,13 +25,13 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
   public function testConstructor() {
     $scope = 'some_scope';
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['bar', 'baz', 'bar'], FALSE);
+    $item = new CalculatedPermissionsItem(['bar', 'baz', 'bar'], FALSE, $scope, 'foo');
     $this->assertEquals($scope, $item->getScope(), 'Scope name was set correctly.');
     $this->assertEquals('foo', $item->getIdentifier(), 'Scope identifier was set correctly.');
     $this->assertEquals(['bar', 'baz'], $item->getPermissions(), 'Permissions were made unique and set correctly.');
     $this->assertFalse($item->isAdmin(), 'Admin flag was set correctly');
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['bar', 'baz', 'bar'], TRUE);
+    $item = new CalculatedPermissionsItem(['bar', 'baz', 'bar'], TRUE, $scope, 'foo');
     $this->assertEquals([], $item->getPermissions(), 'Permissions were emptied out for an admin item.');
     $this->assertTrue($item->isAdmin(), 'Admin flag was set correctly');
   }
@@ -43,7 +43,7 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
    * @depends testConstructor
    */
   public function testHasPermission() {
-    $item = new CalculatedPermissionsItem('some_scope', 'foo', ['bar'], FALSE);
+    $item = new CalculatedPermissionsItem(['bar'], FALSE, 'some_scope', 'foo');
     $this->assertFalse($item->hasPermission('baz'), 'Missing permission was not found.');
     $this->assertTrue($item->hasPermission('bar'), 'Existing permission was found.');
   }
@@ -55,7 +55,7 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
    * @depends testConstructor
    */
   public function testHasPermissionWithAdminFlag() {
-    $item = new CalculatedPermissionsItem('some_scope', 'foo', ['bar'], TRUE);
+    $item = new CalculatedPermissionsItem(['bar'], TRUE, 'some_scope', 'foo');
     $this->assertTrue($item->hasPermission('baz'), 'Missing permission was found.');
     $this->assertTrue($item->hasPermission('bar'), 'Existing permission was found.');
   }

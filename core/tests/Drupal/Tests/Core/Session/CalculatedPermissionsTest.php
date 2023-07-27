@@ -25,8 +25,8 @@ class CalculatedPermissionsTest extends UnitTestCase {
    * @covers ::getItemsByScope
    */
   public function testConstructor() {
-    $item_a = new CalculatedPermissionsItem('scope_a', 'foo', ['baz']);
-    $item_b = new CalculatedPermissionsItem('scope_b', 1, ['bob', 'charlie']);
+    $item_a = new CalculatedPermissionsItem(['baz'], FALSE, 'scope_a', 'foo');
+    $item_b = new CalculatedPermissionsItem(['bob', 'charlie'], FALSE, 'scope_b', 1);
 
     $calculated_permissions = $this->prophesize(CalculatedPermissionsInterface::class);
     $calculated_permissions->getItems()->willReturn([$item_a, $item_b]);

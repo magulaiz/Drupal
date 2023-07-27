@@ -27,15 +27,15 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $calculated_permissions = new RefinableCalculatedPermissions();
     $scope = 'some_scope';
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['bar']);
+    $item = new CalculatedPermissionsItem(['bar'], FALSE, $scope, 'foo');
     $calculated_permissions->addItem($item);
     $this->assertSame($item, $calculated_permissions->getItem($scope, 'foo'), 'Managed to retrieve the calculated permissions item.');
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['baz']);
+    $item = new CalculatedPermissionsItem(['baz'], FALSE, $scope, 'foo');
     $calculated_permissions->addItem($item);
     $this->assertEquals(['bar', 'baz'], $calculated_permissions->getItem($scope, 'foo')->getPermissions(), 'Adding a calculated permissions item that was already in the list merges them.');
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['cat'], TRUE);
+    $item = new CalculatedPermissionsItem(['cat'], TRUE, $scope, 'foo');
     $calculated_permissions->addItem($item);
     $this->assertEquals([], $calculated_permissions->getItem($scope, 'foo')->getPermissions(), 'Merging in a calculated permissions item with admin rights empties the permissions.');
     $this->assertTrue($calculated_permissions->getItem($scope, 'foo')->isAdmin(), 'Merging in a calculated permissions item with admin rights flags the result as having admin rights.');
@@ -52,10 +52,10 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $calculated_permissions = new RefinableCalculatedPermissions();
     $scope = 'some_scope';
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['bar']);
+    $item = new CalculatedPermissionsItem(['bar'], FALSE, $scope, 'foo');
     $calculated_permissions->addItem($item);
 
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['baz']);
+    $item = new CalculatedPermissionsItem(['baz'], FALSE, $scope, 'foo');
     $calculated_permissions->addItem($item, TRUE);
     $this->assertEquals(['baz'], $calculated_permissions->getItem($scope, 'foo')->getPermissions(), 'Successfully overwrote an item that was already in the list.');
   }
@@ -68,7 +68,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    */
   public function testRemoveItem() {
     $scope = 'some_scope';
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['bar']);
+    $item = new CalculatedPermissionsItem(['bar'], FALSE, $scope, 'foo');
 
     $calculated_permissions = new RefinableCalculatedPermissions();
     $calculated_permissions->addItem($item);
@@ -84,7 +84,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    */
   public function testRemoveItems() {
     $scope = 'some_scope';
-    $item = new CalculatedPermissionsItem($scope, 'foo', ['bar']);
+    $item = new CalculatedPermissionsItem(['bar'], FALSE, $scope, 'foo');
 
     $calculated_permissions = new RefinableCalculatedPermissions();
     $calculated_permissions->addItem($item);
@@ -103,8 +103,8 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $scope_a = 'cat';
     $scope_b = 'dog';
 
-    $item_a = new CalculatedPermissionsItem($scope_a, 'foo', ['bar']);
-    $item_b = new CalculatedPermissionsItem($scope_b, 1, ['baz']);
+    $item_a = new CalculatedPermissionsItem(['bar'], FALSE, $scope_a, 'foo');
+    $item_b = new CalculatedPermissionsItem(['baz'], FALSE, $scope_b, 1);
 
     $calculated_permissions = (new RefinableCalculatedPermissions())
       ->addItem($item_a)
@@ -130,10 +130,10 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
     $container->get('cache_contexts_manager')->willReturn($cache_context_manager->reveal());
     \Drupal::setContainer($container->reveal());
 
-    $item_a = new CalculatedPermissionsItem($scope, 'foo', ['baz']);
-    $item_b = new CalculatedPermissionsItem($scope, 'foo', ['bob', 'charlie']);
-    $item_c = new CalculatedPermissionsItem($scope, 'bar', []);
-    $item_d = new CalculatedPermissionsItem($scope, 'baz', []);
+    $item_a = new CalculatedPermissionsItem(['baz'], FALSE, $scope, 'foo');
+    $item_b = new CalculatedPermissionsItem(['bob', 'charlie'], FALSE, $scope, 'foo');
+    $item_c = new CalculatedPermissionsItem([], FALSE, $scope, 'bar');
+    $item_d = new CalculatedPermissionsItem([], FALSE, $scope, 'baz');
 
     $calculated_permissions = new RefinableCalculatedPermissions();
     $calculated_permissions
