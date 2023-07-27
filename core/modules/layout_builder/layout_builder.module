@@ -68,6 +68,22 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function layout_builder_theme($existing, $type, $theme, $path) {
+  return [
+    'layout_builder' => [
+      'variables' => [
+        'section_storage' => NULL,
+        'status_messages' => NULL,
+        'sections' => NULL,
+        'element' => NULL,
+      ],
+    ]
+  ];
+}
+
+/**
  * Implements hook_entity_type_alter().
  */
 function layout_builder_entity_type_alter(array &$entity_types) {

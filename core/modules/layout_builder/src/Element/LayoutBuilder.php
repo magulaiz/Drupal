@@ -28,7 +28,10 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
 
   use AjaxHelperTrait;
   use LayoutBuilderContextTrait;
-  use LayoutBuilderHighlightTrait;
+  use LayoutBuilderHighlightTrait {
+    // Alias these methods so they can be called from twig templates.
+    sectionAddHighlightId as getSectionAddHighlightId;
+  }
 
   /**
    * The event dispatcher.
@@ -99,31 +102,30 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
    */
   protected function layout(SectionStorageInterface $section_storage) {
     $this->prepareLayout($section_storage);
-
-    $output = [];
+    $output = [
+      '#theme' => 'layout_builder',
+      '#section_storage' => $section_storage,
+    ];
     if ($this->isAjax()) {
-      $output['status_messages'] = [
+      $output['#status_messages'] = [
         '#type' => 'status_messages',
       ];
     }
-    $count = 0;
+
+    // Add each section.
     for ($i = 0; $i < $section_storage->count(); $i++) {
-      $output[] = $this->buildAddSectionLink($section_storage, $count);
-      $output[] = $this->buildAdministrativeSection($section_storage, $count);
-      $count++;
+      // @todo Add twig templates for this.
+      $output['#sections'][$i]['build'] = $this->buildAdministrativeSection($section_storage, $i);
     }
-    $output[] = $this->buildAddSectionLink($section_storage, $count);
-    $output['#attached']['library'][] = 'layout_builder/drupal.layout_builder';
+
     // As the Layout Builder UI is typically displayed using the frontend theme,
     // it is not marked as an administrative page at the route level even though
     // it performs an administrative task. Mark this as an administrative page
     // for JavaScript.
-    $output['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
-    $output['#type'] = 'container';
-    $output['#attributes']['id'] = 'layout-builder';
-    $output['#attributes']['class'][] = 'layout-builder';
+    $output['#element']['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
+    $output['#element']['#attached']['library'][] = 'layout_builder/drupal.layout_builder';
     // Mark this UI as uncacheable.
-    $output['#cache']['max-age'] = 0;
+    $output['#element']['#cache']['max-age'] = 0;
     return $output;
   }
 
