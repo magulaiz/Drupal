@@ -12,20 +12,20 @@ class CalculatedPermissionsItem implements CalculatedPermissionsItemInterface {
   /**
    * Constructs a new CalculatedPermissionsItem.
    *
-   * @param string $scope
-   *   The scope name.
-   * @param string|int $identifier
-   *   The identifier within the scope.
    * @param string[] $permissions
    *   The permission names.
    * @param bool $isAdmin
    *   (optional) Whether the item grants admin privileges.
+   * @param string $scope
+   *   (optional) The scope name, defaults to 'drupal'.
+   * @param string|int $identifier
+   *   (optional) The identifier within the scope, defaults to 'drupal'.
    */
   public function __construct(
-    protected string $scope,
-    protected string|int $identifier,
     protected array $permissions,
-    protected bool $isAdmin = FALSE
+    protected bool $isAdmin = FALSE,
+    protected string $scope = AccessPolicyInterface::SCOPE_DRUPAL,
+    protected string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL
   ) {
     $this->permissions = $this->isAdmin ? [] : array_unique($this->permissions);
   }

@@ -93,7 +93,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
       $permissions = array_unique(array_merge($a->getPermissions(), $b->getPermissions()));
     }
 
-    return new CalculatedPermissionsItem($a->getScope(), $a->getIdentifier(), $permissions, $is_admin);
+    return new CalculatedPermissionsItem($permissions, $is_admin, $a->getScope(), $a->getIdentifier());
   }
 
 }

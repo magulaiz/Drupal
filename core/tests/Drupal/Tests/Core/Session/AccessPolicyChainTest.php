@@ -390,7 +390,7 @@ class FooAccessPolicy extends AccessPolicyBase {
 
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
-    return $calculated_permissions->addItem(new CalculatedPermissionsItem('foo', 1, ['foo', 'bar'], TRUE));
+    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], TRUE, 'foo', 1));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
@@ -407,7 +407,7 @@ class BarAccessPolicy extends AccessPolicyBase {
 
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
-    return $calculated_permissions->addItem(new CalculatedPermissionsItem('bar', 1, ['foo', 'bar']));
+    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], FALSE, 'bar', 1));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
@@ -424,7 +424,7 @@ class BazAccessPolicy extends AccessPolicyBase {
 
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
-    return $calculated_permissions->addItem(new CalculatedPermissionsItem('baz', 1, ['baz']));
+    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['baz'], FALSE, 'baz', 1));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
@@ -449,9 +449,10 @@ class BarAlterAccessPolicy extends AccessPolicyBase {
         $permissions[$key] = 'baz';
 
         $new_item = new CalculatedPermissionsItem(
+          $permissions,
+          FALSE,
           $item->getScope(),
-          $item->getIdentifier(),
-          $permissions
+          $item->getIdentifier()
         );
 
         $calculated_permissions->addItem($new_item, TRUE);
@@ -469,7 +470,7 @@ class AlwaysAddsAccessPolicy extends AccessPolicyBase {
 
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
-    return $calculated_permissions->addItem(new CalculatedPermissionsItem('always', 1, ['always']));
+    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 1));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
@@ -486,7 +487,7 @@ class AlwaysAltersAccessPolicy extends AccessPolicyBase {
 
   public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {
     parent::alterPermissions($calculated_permissions);
-    $calculated_permissions->addItem(new CalculatedPermissionsItem('always', 2, ['always']));
+    $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 2,));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
