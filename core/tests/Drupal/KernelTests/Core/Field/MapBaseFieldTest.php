@@ -41,6 +41,9 @@ class MapBaseFieldTest extends EntityKernelTestBase {
     }
   }
 
+  /**
+   * Data provider for testMapItemBaseField().
+   */
   public function provideMapItemBaseFieldData() {
     return [
       'single item cardinality, stored in base table' => [1],

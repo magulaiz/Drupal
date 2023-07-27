@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Core\Entity\FieldItemStorageMapperInterface;
+
 /**
  * Delegate StorageMapperInterface methods to the field item class.
  */

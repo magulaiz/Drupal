@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Core\Entity\Sql;
+namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\FieldItemInterface;
 

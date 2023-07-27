@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Core\Entity\Sql\FieldItemStorageMapperInterface;
+use Drupal\Core\Entity\FieldItemStorageMapperInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 

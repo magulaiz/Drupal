@@ -838,6 +838,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     return !empty($this->definition['internal']);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   protected function getFieldItemClass() {
     return $this->getItemDefinition()->getClass();
   }
