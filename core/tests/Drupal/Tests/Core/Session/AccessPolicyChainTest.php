@@ -487,7 +487,7 @@ class AlwaysAltersAccessPolicy extends AccessPolicyBase {
 
   public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {
     parent::alterPermissions($calculated_permissions);
-    $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 2,));
+    $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 2));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
