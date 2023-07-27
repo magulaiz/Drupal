@@ -207,6 +207,7 @@
     margin: 0;
     border: 0;
     box-shadow: none;
+    flex-wrap: wrap;
   }
 
   .is-horizontal .tabs--secondary {
