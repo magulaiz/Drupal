@@ -219,6 +219,7 @@ class ManagedFile extends FormElement {
    *   ID, or FALSE if no files were saved.
    */
   public static function saveUpload($element, FormStateInterface $form_state) {
+    \Drupal::moduleHandler()->load('file');
     $upload_name = implode('_', $element['#parents']);
     $all_files = \Drupal::request()->files->get('files', []);
     if (empty($all_files[$upload_name])) {
