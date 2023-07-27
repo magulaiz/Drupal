@@ -143,7 +143,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       '#type' => 'checkbox',
       '#title' => $this->t('Contextualize title based on page hierarchy'),
       '#default_value' => $this->configuration['contextualize_title'],
-      '#description' => $this->t('@todo Explain how this works'),
+      '#description' => $this->t('Display the page title based on the current context opposed to the default behaviour which displays title based on the current page.'),
     ];
     return $form;
   }
@@ -155,6 +155,9 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     $this->configuration['contextualize_title'] = $form_state->getValue('contextualize_title');
   }
 
+  /**
+   * Sets configuration for title when base route is available.
+   */
   private function setConfigurationForTitle() {
     $route_name = $this->routeMatch->getRouteName();
     $base_route = $this->localTaskManager->getBaseRoute($route_name);
