@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\views\Unit\Routing;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Routing\ViewPageController;
@@ -42,6 +44,12 @@ class ViewPageControllerTest extends UnitTestCase {
     parent::setUp();
 
     $this->pageController = new ViewPageController();
+
+    $module_handler = $this->getMockBuilder(ModuleHandlerInterface::class)
+      ->getMock();
+    $container = new ContainerBuilder();
+    $container->set('module_handler', $module_handler);
+    \Drupal::setContainer($container);
   }
 
   /**
