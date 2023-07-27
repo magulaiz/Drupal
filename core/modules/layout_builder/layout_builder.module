@@ -79,7 +79,7 @@ function layout_builder_theme($existing, $type, $theme, $path) {
         'sections' => NULL,
         'element' => NULL,
       ],
-    ]
+    ],
   ];
 }
 
