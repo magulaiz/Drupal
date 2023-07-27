@@ -195,7 +195,7 @@ class AccessPolicyChainTest extends UnitTestCase {
     $chain_calculator->addAccessPolicy(new AlwaysAddsAccessPolicy());
 
     $this->expectException(AccessPolicyScopeException::class);
-    $this->expectExceptionMessage(sprintf('The calculator "%s" returned permissions for scopes other than "%s".', AlwaysAddsAccessPolicy::class, 'bar'));
+    $this->expectExceptionMessage(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', AlwaysAddsAccessPolicy::class, 'bar'));
     $chain_calculator->calculatePermissions($this->prophesize(AccountInterface::class)->reveal(), 'bar');
   }
 
@@ -210,7 +210,7 @@ class AccessPolicyChainTest extends UnitTestCase {
     $chain_calculator->addAccessPolicy(new AlwaysAddsAccessPolicy());
 
     $this->expectException(AccessPolicyScopeException::class);
-    $this->expectExceptionMessage(sprintf('The calculator "%s" returned permissions for scopes other than "%s".', AlwaysAddsAccessPolicy::class, 'foo'));
+    $this->expectExceptionMessage(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', AlwaysAddsAccessPolicy::class, 'foo'));
     $chain_calculator->calculatePermissions($this->prophesize(AccountInterface::class)->reveal(), 'foo');
   }
 
@@ -225,7 +225,7 @@ class AccessPolicyChainTest extends UnitTestCase {
     $chain_calculator->addAccessPolicy(new AlwaysAltersAccessPolicy());
 
     $this->expectException(AccessPolicyScopeException::class);
-    $this->expectExceptionMessage(sprintf('The calculator "%s" altered permissions in a scope other than "%s".', AlwaysAltersAccessPolicy::class, 'foo'));
+    $this->expectExceptionMessage(sprintf('The access policy "%s" altered permissions in a scope other than "%s".', AlwaysAltersAccessPolicy::class, 'foo'));
     $chain_calculator->calculatePermissions($this->prophesize(AccountInterface::class)->reveal(), 'foo');
   }
 
