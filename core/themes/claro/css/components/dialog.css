@@ -21,39 +21,21 @@
   box-shadow: var(--jui-dialog-box-shadow);
 }
 
-@media (forced-colors: active) {
-  .ui-dialog {
-    border: 1px solid transparent;
-  }
-}
-
 .ui-dialog:focus {
   outline: var(--jui-dialog--focus-outline);
   box-shadow: var(--jui-dialog--focus-box-shadow);
 }
 
-@media all and (max-width: 48em) {
-  /* 768px */
-  .ui-dialog:not(.ui-dialog-off-canvas) {
-    min-width: 92%;
-    max-width: 92%;
-  }
-}
-
 .ui-dialog .ui-dialog-titlebar {
   position: relative;
   box-sizing: border-box;
-  padding: var(--space-m) var(--jui-dialog-close-button-reserved-space) var(--space-m) var(--space-l); /* LTR */
+  padding-block: var(--space-m);
+  padding-inline: var(--space-l) var(--jui-dialog-close-button-reserved-space);
   color: var(--jui-dialog-title-color);
   border-top-left-radius: var(--jui-dialog-border-radius);
   border-top-right-radius: var(--jui-dialog-border-radius);
   background: var(--jui-dialog-title-bg-color);
   line-height: calc(var(--space-m) * 2);
-}
-
-[dir="rtl"] .ui-dialog .ui-dialog-titlebar {
-  padding-right: var(--space-l);
-  padding-left: var(--jui-dialog-close-button-reserved-space);
 }
 
 .ui-dialog .ui-dialog-title {
@@ -64,8 +46,8 @@
 
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
-  top: 50%;
-  right: 0; /* LTR */
+  inset-block-start: 50%;
+  inset-inline-end: 0;
   box-sizing: border-box;
   width: var(--jui-dialog-close-button-size);
   height: var(--jui-dialog-close-button-size);
@@ -76,11 +58,6 @@
   border: 2px solid transparent;
   border-radius: var(--jui-dialog-close-button-border-radius);
   background: none;
-}
-
-[dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
-  right: auto;
-  left: 0;
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover {
@@ -102,10 +79,18 @@
 }
 
 .ui-dialog > .ui-dialog-content {
+  position: static;
   overflow: auto;
   padding: var(--space-m) var(--space-l);
   color: var(--color-text);
   background: var(--color-white);
+
+  /* Form action buttons are moved in dialogs. Remove empty space. */
+}
+
+.ui-dialog > .ui-dialog-content .form-actions {
+  margin: 0;
+  padding: 0;
 }
 
 .ui-dialog > .ui-dialog-buttonpane {
@@ -115,36 +100,37 @@
   background: var(--color-gray-050);
 }
 
-.ui-dialog-buttonpane .ui-dialog-buttonset {
-  justify-content: flex-end;
-  margin: 0 var(--space-s);
-}
-
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
   padding: 0;
 }
 
-.ui-dialog .ui-dialog-content {
-  position: static;
-}
-
-/* Form action buttons are moved in dialogs. Remove empty space. */
-
-.ui-dialog .ui-dialog-content .form-actions {
-  margin: 0;
-  padding: 0;
-}
-
-/**
- * Off-canvas styles.
- */
+/** Off-canvas styles. */
 
 .ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
   background: none;
 }
 
+@media all and (max-width: 48em) {
+  .ui-dialog:not(.ui-dialog-off-canvas) {
+    /* 768px */
+    min-width: 92%;
+    max-width: 92%;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-dialog {
+    border: 1px solid transparent;
+  }
+}
+
+.ui-dialog-buttonpane .ui-dialog-buttonset {
+  justify-content: flex-end;
+  margin: 0 var(--space-s);
+}
+
 #drupal-off-canvas .form-type--boolean {
-  margin-left: 0;
+  margin-inline-start: 0;
 }
 
 #drupal-off-canvas .form-item .form-item__description {
