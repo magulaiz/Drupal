@@ -8,7 +8,7 @@ use Drupal\Core\Cache\VariationCacheInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AccessPolicyBase;
-use Drupal\Core\Session\AccessPolicyChain;
+use Drupal\Core\Session\AccessPolicyProcessor;
 use Drupal\Core\Session\AccessPolicyScopeException;
 use Drupal\Core\Session\CalculatedPermissions;
 use Drupal\Core\Session\CalculatedPermissionsInterface;
@@ -20,12 +20,12 @@ use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests the AccessPolicyChain service.
+ * Tests the AccessPolicyProcessor service.
  *
- * @coversDefaultClass \Drupal\Core\Session\AccessPolicyChain
+ * @coversDefaultClass \Drupal\Core\Session\AccessPolicyProcessor
  * @group Session
  */
-class AccessPolicyChainTest extends UnitTestCase {
+class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
@@ -48,19 +48,19 @@ class AccessPolicyChainTest extends UnitTestCase {
    * @covers ::getAccessPolicies
    */
   public function testAddAccessPolicy() {
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $calculators = [
+    $processor = $this->setUpAccessPolicyProcessor();
+    $access_policies = [
       new FooAccessPolicy(),
       new BarAccessPolicy(),
       new BazAccessPolicy(),
       new BarAlterAccessPolicy(),
     ];
 
-    foreach ($calculators as $calculator) {
-      $chain_calculator->addAccessPolicy($calculator);
+    foreach ($access_policies as $access_policy) {
+      $processor->addAccessPolicy($access_policy);
     }
 
-    $this->assertEquals($calculators, $chain_calculator->getAccessPolicies(), 'The added access policies match the returned ones.');
+    $this->assertEquals($access_policies, $processor->getAccessPolicies(), 'The added access policies match the returned ones.');
   }
 
   /**
@@ -70,65 +70,65 @@ class AccessPolicyChainTest extends UnitTestCase {
    * @covers ::getPersistentCacheContexts
    */
   public function testGetPersistentCacheContexts() {
-    $chain_calculator = $this->setUpAccessPolicyChain();
+    $processor = $this->setUpAccessPolicyProcessor();
 
-    foreach ([new FooAccessPolicy(), new BarAccessPolicy(), new BazAccessPolicy(), new BarAlterAccessPolicy()] as $calculator) {
-      $chain_calculator->addAccessPolicy($calculator);
+    foreach ([new FooAccessPolicy(), new BarAccessPolicy(), new BazAccessPolicy(), new BarAlterAccessPolicy()] as $access_policy) {
+      $processor->addAccessPolicy($access_policy);
     }
 
-    $this->assertEquals(['foo', 'bar'], $chain_calculator->getPersistentCacheContexts('anything'), 'Cache contexts match only those access policies that apply to the scope.');
+    $this->assertEquals(['foo', 'bar'], $processor->getPersistentCacheContexts('anything'), 'Cache contexts match only those access policies that apply to the scope.');
   }
 
   /**
-   * Tests that calculators are properly processed.
+   * Tests that access policies are properly processed.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testCalculatePermissions() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
-    $calculator = new BarAccessPolicy();
+    $access_policy = new BarAccessPolicy();
 
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy($calculator);
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy($access_policy);
 
-    $calculator_permissions = $calculator->calculatePermissions($account, 'bar');
-    $calculator_permissions->addCacheTags(['access_policies']);
-    $this->assertEquals(new CalculatedPermissions($calculator_permissions), $chain_calculator->calculatePermissions($account, 'bar'));
+    $access_policy_permissions = $access_policy->calculatePermissions($account, 'bar');
+    $access_policy_permissions->addCacheTags(['access_policies']);
+    $this->assertEquals(new CalculatedPermissions($access_policy_permissions), $processor->processAccessPolicies($account, 'bar'));
   }
 
   /**
-   * Tests that calculators that do not apply are not processed.
+   * Tests that access policies that do not apply are not processed.
    *
    * @covers ::applies
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testCalculatePermissionsNoApply() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
-    $calculator = new BarAccessPolicy();
+    $access_policy = new BarAccessPolicy();
 
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy($calculator);
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy($access_policy);
 
     $no_permissions = new RefinableCalculatedPermissions();
     $no_permissions->addCacheTags(['access_policies']);
-    $calculated_permissions = $chain_calculator->calculatePermissions($account, 'nothing');
+    $calculated_permissions = $processor->processAccessPolicies($account, 'nothing');
     $this->assertEquals(new CalculatedPermissions($no_permissions), $calculated_permissions);
   }
 
   /**
-   * Tests that calculators can alter the final result.
+   * Tests that access policies can alter the final result.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testAlterPermissions() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
 
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy(new BarAccessPolicy());
-    $chain_calculator->addAccessPolicy(new BarAlterAccessPolicy());
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy(new BarAccessPolicy());
+    $processor->addAccessPolicy(new BarAlterAccessPolicy());
 
-    $actual_permissions = $chain_calculator
-      ->calculatePermissions($account, 'bar')
+    $actual_permissions = $processor
+      ->processAccessPolicies($account, 'bar')
       ->getItem('bar', 1)
       ->getPermissions();
 
@@ -138,101 +138,101 @@ class AccessPolicyChainTest extends UnitTestCase {
   /**
    * Tests that alters that do not apply are not processed.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testAlterPermissionsNoApply() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
 
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy($calculator = new FooAccessPolicy());
-    $chain_calculator->addAccessPolicy(new BarAlterAccessPolicy());
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy($access_policy = new FooAccessPolicy());
+    $processor->addAccessPolicy(new BarAlterAccessPolicy());
 
-    $calculator_permissions = $calculator->calculatePermissions($account, 'foo');
-    $calculator_permissions->addCacheTags(['access_policies']);
-    $this->assertEquals(new CalculatedPermissions($calculator_permissions), $chain_calculator->calculatePermissions($account, 'foo'));
+    $access_policy_permissions = $access_policy->calculatePermissions($account, 'foo');
+    $access_policy_permissions->addCacheTags(['access_policies']);
+    $this->assertEquals(new CalculatedPermissions($access_policy_permissions), $processor->processAccessPolicies($account, 'foo'));
   }
 
   /**
-   * Tests that calculators which do nothing are properly processed.
+   * Tests that access policies which do nothing are properly processed.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testEmptyCalculator() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
-    $calculator = new EmptyAccessPolicy();
+    $access_policy = new EmptyAccessPolicy();
 
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy($calculator);
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy($access_policy);
 
-    $calculator_permissions = $calculator->calculatePermissions($account, 'anything');
-    $calculator_permissions->addCacheTags(['access_policies']);
-    $calculated_permissions = $chain_calculator->calculatePermissions($account, 'anything');
-    $this->assertEquals(new CalculatedPermissions($calculator_permissions), $calculated_permissions);
+    $access_policy_permissions = $access_policy->calculatePermissions($account, 'anything');
+    $access_policy_permissions->addCacheTags(['access_policies']);
+    $calculated_permissions = $processor->processAccessPolicies($account, 'anything');
+    $this->assertEquals(new CalculatedPermissions($access_policy_permissions), $calculated_permissions);
   }
 
   /**
-   * Tests that everything works if no calculators are present.
+   * Tests that everything works if no access policies are present.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testNoCalculators() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
-    $chain_calculator = $this->setUpAccessPolicyChain();
+    $processor = $this->setUpAccessPolicyProcessor();
 
     $no_permissions = new RefinableCalculatedPermissions();
     $no_permissions->addCacheTags(['access_policies']);
-    $calculated_permissions = $chain_calculator->calculatePermissions($account, 'anything');
+    $calculated_permissions = $processor->processAccessPolicies($account, 'anything');
     $this->assertEquals(new CalculatedPermissions($no_permissions), $calculated_permissions);
   }
 
   /**
    * Tests the wrong scope exception.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testWrongScopeException() {
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy(new AlwaysAddsAccessPolicy());
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy(new AlwaysAddsAccessPolicy());
 
     $this->expectException(AccessPolicyScopeException::class);
     $this->expectExceptionMessage(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', AlwaysAddsAccessPolicy::class, 'bar'));
-    $chain_calculator->calculatePermissions($this->prophesize(AccountInterface::class)->reveal(), 'bar');
+    $processor->processAccessPolicies($this->prophesize(AccountInterface::class)->reveal(), 'bar');
   }
 
   /**
    * Tests the multiple scopes exception.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testMultipleScopeException() {
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy(new FooAccessPolicy());
-    $chain_calculator->addAccessPolicy(new AlwaysAddsAccessPolicy());
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy(new FooAccessPolicy());
+    $processor->addAccessPolicy(new AlwaysAddsAccessPolicy());
 
     $this->expectException(AccessPolicyScopeException::class);
     $this->expectExceptionMessage(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', AlwaysAddsAccessPolicy::class, 'foo'));
-    $chain_calculator->calculatePermissions($this->prophesize(AccountInterface::class)->reveal(), 'foo');
+    $processor->processAccessPolicies($this->prophesize(AccountInterface::class)->reveal(), 'foo');
   }
 
   /**
    * Tests the multiple scopes exception.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    */
   public function testMultipleScopeAlterException() {
-    $chain_calculator = $this->setUpAccessPolicyChain();
-    $chain_calculator->addAccessPolicy(new FooAccessPolicy());
-    $chain_calculator->addAccessPolicy(new AlwaysAltersAccessPolicy());
+    $processor = $this->setUpAccessPolicyProcessor();
+    $processor->addAccessPolicy(new FooAccessPolicy());
+    $processor->addAccessPolicy(new AlwaysAltersAccessPolicy());
 
     $this->expectException(AccessPolicyScopeException::class);
     $this->expectExceptionMessage(sprintf('The access policy "%s" altered permissions in a scope other than "%s".', AlwaysAltersAccessPolicy::class, 'foo'));
-    $chain_calculator->calculatePermissions($this->prophesize(AccountInterface::class)->reveal(), 'foo');
+    $processor->processAccessPolicies($this->prophesize(AccountInterface::class)->reveal(), 'foo');
   }
 
   /**
    * Tests if the account switcher switches properly when user cache context is present.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    * @dataProvider accountSwitcherProvider
    */
   public function testAccountSwitcher($has_user_context) {
@@ -248,12 +248,12 @@ class AccessPolicyChainTest extends UnitTestCase {
       $account_switcher->switchBack()->shouldNotBeCalled();
     }
 
-    $chain_calculator = $this->setUpAccessPolicyChain(NULL, NULL, NULL, $account_switcher->reveal());
-    $chain_calculator->addAccessPolicy(new BarAccessPolicy());
+    $processor = $this->setUpAccessPolicyProcessor(NULL, NULL, NULL, $account_switcher->reveal());
+    $processor->addAccessPolicy(new BarAccessPolicy());
     if ($has_user_context) {
-      $chain_calculator->addAccessPolicy(new UserContextAccessPolicy());
+      $processor->addAccessPolicy(new UserContextAccessPolicy());
     }
-    $chain_calculator->calculatePermissions($account, 'bar');
+    $processor->processAccessPolicies($account, 'bar');
   }
 
   /**
@@ -271,7 +271,7 @@ class AccessPolicyChainTest extends UnitTestCase {
   /**
    * Tests if the account switcher switches properly when user cache context is present.
    *
-   * @covers ::calculatePermissions
+   * @covers ::processAccessPolicies
    * @dataProvider cachingProvider
    */
   public function testCaching(bool $db_cache_hit, bool $static_cache_hit) {
@@ -282,8 +282,8 @@ class AccessPolicyChainTest extends UnitTestCase {
     $account = $this->prophesize(AccountInterface::class)->reveal();
     $scope = 'bar';
 
-    $bar_calculator = new BarAccessPolicy();
-    $bar_permissions = $bar_calculator->calculatePermissions($account, $scope);
+    $bar_access_policy = new BarAccessPolicy();
+    $bar_permissions = $bar_access_policy->calculatePermissions($account, $scope);
     $bar_permissions->addCacheTags(['access_policies']);
     $bar_permissions = new CalculatedPermissions($bar_permissions);
 
@@ -310,9 +310,9 @@ class AccessPolicyChainTest extends UnitTestCase {
     $cache_static = $cache_static->reveal();
     $cache_db = $cache_db->reveal();
 
-    $chain_calculator = $this->setUpAccessPolicyChain($cache_db, $cache_static);
-    $chain_calculator->addAccessPolicy($bar_calculator);
-    $permissions = $chain_calculator->calculatePermissions($account, $scope);
+    $processor = $this->setUpAccessPolicyProcessor($cache_db, $cache_static);
+    $processor->addAccessPolicy($bar_access_policy);
+    $permissions = $processor->processAccessPolicies($account, $scope);
     $this->assertEquals($bar_permissions, $permissions, 'Cached permission matches calculated.');
   }
 
@@ -332,11 +332,11 @@ class AccessPolicyChainTest extends UnitTestCase {
   }
 
   /**
-   * Sets up the access policy chain.
+   * Sets up the access policy processor.
    *
-   * @return \Drupal\Core\Session\AccessPolicyChainInterface
+   * @return \Drupal\Core\Session\AccessPolicyProcessorInterface
    */
-  protected function setUpAccessPolicyChain(
+  protected function setUpAccessPolicyProcessor(
     VariationCacheInterface $variation_cache = NULL,
     VariationCacheInterface $variation_cache_static = NULL,
     CacheBackendInterface $cache_static = NULL,
@@ -372,7 +372,7 @@ class AccessPolicyChainTest extends UnitTestCase {
       $account_switcher = $this->prophesize(AccountSwitcherInterface::class)->reveal();
     }
 
-    return new AccessPolicyChain(
+    return new AccessPolicyProcessor(
       $variation_cache,
       $variation_cache_static,
       $cache_static,

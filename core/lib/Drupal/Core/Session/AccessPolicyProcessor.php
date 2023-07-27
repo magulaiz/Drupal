@@ -9,7 +9,7 @@ use Drupal\Core\Cache\VariationCacheInterface;
 /**
  * Processes access policies into permissions for an account.
  */
-class AccessPolicyChain implements AccessPolicyChainInterface {
+class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
 
   /**
    * The access policies.
@@ -54,14 +54,7 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(string $scope): bool {
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function processAccessPolicies(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $persistent_cache_contexts = $this->getPersistentCacheContexts($scope);
     $initial_cacheability = (new CacheableMetadata())->addCacheContexts($persistent_cache_contexts);
     $cache_keys = ['access_policies', $scope];
@@ -124,7 +117,7 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
         $calculated_permissions = $calculated_permissions->merge($policy_permissions);
       }
 
-      // Alter mode, allow all calculators to alter the complete build.
+      // Alter mode, allow all access policies to alter the complete build.
       foreach ($this->getAccessPolicies() as $access_policy) {
         if (!$access_policy->applies($scope)) {
           continue;
@@ -164,7 +157,7 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
    * {@inheritdoc}
    */
   public function getPersistentCacheContexts(string $scope): array {
-    $cid = 'access_policies:access_policy_chain:contexts:' . $scope;
+    $cid = 'access_policies:access_policy_processor:contexts:' . $scope;
 
     // Retrieve the contexts from the regular static cache if available.
     if ($static_cache = $this->regularStatic->get($cid)) {
@@ -186,11 +179,6 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {}
-
-  /**
    * Validates if calculated permissions all match a single scope.
    *
    * @param string $scope
@@ -205,8 +193,8 @@ class AccessPolicyChain implements AccessPolicyChainInterface {
     $actual_scopes = $calculated_permissions->getScopes();
 
     // Validate that only the requested scope was returned. An empty result is
-    // allowed, however, as it might be that the calculator had nothing to say
-    // for this scope.
+    // allowed, however, as it might be that the access policy had nothing to
+    // say for this scope.
     if (!empty($actual_scopes) && (count($actual_scopes) > 1 || reset($actual_scopes) !== $scope)) {
       return FALSE;
     }

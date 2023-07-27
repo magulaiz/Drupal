@@ -1555,12 +1555,12 @@ services:
     class: Drupal\Core\Session\AccountSwitcher
     arguments: ['@current_user', '@session_handler.write_safe']
   Drupal\Core\Session\AccountSwitcherInterface: '@account_switcher'
-  access_policy_chain:
-    class: Drupal\Core\Session\AccessPolicyChain
+  access_policy_processor:
+    class: Drupal\Core\Session\AccessPolicyProcessor
     arguments: ['@variation_cache.access_policy', '@variation_cache.access_policy_memory', '@cache.access_policy_memory', '@account_switcher']
     tags:
       - { name: service_collector, call: addAccessPolicy, tag: access_policy }
-  Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_chain'
+  Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_processor'
   permission_checker:
     class: Drupal\Core\Session\PermissionChecker
     arguments: ['@entity_type.manager']
