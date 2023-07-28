@@ -24,6 +24,7 @@
 .tabs {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   width: 100%;
   margin: 0 0 1.5rem 0;
   border: 1px solid #d3d4d9;
@@ -207,7 +208,6 @@
     margin: 0;
     border: 0;
     box-shadow: none;
-    flex-wrap: wrap;
   }
 
   .is-horizontal .tabs--secondary {
