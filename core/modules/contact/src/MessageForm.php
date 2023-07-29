@@ -125,7 +125,6 @@ class MessageForm extends ContentEntityForm {
     ];
     if ($user->isAnonymous()) {
       $form['#attached']['library'][] = 'core/drupal.form';
-      $form['#attributes']['data-user-info-from-browser'] = TRUE;
     }
     // Do not allow authenticated users to alter the name or email values to
     // prevent the impersonation of other users.
