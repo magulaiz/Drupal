@@ -102,7 +102,7 @@ class BlockContentDeriverTest extends KernelTestBase {
       $plugin = \Drupal::service('plugin.manager.block')->createInstance('block_content:' . $entity->uuid());
       $plugin_definition = $plugin->getPluginDefinition();
 
-      // Check the plugin definiction admin label.
+      // Check the plugin definition admin label.
       $expected_label = $entity->label() ?? sprintf('%s %s', $entity->type->entity->label(), $entity->id());
       $this->assertEquals($expected_label, $plugin_definition['admin_label']);
       $this->assertNotNull($plugin_definition['admin_label']);
