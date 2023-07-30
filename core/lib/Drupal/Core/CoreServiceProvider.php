@@ -104,7 +104,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new DeprecatedServicePass());
 
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
-      ->addTag('event_subscriber');
+      ->addTag('kernel.event_subscriber');
   }
 
   /**
