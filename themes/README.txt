@@ -11,7 +11,7 @@ without overwriting these files.
 DOWNLOAD ADDITIONAL THEMES
 --------------------------
 
-Contributed themes from the Drupal community may be download at
+Contributed themes from the Drupal community may be downloading at
 https://www.drupal.org/project/project_theme.
 
 MULTISITE CONFIGURATION
