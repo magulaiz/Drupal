@@ -138,7 +138,7 @@ trait FunctionalTestSetupTrait {
       $services['services']['testing.config_schema_checker'] = [
         'class' => ConfigSchemaChecker::class,
         'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
-        'tags' => [['name' => 'event_subscriber']],
+        'tags' => [['name' => 'kernel.event_subscriber']],
       ];
       file_put_contents($directory . '/services.yml', $yaml->dump($services));
     }

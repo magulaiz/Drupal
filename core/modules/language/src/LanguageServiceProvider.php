@@ -22,7 +22,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     // The following services are needed only on multilingual sites.
     if ($this->isMultilingual()) {
       $container->register('language_request_subscriber', 'Drupal\language\EventSubscriber\LanguageRequestSubscriber')
-        ->addTag('event_subscriber')
+        ->addTag('kernel.event_subscriber')
         ->addArgument(new Reference('language_manager'))
         ->addArgument(new Reference('language_negotiator'))
         ->addArgument(new Reference('string_translation'))

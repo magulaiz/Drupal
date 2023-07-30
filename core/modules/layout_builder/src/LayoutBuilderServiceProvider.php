@@ -36,7 +36,7 @@ class LayoutBuilderServiceProvider implements ServiceProviderInterface {
         new Reference('inline_block.usage'),
         new Reference('plugin.manager.layout_builder.section_storage'),
       ]);
-      $definition->addTag('event_subscriber');
+      $definition->addTag('kernel.event_subscriber');
       $definition->setPublic(TRUE);
       $container->setDefinition('layout_builder.get_block_dependency_subscriber', $definition);
     }

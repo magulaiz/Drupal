@@ -63,7 +63,7 @@ class AutowireTest extends KernelTestBase {
                 'access_check',
                 'cache.context',
                 'context_provider',
-                'event_subscriber',
+                'kernel.event_subscriber',
                 'module_install.uninstall_validator',
               ])) {
                 continue 2;
