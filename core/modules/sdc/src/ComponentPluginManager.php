@@ -182,20 +182,18 @@ final class ComponentPluginManager extends DefaultPluginManager {
     $component_directory = $this->fileSystem->dirname($metadata_path);
     // Add the JS and CSS files.
     $library = [];
-    $css_file = $this->findAsset(
+    $css_file = $this->findLibraryAsset(
       $component_directory,
       $definition['machineName'],
       'css',
-      TRUE
     );
     if ($css_file) {
       $library['css']['component'][$css_file] = [];
     }
-    $js_file = $this->findAsset(
+    $js_file = $this->findLibraryAsset(
       $component_directory,
       $definition['machineName'],
       'js',
-      TRUE
     );
     if ($js_file) {
       $library['js'][$js_file] = [];
@@ -321,6 +319,13 @@ final class ComponentPluginManager extends DefaultPluginManager {
       'twig'
     );
     $definition['template'] = basename($template);
+
+    $thumbnail = $this->findAsset(
+      $component_directory,
+      $definition['machineName'],
+      ['png', 'svg']
+    );
+    $definition['thumbnail'] = basename($thumbnail);
     $definition['documentation'] = 'No documentation found. Add a README.md in your component directory.';
     $documentation_path = sprintf('%s/README.md', $this->fileSystem->dirname($metadata_path));
     if (file_exists($documentation_path)) {
@@ -438,22 +443,59 @@ final class ComponentPluginManager extends DefaultPluginManager {
    *   The component directory for the plugin.
    * @param string $machine_name
    *   The component's machine name.
-   * @param string $file_extension
-   *   The file extension to detect.
-   * @param bool $make_relative
-   *   TRUE to make the filename relative to the SDC module location.
+   * @param array|string $file_extension
+   *   A single or multiple file extensions.
    *
    * @return string|null
    *   Filenames, maybe relative to the sdc module.
    */
-  private function findAsset(string $component_directory, string $machine_name, string $file_extension, bool $make_relative = FALSE): ?string {
-    $absolute_path = sprintf('%s%s%s.%s', $component_directory, DIRECTORY_SEPARATOR, $machine_name, $file_extension);
-    if (!file_exists($absolute_path)) {
-      return NULL;
+  private function findAsset(
+    string $component_directory,
+    string $machine_name,
+    array|string $file_extension
+  ): ?string {
+    $extensions = (array)$file_extension;
+
+    foreach ($extensions as $extension) {
+      $path = sprintf(
+        '%s%s%s.%s',
+        $component_directory,
+        DIRECTORY_SEPARATOR,
+        $machine_name,
+        $extension
+      );
+
+      if (file_exists($path)) {
+        return $path;
+      }
     }
-    return $make_relative
-      ? $this->makePathRelativeToLibraryRoot($absolute_path)
-      : $absolute_path;
+
+    return NULL;
+  }
+
+  /**
+   * Finds assets related to the provided metadata file.
+   *
+   * @param string $component_directory
+   *   The component directory for the plugin.
+   * @param string $machine_name
+   *   The component's machine name.
+   * @param string $file_extension
+   *   The file extension to detect.
+   *
+   * @return string|null
+   *   The library asset path.
+   */
+  private function findLibraryAsset(
+    string $component_directory,
+    string $machine_name,
+    string $file_extension
+  ): ?string {
+    if ($path = $this->findAsset($component_directory, $machine_name, $file_extension)) {
+      return $this->makePathRelativeToLibraryRoot($path);
+    }
+
+    return NULL;
   }
 
   /**
