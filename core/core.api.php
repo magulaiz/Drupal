@@ -2589,8 +2589,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  *
  * @section sec_subscribe Registering event subscribers
  * Here are the steps to register an event subscriber:
- * - Define a service in your module, tagged with 'event_subscriber' (see the
- *   @link container Services topic @endlink for instructions).
+ * - Define a service in your module, tagged with 'kernel.event_subscriber'
+ *   (see the @link container Services topic @endlink for instructions).
  * - Define a class for your subscriber service that implements
  *   \Symfony\Component\EventDispatcher\EventSubscriberInterface
  * - In your class, the getSubscribedEvents method returns a list of the events
