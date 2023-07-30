@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
@@ -96,7 +97,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
 
       // Merge any additional attributes.
       if (!empty($css_asset['attributes'])) {
-        $element['#attributes'] += $css_asset['attributes'];
+        $element['#attributes'] = NestedArray::mergeDeep($element['#attributes'], $css_asset['attributes']);
       }
 
       $elements[] = $element;
