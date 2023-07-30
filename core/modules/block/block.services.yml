@@ -6,7 +6,7 @@ services:
   block.page_display_variant_subscriber:
     class: Drupal\block\EventSubscriber\BlockPageDisplayVariantSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   block.repository:
     class: Drupal\block\BlockRepository
     arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']

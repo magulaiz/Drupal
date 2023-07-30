@@ -2,7 +2,7 @@ services:
   html_response.big_pipe_subscriber:
     class: Drupal\big_pipe\EventSubscriber\HtmlResponseBigPipeSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
     arguments: ['@big_pipe']
   placeholder_strategy.big_pipe:
     class: Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
@@ -22,4 +22,4 @@ services:
   route_subscriber.no_big_pipe:
     class: Drupal\big_pipe\EventSubscriber\NoBigPipeRouteAlterSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }

@@ -20,7 +20,7 @@ services:
     arguments: ['@session_configuration', '@database', '@messenger']
     tags:
       - { name: authentication_provider, provider_id: 'cookie', priority: 0, global: TRUE }
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']
@@ -31,17 +31,17 @@ services:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
     arguments: ['@maintenance_mode', '@current_user']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   user_access_denied_subscriber:
     class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
     arguments: ['@current_user']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   user_last_access_subscriber:
     class: Drupal\user\EventSubscriber\UserRequestSubscriber
     arguments: ['@current_user', '@entity_type.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   theme.negotiator.admin_theme:
     class: Drupal\user\Theme\AdminNegotiator
     arguments: ['@current_user', '@config.factory', '@entity_type.manager', '@router.admin_context']
@@ -71,7 +71,7 @@ services:
     class: Drupal\user\EventSubscriber\UserFloodSubscriber
     arguments: ['@logger.channel.user']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: kernel.event_subscriber }
   logger.channel.user:
     parent: logger.channel_base
     arguments: ['user']

@@ -78,7 +78,7 @@ services:
     class: Drupal\views\EventSubscriber\RouteSubscriber
     arguments: ['@entity_type.manager', '@state']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: kernel.event_subscriber }
   views.exposed_form_cache:
     class: Drupal\views\ExposedFormCache
   Drupal\views\ExposedFormCache: '@views.exposed_form_cache'
@@ -86,7 +86,7 @@ services:
     class: Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
     arguments: ['@entity_type.manager', '@logger.channel.default']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: kernel.event_subscriber }
   views.date_sql:
     class: Drupal\views\Plugin\views\query\MysqlDateSql
     arguments: ['@database']

@@ -2,4 +2,4 @@ services:
   config.config_subscriber:
     class: Drupal\config\ConfigSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }

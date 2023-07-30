@@ -53,7 +53,7 @@ services:
       - ['setVariationCache', ['@variation_cache.jsonapi_normalizations']]
       - ['setRequestStack', ['@request_stack']]
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   serializer.normalizer.content_entity.jsonapi:
     class: Drupal\jsonapi\Normalizer\ContentEntityDenormalizer
     arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
@@ -116,7 +116,7 @@ services:
   jsonapi.exception_subscriber:
     class: Drupal\jsonapi\EventSubscriber\DefaultExceptionSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
     arguments: ['@jsonapi.serializer', '%serializer.formats%']
 
   logger.channel.jsonapi:
@@ -209,24 +209,24 @@ services:
   jsonapi.custom_query_parameter_names_validator.subscriber:
     class: Drupal\jsonapi\EventSubscriber\JsonApiRequestValidator
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   jsonapi.resource_response.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber
     arguments: ['@jsonapi.serializer']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   jsonapi.resource_response_validator.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseValidator
     arguments: ['@logger.channel.jsonapi', '@module_handler', '%app.root%']
     calls:
       - [setValidator, []]
     tags:
-      - { name: event_subscriber, priority: 1000 }
+      - { name: kernel.event_subscriber, priority: 1000 }
   jsonapi.maintenance_mode_subscriber:
     class: Drupal\jsonapi\EventSubscriber\JsonapiMaintenanceModeSubscriber
     arguments: ['@maintenance_mode', '@config.factory']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
 
   # Revision management.
   jsonapi.version_negotiator:

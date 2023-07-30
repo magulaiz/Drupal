@@ -3,4 +3,4 @@ services:
     class: Drupal\entity_test_update\EventSubscriber\EntitySchemaSubscriber
     arguments: ['@entity.definition_update_manager', '@state']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: kernel.event_subscriber }

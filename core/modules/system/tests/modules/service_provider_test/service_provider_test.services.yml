@@ -2,7 +2,7 @@ services:
   service_provider_test_class:
     class: Drupal\service_provider_test\TestClass
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
       - { name: needs_destruction }
     parent: container.trait
     arguments: ['@state']

@@ -2,7 +2,7 @@ services:
   node.route_subscriber:
     class: Drupal\node\Routing\RouteSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
     arguments: ['@database', '@module_handler', '@language_manager']
@@ -18,7 +18,7 @@ services:
     class: Drupal\node\EventSubscriber\NodeAdminRouteSubscriber
     arguments: ['@config.factory', '@router.builder']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   node_preview:
     class: Drupal\node\ParamConverter\NodePreviewConverter
     arguments: ['@tempstore.private']
