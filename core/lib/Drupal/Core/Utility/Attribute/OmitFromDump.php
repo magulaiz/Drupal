@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Core\Utility;
+namespace Drupal\Core\Utility\Attribute;
 
 /**
  * Attribute to mark properties to be omitted from dump() CLI output.

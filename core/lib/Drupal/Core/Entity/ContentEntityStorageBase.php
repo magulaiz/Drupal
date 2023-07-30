@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TranslationStatusInterface;
-use Drupal\Core\Utility\OmitFromDump;
+use Drupal\Core\Utility\Attribute\OmitFromDump;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

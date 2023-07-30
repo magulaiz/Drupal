@@ -2,7 +2,7 @@
 
 namespace Drupal\TestTools;
 
-use Drupal\Core\Utility\OmitFromDump;
+use Drupal\Core\Utility\Attribute\OmitFromDump;
 use ReflectionClass;
 use Symfony\Component\VarDumper\Cloner\Stub;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
