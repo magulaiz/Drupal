@@ -189,7 +189,7 @@ body.drag {
  */
 
 .tabledrag-toggle-weight-wrapper {
-  text-align: start;
+  text-align: end;
 
   /* Hide nested weight toggles as they are redundant. */
 }
