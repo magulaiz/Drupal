@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\StatementPrefetch;
+use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -890,6 +891,18 @@ class ConnectionTest extends UnitTestCase {
     $mockConnection = new StubConnection($mockPdo, []);
     $statement = new StatementPrefetch($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetch::class, $statement);
+  }
+
+  /**
+   * Tests deprecation of ::getPagerManager.
+   *
+   * @group legacy
+   */
+  public function testGetPagerManagerDeprecation() {
+    $this->expectDeprecation('\\Drupal\\Core\\Database\\Connection::getPagerManager() is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001');
+    $mockPdo = $this->createMock(StubPDO::class);
+    $mockConnection = new StubConnection($mockPdo, []);
+    $this->assertInstanceOf(PagerManagerInterface ::class, $mockConnection->getPagerManager());
   }
 
 }
