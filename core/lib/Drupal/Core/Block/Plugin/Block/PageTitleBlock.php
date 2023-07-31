@@ -125,10 +125,10 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    * {@inheritdoc}
    */
   public function build() {
+    $title = $this->title;
     if ($this->configuration['contextualize_title']) {
-      $this->setConfigurationForTitle();
+      $title = $this->getTitleBasedOnBaseRoute() ?? $title;
     }
-    $title = $this->configuration['title_when_base_route_is_available'] ?? $this->title;
     return [
       '#type' => 'page_title',
       '#title' => $title,
@@ -156,9 +156,12 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   }
 
   /**
-   * Sets configuration for title when base route is available.
+   * Gets title based on base route.
+   *
+   * @return array|string|\Stringable|null
+   *   The title based on base route.
    */
-  private function setConfigurationForTitle() {
+  private function getTitleBasedOnBaseRoute() {
     $route_name = $this->routeMatch->getRouteName();
     $base_route = $this->localTaskManager->getBaseRoute($route_name);
     $title = NULL;
@@ -175,9 +178,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
         $title = $this->t($title);
       }
     }
-    if ($title) {
-      $this->configuration['title_when_base_route_is_available'] = $title;
-    }
+    return $title;
   }
 
   /**
