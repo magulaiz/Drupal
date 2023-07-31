@@ -7,7 +7,7 @@ use Drupal\user\Event\RoleFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Subscribes to the user module's RoleFilterEvent
+ * Subscribes to the user module's RoleFilterEvent.
  */
 class RoleFilterSubscriber implements EventSubscriberInterface {
 

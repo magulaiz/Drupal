@@ -67,4 +67,5 @@ class RoleFilterEvent extends Event {
   public function getRoles(): array {
     return $this->roleList;
   }
+
 }

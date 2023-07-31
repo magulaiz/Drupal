@@ -42,6 +42,8 @@ class RoleListBuilder extends DraggableListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
   public function __construct(EntityTypeInterface $entityType,
                               EntityStorageInterface $storage,
