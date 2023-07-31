@@ -67,14 +67,10 @@ tr.selected td {
       box-shadow: none;
     }
   }
-  & .button--primary {
+  & .button--primary:not(:disabled, .is-disabled) {
     background: var(--color-blue-400);
     &:hover {
       background: var(--color-blue-500);
-    }
-    &:disabled,
-    &.is-disabled {
-       background-color: var(--button--disabled-bg-color--primary);
     }
   }
   & .form-item__label {
