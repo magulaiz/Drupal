@@ -32,7 +32,7 @@ class PermissionsListFilterEvent extends Event {
    *   This is a callback used by array_filter and applied to a permissions
    *   array. The ARRAY_FILTER_USE_BOTH option is used, so the function
    *   is effectively `callable(array, string): bool`.
-   *      * @code
+   * @code
    * // Example:
    * function filterDeleteAndBlockContent($permission_array, $permission_name) {
    *   // Remove any permission with a name that starts with 'delete'
