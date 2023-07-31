@@ -25,18 +25,18 @@ function block_update_last_removed() {
 }
 
 /**
- *  Add 'contextualize_title' setting for page title blocks.
+ * Add 'contextualize_title' setting for page title blocks.
  */
 function block_update_11100() {
   $config_factory = \Drupal::configFactory();
   foreach ($config_factory->listAll('block.block.') as $block_config_name) {
-    if(!str_contains($block_config_name, 'page_title')){
+    if (!str_contains($block_config_name, 'page_title')) {
       continue;
     }
     $block = $config_factory->getEditable($block_config_name);
 
     $settings = $block->get('settings');
-    if(str_contains($block->getName(), 'claro')){
+    if (str_contains($block->getName(), 'claro')) {
       $settings['contextualize_title'] = TRUE;
     }
     else {
