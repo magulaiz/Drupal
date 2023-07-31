@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
  * Tests of the core database system.
@@ -197,6 +198,16 @@ class ConnectionTest extends DatabaseTestBase {
   public function testDeprecatedTablePrefix(): void {
     $this->expectDeprecation('Drupal\Core\Database\Connection::tablePrefix() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849');
     $this->assertIsString($this->connection->tablePrefix());
+  }
+
+  /**
+   * Tests deprecation of ::getPagerManager.
+   *
+   * @group legacy
+   */
+  public function testGetPagerManagerDeprecation() {
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::getPagerManager() is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001');
+    $this->assertInstanceOf(PagerManagerInterface ::class, $this->connection->getPagerManager());
   }
 
 }
