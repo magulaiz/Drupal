@@ -48,8 +48,8 @@ class PermissionsListFilterEvent extends Event {
    *   }
    *
    *   $permission_list_filter_event->filter('filterDeleteAndBlockContent');
-   * @endcode
    *
+   * @endcode
    */
   public function filter(callable $callback): void {
     $this->permissions = array_filter($this->permissions, $callback, ARRAY_FILTER_USE_BOTH);
