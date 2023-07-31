@@ -70,12 +70,10 @@ class UserPermissionsAdminTest extends BrowserTestBase {
       'administer permissions',
     ]));
     $this->drupalGet('admin/people/permissions');
-    $roles_listed = $this->getSession()->getPage()->findAll('css', '.permissions th.checkbox');
 
     $items = array_map(fn($item) => $item->getText(),
       $this->getSession()->getPage()->findAll('css', '.permissions th.checkbox'));
 
-//    $this->assertSame(1, 2, print_r($items, TRUE));
     // Just assert there are greater than 6 permissions available so we know
     // there are more overall permissions than what appears once the event
     // subscriber in `user_filtered_permissions_test` is running.
@@ -83,8 +81,14 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     $this->assertNotFalse(array_search('Anonymous user', $items));
     $this->assertNotFalse(array_search('Authenticated user', $items));
 
+    $this->drupalGet('admin/people/roles');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody > tr > td:first-child'));
+    $this->assertGreaterThan(1, $items);
+    $this->assertNotFalse(array_search('Anonymous user', $items));
+    $this->assertNotFalse(array_search('Authenticated user', $items));
 
-    // Enable a module that filters all but permissions a, b, c.
+    // Enable a module that filters anonymous and authenticated roles.
     \Drupal::service('module_installer')->install(['user_filtered_roles_test']);
     $this->resetAll();
     $this->rebuildContainer();
@@ -92,8 +96,16 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people/permissions');
     $items = array_map(fn($item) => $item->getText(),
       $this->getSession()->getPage()->findAll('css', '.permissions th.checkbox'));
+    $this->assertCount(1, $items);
+    $this->assertFalse(array_search('Anonymous user', $items));
+    $this->assertFalse(array_search('Authenticated user', $items));
 
-    $this->assertSame(1, 2, print_r($items, TRUE));
+    $this->drupalGet('admin/people/roles');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody > tr > td:first-child'));
+    $this->assertCount(1, $items);
+    $this->assertFalse(array_search('Anonymous user', $items));
+    $this->assertFalse(array_search('Authenticated user', $items));
   }
 
 }

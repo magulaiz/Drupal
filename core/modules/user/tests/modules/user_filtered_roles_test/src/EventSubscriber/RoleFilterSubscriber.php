@@ -2,6 +2,8 @@
 
 namespace Drupal\user_filtered_roles_test\EventSubscriber;
 
+
+use Drupal\user\Entity\Role;
 use Drupal\user\Event\RoleFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RoleFilterSubscriber implements EventSubscriberInterface {
@@ -11,14 +13,13 @@ class RoleFilterSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Takes a permissions array and removes all keys but a, b, c.
+   * Takes a roles array and removes the anonymous and authenticated roles.
    *
    * @param \Drupal\user\Event\RoleFilterEvent $event
    *   The permissions filter list event.
    */
   public function filterRoles(RoleFilterEvent $event):void {
-    $stop = 'here';
-    $event->filter(fn(array $role_data, string $role_name) => substr($role_name, 0, 1) !== 'anonymous' && substr($role_name, 0, 1) !== 'authenticated');
+    $event->filter(fn(Role $role_data, string $role_name) => !str_contains($role_name, 'anonymous')  && !str_contains($role_name, 'authenticated'));
   }
 
 }

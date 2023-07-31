@@ -8,7 +8,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\user\Event\RoleFilterEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a class to build a listing of user role entities.
@@ -25,6 +27,13 @@ class RoleListBuilder extends DraggableListBuilder {
   protected $messenger;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * RoleListBuilder constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
@@ -36,9 +45,15 @@ class RoleListBuilder extends DraggableListBuilder {
    */
   public function __construct(EntityTypeInterface $entityType,
                               EntityStorageInterface $storage,
-                              MessengerInterface $messenger) {
+                              MessengerInterface $messenger,
+                              EventDispatcherInterface $event_dispatcher) {
     parent::__construct($entityType, $storage);
     $this->messenger = $messenger;
+    if (is_null($event_dispatcher)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $eventDispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $event_dispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -48,7 +63,8 @@ class RoleListBuilder extends DraggableListBuilder {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('event_dispatcher')
     );
   }
 
@@ -98,6 +114,16 @@ class RoleListBuilder extends DraggableListBuilder {
     parent::submitForm($form, $form_state);
 
     $this->messenger->addStatus($this->t('The role settings have been updated.'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function load() {
+    $roles = parent::load();
+    $event = new RoleFilterEvent($roles);
+    $this->eventDispatcher->dispatch($event);
+    return $event->getRoles();
   }
 
 }

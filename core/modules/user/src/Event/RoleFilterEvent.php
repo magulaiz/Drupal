@@ -24,24 +24,24 @@ class RoleFilterEvent extends Event {
   }
 
   /**
-   * Filters the permissions with a provided callback function.
+   * Filters the roles with a provided callback function.
    *
    * @param callable $callback
    *   The filter callback.
    *
-   *   This is a callback used by array_filter and applied to a permissions
+   *   This is a callback used by array_filter and applied to a roles
    *   array. The ARRAY_FILTER_USE_BOTH option is used, so the function
-   *   is effectively `callable(array, string): bool`.
+   *   is effectively `callable(\Drupal\user\Entity\Role, string): bool`.
    *
    *    @code
    *   // Example:
-   *   function filterDeleteAndBlockContent($permission_array, $permission_name) {
-   *     // Remove any permission with a name that starts with 'delete'
-   *     if (strpos($permission_name, 'delete') === 0) {
+   *   function filterAnonuymousAndAdmin(Role $role, string $role_name) {
+   *     // Remove any role that starts with 'anonymous'
+   *     if (strpos($permission_name, 'anonymous') === 0) {
    *       return FALSE;
    *     }
-   *     // Remove any permission from the Block Content module.
-   *     if ($permission_array['provider'] === 'block_content) {
+   *     // Remove any role that is an admin role.
+   *     if ($role->isAdmin()) {
    *       return FALSE;
    *     }
    *     return TRUE;
