@@ -236,7 +236,8 @@ class Renderer implements RendererInterface {
           // Abort, but bubble new cache metadata from the access result.
           $context = $this->getCurrentRenderContext();
           if (!isset($context)) {
-            throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
+            trigger_error("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.", E_USER_WARNING);
+            return '';
           }
           $context->push(new BubbleableMetadata());
           $context->update($elements);
