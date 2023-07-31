@@ -4,6 +4,9 @@ namespace Drupal\user\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 
+/**
+ * Provides a role filter event for event listeners.
+ */
 class RoleFilterEvent extends Event {
 
   /**
@@ -35,7 +38,7 @@ class RoleFilterEvent extends Event {
    *
    *    @code
    *   // Example:
-   *   function filterAnonuymousAndAdmin(Role $role, string $role_name) {
+   *   function filterAnonymousAndAdmin(Role $role, string $role_name) {
    *     // Remove any role that starts with 'anonymous'
    *     if (strpos($permission_name, 'anonymous') === 0) {
    *       return FALSE;
