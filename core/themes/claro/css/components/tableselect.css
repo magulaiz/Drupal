@@ -84,6 +84,12 @@ tr.selected td {
   background: var(--color-blue-500);
 }
 
+.views-bulk-actions__item .button--primary:disabled,
+.views-bulk-actions__item .button--primary.is-disabled {
+  color: var(--button--disabled-fg-color--primary);
+  background-color: var(--button--disabled-bg-color--primary);
+}
+
 .views-bulk-actions__item .form-item__label {
   display: inline;
   padding-inline-end: var(--space-xs);

@@ -72,6 +72,11 @@ tr.selected td {
     &:hover {
       background: var(--color-blue-500);
     }
+    &:disabled,
+    &.is-disabled {
+       color: var(--button--disabled-fg-color--primary);
+       background-color: var(--button--disabled-bg-color--primary);
+    }
   }
   & .form-item__label {
     display: inline;
