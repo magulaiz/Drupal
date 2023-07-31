@@ -86,7 +86,6 @@ tr.selected td {
 
 .views-bulk-actions__item .button--primary:disabled,
 .views-bulk-actions__item .button--primary.is-disabled {
-  color: var(--button--disabled-fg-color--primary);
   background-color: var(--button--disabled-bg-color--primary);
 }
 
