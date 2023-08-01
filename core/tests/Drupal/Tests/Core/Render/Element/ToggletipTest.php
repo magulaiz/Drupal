@@ -46,6 +46,7 @@ class ToggletipTest extends WebDriverTestBase {
   public function testToggletip(string $element_selector, string $text) {
     $page = $this->getSession()->getPage();
     $toggle_button = $page->find('css', "$element_selector > button.toggletip__toggle");
+    $this->assertEquals('This tests the atDescription property', $toggle_button->getText());
     // Get tooltip id from button.
     $tooltip_id = $toggle_button->getAttribute('popovertarget');
     $popover_element = $page->find('css', "#$tooltip_id");
