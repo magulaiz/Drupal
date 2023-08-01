@@ -46,7 +46,7 @@ class ToggletipForm extends FormBase {
           'content' => '<p>CONTAINER: A movie like this is a deep <a href="https://drupal.org">mystery</a>. It asks the question: What went wrong? "Clifford" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn\'t matter what the actors do, because they are in a movie that should never have been made.</p>
             <p>The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.</p>',
           'atDescription' => 'This tests the atDescription property',
-          ],
+        ],
       ],
       'a_long_div' => [
         '#type' => 'container',
@@ -112,7 +112,7 @@ class ToggletipForm extends FormBase {
           'content' => '<p>TEXTFIELD: A movie like this is a deep mystery. It asks the question: What went wrong? "Clifford" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn\'t matter what the actors do, because they are in a movie that should never have been made.</p>
             <p>The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.</p>',
           'atDescription' => 'This tests the atDescription property',
-          ],
+        ],
       ],
       'textarea' => [
         '#type' => 'textarea',
@@ -123,7 +123,7 @@ class ToggletipForm extends FormBase {
           'content' => '<p>TEXTAREA: A movie like this is a deep mystery. It asks the question: What went wrong? "Clifford" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn\'t matter what the actors do, because they are in a movie that should never have been made.</p>
             <p>The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.</p>',
           'atDescription' => 'This tests the atDescription property',
-          ],
+        ],
       ],
       'a_long_div_custom_positioning_right_end' => [
         '#type' => 'container',
@@ -132,7 +132,7 @@ class ToggletipForm extends FormBase {
           'content' => 'Toggletip content for long div custom positioned button, right-end',
           'place' => 'right-end',
           'atDescription' => 'This tests the atDescription property',
-          ],
+        ],
       ],
       'a_long_div_custom_positioning_left_end' => [
         '#type' => 'container',
