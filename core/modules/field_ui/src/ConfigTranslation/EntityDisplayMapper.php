@@ -14,10 +14,8 @@ class EntityDisplayMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getBaseRouteParameters() {
-    $base_entity_info = $this->entityTypeManager
-      ->getDefinition($this->pluginDefinition['base_entity_type']);
-    $bundle_parameter_key = $base_entity_info
-      ->getBundleEntityType() ?: 'bundle';
+    $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
+    $bundle_parameter_key = $base_entity_info->getBundleEntityType() ?: 'bundle';
 
     $parameters = [];
     $parameters[$bundle_parameter_key] = $this->entity->getTargetBundle();
@@ -37,8 +35,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getTitle() {
-    $base_entity_info = $this->entityTypeManager
-      ->getDefinition($this->pluginDefinition['base_entity_type']);
+    $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
     $bundle = $base_entity_info->getLabel();
     if ($bundle_type = $base_entity_info->getBundleEntityType()) {
       $bundle = $this->entityTypeManager
@@ -71,8 +68,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getTypeLabel() {
-    $base_entity_info = $this->entityTypeManager
-      ->getDefinition($this->pluginDefinition['base_entity_type']);
+    $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
 
     if ($this->entityType == 'entity_view_display') {
       return $this->t('@label view display', [
