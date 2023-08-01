@@ -27,7 +27,7 @@ class CalculatedPermissionsItem implements CalculatedPermissionsItemInterface {
     protected string $scope = AccessPolicyInterface::SCOPE_DRUPAL,
     protected string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL
   ) {
-    $this->permissions = $this->isAdmin ? [] : array_unique($this->permissions);
+    $this->permissions = $isAdmin ? [] : array_unique($permissions);
   }
 
   /**
