@@ -32,14 +32,13 @@ class PreSessionHandler implements HttpKernelInterface {
    * {@inheritdoc}
    */
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
-    $prefix = ini_get('session.upload_progress.prefix');
     $pathInfo = $request->getPathInfo();
-    $key = '';
-    if ($pathInfo) {
+    if ($pathInfo && str_contains($pathInfo, '/file/progress/')) {
+      session_start();
+      $prefix = ini_get('session.upload_progress.prefix');
       $key = explode('/', $request->getPathInfo())[3];
-    }
-    if (isset($_SESSION[$prefix . $key])) {
-      $request->attributes->set('status', $_SESSION[$prefix . $key]);
+      $request->attributes->set('status', $prefix.$key);
+      session_write_close();
     }
     return $this->httpKernel->handle($request, $type, $catch);
   }

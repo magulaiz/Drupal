@@ -79,11 +79,9 @@ class FileWidgetAjaxController implements ContainerInjectionInterface {
       // Get upload status from the PHP session.
       $status = [];
       session_module_name($this->PHPSessionHandler);
-      // Fail silently if the PHP session handler generates an error.
-      @session_start();
-      $prefix = ini_get('session.upload_progress.prefix');
-      if (isset($_SESSION[$prefix . $key])) {
-        $status = $_SESSION[$prefix . $key];
+      $var = \Drupal::request()->get('status');
+      if (isset($_SESSION[$var])) {
+        $status = $_SESSION[$var];
       }
 
       if (isset($status['bytes_processed']) && !empty($status['content_length'])) {
