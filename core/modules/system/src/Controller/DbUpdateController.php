@@ -228,9 +228,11 @@ class DbUpdateController extends ControllerBase {
     $info[] = $this->t("<strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.");
     // @todo Simplify with https://www.drupal.org/node/2548095
     $base_url = str_replace('/update.php', '', $request->getBaseUrl());
-    $info[] = $this->t('Put your site into <a href=":url">maintenance mode</a>.', [
-      ':url' => Url::fromRoute('system.site_maintenance_mode')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl(),
-    ]);
+    if (!$this->state->get('system.maintenance_mode', FALSE)) {
+      $info[] = $this->t('Put your site into <a href=":url">maintenance mode</a>.', [
+        ':url' => Url::fromRoute('system.site_maintenance_mode')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl(),
+      ]);
+    }
     $info[] = $this->t('<strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.');
     $info[] = $this->t('Update your files (as described in the handbook page linked above).');
     $build['info'] = [
