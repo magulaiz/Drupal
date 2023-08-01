@@ -584,9 +584,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     $this->loadLegacyIncludes();
 
-    // Load all enabled modules.
-    // Uncomment $this->container->get('module_handler')->loadAll();
-
     // Register stream wrappers.
     $this->container->get('stream_wrapper_manager')->register();
 

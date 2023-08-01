@@ -110,7 +110,6 @@ function drupal_install_profile_distribution_name() {
   }
   // At all other times, we load the profile via standard methods.
   else {
-    // @todo, check if below line is required.
     \Drupal::moduleHandler()->load('system');
     $profile = \Drupal::installProfile();
     $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
