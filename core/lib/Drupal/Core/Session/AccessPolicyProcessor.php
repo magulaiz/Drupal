@@ -134,14 +134,24 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     }
 
     if (!$static_cache_hit) {
-      // Get the final cacheability from the calculated permissions and turn the
-      // permissions into an immutable value object for cache storage.
       $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
-      $calculated_permissions = new CalculatedPermissions($calculated_permissions);
 
+      // First store the actual calculated permissions in the persistent cache,
+      // along with the final cache contexts after all calculations have run. We
+      // need to store the RefinableCalculatedPermissions in the persistent
+      // cache so we can still get the final cacheability from it for when we
+      // run into a persistent cache hit but not a static one. At that point, if
+      // we had stored a CalculatedPermissions object, we would no longer be
+      // able to ask for its cache contexts.
       if (!$persistent_cache_hit) {
         $this->cache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
       }
+
+      // Then convert the calculated permissions to an immutable value object
+      // and store it in the static cache so that we don't have to do the same
+      // conversion every time we call for the calculated permissions from a
+      // warm static cache.
+      $calculated_permissions = new CalculatedPermissions($calculated_permissions);
       $this->static->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
     }
 
