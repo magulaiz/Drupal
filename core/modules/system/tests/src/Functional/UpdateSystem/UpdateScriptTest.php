@@ -689,10 +689,15 @@ class UpdateScriptTest extends BrowserTestBase {
 
   /**
    * Tests update.php after performing a successful update.
+   *
+   * @param bool $initial_maintenance_mode
+   *   Whether the update should start in maintenance mode.
+   *
+   * @testWith [true]
+   *           [false]
    */
-  public function testSuccessfulUpdateFunctionality() {
-    $initial_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
-    $this->assertNull($initial_maintenance_mode, 'Site is not in maintenance mode.');
+  public function testSuccessfulUpdateFunctionality(bool $initial_maintenance_mode) {
+    $this->container->get('state')->set('system.maintenance_mode', $initial_maintenance_mode);
     $this->runUpdates($initial_maintenance_mode);
     $final_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
     $this->assertEquals($initial_maintenance_mode, $final_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
@@ -858,6 +863,12 @@ class UpdateScriptTest extends BrowserTestBase {
       $this->assertSession()->pageTextNotContains('Operating in maintenance mode.');
     }
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    if ($maintenance_mode) {
+      $this->assertSession()->pageTextNotContains("Put your site into maintenance mode");
+    }
+    else {
+      $this->assertSession()->pageTextContains("Put your site into maintenance mode");
+    }
     $this->updateRequirementsProblem();
     $this->clickLink('Continue');
     $this->clickLink('Apply pending updates');
