@@ -1239,6 +1239,9 @@ function template_preprocess(&$variables, $hook, $info) {
       $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
     }
   }
+
+  // Tell all templates where they are located.
+  $variables['directory'] = \Drupal::theme()->getActiveTheme()->getPath();
 }
 
 /**
@@ -1259,9 +1262,6 @@ function _template_preprocess_default_variables() {
 
   // Give modules a chance to alter the default template variables.
   \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
-
-  // Tell all templates where they are located.
-  $variables['directory'] = \Drupal::theme()->getActiveTheme()->getPath();
 
   return $variables;
 }
