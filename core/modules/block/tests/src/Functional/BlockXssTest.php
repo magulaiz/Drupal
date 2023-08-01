@@ -21,12 +21,12 @@ class BlockXssTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_content', 'menu_ui', 'views'];
+  protected static $modules = ['block', 'block_content', 'menu_ui', 'system', 'views'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'olivero';
 
   /**
    * Tests that nothing is escaped other than the blocks explicitly tested.

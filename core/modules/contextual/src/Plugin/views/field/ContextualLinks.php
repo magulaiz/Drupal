@@ -8,6 +8,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
+use Drupal\contextual\ContextualController;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -136,7 +137,7 @@ class ContextualLinks extends FieldPluginBase {
 
       $element = [
         '#type' => 'contextual_links_placeholder',
-        '#id' => _contextual_links_to_id($contextual_links),
+        '#id' => ContextualController::_contextual_links_to_id($contextual_links),
       ];
       return \Drupal::service('renderer')->render($element);
     }
