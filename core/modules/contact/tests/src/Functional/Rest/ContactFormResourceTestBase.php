@@ -72,7 +72,7 @@ abstract class ContactFormResourceTestBase extends ConfigEntityResourceTestBase 
         'llama@example.com',
         'contact@example.com',
       ],
-      'redirect' => NULL,
+      'redirect' => '<front>',
       'reply' => 'Llamas are indeed awesome!',
       'status' => TRUE,
       'uuid' => $this->entity->uuid(),

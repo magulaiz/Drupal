@@ -91,7 +91,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    *
    * @var string
    */
-  protected $redirect;
+  protected $redirect = '<front>';
 
   /**
    * An auto-reply message.

@@ -97,7 +97,7 @@ class ContactFormTest extends ConfigEntityResourceTestBase {
             'llama@example.com',
             'contact@example.com',
           ],
-          'redirect' => NULL,
+          'redirect' => '<front>',
           'reply' => 'Llamas are indeed awesome!',
           'status' => TRUE,
           'weight' => 0,
