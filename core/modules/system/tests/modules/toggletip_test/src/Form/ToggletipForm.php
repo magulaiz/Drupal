@@ -142,6 +142,9 @@ class ToggletipForm extends FormBase {
           'place' => 'left-end',
           'atDescription' => 'This tests the atDescription property',
         ],
+        '#attributes' => [
+          'style' => 'margin-left: 1.5rem',
+        ],
       ],
       'a_long_div_custom_positioning_right_start' => [
         '#type' => 'container',
@@ -159,6 +162,9 @@ class ToggletipForm extends FormBase {
           'content' => 'Toggletip content for long div custom positioned button, left-start',
           'place' => 'left-start',
           'atDescription' => 'This tests the atDescription property',
+        ],
+        '#attributes' => [
+          'style' => 'margin-left: 1.5rem',
         ],
       ],
       'a_long_div_custom_positioning_top_end' => [
@@ -226,6 +232,9 @@ class ToggletipForm extends FormBase {
           'content' => 'Toggletip content for long div custom positioned button, left',
           'place' => 'left',
           'atDescription' => 'This tests the atDescription property',
+        ],
+        '#attributes' => [
+          'style' => 'margin-left: 1.5rem',
         ],
       ],
 
