@@ -40,13 +40,16 @@ class ToggletipTest extends WebDriverTestBase {
    *   Selector of element the toggle tip is for.
    * @param string $text
    *   Text inside the toggle tip.
+   * @param string $at_description
+   *   Text of atDescription property.
    *
-   *  @dataProvider dataProvider
+   *  @dataProvider toggletipContent
    */
-  public function testToggletip(string $element_selector, string $text) {
+  public function testToggletip(string $element_selector, string $text, string $at_description = 'This tests the atDescription property') {
     $page = $this->getSession()->getPage();
     $toggle_button = $page->find('css', "$element_selector > button.toggletip__toggle");
-    $this->assertEquals('This tests the atDescription property', $toggle_button->getText());
+    $at_description_span = $toggle_button->find('css', 'span');
+    $this->assertEquals($at_description, $at_description_span->getText());
     // Get tooltip id from button.
     $tooltip_id = $toggle_button->getAttribute('popovertarget');
     $popover_element = $page->find('css', "#$tooltip_id");
@@ -69,7 +72,7 @@ class ToggletipTest extends WebDriverTestBase {
    * @return array
    *   Array of selectors and text content.
    */
-  public function dataProvider() {
+  public function toggletipContent() {
     return [
       ['div[data-drupal-selector="edit-a-div"]',
         "CONTAINER: A movie like this is a deep mystery. It asks the question: What went wrong? \"Clifford\" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn't matter what the actors do, because they are in a movie that should never have been made. The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.",
@@ -79,7 +82,7 @@ class ToggletipTest extends WebDriverTestBase {
       ],
       ['div[data-drupal-selector="edit-a-long-div"]', 'Long div toggletip content'],
       ['summary[aria-controls="edit-a-details"]', "Details: Many of the jokes are of a cruel physical nature, involving a hairpiece worn by the uncle's boss, or face-lifts, or phony bomb threats. What they boil down to is, little Clifford is mean, vindictive, spiteful and cruel. So hateful that if a real little boy had played him, the movie would be like \"The Omen\" filtered through \"The Good Son\" and a particularly bad evening of \"Saturday Night Live.\" But Martin Short is clearly not a little boy. He is a curious adult pretending to be a little boy, with odd verbal mannerisms And then there is the \"climax,\" in which Uncle Martin finally does take little Clifford to the Dinosaur Park. The movie treats the sequence as a bravura set piece, but actually it's an embarrassing assembly of shabby special effects, resulting in absolutely no comic output. At one point the movie sets up an out-of-control thrill ride, and we in the audience think we know how the laughs will build, but we're wrong. They don't."],
-      ['div[data-drupal-selector="edit-added-in-markup"] > span.toggletip', "What we have here is a suitable case for deep cinematic analysis. I would love to hear a symposium of veteran producers, marketing guys and exhibitors discuss this film. It is not bad in any usual way. It is bad in a new way all its own. There is something extraterrestrial about it, as if it is based on the sense of humor of an alien race with a completely different relationship to the physical universe. The movie is so odd, it is almost worth seeing just because we will never see anything like it again. I hope."],
+      ['div[data-drupal-selector="edit-added-in-markup"] > span.toggletip', "What we have here is a suitable case for deep cinematic analysis. I would love to hear a symposium of veteran producers, marketing guys and exhibitors discuss this film. It is not bad in any usual way. It is bad in a new way all its own. There is something extraterrestrial about it, as if it is based on the sense of humor of an alien race with a completely different relationship to the physical universe. The movie is so odd, it is almost worth seeing just because we will never see anything like it again. I hope.", "More info about this"],
       ['label[for="edit-textfield"]',
         "TEXTFIELD: A movie like this is a deep mystery. It asks the question: What went wrong? \"Clifford\" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn't matter what the actors do, because they are in a movie that should never have been made. The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.",
       ],
@@ -90,7 +93,6 @@ class ToggletipTest extends WebDriverTestBase {
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-left-start"]', "Toggletip content for long div custom positioned button, left-start"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-top-start"]', "Toggletip content for long div custom positioned button, top-start"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-bottom-start"]', "Toggletip content for long div custom positioned button, bottom-start"],
-      ['div[data-drupal-selector="edit-a-long-div-custom-positioning-left-start"]', "Toggletip content for long div custom positioned button, left-start"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-left"]', "Toggletip content for long div custom positioned button, left"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-top"]', "Toggletip content for long div custom positioned button, top"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-bottom"]', "Toggletip content for long div custom positioned button, bottom"],
