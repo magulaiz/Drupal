@@ -63,6 +63,7 @@ class EntityFormDisplayTest extends ConfigEntityResourceTestBase {
       'targetEntityType' => 'node',
       'bundle' => 'camelids',
       'mode' => 'default',
+      'status' => TRUE,
     ]);
     $form_display->save();
 
@@ -160,7 +161,7 @@ class EntityFormDisplayTest extends ConfigEntityResourceTestBase {
           'hidden' => [],
           'langcode' => 'en',
           'mode' => 'default',
-          'status' => NULL,
+          'status' => TRUE,
           'targetEntityType' => 'node',
           'drupal_internal__id' => 'node.camelids.default',
         ],

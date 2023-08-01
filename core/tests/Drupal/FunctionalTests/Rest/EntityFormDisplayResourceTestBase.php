@@ -47,6 +47,7 @@ abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTes
       'targetEntityType' => 'node',
       'bundle' => 'camelids',
       'mode' => 'default',
+      'status' => TRUE,
     ]);
     $form_display->save();
 
@@ -126,7 +127,7 @@ abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTes
       'id' => 'node.camelids.default',
       'langcode' => 'en',
       'mode' => 'default',
-      'status' => NULL,
+      'status' => TRUE,
       'targetEntityType' => 'node',
       'uuid' => $this->entity->uuid(),
     ];
