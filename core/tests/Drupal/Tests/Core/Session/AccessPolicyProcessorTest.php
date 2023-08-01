@@ -283,7 +283,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
     $bar_access_policy = new BarAccessPolicy();
     $bar_permissions = $bar_access_policy->calculatePermissions($account, $scope);
     $bar_permissions->addCacheTags(['access_policies']);
-    $bar_permissions = new CalculatedPermissions($bar_permissions);
+    $none_refinable_bar_permissions = new CalculatedPermissions($bar_permissions);
 
     $cache_static = $this->prophesize(VariationCacheInterface::class);
     $cache_db = $this->prophesize(VariationCacheInterface::class);
@@ -298,10 +298,10 @@ class AccessPolicyProcessorTest extends UnitTestCase {
         $cache_db->set()->shouldNotBeCalled();
       }
       $cache_static->get(Argument::cetera())->willReturn(FALSE);
-      $cache_static->set(Argument::any(), $bar_permissions, Argument::cetera())->shouldBeCalled();
+      $cache_static->set(Argument::any(), $none_refinable_bar_permissions, Argument::cetera())->shouldBeCalled();
     }
     else {
-      $cache_item = new CacheItem($bar_permissions);
+      $cache_item = new CacheItem($none_refinable_bar_permissions);
       $cache_static->get(Argument::cetera())->willReturn($cache_item);
       $cache_static->set()->shouldNotBeCalled();
     }
@@ -311,7 +311,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
     $processor = $this->setUpAccessPolicyProcessor($cache_db, $cache_static);
     $processor->addAccessPolicy($bar_access_policy);
     $permissions = $processor->processAccessPolicies($account, $scope);
-    $this->assertEquals($bar_permissions, $permissions, 'Cached permission matches calculated.');
+    $this->assertEquals($none_refinable_bar_permissions, $permissions, 'Cached permission matches calculated.');
   }
 
   /**
