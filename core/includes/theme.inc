@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -1629,6 +1630,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
         'colspan' => 2,
         'class' => ['field-label'],
       ],
+      [],
       t('Order', [], ['context' => 'Sort order']),
     ];
     $rows = [];
@@ -1656,9 +1658,17 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       $delta_element = $item['_weight'];
       unset($item['_weight']);
 
+      // Render actions in a separate column.
+      $actions = [];
+      if (isset($item['_actions'])) {
+        $actions = $item['_actions'];
+        unset($item['_actions']);
+      }
+
       $cells = [
         ['data' => '', 'class' => ['field-multiple-drag']],
         ['data' => $item],
+        ['data' => $actions],
         ['data' => $delta_element, 'class' => ['delta-order']],
       ];
       $rows[] = [
@@ -1814,26 +1824,25 @@ function template_preprocess_pager(&$variables) {
     }
   }
 
-  if ($i != $pager_max) {
-    // Add an ellipsis if there are further previous pages.
-    if ($i > 1) {
-      $variables['ellipses']['previous'] = TRUE;
+  // Add an ellipsis if there are further previous pages.
+  if ($i > 1) {
+    $variables['ellipses']['previous'] = TRUE;
+  }
+  // Now generate the actual pager piece.
+  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
+    ];
+    $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    $items['pages'][$i]['attributes'] = new Attribute();
+    if ($i == $pager_current) {
+      $variables['current'] = $i;
+      $items['pages'][$i]['attributes']->setAttribute('aria-current', new TranslatableMarkup('Current page'));
     }
-    // Now generate the actual pager piece.
-    for (; $i <= $pager_last && $i <= $pager_max; $i++) {
-      $options = [
-        'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
-      ];
-      $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-      $items['pages'][$i]['attributes'] = new Attribute();
-      if ($i == $pager_current) {
-        $variables['current'] = $i;
-      }
-    }
-    // Add an ellipsis if there are further next pages.
-    if ($i < $pager_max + 1) {
-      $variables['ellipses']['next'] = TRUE;
-    }
+  }
+  // Add an ellipsis if there are further next pages.
+  if ($i < $pager_max + 1) {
+    $variables['ellipses']['next'] = TRUE;
   }
 
   // Create the "next" and "last" links if we are not on the last page.

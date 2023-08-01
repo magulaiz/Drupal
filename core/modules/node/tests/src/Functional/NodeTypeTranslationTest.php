@@ -148,7 +148,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Edit the title label for it to be displayed on the translation form.
     $this->drupalGet("admin/structure/types/manage/{$type}");
-    $this->submitForm(['title_label' => 'Edited title'], 'Save content type');
+    $this->submitForm(['title_label' => 'Edited title'], 'Save');
 
     // Assert that the title label is displayed on the translation form with the right value.
     $this->drupalGet("admin/structure/types/manage/$type/translate/$langcode/add");
@@ -166,7 +166,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     $this->assertSession()->pageTextContains('Translated title');
 
-    // Add an e-mail field.
+    // Add an email field.
     $this->drupalGet("admin/structure/types/manage/{$type}/fields/add-field");
     $this->submitForm([
       'new_storage_type' => 'email',

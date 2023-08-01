@@ -13,13 +13,13 @@ Core committers
 The Drupal core committers oversee the development of Drupal as a whole. The
 core committers for Drupal are (in alphabetical order):
 
-BDFL
+Project Lead
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
 
 Product managers
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
-- Angela Byron 'webchick' https://www.drupal.org/u/webchick
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 
 Framework managers
@@ -31,7 +31,6 @@ Framework managers
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
   Frontend
-  - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
   - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
   - (provisional) Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
@@ -227,9 +226,6 @@ History
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Help
-- ?
-
-Help Topics
 - Amber Matz 'Amber Himes Matz' https://www.drupal.org/u/amber-himes-matz
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
@@ -451,7 +447,7 @@ Accessibility
 - Rain Breaw Michaels 'rainbreaw' https://www.drupal.org/u/rainbreaw
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
 - Andrew Macpherson 'andrewmacpherson' https://www.drupal.org/u/andrewmacpherson
-- (provisional) Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
+- Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Documentation
 - ?

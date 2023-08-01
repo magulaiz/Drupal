@@ -37,7 +37,6 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     NodeType::create([
@@ -54,7 +53,7 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     $this->createEntityReferenceField('node', 'article', 'field_relationships', 'Relationship', 'node', 'default', ['target_bundles' => ['article']], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     Role::create([
-      'id' => 'article editor',
+      'id' => 'article_editor',
       'label' => 'article editor',
       'permissions' => [
         'access content',
@@ -64,7 +63,7 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     ])->save();
 
     Role::create([
-      'id' => 'page editor',
+      'id' => 'page_editor',
       'label' => 'page editor',
       'permissions' => [
         'access content',
@@ -93,14 +92,14 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
       'status' => 1,
       // Do not use UID 1 as that has access to everything.
       'uid' => 2,
-      'roles' => ['article editor'],
+      'roles' => ['article_editor'],
     ]);
     $page_editor = User::create([
       'name' => 'page editor',
       'mail' => 'page@localhost',
       'status' => 1,
       'uid' => 3,
-      'roles' => ['page editor'],
+      'roles' => ['page_editor'],
     ]);
     $editor = User::create([
       'name' => 'editor',

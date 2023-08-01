@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Checkboxes;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\Html;
@@ -640,7 +641,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['expose']['remember'],
     ];
 
-    $role_options = array_map('\Drupal\Component\Utility\Html::escape', user_role_names());
+    $role_options = array_map(fn(RoleInterface $role) => Html::escape($role->label()), Role::loadMultiple());
     $form['expose']['remember_roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('User roles'),
@@ -1165,7 +1166,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
             }
           }
 
-          if (!empty($this->options['group_info']['group_items'][$item_id]['value'][$child])) {
+          if (isset($this->options['group_info']['group_items'][$item_id]['value'][$child])) {
             $row['value'][$child]['#default_value'] = $this->options['group_info']['group_items'][$item_id]['value'][$child];
           }
         }

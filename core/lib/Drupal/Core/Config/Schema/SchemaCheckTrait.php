@@ -60,16 +60,26 @@ trait SchemaCheckTrait {
     $errors = array_merge(...$errors);
     // Also perform explicit validation. Note this does NOT require every node
     // in the config schema tree to have validation constraints defined.
-    // @todo Remove this condition in https://www.drupal.org/project/drupal/issues/3361534
-    // @todo Consider testing for all `config_test` config.
-    if (str_starts_with($config_name, 'config_test.types')) {
-      $violations = $this->schema->validate();
-      $validation_errors = array_map(
-        fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
-        iterator_to_array($violations)
-      );
-      $errors = array_merge($errors, $validation_errors);
-    }
+    $violations = $this->schema->validate();
+    $ignored_validation_constraint_messages = [
+      // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$moduleMessage
+      // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$themeMessage
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362456
+      "Module '.*' is not installed.",
+      "Theme '.*' is not installed.",
+      // @see \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint::$unknownPluginMessage
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362457
+      "The '.*' plugin does not exist.",
+    ];
+    $filtered_violations = array_filter(
+      iterator_to_array($violations),
+      fn (ConstraintViolation $v) => preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
+    );
+    $validation_errors = array_map(
+      fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
+      $filtered_violations
+    );
+    $errors = array_merge($errors, $validation_errors);
     if (empty($errors)) {
       return TRUE;
     }
