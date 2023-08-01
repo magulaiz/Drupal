@@ -88,7 +88,7 @@ class RoleTest extends ConfigEntityResourceTestBase {
           'status' => TRUE,
           'dependencies' => [],
           'label' => 'Llama',
-          'is_admin' => NULL,
+          'is_admin' => FALSE,
           'permissions' => [],
           'drupal_internal__id' => 'llama',
         ],
