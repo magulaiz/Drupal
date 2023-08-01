@@ -72,7 +72,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var int
    */
-  protected $weight;
+  protected $weight = 0;
 
   /**
    * The permissions belonging to this role.
@@ -86,7 +86,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var bool
    */
-  protected $is_admin;
+  protected $is_admin = FALSE;
 
   /**
    * {@inheritdoc}
