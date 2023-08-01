@@ -174,9 +174,6 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       else {
         $title = $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
       }
-      if (is_string($title)) {
-        $title = $this->t($title);
-      }
     }
     return $title;
   }
