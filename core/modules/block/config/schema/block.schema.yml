@@ -26,6 +26,8 @@ block.block.*:
     provider:
       type: string
       label: 'Provider'
+      # User-placed blocks do not have a provider, only blocks provided by a Drupal extension.
+      nullable: true
     plugin:
       type: string
       label: 'Plugin'
