@@ -26,9 +26,11 @@ node.type.*:
     description:
       type: text
       label: 'Description'
+      nullable: true
     help:
       type: text
       label: 'Explanation or submission guidelines'
+      nullable: true
     new_revision:
       type: boolean
       label: 'Whether a new revision should be created by default'
