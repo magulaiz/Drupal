@@ -21,6 +21,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\TableSort;
 use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Component\Utility\Xss;
 
 /**
  * @defgroup content_flags Content markers
@@ -1099,6 +1100,8 @@ function template_preprocess(&$variables, $hook, $info) {
   if (isset($info['render element'])) {
     $key = $info['render element'];
     if (isset($variables[$key]['#toggletip'])) {
+      $variables[$key]['#toggletip']['content'] = Xss::filterAdmin($variables[$key]['#toggletip']['content']);
+      $variables[$key]['#toggletip']['atDescription'] = Xss::filterAdmin($variables[$key]['#toggletip']['atDescription']);
       $variables[$key]['#attributes']['data-drupal-toggletip'] = Json::encode([...$variables[$key]['#toggletip'], 'rendered' => TRUE]);
       if (!empty($variables[$key]['#input']) && !empty($variables[$key]['#title'])) {
         $variables[$key]['#attributes']['data-drupal-toggletip-form-element'] = '';
