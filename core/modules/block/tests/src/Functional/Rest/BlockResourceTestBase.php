@@ -79,8 +79,8 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
   protected function getExpectedNormalizedEntity() {
     $normalization = [
       'uuid' => $this->entity->uuid(),
+      'weight' => 0,
       'id' => 'llama',
-      'weight' => NULL,
       'langcode' => 'en',
       'status' => TRUE,
       'dependencies' => [

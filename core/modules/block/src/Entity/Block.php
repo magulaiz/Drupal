@@ -87,7 +87,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    *
    * @var int
    */
-  protected $weight;
+  protected $weight = 0;
 
   /**
    * The plugin instance ID.
