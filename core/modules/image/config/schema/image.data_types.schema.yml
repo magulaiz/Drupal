@@ -2,13 +2,17 @@
 
 image_size:
   type: mapping
+  # @todo require that EITHER width or height is not null
+  constraints: {}
   mapping:
     width:
       type: integer
       label: 'Width'
+      nullable: true
     height:
       type: integer
       label: 'Height'
+      nullable: true
 
 field_default_image:
   type: mapping
