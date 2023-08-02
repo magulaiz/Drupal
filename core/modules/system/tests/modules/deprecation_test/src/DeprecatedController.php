@@ -14,7 +14,6 @@ class DeprecatedController {
    *   Render array.
    */
   public function deprecatedMethod() {
-    \Drupal::moduleHandler()->load('deprecation_test');
     return [
       '#markup' => deprecation_test_function(),
     ];

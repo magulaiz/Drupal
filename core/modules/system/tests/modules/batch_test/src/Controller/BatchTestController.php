@@ -31,7 +31,6 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testLargePercentage() {
-    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
 
     batch_set(_batch_test_batch_5());
@@ -48,7 +47,6 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testNestedDrupalFormSubmit($value = 1) {
-    \Drupal::moduleHandler()->load('batch_test');
     // Set the batch and process it.
     $batch_builder = (new BatchBuilder())
       ->addOperation('_batch_test_nested_drupal_form_submit_callback', [$value]);
@@ -63,7 +61,6 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testNoForm() {
-    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
 
     batch_set(_batch_test_batch_1());
@@ -78,7 +75,6 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testFinishRedirect() {
-    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
 
     $batch = _batch_test_batch_1();
@@ -118,7 +114,6 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testThemeBatch() {
-    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
     $batch = [
       'operations' => [
@@ -136,7 +131,6 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testTitleBatch() {
-    \Drupal::moduleHandler()->load('batch_test');
     batch_test_stack(NULL, TRUE);
     $batch = [
       'title' => 'Batch Test',
