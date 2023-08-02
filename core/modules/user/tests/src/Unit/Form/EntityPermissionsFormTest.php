@@ -17,7 +17,9 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\Form\EntityPermissionsForm;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
+use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
+use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -78,6 +80,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
       ->willReturn($entity_type);
     $entity_type_manager = $prophecy->reveal();
     $prophecy = $this->prophesize(EventDispatcherInterface::class);
+    $prophecy->dispatch(Argument::any(), Argument::any())->willReturn(new Event());
     $event_dispatcher = $prophecy->reveal();
 
     $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager, $event_dispatcher, $module_extension_list);
