@@ -43,7 +43,6 @@ class DefaultLanguageItem extends LanguageItem {
    *   A string language code.
    */
   public function getDefaultLangcode(EntityInterface $entity) {
-    \Drupal::moduleHandler()->load('language');
     return language_get_default_langcode($entity->getEntityTypeId(), $entity->bundle());
   }
 
