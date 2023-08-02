@@ -27,6 +27,43 @@ trait SchemaCheckTrait {
   protected string $configName;
 
   /**
+   * The ignored property paths.
+   *
+   * Allow ignoring specific config schema types (top-level keys, require an
+   * exact match to one of the top-level entries in *.schema.yml files) by
+   * allowing one or more partial property path matches.
+   *
+   * Keys must be an exact match for a Config object's schema type.
+   * Values must be wildcard matches for property paths, where any property
+   * path segment can use a wildcard (`*`) to indicate any value for that
+   * segment should be accepted for this property path to be ignored.
+   *
+   * @var \string[][]
+   */
+  protected static array $ignoredPropertyPaths = [
+    'views.view.*' => [
+      // Values may be
+      // @todo Fix config or tweak schema of `type: views_pager_sql`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.pager.options.total_pages',
+      // @todo Fix config or tweak schema of `type: views_filter`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.filters.status.expose.description',
+      // @todo Fix config or tweak schema of `type: views_handler`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.fields.info.entity_type',
+      // @todo Fix config or tweak schema of `type: views_filter`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.filters.bundle.group_info.description',
+    ],
+    'field.field.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: field.value.comment`.
+      // @see comment.schema.yml
+      'default_value.*.last_comment_name',
+    ],
+  ];
+
+  /**
    * Checks the TypedConfigManager has a valid schema for the configuration.
    *
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
@@ -66,7 +103,11 @@ trait SchemaCheckTrait {
     ];
     $filtered_violations = array_filter(
       iterator_to_array($violations),
-      fn (ConstraintViolation $v) => preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
+      fn (ConstraintViolation $v) =>
+        // Ignore violation messages in $ignored_validation_constraint_messages.
+        preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
+        // Ignore violation messages for static::$ignoredPropertyPaths.
+        && !static::isViolationForIgnoredPropertyPath($v),
     );
     $validation_errors = array_map(
       fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
@@ -77,6 +118,39 @@ trait SchemaCheckTrait {
       return TRUE;
     }
     return $errors;
+  }
+
+  /**
+   * Determines whether this violation is for an ignored Config property path.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolation $v
+   *   A validation constraint violation for a Config object.
+   *
+   * @return bool
+   */
+  protected static function isViolationForIgnoredPropertyPath(ConstraintViolation $v): bool {
+    $config_object_data_type = $v->getRoot()->getDataDefinition()->getDataType();
+    if (!array_key_exists($config_object_data_type, static::$ignoredPropertyPaths)) {
+      return FALSE;
+    }
+
+    $ignored_property_paths_as_partial_regexes = array_map(
+      // Treat `*` nor in the regex sense nor as something to be escaped: treat
+      // it as the wildcard for a segment in a property path (property path
+      // segments are separated by periods).
+      // That requires first ensuring that preg_quote() does not escape it, and
+      // then replacing it with an appropriate regular expression: `[^\.]+`,
+      // which means: ">=1 characters that are anything except a period".
+      fn ($s) => str_replace(' ', '[^\.]+', preg_quote(str_replace('*', ' ', $s))),
+      static::$ignoredPropertyPaths[$config_object_data_type]
+    );
+
+    // All ignored property path expressions are combined into a single regex
+    // capture group.
+    $regex_capture_group = implode('|', $ignored_property_paths_as_partial_regexes);
+
+    // Require an exact match to one of the ignored property path expressions.
+    return preg_match('/^(' . $regex_capture_group . ')$/', $v->getPropertyPath()) === 1;
   }
 
   /**
