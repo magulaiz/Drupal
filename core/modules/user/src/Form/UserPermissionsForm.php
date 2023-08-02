@@ -61,7 +61,7 @@ class UserPermissionsForm extends FormBase {
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
+  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher = NULL, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
     $this->permissionHandler = $permission_handler;
     $this->roleStorage = $role_storage;
     $this->moduleHandler = $module_handler;
@@ -70,7 +70,7 @@ class UserPermissionsForm extends FormBase {
       $this->moduleExtensionList = \Drupal::service('extension.list.module');
     }
     if (is_null($event_dispatcher)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $eventDispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
     $this->eventDispatcher = $event_dispatcher;
