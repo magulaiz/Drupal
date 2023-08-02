@@ -2,8 +2,6 @@
 
 namespace Drupal\views;
 
-use Drupal\views\Plugin\views\display\Page;
-
 /**
  * Static service container wrapper for views.
  */
@@ -524,20 +522,6 @@ class Views {
     return array_keys(array_filter(static::$plugins, function ($plugin_type) use ($type) {
       return $plugin_type == $type;
     }));
-  }
-
-  /**
-   * #pre_render callback to set contextual links for views using a Page display.
-   */
-  public static function pageDisplayPreRender(array $element) {
-    // If the main content of this page contains a view, attach its contextual
-    // links to the overall page array. This allows them to be rendered directly
-    // next to the page title.
-    \Drupal::moduleHandler()->load('views');
-    if ($view = Page::getPageRenderArray()) {
-      views_add_contextual_links($element, 'page', $view, $view->current_display);
-    }
-    return $element;
   }
 
   /**
