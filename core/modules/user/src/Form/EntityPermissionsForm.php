@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\Event\PermissionsListFilterEvent;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -120,6 +121,9 @@ class EntityPermissionsForm extends UserPermissionsForm {
 
     // Find all the permissions that depend on $this->bundle.
     $permissions = $this->permissionHandler->getPermissions();
+    $event = new PermissionsListFilterEvent($permissions);
+    $this->eventDispatcher->dispatch($event);
+    $permissions = $event->getPermissions();
     $permissions_by_provider = [];
     foreach ($permissions as $permission_name => $permission) {
       $required_configs = $permission['dependencies']['config'] ?? [];
