@@ -125,7 +125,7 @@ class UserPermissionsForm extends FormBase {
 
     // Move the access content permission to the Node module if it is installed.
     // @todo Add an alter so that this section can be moved to the Node module.
-    if ($this->moduleHandler->moduleExists('node')) {
+    if ($this->moduleHandler->moduleExists('node') && isset($permissions_by_provider['node'])) {
       // Insert 'access content' before the 'view own unpublished content' key
       // in order to maintain the UI even though the permission is provided by
       // the system module.
