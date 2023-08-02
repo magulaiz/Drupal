@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "default_view_mode" = "default",
  *     "allowed_view_modes" = {},
  *     "allowed_media_types" = {},
+ *     "media_image_use_img" = 0,
  *   },
  *   weight = 100,
  * )
@@ -169,6 +170,13 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#default_value' => $this->settings['allowed_media_types'],
       '#description' => $this->t('If none are selected, all will be allowed.'),
       '#element_validate' => [[static::class, 'validateOptions']],
+    ];
+
+    $form['media_image_use_img'] = [
+      '#title' => $this->t('Use &lt;img&gt; tag for Media Image type.'),
+      '#type' => 'checkbox',
+      '#default_value' => isset($this->settings['media_image_use_img']) ? $this->settings['media_image_use_img'] : 0,
+      '#description' => $this->t('Place Media Image as a normal image element using &lt;img&gt; tag, rather than using &lt;drupal-media&gt;, to enable image editing options, i.e, resize by drag and drop and use other image edit options.<br><strong><em>Only works if you enabled Image tool</em></strong>'),
     ];
 
     $form['allowed_view_modes'] = [

@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Ajax\EditorDialogSave;
+use Drupal\file\Entity\File;
 
 /**
  * The media library opener for text editors.
@@ -62,12 +63,40 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
    */
   public function getSelectionResponse(MediaLibraryState $state, array $selected_ids) {
     $selected_media = $this->mediaStorage->load(reset($selected_ids));
+    $selected_source = $selected_media->getSource();
+    $plugin_id = $selected_source->getPluginId();
+
+    // Get type id
+    $type_id = $state->getSelectedTypeId();
+
+    // Assume source type
+    $src_type = $plugin_id;
+
+    $alt = '';
+    $url = '';
+    if ($selected_media) {
+      $fid = $selected_source->getSourceFieldValue($selected_media);
+      $file = File::load($fid);
+      if ($file) {
+        $url = $file->createFileUrl();
+      } else {
+        $url = $fid;
+      }
+
+      if ($src_type == 'image') {
+        $alt = $selected_source->getMetadata($selected_media, 'thumbnail_alt_value');
+      }
+    }
 
     $response = new AjaxResponse();
     $values = [
       'attributes' => [
         'data-entity-type' => 'media',
         'data-entity-uuid' => $selected_media->uuid(),
+        'src' => $url,
+        'alt' => $alt,
+        'type-id' => $type_id,
+        'src-type' => $src_type,
       ],
     ];
     $response->addCommand(new EditorDialogSave($values));
