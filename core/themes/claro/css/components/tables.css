@@ -21,11 +21,7 @@ table {
 }
 
 caption {
-  text-align: left; /* LTR */
-}
-
-[dir="rtl"] caption {
-  text-align: right;
+  text-align: start;
 }
 
 th {
@@ -33,27 +29,17 @@ th {
   box-sizing: border-box;
   height: var(--space-xl);
   padding: var(--space-xs) var(--space-m);
-  text-align: left; /* LTR */
+  text-align: start;
   color: var(--color-text);
   background: var(--color-gray-050);
   line-height: 1.25rem; /* 20px */
 }
 
-[dir="rtl"] th {
-  text-align: right;
-}
-
-/**
- * Table sort.
- */
-
-/* Table head cell containing sort link. */
+/* The actual sort link. */
 
 .sortable-heading {
   padding: 0 var(--space-m);
 }
-
-/* The actual sort link. */
 
 .sortable-heading > a {
   display: block;
@@ -64,16 +50,20 @@ th {
   color: inherit;
 }
 
-.sortable-heading.is-active > a {
-  color: var(--color-absolutezero);
+.sortable-heading > a:focus,
+.sortable-heading > a:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
 }
 
-.sortable-heading.is-active > a::before {
-  border-bottom: 0.1875rem solid var(--color-absolutezero);
+.sortable-heading > a:focus::before,
+.sortable-heading > a:hover::before {
+  border-color: inherit;
 }
 
-.sortable-heading.is-active > a::after {
-  content: none;
+.sortable-heading > a:focus::after,
+.sortable-heading > a:hover::after {
+  opacity: 1;
 }
 
 .sortable-heading > a::before {
@@ -121,20 +111,16 @@ th {
   }
 }
 
-.sortable-heading > a:focus,
-.sortable-heading > a:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+.sortable-heading.is-active > a {
+  color: var(--color-absolutezero);
 }
 
-.sortable-heading > a:focus::before,
-.sortable-heading > a:hover::before {
-  border-color: inherit;
+.sortable-heading.is-active > a::before {
+  border-bottom: 0.1875rem solid var(--color-absolutezero);
 }
 
-.sortable-heading > a:focus::after,
-.sortable-heading > a:hover::after {
-  opacity: 1;
+.sortable-heading.is-active > a::after {
+  content: none;
 }
 
 tr {
@@ -177,11 +163,7 @@ td {
   box-sizing: border-box;
   height: 4rem;
   padding: var(--space-xs) var(--space-m);
-  text-align: left; /* LTR */
-}
-
-[dir="rtl"] td {
-  text-align: right;
+  text-align: start;
 }
 
 td .item-list ul {
