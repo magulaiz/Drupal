@@ -5,7 +5,6 @@ namespace Drupal\FunctionalTests;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\StreamCapturer;

@@ -191,8 +191,8 @@ class WebAssertTest extends BrowserTestBase {
   /**
    * Tests legacy text asserts.
    *
-   * covers ::responseContains
-   * covers ::responseNotContains
+   * @covers ::responseContains
+   * @covers ::responseNotContains
    */
   public function testTextAsserts() {
     $this->drupalGet('test-encoded');
@@ -205,8 +205,8 @@ class WebAssertTest extends BrowserTestBase {
   /**
    * Tests legacy field asserts for button field type.
    *
-   * covers ::buttonExists
-   * covers ::buttonNotExists
+   * @covers ::buttonExists
+   * @covers ::buttonNotExists
    */
   public function testFieldAssertsForButton() {
     $this->drupalGet('test-field-xpath');
