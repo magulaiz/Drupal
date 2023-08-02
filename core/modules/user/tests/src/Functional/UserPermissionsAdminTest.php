@@ -65,12 +65,16 @@ class UserPermissionsAdminTest extends BrowserTestBase {
    * Confirms that PermissionsListFilter can filter the permissions UI listing.
    */
   public function testFilterPermissionsEvent() {
+    \Drupal::service('module_installer')->install(['user_permissions_test', 'node']);
+    $this->drupalCreateContentType(['type' => 'page']);
     \Drupal::service('module_installer')->install(['user_permissions_test']);
     $this->resetAll();
     $this->rebuildContainer();
     $this->drupalLogin($this->drupalCreateUser([
       'administer permissions',
     ]));
+
+    // Test UserPermissionsForm.
     $this->drupalGet('admin/people/permissions');
     $items = array_map(fn($item) => $item->getAttribute('for'),
       $this->getSession()->getPage()->findAll('css', 'tbody label[for^="edit-anonymous"], tbody label[for^="edit-authenticated"]'));
@@ -79,6 +83,24 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     // there are more overall permissions than what appears once the event
     // subscriber in `user_filtered_permissions_test` is running.
     $this->assertGreaterThan(6, $items);
+
+    // Test UserPermissionsRoleSpecificForm.
+    $this->drupalGet('admin/people/permissions/authenticated');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody .title'));
+    $this->assertGreaterThan(3, $items);
+
+    // Test UserPermissionsModuleSpecificForm.
+    $this->drupalGet('admin/people/permissions/module/user');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody .title'));
+    $this->assertGreaterThan(3, $items);
+
+    // Test EntityPermissionsForm.
+    $this->drupalGet('admin/structure/types/manage/page/permissions');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody .title'));
+    $this->assertGreaterThan(3, $items);
 
     // Enable a module that filters all but permissions a, b, c.
     \Drupal::service('module_installer')->install(['user_filtered_permissions_test']);
@@ -99,6 +121,26 @@ class UserPermissionsAdminTest extends BrowserTestBase {
       'edit-authenticated-b',
       'edit-authenticated-c',
     ], $items);
+
+    $this->drupalGet('admin/people/permissions/authenticated');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody .title'));
+    $this->assertCount(3, $items);
+    $this->assertEquals([
+      'Test permission',
+      'Test permission',
+      'Test permission',
+    ], $items);
+
+    $this->drupalGet('admin/people/permissions/module/user');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody .title'));
+    $this->assertEmpty($items);
+
+    $this->drupalGet('admin/structure/types/manage/page/permissions');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody .title'));
+    $this->assertEmpty($items);
   }
 
 }
