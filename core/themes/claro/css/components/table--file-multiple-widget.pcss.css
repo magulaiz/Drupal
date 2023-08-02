@@ -11,9 +11,10 @@
     position: relative;
     display: block;
     height: auto;
-  }
-  & .tabledrag-cell-content > * {
-    display: block;
+
+    & > * {
+      display: block;
+    }
   }
   & .tabledrag-cell-content__item {
     padding: 0;
@@ -56,14 +57,8 @@
   }
 }
 
-.no-touchevents {
-  & .table-file-multiple-widget {
-    & .checkbox {
-      & .form-type--boolean {
-        line-height: var(--line-height);
-      }
-    }
-  }
+.no-touchevents .table-file-multiple-widget .checkbox .form-type--boolean {
+  line-height: var(--line-height);
 }
 
 /**
@@ -78,22 +73,16 @@
  * Remove the border for the last table row if upload is not possible.
  * (A full file widget with limited cardinality.)
  */
-.table-file-multiple-widget--no-upload {
-  & > tbody:last-child {
-    & > tr:last-child {
-      border-block-end: 0;
-    }
-  }
+.table-file-multiple-widget--no-upload > tbody:last-child > tr:last-child {
+  border-block-end: 0;
 }
 
 /**
  * Take as much space as possible.
  */
 @media screen and (max-width: 37.5em) {
-  .claro-details__wrapper {
-    & .file-widget-multiple__table-wrapper {
-      margin-inline: calc(var(--space-m) * -1);
-    }
+  .claro-details__wrapper .file-widget-multiple__table-wrapper {
+    margin-inline: calc(var(--space-m) * -1);
     & > :not(table) {
       margin-inline: var(--space-m);
     }

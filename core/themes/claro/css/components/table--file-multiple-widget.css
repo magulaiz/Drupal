@@ -103,7 +103,7 @@
   .claro-details__wrapper .file-widget-multiple__table-wrapper {
     margin-inline: calc(var(--space-m) * -1);
   }
-  .claro-details__wrapper > :not(table) {
+  .claro-details__wrapper .file-widget-multiple__table-wrapper > :not(table) {
     margin-inline: var(--space-m);
   }
 }
