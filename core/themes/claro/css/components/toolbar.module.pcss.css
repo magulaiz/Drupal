@@ -112,6 +112,7 @@
  * active. */
 body .toolbar-oriented .toolbar-bar {
   position: fixed;
+  width: 100vw;
 }
 /* When the configured narrow breakpoint is active, the toolbar is sized to wrap
  * around the trays in order to provide a context for scrolling tray content
