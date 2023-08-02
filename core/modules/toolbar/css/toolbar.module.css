@@ -156,7 +156,6 @@ body.toolbar-tray-open.toolbar-vertical .toolbar-oriented {
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
   left: -100%; /* LTR */
-  width: 240px;
   width: 15rem;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical {
