@@ -409,6 +409,50 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * Passes if a link starting with a given href (part) is found.
+   *
+   * @param string $href
+   *   The full or partial value of the 'href' attribute of the anchor tag.
+   * @param int $index
+   *   Link position counting from zero.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist.
+   */
+  public function linkByHrefStartsWithExists(string $href, int $index = 0, string $message = ''): void {
+    $xpath = $this->buildXPathQuery('//a[starts-with(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : strtr('No link with href starting with %href found.', ['%href' => $href]));
+    $links = $this->session->getPage()->findAll('xpath', $xpath);
+    $this->assert(!empty($links[$index]), $message);
+  }
+
+  /**
+   * Passes if a link starting with a given href (part) is not found.
+   *
+   * @param string $href
+   *   The full or partial value of the 'href' attribute of the anchor tag.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist.
+   */
+  public function linkByHrefStartsWithNotExists(string $href, string $message = ''): void {
+    $xpath = $this->buildXPathQuery('//a[starts-with(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : strtr('Link with href starting with %href found.', ['%href' => $href]));
+    $links = $this->session->getPage()->findAll('xpath', $xpath);
+    $this->assert(empty($links), $message);
+  }
+
+  /**
    * Builds an XPath query.
    *
    * Builds an XPath query by replacing placeholders in the query by the value
