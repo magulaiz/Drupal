@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Prepares the environment after page caching ran.
+ * Sets the status key for the upload progress.
  */
 class PreSessionHandler implements HttpKernelInterface {
 
@@ -19,7 +19,7 @@ class PreSessionHandler implements HttpKernelInterface {
   protected $httpKernel;
 
   /**
-   * Constructs a new KernelPreHandle instance.
+   * Constructs a new PreSessionHandler instance.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The wrapped HTTP kernel.
@@ -37,7 +37,7 @@ class PreSessionHandler implements HttpKernelInterface {
       session_start();
       $prefix = ini_get('session.upload_progress.prefix');
       $key = explode('/', $request->getPathInfo())[3];
-      $request->attributes->set('status', $prefix.$key);
+      $request->attributes->set('status', $prefix . $key);
       session_write_close();
     }
     return $this->httpKernel->handle($request, $type, $catch);
