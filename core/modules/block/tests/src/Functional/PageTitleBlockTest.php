@@ -15,7 +15,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'update'];
+  protected static $modules = ['block', 'update', 'node'];
 
   /**
    * {@inheritdoc}
@@ -27,20 +27,32 @@ class PageTitleBlockTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     // Add the page title block to the page.
-    $this->drupalPlaceBlock('page_title_block', ['region' => 'header', 'id' => 'stark_page_title']);
+    $this->drupalPlaceBlock('page_title_block', ['id' => 'stark_page_title']);
+
+    // Create node type.
+    $this->drupalCreateContentType([
+      'type' => 'article',
+      'name' => 'Article',
+    ]);
 
     // Create administrative user.
     $admin_user = $this->drupalCreateUser([
       'administer blocks',
       'administer themes',
       'administer software updates',
+      'administer nodes',
+      'create article content',
+      'edit any article content',
+      'delete any article content',
+      'delete any article content',
     ]);
     $this->drupalLogin($admin_user);
   }
 
   /**
-   * Data provider for testTestContextualizeTitle().
+   * Data provider for testContextualizeTitle().
    *
    * @return array[][]
    *   The test cases.
@@ -71,7 +83,7 @@ class PageTitleBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Check if the page title block shows contextualized title.
+   * Check if the contextualized title is displayed.
    *
    * @dataProvider providerTestContextualizeTitle
    */
@@ -106,6 +118,64 @@ class PageTitleBlockTest extends BrowserTestBase {
     // Make sure the title shown is contextualized.
     $this->drupalGet('admin/modules/update');
     $this->assertSession()->elementTextEquals('css', 'h1', $contextualized_title);
+  }
+
+  /**
+   * Data provider for testContextualizeTitleOnNodeOperationPages().
+   *
+   * @return array[][]
+   *   The test cases.
+   */
+  public function providerTestContextualizeTitleOnNodeOperationPages() {
+    return [
+      'node with random title' => [$this->randomMachineName(8)],
+      'node with title set to 0' => ['0'],
+    ];
+  }
+
+  /**
+   * Tests if contextualized title displayed on all node operation pages.
+   *
+   * @dataProvider providerTestContextualizeTitleOnNodeOperationPages
+   */
+  public function testContextualizeTitleOnNodeOperationPages($node_title) {
+    $settings = [
+      'type' => 'article',
+      'title' => $node_title,
+    ];
+    $node = $this->drupalCreateNode($settings);
+
+    // Make sure the non-contextualized title is shown on all node operation
+    // pages.
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "Edit Article $node_title");
+
+    $this->drupalGet('node/' . $node->id() . '/delete');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "Are you sure you want to delete the content item $node_title?");
+
+    $this->drupalGet('node/' . $node->id() . '/revisions');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "Revisions for $node_title");
+
+    // Configure title block to show contextualized title and.
+    $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
+    $this->submitForm(['settings[contextualize_title]' => TRUE], 'Save block');
+
+    // Make sure the contextualized title is shown on all node operation pages.
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+
+    $this->drupalGet('node/' . $node->id() . '/delete');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+
+    $this->drupalGet('node/' . $node->id() . '/revisions');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+
   }
 
 }
