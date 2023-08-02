@@ -199,8 +199,8 @@ abstract class TranslateFormBase extends FormBase {
       'title' => $this->t('Translation type'),
       'options' => [
         'all' => $this->t('All'),
-        LOCALE_NOT_CUSTOMIZED => $this->t('Non-customized translation'),
-        LOCALE_CUSTOMIZED => $this->t('Customized translation'),
+        0 => $this->t('Non-customized translation'),
+        1 => $this->t('Customized translation'),
       ],
       'states' => [
         'visible' => [

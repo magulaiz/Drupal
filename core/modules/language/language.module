@@ -223,51 +223,6 @@ function language_entity_bundle_delete($entity_type_id, $bundle) {
 }
 
 /**
- * Returns the default language code assigned to an entity type and a bundle.
- *
- * @param string $entity_type
- *   The entity type.
- * @param string $bundle
- *   The bundle name.
- *
- * @return string
- *   The language code.
- */
-function language_get_default_langcode($entity_type, $bundle) {
-  $configuration = ContentLanguageSettings::loadByEntityTypeBundle($entity_type, $bundle);
-
-  $default_value = NULL;
-  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-  switch ($configuration->getDefaultLangcode()) {
-    case LanguageInterface::LANGCODE_SITE_DEFAULT:
-      $default_value = \Drupal::languageManager()->getDefaultLanguage()->getId();
-      break;
-
-    case 'current_interface':
-      $default_value = $language_interface->getId();
-      break;
-
-    case 'authors_default':
-      $user = \Drupal::currentUser();
-      $language_code = $user->getPreferredLangcode();
-      if (!empty($language_code)) {
-        $default_value = $language_code;
-      }
-      else {
-        $default_value = $language_interface->getId();
-      }
-      break;
-  }
-  if ($default_value) {
-    return $default_value;
-  }
-
-  // If we still do not have a default value, just return the value stored in
-  // the configuration; it has to be an actual language code.
-  return $configuration->getDefaultLangcode();
-}
-
-/**
  * Update the list of prefixes from the installed languages.
  */
 function language_negotiation_url_prefixes_update() {

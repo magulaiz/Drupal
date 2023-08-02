@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\DefaultLanguageItem;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Core\Language\LanguageInterface;
@@ -73,7 +74,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
    */
   public function testMultilingualNodeForm() {
     // Create "Basic page" content.
-    $langcode = language_get_default_langcode('node', 'page');
+    $langcode = DefaultLanguageItem::language_get_default_langcode('node', 'page');
     $title_key = 'title[0][value]';
     $title_value = $this->randomMachineName(8);
     $body_key = 'body[0][value]';
