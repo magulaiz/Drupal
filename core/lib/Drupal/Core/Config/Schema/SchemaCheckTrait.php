@@ -46,6 +46,7 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: views_pager_sql`.
       // @see views.data_types.schema.yml
       'display.*.display_options.pager.options.total_pages',
+      'display.*.display_options.pager.options.items_per_page',
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
       'display.*.display_options.filters.status.expose.description',
@@ -55,6 +56,9 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
       'display.*.display_options.filters.bundle.group_info.description',
+      // @todo Fix config or tweak schema of `type: views.view.*`.
+      // @see views.schema.yml
+      'display.*.position',
     ],
     'field.field.*.*.*' => [
       // @todo Fix config or tweak schema of `type: field.value.comment`.
