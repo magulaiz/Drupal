@@ -113,11 +113,15 @@ class EntityOperations implements ContainerInjectionInterface {
       $current_state = $workflow->getTypePlugin()
         ->getState($entity->moderation_state->value);
 
-      // This entity is default if it is new, the default revision, or the
-      // default revision is not published.
+      // The moderation state dictates whether the latest revision should
+      // become the default revision upon save. However, if the latest
+      // revision is already the default, and we are not changing the state,
+      // then make the new revision the default too.
+      $has_state_changed = $current_state->id() != $this->moderationInfo->getOriginalState($entity)->id();
+      $was_default = !$entity->isNew() && $this->moderationInfo->getDefaultRevisionId('node', $entity->id()) == $entity->getLoadedRevisionId();
       $update_default_revision = $entity->isNew()
         || $current_state->isDefaultRevisionState()
-        || !$this->moderationInfo->isDefaultRevisionPublished($entity);
+        || ($was_default && !$has_state_changed);
 
       // Fire per-entity-type logic for handling the save process.
       $this->entityTypeManager
