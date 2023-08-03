@@ -154,7 +154,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleTrueOptionchecker() {
 
-    [$header, $options] = _form_test_tableselect_get_data();
+    [$header, $options] = $this->formTestTableselectGetData();
 
     $form['tableselect'] = [
       '#type' => 'tableselect',
@@ -177,7 +177,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleFalseOptionchecker() {
 
-    [$header, $options] = _form_test_tableselect_get_data();
+    [$header, $options] = $this->formTestTableselectGetData();
 
     $form['tableselect'] = [
       '#type' => 'tableselect',
@@ -240,6 +240,44 @@ class ElementsTableSelectTest extends BrowserTestBase {
     // Return the processed form together with form_state and errors
     // to allow the caller low-level access to the form.
     return [$form, $form_state, $errors];
+  }
+
+  /**
+   * Create a header and options array. Helper function for callbacks.
+   */
+  public function formTestTableselectGetData() {
+    $header = [
+      'one' => t('One'),
+      'two' => t('Two'),
+      'three' => t('Three'),
+      'four' => t('Four'),
+    ];
+
+    $options['row1'] = [
+      'title' => ['data' => ['#title' => t('row1')]],
+      'one' => 'row1col1',
+      'two' => t('row1col2'),
+      'three' => t('row1col3'),
+      'four' => t('row1col4'),
+    ];
+
+    $options['row2'] = [
+      'title' => ['data' => ['#title' => t('row2')]],
+      'one' => 'row2col1',
+      'two' => t('row2col2'),
+      'three' => t('row2col3'),
+      'four' => t('row2col4'),
+    ];
+
+    $options['row3'] = [
+      'title' => ['data' => ['#title' => t('row3')]],
+      'one' => 'row3col1',
+      'two' => t('row3col2'),
+      'three' => t('row3col3'),
+      'four' => t('row3col4'),
+    ];
+
+    return [$header, $options];
   }
 
 }
