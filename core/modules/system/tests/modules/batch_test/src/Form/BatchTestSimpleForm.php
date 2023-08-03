@@ -50,6 +50,7 @@ class BatchTestSimpleForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
+    \Drupal::moduleHandler()->loadInclude('batch_test', 'inc', 'batch_test.callbacks');
 
     foreach ($form_state->getValue('batch') as $batch) {
       $function = '_batch_test_' . $batch;
