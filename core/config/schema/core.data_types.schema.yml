@@ -176,6 +176,9 @@ filter:
     id:
       type: string
       label: 'ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.filter
     provider:
       type: string
       label: 'Provider'
