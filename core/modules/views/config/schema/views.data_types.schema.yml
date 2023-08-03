@@ -91,6 +91,9 @@ views_display:
         type:
           type: string
           label: 'Type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.style
         options:
           type: views.style.[%parent.type]
     row:
