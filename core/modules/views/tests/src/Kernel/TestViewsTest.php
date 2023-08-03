@@ -29,6 +29,8 @@ class TestViewsTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = [
+    'image',
+    'views',
     // `node.type.book` config entity is a config dependency.
     // @see core/modules/book/tests/modules/book_test_views/test_views/views.view.test_book_view.yml
     'book',
