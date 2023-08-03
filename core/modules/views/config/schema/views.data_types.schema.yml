@@ -109,6 +109,9 @@ views_display:
         type:
           type: string
           label: 'Query type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.query
         options:
           type: views.query.[%parent.type]
     defaults:
