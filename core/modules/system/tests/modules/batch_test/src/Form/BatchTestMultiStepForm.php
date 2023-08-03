@@ -50,6 +50,7 @@ class BatchTestMultiStepForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
+    \Drupal::moduleHandler()->loadInclude('batch_test', 'inc', 'batch_test.callbacks');
 
     $step = $form_state->get('step');
     switch ($step) {
