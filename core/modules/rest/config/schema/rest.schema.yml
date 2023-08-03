@@ -79,6 +79,9 @@ rest.resource.*:
     plugin_id:
       type: string
       label: 'REST resource plugin id'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.rest
     granularity:
       type: string
       label: 'REST resource configuration granularity'

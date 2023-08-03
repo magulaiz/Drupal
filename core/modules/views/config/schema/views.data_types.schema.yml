@@ -274,6 +274,9 @@ views_sort:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.sort
 
 views_sort_expose:
   type: mapping
@@ -298,6 +301,9 @@ views_area:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.area
 
 views_handler:
   type: mapping
@@ -415,6 +421,9 @@ views_argument:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.argument
 
 views_exposed_form:
   type: mapping
@@ -574,6 +583,9 @@ views_field:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.field
 
 views_pager:
   type: mapping
@@ -774,6 +786,9 @@ views_filter:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.filter
 
 views_filter_group_item:
   type: mapping
