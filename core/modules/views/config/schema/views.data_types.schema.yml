@@ -25,6 +25,9 @@ views_display:
         type:
           type: string
           label: 'Pager type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.pager
         options:
           type: views.pager.[%parent.type]
     exposed_form:
