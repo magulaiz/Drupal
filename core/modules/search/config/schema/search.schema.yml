@@ -89,6 +89,7 @@ search.page.*:
       constraints:
         PluginExists:
           manager: plugin.manager.search
+          interface: 'Drupal\search\Plugin\SearchInterface'
     configuration:
       type: search.plugin.[%parent.plugin]
 
