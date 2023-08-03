@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -237,4 +239,54 @@ function _batch_test_finished_6($success, $results, $operations, $elapsed) {
  */
 function _batch_test_finished_7($success, $results, $operations, $elapsed) {
   _batch_test_finished_helper(7, $success, $results, $operations, $elapsed);
+}
+
+/**
+ * Batch operation: Submits form_test_mock_form().
+ */
+function _batch_test_nested_drupal_form_submit_callback($value) {
+  $form_state = (new FormState())
+    ->setValue('test_value', $value);
+  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
+}
+
+/**
+ * Batch 1: Repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_1() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_1');
+
+  for ($i = 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_1'];
+}
+
+/**
+ * Batch 5: Repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_5() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_5');
+  for ($i = 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_5', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_5'];
 }
