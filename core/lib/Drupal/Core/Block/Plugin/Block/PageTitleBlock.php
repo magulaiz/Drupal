@@ -127,7 +127,10 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   public function build() {
     $title = $this->title;
     if ($this->configuration['contextualize_title']) {
-      $title = $this->getTitleBasedOnBaseRoute() ?? $title;
+      $contextualized_title = $this->getTitleBasedOnBaseRoute();
+      if (!is_null($contextualized_title)) {
+        $title = $contextualized_title;
+      }
     }
     return [
       '#type' => 'page_title',
