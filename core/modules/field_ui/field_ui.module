@@ -385,11 +385,13 @@ function field_ui_form_config_translation_form_alter(&$form, FormStateInterface 
         continue;
       }
       foreach ($section_components as $j => $component) {
-        if (isset($component['configuration']['formatter']['settings']) &&
+        if (explode(PluginBase::DERIVATIVE_SEPARATOR, $component['configuration']['id'])[0] === 'field_block' &&
+          isset($component['configuration']['formatter']['settings']) &&
           !empty($component['configuration']['formatter']['settings']) &&
           isset($form_elements['third_party_settings']['layout_builder']['sections'][$i]['components'][$j]['configuration']['formatter']['settings'])) {
           try {
-            [,,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component['configuration']['id']);
+            $id_args = explode(PluginBase::DERIVATIVE_SEPARATOR, $component['configuration']['id']);
+            $field_name = array_pop($id_args);
           }
           catch (\Exception $e) {
             continue;

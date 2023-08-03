@@ -87,9 +87,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function populateFromRouteMatch(RouteMatchInterface $route_match) {
-    $bundle_entity_type = $this->entityTypeManager
-      ->getDefinition($this->pluginDefinition['base_entity_type'])
-      ->getBundleEntityType();
+    $bundle_entity_type = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type'])->getBundleEntityType();
     $bundle = $route_match->getParameter($bundle_entity_type ?: 'bundle') ?: $this->pluginDefinition['base_entity_type'];
     $mode = $route_match->getParameter($this->pluginDefinition['display_context'] . '_mode_name') ?: 'default';
 
