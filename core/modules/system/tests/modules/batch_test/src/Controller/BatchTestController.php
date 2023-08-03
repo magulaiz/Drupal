@@ -31,7 +31,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testLargePercentage() {
-    batch_test_stack(NULL, TRUE);
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
 
     batch_set(_batch_test_batch_5());
     return batch_process('batch-test/redirect');
@@ -61,7 +61,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testNoForm() {
-    batch_test_stack(NULL, TRUE);
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
 
     batch_set(_batch_test_batch_1());
     return batch_process('batch-test/redirect');
@@ -75,7 +75,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testFinishRedirect() {
-    batch_test_stack(NULL, TRUE);
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
 
     $batch = _batch_test_batch_1();
     $batch['finished'] = '_batch_test_finished_1_finished';
@@ -114,7 +114,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testThemeBatch() {
-    batch_test_stack(NULL, TRUE);
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
     $batch = [
       'operations' => [
         ['_batch_test_theme_callback', []],
@@ -131,7 +131,7 @@ class BatchTestController {
    *   A redirect response if the batch is progressive. No return value otherwise.
    */
   public function testTitleBatch() {
-    batch_test_stack(NULL, TRUE);
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
     $batch = [
       'title' => 'Batch Test',
       'operations' => [

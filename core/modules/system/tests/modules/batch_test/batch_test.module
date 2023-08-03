@@ -202,7 +202,7 @@ function _batch_test_theme_callback() {
   // directly. Instead, we save the theme being used in a variable here, so
   // that it can be loaded and inspected in the thread running the test.
   $theme = \Drupal::theme()->getActiveTheme()->getName();
-  batch_test_stack($theme);
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack($theme);
 }
 
 /**
@@ -217,21 +217,5 @@ function _batch_test_title_callback() {
   $request = \Drupal::request();
   $route_match = \Drupal::routeMatch();
   $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
-  batch_test_stack($title);
-}
-
-/**
- * Helper function: Stores or retrieves traced execution data.
- */
-function batch_test_stack($data = NULL, $reset = FALSE) {
-  $state = \Drupal::state();
-  if ($reset) {
-    $state->delete('batch_test.stack');
-  }
-  if (!isset($data)) {
-    return $state->get('batch_test.stack');
-  }
-  $stack = $state->get('batch_test.stack');
-  $stack[] = $data;
-  $state->set('batch_test.stack', $stack);
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack($title);
 }

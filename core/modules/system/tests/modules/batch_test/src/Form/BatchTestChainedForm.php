@@ -53,10 +53,10 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #1 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit1($form, FormStateInterface $form_state) {
-    batch_test_stack(NULL, TRUE);
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack(NULL, TRUE);
 
-    batch_test_stack('submit handler 1');
-    batch_test_stack('value = ' . $form_state->getValue('value'));
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('submit handler 1');
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('value = ' . $form_state->getValue('value'));
 
     $value = &$form_state->getValue('value');
     $value++;
@@ -69,8 +69,8 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #2 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit2($form, FormStateInterface $form_state) {
-    batch_test_stack('submit handler 2');
-    batch_test_stack('value = ' . $form_state->getValue('value'));
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('submit handler 2');
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('value = ' . $form_state->getValue('value'));
 
     $value = &$form_state->getValue('value');
     $value++;
@@ -83,8 +83,8 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #3 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit3($form, FormStateInterface $form_state) {
-    batch_test_stack('submit handler 3');
-    batch_test_stack('value = ' . $form_state->getValue('value'));
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('submit handler 3');
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('value = ' . $form_state->getValue('value'));
 
     $value = &$form_state->getValue('value');
     $value++;
@@ -96,8 +96,8 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #4 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit4($form, FormStateInterface $form_state) {
-    batch_test_stack('submit handler 4');
-    batch_test_stack('value = ' . $form_state->getValue('value'));
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('submit handler 4');
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack('value = ' . $form_state->getValue('value'));
 
     $value = &$form_state->getValue('value');
     $value++;

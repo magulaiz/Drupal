@@ -20,7 +20,7 @@ function _batch_test_callback_1($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 1 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 1 id $id");
   $context['results'][1][] = $id;
 }
 
@@ -45,7 +45,7 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
     // Track execution, and store some result for post-processing in the
     // 'finished' callback.
     $id = $context['sandbox']['current'] + $i;
-    batch_test_stack("op 2 id $id");
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 2 id $id");
     $context['results'][2][] = $id;
 
     // Update progress information.
@@ -68,7 +68,7 @@ function _batch_test_callback_5($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 5 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 5 id $id");
   $context['results'][5][] = $id;
   // This test is to test finished > 1
   $context['finished'] = 3.14;
@@ -85,7 +85,7 @@ function _batch_test_callback_6($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 6 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 6 id $id");
   $context['results'][6][] = $id;
 }
 
@@ -100,7 +100,7 @@ function _batch_test_callback_7($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 7 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 7 id $id");
   $context['results'][7][] = $id;
 }
 
@@ -111,7 +111,7 @@ function _batch_test_callback_7($id, $sleep, &$context) {
  */
 function _batch_test_nested_batch_callback(array $batches = []) {
   foreach ($batches as $batch) {
-    batch_test_stack("setting up batch $batch");
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack("setting up batch $batch");
     $function = '_batch_test_batch_' . $batch;
     batch_set($function());
   }
