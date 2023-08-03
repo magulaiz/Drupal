@@ -358,10 +358,10 @@ JS;
   /**
    * Tests creating empty inline elements using Source Editing.
    *
-   * @testWith ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", "<p>Before and after.</p>", null, null]
+   * @testWith ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", "<p>Before and after.</p>", "<p>Before and after.</p>", null]
    *           ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", "<p>Before &nbsp;and after.</p>", null, "<i>"]
    *           ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", null, null, "<i class>"]
-   *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before and after.</p>", null, null]
+   *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before and after.</p>", "<p>Before and after.</p>", null]
    *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before &nbsp;and after.</p>", null, "<span>"]
    *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before <span class=\"icon\"></span> and after.</p>", null, "<span class=\"icon\">"]
    */
