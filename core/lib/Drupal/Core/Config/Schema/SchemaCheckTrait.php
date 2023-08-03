@@ -41,6 +41,23 @@ trait SchemaCheckTrait {
    * @var \string[][]
    */
   protected static array $ignoredPropertyPaths = [
+    'block_content.type.*' => [
+      // @todo Fix config or tweak schema of `type: block_content.type.*`.
+      // @see block_content.schema.yml
+      'description',
+      'label',
+    ],
+    'comment.type.*' => [
+      // @todo Fix config or tweak schema of `type: comment.type.*`.
+      // @see comment.schema.yml
+      'description',
+      'label',
+    ],
+    'core.entity_view_mode.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_view_mode.*.*`.
+      // @see core.entity.schema.yml
+      'description',
+    ],
     'views.view.*' => [
       // Values may be
       // @todo Fix config or tweak schema of `type: views_pager_sql`.
@@ -59,11 +76,39 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: views.view.*`.
       // @see views.schema.yml
       'display.*.position',
+      'label',
+    ],
+    'entity_test.entity_test_bundle.*' => [
+      // @todo Fix config or tweak schema of `type: entity_test.entity_test_bundle.*`.
+      // @see entity_test.schema.yml
+      'description',
+      'label',
     ],
     'field.field.*.*.*' => [
       // @todo Fix config or tweak schema of `type: field.value.comment`.
       // @see comment.schema.yml
       'default_value.*.last_comment_name',
+    ],
+    'image.style.*' => [
+      // @todo Fix config or tweak schema of `type: image.effect.image_rotate`.
+      // @see image.schema.yml
+      'effects.*.data.bgcolor',
+    ],
+    'media.type.*' => [
+      // @todo Fix config or tweak schema of `type: media.type.*`.
+      // @see media.schema.yml
+      'label',
+    ],
+    'node.type.*' => [
+      // @todo Fix config or tweak schema of `type: node.type.*`.
+      // @see node.schema.yml
+      'name',
+    ],
+    'system.action.*' => [
+      // @todo Fix config or tweak schema of `type: system.action.*`.
+      // @see system.schema.yml
+      'description',
+      'label',
     ],
   ];
 
