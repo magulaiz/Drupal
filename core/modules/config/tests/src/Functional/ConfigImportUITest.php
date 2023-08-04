@@ -422,7 +422,7 @@ class ConfigImportUITest extends BrowserTestBase {
       'style' => NULL,
       'size' => NULL,
       'size_value' => NULL,
-      'protected_property' => NULL,
+      'protected_property' => 'Default',
     ];
     $sync->write($name_primary, $values_primary);
     $values_secondary = [
@@ -439,7 +439,7 @@ class ConfigImportUITest extends BrowserTestBase {
       'style' => NULL,
       'size' => NULL,
       'size_value' => NULL,
-      'protected_property' => NULL,
+      'protected_property' => 'Default',
     ];
     $sync->write($name_secondary, $values_secondary);
     // Verify that there are configuration differences to import.
