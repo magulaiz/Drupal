@@ -106,7 +106,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'weight' => 0,
+          'weight' => NULL,
           'langcode' => 'en',
           'status' => TRUE,
           'dependencies' => [

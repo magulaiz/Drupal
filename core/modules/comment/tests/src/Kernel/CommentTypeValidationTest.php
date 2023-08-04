@@ -27,7 +27,6 @@ class CommentTypeValidationTest extends ConfigEntityValidationTestBase {
       'id' => 'test',
       'label' => 'Test',
       'target_entity_type_id' => 'node',
-      'description' => '',
     ]);
     $this->entity->save();
   }

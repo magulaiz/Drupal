@@ -54,7 +54,7 @@ abstract class RoleResourceTestBase extends ConfigEntityResourceTestBase {
       'dependencies' => [],
       'id' => 'llama',
       'label' => 'Llama',
-      'is_admin' => FALSE,
+      'is_admin' => NULL,
       'permissions' => [],
     ];
   }

@@ -26,7 +26,6 @@ class VocabularyValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = Vocabulary::create([
       'vid' => 'test',
       'name' => 'Test',
-      'description' => '',
     ]);
     $this->entity->save();
   }

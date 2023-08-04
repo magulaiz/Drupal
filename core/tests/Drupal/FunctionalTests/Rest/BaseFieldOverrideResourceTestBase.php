@@ -44,7 +44,6 @@ abstract class BaseFieldOverrideResourceTestBase extends ConfigEntityResourceTes
       'field_name' => 'promote',
       'entity_type' => 'node',
       'bundle' => 'camelids',
-      'label' => 'Promoted to front page',
     ]);
     $entity->save();
 
@@ -69,7 +68,7 @@ abstract class BaseFieldOverrideResourceTestBase extends ConfigEntityResourceTes
       'field_name' => 'promote',
       'field_type' => 'boolean',
       'id' => 'node.camelids.promote',
-      'label' => 'Promoted to front page',
+      'label' => NULL,
       'langcode' => 'en',
       'required' => FALSE,
       'settings' => [

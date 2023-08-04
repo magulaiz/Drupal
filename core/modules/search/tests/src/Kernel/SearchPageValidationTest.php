@@ -27,7 +27,6 @@ class SearchPageValidationTest extends ConfigEntityValidationTestBase {
       'id' => 'test',
       'label' => 'Test',
       'plugin' => 'user_search',
-      'path' => '',
     ]);
     $this->entity->save();
   }

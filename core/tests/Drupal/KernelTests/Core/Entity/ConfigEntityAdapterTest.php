@@ -45,7 +45,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
       'id' => 'system',
       'label' => 'foobar',
       'weight' => 1,
-      'protected_property' => '',
     ]);
   }
 
@@ -72,14 +71,10 @@ class ConfigEntityAdapterTest extends KernelTestBase {
     ]);
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $violations = $adapter->validate();
-    $this->assertCount(2, $violations);
+    $this->assertCount(1, $violations);
     $violation = $violations->get(0);
     $this->assertEquals('This value should be of the correct primitive type.', $violation->getMessage());
     $this->assertEquals('weight', $violation->getPropertyPath());
-    $violation = $violations->get(1);
-    $this->assertSame('This value should not be null.', $violation->getMessage());
-    $this->assertSame('protected_property', $violation->getPropertyPath());
-
   }
 
   /**

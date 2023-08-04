@@ -31,8 +31,6 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'settings' => [
         'label' => 'Powered by Drupal 🚀',
       ],
-      'weight' => 0,
-      'provider' => '',
     ]);
     $this->entity->save();
   }

@@ -26,8 +26,6 @@ class RoleValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = Role::create([
       'id' => 'test',
       'label' => 'Test',
-      'weight' => 0,
-      'is_admin' => FALSE,
     ]);
     $this->entity->save();
   }
