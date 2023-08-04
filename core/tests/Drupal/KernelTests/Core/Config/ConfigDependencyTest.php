@@ -127,8 +127,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // Create a configuration entity of a different type with the same ID as one
     // of the entities already created.
     $alt_storage = $this->container->get('entity_type.manager')->getStorage('config_query_test');
-    $alt_storage->create(['id' => 'entity1', 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]])->save();
-    $alt_storage->create(['id' => 'entity2', 'dependencies' => ['enforced' => ['module' => ['views']]]])->save();
+    $alt_storage->create(['id' => 'entity1', 'number' => 0, 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]])->save();
+    $alt_storage->create(['id' => 'entity2', 'number' => 0, 'dependencies' => ['enforced' => ['module' => ['views']]]])->save();
 
     $dependents = $config_manager->findConfigEntityDependenciesAsEntities('config', [$entity1->getConfigDependencyName()]);
     $dependent_ids = $this->getDependentIds($dependents);
