@@ -314,10 +314,15 @@ trait SchemaCheckTrait {
       // - with as many `.*`-suffixes appended as there are parts in the ID (for
       //   example, for NodeType there's only 1 part, for EntityViewDisplay
       //   there are 3 parts.)
-      $config_object_data_type = $config_prefix . str_repeat(
-        '.*',
-        substr_count($config_entity->getConfigDependencyName(), '.') - substr_count($config_prefix, '.')
-      );
+      // TRICKY: in principle it is possible to compute the exact number of
+      // suffixes by inspecting ConfigEntity::getConfigDependencyName(), except
+      // when the entity ID itself is invalid. Unfortunately that means
+      // gradually discovering it is the only available alternative.
+      $suffix_count = 1;
+      do {
+        $config_object_data_type = $config_prefix . str_repeat('.*', $suffix_count);
+        $suffix_count++;
+      } while ($suffix_count <= 3 && !array_key_exists($config_object_data_type, static::$ignoredPropertyPaths));
     }
     else {
       $config_object_data_type = $v->getRoot()
