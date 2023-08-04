@@ -2,7 +2,10 @@
 
 namespace Drupal\Core\Config\Schema;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
@@ -297,7 +300,30 @@ trait SchemaCheckTrait {
    * @return bool
    */
   protected static function isViolationForIgnoredPropertyPath(ConstraintViolation $v): bool {
-    $config_object_data_type = $v->getRoot()->getDataDefinition()->getDataType();
+    // When the validated object is a config entity wrapped in a
+    // ConfigEntityAdapter, some work is necessary to map from e.g.
+    // `entity:comment_type` to the corresponding `comment.type.*`.
+    if ($v->getRoot() instanceof ConfigEntityAdapter) {
+      $config_entity = $v->getRoot()->getEntity();
+      assert($config_entity instanceof ConfigEntityInterface);
+      $config_entity_type = $config_entity->getEntityType();
+      assert($config_entity_type instanceof ConfigEntityType);
+      $config_prefix = $config_entity_type->getConfigPrefix();
+      // Compute the data type of the config object being validated:
+      // - the config entity type's config prefix
+      // - with as many `.*`-suffixes appended as there are parts in the ID (for
+      //   example, for NodeType there's only 1 part, for EntityViewDisplay
+      //   there are 3 parts.)
+      $config_object_data_type = $config_prefix . str_repeat(
+        '.*',
+        substr_count($config_entity->getConfigDependencyName(), '.') - substr_count($config_prefix, '.')
+      );
+    }
+    else {
+      $config_object_data_type = $v->getRoot()
+        ->getDataDefinition()
+        ->getDataType();
+    }
     if (!array_key_exists($config_object_data_type, static::$ignoredPropertyPaths)) {
       return FALSE;
     }
