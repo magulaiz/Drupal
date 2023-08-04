@@ -45,12 +45,14 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: block.block.*`.
       // @see block.schema.yml
       'weight',
+      'provider',
     ],
     'block_content.type.*' => [
       // @todo Fix config or tweak schema of `type: block_content.type.*`.
       // @see block_content.schema.yml
       'description',
       'label',
+      'revision',
     ],
     'comment.type.*' => [
       // @todo Fix config or tweak schema of `type: comment.type.*`.
@@ -62,11 +64,16 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: contact.form.*`.
       // @see contact.schema.yml
       'message',
+      'redirect',
     ],
     'core.base_field_override.*.*.*' => [
       // @todo Fix config or tweak schema of `type: core.base_field_override.*.*.*`.
       // @see core.data_types.schema.yml
       'label',
+      // @todo Fix config or tweak schema of `type: field.field_settings.integer`.
+      // @see core.data_types.schema.yml
+      'settings.min',
+      'settings.max',
     ],
     'core.date_format.*' => [
       // @todo Fix config or tweak schema of `type: core.date_format.*`.
@@ -148,6 +155,9 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: image.effect.image_rotate`.
       // @see image.schema.yml
       'effects.*.data.bgcolor',
+      // @todo Fix config or tweak schema of `type: image.effect.image_scale`.
+      // @see image.schema.yml
+      'effects.*.data.height',
       // @todo Fix config or tweak schema of `type: image.style.*`.
       // @see image.schema.yml
       'effects.*.weight',
@@ -172,6 +182,8 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: node.type.*`.
       // @see node.schema.yml
       'name',
+      'description',
+      'help',
     ],
     'search.page.*' => [
       // @todo Fix config or tweak schema of `type: search.page.*`.
@@ -184,6 +196,7 @@ trait SchemaCheckTrait {
       // @see system.schema.yml
       'description',
       'label',
+      'type',
     ],
     'system.menu.*' => [
       // @todo Fix config or tweak schema of `type: system.menu.*`.
@@ -195,6 +208,13 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: taxonomy.vocabulary.*`.
       // @see taxonomy.schema.yml
       'name',
+      'description',
+    ],
+    'user.role.*' => [
+      // @todo Fix config or tweak schema of `type: user.role.*`.
+      // @see user.schema.yml
+      'is_admin',
+      'weight',
     ],
     'user.settings' => [
       // @todo Fix config or tweak schema of `type: user.settings`.
