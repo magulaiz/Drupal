@@ -17,7 +17,7 @@ trait CalculatedPermissionsTrait {
   /**
    * {@inheritdoc}
    */
-  public function getItem(string $scope, string|int $identifier): CalculatedPermissionsItemInterface|false {
+  public function getItem(string $scope = AccessPolicyInterface::SCOPE_DRUPAL, string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL): CalculatedPermissionsItemInterface|false {
     return $this->items[$scope][$identifier] ?? FALSE;
   }
 
@@ -44,7 +44,7 @@ trait CalculatedPermissionsTrait {
   /**
    * {@inheritdoc}
    */
-  public function getItemsByScope($scope): array {
+  public function getItemsByScope($scope = AccessPolicyInterface::SCOPE_DRUPAL): array {
     return isset($this->items[$scope])
       ? array_values($this->items[$scope])
       : [];
