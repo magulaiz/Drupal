@@ -78,7 +78,6 @@ services:
       - { name: jsonapi_normalizer }
   serializer.normalizer.relationship.jsonapi:
     class: Drupal\jsonapi\Normalizer\RelationshipNormalizer
-    arguments: ['@event_dispatcher']
     tags:
       - { name: jsonapi_normalizer }
   serializer.encoder.jsonapi:
