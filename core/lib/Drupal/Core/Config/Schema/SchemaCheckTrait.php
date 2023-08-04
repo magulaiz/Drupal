@@ -359,7 +359,7 @@ trait SchemaCheckTrait {
     'system.date' => [
       // @todo Fix config or tweak schema of `type: system.date`.
       // @see system.schema.yml
-      'timezone' => [
+      'timezone.default' => [
         'This value should not be null.',
       ],
     ],
