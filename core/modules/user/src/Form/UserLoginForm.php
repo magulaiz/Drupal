@@ -9,6 +9,7 @@ use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserSessionHandlerInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserFloodControlInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,6 +57,13 @@ class UserLoginForm extends FormBase {
   protected $bareHtmlPageRenderer;
 
   /**
+   * The user session handler.
+   *
+   * @var \Drupal\user\UserSessionHandlerInterface
+   */
+  protected UserSessionHandlerInterface $userSessionHandler;
+
+  /**
    * Constructs a new UserLoginForm.
    *
    * @param \Drupal\user\UserFloodControlInterface $user_flood_control
@@ -68,13 +76,16 @@ class UserLoginForm extends FormBase {
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
+   * @param \Drupal\user\UserSessionHandlerInterface $userSessionHandler
+   *   The user session handler.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
+  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer, UserSessionHandlerInterface $userSessionHandler) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
+    $this->userSessionHandler = $userSessionHandler;
   }
 
   /**
@@ -86,7 +97,8 @@ class UserLoginForm extends FormBase {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('user.auth'),
       $container->get('renderer'),
-      $container->get('bare_html_page_renderer')
+      $container->get('bare_html_page_renderer'),
+      $container->get('user.user_session_handler')
     );
   }
 
@@ -162,7 +174,7 @@ class UserLoginForm extends FormBase {
       $this->getRequest()->query->set('destination', $this->getRequest()->request->get('destination'));
     }
 
-    user_login_finalize($account);
+    $this->userSessionHandler->login($account);
   }
 
   /**

@@ -2,7 +2,12 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form handler for the user register forms.
@@ -10,6 +15,45 @@ use Drupal\Core\Form\FormStateInterface;
  * @internal
  */
 class RegisterForm extends AccountForm {
+
+  /**
+   * The user session handler.
+   *
+   * @var \Drupal\user\UserSessionHandlerInterface
+   */
+  protected UserSessionHandlerInterface $userSessionHandler;
+
+  /**
+   * Constructs a new EntityForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface|null $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
+   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
+   *   The user session handler.
+   */
+  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, UserSessionHandlerInterface $userSessionHandler = NULL) {
+    parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
+    $this->userSessionHandler = $userSessionHandler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.repository'),
+      $container->get('language_manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time'),
+      $container->get('user.user_session_handler')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -114,7 +158,7 @@ class RegisterForm extends AccountForm {
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
       _user_mail_notify('register_no_approval_required', $account);
-      user_login_finalize($account);
+      $this->userSessionHandler->login($account);
       $this->messenger()->addStatus($this->t('Registration successful. You are now logged in.'));
       $form_state->setRedirect('<front>');
     }

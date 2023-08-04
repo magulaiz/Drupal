@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserSessionHandlerInterface;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -95,6 +96,13 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $logger;
 
   /**
+   * The user session handler.
+   *
+   * @var \Drupal\user\UserSessionHandlerInterface
+   */
+  protected UserSessionHandlerInterface $userSessionHandler;
+
+  /**
    * Constructs a new UserAuthenticationController object.
    *
    * @param \Drupal\user\UserFloodControlInterface $user_flood_control
@@ -113,8 +121,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\user\UserSessionHandlerInterface $userSessionHandler
+   *   The user session handler.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats, LoggerInterface $logger) {
+  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats, LoggerInterface $logger, UserSessionHandlerInterface $userSessionHandler) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->csrfToken = $csrf_token;
@@ -123,6 +133,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $this->serializerFormats = $serializer_formats;
     $this->routeProvider = $route_provider;
     $this->logger = $logger;
+    $this->userSessionHandler = $userSessionHandler;
   }
 
   /**
@@ -147,7 +158,8 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $container->get('router.route_provider'),
       $serializer,
       $formats,
-      $container->get('logger.factory')->get('user')
+      $container->get('logger.factory')->get('user'),
+      $container->get('user.user_session_handler')
     );
   }
 
@@ -298,7 +310,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The user.
    */
   protected function userLoginFinalize(UserInterface $user) {
-    user_login_finalize($user);
+    $this->userSessionHandler->login($user);
   }
 
   /**
@@ -316,7 +328,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * Logs the user out.
    */
   protected function userLogout() {
-    user_logout();
+    $this->userSessionHandler->logout();
   }
 
   /**

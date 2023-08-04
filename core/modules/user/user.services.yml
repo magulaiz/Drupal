@@ -30,7 +30,7 @@ services:
   Drupal\user\UserDataInterface: '@user.data'
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
-    arguments: ['@maintenance_mode', '@current_user']
+    arguments: ['@maintenance_mode', '@current_user', '@user.user_session_handler']
   user_access_denied_subscriber:
     class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
     arguments: ['@current_user']
@@ -73,3 +73,9 @@ services:
   user.module_permissions_link_helper:
     class: Drupal\user\ModulePermissionsLinkHelper
     arguments: ['@user.permissions', '@access_manager', '@extension.list.module']
+  user.user_session_handler:
+    class: Drupal\user\UserSessionHandler
+    arguments: ['@current_user', '@session', '@session_manager', '@entity_type.manager', '@module_handler', '@logger.channel.user']
+    calls:
+      - [setContainer, ['@service_container']]
+  Drupal\user\UserSessionHandlerInterface: '@user.user_session_handler'
