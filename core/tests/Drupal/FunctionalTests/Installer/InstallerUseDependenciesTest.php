@@ -9,13 +9,21 @@ namespace Drupal\FunctionalTests\Installer;
  */
 class InstallerUseDependenciesTest extends InstallerTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'starterkit_theme';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing_install_use_dependencies';
 
   /**
    * Confirms that the installation succeeded.
    */
   public function testInstalled() {
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
