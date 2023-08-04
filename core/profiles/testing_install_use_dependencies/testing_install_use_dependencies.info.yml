@@ -4,4 +4,6 @@ description: 'Tests install profiles that use dependencies.'
 version: VERSION
 hidden: true
 install:
-  - node
+  - drupal:node
+themes:
+  - starterkit_theme
