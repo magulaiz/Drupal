@@ -71,10 +71,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * The weight of this role in administrative listings.
    *
    * @var int
-   *
-   * A dynamic default is computed.
-   *
-   * @see \Drupal\user\Entity\Role::preSave()
    */
   protected $weight;
 
@@ -90,7 +86,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var bool
    */
-  protected $is_admin = FALSE;
+  protected $is_admin;
 
   /**
    * {@inheritdoc}
@@ -182,10 +178,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (!isset($this->weight) && empty($storage->loadMultiple())) {
-      $this->weight = 0;
-    }
-    elseif (!isset($this->weight) && ($roles = $storage->loadMultiple())) {
+    if (!isset($this->weight) && ($roles = $storage->loadMultiple())) {
       // Set a role weight to make this new role last.
       $max = array_reduce($roles, function ($max, $role) {
         return $max > $role->weight ? $max : $role->weight;
