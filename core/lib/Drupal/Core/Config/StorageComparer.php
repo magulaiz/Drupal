@@ -157,9 +157,9 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION) {
-    if ($op) {
-      return $this->changelist[$collection][$op];
+  public function getChangelist($operation = NULL, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    if ($operation) {
+      return $this->changelist[$collection][$operation];
     }
     return $this->changelist[$collection];
   }
@@ -169,7 +169,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @param string $collection
    *   The storage collection to add changes for.
-   * @param string $op
+   * @param string $operation
    *   The change operation performed. Either delete, create, rename, or update.
    * @param array $changes
    *   Array of changes to add to the changelist.
@@ -177,17 +177,17 @@ class StorageComparer implements StorageComparerInterface {
    *   Array to sort that can be used to sort the changelist. This array must
    *   contain all the items that are in the change list.
    */
-  protected function addChangeList($collection, $op, array $changes, array $sort_order = NULL) {
+  protected function addChangeList($collection, $operation, array $changes, array $sort_order = NULL) {
     // Only add changes that aren't already listed.
-    $changes = array_diff($changes, $this->changelist[$collection][$op]);
-    $this->changelist[$collection][$op] = array_merge($this->changelist[$collection][$op], $changes);
+    $changes = array_diff($changes, $this->changelist[$collection][$operation]);
+    $this->changelist[$collection][$operation] = array_merge($this->changelist[$collection][$operation], $changes);
     if (isset($sort_order)) {
-      $count = count($this->changelist[$collection][$op]);
+      $count = count($this->changelist[$collection][$operation]);
       // Sort the changelist in the same order as the $sort_order array and
       // ensure the array is keyed from 0.
-      $this->changelist[$collection][$op] = array_values(array_intersect($sort_order, $this->changelist[$collection][$op]));
-      if ($count != count($this->changelist[$collection][$op])) {
-        throw new \InvalidArgumentException("Sorting the $op changelist should not change its length.");
+      $this->changelist[$collection][$operation] = array_values(array_intersect($sort_order, $this->changelist[$collection][$operation]));
+      if ($count != count($this->changelist[$collection][$operation])) {
+        throw new \InvalidArgumentException("Sorting the $operation changelist should not change its length.");
       }
     }
   }
@@ -336,15 +336,15 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @param string $collection
    *   The storage collection to operate on.
-   * @param string $op
+   * @param string $operation
    *   The changelist to act on. Either delete, create, rename or update.
    * @param string $name
    *   The name of the configuration to remove.
    */
-  protected function removeFromChangelist($collection, $op, $name) {
-    $key = array_search($name, $this->changelist[$collection][$op]);
+  protected function removeFromChangelist($collection, $operation, $name) {
+    $key = array_search($name, $this->changelist[$collection][$operation]);
     if ($key !== FALSE) {
-      unset($this->changelist[$collection][$op][$key]);
+      unset($this->changelist[$collection][$operation][$key]);
     }
   }
 
@@ -374,8 +374,8 @@ class StorageComparer implements StorageComparerInterface {
    */
   public function hasChanges() {
     foreach ($this->getAllCollectionNames() as $collection) {
-      foreach (['delete', 'create', 'update', 'rename'] as $op) {
-        if (!empty($this->changelist[$collection][$op])) {
+      foreach (['delete', 'create', 'update', 'rename'] as $operation) {
+        if (!empty($this->changelist[$collection][$operation])) {
           return TRUE;
         }
       }

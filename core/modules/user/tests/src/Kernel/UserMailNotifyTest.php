@@ -71,20 +71,20 @@ class UserMailNotifyTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests mails are sent when notify.$op is TRUE.
+   * Tests mails are sent when notify.$operation is TRUE.
    *
-   * @param string $op
+   * @param string $operation
    *   The operation being performed on the account.
    * @param array $mail_keys
    *   The mail keys to test for.
    *
    * @dataProvider userMailsProvider
    */
-  public function testUserMailsSent($op, array $mail_keys) {
+  public function testUserMailsSent($operation, array $mail_keys) {
     $this->installConfig('user');
     $this->config('system.site')->set('mail', 'test@example.com')->save();
-    $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
-    $return = _user_mail_notify($op, $this->createUser());
+    $this->config('user.settings')->set('notify.' . $operation, TRUE)->save();
+    $return = _user_mail_notify($operation, $this->createUser());
     $this->assertTrue($return);
     foreach ($mail_keys as $key) {
       $filter = ['key' => $key];
@@ -94,16 +94,16 @@ class UserMailNotifyTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests mails are not sent when notify.$op is FALSE.
+   * Tests mails are not sent when notify.$operation is FALSE.
    *
-   * @param string $op
+   * @param string $operation
    *   The operation being performed on the account.
    *
    * @dataProvider userMailsProvider
    */
-  public function testUserMailsNotSent($op) {
-    $this->config('user.settings')->set('notify.' . $op, FALSE)->save();
-    $return = _user_mail_notify($op, $this->createUser());
+  public function testUserMailsNotSent($operation) {
+    $this->config('user.settings')->set('notify.' . $operation, FALSE)->save();
+    $return = _user_mail_notify($operation, $this->createUser());
     $this->assertNull($return);
     $this->assertEmpty($this->getMails());
   }

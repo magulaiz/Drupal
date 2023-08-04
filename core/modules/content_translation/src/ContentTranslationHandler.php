@@ -293,7 +293,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   /**
    * {@inheritdoc}
    */
-  public function getTranslationAccess(EntityInterface $entity, $op) {
+  public function getTranslationAccess(EntityInterface $entity, $operation) {
     // @todo Move this logic into a translation access control handler checking also
     //   the translation language and the given account.
     $entity_type = $entity->getEntityType();
@@ -303,7 +303,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if (!$this->currentUser->hasPermission('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
       $translate_permission = $this->currentUser->hasPermission($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
     }
-    $access = AccessResult::allowedIf(($translate_permission && $this->currentUser->hasPermission("$op content translations")))->cachePerPermissions();
+    $access = AccessResult::allowedIf(($translate_permission && $this->currentUser->hasPermission("$operation content translations")))->cachePerPermissions();
     if (!$access->isAllowed()) {
       return AccessResult::allowedIfHasPermission($this->currentUser, 'translate editable entities')->andIf($entity->access('update', $this->currentUser, TRUE));
     }

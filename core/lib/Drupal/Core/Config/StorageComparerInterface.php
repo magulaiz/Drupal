@@ -42,7 +42,7 @@ interface StorageComparerInterface {
   /**
    * Gets the list of differences to import.
    *
-   * @param string $op
+   * @param string $operation
    *   (optional) A change operation. Either delete, create or update. If
    *   supplied the returned list will be limited to this operation.
    * @param string $collection
@@ -52,7 +52,7 @@ interface StorageComparerInterface {
    * @return array
    *   An array of config changes that are yet to be imported.
    */
-  public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION);
+  public function getChangelist($operation = NULL, $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Recalculates the differences.
