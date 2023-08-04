@@ -25,20 +25,6 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
   use RefinableCacheableDependencyTrait;
 
   /**
-   * The resource object.
-   *
-   * @var \Drupal\jsonapi\JsonApiResource\ResourceObject
-   */
-  private ResourceObject $resourceObject;
-
-  /**
-   * The context options from the normalizer.
-   *
-   * @var array
-   */
-  private array $context = [];
-
-  /**
    * The metadata.
    *
    * @var array
@@ -53,11 +39,11 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
    * @param array $context
    *   The context options for the normalizer.
    */
-  public function __construct(ResourceObject $resource_object, array $context) {
+  public function __construct(
+    private readonly ResourceObject $resourceObject,
+    private array $context)
+  {
     assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
-
-    $this->resourceObject = $resource_object;
-    $this->context = $context;
   }
 
   /**

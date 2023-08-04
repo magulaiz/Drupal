@@ -25,20 +25,6 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   use RefinableCacheableDependencyTrait;
 
   /**
-   * The resource object.
-   *
-   * @var \Drupal\jsonapi\JsonApiResource\ResourceObject
-   */
-  private ResourceObject $resourceObject;
-
-  /**
-   * The relationship field's public name.
-   *
-   * @var string
-   */
-  private string $relationshipFieldName;
-
-  /**
    * The metadata.
    *
    * @var array
@@ -48,15 +34,15 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   /**
    * Constructs a new CollectRelationshipMetaEvent object.
    *
-   * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $resource_object
+   * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $resourceObject
    *   The resource object.
-   * @param string $relationship_field_name
-   *   The relationship field.
+   * @param string $relationshipFieldName
+   *   The relationship field name.
    */
-  public function __construct(ResourceObject $resource_object, string $relationship_field_name) {
-    $this->resourceObject = $resource_object;
-    $this->relationshipFieldName = $relationship_field_name;
-  }
+  public function __construct(
+    private readonly ResourceObject $resourceObject,
+    private readonly string $relationshipFieldName)
+  { }
 
   /**
    * Gets the resource object.

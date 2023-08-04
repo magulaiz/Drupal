@@ -201,7 +201,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
         $resource_field_name = $resource_object->getResourceType()->getFieldByInternalName($field->getName())->getPublicName();
         $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $resource_field_name);
         $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
-        $relationship = Relationship::createFromEntityReferenceField($resource_object, $field, NULL, $collect_meta_event->getMeta());
+        $relationship = Relationship::createFromEntityReferenceField(context: $resource_object, field: $field, meta: $collect_meta_event->getMeta());
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
         $normalized_field = $normalized_field->withCacheableDependency($collect_meta_event);
       }
