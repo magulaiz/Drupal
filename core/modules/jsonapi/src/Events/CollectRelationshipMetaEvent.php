@@ -12,6 +12,13 @@ use Drupal\Component\EventDispatcher\Event;
 
 /**
  * An event used for collecting resource object metadata of a JSON:API resource type relation.
+ *
+ * When subscribing to this event you should make sure you set the correct cache tags and contexts. These will then
+ * bubble up to the normalization.
+ *
+ * This class does not automatically add the cache tags and contexts. You can do anything in the meta event subscriber,
+ * but you should make sure you add the correct cache tags and contexts to the normalization based on the data you add
+ * to the metadata.
  */
 final class CollectRelationshipMetaEvent extends Event implements RefinableCacheableDependencyInterface {
 
