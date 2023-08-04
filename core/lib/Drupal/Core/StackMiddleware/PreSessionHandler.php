@@ -34,10 +34,12 @@ class PreSessionHandler implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     $pathInfo = $request->getPathInfo();
     if ($pathInfo && str_contains($pathInfo, '/file/progress/')) {
-      if (session_status() === \PHP_SESSION_NONE) {
-        if (!session_start()) {
-          throw new \Exception('booooo');
-        }
+      if (session_status() !== \PHP_SESSION_NONE) {
+        throw new \RuntimeException('Failed to start the session: already started by PHP.');
+      }
+
+      if (!session_start()) {
+        throw new \RuntimeException('Failed to start the session.');
       }
 
       $prefix = ini_get('session.upload_progress.prefix');
