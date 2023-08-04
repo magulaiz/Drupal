@@ -189,7 +189,7 @@ class EntityResource {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, protected readonly ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
@@ -201,7 +201,11 @@ class EntityResource {
     $this->serializer = $serializer;
     $this->time = $time;
     $this->user = $user;
-    $this->eventDispatcher = $event_dispatcher;
+
+    if (!isset($event_dispatcher)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
   }
 
   /**
@@ -602,7 +606,7 @@ class EntityResource {
     $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $related);
     $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
 
-    $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list, NULL, $collect_meta_event->getMeta());
+    $relationship = Relationship::createFromEntityReferenceField(context: $resource_object, field: $field_list, meta: $collect_meta_event->getMeta());
     $response = $this->buildWrappedResponse($relationship, $request, $this->getIncludes($request, $resource_object), $response_code);
     // Add the host entity as a cacheable dependency.
     if ($response instanceof CacheableResponseInterface) {

@@ -48,9 +48,13 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(ResourceObjectNormalizationCacher $cacher, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(ResourceObjectNormalizationCacher $cacher, protected readonly ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->cacher = $cacher;
-    $this->eventDispatcher = $event_dispatcher;
+
+    if (!isset($event_dispatcher)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
   }
 
   /**
