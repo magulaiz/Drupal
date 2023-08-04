@@ -1,0 +1,10 @@
+node.my_test_revert_confirm:
+  path: '/node/{node}/revisions/{node_revision}/my-form'
+  defaults:
+    _form: '\Drupal\testing_install_use_dependencies\Form\MyTestForm'
+    _title: 'My test form'
+  requirements:
+    _access_node_revision: 'update'
+    node: \d+
+  options:
+    _node_operation_route: TRUE
