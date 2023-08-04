@@ -608,8 +608,9 @@ class EntityResource {
     if ($response instanceof CacheableResponseInterface) {
       $response->addCacheableDependency($entity);
     }
-    // Add the meta event as a cacheable dependency.
-    $entity->addCacheableDependency($collect_meta_event);
+
+    // Subscribers can bubble cacheability metadata via the event, add the metadata from the event to the response.
+    $response->addCacheableDependency($collect_meta_event);
     return $response;
   }
 
