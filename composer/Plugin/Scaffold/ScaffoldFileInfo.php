@@ -29,7 +29,7 @@ class ScaffoldFileInfo {
    *
    * @var \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface
    */
-  protected $op;
+  protected $operation;
 
   /**
    * Constructs a ScaffoldFileInfo object.
@@ -40,9 +40,9 @@ class ScaffoldFileInfo {
    * @param \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface $op
    *   Operations object that will handle scaffolding operations.
    */
-  public function __construct(ScaffoldFilePath $destination, OperationInterface $op) {
+  public function __construct(ScaffoldFilePath $destination, OperationInterface $operation) {
     $this->destination = $destination;
-    $this->op = $op;
+    $this->operation = $operation;
   }
 
   /**
@@ -51,8 +51,8 @@ class ScaffoldFileInfo {
    * @return \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface
    *   Operations object that handles scaffolding (copy, make symlink, etc).
    */
-  public function op() {
-    return $this->op;
+  public function operation() {
+    return $this->operation;
   }
 
   /**
@@ -120,7 +120,7 @@ class ScaffoldFileInfo {
    *   The scaffold result.
    */
   public function process(IOInterface $io, ScaffoldOptions $options) {
-    return $this->op()->process($this->destination, $io, $options);
+    return $this->operation()->process($this->destination, $io, $options);
   }
 
   /**
@@ -133,7 +133,7 @@ class ScaffoldFileInfo {
     if (!file_exists($path)) {
       return TRUE;
     }
-    return $this->op()->contents() !== file_get_contents($path);
+    return $this->operation()->contents() !== file_get_contents($path);
   }
 
 }
