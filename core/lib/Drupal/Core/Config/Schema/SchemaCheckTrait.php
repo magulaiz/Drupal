@@ -47,190 +47,320 @@ trait SchemaCheckTrait {
     'block.block.*' => [
       // @todo Fix config or tweak schema of `type: block.block.*`.
       // @see block.schema.yml
-      'weight',
-      'provider',
+      'weight' => [
+        'This value should not be null.',
+      ],
+      'provider' => [
+        'This value should not be null.',
+      ],
     ],
     'block_content.type.*' => [
       // @todo Fix config or tweak schema of `type: block_content.type.*`.
       // @see block_content.schema.yml
-      'description',
-      'label',
-      'revision',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+      'revision' => [
+        'This value should not be null.',
+      ],
     ],
     'comment.type.*' => [
       // @todo Fix config or tweak schema of `type: comment.type.*`.
       // @see comment.schema.yml
-      'description',
-      'label',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'contact.form.*' => [
       // @todo Fix config or tweak schema of `type: contact.form.*`.
       // @see contact.schema.yml
-      'message',
-      'redirect',
+      'message' => [
+        'This value should not be null.',
+      ],
+      'redirect' => [
+        'This value should not be null.',
+      ],
     ],
     'core.base_field_override.*.*.*' => [
       // @todo Fix config or tweak schema of `type: core.base_field_override.*.*.*`.
       // @see core.data_types.schema.yml
-      'label',
+      'label' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: field.field_settings.integer`.
       // @see core.data_types.schema.yml
-      'settings.min',
-      'settings.max',
+      'settings.min' => [
+        'This value should not be null.',
+      ],
+      'settings.max' => [
+        'This value should not be null.',
+      ],
     ],
     'core.date_format.*' => [
       // @todo Fix config or tweak schema of `type: core.date_format.*`.
       // @see core.data_types.schema.yml
-      'label',
-      'pattern',
+      'label' => [
+        'This value should not be null.',
+      ],
+      'pattern' => [
+        'This value should not be null.',
+      ],
     ],
     'core.entity_form_mode.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_form_mode.*.*`.
       // @see core.entity.schema.yml
-      'description',
-      'label',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'core.entity_view_mode.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_view_mode.*.*`.
       // @see core.entity.schema.yml
-      'description',
-      'label',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'core.entity_form_display.*.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_form_display.*.*.*`.
       // @see core.entity.schema.yml
-      'status',
+      'status' => [
+        'This value should not be null.',
+      ],
     ],
     'core.entity_view_display.*.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_view_display.*.*.*`.
       // @see core.entity.schema.yml
-      'status',
+      'status' => [
+        'This value should not be null.',
+      ],
     ],
     'views.view.*' => [
       // Values may be
       // @todo Fix config or tweak schema of `type: views_pager_sql`.
       // @see views.data_types.schema.yml
-      'display.*.display_options.pager.options.total_pages',
-      'display.*.display_options.pager.options.items_per_page',
+      'display.*.display_options.pager.options.total_pages' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.pager.options.items_per_page' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
-      'display.*.display_options.filters.*.expose.description',
+      'display.*.display_options.filters.*.expose.description' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: views_handler`.
       // @see views.data_types.schema.yml
-      'display.*.display_options.fields.*.entity_type',
-      'display.*.display_options.fields.*.entity_field',
+      'display.*.display_options.fields.*.entity_type' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.fields.*.entity_field' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
-      'display.*.display_options.filters.bundle.group_info.description',
+      'display.*.display_options.filters.bundle.group_info.description' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: views.view.*`.
       // @see views.schema.yml
-      'display.*.position',
-      'label',
+      'display.*.position' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'entity_test.entity_test_bundle.*' => [
       // @todo Fix config or tweak schema of `type: entity_test.entity_test_bundle.*`.
       // @see entity_test.schema.yml
-      'description',
-      'label',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'field.field.*.*.*' => [
       // @todo Fix config or tweak schema of `type: field.value.comment`.
       // @see comment.schema.yml
-      'default_value.*.last_comment_name',
+      'default_value.*.last_comment_name' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: field.field_settings.images`.
       // @see image.schema.yml
-      'settings.default_image.uuid',
-      'settings.default_image.width',
-      'settings.default_image.height',
+      'settings.default_image.uuid' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.width' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.height' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: field.field_settings.integer`.
       // @see core.data_types.schema.yml
-      'settings.min',
-      'settings.max',
+      'settings.min' => [
+        'This value should not be null.',
+      ],
+      'settings.max' => [
+        'This value should not be null.',
+      ],
     ],
     'field.storage.*.*' => [
       // @todo Fix config or tweak schema of `type: field.storage_settings.image`.
       // @see image.schema.yml
-      'settings.default_image.uuid',
-      'settings.default_image.width',
-      'settings.default_image.height',
+      'settings.default_image.uuid' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.width' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.height' => [
+        'This value should not be null.',
+      ],
     ],
     'image.style.*' => [
       // @todo Fix config or tweak schema of `type: image.effect.image_rotate`.
       // @see image.schema.yml
-      'effects.*.data.bgcolor',
+      'effects.*.data.bgcolor' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: image.effect.image_scale`.
       // @see image.schema.yml
-      'effects.*.data.height',
-      'effects.*.data.width',
+      'effects.*.data.height' => [
+        'This value should not be null.',
+      ],
+      'effects.*.data.width' => [
+        'This value should not be null.',
+      ],
       // @todo Fix config or tweak schema of `type: image.style.*`.
       // @see image.schema.yml
-      'effects.*.weight',
-      'label',
+      'effects.*.weight' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'language.entity.*' => [
       // @todo Fix config or tweak schema of `type: language.entity.*`.
       // @see language.schema.yml
-      'label',
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'language.negotiation' => [
       // @todo Fix config or tweak schema of `type: language.negotiation`.
       // @see language.schema.yml
-      'url.prefixes',
+      'url.prefixes' => [
+        'This value should not be null.',
+      ],
     ],
     'media.type.*' => [
       // @todo Fix config or tweak schema of `type: media.type.*`.
       // @see media.schema.yml
-      'label',
-      'description',
+      'label' => [
+        'This value should not be null.',
+      ],
+      'description' => [
+        'This value should not be null.',
+      ],
     ],
     'node.type.*' => [
       // @todo Fix config or tweak schema of `type: node.type.*`.
       // @see node.schema.yml
-      'name',
-      'description',
-      'help',
+      'name' => [
+        'This value should not be null.',
+      ],
+      'description' => [
+        'This value should not be null.',
+      ],
+      'help' => [
+        'This value should not be null.',
+      ],
     ],
     'search.page.*' => [
       // @todo Fix config or tweak schema of `type: search.page.*`.
       // @see search.schema.yml
-      'label',
-      'path',
+      'label' => [
+        'This value should not be null.',
+      ],
+      'path' => [
+        'This value should not be null.',
+      ],
     ],
     'system.action.*' => [
       // @todo Fix config or tweak schema of `type: system.action.*`.
       // @see system.schema.yml
-      'description',
-      'label',
-      'type',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+      'type' => [
+        'This value should not be null.',
+      ],
     ],
     'system.menu.*' => [
       // @todo Fix config or tweak schema of `type: system.menu.*`.
       // @see system.schema.yml
-      'description',
-      'label',
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
     'taxonomy.vocabulary.*' => [
       // @todo Fix config or tweak schema of `type: taxonomy.vocabulary.*`.
       // @see taxonomy.schema.yml
-      'name',
-      'description',
+      'name' => [
+        'This value should not be null.',
+      ],
+      'description' => [
+        'This value should not be null.',
+      ],
     ],
     'user.role.*' => [
       // @todo Fix config or tweak schema of `type: user.role.*`.
       // @see user.schema.yml
-      'is_admin',
-      'weight',
+      'is_admin' => [
+        'This value should not be null.',
+      ],
+      'weight' => [
+        'This value should not be null.',
+      ],
     ],
     'user.settings' => [
       // @todo Fix config or tweak schema of `type: user.settings`.
       // @see user.schema.yml
-      'cancel_method',
-      'register',
+      'cancel_method' => [
+        'This value should not be null.',
+      ],
+      'register' => [
+        'This value should not be null.',
+      ],
     ],
     'workflows.workflow.*' => [
       // @todo Fix config or tweak schema of `type: workflows.workflow.*`.
       // @see workflows.schema.yml
-      'label',
+      'label' => [
+        'This value should not be null.',
+      ],
     ],
   ];
 
@@ -269,16 +399,9 @@ trait SchemaCheckTrait {
     // Also perform explicit validation. Note this does NOT require every node
     // in the config schema tree to have validation constraints defined.
     $violations = $this->schema->validate();
-    $ignored_validation_constraint_messages = [
-      // Currently none!
-    ];
     $filtered_violations = array_filter(
       iterator_to_array($violations),
-      fn (ConstraintViolation $v) =>
-        // Ignore violation messages in $ignored_validation_constraint_messages.
-        preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
-        // Ignore violation messages for static::$ignoredPropertyPaths.
-        && !static::isViolationForIgnoredPropertyPath($v),
+      fn (ConstraintViolation $v) => !static::isViolationForIgnoredPropertyPath($v),
     );
     $validation_errors = array_map(
       fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
@@ -333,23 +456,24 @@ trait SchemaCheckTrait {
       return FALSE;
     }
 
-    $ignored_property_paths_as_partial_regexes = array_map(
-      // Treat `*` nor in the regex sense nor as something to be escaped: treat
-      // it as the wildcard for a segment in a property path (property path
-      // segments are separated by periods).
+    foreach (static::$ignoredPropertyPaths[$config_object_data_type] as $ignored_property_path_expression => $ignored_validation_constraint_messages) {
+      // Convert the wildcard-based expression to a regex: treat `*` nor in the
+      // regex sense nor as something to be escaped: treat it as the wildcard
+      // for a segment in a property path (property path segments are separated
+      // by periods).
       // That requires first ensuring that preg_quote() does not escape it, and
       // then replacing it with an appropriate regular expression: `[^\.]+`,
       // which means: ">=1 characters that are anything except a period".
-      fn ($s) => str_replace(' ', '[^\.]+', preg_quote(str_replace('*', ' ', $s))),
-      static::$ignoredPropertyPaths[$config_object_data_type]
-    );
+      $ignored_property_path_regex = str_replace(' ', '[^\.]+', preg_quote(str_replace('*', ' ', $ignored_property_path_expression)));
 
-    // All ignored property path expressions are combined into a single regex
-    // capture group.
-    $regex_capture_group = implode('|', $ignored_property_paths_as_partial_regexes);
-
-    // Require an exact match to one of the ignored property path expressions.
-    return preg_match('/^(' . $regex_capture_group . ')$/', $v->getPropertyPath()) === 1;
+      // To ignore this violation constraint, require a match on both the
+      // property path and the message.
+      $property_path_match = preg_match('/^' . $ignored_property_path_regex . '$/', $v->getPropertyPath(), $matches) === 1;
+      if ($property_path_match) {
+        return preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) === 1;
+      }
+    }
+    return FALSE;
   }
 
   /**
