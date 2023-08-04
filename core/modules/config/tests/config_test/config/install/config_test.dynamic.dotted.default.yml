@@ -4,4 +4,3 @@ weight: 0
 protected_property: Default
 # Intentionally commented out to verify default status behavior.
 # status: 1
-dependencies: {}

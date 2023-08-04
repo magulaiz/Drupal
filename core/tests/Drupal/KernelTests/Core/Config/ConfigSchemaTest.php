@@ -215,10 +215,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $expected['mapping']['width']['type'] = 'integer';
     $expected['mapping']['width']['label'] = 'Width';
-    $expected['mapping']['width']['nullable'] = TRUE;
     $expected['mapping']['height']['type'] = 'integer';
     $expected['mapping']['height']['label'] = 'Height';
-    $expected['mapping']['height']['nullable'] = TRUE;
     $expected['mapping']['upscale']['type'] = 'boolean';
     $expected['mapping']['upscale']['label'] = 'Upscale';
     $expected['type'] = 'image.effect.image_scale';

@@ -78,14 +78,6 @@ class ConfigValidation {
     // keys.
     $mapping_schema = \Drupal::service('config.typed')->get('config_test.validation')->getValue();
     if ($diff = array_diff_key($mapping, $mapping_schema)) {
-      // The `config_object` type is the parent of the `config_test.validation`
-      // type and specifies the `langcode` key. This is added automatically by
-      // \Drupal\Core\Config\Schema\SchemaCheckTrait::checkConfigSchema(). This
-      // logic is just kept as simple as possible: it does not handle inherited
-      // keys.
-      if (array_keys($diff) === ['langcode']) {
-        return;
-      }
       $context->addViolation('Unexpected keys: ' . implode(', ', array_keys($diff)));
     }
   }
