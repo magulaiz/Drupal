@@ -249,8 +249,6 @@ system.action.*:
     type:
       type: string
       label: 'Type'
-      # Generic entity type actions do not have a type specified.
-      nullable: true
     plugin:
       type: string
       label: 'Plugin'

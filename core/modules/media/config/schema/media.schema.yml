@@ -34,7 +34,6 @@ media.type.*:
     description:
       type: text
       label: 'Description'
-      nullable: true
     source:
       type: string
       label: 'Source'

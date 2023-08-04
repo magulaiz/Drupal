@@ -32,7 +32,6 @@ taxonomy.vocabulary.*:
     description:
       type: label
       label: 'Description'
-      nullable: true
     weight:
       type: integer
       label: 'Weight'
