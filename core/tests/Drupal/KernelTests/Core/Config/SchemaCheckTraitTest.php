@@ -53,13 +53,13 @@ class SchemaCheckTraitTest extends KernelTestBase {
     // Test it is possible to mark any schema type as required (not nullable).
     $nulled_config_data = array_fill_keys(array_keys($config_data), NULL);
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $nulled_config_data);
-    $this->assertEquals([
+    $this->assertSame([
       // TRICKY: `_core` is added during installation even if it is absent from
       // core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml.
       // @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
       'config_test.types:_core' => 'variable type is NULL but applied schema class is Drupal\Core\Config\Schema\Mapping',
-      '[_core] This value should not be null.',
       'config_test.types:array' => 'variable type is NULL but applied schema class is Drupal\Core\Config\Schema\Sequence',
+      '[_core] This value should not be null.',
       '[array] This value should not be null.',
       '[boolean] This value should not be null.',
       '[exp] This value should not be null.',
