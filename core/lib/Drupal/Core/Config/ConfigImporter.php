@@ -339,7 +339,7 @@ class ConfigImporter {
   /**
    * Gets a list of unprocessed changes for a given operation.
    *
-   * @param string $op
+   * @param string $operation
    *   The change operation to get the unprocessed list for, either delete,
    *   create, rename, or update.
    * @param string $collection
@@ -349,8 +349,8 @@ class ConfigImporter {
    * @return array
    *   An array of configuration names.
    */
-  public function getUnprocessedConfiguration($op, $collection = StorageInterface::DEFAULT_COLLECTION) {
-    return array_diff($this->storageComparer->getChangelist($op, $collection), $this->processedConfiguration[$collection][$op]);
+  public function getUnprocessedConfiguration($operation, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    return array_diff($this->storageComparer->getChangelist($operation, $collection), $this->processedConfiguration[$collection][$operation]);
   }
 
   /**

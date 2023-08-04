@@ -855,11 +855,11 @@ class AccessResultTest extends UnitTestCase {
    *
    * @dataProvider andOrCacheabilityPropagationProvider
    */
-  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $op, AccessResultInterface $second, $implements_cacheable_dependency_interface, $is_cacheable) {
-    if ($op === 'OR') {
+  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $operation, AccessResultInterface $second, $implements_cacheable_dependency_interface, $is_cacheable) {
+    if ($operation === 'OR') {
       $result = $first->orIf($second);
     }
-    elseif ($op === 'AND') {
+    elseif ($operation === 'AND') {
       $result = $first->andIf($second);
     }
     else {
