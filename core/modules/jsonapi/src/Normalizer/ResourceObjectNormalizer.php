@@ -97,7 +97,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $normalization_parts[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_BASE] + [
         'attributes' => CacheableNormalization::aggregate($attributes)->omitIfEmpty(),
         'relationships' => CacheableNormalization::aggregate($relationships)->omitIfEmpty(),
-        'meta' => (!empty($event->getMeta())) ? new CacheableNormalization($event, $event->getMeta()) : '',
+        'meta' => (count($event->getMeta()) > 0) ? new CacheableNormalization($event, $event->getMeta()) : '',
       ]
     );
     return CacheableNormalization::aggregate($entity_normalization)->withCacheableDependency($object);
