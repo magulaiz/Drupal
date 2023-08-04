@@ -63,10 +63,16 @@ trait SchemaCheckTrait {
       // @see contact.schema.yml
       'message',
     ],
+    'core.base_field_override.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.base_field_override.*.*.*`.
+      // @see core.data_types.schema.yml
+      'label',
+    ],
     'core.date_format.*' => [
       // @todo Fix config or tweak schema of `type: core.date_format.*`.
       // @see core.data_types.schema.yml
       'label',
+      'pattern',
     ],
     'core.entity_form_mode.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_form_mode.*.*`.
@@ -80,6 +86,16 @@ trait SchemaCheckTrait {
       'description',
       'label',
     ],
+    'core.entity_form_display.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_form_display.*.*.*`.
+      // @see core.entity.schema.yml
+      'status',
+    ],
+    'core.entity_view_display.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_view_display.*.*.*`.
+      // @see core.entity.schema.yml
+      'status',
+    ],
     'views.view.*' => [
       // Values may be
       // @todo Fix config or tweak schema of `type: views_pager_sql`.
@@ -88,7 +104,7 @@ trait SchemaCheckTrait {
       'display.*.display_options.pager.options.items_per_page',
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
-      'display.*.display_options.filters.status.expose.description',
+      'display.*.display_options.filters.*.expose.description',
       // @todo Fix config or tweak schema of `type: views_handler`.
       // @see views.data_types.schema.yml
       'display.*.display_options.fields.*.entity_type',
@@ -132,6 +148,10 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: image.effect.image_rotate`.
       // @see image.schema.yml
       'effects.*.data.bgcolor',
+      // @todo Fix config or tweak schema of `type: image.style.*`.
+      // @see image.schema.yml
+      'effects.*.weight',
+      'label',
     ],
     'language.entity.*' => [
       // @todo Fix config or tweak schema of `type: language.entity.*`.
@@ -165,10 +185,22 @@ trait SchemaCheckTrait {
       'description',
       'label',
     ],
+    'system.menu.*' => [
+      // @todo Fix config or tweak schema of `type: system.menu.*`.
+      // @see system.schema.yml
+      'description',
+      'label',
+    ],
     'taxonomy.vocabulary.*' => [
       // @todo Fix config or tweak schema of `type: taxonomy.vocabulary.*`.
       // @see taxonomy.schema.yml
       'name',
+    ],
+    'user.settings' => [
+      // @todo Fix config or tweak schema of `type: user.settings`.
+      // @see user.schema.yml
+      'cancel_method',
+      'register',
     ],
     'workflows.workflow.*' => [
       // @todo Fix config or tweak schema of `type: workflows.workflow.*`.
