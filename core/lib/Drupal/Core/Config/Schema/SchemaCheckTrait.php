@@ -41,6 +41,11 @@ trait SchemaCheckTrait {
    * @var \string[][]
    */
   protected static array $ignoredPropertyPaths = [
+    'block.block.*' => [
+      // @todo Fix config or tweak schema of `type: block.block.*`.
+      // @see block.schema.yml
+      'weight',
+    ],
     'block_content.type.*' => [
       // @todo Fix config or tweak schema of `type: block_content.type.*`.
       // @see block_content.schema.yml
@@ -53,10 +58,27 @@ trait SchemaCheckTrait {
       'description',
       'label',
     ],
+    'contact.form.*' => [
+      // @todo Fix config or tweak schema of `type: contact.form.*`.
+      // @see contact.schema.yml
+      'message',
+    ],
+    'core.date_format.*' => [
+      // @todo Fix config or tweak schema of `type: core.date_format.*`.
+      // @see core.data_types.schema.yml
+      'label',
+    ],
+    'core.entity_form_mode.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_form_mode.*.*`.
+      // @see core.entity.schema.yml
+      'description',
+      'label',
+    ],
     'core.entity_view_mode.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_view_mode.*.*`.
       // @see core.entity.schema.yml
       'description',
+      'label',
     ],
     'views.view.*' => [
       // Values may be
@@ -69,7 +91,8 @@ trait SchemaCheckTrait {
       'display.*.display_options.filters.status.expose.description',
       // @todo Fix config or tweak schema of `type: views_handler`.
       // @see views.data_types.schema.yml
-      'display.*.display_options.fields.info.entity_type',
+      'display.*.display_options.fields.*.entity_type',
+      'display.*.display_options.fields.*.entity_field',
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
       'display.*.display_options.filters.bundle.group_info.description',
@@ -88,11 +111,37 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: field.value.comment`.
       // @see comment.schema.yml
       'default_value.*.last_comment_name',
+      // @todo Fix config or tweak schema of `type: field.field_settings.images`.
+      // @see image.schema.yml
+      'settings.default_image.uuid',
+      'settings.default_image.width',
+      'settings.default_image.height',
+      // @todo Fix config or tweak schema of `type: field.field_settings.integer`.
+      // @see core.data_types.schema.yml
+      'settings.min',
+      'settings.max',
+    ],
+    'field.storage.*.*' => [
+      // @todo Fix config or tweak schema of `type: field.storage_settings.image`.
+      // @see image.schema.yml
+      'settings.default_image.uuid',
+      'settings.default_image.width',
+      'settings.default_image.height',
     ],
     'image.style.*' => [
       // @todo Fix config or tweak schema of `type: image.effect.image_rotate`.
       // @see image.schema.yml
       'effects.*.data.bgcolor',
+    ],
+    'language.entity.*' => [
+      // @todo Fix config or tweak schema of `type: language.entity.*`.
+      // @see language.schema.yml
+      'label',
+    ],
+    'language.negotiation' => [
+      // @todo Fix config or tweak schema of `type: language.negotiation`.
+      // @see language.schema.yml
+      'url.prefixes',
     ],
     'media.type.*' => [
       // @todo Fix config or tweak schema of `type: media.type.*`.
@@ -104,10 +153,26 @@ trait SchemaCheckTrait {
       // @see node.schema.yml
       'name',
     ],
+    'search.page.*' => [
+      // @todo Fix config or tweak schema of `type: search.page.*`.
+      // @see search.schema.yml
+      'label',
+      'path',
+    ],
     'system.action.*' => [
       // @todo Fix config or tweak schema of `type: system.action.*`.
       // @see system.schema.yml
       'description',
+      'label',
+    ],
+    'taxonomy.vocabulary.*' => [
+      // @todo Fix config or tweak schema of `type: taxonomy.vocabulary.*`.
+      // @see taxonomy.schema.yml
+      'name',
+    ],
+    'workflows.workflow.*' => [
+      // @todo Fix config or tweak schema of `type: workflows.workflow.*`.
+      // @see workflows.schema.yml
       'label',
     ],
   ];
