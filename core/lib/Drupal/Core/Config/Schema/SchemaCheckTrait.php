@@ -158,6 +158,7 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: image.effect.image_scale`.
       // @see image.schema.yml
       'effects.*.data.height',
+      'effects.*.data.width',
       // @todo Fix config or tweak schema of `type: image.style.*`.
       // @see image.schema.yml
       'effects.*.weight',
@@ -177,6 +178,7 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: media.type.*`.
       // @see media.schema.yml
       'label',
+      'description',
     ],
     'node.type.*' => [
       // @todo Fix config or tweak schema of `type: node.type.*`.
