@@ -87,6 +87,13 @@ trait SchemaCheckTrait {
         'This value should not be null.',
       ],
     ],
+    'contact.settings' => [
+      // @todo Fix config or tweak schema of `type: contact.settings`.
+      // @see contact.schema.yml
+      'default_form' => [
+        'This value should not be null.',
+      ],
+    ],
     'core.base_field_override.*.*.*' => [
       // @todo Fix config or tweak schema of `type: core.base_field_override.*.*.*`.
       // @see core.data_types.schema.yml
@@ -138,11 +145,30 @@ trait SchemaCheckTrait {
       'status' => [
         'This value should not be null.',
       ],
+      'content.*.type' => [
+        'This value should not be null.',
+      ],
     ],
     'core.entity_view_display.*.*.*' => [
       // @todo Fix config or tweak schema of `type: core.entity_view_display.*.*.*`.
       // @see core.entity.schema.yml
       'status' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: field.formatter.settings.link`.
+      // @see link.schema.yml
+      'content.*.settings.trim_length' => [
+        'This value should not be null.',
+      ],
+      'content.*.settings.rel' => [
+        'This value should not be null.',
+      ],
+      'content.*.settings.target' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: inline_block`.
+      // @see layout_builder.schema.yml
+      'third_party_settings.layout_builder.sections.*.components.*.configuration.block_serialized' => [
         'This value should not be null.',
       ],
     ],
@@ -172,6 +198,16 @@ trait SchemaCheckTrait {
       // @todo Fix config or tweak schema of `type: views_filter`.
       // @see views.data_types.schema.yml
       'display.*.display_options.filters.bundle.group_info.description' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `views.filter.numeric`.
+      'display.*.display_options.filters.*.expose.min_placeholder' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.filters.*.expose.max_placeholder' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.filters.*.expose.placeholder' => [
         'This value should not be null.',
       ],
       // @todo Fix config or tweak schema of `type: views.view.*`.
@@ -216,6 +252,11 @@ trait SchemaCheckTrait {
         'This value should not be null.',
       ],
       'settings.max' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: entity_reference_selection.default`.
+      // @see core.data_types.schema.yml
+      'settings.handler_settings.auto_create_bundle' => [
         'This value should not be null.',
       ],
     ],
@@ -312,6 +353,13 @@ trait SchemaCheckTrait {
         'This value should not be null.',
       ],
       'type' => [
+        'This value should not be null.',
+      ],
+    ],
+    'system.date' => [
+      // @todo Fix config or tweak schema of `type: system.date`.
+      // @see system.schema.yml
+      'timezone' => [
         'This value should not be null.',
       ],
     ],
