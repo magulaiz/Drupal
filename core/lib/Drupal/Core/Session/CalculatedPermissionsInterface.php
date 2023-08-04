@@ -13,14 +13,14 @@ interface CalculatedPermissionsInterface extends CacheableDependencyInterface {
    * Retrieves a single calculated permission item from a given scope.
    *
    * @param string $scope
-   *   The scope name to retrieve the item for.
+   *   (optional) The scope name to get the item for, defaults to 'drupal'.
    * @param string|int $identifier
-   *   The scope identifier to retrieve the item for.
+   *   (optional) The identifier to get the item for, defaults to 'drupal'.
    *
    * @return \Drupal\Core\Session\CalculatedPermissionsItemInterface|false
    *   The calculated permission item or FALSE if it could not be found.
    */
-  public function getItem(string $scope, string|int $identifier): CalculatedPermissionsItemInterface|false;
+  public function getItem(string $scope = AccessPolicyInterface::SCOPE_DRUPAL, string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL): CalculatedPermissionsItemInterface|false;
 
   /**
    * Retrieves all of the calculated permission items, regardless of scope.
@@ -42,11 +42,11 @@ interface CalculatedPermissionsInterface extends CacheableDependencyInterface {
    * Retrieves all of the calculated permission items for the given scope.
    *
    * @param string $scope
-   *   The scope name to retrieve the items for.
+   *   (optional) The scope name to get the item for, defaults to 'drupal'.
    *
    * @return \Drupal\Core\Session\CalculatedPermissionsItemInterface[]
    *   A list of calculated permission items for the given scope.
    */
-  public function getItemsByScope(string $scope): array;
+  public function getItemsByScope(string $scope = AccessPolicyInterface::SCOPE_DRUPAL): array;
 
 }

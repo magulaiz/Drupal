@@ -54,7 +54,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function processAccessPolicies(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function processAccessPolicies(AccountInterface $account, string $scope = AccessPolicyInterface::SCOPE_DRUPAL): CalculatedPermissionsInterface {
     $persistent_cache_contexts = $this->getPersistentCacheContexts($scope);
     $initial_cacheability = (new CacheableMetadata())->addCacheContexts($persistent_cache_contexts);
     $cache_keys = ['access_policies', $scope];
