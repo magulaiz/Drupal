@@ -454,7 +454,7 @@ final class ComponentPluginManager extends DefaultPluginManager {
     string $machine_name,
     array|string $file_extension
   ): ?string {
-    $extensions = (array)$file_extension;
+    $extensions = (array) $file_extension;
 
     foreach ($extensions as $extension) {
       $path = sprintf(
