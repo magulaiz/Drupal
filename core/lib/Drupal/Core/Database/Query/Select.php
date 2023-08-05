@@ -631,6 +631,9 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (isset($type)) {
+      $this->queryOptions['create_missing_table'] = FALSE;
+    }
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
         $alias = 'subquery';

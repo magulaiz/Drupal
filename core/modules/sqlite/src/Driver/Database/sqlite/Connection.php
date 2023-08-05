@@ -468,6 +468,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function isTableMissingException(\Exception $e) {
+    return preg_match('/^SQLSTATE\[HY000\]: General error: 1 no such table/', $e->getMessage());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function createConnectionOptionsFromUrl($url, $root) {
     $database = parent::createConnectionOptionsFromUrl($url, $root);
 

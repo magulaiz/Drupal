@@ -9,6 +9,7 @@ use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
+use Drupal\TestTools\Extension\SchemaInspector;
 
 /**
  * Tests table creation and modification via the schema API.
@@ -222,6 +223,13 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // Try to drop the table.
     $this->schema->dropTable('test_table2');
     $this->assertFalse($this->schema->tableExists('test_table2'), 'The dropped table does not exist.');
+
+    $module_handler = $this->container->get('module_handler');
+    $specification = SchemaInspector::getTablesSpecification($module_handler, 'database_test');
+    $schema = $specification['test'];
+
+    // Try to ensure the table exists.
+    $this->assertTrue(Database::getConnection()->schema()->ensureTableExists('test_table2', $schema));
 
     // Recreate the table.
     $this->schema->createTable('test_table', $table_specification);

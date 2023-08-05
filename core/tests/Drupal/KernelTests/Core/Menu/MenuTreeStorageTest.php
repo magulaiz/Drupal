@@ -63,7 +63,7 @@ class MenuTreeStorageTest extends KernelTestBase {
     // that selecting from the storage creates the table.
     $tree_storage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'test_menu_tree');
     $this->assertFalse($this->connection->schema()->tableExists('test_menu_tree'), 'Test table is not yet created');
-    $tree_storage->countMenuLinks();
+    $tree_storage->save($this->getLinkArray($this->randomMachineName()));
     $this->assertTrue($this->connection->schema()->tableExists('test_menu_tree'), 'Test table was created');
   }
 
@@ -374,16 +374,7 @@ class MenuTreeStorageTest extends KernelTestBase {
    * Adds a link with the given ID and supply defaults.
    */
   protected function addMenuLink($id, $parent = '', $route_name = 'test', $route_parameters = [], $menu_name = 'tools', $extra = []) {
-    $link = [
-      'id' => $id,
-      'menu_name' => $menu_name,
-      'route_name' => $route_name,
-      'route_parameters' => $route_parameters,
-      'title' => 'test',
-      'parent' => $parent,
-      'options' => [],
-      'metadata' => [],
-    ] + $extra;
+    $link = $this->getLinkArray($id, $parent, $route_name, $route_parameters, $menu_name) + $extra;
     $this->treeStorage->save($link);
   }
 
@@ -453,6 +444,34 @@ class MenuTreeStorageTest extends KernelTestBase {
     }
     // Verify that the child IDs match.
     $this->assertEqualsCanonicalizing($children, array_keys($this->treeStorage->loadAllChildren($id)));
+  }
+
+  /**
+   *
+   * @param string $id
+   *   The ID of the menu link to test
+   * @param string $parent
+   *   The name of the parent
+   * @param $route_name
+   *   The Route name of the menu
+   * @param $route_parameters
+   *   The parameter of the route
+   * @param $menu_name
+   *   The Menu name
+   * @return array
+   */
+  protected function getLinkArray($id, $parent = '', $route_name = 'test', $route_parameters = [], $menu_name = 'tools') {
+    return [
+      'id' => $id,
+      'menu_name' => $menu_name,
+      'route_name' => $route_name,
+      'route_parameters' => $route_parameters,
+      'title_arguments' => [],
+      'title' => 'test',
+      'parent' => $parent,
+      'options' => [],
+      'metadata' => [],
+    ];
   }
 
 }

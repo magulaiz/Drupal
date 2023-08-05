@@ -619,6 +619,34 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
+   * Checks a table for existence and creates it as necessary.
+   *
+   * @param $table_name
+   *   The name of the table to check and create.
+   * @param array $schema
+   *   A Schema API table definition array.
+   *
+   * @return bool
+   *   TRUE if the table already existed or now exists, FALSE if there was an
+   *   error and it does not.
+   */
+  public function ensureTableExists($table_name, array $schema) {
+    try {
+      if (!$this->tableExists($table_name)) {
+        $this->createTable($table_name, $schema);
+      }
+      return TRUE;
+    }
+    catch (SchemaObjectExistsException $e) {
+      // If another process has already created the table, attempting to
+      // recreate it will throw an exception. In this case just catch the
+      // exception and do nothing.
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
    * Generate SQL to create a new table from a Drupal schema definition.
    *
    * This method should be implemented in extending classes.

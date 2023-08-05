@@ -417,6 +417,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function isTableMissingException(\Exception $e) {
+    // "42P01" is the PostgreSQL error code for "undefined_table".
+    // @see http://www.postgresql.org/docs/9.3/static/errcodes-appendix.html
+    return $this->getSQLState($e) === '42P01';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function select($table, $alias = NULL, array $options = []) {
     return new Select($this, $table, $alias, $options);
   }

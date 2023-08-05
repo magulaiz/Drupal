@@ -137,6 +137,10 @@ class Merge extends Query implements ConditionInterface {
     // @todo Remove $options['return'] in Drupal 11.
     // @see https://www.drupal.org/project/drupal/issues/3256524
     $options['return'] = Database::RETURN_AFFECTED;
+    if (!isset($options['create_missing_table'])) {
+      $options['create_missing_table'] = TRUE;
+      $options['missing_table_name'] = $table;
+    }
     parent::__construct($connection, $options);
     $this->table = $table;
     $this->conditionTable = $table;
@@ -370,14 +374,14 @@ class Merge extends Query implements ConditionInterface {
     if (!count($this->condition)) {
       throw new InvalidMergeQueryException('Invalid merge query: no conditions');
     }
-
-    $select = $this->connection->select($this->conditionTable)
+    $options = isset($this->queryOptions['schema_provider']) ? ['schema_provider' => $this->queryOptions['schema_provider']] : [];
+    $select = $this->connection->select($this->conditionTable, NULL, $options)
       ->condition($this->condition);
     $select->addExpression('1');
 
     if (!$select->execute()->fetchField()) {
       try {
-        $insert = $this->connection->insert($this->table)->fields($this->insertFields);
+        $insert = $this->connection->insert($this->table, $options)->fields($this->insertFields);
         if ($this->defaultFields) {
           $insert->useDefaults($this->defaultFields);
         }
@@ -396,7 +400,7 @@ class Merge extends Query implements ConditionInterface {
     }
 
     if ($this->needsUpdate) {
-      $update = $this->connection->update($this->table)
+      $update = $this->connection->update($this->table, $options)
         ->fields($this->updateFields)
         ->condition($this->condition);
       if ($this->expressionFields) {

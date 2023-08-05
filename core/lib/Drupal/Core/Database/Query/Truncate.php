@@ -38,7 +38,7 @@ class Truncate extends Query {
   /**
    * Executes the TRUNCATE query.
    *
-   * @return int|null
+   * @return int|\Exception
    *   Return value is dependent on whether the executed SQL statement is a
    *   TRUNCATE or a DELETE. TRUNCATE is DDL and no information on affected
    *   rows is available. DELETE is DML and will return the number of affected
@@ -48,16 +48,18 @@ class Truncate extends Query {
    * @see https://learnsql.com/blog/difference-between-truncate-delete-and-drop-table-in-sql
    */
   public function execute() {
-    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
+
     try {
-      $stmt->execute([], $this->queryOptions);
-      return $stmt->rowCount();
+      return $this->connection->query((string) $this, [], $this->queryOptions);
     }
     catch (\Exception $e) {
-      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
+      if ($this->connection->isTableMissingException($e)) {
+        // The table is quite empty. It doesn't even exist but that's fine.
+        return 0;
+      }
+      throw $e;
     }
 
-    return NULL;
   }
 
   /**
