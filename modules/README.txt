@@ -26,7 +26,7 @@ There are number of directories that are ignored when looking for modules. These
 are 'src', 'lib', 'vendor', 'assets', 'css', 'files', 'images', 'js', 'misc',
 'templates', 'includes', 'fixtures' and 'Drupal'.
 
-MULTISITE CONFIGURATION
+MULTISITE CONFIGURATION example
 -----------------------
 
 In multisite configurations, modules found in this directory are available to
