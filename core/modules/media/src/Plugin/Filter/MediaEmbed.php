@@ -171,6 +171,15 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#element_validate' => [[static::class, 'validateOptions']],
     ];
 
+    $form['link_text_media_types'] = [
+      '#title' => $this->t('Media types allowed as link'),
+      '#type' => 'checkboxes',
+      '#options' => $bundle_options,
+      '#default_value' => $this->settings['link_text_media_types'],
+      '#description' => $this->t('Select media types that you want to convert into links.'),
+      '#element_validate' => [[static::class, 'validateOptions']],
+    ];
+
     $form['allowed_view_modes'] = [
       '#title' => $this->t("View modes selectable in the 'Edit media' dialog"),
       '#type' => 'checkboxes',
@@ -258,6 +267,66 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
   }
 
   /**
+   * Builds link for media entity.
+   *
+   * @param \Drupal\media\MediaInterface $media
+   *   A media entity to render.
+   * @param string $data_link_text
+   *   Data link text in media entity.
+   *
+   * @return array
+   *   A render array.
+   */
+  protected function renderMediaLinkText(MediaInterface $media, string $data_link_text) {
+    // Due to render caching and delayed calls, filtering happens later
+    // in the rendering process through a '#pre_render' callback, so we
+    // need to generate a counter for the media entity that is being embedded.
+    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
+    $recursive_render_id = $media->uuid();
+    if (isset(static::$recursiveRenderDepth[$recursive_render_id])) {
+      static::$recursiveRenderDepth[$recursive_render_id]++;
+    }
+    else {
+      static::$recursiveRenderDepth[$recursive_render_id] = 1;
+    }
+    // Protect ourselves from recursive rendering: return an empty render array.
+    if (static::$recursiveRenderDepth[$recursive_render_id] > EntityReferenceEntityFormatter::RECURSIVE_RENDER_LIMIT) {
+      $this->loggerFactory->get('media')->error('During rendering of embedded media: recursive rendering detected for %entity_id. Aborting rendering.', [
+        '%entity_id' => $media->id(),
+      ]);
+      return [];
+    }
+
+    $file_id = $media->getSource()->getSourceFieldValue($media);
+    $file = $this->entityTypeManager->getStorage('file')->load($file_id);
+    $link_text = [
+      '#theme' => 'media_link_text',
+      '#text' => empty($data_link_text) ? $media->label() : $data_link_text,
+      '#link' => $file->createFileUrl(),
+    ];
+    $build = $link_text;
+
+    // Allows other modules to treat embedded media items differently.
+    $build['#embed'] = TRUE;
+
+    // There are a few concerns when rendering an embedded media entity:
+    // - entity access checking happens not during rendering but during routing,
+    //   and therefore we have to do it explicitly here for the embedded entity.
+    $build['#access'] = $media->access('view', NULL, TRUE);
+    // - Contextual Links do not make sense for embedded entities; we only allow
+    //   the host entity to be contextually managed.
+    $build['#pre_render'][] = static::class . '::disableContextualLinks';
+    // - default styling may break captioned media embeds; attach asset library
+    //   to ensure captions behave as intended. Do not set this at the root
+    //   level of the render array, otherwise it will be attached always,
+    //   instead of only when #access allows this media to be viewed and hence
+    //   only when media is actually rendered.
+    $build[':media_embed']['#attached']['library'][] = 'media/filter.caption';
+
+    return $build;
+  }
+
+  /**
    * Builds the render array for the indicator when media cannot be loaded.
    *
    * @return array
@@ -311,10 +380,13 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
           $this->loggerFactory->get('media')->error('During rendering of embedded media: the view mode "@view-mode-id" does not exist.', ['@view-mode-id' => $view_mode_id]);
         }
       }
-
       $build = $media && ($view_mode || $view_mode_id === EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE)
         ? $this->renderMedia($media, $view_mode_id, $langcode)
         : $this->renderMissingMediaIndicator();
+
+      if ($media && in_array($media->bundle(), $this->settings['link_text_media_types'])) {
+        $build = $this->renderMediaLinkText($media, $node->getAttribute('data-link-text'));
+      }
 
       if (empty($build['#attributes']['class'])) {
         $build['#attributes']['class'] = [];

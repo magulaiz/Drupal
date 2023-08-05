@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words drupalmediaediting drupalmediageneralhtmlsupport drupalmediaui drupalmediatoolbar mediaimagetextalternative */
+/* cspell:words drupalmediaediting drupalmediageneralhtmlsupport drupalmediaui drupalmediatoolbar mediaimagetextalternative medialinktextalternative */
 
 import { Plugin } from 'ckeditor5/src/core';
 import DrupalMediaEditing from './drupalmediaediting';
@@ -7,6 +7,7 @@ import DrupalMediaUI from './drupalmediaui';
 import DrupalMediaToolbar from './drupalmediatoolbar';
 
 import MediaImageTextAlternative from './mediaimagetextalternative';
+import MediaLinkTextAlternative from './medialinktextalternative';
 import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
 
 /**
@@ -18,6 +19,7 @@ import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
  *  - {@link DrupalMediaUI}
  *  - {@link DrupalMediaToolbar}
  *  - {@link MediaImageTextAlternative}
+ *  - {@link MediaLinkTextAlternative}
  *
  * @private
  */
@@ -32,6 +34,7 @@ export default class DrupalMedia extends Plugin {
       DrupalMediaUI,
       DrupalMediaToolbar,
       MediaImageTextAlternative,
+      MediaLinkTextAlternative,
     ];
   }
 

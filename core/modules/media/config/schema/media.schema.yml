@@ -131,3 +131,9 @@ filter_settings.media_embed:
       sequence:
         type: string
         label: 'Media type'
+    link_text_media_types:
+      type: sequence
+      label: 'Media link text selectable in the Media Library'
+      sequence:
+        type: string
+        label: 'Media type'

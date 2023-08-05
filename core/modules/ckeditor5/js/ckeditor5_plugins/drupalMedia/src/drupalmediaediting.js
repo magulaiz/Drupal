@@ -32,6 +32,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     this.attrs = {
       drupalMediaAlt: 'alt',
+      drupalMediaLinkText: 'data-link-text',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
     };
@@ -40,6 +41,7 @@ export default class DrupalMediaEditing extends Plugin {
       'drupalElementStyleViewMode',
       'drupalMediaEntityType',
       'drupalMediaAlt',
+      'drupalMediaLinkText',
     ];
   }
 
@@ -166,6 +168,53 @@ export default class DrupalMediaEditing extends Plugin {
   }
 
   /**
+   * Upcast `drupalMediaLinkText` from Drupal Media type metadata.
+   *
+   * @param {module:engine/model/node~Node} modelElement
+   *   The `drupalMedia` model element.
+   *
+   * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
+   *
+   * @private
+   */
+  upcastDrupalMediaIsFile(modelElement) {
+    const metadataRepository = this.editor.plugins.get(
+      'DrupalMediaMetadataRepository',
+    );
+    // Get all metadata for drupalMedia elements to set value for
+    // drupalMediaType attribute. When other plugins start using the
+    // metadata, this functionality will be handled more generically.
+    metadataRepository
+      .getMetadata(modelElement)
+      .then((metadata) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        // Enqueue a model change in `transparent` batch to make it
+        // invisible to the undo/redo functionality.
+        this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
+          writer.setAttribute(
+            'drupalMediaIsFile',
+            this.editor.config
+              .get('drupalMedia')
+              .linkTextMediaTypes.hasOwnProperty(metadata.type),
+            modelElement,
+          );
+        });
+      })
+      .catch((e) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        console.warn(e.toString());
+      });
+  }
+
+  /**
    * Fetches preview from the server.
    *
    * @param {module:engine/model/element~Element} modelElement
@@ -252,6 +301,7 @@ export default class DrupalMediaEditing extends Plugin {
                 // On upcast, get `drupalMediaIsImage` attribute value from media metadata
                 // repository.
                 this.upcastDrupalMediaIsImage(modelElement);
+                this.upcastDrupalMediaIsFile(modelElement);
                 // Enqueue a model change after getting modelElement.
                 this.editor.model.enqueueChange(
                   { isUndoable: false },
@@ -459,6 +509,7 @@ export default class DrupalMediaEditing extends Plugin {
       // Need to upcast DrupalMediaType to model so it can be used to show
       // correct buttons based on bundle.
       this.upcastDrupalMediaType(modelElement);
+      this.upcastDrupalMediaIsFile(modelElement);
     });
   }
 

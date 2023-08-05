@@ -1265,9 +1265,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-image/src/imagetextalternative/ui/textalternativeformview.js
+ * Declared in file @ckeditor/ckeditor5-image/src/imagetextalternative/ui/linktextalternativeformview.js
  *
- * @typedef {module:image/imagetextalternative/ui/textalternativeformview} module:image/imagetextalternative/ui/textalternativeformview~TextAlternativeFormView
+ * @typedef {module:image/imagetextalternative/ui/textalternativeformview} module:image/imagetextalternative/ui/textalternativeformview~Linktextalternativeformview
  */
 
 /**
