@@ -41,6 +41,8 @@ class TypedDataDefinitionTest extends KernelTestBase {
   public function testLists() {
     $list_definition = ListDataDefinition::create('string');
     $this->assertInstanceOf(ListDataDefinitionInterface::class, $list_definition);
+    $this->assertEquals('list', $list_definition->getDataType());
+    $this->assertEquals(['type' => 'list'], $list_definition->toArray());
     $item_definition = $list_definition->getItemDefinition();
     $this->assertInstanceOf(DataDefinitionInterface::class, $item_definition);
     $this->assertEquals('string', $item_definition->getDataType());
@@ -55,6 +57,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
     $list_definition = $this->typedDataManager->createDataDefinition('list');
     $this->assertInstanceOf(ListDataDefinitionInterface::class, $list_definition);
     $this->assertEquals('list', $list_definition->getDataType());
+    $this->assertEquals(['type' => 'list'], $list_definition->toArray());
     $this->assertEquals('any', $list_definition->getItemDefinition()->getDataType());
   }
 
@@ -66,8 +69,12 @@ class TypedDataDefinitionTest extends KernelTestBase {
       ->setPropertyDefinition('one', DataDefinition::create('string'))
       ->setPropertyDefinition('two', DataDefinition::create('string'))
       ->setPropertyDefinition('three', DataDefinition::create('string'));
+    $this->assertEquals('map', $map_definition->getDataType());
+    $this->assertEquals(['type' => 'map'], $map_definition->toArray());
 
     $this->assertInstanceOf(ComplexDataDefinitionInterface::class, $map_definition);
+    $this->assertEquals('map', $map_definition->getDataType());
+    $this->assertEquals(['type' => 'map'], $map_definition->toArray());
 
     // Test retrieving metadata about contained properties.
     $this->assertEquals(['one', 'two', 'three'], array_keys($map_definition->getPropertyDefinitions()));
@@ -90,6 +97,8 @@ class TypedDataDefinitionTest extends KernelTestBase {
   public function testDataReferences() {
     $language_reference_definition = DataReferenceDefinition::create('language');
     $this->assertInstanceOf(DataReferenceDefinitionInterface::class, $language_reference_definition);
+    $this->assertEquals('language_reference', $language_reference_definition->getDataType());
+    $this->assertEquals(['type' => 'language_reference'], $language_reference_definition->toArray());
 
     // Test retrieving metadata about the referenced data.
     $this->assertEquals('language', $language_reference_definition->getTargetDefinition()->getDataType());
