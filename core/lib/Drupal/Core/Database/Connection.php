@@ -308,6 +308,12 @@ abstract class Connection {
    *   - Database::RETURN_NULL: Do not return anything, as there is no
    *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
+   * - create_missing_table: Boolean value, whether to create a missing table.
+   * - missing_table_name: In case create_missing_table is TRUE, this will
+   *   be the table name used for the automatic table creation.
+   * - schema_provider: An object implementing
+   *   \Drupal\Core\Schema\SchemaProviderInterface . This will be called when
+   *   both create_missing_table and missing_table_name is set.
    * - allow_delimiter_in_query: By default, queries which have the ; delimiter
    *   any place in them will cause an exception. This reduces the chance of SQL
    *   injection attacks that terminate the original query and add one or more
@@ -333,6 +339,7 @@ abstract class Connection {
       'fetch' => \PDO::FETCH_OBJ,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
+      'create_missing_table' => TRUE,
       'pdo' => [],
     ];
   }
@@ -819,7 +826,7 @@ abstract class Connection {
       }
     }
     catch (\Exception $e) {
-      $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, $options);
+      return $this->handleMissingTable($e, $query, $args, $options);
     }
   }
 
@@ -1746,6 +1753,65 @@ abstract class Connection {
     }
     else {
       return $e->getCode();
+    }
+  }
+
+  /**
+   * Determines whether an exception means missing table.
+   *
+   * @param \Exception $e
+   *   The exception being investigated. Use
+   *   \Drupal\Core\Database\Database::getSqlState($e) instead of
+   *   $e->getCode() to get the SQLSTATE.
+   *
+   * @return bool
+   *   TRUE if this exception means table missing, FALSE otherwise.
+   */
+  abstract public function isTableMissingException(\Exception $e);
+
+  /**
+   * Handles a missing table exception.
+   *
+   * @param \PDOException $e
+   *   The exception thrown by static::query().
+   * @param $query
+   *   The query executed by static::query().
+   * @param array $args
+   *   An array of arguments for the prepared statement.
+   * @param array $options
+   *   An associative array of options to control how the query is run.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|bool
+   *   This method re-runs the query after creating the missing table. In this
+   *   case it returns a \Drupal\Core\Database\StatementInterface object or
+   *   FALSE if the schema provider is not specified in the $options.
+   */
+  protected function handleMissingTable($e, $query, $args, $options) {
+    if ($this->isTableMissingException($e) && $options['create_missing_table']) {
+      if ($options['return'] == Database::RETURN_STATEMENT) {
+        // This is a SELECT on a missing table. Creating the table and
+        // re-running the query will result in an empty result so return that
+        // early instead.
+        return new \Exception();
+      }
+      if (!empty($options['missing_table_name']) && isset($options['schema_provider'])) {
+        $table = $options['missing_table_name'];
+        /** @var \Drupal\Core\Database\SchemaProviderInterface $schema_provider */
+        if ($schema_provider = $options['schema_provider']) {
+          if ($this->schema()->ensureTableExists($table, $schema_provider->getSchema($table))) {
+            // Theoretically the table must exist at this point so this
+            // should not matter but still, databases. This makes sure
+            // no infinite recursion happens.
+            $options['create_missing_table'] = FALSE;
+            unset($options['missing_table_name']);
+            unset($options['schema_provider']);
+            return $this->query($query, $args, $options);
+          }
+        }
+      }
+      elseif ($options['create_missing_table'] === TRUE) {
+        return FALSE;
+      }
     }
   }
 

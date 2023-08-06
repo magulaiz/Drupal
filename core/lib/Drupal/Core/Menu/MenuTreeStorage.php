@@ -9,13 +9,12 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseException;
-use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\SchemaProviderInterface;
 
 /**
  * Provides a menu tree storage using the database.
  */
-class MenuTreeStorage implements MenuTreeStorageInterface {
+class MenuTreeStorage implements MenuTreeStorageInterface, SchemaProviderInterface {
 
   use MenuLinkFieldDefinitions;
 
@@ -94,7 +93,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $this->menuCacheBackend = $menu_cache_backend;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
     $this->table = $table;
-    $this->options = $options;
+    $this->options = $options + ['schema_provider' => $this];
   }
 
   /**
@@ -198,33 +197,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-   * Executes a select query while making sure the database table exists.
-   *
-   * @param \Drupal\Core\Database\Query\SelectInterface $query
-   *   The select object to be executed.
-   *
-   * @return \Drupal\Core\Database\StatementInterface|null
-   *   A prepared statement, or NULL if the query is not valid.
-   *
-   * @throws \Exception
-   *   Thrown if the table could not be created or the database connection
-   *   failed.
-   */
-  protected function safeExecuteSelect(SelectInterface $query) {
-    try {
-      return $query->execute();
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if ($this->ensureTableExists()) {
-        return $query->execute();
-      }
-      // Some other failure that we can not recover from.
-      throw new PluginException($e->getMessage(), 0, $e);
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function save(array $link) {
@@ -264,7 +236,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table);
     $query->condition('id', $link['id']);
-    $original = $this->safeExecuteSelect($query)->fetchAssoc();
+    $original = $query->execute()->fetchAssoc();
 
     if ($original) {
       $link['mlid'] = $original['mlid'];
@@ -332,7 +304,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected function preSave(array &$link, array $original) {
     static $schema_fields, $schema_defaults;
     if (empty($schema_fields)) {
-      $schema = static::schemaDefinition();
+      $schema = $this->getSchema($this->table);
       $schema_fields = $schema['fields'];
       foreach ($schema_fields as $name => $spec) {
         if (isset($spec['default'])) {
@@ -438,7 +410,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition("p$i", $original["p$i"]);
     }
 
-    $max_depth = $this->safeExecuteSelect($query)->fetchField();
+    $max_depth = $query->execute()->fetchField();
 
     return ($max_depth > $original['depth']) ? $max_depth - $original['depth'] : 0;
   }
@@ -600,7 +572,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         ->condition('enabled', 1);
 
       $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
-      $this->connection->update($this->table, $this->options)
+      $this->connection->update($this->table, NULL, $this->options)
         ->fields(['has_children' => $parent_has_children])
         ->condition('id', $link['parent'])
         ->execute();
@@ -644,7 +616,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
       $query->condition($name, $value);
     }
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $loaded = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
     foreach ($loaded as $id => $link) {
       $loaded[$id] = $this->prepareLink($link);
     }
@@ -673,7 +645,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->orderBy('depth');
     $query->orderBy('weight');
     $query->orderBy('id');
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $loaded = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
     foreach ($loaded as $id => $link) {
       $loaded[$id] = $this->prepareLink($link);
     }
@@ -690,7 +662,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->fields($this->table, $this->definitionFields());
       $query->condition('id', $missing_ids, 'IN');
-      $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+      $loaded = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
       foreach ($loaded as $id => $link) {
         $this->definitions[$id] = $this->prepareLink($link);
       }
@@ -736,7 +708,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table);
     $query->condition('id', $ids, 'IN');
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $loaded = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
     foreach ($loaded as &$link) {
       foreach ($this->serializedFields() as $name) {
         if (isset($link[$name])) {
@@ -766,7 +738,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition('mlid', $ids, 'IN');
       // @todo Cache this result in memory if we find it is being used more
       //   than once per page load. https://www.drupal.org/node/2302185
-      return $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
+      return $query->execute()->fetchAllKeyed(0, 0);
     }
     return [];
   }
@@ -786,7 +758,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition('enabled', 1);
       $query->condition('parent', $parents, 'IN');
       $query->condition('id', $parents, 'NOT IN');
-      $result = $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
+      $result = $query->execute()->fetchAllKeyed(0, 0);
       $parents += $result;
     } while (!empty($result));
     return $parents;
@@ -944,7 +916,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
     }
 
-    $links = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $links = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
 
     return $links;
   }
@@ -1011,7 +983,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->addField($this->table, 'mlid');
     $query->condition('menu_name', $menu_name);
     $query->range(0, 1);
-    return (bool) $this->safeExecuteSelect($query);
+    return (bool) $query->execute();
   }
 
   /**
@@ -1021,7 +993,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->addField($this->table, 'menu_name');
     $query->distinct();
-    return $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
+    return $query->execute()->fetchAllKeyed(0, 0);
   }
 
   /**
@@ -1032,7 +1004,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     if ($menu_name) {
       $query->condition('menu_name', $menu_name);
     }
-    return $this->safeExecuteSelect($query->countQuery())->fetchField();
+    return $query->execute()->fetchAllKeyed(0, 0);
   }
 
   /**
@@ -1051,7 +1023,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     }
     // The next p column should not be empty. This excludes the root link.
     $query->condition("p$i", 0, '>');
-    return $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
+    return $query->execute()->fetchAllKeyed(0, 0);
   }
 
   /**
@@ -1130,27 +1102,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-   * Checks if the tree table exists and create it if not.
-   *
-   * @return bool
-   *   TRUE if the table was created, FALSE otherwise.
-   */
-  protected function ensureTableExists() {
-    try {
-      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-    }
-    catch (DatabaseException $e) {
-      // If another process has already created the config table, attempting to
-      // recreate it will throw an exception. In this case just catch the
-      // exception and do nothing.
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
    * Determines serialized fields in the storage.
    *
    * @return array
@@ -1158,7 +1109,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    */
   protected function serializedFields() {
     if (empty($this->serializedFields)) {
-      $schema = static::schemaDefinition();
+      $schema = $this->getSchema($this->table);
       foreach ($schema['fields'] as $name => $field) {
         if (!empty($field['serialize'])) {
           $this->serializedFields[] = $name;
@@ -1186,7 +1137,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @internal
    */
-  protected static function schemaDefinition() {
+  public function getSchema($table_name) {
     $schema = [
       'description' => 'Contains the menu tree hierarchy.',
       'fields' => [
@@ -1421,7 +1372,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       ],
     ];
 
-    return $schema;
+    return $this->table == $table_name ? $schema : FALSE;
   }
 
   /**

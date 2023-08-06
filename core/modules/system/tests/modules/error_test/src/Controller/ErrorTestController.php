@@ -79,7 +79,7 @@ class ErrorTestController extends ControllerBase {
    */
   public function triggerPDOException() {
     define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-    $this->database->select('bananas_are_awesome', 'b')
+    $this->database->select('bananas_are_awesome', 'b', [], ['create_missing_table' => FALSE])
       ->fields('b')
       ->execute();
   }

@@ -45,7 +45,10 @@ class DatabaseBackendTagTest extends KernelTestBase {
     }
 
     $connection = Database::getConnection();
-    $invalidations_before = intval($connection->select('cachetags')->fields('cachetags', ['invalidations'])->condition('tag', 'test_tag:2')->execute()->fetchField());
+
+    // Just setting cache data does not create the cachetags table, that only
+    // happens when tags are invalidated.
+    $this->assertFalse($connection->schema()->tableExists('cachetags'));
     Cache::invalidateTags(['test_tag:2']);
 
     // Test that cache entry has been invalidated in multiple bins.
@@ -56,7 +59,8 @@ class DatabaseBackendTagTest extends KernelTestBase {
 
     // Test that only one tag invalidation has occurred.
     $invalidations_after = intval($connection->select('cachetags')->fields('cachetags', ['invalidations'])->condition('tag', 'test_tag:2')->execute()->fetchField());
-    $this->assertEquals($invalidations_before + 1, $invalidations_after, 'Only one addition cache tag invalidation has occurred after invalidating a tag used in multiple bins.');
+    $this->assertEquals($invalidations_after, 1, 'Only one addition cache tag invalidation has occurred after invalidating a tag used in multiple bins.');
+
   }
 
 }

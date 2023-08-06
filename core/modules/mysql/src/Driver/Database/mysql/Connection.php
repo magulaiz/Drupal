@@ -523,6 +523,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function isTableMissingException(\Exception $e) {
+    // "42S02" is the MySQL error code for "Unknown table".
+    // @see http://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html
+    return $this->getSQLState($e) === '42S02';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function select($table, $alias = NULL, array $options = []) {
     return new Select($this, $table, $alias, $options);
   }

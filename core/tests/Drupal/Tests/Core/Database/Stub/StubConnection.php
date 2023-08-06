@@ -188,4 +188,11 @@ class StubConnection extends Connection {
     return new Transaction($this, $name);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isTableMissingException(\Exception $e) {
+    return TRUE;
+  }
+
 }
