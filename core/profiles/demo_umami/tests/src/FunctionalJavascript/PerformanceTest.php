@@ -37,5 +37,4 @@ class PerformanceTest extends PerformanceTestBase {
     $this->assertSame(2, $this->stylesheetCount);
     $this->assertSame(1, $this->scriptCount);
   }
-
 }
