@@ -18,21 +18,24 @@ class PermissionsListFilterSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Takes a permissions array and removes all keys but a, b, c.
+   * Takes a permissions array and filters it.
    *
    * @param \Drupal\user\Event\PermissionsListFilterEvent $event
    *   The permissions filter list event.
    */
   public function filterPermissions(PermissionsListFilterEvent $event):void {
     $test_case = \Drupal::state()->get('user_filtered_permissions_test.test_case');
-    switch($test_case) {
+    switch ($test_case) {
       case 'no node permissions':
         $event->filter(fn(array $permission_data, string $permission_name) => $permission_data['provider'] !== 'node');
         break;
+
       case 'no view own published content':
         $event->filter(fn(array $permission_data, string $permission_name) => $permission_name !== 'view own unpublished content');
         break;
+
       default:
+        // Filter every permission that is not a, b, or c.
         $event->filter(fn(array $permission_data, string $permission_name) => in_array($permission_name, ['a', 'b', 'c']));
         break;
     }

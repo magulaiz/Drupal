@@ -140,22 +140,16 @@ class UserPermissionsForm extends FormBase {
             array_slice($permissions_by_provider['node'], $offset)
           );
         }
-//        elseif (isset($permissions_by_provider['node'])){
         else {
 
-            // If the list of node permissions is filtered so there's no 'view
+          // If the list of node permissions is filtered so there's no 'view
           // own unpublished content' key to position before, add the permission
           // to the end of the node permissions list.
           $permissions_by_provider['node']['access content'] = $permissions_by_provider['system']['access content'];
-          $permissions_by_provider['node']['access content']['provider'] = 'node';
           ksort($permissions_by_provider);
           unset($permissions_by_provider['system']['access content']);
         }
       }
-      else {
-        $stop = 'here';
-      }
-
     }
 
     return $permissions_by_provider;

@@ -174,7 +174,8 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     $this->assertEmpty($items);
 
     // Test the form with all node permissions hidden to see how the edge case
-    // of moving "access content" from system to node permissions works.
+    // of moving "access content" from system to node permissions works when no
+    // other node permissions are present.
     \Drupal::state()->set('user_filtered_permissions_test.test_case', 'no node permissions');
     $this->drupalGet('admin/people/permissions');
 
