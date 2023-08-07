@@ -354,7 +354,6 @@ system.admin_index:
     _title: 'Administration'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.files:
   path: '/system/files/{scheme}'
