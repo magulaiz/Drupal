@@ -34,14 +34,17 @@ trait SchemaCheckTrait {
    *
    * Allow ignoring specific config schema types (top-level keys, require an
    * exact match to one of the top-level entries in *.schema.yml files) by
-   * allowing one or more partial property path matches.
+   * allowing one or more partial property path matches and one or more ignored
+   * constraint violation messages:
+   * - Top-level keys must be an exact match for a Config object's schema type.
+   * - Second-level keys must be must be wildcard matches for property paths,
+   *   where any property path segment can use a wildcard (`*`) to indicate any
+   *   value for that segment should be accepted for this property path to be
+   *   ignored.
+   * - Values of second-level keys must be regular expressions to match
+   *   constraint violation messages of those property paths against.
    *
-   * Keys must be an exact match for a Config object's schema type.
-   * Values must be wildcard matches for property paths, where any property
-   * path segment can use a wildcard (`*`) to indicate any value for that
-   * segment should be accepted for this property path to be ignored.
-   *
-   * @var \string[][]
+   * @var \string[][][]
    */
   protected static array $ignoredPropertyPaths = [
     'block.block.*' => [
