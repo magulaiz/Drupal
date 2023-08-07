@@ -71,18 +71,6 @@ class FileWidgetAjaxController implements ContainerInjectionInterface {
       }
       return new JsonResponse($progress);
     }
-    elseif ($implementation == 'session') {
-      $var = \Drupal::request()->get('status');
-      if (isset($_SESSION[$var])) {
-        $status = $_SESSION[$var];
-      }
-
-      if (isset($status['bytes_processed']) && !empty($status['content_length'])) {
-        $progress['message'] = t('Uploading... (@current of @total)', ['@current' => format_size($status['bytes_processed']), '@total' => format_size($status['content_length'])]);
-        $progress['percentage'] = round(100 * $status['bytes_processed'] / $status['content_length']);
-      }
-    }
-
     return new JsonResponse($progress);
   }
 
