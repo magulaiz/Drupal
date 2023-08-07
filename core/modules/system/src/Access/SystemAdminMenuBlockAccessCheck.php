@@ -8,8 +8,8 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Routing\AccessAwareRouter;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\Router;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -24,10 +24,10 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    *   The access manager.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
    *   The menu link tree service.
-   * @param AccessAwareRouter $router
+   * @param \Drupal\Core\Routing\Router $router
    *   The router service.
    */
-  public function __construct(private readonly AccessManagerInterface $accessManager, private readonly MenuLinkTreeInterface $menuLinkTree, private readonly AccessAwareRouter $router) {
+  public function __construct(private readonly AccessManagerInterface $accessManager, private readonly MenuLinkTreeInterface $menuLinkTree, private readonly Router $router) {
   }
 
   /**
@@ -67,8 +67,10 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
 
     if (empty($tree)) {
       $route = $this->router->getRouteCollection()->get($route_id);
-      return AccessResult::allowedIf(empty($route->getRequirement('_access_admin_menu_block_page')));
-
+      if ($route) {
+        return AccessResult::allowedIf(empty($route->getRequirement('_access_admin_menu_block_page')));
+      }
+      return AccessResult::neutral();
     }
 
     foreach ($tree as $menu_link_route_id => $element) {

@@ -125,6 +125,8 @@ class MenuAccessTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/people');
     $this->assertSession()->statusCodeEquals(403);
+    $this->drupalGet('admin/config');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }
