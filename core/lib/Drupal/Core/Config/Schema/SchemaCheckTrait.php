@@ -47,9 +47,8 @@ trait SchemaCheckTrait {
    * @var \string[][][]
    */
   protected static array $ignoredPropertyPaths = [
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3379725
     'block.block.*' => [
-      // @todo Fix config or tweak schema of `type: block.block.*`.
-      // @see block.schema.yml
       'weight' => [
         'This value should not be null.',
       ],
@@ -323,9 +322,8 @@ trait SchemaCheckTrait {
         'This value should not be null.',
       ],
     ],
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3379731
     'node.type.*' => [
-      // @todo Fix config or tweak schema of `type: node.type.*`.
-      // @see node.schema.yml
       'name' => [
         'This value should not be null.',
       ],
@@ -359,9 +357,8 @@ trait SchemaCheckTrait {
         'This value should not be null.',
       ],
     ],
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3379734
     'system.date' => [
-      // @todo Fix config or tweak schema of `type: system.date`.
-      // @see system.schema.yml
       'timezone.default' => [
         'This value should not be null.',
       ],
