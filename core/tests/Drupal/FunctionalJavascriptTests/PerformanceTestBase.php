@@ -153,7 +153,7 @@ class PerformanceTestBase extends WebDriverTestBase {
       // candidates is 2, so if we get that many, stop looking for any more.
       // Also only check once if $this->telemetryServiceName is false, since
       // largestContentfulPaint is not currently asserted on.
-      // @todo find a better way.
+      // @todo https://www.drupal.org/project/drupal/issues/3379757
       if ($lcp_count === 2 || !$this->telemetryServiceName) {
         break;
       }
@@ -224,6 +224,7 @@ class PerformanceTestBase extends WebDriverTestBase {
       // to all other 'ts' timestamps. Note that if the two events actually
       // happen at different times, then the offset will be wrong by that
       // difference.
+      // @see https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
       if ($dom_loaded_timestamp_page === NULL && $message['method'] === 'Page.domContentEventFired') {
         $dom_loaded_timestamp_page = $message['params']['timestamp'] * static::NANOSECONDS_PER_SECOND;
       }
@@ -239,32 +240,9 @@ class PerformanceTestBase extends WebDriverTestBase {
 
     $time_to_first_byte = $entry['responseStart'] - $entry['requestStart'];
 
-    $router = \Drupal::service('router.no_access_checks');
-    $route_provider = \Drupal::service('router.route_provider');
-    $route_path = $path;
-    if ($path instanceof Url && $path->isRouted()) {
-      $route_name = $path->getRouteName();
-      $route = $route_provider->getRouteByName($route_name);
-      $route_path = $route->getPath();
-    }
-    else {
-      if ($path instanceof Url) {
-        $path = $path->getInternalPath();
-      }
-      try {
-        $match = $router->match($path);
-        $route = $route_provider->getRouteByName($match[0]);
-        $route_path = $route->getPath();
-      }
-      catch (\Exception) {
-      }
-    }
-
-    // @todo: consider setting up the resource using environment variables
-    // OTEL_SERVICE_NAME, OTEL_RESOURCE_ATTRIBUTES
-    // See https://opentelemetry.io/docs/instrumentation/php/resources/
     // @todo: get commit hash from an environment variable and add this as an
     // additional attribute.
+    // @see https://www.drupal.org/project/drupal/issues/3379761
     $resource = ResourceInfoFactory::merge(ResourceInfo::create(Attributes::create([
       ResourceAttributes::SERVICE_NAMESPACE => 'Drupal',
       ResourceAttributes::SERVICE_NAME => $this->telemetryServiceName,
@@ -305,7 +283,8 @@ class PerformanceTestBase extends WebDriverTestBase {
           if (!isset($fcp_timestamp)) {
             // Tracing timestamps are microseconds since OS boot. However they
             // appear to start from a slightly different point from page
-            // timestamps, so apply an offset calculated from DOM content loaded.
+            // timestamps. Apply an offset calculated from DOM content loaded.
+            // @see https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
             $fcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
             $fcp_span = $tracer->spanBuilder('firstContentfulPaint')
               ->setStartTimestamp($timestamp)
@@ -316,8 +295,8 @@ class PerformanceTestBase extends WebDriverTestBase {
           }
         }
 
-        // There can be multiple largestContentfulPaint candidates, override
-        // when they're larger.
+        // There can be multiple largestContentfulPaint candidates, remember
+        // the largest one.
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate' && $message['params']['args']['data']['size'] > $lcp_size) {
           $lcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
           $lcp_size = $message['params']['args']['data']['size'];
