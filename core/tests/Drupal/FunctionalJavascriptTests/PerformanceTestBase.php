@@ -32,14 +32,14 @@ class PerformanceTestBase extends WebDriverTestBase {
   const NANOSECONDS_PER_SECOND = 1000_000_000;
 
   /**
-   * The number of nanoseconds in a second.
+   * The number of nanoseconds in a millisecond.
    *
    * @var int
    */
   const NANOSECONDS_PER_MILLISECOND = 1000_000;
 
   /**
-   * The number of nanoseconds in a second.
+   * The number of nanoseconds in a microsecond.
    *
    * @var int
    */
@@ -189,7 +189,7 @@ class PerformanceTestBase extends WebDriverTestBase {
   }
 
   /**
-   * Send metrics to OpenTelemetry.
+   * Sends metrics to OpenTelemetry.
    *
    * @param string|\Drupal\Core\Url $path
    *   The path as passed to static::drupalGet().

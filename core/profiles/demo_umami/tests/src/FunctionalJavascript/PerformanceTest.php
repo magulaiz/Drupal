@@ -43,7 +43,7 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log front page tracing data with a cold cache.
+   * Logs front page tracing data with a cold cache.
    *
    * @group OpenTelemetry
    */
@@ -60,7 +60,7 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log front page tracing data with a warm cache.
+   * Logs front page tracing data with a warm cache.
    *
    * @group OpenTelemetry
    */
@@ -75,7 +75,7 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log front page tracing data with a lukewarm cache.
+   * Logs front page tracing data with a lukewarm cache.
    *
    * Lukewarm here means that 'global' site caches are warm but anything
    * specific to the front page is cold.
@@ -94,7 +94,7 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log node page tracing data with a cold cache.
+   * Logs node page tracing data with a cold cache.
    *
    * @group OpenTelemetry
    */
@@ -111,7 +111,7 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log node page tracing data with a warm cache.
+   * Logs node page tracing data with a warm cache.
    *
    * @group OpenTelemetry
    */
@@ -127,7 +127,7 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log node/1 tracing data with a lukewarm cache.
+   * Logs node/1 tracing data with a lukewarm cache.
    *
    * Lukewarm here means that 'global' site caches are warm but anything
    * specific to the page is cold.
