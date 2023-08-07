@@ -9,19 +9,12 @@ use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\LocalTaskManager;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Utility\RequestGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -64,12 +57,8 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The route provider.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $pathProcessor
-   *   The inbound path processor.
-   * @param \Drupal\Core\Path\CurrentPathStack $currentPath
-   *   The current path.
-   * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
-   *   The dynamic router service.
+   * @param \Drupal\Core\Utility\RequestGenerator $requestGenerator
+   *   The request generator.
    */
   public function __construct(
     array $configuration,
@@ -81,9 +70,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     protected LocalTaskManager $localTaskManager,
     protected RouteProviderInterface $routeProvider,
     protected RequestStack $requestStack,
-    protected InboundPathProcessorInterface $pathProcessor,
-    protected CurrentPathStack $currentPath,
-    protected RequestMatcherInterface $router,
+    protected RequestGenerator $requestGenerator,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -102,9 +89,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       $container->get('plugin.manager.menu.local_task'),
       $container->get('router.route_provider'),
       $container->get('request_stack'),
-      $container->get('path_processor_manager'),
-      $container->get('path.current'),
-      $container->get('router.no_access_checks'),
+      $container->get('request_generator'),
     );
   }
 
@@ -176,7 +161,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     if ($base_route) {
       if ($base_route !== $route_name) {
         $path = $this->url_generator->getPathFromRoute($base_route, $this->routeMatch->getRawParameters()->all());
-        $route_request = $this->getRequestForPath($path);
+        $route_request = $this->requestGenerator->generateRequestForPath($path, []);
         $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route));
       }
       else {
@@ -184,37 +169,6 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       }
     }
     return $title;
-  }
-
-  /**
-   * Matches a path in the router.
-   *
-   * @param string $path
-   *   The request path with a leading slash.
-   *
-   * @return \Symfony\Component\HttpFoundation\Request
-   *   A populated request object or NULL if the path couldn't be matched.
-   */
-  private function getRequestForPath(string $path) {
-    $request = Request::create($path);
-    // Performance optimization: set a short accept header to reduce overhead in
-    // AcceptHeaderMatcher when matching the request.
-    $request->headers->set('Accept', 'text/html');
-    // Find the system path by resolving aliases, language prefix, etc.
-    $processed = $this->pathProcessor->processInbound($path, $request);
-    if (empty($processed)) {
-      // This resolves to the front page, which we already add.
-      return NULL;
-    }
-    $this->currentPath->setPath($processed, $request);
-    // Attempt to match this path to provide a fully built request.
-    try {
-      $request->attributes->add($this->router->matchRequest($request));
-      return $request;
-    }
-    catch (ParamNotConvertedException | ResourceNotFoundException | MethodNotAllowedException | AccessDeniedHttpException $e) {
-      return NULL;
-    }
   }
 
 }
