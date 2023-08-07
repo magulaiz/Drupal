@@ -9,10 +9,7 @@ use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
-use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -20,12 +17,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\RequestGenerator;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
  * Defines a class to build path-based breadcrumbs.

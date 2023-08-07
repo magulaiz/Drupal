@@ -12,6 +12,7 @@ use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Core\Utility\RequestGenerator;
 use Drupal\system\PathBasedBreadcrumbBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -76,18 +77,18 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   protected $pathProcessor;
 
   /**
-   * The mocked current path.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $currentPath;
-
-  /**
    * The mocked path matcher service.
    *
    * @var \Drupal\Core\Path\PathMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathMatcher;
+
+  /**
+   * The request generator service.
+   *
+   * @var \Drupal\Core\Utility\RequestGenerator|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $requestGenerator;
 
   /**
    * {@inheritdoc}
@@ -107,22 +108,18 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->accessManager = $this->createMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->titleResolver = $this->createMock('\Drupal\Core\Controller\TitleResolverInterface');
     $this->currentUser = $this->createMock('Drupal\Core\Session\AccountInterface');
-    $this->currentPath = $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->pathMatcher = $this->createMock(PathMatcherInterface::class);
+    $this->requestGenerator = $this->createMock(RequestGenerator::class);
 
     $this->builder = new TestPathBasedBreadcrumbBuilder(
       $this->context,
       $this->accessManager,
-      $this->requestMatcher,
-      $this->pathProcessor,
       $config_factory,
       $this->titleResolver,
       $this->currentUser,
-      $this->currentPath,
-      $this->pathMatcher
+      $this->pathMatcher,
+      $this->requestGenerator,
     );
 
     $this->builder->setStringTranslation($this->getStringTranslationStub());
@@ -174,7 +171,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the build method with two path elements.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithTwoPathElements() {
     $this->context->expects($this->once())
@@ -213,7 +209,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the build method with three path elements.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithThreePathElements() {
     $this->context->expects($this->once())
@@ -269,7 +264,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests that exceptions during request matching are caught.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    *
    * @dataProvider providerTestBuildWithException
    */
@@ -312,7 +306,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the build method with a non processed path.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithNonProcessedPath() {
     $this->context->expects($this->once())
@@ -349,7 +342,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the breadcrumb for a user path.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithUserPath() {
     $this->context->expects($this->once())
