@@ -125,18 +125,37 @@ class UserPermissionsForm extends FormBase {
 
     // Move the access content permission to the Node module if it is installed.
     // @todo Add an alter so that this section can be moved to the Node module.
-    if ($this->moduleHandler->moduleExists('node') && isset($permissions_by_provider['node'])) {
-      // Insert 'access content' before the 'view own unpublished content' key
-      // in order to maintain the UI even though the permission is provided by
-      // the system module.
-      $keys = array_keys($permissions_by_provider['node']);
-      $offset = (int) array_search('view own unpublished content', $keys);
-      $permissions_by_provider['node'] = array_merge(
-        array_slice($permissions_by_provider['node'], 0, $offset),
-        ['access content' => $permissions_by_provider['system']['access content']],
-        array_slice($permissions_by_provider['node'], $offset)
-      );
-      unset($permissions_by_provider['system']['access content']);
+    if ($this->moduleHandler->moduleExists('node')) {
+      // Insert 'access content' in node permissions. This maintains the UI even
+      // though the permission is provided by the system module.
+      if (isset($permissions_by_provider['system']['access content'])) {
+        // If the node permission 'view own unpublished content' is present,
+        // insert 'access content' before it.
+        if (isset($permissions_by_provider['node']['view own unpublished content'])) {
+          $keys = array_keys($permissions_by_provider['node']);
+          $offset = (int) array_search('view own unpublished content', $keys);
+          $permissions_by_provider['node'] = array_merge(
+            array_slice($permissions_by_provider['node'], 0, $offset),
+            ['access content' => $permissions_by_provider['system']['access content']],
+            array_slice($permissions_by_provider['node'], $offset)
+          );
+        }
+//        elseif (isset($permissions_by_provider['node'])){
+        else {
+
+            // If the list of node permissions is filtered so there's no 'view
+          // own unpublished content' key to position before, add the permission
+          // to the end of the node permissions list.
+          $permissions_by_provider['node']['access content'] = $permissions_by_provider['system']['access content'];
+          $permissions_by_provider['node']['access content']['provider'] = 'node';
+          ksort($permissions_by_provider);
+          unset($permissions_by_provider['system']['access content']);
+        }
+      }
+      else {
+        $stop = 'here';
+      }
+
     }
 
     return $permissions_by_provider;

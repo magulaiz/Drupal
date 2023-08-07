@@ -24,7 +24,18 @@ class PermissionsListFilterSubscriber implements EventSubscriberInterface {
    *   The permissions filter list event.
    */
   public function filterPermissions(PermissionsListFilterEvent $event):void {
-    $event->filter(fn(array $permission_data, string $permission_name) => in_array($permission_name, ['a', 'b', 'c']));
+    $test_case = \Drupal::state()->get('user_filtered_permissions_test.test_case');
+    switch($test_case) {
+      case 'no node permissions':
+        $event->filter(fn(array $permission_data, string $permission_name) => $permission_data['provider'] !== 'node');
+        break;
+      case 'no view own published content':
+        $event->filter(fn(array $permission_data, string $permission_name) => $permission_name !== 'view own unpublished content');
+        break;
+      default:
+        $event->filter(fn(array $permission_data, string $permission_name) => in_array($permission_name, ['a', 'b', 'c']));
+        break;
+    }
   }
 
 }
