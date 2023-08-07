@@ -15,6 +15,7 @@ use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -51,6 +52,8 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The url generator.
    * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver.
    * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
@@ -72,6 +75,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     array $configuration,
     $plugin_id,
     $plugin_definition,
+    protected UrlGeneratorInterface $url_generator,
     protected TitleResolverInterface $titleResolver,
     protected RouteMatchInterface $routeMatch,
     protected LocalTaskManager $localTaskManager,
@@ -92,6 +96,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('url_generator'),
       $container->get('title_resolver'),
       $container->get('current_route_match'),
       $container->get('plugin.manager.menu.local_task'),
@@ -170,7 +175,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     $title = NULL;
     if ($base_route) {
       if ($base_route !== $route_name) {
-        $path = \Drupal::service('url_generator')->getPathFromRoute($base_route, $this->routeMatch->getRawParameters()->all());
+        $path = $this->url_generator->getPathFromRoute($base_route, $this->routeMatch->getRawParameters()->all());
         $route_request = $this->getRequestForPath($path);
         $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route));
       }
