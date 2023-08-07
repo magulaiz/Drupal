@@ -74,7 +74,7 @@ class MenuAccessTest extends BrowserTestBase {
   /**
    * Test routes implementing _access_admin_menu_block_page.
    */
-  public function testSystemAdminMenuBlockAccessCheck() {
+  public function testSystemAdminMenuBlockAccessCheck(): void {
     // Create an admin user.
     $adminUser = $this->drupalCreateUser([], NULL, TRUE);
 
