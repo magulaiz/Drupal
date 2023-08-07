@@ -45,7 +45,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
    *   The url generator.
    * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver.
@@ -64,7 +64,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    protected UrlGeneratorInterface $url_generator,
+    protected UrlGeneratorInterface $urlGenerator,
     protected TitleResolverInterface $titleResolver,
     protected RouteMatchInterface $routeMatch,
     protected LocalTaskManager $localTaskManager,
@@ -160,7 +160,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     $title = NULL;
     if ($base_route) {
       if ($base_route !== $route_name) {
-        $path = $this->url_generator->getPathFromRoute($base_route, $this->routeMatch->getRawParameters()->all());
+        $path = $this->urlGenerator->getPathFromRoute($base_route, $this->routeMatch->getRawParameters()->all());
         $route_request = $this->requestGenerator->generateRequestForPath($path, []);
         $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route));
       }
