@@ -17,7 +17,7 @@ class MenuAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'menu_test'];
+  protected static $modules = ['block', 'filter', 'menu_test'];
 
   /**
    * {@inheritdoc}
@@ -69,6 +69,62 @@ class MenuAccessTest extends BrowserTestBase {
     ));
     $this->assertSession()->linkByHrefNotExists('foo/asdf/b');
     $this->assertSession()->linkByHrefNotExists('foo/asdf/c');
+  }
+
+  /**
+   * Test routes implementing _access_admin_menu_block_page.
+   */
+  public function testSystemAdminMenuBlockAccessCheck() {
+    // Create an admin user.
+    $adminUser = $this->drupalCreateUser([], NULL, TRUE);
+
+    // Create a user with 'administer menu' permission.
+    $menuAdmin = $this->drupalCreateUser([
+      'access administration pages',
+      'administer menu',
+    ]);
+
+    // Create a user with 'administer filters' permission.
+    $filterAdmin = $this->drupalCreateUser([
+      'access administration pages',
+      'administer filters',
+    ]);
+
+    // Create a user with 'access administration pages' permission.
+    $webUser = $this->drupalCreateUser([
+      'access administration pages',
+    ]);
+
+    // An admin user has access to all parent pages.
+    $this->drupalLogin($adminUser);
+    $this->drupalGet('admin/structure');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet('admin/people');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // This user has access to administer menus so the structure parent page
+    // should be accessible.
+    $this->drupalLogin($menuAdmin);
+    $this->drupalGet('admin/structure');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet('admin/people');
+    $this->assertSession()->statusCodeEquals(403);
+
+    // This user has access to administer filters so the config parent page
+    // should be accessible.
+    $this->drupalLogin($filterAdmin);
+    $this->drupalGet('admin/config');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet('admin/people');
+    $this->assertSession()->statusCodeEquals(403);
+
+    // This user doesn't have access to any of the child pages, so the parent
+    // pages should not be accessible.
+    $this->drupalLogin($webUser);
+    $this->drupalGet('admin/structure');
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalGet('admin/people');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }
