@@ -4,6 +4,12 @@ namespace Drupal\menu_ui;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Drupal\menu_ui\Form\MenuFilterForm;
 use Drupal\Core\Url;
 
 /**
@@ -15,6 +21,51 @@ use Drupal\Core\Url;
 class MenuListBuilder extends ConfigEntityListBuilder {
 
   /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $currentRequest;
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * Constructs a new MenuListBuilder object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
+   * @param \Symfony\Component\HttpFoundation\Request $current_request
+   *   The current request.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Request $current_request, FormBuilderInterface $form_builder) {
+    parent::__construct($entity_type, $storage);
+
+    $this->currentRequest = $current_request;
+    $this->formBuilder = $form_builder;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
+      $container->get('request_stack')->getCurrentRequest(),
+      $container->get('form_builder')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function getEntityIds() {
@@ -23,10 +74,16 @@ class MenuListBuilder extends ConfigEntityListBuilder {
       ->getQuery()
       ->sort('label', 'ASC');
 
+    $search = $this->currentRequest->query->get('search');
+    if ($search) {
+      $query->condition('label', $search, 'CONTAINS');
+    }
+
     // Only add the pager if a limit is specified.
     if ($this->limit) {
       $query->pager($this->limit);
     }
+
     return $query->execute();
   }
 
@@ -91,7 +148,9 @@ class MenuListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $build = parent::render();
+    $keys = $this->currentRequest->query->get('search');
+    $build['menu_filter_form'] = $this->formBuilder->getForm(MenuFilterForm::class, $keys);
+    $build += parent::render();
     $build['#attached']['library'][] = "menu_ui/drupal.menu_ui.adminforms";
     return $build;
   }
