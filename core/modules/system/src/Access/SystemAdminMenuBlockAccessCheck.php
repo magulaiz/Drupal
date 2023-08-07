@@ -8,6 +8,7 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Routing\Access\AccessInterface;
+use Drupal\Core\Routing\AccessAwareRouter;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -17,30 +18,16 @@ use Drupal\Core\Session\AccountInterface;
 class SystemAdminMenuBlockAccessCheck implements AccessInterface {
 
   /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The menu link tree service.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuLinkTree;
-
-  /**
    * Constructs a new SystemAdminMenuBlockAccessCheck.
    *
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access manager.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
    *   The menu link tree service.
+   * @param AccessAwareRouter $router
+   *   The router service.
    */
-  public function __construct(AccessManagerInterface $access_manager, MenuLinkTreeInterface $menu_link_tree) {
-    $this->accessManager = $access_manager;
-    $this->menuLinkTree = $menu_link_tree;
+  public function __construct(private readonly AccessManagerInterface $accessManager, private readonly MenuLinkTreeInterface $menuLinkTree, private readonly AccessAwareRouter $router) {
   }
 
   /**
@@ -79,7 +66,9 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     $tree = $this->menuLinkTree->load(NULL, $parameters);
 
     if (empty($tree)) {
-      return AccessResult::allowed();
+      $route = $this->router->getRouteCollection()->get($route_id);
+      return AccessResult::allowedIf(empty($route->getRequirement('_access_admin_menu_block_page')));
+
     }
 
     foreach ($tree as $menu_link_route_id => $element) {
