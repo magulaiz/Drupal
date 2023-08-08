@@ -501,6 +501,17 @@ function system_requirements($phase) {
     }
   }
 
+  if ($phase === 'runtime') {
+    if (!function_exists('fastcgi_finish_request') && !function_exists('litespeed_finish_request') && !ob_get_status()) {
+      $requirements['output_buffering'] = [
+        'title' => t('Output Buffering'),
+        'error_value' => t('Not enabled'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('<a href="https://www.php.net/manual/en/function.ob-start.php">Output buffering</a> is not enabled. This may degrade Drupal\'s performance. You can enable output buffering by default <a href="https://www.php.net/manual/en/outcontrol.configuration.php#ini.output-buffering">in your PHP settings</a>.'),
+      ];
+    }
+  }
+
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = [
@@ -516,8 +527,7 @@ function system_requirements($phase) {
     }
     else {
       // Make sure at least one supported database driver exists.
-      $drivers = drupal_detect_database_types();
-      if (empty($drivers)) {
+      if (empty(Database::getDriverList()->getInstallableList())) {
         $database_ok = FALSE;
         $pdo_message = t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href=":drupal-databases">Drupal supports</a>.', [
           ':drupal-databases' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
@@ -545,7 +555,7 @@ function system_requirements($phase) {
 
   if ($phase === 'runtime' || $phase === 'update') {
     // Database information.
-    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
+    $class = Database::getConnection()->getConnectionOptions()['namespace'] . '\\Install\\Tasks';
     /** @var \Drupal\Core\Database\Install\Tasks $tasks */
     $tasks = new $class();
     $requirements['database_system'] = [
@@ -1279,7 +1289,7 @@ function system_requirements($phase) {
       break;
 
     case 'mbstring.encoding_translation':
-      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
       break;
   }
 
@@ -1583,13 +1593,16 @@ function system_install() {
   $site->save(TRUE);
 
   // Populate the dummy query string added to all CSS and JavaScript files.
-  _drupal_flush_css_js();
+  \Drupal::service('asset.query_string')->reset();
 }
 
 /**
  * Implements hook_schema().
  */
 function system_schema() {
+  // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
+  // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
+  // @todo: Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
   $schema['sequences'] = [
     'description' => 'Stores IDs.',
     'fields' => [

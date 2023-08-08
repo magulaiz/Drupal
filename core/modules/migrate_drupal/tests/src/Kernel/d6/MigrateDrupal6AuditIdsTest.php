@@ -10,6 +10,8 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
+// cspell:ignore sourceid
+
 /**
  * Tests the migration auditor for ID conflicts.
  *
@@ -39,7 +41,6 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     $this->installSchema('forum', ['forum_index']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('search', ['search_dataset']);
-    $this->installSchema('system', ['sequences']);
     // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
     $this->installSchema('tracker', ['tracker_node', 'tracker_user']);
 

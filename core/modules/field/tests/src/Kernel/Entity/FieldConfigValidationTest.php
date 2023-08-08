@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field\Kernel\Entity;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests validation of field_config entities.
@@ -36,7 +37,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $dependencies['config'] = [];
     $this->entity->set('dependencies', $dependencies);
 
-    $this->assertValidationErrors(['This field requires a field storage.']);
+    $this->assertValidationErrors(['' => 'This field requires a field storage.']);
 
     // Things look sort-of like `field.storage.*.*` should fail validation
     // because they don't exist.
@@ -47,10 +48,42 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ];
     $this->entity->set('dependencies', $dependencies);
     $this->assertValidationErrors([
-      "The 'field.storage.fake' config does not exist.",
-      "The 'field.storage.' config does not exist.",
-      "The 'field.storage.user.' config does not exist.",
+      'dependencies.config.0' => "The 'field.storage.fake' config does not exist.",
+      'dependencies.config.1' => "The 'field.storage.' config does not exist.",
+      'dependencies.config.2' => "The 'field.storage.user.' config does not exist.",
     ]);
+  }
+
+  /**
+   * Tests validation of a field_config's default value.
+   */
+  public function testMultilineTextFieldDefaultValue(): void {
+    // First, create a field storage for which a complex default value exists.
+    $this->enableModules(['text']);
+    $text_field_storage_config = FieldStorageConfig::create([
+      'type' => 'text_with_summary',
+      'field_name' => 'novel',
+      'entity_type' => 'user',
+    ]);
+    $text_field_storage_config->save();
+
+    $this->entity = FieldConfig::create([
+      'field_storage' => $text_field_storage_config,
+      'bundle' => 'user',
+      'default_value' => [
+        0 => [
+          'value' => "Multi\nLine",
+          'summary' => '',
+          'format' => 'basic_html',
+        ],
+      ],
+      'dependencies' => [
+        'config' => [
+          $text_field_storage_config->getConfigDependencyName(),
+        ],
+      ],
+    ]);
+    $this->assertValidationErrors([]);
   }
 
 }

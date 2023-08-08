@@ -636,16 +636,6 @@ parameters:
 			path: lib/Drupal/Core/Render/MainContent/HtmlRenderer.php
 
 		-
-			message: "#^Variable \\$cid in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/RenderCache.php
-
-		-
-			message: "#^Variable \\$context in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Renderer.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Routing/MatcherDumper.php
@@ -791,11 +781,6 @@ parameters:
 			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateCustomBlockContentTranslationTest.php
 
 		-
-			message: "#^Variable \\$book_links in empty\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/book/book.module
-
-		-
 			message: "#^Variable \\$callable in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/book/src/BookExport.php
@@ -814,21 +799,6 @@ parameters:
 			message: "#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/book/src/Form/BookOutlineForm.php
-
-		-
-			message: "#^Function _add_ajax_listeners_to_plugin_inputs not found\\.$#"
-			count: 2
-			path: modules/ckeditor5/ckeditor5.module
-
-		-
-			message: "#^Function _add_attachments_to_editor_update_response not found\\.$#"
-			count: 2
-			path: modules/ckeditor5/ckeditor5.module
-
-		-
-			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
-			count: 2
-			path: modules/ckeditor5/ckeditor5.module
 
 		-
 			message: "#^Variable \\$ghs_config_classes in empty\\(\\) always exists and is always falsy\\.$#"
@@ -914,11 +884,6 @@ parameters:
 			message: "#^Variable \\$data might not be defined\\.$#"
 			count: 2
 			path: modules/config/src/Form/ConfigSingleImportForm.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/config/tests/src/Functional/ConfigInstallProfileUnmetDependenciesTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1461,11 +1426,6 @@ parameters:
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm has an unused parameter \\$language_manager\\.$#"
-			count: 1
-			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
-
-		-
 			message: "#^Method Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
@@ -1474,11 +1434,6 @@ parameters:
 			message: "#^Variable \\$uuid might not be defined\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
-
-		-
-			message: "#^@coversDefaultClass defined on class method testPendingRevisions\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1514,16 +1469,6 @@ parameters:
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Config\\:\\:fields\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/Config.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:processStubRow\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:updateEntity\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
 
 		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:fields\\(\\) should return array but return statement is missing\\.$#"
@@ -2041,36 +1986,6 @@ parameters:
 			path: modules/taxonomy/src/TermForm.php
 
 		-
-			message: "#^Cannot unset offset 'ancestors' on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/taxonomy/src/TermStorage.php
-
-		-
-			message: "#^Cannot unset offset 'treeChildren' on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/taxonomy/src/TermStorage.php
-
-		-
-			message: "#^Cannot unset offset 'treeParents' on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/taxonomy/src/TermStorage.php
-
-		-
-			message: "#^Cannot unset offset 'treeTerms' on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/taxonomy/src/TermStorage.php
-
-		-
-			message: "#^Cannot unset offset 'trees' on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/taxonomy/src/TermStorage.php
-
-		-
-			message: "#^Cannot unset offset 'vocabularyHierarchy…' on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/taxonomy/src/TermStorage.php
-
-		-
 			message: "#^Method Drupal\\\\taxonomy\\\\VocabularyForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/taxonomy/src/VocabularyForm.php
@@ -2531,16 +2446,6 @@ parameters:
 			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
 
 		-
-			message: "#^Offset 'display_id' on array\\{\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/AreaDisplayLinkTest.php
-
-		-
-			message: "#^Offset 'view_mode' on array\\{\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/AreaEntityTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
@@ -2681,11 +2586,6 @@ parameters:
 			path: modules/workspaces/src/WorkspacePublisher.php
 
 		-
-			message: "#^@coversDefaultClass defined on class method testWorkspaceSelection\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
 			message: "#^Variable \\$keyed_content might not be defined\\.$#"
 			count: 1
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
@@ -2711,16 +2611,6 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerTestBase.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Update/UpdatePathTestBase.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
@@ -2734,11 +2624,6 @@ parameters:
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/DrupalKernel/DrupalKernelTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2896,24 +2781,9 @@ parameters:
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
 
 		-
-			message: "#^@coversDefaultClass defined on class method testHtmlClass\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
-
-		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
-
-		-
-			message: "#^Class Drupal\\\\Driver\\\\Database\\\\corefake\\\\Install\\\\Tasks not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Class Drupal\\\\Driver\\\\Database\\\\fake\\\\Install\\\\Tasks not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
 
 		-
 			message: "#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"

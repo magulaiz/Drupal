@@ -195,7 +195,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
-      ->with('/test-page?ajax_page_state=drupal.settings%5B%5D&type=article');
+      ->with('/test-page?type=article');
     $this->currentPath->expects($this->once())
       ->method('setPath')
       ->with('/test-page', $request);
@@ -224,7 +224,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
-      ->with('test-page?ajax_page_state=drupal.settings%5B%5D&type=article');
+      ->with('/test-page?type=article');
     $this->currentPath->expects($this->once())
       ->method('setPath')
       ->with('/test-page');
@@ -428,7 +428,6 @@ class ViewAjaxControllerTest extends UnitTestCase {
    */
   protected function getCommands(ViewAjaxResponse $response) {
     $reflection_property = new \ReflectionProperty('Drupal\views\Ajax\ViewAjaxResponse', 'commands');
-    $reflection_property->setAccessible(TRUE);
     $commands = $reflection_property->getValue($response);
     return $commands;
   }

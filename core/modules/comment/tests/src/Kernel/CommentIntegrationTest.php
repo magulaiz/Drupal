@@ -42,7 +42,6 @@ class CommentIntegrationTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('comment');
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('system', ['sequences']);
 
     // Create a new 'comment' comment-type.
     CommentType::create([
@@ -59,7 +58,7 @@ class CommentIntegrationTest extends KernelTestBase {
    * @see CommentDefaultFormatter::calculateDependencies()
    */
   public function testViewMode() {
-    $mode = mb_strtolower($this->randomMachineName());
+    $mode = $this->randomMachineName();
     // Create a new comment view mode and a view display entity.
     EntityViewMode::create([
       'id' => "comment.$mode",
@@ -76,7 +75,7 @@ class CommentIntegrationTest extends KernelTestBase {
     FieldStorageConfig::create([
       'entity_type' => 'entity_test',
       'type' => 'comment',
-      'field_name' => $field_name = mb_strtolower($this->randomMachineName()),
+      'field_name' => $field_name = $this->randomMachineName(),
       'settings' => [
         'comment_type' => 'comment',
       ],

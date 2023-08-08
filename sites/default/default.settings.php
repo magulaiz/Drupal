@@ -222,6 +222,27 @@ $databases = [];
  *     'prefix' => '',
  *   ];
  * @endcode
+ *
+ * Sample Database configuration format for a driver that is extending another
+ * database driver.
+ * @code
+ *   $databases['default']['default'] = [
+ *     'driver' => 'my_driver',
+ *     'namespace' => 'Drupal\my_module\Driver\Database\my_driver',
+ *     'autoload' => 'modules/my_module/src/Driver/Database/my_driver/',
+ *     'database' => 'databasename',
+ *     'username' => 'sqlusername',
+ *     'password' => 'sqlpassword',
+ *     'host' => 'localhost',
+ *     'prefix' => '',
+ *     'dependencies' => [
+ *       'parent_module' => [
+ *         'namespace' => 'Drupal\parent_module',
+ *         'autoload' => 'core/modules/parent_module/src/',
+ *       ],
+ *     ],
+ *   ];
+ * @endcode
  */
 
 /**
@@ -559,6 +580,23 @@ $settings['update_free_access'] = FALSE;
  * directory tree.
  */
 # $settings['file_sa_core_2023_005_schemes'] = ['porcelain'];
+
+/**
+ * Configuration for phpinfo() admin status report.
+ *
+ * Drupal's admin UI includes a report at admin/reports/status/php which shows
+ * the output of phpinfo(). The full output can contain sensitive information
+ * so by default Drupal removes some sections.
+ *
+ * This behaviour can be configured by setting this variable to a different
+ * value corresponding to the flags parameter of phpinfo().
+ *
+ * If you need to expose more information in the report - for example to debug a
+ * problem - consider doing so temporarily.
+ *
+ * @see https://www.php.net/manual/function.phpinfo.php
+ */
+# $settings['sa_core_2023_004_phpinfo_flags'] = ~ (INFO_VARIABLES | INFO_ENVIRONMENT);
 
 /**
  * Private file path:
