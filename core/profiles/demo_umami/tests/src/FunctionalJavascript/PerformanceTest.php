@@ -50,7 +50,7 @@ class PerformanceTest extends PerformanceTestBase {
   public function testFrontPageColdCache() {
     $this->telemetryServiceName = FALSE;
     // @todo: Chromedriver doesn't collect tracing performance logs for the very
-    //   first request in a test, so warm it up.
+    // first request in a test, so warm it up.
     // @see https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
@@ -105,7 +105,7 @@ class PerformanceTest extends PerformanceTestBase {
   public function testNodePageColdCache() {
     $this->telemetryServiceName = FALSE;
     // @todo: Chromedriver doesn't collect tracing performance logs for the very
-    //   first request in a test, so warm it up.
+    // first request in a test, so warm it up.
     // @see https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
