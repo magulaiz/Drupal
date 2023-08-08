@@ -1,0 +1,21 @@
+{
+    "name": "drupal/checkboxes_filter",
+    "type": "drupal-module",
+    "description": "Provides the ability to filter checkboxes on the checkboxes field.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "George Anderson (geoanders)",
+            "homepage": "https://www.drupal.org/u/geoanders",
+            "role": "Maintainer"
+        }
+    ],
+    "homepage": "https://drupal.org/project/checkboxes_filter",
+    "support": {
+        "issues": "https://drupal.org/project/issues/checkboxes_filter",
+        "source": "https://git.drupalcode.org/project/checkboxes_filter"
+    },
+    "require": {
+        "drupal/core": "^8 || ^9"
+    }
+}
