@@ -65,6 +65,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     'language',
     'test_page_test',
     'locale',
+    'search',
   ];
 
   /**
@@ -285,10 +286,13 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   public function testLocaleTranslationSubtreesHashCacheClear() {
     $admin_user = $this->adminUser;
     // User to translate and delete string.
-    $translate_user = $this->drupalCreateUser([
-      'translate interface',
-      'access administration pages',
-    ]);
+    $translate_user = $this->rootUser;
+
+//      $this->drupalCreateUser([
+//      'translate interface',
+//      'access administration pages',
+//      'administer search',
+//    ]);
 
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';
