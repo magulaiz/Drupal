@@ -246,40 +246,37 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
     }
 
+    // Check if there are exposed filters for this view
+    $exposed_filters = [];
+    $exposed_required_filters = [];
+    foreach ($this->view->filter as $id => $handler) {
+      if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
+        if ($handler->options['expose']['required']) {
+          $exposed_required_filters[$handler->options['expose']['identifier']] = $id;
+        }
+        $exposed_filters[$handler->options['expose']['identifier']] = $id;
+      }
+    }
+
+    // If any required exposed filters loop through them to see if they
+    // have any input. If not don't auto process the form to prevent validation.
+    if (!empty($exposed_required_filters)) {
+      $form_values = $form_state->getUserInput();
+      foreach ($exposed_required_filters as $key => $required_filter) {
+        if (!$form_values || empty($form_values[$key])) {
+          $form_state->setAlwaysProcess(FALSE);
+          break;
+        }
+      }
+    }
+    $all_exposed = array_merge($exposed_sorts, $exposed_filters);
+
     if (!empty($this->options['reset_button'])) {
       $form['actions']['reset'] = [
         '#value' => $this->options['reset_button_label'],
         '#type' => 'submit',
         '#weight' => 10,
       ];
-
-      // Get an array of exposed filters and exposed required text filters,
-      // keyed by identifier option.
-      $exposed_filters = [];
-      $text_filter_plugin_ids = ['string', 'combine'];
-      $exposed_required_text_filters = [];
-      foreach ($this->view->filter as $id => $handler) {
-        if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
-          if ($handler->options['expose']['required'] && in_array($handler->options['plugin_id'], $text_filter_plugin_ids)) {
-            $exposed_required_text_filters[$handler->options['expose']['identifier']] = $id;
-          }
-          $exposed_filters[$handler->options['expose']['identifier']] = $id;
-        }
-      }
-
-      // If any required exposed text filters loop through them to see if they
-      // have any input. If not don't auto process the form.
-      if (!empty($exposed_required_text_filters)) {
-        // Prevent form validation if exposed text filter is not set.
-        $exposed_input = $this->view->getExposedInput();
-        foreach ($exposed_required_text_filters as $key => $required_filter) {
-          if (!$exposed_input || empty($exposed_input[$key])) {
-            $form_state->setAlwaysProcess(FALSE);
-            break;
-          }
-        }
-      }
-      $all_exposed = array_merge($exposed_sorts, $exposed_filters);
 
       // Set the access to FALSE if there is no exposed input.
       if (!array_intersect_key($all_exposed, $this->view->getExposedInput())) {
