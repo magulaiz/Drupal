@@ -16,7 +16,7 @@
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
 # Skip Drupal\Core\Template\Attribute deprecation while fixing up.
-%\\Drupal\\Core\\Template\\Attribute.* is deprecated in drupal:10\.1\.0 and is removed from drupal:11\.0\.0\. Use \\Drupal\\Component\\HtmlAttribute\\HtmlAttributeCollection instead\. See https:\/\/www\.drupal\.org\/node\/3070485%
+%\\Drupal\\Core\\Template\\Attribute.* is deprecated in drupal:10\.2\.0 and is removed from drupal:11\.0\.0\. Use \\Drupal\\Component\\HtmlAttribute\\HtmlAttributeCollection instead\. See https:\/\/www\.drupal\.org\/node\/3070485%
 
 # Drupal 11.
 %Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%

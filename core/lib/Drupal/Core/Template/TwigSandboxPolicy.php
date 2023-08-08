@@ -68,7 +68,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       ]);
       // BC layer to support earlier Attribute class.
       if (in_array('Drupal\Core\Template\Attribute', $allowed_classes) && !in_array(HtmlAttributeCollection::class, $allowed_classes)) {
-        @trigger_error('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeCollection instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
+        @trigger_error('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeCollection instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
         $allowed_classes[] = HtmlAttributeCollection::class;
       }
       // Flip the array so we can check using isset().
