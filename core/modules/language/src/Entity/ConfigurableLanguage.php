@@ -9,6 +9,8 @@ use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\ConfigurableLanguageInterface;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Defines the ConfigurableLanguage entity.
@@ -257,6 +259,16 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   public function setWeight($weight) {
     $this->weight = $weight;
     return $this;
+  }
+
+  public function isPseudoLanguage() {
+    $node = Node::create();
+    if (!in_array($node->language()->getId(), [LanguageInterface::LANGCODE_NOT_APPLICABLE, LanguageInterface::LANGCODE_NOT_SPECIFIED], TRUE)) {
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
   }
 
   /**
