@@ -6,6 +6,9 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Tests deprecated user module functions.
@@ -31,6 +34,14 @@ class LegacyUserTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
+
+    // Set up our session.
+    $request_stack = new RequestStack();
+    $request = new Request();
+    $session = new Session($this->container->get('session_manager'));
+    $request->setSession($session);
+    $request_stack->push($request);
+    $this->container->set('request_stack', $request_stack);
   }
 
   /**
