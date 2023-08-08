@@ -46,8 +46,7 @@ trait SchemaCheckTrait {
    *
    * @var \string[][][]
    */
-  protected static array $ignoredPropertyPaths = [
-  ];
+  protected static array $ignoredPropertyPaths = [];
 
   /**
    * Checks the TypedConfigManager has a valid schema for the configuration.
