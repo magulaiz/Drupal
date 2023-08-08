@@ -458,9 +458,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     $new_entity = EntityTest::create($data);
     $new_entity->save();
     $this->drupalGet('entity_test/manage/' . $new_entity->id() . '/edit');
-    $this->assertSession()->checkboxNotChecked('edit-field-foobar-0-status-1');
     $this->assertSession()->checkboxChecked('edit-field-foobar-0-status-2');
-    $this->assertSession()->fieldNotExists('edit-field-foobar-0-status-0');
+    $this->assertSession()->checkboxNotChecked('edit-field-foobar-0-status-0');
+    $this->assertSession()->fieldNotExists('edit-field-foobar-0-status-1');
 
     // @todo Check proper URL and form https://www.drupal.org/node/2458323
     $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());
@@ -521,6 +521,35 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='comment']");
     // Ensure a core field type shown.
     $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='boolean']");
+  }
+
+  /**
+   * Ensures that comment settings are not required.
+   */
+  public function testCommentSettingsNotRequired() {
+    $limited_user = $this->drupalCreateUser([
+      'administer entity_test fields',
+    ]);
+    $this->drupalLogin($limited_user);
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
+
+    // Change the comments to be displayed as hidden by default.
+    $edit = [
+      'default_value_input[comment][0][status]' => CommentItemInterface::HIDDEN,
+      'settings[anonymous]' => CommentInterface::ANONYMOUS_MAY_CONTACT,
+    ];
+    $this->submitForm($edit, 'Save settings');
+
+    // Ensure that the comment settings field is not required and can be saved
+    // with the default value.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('/entity_test/add');
+    $this->assertSession()->checkboxChecked('edit-comment-0-status-0');
+    $edit = [
+      "name[0][value]" => 'Comment test',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('entity_test 2 has been created.');
   }
 
 }

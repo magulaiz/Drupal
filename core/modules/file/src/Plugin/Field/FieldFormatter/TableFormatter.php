@@ -40,7 +40,7 @@ class TableFormatter extends DescriptionAwareFileFormatterBase {
               ],
             ],
           ],
-          ['data' => ByteSizeMarkup::create($file->getSize())],
+          ['data' => $file->getSize() !== NULL ? ByteSizeMarkup::create($file->getSize()) : $this->t('Unknown')],
         ];
       }
 
