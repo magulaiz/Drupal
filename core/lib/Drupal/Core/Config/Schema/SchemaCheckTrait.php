@@ -46,7 +46,41 @@ trait SchemaCheckTrait {
    *
    * @var \string[][][]
    */
-  protected static array $ignoredPropertyPaths = [];
+  protected static array $ignoredPropertyPaths = [
+    'core.entity_form_display.*.*.*' => [
+      'content.author' => [
+        "'type' is a required key.",
+      ],
+    ],
+    'core.entity_view_display.*.*.*' => [
+      'content.*' => [
+        "'label' is a required key.",
+        "'type' is a required key.",
+      ],
+    ],
+    'field.storage.*.*' => [
+      'settings' => [
+        "'allowed_formats' is a required key.",
+      ],
+    ],
+    'system.file' => [
+      '' => [
+        "'path' is a required key.",
+      ],
+    ],
+    'system.site' => [
+      '' => [
+        "'mail_notification' is a required key.",
+      ],
+    ],
+    'system.theme.global' => [
+      'features' => [
+        "'logo' is a required key.",
+        "'name' is a required key.",
+        "'slogan' is a required key.",
+      ],
+    ],
+  ];
 
   /**
    * Checks the TypedConfigManager has a valid schema for the configuration.
