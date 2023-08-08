@@ -121,6 +121,11 @@ config_test.system:
       type: string
       label: 'Foo'
     baz:
+      # This is not part of any real `config_test.system` config, it's used only for testing configuration system
+      # functionality.
+      # @see \Drupal\Tests\config\Functional\ConfigImportUITest::testImportDiff()
+      # @see \Drupal\KernelTests\Core\Config\ConfigOverrideTest::testConfOverride()
+      requiredKey: false
       type: string
       label: 'Baz'
     '404':
