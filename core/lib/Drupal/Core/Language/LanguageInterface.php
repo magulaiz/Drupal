@@ -155,4 +155,12 @@ interface LanguageInterface {
    */
   public function isLocked();
 
+  /**
+   * Returns whether this language is a pseudo language.
+   *
+   * @return bool
+   *   Whether this language is a pseudo language or not
+   */
+  public function isPseudoLanguage()
+
 }
