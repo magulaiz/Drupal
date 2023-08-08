@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Gives file upload progress data.
+ */
+
 session_start();
 $progress = [
   'message' => 'Starting upload...',

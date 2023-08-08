@@ -11,7 +11,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -301,8 +300,7 @@ class ManagedFile extends FormElement {
       }
 
       // Add the upload progress callback.
-//      $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress', ['key' => $upload_progress_key]);
-
+      // $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress', ['key' => $upload_progress_key]);.
       // Set a custom submit event so we can modify the upload progress
       // identifier element before the form gets submitted.
       $element['upload_button']['#ajax']['event'] = 'fileUpload';

@@ -971,17 +971,16 @@
     if (this.progress.message) {
       progressBar.setProgress(-1, this.progress.message);
     }
-    let timer = setInterval(function () {
+    const timer = setInterval(function () {
       $.ajax({
         type: 'POST',
-        data: {},
         url: Drupal.url('core/modules/file/session-upload-progress.php'),
         success: function (msg) {
           if (msg === 'null') {
             clearInterval(timer);
-            progressBar.setProgress(100, "Upload completed.");
+            progressBar.setProgress(100, 'Upload completed.');
           } else {
-            progressBar.setProgress(10, "something is there 2");
+            progressBar.setProgress(10, 'something is there 2');
           }
         }
       })
