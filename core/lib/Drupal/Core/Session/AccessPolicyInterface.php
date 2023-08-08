@@ -60,7 +60,7 @@ interface AccessPolicyInterface {
    *
    * A good example use case of alterPermissions would be to flat out revoke a
    * banned list of permissions outside of office hours. This would make it so
-   * no-one can perform any destructive actions while the helpdesk is offline.
+   * no-one can perform any destructive actions while the help desk is offline.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to alter the permissions.
