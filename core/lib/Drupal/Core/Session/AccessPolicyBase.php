@@ -24,7 +24,7 @@ abstract class AccessPolicyBase implements AccessPolicyInterface {
   /**
    * {@inheritdoc}
    */
-  public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {}
+  public function alterPermissions(AccountInterface $account, RefinableCalculatedPermissionsInterface $calculated_permissions): void {}
 
   /**
    * {@inheritdoc}
