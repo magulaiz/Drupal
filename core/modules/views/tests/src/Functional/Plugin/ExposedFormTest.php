@@ -6,9 +6,9 @@ use Drupal\Component\Utility\Html;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
-use Drupal\views\Entity\View;
 
 /**
  * Tests exposed forms functionality.
@@ -24,7 +24,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager', 'test_remember_selected'];
+  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_form_required_text_filter', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager', 'test_remember_selected'];
 
   /**
    * Modules to enable.
@@ -342,6 +342,23 @@ class ExposedFormTest extends ViewTestBase {
     // is applied.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
     $this->assertSession()->pageTextNotContains($on_demand_text);
+  }
+
+  /**
+   * Tests the input required exposed form type with a text type filter.
+   */
+  public function testInputRequiredTextFilter() {
+    $this->drupalGet('test_exposed_form_required_text_filter');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->helperButtonHasLabel('edit-submit-test-exposed-form-required-text-filter', 'Apply');
+
+    // Ensure that no results are displayed by default when no input is
+    // provided.
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-row')]");
+
+    // Ensure that no error element is shown.
+    $this->assertSession()->elementNotExists('css', '.messages--error');
+    $this->assertFalse($this->getSession()->getPage()->findField('title')->hasClass('error'));
   }
 
   /**
