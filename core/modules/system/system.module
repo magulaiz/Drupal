@@ -325,7 +325,7 @@ function system_theme_suggestions_maintenance_page(array $variables) {
 
   // Dead databases will show error messages so supplying this template will
   // allow themers to override the page and the content completely.
-  $offline = defined('MAINTENANCE_MODE');
+  $offline = Drupal::service('maintenance_mode')->isEnabled();
   try {
     \Drupal::service('path.matcher')->isFrontPage();
   }
@@ -384,6 +384,42 @@ function template_preprocess_entity_add_list(&$variables) {
       '#markup' => $bundle_info['description'],
     ];
   }
+}
+
+/**
+ * Prepares variables for authorize.php operation report templates.
+ *
+ * This report displays the results of an operation run via authorize.php.
+ *
+ * Default template: authorize-report.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - messages: An array of result messages.
+ */
+function template_preprocess_authorize_report(&$variables) {
+  $messages = [];
+  if (!empty($variables['messages'])) {
+    foreach ($variables['messages'] as $heading => $logs) {
+      $items = [];
+      foreach ($logs as $number => $log_message) {
+        if ($number === '#abort') {
+          continue;
+        }
+        $class = 'authorize-results__' . ($log_message['success'] ? 'success' : 'failure');
+        $items[] = [
+          '#wrapper_attributes' => ['class' => [$class]],
+          '#markup' => $log_message['message'],
+        ];
+      }
+      $messages[] = [
+        '#theme' => 'item_list',
+        '#items' => $items,
+        '#title' => $heading,
+      ];
+    }
+  }
+  $variables['messages'] = $messages;
 }
 
 /**
@@ -754,7 +790,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   /** @var \Drupal\Core\Asset\LibraryDependencyResolver $library_dependency_resolver */
   $library_dependency_resolver = \Drupal::service('library.dependency_resolver');
   if (isset($settings['ajaxPageState']) || in_array('core/drupal.ajax', $library_dependency_resolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()))) {
-    if (!defined('MAINTENANCE_MODE')) {
+    if (!\Drupal::service('maintenance_mode')->isEnabled()) {
       // The theme token is only validated when the theme requested is not the
       // default, so don't generate it unless necessary.
       // @see \Drupal\Core\Theme\AjaxBasePageNegotiator::determineActiveTheme()

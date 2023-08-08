@@ -4,6 +4,7 @@ namespace Drupal\system\Element;
 
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Render\Element\StatusReport;
+use Drupal\Core\Site\MaintenanceMode;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
@@ -99,7 +100,7 @@ class StatusReportPage extends RenderElement {
       if (isset($requirement['severity'])) {
         $severity = $severities[(int) $requirement['severity']];
       }
-      elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
+      elseif (MaintenanceMode::getMode() === MaintenanceMode::MODE['install']) {
         $severity = $severities[REQUIREMENT_OK];
       }
 

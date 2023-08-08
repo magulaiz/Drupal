@@ -4,6 +4,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
@@ -40,11 +41,18 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *   The state keyvalue collection to use.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
+   *   Maintenance mode instance.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, PermissionHandlerInterface $permission_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, PermissionHandlerInterface $permission_handler, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     parent::__construct($config_factory);
+    // @ToDo: Remove state service injection before drupal:11.0.0.
     $this->state = $state;
     $this->permissionHandler = $permission_handler;
+    if ($this->maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
+    }
   }
 
   /**
@@ -54,7 +62,8 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('state'),
-      $container->get('user.permissions')
+      $container->get('user.permissions'),
+      $container->get('maintenance_mode')
     );
   }
 
@@ -82,7 +91,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
     $form['maintenance_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Put site into maintenance mode'),
-      '#default_value' => $this->state->get('system.maintenance_mode'),
+      '#default_value' => $this->maintenanceMode->isEnabled(),
       '#description' => $this->t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', ['@permission-label' => $permission_label, ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString(), ':user-login' => Url::fromRoute('user.login')->toString()]),
     ];
     $form['maintenance_mode_message'] = [
@@ -102,7 +111,12 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
       ->set('message', $form_state->getValue('maintenance_mode_message'))
       ->save();
 
-    $this->state->set('system.maintenance_mode', $form_state->getValue('maintenance_mode'));
+    if ($form_state->getValue('maintenance_mode')) {
+      $this->maintenanceMode->enable();
+    }
+    else {
+      $this->maintenanceMode->disable();
+    }
     parent::submitForm($form, $form_state);
   }
 

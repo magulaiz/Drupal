@@ -203,18 +203,16 @@ function update_authorize_update_batch_finished($success, $results) {
       $success = FALSE;
     }
   }
-  $offline = \Drupal::state()->get('system.maintenance_mode');
+  $offline = \Drupal::service('maintenance_mode')->isEnabled();
   $session = \Drupal::request()->getSession();
-  // Unset the variable since it is no longer needed.
-  $maintenance_mode = $session->remove('maintenance_mode');
   if ($success) {
     // Now that the update completed, we need to clear the available update data
     // and recompute our status, so prevent show bogus results.
     _update_authorize_clear_update_status();
 
     // Take the site out of maintenance mode if it was previously that way.
-    if ($offline && $maintenance_mode === FALSE) {
-      \Drupal::state()->set('system.maintenance_mode', FALSE);
+    if ($offline) {
+      Drupal::service('maintenance_mode')->disable();
       $page_message = [
         'message' => t('Update was completed successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',
@@ -288,14 +286,12 @@ function update_authorize_install_batch_finished($success, $results) {
       $success = FALSE;
     }
   }
-  $offline = \Drupal::state()->get('system.maintenance_mode');
+  $offline = \Drupal::service('maintenance_mode')->isEnabled();
   $session = \Drupal::request()->getSession();
-  // Unset the variable since it is no longer needed.
-  $maintenance_mode = $session->remove('maintenance_mode');
   if ($success) {
     // Take the site out of maintenance mode if it was previously that way.
-    if ($offline && $maintenance_mode === FALSE) {
-      \Drupal::state()->set('system.maintenance_mode', FALSE);
+    if ($offline) {
+      \Drupal::service('maintenance_mode')->disable();
       $page_message = [
         'message' => t('Files were added successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',

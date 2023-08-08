@@ -520,9 +520,10 @@ function drupal_flush_all_caches($kernel = NULL) {
   // Re-initialize the maintenance theme, if the current request attempted to
   // use it. Unlike regular usages of this function, the installer and update
   // scripts need to flush all caches during GET requests/page building.
-  if (function_exists('_drupal_maintenance_theme')) {
+  $maintenance_mode = \Drupal::service('maintenance_mode');
+  if ($maintenance_mode->isEnabled()) {
     \Drupal::theme()->resetActiveTheme();
-    drupal_maintenance_theme();
+    $maintenance_mode->setTheme();
   }
 }
 

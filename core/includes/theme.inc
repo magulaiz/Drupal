@@ -1252,7 +1252,7 @@ function _template_preprocess_default_variables() {
     'content_attributes' => [],
     'title_prefix' => [],
     'title_suffix' => [],
-    'db_is_active' => !defined('MAINTENANCE_MODE'),
+    'db_is_active' => !\Drupal::service('maintenance_mode')->isEnabled(),
     'is_admin' => FALSE,
     'logged_in' => FALSE,
   ];
@@ -2041,7 +2041,7 @@ function drupal_common_theme() {
     ],
     'authorize_report' => [
       'variables' => ['messages' => [], 'attributes' => []],
-      'includes' => ['core/includes/theme.maintenance.inc'],
+      'includes' => ['core/modules/system/system.module'],
       'template' => 'authorize-report',
     ],
     'pager' => [

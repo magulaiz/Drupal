@@ -22,6 +22,7 @@
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Site\MaintenanceMode;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +43,7 @@ $autoloader = require_once 'autoload.php';
  * such as css/js preprocessing and translation, and solves some theming issues.
  * The flag is checked in other places in Drupal code (not just authorize.php).
  */
-const MAINTENANCE_MODE = 'update';
+MaintenanceMode::setMode(MaintenanceMode::MODE['update']);
 
 /**
  * Determines if the current user is allowed to run authorize.php.
@@ -91,7 +92,7 @@ catch (HttpExceptionInterface $e) {
 \Drupal::moduleHandler()->load('user');
 
 // Initialize the maintenance theme for this administrative script.
-drupal_maintenance_theme();
+\Drupal::service('maintenance_mode')->setTheme();
 
 $content = [];
 $show_messages = TRUE;

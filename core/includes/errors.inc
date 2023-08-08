@@ -117,7 +117,9 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {
-  if (defined('MAINTENANCE_MODE')) {
+  /** @var \Drupal\Core\Site\MaintenanceMode $maintenance_mode */
+  $maintenance_mode = \Drupal::service('maintenance_mode');
+  if ($maintenance_mode->isEnabled()) {
     return TRUE;
   }
   $error_level = _drupal_get_error_level();

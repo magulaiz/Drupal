@@ -20,6 +20,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\Site\MaintenanceMode;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
@@ -236,7 +237,7 @@ function user_validate_name($name) {
  */
 function user_role_permissions(array $roles) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement beyond loading the roles and calling \Drupal\user\Entity\Role::getPermissions(). See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+  if (MaintenanceMode::getMode() === MaintenanceMode::MODE['update']) {
     return _user_role_permissions_update($roles);
   }
   $entities = Role::loadMultiple($roles);

@@ -13,6 +13,7 @@ use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -51,10 +52,12 @@ class BigPipeResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcess
    *   The module handler service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
+   *   The maintenance mode service.
    */
-  public function __construct(AttachmentsResponseProcessorInterface $html_response_attachments_processor, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(AttachmentsResponseProcessorInterface $html_response_attachments_processor, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, ?MaintenanceModeInterface $maintenanceMode = NULL) {
     $this->htmlResponseAttachmentsProcessor = $html_response_attachments_processor;
-    parent::__construct($asset_resolver, $config_factory, $css_collection_renderer, $js_collection_renderer, $request_stack, $renderer, $module_handler, $language_manager);
+    parent::__construct($asset_resolver, $config_factory, $css_collection_renderer, $js_collection_renderer, $request_stack, $renderer, $module_handler, $language_manager, $maintenanceMode);
   }
 
   /**

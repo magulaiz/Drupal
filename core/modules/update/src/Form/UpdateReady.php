@@ -6,6 +6,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,12 +58,18 @@ class UpdateReady extends FormBase {
    *   The state key value store.
    * @param string $site_path
    *   The site path.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
+   *   The maintenance mode service.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
     $this->sitePath = $site_path;
+    if ($this->maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
+    }
   }
 
   /**
@@ -80,7 +87,8 @@ class UpdateReady extends FormBase {
       $container->get('update.root'),
       $container->get('module_handler'),
       $container->get('state'),
-      $container->getParameter('site.path')
+      $container->getParameter('site.path'),
+      $container->get('maintenance_mode')
     );
   }
 
@@ -119,10 +127,8 @@ class UpdateReady extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $session = $this->getRequest()->getSession();
-    // Store maintenance_mode setting so we can restore it when done.
-    $session->set('maintenance_mode', $this->state->get('system.maintenance_mode'));
-    if ($form_state->getValue('maintenance_mode') == TRUE) {
-      $this->state->set('system.maintenance_mode', TRUE);
+    if ($form_state->getValue('maintenance_mode') === TRUE) {
+      $this->maintenanceMode->enable();
     }
 
     $projects = $session->remove('update_manager_update_projects');

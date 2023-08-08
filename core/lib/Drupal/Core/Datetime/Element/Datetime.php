@@ -31,7 +31,7 @@ class Datetime extends DateElementBase {
     $date_format = '';
     $time_format = '';
     // Date formats cannot be loaded during install or update.
-    if (!defined('MAINTENANCE_MODE')) {
+    if (!\Drupal::service('maintenance_mode')->isEnabled()) {
       if ($date_format_entity = DateFormat::load('html_date')) {
         /** @var \Drupal\Core\Datetime\DateFormatInterface $date_format_entity */
         $date_format = $date_format_entity->getPattern();

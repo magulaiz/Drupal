@@ -128,8 +128,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         // - on AJAX requests.
         // - on Iframe uploads.
         // - on the maintenance mode settings page.
-        if ($route_match->getRouteName() != 'system.site_maintenance_mode') {
-          $show_message = $route_match->getRouteName() != 'system.site_maintenance_mode' &&
+        if ($route_match->getRouteName() !== 'system.site_maintenance_mode') {
+          $show_message = $route_match->getRouteName() !== 'system.site_maintenance_mode' &&
             !$event->getRequest()->isXmlHttpRequest() &&
             $event->getRequest()->get('ajax_iframe_upload', FALSE) === FALSE;
 
@@ -160,7 +160,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       $event->setResponse($response);
       return;
     }
-    drupal_maintenance_theme();
+    $this->maintenanceMode->setTheme();
     $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $this->maintenanceMode->getSiteMaintenanceMessage()], $this->t('Site under maintenance'), 'maintenance_page');
     $response->setStatusCode(503);
     // Calling RequestEvent::setResponse() also stops propagation of the event.
