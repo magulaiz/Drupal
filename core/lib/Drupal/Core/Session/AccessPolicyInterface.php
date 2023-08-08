@@ -49,10 +49,12 @@ interface AccessPolicyInterface {
   /**
    * Alter the permissions after all access policies have finished building them.
    *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account for which to alter the permissions.
    * @param \Drupal\Core\Session\RefinableCalculatedPermissionsInterface $calculated_permissions
    *   The completely built calculated permissions.
    */
-  public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void;
+  public function alterPermissions(AccountInterface $account, RefinableCalculatedPermissionsInterface $calculated_permissions): void;
 
   /**
    * Gets the persistent cache contexts for a given scope.

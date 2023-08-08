@@ -437,8 +437,8 @@ class BarAlterAccessPolicy extends AccessPolicyBase {
     return $scope === 'bar' || $scope === 'anything';
   }
 
-  public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {
-    parent::alterPermissions($calculated_permissions);
+  public function alterPermissions(AccountInterface $account, RefinableCalculatedPermissionsInterface $calculated_permissions): void {
+    parent::alterPermissions($account, $calculated_permissions);
 
     foreach ($calculated_permissions->getItemsByScope('bar') as $item) {
       $permissions = $item->getPermissions();
@@ -483,8 +483,8 @@ class AlwaysAltersAccessPolicy extends AccessPolicyBase {
     return TRUE;
   }
 
-  public function alterPermissions(RefinableCalculatedPermissionsInterface $calculated_permissions): void {
-    parent::alterPermissions($calculated_permissions);
+  public function alterPermissions(AccountInterface $account, RefinableCalculatedPermissionsInterface $calculated_permissions): void {
+    parent::alterPermissions($account, $calculated_permissions);
     $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 2));
   }
 

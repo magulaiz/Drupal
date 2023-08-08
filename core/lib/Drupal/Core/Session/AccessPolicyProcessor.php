@@ -123,7 +123,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
           continue;
         }
 
-        $access_policy->alterPermissions($calculated_permissions);
+        $access_policy->alterPermissions($account, $calculated_permissions);
         if (!$this->validateScope($scope, $calculated_permissions)) {
           throw new AccessPolicyScopeException(sprintf('The access policy "%s" altered permissions in a scope other than "%s".', get_class($access_policy), $scope));
         }
