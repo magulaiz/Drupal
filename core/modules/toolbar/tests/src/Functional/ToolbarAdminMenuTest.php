@@ -288,11 +288,11 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // User to translate and delete string.
     $translate_user = $this->rootUser;
 
-//      $this->drupalCreateUser([
-//      'translate interface',
-//      'access administration pages',
-//      'administer search',
-//    ]);
+    $this->drupalCreateUser([
+      'translate interface',
+      'access administration pages',
+      'administer search',
+    ]);
 
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';

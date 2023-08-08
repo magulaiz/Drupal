@@ -73,7 +73,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       return AccessResult::allowed();
     }
 
-    foreach ($tree as $menu_link_route_id => $element) {
+    foreach ($tree as $element) {
       $url = $element->link->getUrlObject();
       if (!$this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $account)) {
         continue;
