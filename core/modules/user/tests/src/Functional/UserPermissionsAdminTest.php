@@ -67,11 +67,10 @@ class UserPermissionsAdminTest extends BrowserTestBase {
   public function testFilterPermissionsEvent() {
     \Drupal::service('module_installer')->install(['user_permissions_test', 'node']);
     $this->drupalCreateContentType(['type' => 'page']);
-    $this->resetAll();
-    $this->rebuildContainer();
     $this->drupalLogin($this->drupalCreateUser([
       'administer permissions',
     ]));
+
     // Test UserPermissionsForm.
     $this->drupalGet('admin/people/permissions');
     $items = array_map(fn($item) => $item->getAttribute('for'),
@@ -135,9 +134,6 @@ class UserPermissionsAdminTest extends BrowserTestBase {
 
     // Enable a module that filters all but permissions a, b, c.
     \Drupal::service('module_installer')->install(['user_filtered_permissions_test']);
-    $this->resetAll();
-    $this->rebuildContainer();
-
     $this->drupalGet('admin/people/permissions');
     $items = array_map(fn($item) => $item->getAttribute('for'),
       $this->getSession()->getPage()->findAll('css', 'tbody label[for^="edit-anonymous"], tbody label[for^="edit-authenticated"]'));
@@ -180,8 +176,6 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people/permissions');
 
     $rows = $this->getSession()->getPage()->findAll('css', 'tbody tr[data-drupal-selector]');
-    $this->resetAll();
-    $this->rebuildContainer();
     $node_permissions_index = -1;
     $system_permissions_index = -1;
     $access_content_index = -1;
@@ -217,8 +211,6 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people/permissions');
 
     $rows = $this->getSession()->getPage()->findAll('css', 'tbody tr[data-drupal-selector]');
-    $this->resetAll();
-    $this->rebuildContainer();
     $node_permissions_index = -1;
     $system_permissions_index = -1;
     $access_content_index = -1;
