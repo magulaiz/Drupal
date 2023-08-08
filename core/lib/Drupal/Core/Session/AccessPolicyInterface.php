@@ -47,7 +47,20 @@ interface AccessPolicyInterface {
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface;
 
   /**
-   * Alter the permissions after all access policies have finished building them.
+   * Alter the permissions after all policies have finished building them.
+   *
+   * This should only be used to revoke permissions. If you wish to add
+   * permissions, it is advised to write another access policy that uses the
+   * calculatePermissions method instead.
+   *
+   * Keep in mind that there are many ways to alter access policy results.
+   * Because each access policy itself is a service, the best way to get rid of
+   * a specific access policy's permissions as a whole, is by simply removing
+   * said access policy in your module's service provider.
+   *
+   * A good example use case of alterPermissions would be to flat out revoke a
+   * banned list of permissions outside of office hours. This would make it so
+   * no-one can perform any destructive actions while the helpdesk is offline.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to alter the permissions.
