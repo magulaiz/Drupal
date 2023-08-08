@@ -154,6 +154,8 @@ config_object:
   type: mapping
   mapping:
     _core:
+      # This only exists for merging configuration; it's not required.
+      requiredKey: false
       type: _core_config_info
     langcode:
       type: langcode
@@ -357,6 +359,8 @@ config_entity:
       sequence:
         type: '[%parent.%parent.%type].third_party.[%key]'
     _core:
+      # This only exists for merging configuration; it's not required.
+      requiredKey: false
       type: _core_config_info
 
 block.settings.*:
