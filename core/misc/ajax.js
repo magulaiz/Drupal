@@ -971,12 +971,28 @@
     if (this.progress.message) {
       progressBar.setProgress(-1, this.progress.message);
     }
-    if (this.progress.url) {
-      progressBar.startMonitoring(
-        this.progress.url,
-        this.progress.interval || 1500,
-      );
-    }
+    let timer = setInterval(function () {
+      $.ajax({
+        type: 'POST',
+        data: {},
+        url: Drupal.url('core/modules/file/session-upload-progress.php'),
+        success: function (msg) {
+          if (msg === 'null') {
+            clearInterval(timer);
+            progressBar.setProgress(100, "Upload completed.");
+          } else {
+            progressBar.setProgress(10, "something is there 2");
+          }
+        }
+      })
+    }, 1500);
+
+    // if (this.progress.url) {
+    //   progressBar.startMonitoring(
+    //     this.progress.url,
+    //     this.progress.interval || 1500,
+    //   );
+    // }
     this.progress.element = $(
       Drupal.theme('ajaxProgressBar', progressBar.element),
     );
