@@ -975,7 +975,7 @@
       $.ajax({
         type: 'POST',
         url: Drupal.url('core/modules/file/session-upload-progress.php'),
-        success: function (msg) {
+        success: (msg) => {
           if (msg === 'null') {
             clearInterval(timer);
             progressBar.setProgress(100, 'Upload completed.');
@@ -983,7 +983,7 @@
             progressBar.setProgress(10, 'something is there 2');
           }
         }
-      })
+      });
     }, 1500);
 
     // if (this.progress.url) {
