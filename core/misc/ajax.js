@@ -982,7 +982,7 @@
           } else {
             progressBar.setProgress(10, 'something is there 2');
           }
-        }
+        },
       });
     }, 1500);
 
