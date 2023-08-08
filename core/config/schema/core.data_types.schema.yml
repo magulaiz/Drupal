@@ -258,6 +258,9 @@ theme_settings:
           type: boolean
           label: 'Use default'
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension
+      # point.
+      requiredKey: false
       type: sequence
       label: 'Third party settings'
       sequence:

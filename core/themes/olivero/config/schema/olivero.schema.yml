@@ -5,6 +5,9 @@ olivero.settings:
   label: 'olivero settings'
   mapping:
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension
+      # point.
+      requiredKey: false
       type: mapping
       label: 'Third party settings'
       mapping:
