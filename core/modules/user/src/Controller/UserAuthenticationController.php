@@ -159,7 +159,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $serializer,
       $formats,
       $container->get('logger.factory')->get('user'),
-      $container->get('user.user_session_handler')
+      $container->get('user.session_handler')
     );
   }
 

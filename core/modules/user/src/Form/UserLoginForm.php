@@ -98,7 +98,7 @@ class UserLoginForm extends FormBase {
       $container->get('user.auth'),
       $container->get('renderer'),
       $container->get('bare_html_page_renderer'),
-      $container->get('user.user_session_handler')
+      $container->get('user.session_handler')
     );
   }
 

@@ -113,7 +113,7 @@ class UserController extends ControllerBase {
       $container->get('logger.factory')->get('user'),
       $container->get('flood'),
       $container->get('datetime.time'),
-      $container->get('user.user_session_handler'),
+      $container->get('user.session_handler')
     );
   }
 

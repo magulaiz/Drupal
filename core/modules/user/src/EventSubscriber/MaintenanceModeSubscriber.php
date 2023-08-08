@@ -52,7 +52,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     $this->account = $account;
     if (!$userSessionHandler) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $userSessionHandler = \Drupal::service('user.user_session_handler');
+      $userSessionHandler = \Drupal::service('user.session_handler');
     }
     $this->userSessionHandler = $userSessionHandler;
   }

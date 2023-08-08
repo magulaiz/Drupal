@@ -51,7 +51,7 @@ class RegisterForm extends AccountForm {
       $container->get('language_manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
-      $container->get('user.user_session_handler')
+      $container->get('user.session_handler')
     );
   }
 
