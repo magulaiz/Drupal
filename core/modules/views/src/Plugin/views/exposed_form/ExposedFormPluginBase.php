@@ -251,7 +251,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     $exposed_required_filters = [];
     foreach ($this->view->filter as $id => $handler) {
       if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
-        if ($handler->options['expose']['required']) {
+        if ($handler->options['expose']['required'] && $handler->options['plugin_id'] !== 'boolean') {
           $exposed_required_filters[$handler->options['expose']['identifier']] = $id;
         }
         $exposed_filters[$handler->options['expose']['identifier']] = $id;
