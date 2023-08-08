@@ -161,6 +161,6 @@ interface LanguageInterface {
    * @return bool
    *   Whether this language is a pseudo language or not
    */
-  public function isPseudoLanguage()
+  public function isPseudoLanguage();
 
 }
