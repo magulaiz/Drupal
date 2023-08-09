@@ -30,7 +30,8 @@ class RequestGenerator {
     protected InboundPathProcessorInterface $pathProcessor,
     protected CurrentPathStack $currentPath,
     protected RequestMatcherInterface $router,
-  ) {}
+  ) {
+  }
 
   /**
    * Generates a request by matching a path in the router.
@@ -40,13 +41,14 @@ class RequestGenerator {
    * @param array $exclude
    *   An array of paths or system paths to skip.
    *
-   * @return \Symfony\Component\HttpFoundation\Request
+   * @return \Symfony\Component\HttpFoundation\Request|null
    *   A populated request object or NULL if the path couldn't be matched.
    */
-  public function generateRequestForPath($path, array $exclude) {
+  public function generateRequestForPath(string $path, array $exclude): ?Request {
     if (!empty($exclude[$path])) {
       return NULL;
     }
+
     $request = Request::create($path);
     // Performance optimization: set a short accept header to reduce overhead in
     // AcceptHeaderMatcher when matching the request.
@@ -58,6 +60,7 @@ class RequestGenerator {
       return NULL;
     }
     $this->currentPath->setPath($processed, $request);
+
     // Attempt to match this path to provide a fully built request.
     try {
       $request->attributes->add($this->router->matchRequest($request));

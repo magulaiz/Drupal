@@ -24,21 +24,8 @@ use Drupal\Core\Utility\RequestGenerator;
  * @see \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
  */
 class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+
   use StringTranslationTrait;
-
-  /**
-   * The router request context.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  protected $context;
-
-  /**
-   * The access check service.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
 
   /**
    * Site config object.
@@ -48,51 +35,33 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $config;
 
   /**
-   * The title resolver.
-   *
-   * @var \Drupal\Core\Controller\TitleResolverInterface
-   */
-  protected $titleResolver;
-
-  /**
-   * The current user object.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The patch matcher service.
-   *
-   * @var \Drupal\Core\Path\PathMatcherInterface
-   */
-  protected $pathMatcher;
-
-  /**
    * Constructs the PathBasedBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Routing\RequestContext $context
    *   The router request context.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access check service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user object.
-   * @param \Drupal\Core\Path\PathMatcherInterface|null $path_matcher
+   * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
    *   The path matcher service.
    * @param \Drupal\Core\Utility\RequestGenerator $requestGenerator
    *   The request generator.
    */
-  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, PathMatcherInterface $path_matcher = NULL, protected RequestGenerator $requestGenerator,) {
-    $this->context = $context;
-    $this->accessManager = $access_manager;
+  public function __construct(
+    protected RequestContext $context,
+    protected AccessManagerInterface $accessManager,
+    ConfigFactoryInterface $config_factory,
+    protected TitleResolverInterface $titleResolver,
+    protected AccountInterface $currentUser,
+    protected PathMatcherInterface $pathMatcher,
+    protected RequestGenerator $requestGenerator,
+  ) {
     $this->config = $config_factory->get('system.site');
-    $this->titleResolver = $title_resolver;
-    $this->currentUser = $current_user;
-    $this->pathMatcher = $path_matcher ?: \Drupal::service('path.matcher');
   }
 
   /**
