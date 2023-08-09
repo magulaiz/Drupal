@@ -10,10 +10,12 @@ $progress = [
   'message' => 'Starting upload...',
   'percentage' => -1,
 ];
-$key = ini_get("session.upload_progress.prefix") . $_POST[ini_get("session.upload_progress.name")];
-$status = $_SESSION[$key];
-if (isset($status['bytes_processed']) && !empty($status['content_length'])) {
-  $progress['percentage'] = round(100 * $status['bytes_processed'] / $status['content_length']);
+$key = ini_get("session.upload_progress.prefix") . $_POST['file_id'];
+if (!empty($_SESSION[$key])) {
+  $current = $_SESSION[$key]["bytes_processed"];
+  $total = $_SESSION[$key]["content_length"];
+  echo $current < $total ? ceil($current / $total * 100) : 100;
 }
-header('Content-Type: application/json');
-echo(json_encode($progress));
+else {
+  echo 100;
+}
