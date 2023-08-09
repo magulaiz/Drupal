@@ -87,7 +87,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    *
    * @dataProvider providerTestContextualizeTitle
    */
-  public function testContextualizeTitle(string $theme, bool $contextualize_title_enabled, string $non_contextualized_title, string $contextualized_title) {
+  public function testContextualizeTitle(string $theme, bool $contextualize_title_enabled, string $non_contextualized_title, string $contextualized_title): void {
     if ($theme !== $this->defaultTheme) {
       $system_theme_config = $this->container->get('config.factory')
         ->getEditable('system.theme');
@@ -138,7 +138,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    *
    * @dataProvider providerTestContextualizeTitleOnNodeOperationPages
    */
-  public function testContextualizeTitleOnNodeOperationPages($node_title) {
+  public function testContextualizeTitleOnNodeOperationPages($node_title): void {
     $settings = [
       'type' => 'article',
       'title' => $node_title,

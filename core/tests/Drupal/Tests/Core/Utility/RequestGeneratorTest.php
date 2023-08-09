@@ -104,7 +104,7 @@ class RequestGeneratorTest extends UnitTestCase {
    * @dataProvider providerTestGenerateRequestForPath
    * @covers ::generateRequestForPath
    */
-  public function testGenerateRequestForPath($path, $exclude, $methods_called, $request_generated) {
+  public function testGenerateRequestForPath($path, $exclude, $methods_called, $request_generated): void {
     $route = new Route($path);
     $this->pathProcessor->processInbound($path, Argument::type(Request::class))->willReturnArgument();
     $this->requestMatcher->matchRequest(Argument::type(Request::class))->will(function ($arguments) use ($route, $path) {
@@ -145,7 +145,7 @@ class RequestGeneratorTest extends UnitTestCase {
    * @dataProvider providerTestGenerateRequestForPathWithException
    * @covers ::generateRequestForPath
    */
-  public function testGenerateRequestForPathWithException($exception_class, $exception_argument) {
+  public function testGenerateRequestForPathWithException($exception_class, $exception_argument): void {
     $path = '/example';
     $exclude = [];
     $this->pathProcessor->processInbound($path, Argument::type(Request::class))->willReturnArgument();

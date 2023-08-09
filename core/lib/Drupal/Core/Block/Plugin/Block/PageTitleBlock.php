@@ -154,7 +154,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    * @return array|string|\Stringable|null
    *   The title based on base route.
    */
-  private function getTitleBasedOnBaseRoute() {
+  private function getTitleBasedOnBaseRoute(): array|string|null|\Stringable {
     $route_name = $this->routeMatch->getRouteName();
     $base_route = $this->localTaskManager->getBaseRoute($route_name);
     $title = NULL;
