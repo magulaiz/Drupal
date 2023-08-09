@@ -121,8 +121,8 @@ class DefaultConfigTest extends KernelTestBase {
       $modules_to_install = array_merge($modules_to_install, $dependency->getDependencies('module'));
       $themes_to_install = array_merge($themes_to_install, $dependency->getDependencies('theme'));
     }
-    // Remove core, standard and demo_umami because they cannot be installed.
-    $modules_to_install = array_diff(array_unique($modules_to_install), ['core', 'demo_umami', 'standard']);
+    // Remove core and standard because they cannot be installed.
+    $modules_to_install = array_diff(array_unique($modules_to_install), ['core', 'standard']);
     $this->container->get('module_installer')->install($modules_to_install);
     $this->container->get('theme_installer')->install(array_unique($themes_to_install));
 
@@ -225,11 +225,10 @@ class DefaultConfigTest extends KernelTestBase {
       else {
         $data = $default_config_storage->read($config_name);
         $dependency = new ConfigEntityDependency($config_name, $data);
-        if ($dependency->hasDependency('module', 'standard') || $dependency->hasDependency('module', 'demo_umami')) {
+        if ($dependency->hasDependency('module', 'standard')) {
           // Skip configuration with a dependency on the standard profile. Such
           // configuration has probably been removed from the standard profile
           // and needs its own test.
-          // @todo Remove demo_umami after https://www.drupal.org/i/3270445
           continue;
         }
         $info = $this->container->get("extension.list.$type")->getExtensionInfo($extension);
