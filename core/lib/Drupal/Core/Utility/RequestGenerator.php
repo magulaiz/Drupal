@@ -62,7 +62,7 @@ class RequestGenerator {
       $request->attributes->add($this->router->matchRequest($request));
       return $request;
     }
-    catch (ResourceNotFoundException | MethodNotAllowedException | AccessDeniedHttpException $e) {
+    catch (ParamNotConvertedException | ResourceNotFoundException | MethodNotAllowedException | AccessDeniedHttpException $e) {
       return NULL;
     }
   }
