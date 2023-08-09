@@ -7,8 +7,6 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityViewModeInterface;
-use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 
 /**
@@ -122,29 +120,11 @@ function system_post_update_remove_asset_query_string() {
 }
 
 /**
- * Update description for view modes.
+ * Rebuild the menu tree to account for newly transitive menu items.
  */
-function system_post_update_add_description_to_entity_view_mode(array &$sandbox = NULL): void {
-  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-
-  $callback = function (EntityViewModeInterface $entity_view_mode) {
-    return $entity_view_mode->get('description') === NULL;
-  };
-
-  $config_entity_updater->update($sandbox, 'entity_view_mode', $callback);
-}
-
-/**
- * Update description for form modes.
- */
-function system_post_update_add_description_to_entity_form_mode(array &$sandbox = NULL): void {
-  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-
-  $callback = function (EntityFormModeInterface $entity_form_mode) {
-    return $entity_form_mode->get('description') === NULL;
-  };
-
-  $config_entity_updater->update($sandbox, 'entity_form_mode', $callback);
+function system_post_update_account_for_newly_transitive_menu_items(&$sandbox) {
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_link_manager->rebuild();
 }
 
 /**

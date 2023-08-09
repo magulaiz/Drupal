@@ -37,6 +37,7 @@ trait MenuLinkFieldDefinitions {
     'options' => [],
     'expanded' => 0,
     'enabled' => 1,
+    'transitive' => 0,
     // The name of the module providing this link.
     'provider' => '',
     'metadata' => [],

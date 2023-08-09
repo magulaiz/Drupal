@@ -20,6 +20,7 @@ user.admin_index:
   description: 'Configure user accounts.'
   position: left
   weight: -20
+  transitive: true
 entity.user.admin_form:
   title: 'Account settings'
   parent: user.admin_index

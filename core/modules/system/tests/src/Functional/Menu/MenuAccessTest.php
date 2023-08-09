@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the route access checks on menu links.
@@ -25,12 +26,33 @@ class MenuAccessTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * A test user with permission to access administration pages.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $testUser;
+
+  /**
+   * A test role with permission to access administration pages.
+   *
+   * @var \Drupal\user\RoleInterface
+   */
+  protected $testRole;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('system_menu_block:admin', [
+      'expand_all_items' => TRUE,
+    ]);
+    $this->testRole = Role::load($this->drupalCreateRole(['access administration pages']));
+    $this->testUser = $this->drupalCreateUser([], 'editor');
+    $this->testUser->addRole($this->testRole->id());
+    $this->testUser->save();
   }
 
   /**
@@ -69,6 +91,30 @@ class MenuAccessTest extends BrowserTestBase {
     ));
     $this->assertSession()->linkByHrefNotExists('foo/asdf/b');
     $this->assertSession()->linkByHrefNotExists('foo/asdf/c');
+  }
+
+  /**
+   * Tests access to the admin menu block page when it has no child items.
+   *
+   * @see \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage()
+   */
+  public function testAdminMenuBlockPage() {
+    // Test as the root user with full access.
+    $this->drupalLogin($this->rootUser);
+    $this->assertSession()->linkExists('System');
+    $this->assertSession()->linkExists('Basic site settings');
+    // Test as the test user with limited access.
+    $this->drupalLogin($this->testUser);
+    $this->assertSession()->linkNotExists('System');
+    $this->assertSession()->linkNotExists('Basic site settings');
+    $this->assertSession()->linkNotExists('Structure');
+    $this->assertSession()->linkNotExists('Block layout');
+    // Grant the test user access to administer blocks.
+    $this->testRole->grantPermission('administer blocks')->save();
+    // Reload the page and check that the newly accessible links are now visible.
+    $this->getSession()->reload();
+    $this->assertSession()->linkExists('Structure');
+    $this->assertSession()->linkExists('Block layout');
   }
 
 }
