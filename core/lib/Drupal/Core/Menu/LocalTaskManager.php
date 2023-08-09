@@ -364,7 +364,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     return $active;
   }
 
-  public function getBaseRoute($route_name) {
+  public function getBaseRouteName(string $route_name): ?string {
     $data = $this->doGetLocalTasksForRoute($route_name);
     if (!$data || empty($data['base_routes'])) {
       return NULL;
