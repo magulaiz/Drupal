@@ -962,7 +962,7 @@
    * Sets the progress bar progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
-   const key = document.getElementsByClassName('file-progress')[0].value;
+    const key = document.getElementsByClassName('file-progress')[0].value;
     const progressBar = new Drupal.ProgressBar(
       `ajax-progress-${this.element.id}`,
       $.noop,
@@ -975,7 +975,7 @@
     const timer = setTimeout(function () {
       $.ajax({
         type: 'POST',
-        data: {file_id: key},
+        data: { file_id: key },
         url: Drupal.url('core/modules/file/session-upload-progress.php'),
         success: (msg) => {
           if (msg === 'null') {

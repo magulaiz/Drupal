@@ -6,10 +6,6 @@
  */
 
 session_start();
-$progress = [
-  'message' => 'Starting upload...',
-  'percentage' => -1,
-];
 $key = ini_get("session.upload_progress.prefix") . $_POST['file_id'];
 if (!empty($_SESSION[$key])) {
   $current = $_SESSION[$key]["bytes_processed"];
