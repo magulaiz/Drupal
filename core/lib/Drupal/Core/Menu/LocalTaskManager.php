@@ -364,6 +364,13 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     return $active;
   }
 
+  /**
+   * @todo.
+   *
+   * @param string $route_name
+   *
+   * @return string|null
+   */
   public function getBaseRouteName(string $route_name): ?string {
     $data = $this->doGetLocalTasksForRoute($route_name);
     if (!$data || empty($data['base_routes'])) {
@@ -373,6 +380,13 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     return reset($data['base_routes']);
   }
 
+  /**
+   * @todo.
+   *
+   * @param string $route_name
+   *
+   * @return array
+   */
   protected function doGetLocalTasksForRoute(string $route_name): array {
     if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
       $data = $cache->data;
