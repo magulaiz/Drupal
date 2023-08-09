@@ -1100,8 +1100,9 @@
               // If target is not a focusable element look for triggering
               // element via classes or first tabbable element to focus on.
               if (target && !isFocusable(target)) {
-                const prevParentClasslist = elementParents[n+1].classList;
-                const classListString = Array.from(prevParentClasslist).join('.');
+                const prevParentClasslist = elementParents[n + 1].classList;
+                const classListString =
+                  Array.from(prevParentClasslist).join('.');
                 const selector = `.${classListString}`;
                 if (target.querySelector(selector)) {
                   target = target.querySelector(selector);
