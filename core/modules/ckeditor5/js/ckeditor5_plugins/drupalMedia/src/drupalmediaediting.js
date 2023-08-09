@@ -32,6 +32,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     this.attrs = {
       drupalMediaAlt: 'alt',
+      drupalMediaTitle: 'title',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
     };
@@ -40,6 +41,7 @@ export default class DrupalMediaEditing extends Plugin {
       'drupalElementStyleViewMode',
       'drupalMediaEntityType',
       'drupalMediaAlt',
+      'drupalMediaTitle',
     ];
   }
 
