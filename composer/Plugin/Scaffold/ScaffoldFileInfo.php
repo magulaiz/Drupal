@@ -37,12 +37,12 @@ class ScaffoldFileInfo {
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $destination
    *   The full and relative paths to the destination file and the package
    *   defining it.
-   * @param \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface $op
+   * @param \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface $operation
    *   Operations object that will handle scaffolding operations.
    */
-  public function __construct(ScaffoldFilePath $destination, OperationInterface $op) {
+  public function __construct(ScaffoldFilePath $destination, OperationInterface $operation) {
     $this->destination = $destination;
-    $this->op = $op;
+    $this->op = $operation;
   }
 
   /**
