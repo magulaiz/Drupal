@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Core\Utility;
 
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Utility\RequestGenerator;
 use Drupal\Tests\UnitTestCase;
@@ -10,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -23,71 +26,73 @@ class RequestGeneratorTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Utility\RequestGenerator
    */
-  protected $requestGenerator;
+  protected RequestGenerator $requestGenerator;
 
   /**
    * The mocked path processor.
    *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
    */
-  protected $pathProcessor;
+  protected InboundPathProcessorInterface $pathProcessor;
 
   /**
    * The mocked current path.
    *
-   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Path\CurrentPathStack
    */
-  protected $currentPath;
+  protected CurrentPathStack $currentPath;
 
   /**
    * The request matching mock object.
    *
-   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface
    */
-  protected $requestMatcher;
+  protected RequestMatcherInterface $requestMatcher;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->pathProcessor = $this->createMock('\Drupal\Core\PathProcessor\InboundPathProcessorInterface');
-    $this->currentPath = $this->createMock('Drupal\Core\Path\CurrentPathStack');
-    $this->requestMatcher = $this->createMock('\Symfony\Component\Routing\Matcher\RequestMatcherInterface');
+    parent::setUp();
+
+    $this->pathProcessor = $this->createMock(InboundPathProcessorInterface::class);
+    $this->currentPath = $this->createMock(CurrentPathStack::class);
+    $this->requestMatcher = $this->createMock(RequestMatcherInterface::class);
     $this->requestGenerator = new RequestGenerator(
       $this->pathProcessor,
       $this->currentPath,
       $this->requestMatcher,
     );
-    parent::setUp();
   }
 
   /**
    * Data provider for testGenerateRequestForPath().
    *
-   * @return array
+   * @return \Generator
    *   The test cases.
    */
-  public function providerTestGenerateRequestForPath() {
+  public function providerTestGenerateRequestForPath(): \Generator {
     $path = '/any/path';
-    return [
-      "request for a path with no paths to skip" => [
-        $path,
-        [],
-        ['processInbound' => 1, 'matchRequest' => 1],
-        TRUE,
-      ],
-      "request for a path which needs to be skipped " => [
-        $path,
-        [$path => TRUE],
-        ['processInbound' => 0, 'matchRequest' => 0],
-        FALSE,
-      ],
-      "request for a path with other path which needs to be skipped" => [
-        $path,
-        ['/other/path' => TRUE],
-        ['processInbound' => 1, 'matchRequest' => 1],
-        TRUE,
-      ],
+
+    yield 'request for a path with no paths to skip' => [
+      $path,
+      [],
+      ['processInbound' => 1, 'matchRequest' => 1],
+      TRUE,
+    ];
+
+    yield 'request for a path which needs to be skipped' => [
+      $path,
+      [$path => TRUE],
+      ['processInbound' => 0, 'matchRequest' => 0],
+      FALSE,
+    ];
+
+    yield 'request for a path with other path which needs to be skipped' => [
+      $path,
+      ['/other/path' => TRUE],
+      ['processInbound' => 1, 'matchRequest' => 1],
+      TRUE,
     ];
   }
 
@@ -130,11 +135,9 @@ class RequestGeneratorTest extends UnitTestCase {
    *   The test cases.
    */
   public function providerTestGenerateRequestForPathWithException() {
-    return [
-      'ResourceNotFoundException' => [ResourceNotFoundException::class, ''],
-      'MethodNotAllowedException' => [MethodNotAllowedException::class, []],
-      'AccessDeniedHttpException' => [AccessDeniedHttpException::class, ''],
-    ];
+    yield 'ResourceNotFoundException' => [ResourceNotFoundException::class, ''];
+    yield 'MethodNotAllowedException' => [MethodNotAllowedException::class, []];
+    yield 'AccessDeniedHttpException' => [AccessDeniedHttpException::class, ''];
   }
 
   /**
