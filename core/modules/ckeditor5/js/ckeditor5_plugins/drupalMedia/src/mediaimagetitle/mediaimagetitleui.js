@@ -60,10 +60,9 @@ export default class MediaImageTitleUi extends Plugin {
     editor.ui.componentFactory.add('mediaImageTitle', (locale) => {
       const command = editor.commands.get('mediaImageTitle');
       const view = new ButtonView(locale);
-
       view.set({
         label: Drupal.t('Set image title text'),
-        icon: icons.lowVision,
+        icon: icons.pencil,
         tooltip: true,
       });
 
