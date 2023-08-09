@@ -170,7 +170,7 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // If there is no implementation, log an error and return an empty string.
+    // If there's no implementation, log an error and return an empty string.
     if (!isset($info)) {
       // Only log a message if we #theme was a string. By default, all forms set
       // #theme to an array containing the form ID and don't implement that as a
