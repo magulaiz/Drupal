@@ -110,7 +110,13 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->currentUser = $this->createMock('Drupal\Core\Session\AccountInterface');
 
     $this->pathMatcher = $this->createMock(PathMatcherInterface::class);
-    $this->requestGenerator = $this->createMock(RequestGenerator::class);
+    $this->requestGenerator = new RequestGenerator(
+      $this->pathProcessor,
+      $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
+        ->disableOriginalConstructor()
+        ->getMock(),
+      $this->requestMatcher
+    );
 
     $this->builder = new TestPathBasedBreadcrumbBuilder(
       $this->context,
