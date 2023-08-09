@@ -57,7 +57,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create a content type, with underscores.
-    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name = $this->randomMachineName(8) . '_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->type = $type->id();
 
@@ -113,13 +113,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Create a test entity reference field.
     $field_name = 'test_entity_ref_field';
-    $edit = [
-      'new_storage_type' => 'field_ui:entity_reference:node',
-      'label' => 'Test Entity Reference Field',
-      'field_name' => $field_name,
-    ];
-    $this->drupalGet($bundle_path . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->fieldUIAddNewField($bundle_path, $field_name, 'Test Entity Reference Field', 'field_ui:entity_reference:node', [], [], FALSE);
 
     // Set to unlimited.
     $edit = [
@@ -309,7 +303,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {
-      $vid = mb_strtolower($this->randomMachineName());
+      $vid = $this->randomMachineName();
       $vocabularies[$i] = Vocabulary::create([
         'name' => $this->randomString(),
         'vid' => $vid,
@@ -380,7 +374,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
     // Generate a random field name, must be only lowercase characters.
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
 
     $storage_edit = $field_edit = [];
     $storage_edit['settings[target_type]'] = $target_type;
