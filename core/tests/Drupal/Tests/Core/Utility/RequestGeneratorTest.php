@@ -7,6 +7,8 @@ use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Utility\RequestGenerator;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -33,21 +35,21 @@ class RequestGeneratorTest extends UnitTestCase {
    *
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
    */
-  protected InboundPathProcessorInterface $pathProcessor;
+  protected InboundPathProcessorInterface|ObjectProphecy $pathProcessor;
 
   /**
    * The mocked current path.
    *
    * @var \Drupal\Core\Path\CurrentPathStack
    */
-  protected CurrentPathStack $currentPath;
+  protected CurrentPathStack|ObjectProphecy $currentPath;
 
   /**
    * The request matching mock object.
    *
    * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface
    */
-  protected RequestMatcherInterface $requestMatcher;
+  protected RequestMatcherInterface|ObjectProphecy $requestMatcher;
 
   /**
    * {@inheritdoc}
@@ -55,13 +57,13 @@ class RequestGeneratorTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->pathProcessor = $this->createMock(InboundPathProcessorInterface::class);
-    $this->currentPath = $this->createMock(CurrentPathStack::class);
-    $this->requestMatcher = $this->createMock(RequestMatcherInterface::class);
+    $this->pathProcessor = $this->prophesize(InboundPathProcessorInterface::class);
+    $this->currentPath = $this->prophesize(CurrentPathStack::class);
+    $this->requestMatcher = $this->prophesize(RequestMatcherInterface::class);
     $this->requestGenerator = new RequestGenerator(
-      $this->pathProcessor,
-      $this->currentPath,
-      $this->requestMatcher,
+      $this->pathProcessor->reveal(),
+      $this->currentPath->reveal(),
+      $this->requestMatcher->reveal(),
     );
   }
 
@@ -104,20 +106,17 @@ class RequestGeneratorTest extends UnitTestCase {
    */
   public function testGenerateRequestForPath($path, $exclude, $methods_called, $request_generated) {
     $route = new Route($path);
-    $this->pathProcessor->expects($this->exactly($methods_called['processInbound']))
-      ->method('processInbound')
-      ->willReturn($path);
-    $this->requestMatcher->expects($this->exactly($methods_called['matchRequest']))
-      ->method('matchRequest')
-      ->willReturnCallback(function (Request $request) use ($route, $path) {
-        if ($request->getPathInfo() == $path) {
-          return [
-            RouteObjectInterface::ROUTE_NAME => 'User Example',
-            RouteObjectInterface::ROUTE_OBJECT => $route,
-            '_raw_variables' => new InputBag([]),
-          ];
-        }
-      });
+    $this->pathProcessor->processInbound($path, Argument::type(Request::class))->willReturnArgument();
+    $this->requestMatcher->matchRequest(Argument::type(Request::class))->will(function ($arguments) use ($route, $path) {
+      [$request] = $arguments;
+      if ($request->getPathInfo() == $path) {
+        return [
+          RouteObjectInterface::ROUTE_NAME => 'User Example',
+          RouteObjectInterface::ROUTE_OBJECT => $route,
+          '_raw_variables' => new InputBag([]),
+        ];
+      }
+    });
     $request = $this->requestGenerator->generateRequestForPath($path, $exclude);
     if ($request_generated) {
       $this->assertNotNull($request);
@@ -149,12 +148,8 @@ class RequestGeneratorTest extends UnitTestCase {
   public function testGenerateRequestForPathWithException($exception_class, $exception_argument) {
     $path = '/example';
     $exclude = [];
-    $this->pathProcessor->expects($this->any())
-      ->method('processInbound')
-      ->willReturn($path);
-    $this->requestMatcher->expects($this->once())
-      ->method('matchRequest')
-      ->will($this->throwException(new $exception_class($exception_argument)));
+    $this->pathProcessor->processInbound($path, Argument::type(Request::class))->willReturnArgument();
+    $this->requestMatcher->matchRequest(Argument::type(Request::class))->willThrow(new $exception_class($exception_argument));
     $request = $this->requestGenerator->generateRequestForPath($path, $exclude);
     $this->assertNull($request);
   }
