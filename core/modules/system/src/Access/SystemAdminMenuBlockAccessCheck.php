@@ -70,7 +70,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       if ($route) {
         return AccessResult::allowedIf(empty($route->getRequirement('_access_admin_menu_block_page')));
       }
-      return AccessResult::allowed();
+      return AccessResult::neutral();
     }
 
     foreach ($tree as $element) {
