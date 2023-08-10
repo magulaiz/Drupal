@@ -138,16 +138,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function label() {
-    if (!$label = $this->get('label')) {
-      $label = $this->id();
-    }
-    return $label;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     if (empty($plugin_id)) {
       return FALSE;
