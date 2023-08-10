@@ -426,7 +426,7 @@ function field_ui_form_config_translation_form_alter(&$form, FormStateInterface 
       $field_type = $field_type_manager->getDefinition($definition->getType());
 
       $item['#title'] = $definition->getLabel();
-      $item['#description'] = t("Field %name, type: @type", [
+      $item['#description'] = t("Field: %name, type: @type", [
         '%name' => $component_name,
         '@type' => $field_type['label'],
       ]);
