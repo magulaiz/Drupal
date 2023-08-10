@@ -8,6 +8,7 @@ use Drupal\views\AddContextualLinks;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a page controller to execute and render a view.
