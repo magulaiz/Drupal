@@ -365,7 +365,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   }
 
   /**
-   * @todo.
+   * Gets the name of base route for the given route.
    *
    * @param string $route_name
    *   The route name.
@@ -383,16 +383,16 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   }
 
   /**
-   * @todo.
+   * Gets the local task data for the given route.
    *
    * @param string $route_name
    *   The route name.
    *
    * @return array
    *   The local task data with the following keys:
-   *   - base_routes: @todo.
-   *   - children: @todo.
-   *   - parents: @todo.
+   *   - base_routes: Base routes of the given route.
+   *   - children: Child routes of the given route.
+   *   - parents: Parent routes for the given route.
    */
   protected function doGetLocalTasksForRoute(string $route_name): array {
     if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
