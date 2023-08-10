@@ -205,7 +205,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     // Logo and favicon previews preparation.
-    $app_root = \Drupal::service('app.root');
+    $app_root = \Drupal::root();
     $logo_url = theme_get_setting('logo.url', $theme);
     $logo_preview = '';
     if (is_file($app_root . $logo_url)) {
