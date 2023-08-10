@@ -80,7 +80,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
     $this->user = $user;
-    $this->addContextualLinks  = $add_contextual_links;
+    $this->addContextualLinks = $add_contextual_links;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

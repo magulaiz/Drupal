@@ -182,14 +182,3 @@ class ViewPageControllerTest extends UnitTestCase {
   }
 
 }
-
-// @todo https://www.drupal.org/node/2571679 replace
-//   views_add_contextual_links().
-namespace Drupal\views\Routing;
-
-if (!function_exists('views_add_contextual_links')) {
-
-  function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
-  }
-
-}

@@ -28,7 +28,7 @@ class ViewPageController {
    *   The add contextual links service.
    */
   public function __construct(AddContextualLinks $add_contextual_links) {
-    $this->addContextualLinks  = $add_contextual_links;
+    $this->addContextualLinks = $add_contextual_links;
   }
 
   /**

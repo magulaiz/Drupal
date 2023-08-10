@@ -55,6 +55,13 @@ class ViewsBlockTest extends UnitTestCase {
   protected $displayHandler;
 
   /**
+   * The add contextual links service.
+   *
+   * @var \Drupal\views\AddContextualLinks
+   */
+  protected $addContextualLinks;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
