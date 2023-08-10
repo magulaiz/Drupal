@@ -96,6 +96,20 @@ function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
 }
 
 /**
+ * Add labels to views which don't have one.
+ */
+function views_post_update_add_missing_labels(&$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'view', function (ViewEntityInterface $view): bool {
+      if (!$view->get('label')) {
+        $view->set('label', $view->id());
+        return TRUE;
+      }
+      return FALSE;
+    });
+}
+
+/**
  * Remove the skip_cache settings.
  */
 function views_post_update_remove_skip_cache_setting(): void {
