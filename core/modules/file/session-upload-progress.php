@@ -11,7 +11,7 @@ if (!empty($_SESSION[$key])) {
   $current = $_SESSION[$key]["bytes_processed"];
   $total = $_SESSION[$key]["content_length"];
   $progress['percentage'] = $current < $total ? ceil($current / $total * 100) : 100;
-  $progress['message'] = $this->t('Uploading... (@current of @total)', [
+  $progress['message'] = t('Uploading... (@current of @total)', [
     '@current' => $current,
     '@total' => $total,
   ]);
