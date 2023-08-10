@@ -2687,9 +2687,21 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/getelementsintersectionrect.js
+ *
+ * @typedef {module:utils/dom/getelementsintersectionrect} module:utils/dom/getelementsintersectionrect~getElementsIntersectionRect
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/getpositionedancestor.js
  *
  * @typedef {module:utils/dom/getpositionedancestor} module:utils/dom/getpositionedancestor~getPositionedAncestor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/getscrollableancestors.js
+ *
+ * @typedef {module:utils/dom/getscrollableancestors} module:utils/dom/getscrollableancestors~getScrollableAncestors
  */
 
 /**
