@@ -101,6 +101,11 @@ trait SchemaCheckTrait {
         "'settings' is a required key.",
       ],
     ],
+    'language.content_settings.*.*' => [
+      'third_party_settings.content_translation' => [
+        "'bundle_settings' is a required key.",
+      ],
+    ],
     'language.negotiation' => [
       '' => [
         "'session' is a required key.",
@@ -159,6 +164,11 @@ trait SchemaCheckTrait {
         "'gzip' is a required key.",
       ],
     ],
+    'system.theme' => [
+      '' => [
+        "'admin' is a required key.",
+      ],
+    ],
     'system.theme.global' => [
       'features' => [
         "'logo' is a required key.",
@@ -179,6 +189,7 @@ trait SchemaCheckTrait {
       'display.*.display_options' => [
         "'access' is a required key.",
         "'allow' is a required key.",
+        "'attachment_position' is a required key.",
         "'argument' is a required key.",
         "'arguments' is a required key.",
         "'block_category' is a required key.",
@@ -201,12 +212,15 @@ trait SchemaCheckTrait {
         "'group_by' is a required key.",
         "'header' is a required key.",
         "'hide_attachment_summary' is a required key.",
+        "'inherit_exposed_filters' is a required key.",
+        "'inherit_pager' is a required key.",
         "'link_display' is a required key.",
         "'link_url' is a required key.",
         "'menu' is a required key.",
         "'pager' is a required key.",
         "'query' is a required key.",
         "'relationships' is a required key.",
+        "'render_pager' is a required key.",
         "'rendering_language' is a required key.",
         "'route_name' is a required key.",
         "'row' is a required key.",
@@ -302,6 +316,7 @@ trait SchemaCheckTrait {
         "'value' is a required key.",
       ],
       'display.*.display_options.arguments.*.summary_options' => [
+        "'items_per_page' is a required key.",
         "'grouping' is a required key.",
         "'row_class' is a required key.",
         "'default_row_class' is a required key.",
@@ -475,8 +490,11 @@ trait SchemaCheckTrait {
         "'empty_table' is a required key.",
       ],
       'display.*.display_options.style.options.info.*' => [
+        "'align' is a required key.",
         "'sortable' is a required key.",
         "'default_sort_order' is a required key.",
+        "'empty_column' is a required key.",
+        "'responsive' is a required key.",
       ],
       'display.*.display_options.row' => [
         "'options' is a required key.",
@@ -492,6 +510,8 @@ trait SchemaCheckTrait {
         "'enabled' is a required key.",
         "'expanded' is a required key.",
         "'parent' is a required key.",
+        "'description' is a required key.",
+        "'context' is a required key.",
       ],
       'display.*.display_options.relationships.*' => [
         "'entity_type' is a required key.",
