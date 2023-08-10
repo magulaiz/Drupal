@@ -1075,7 +1075,7 @@ services:
   Drupal\Core\Utility\LinkGeneratorInterface: '@link_generator'
   request_generator:
     class: Drupal\Core\Utility\RequestGenerator
-    arguments: ['@path_processor_manager', '@path.current', '@router.no_access_checks']
+    arguments: ['@path_processor_manager', '@path.current', '@router']
   Drupal\Core\Utility\RequestGenerator: '@request_generator'
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
