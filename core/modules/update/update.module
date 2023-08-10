@@ -474,13 +474,12 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
     case UpdateFetcherInterface::NOT_CHECKED:
     case UpdateFetcherInterface::NOT_FETCHED:
     case UpdateFetcherInterface::FETCH_PENDING:
-      if ($msg_type == 'core') {
-        $text = t('There was a problem checking <a href=":update-report">available updates</a> for Drupal.', [':update-report' => Url::fromRoute('update.status')->toString()], ['langcode' => $langcode]);
-      }
-      else {
-        $text = t('There was a problem checking <a href=":update-report">available updates</a> for your modules or themes.', [':update-report' => Url::fromRoute('update.status')->toString()], ['langcode' => $langcode]);
-      }
+      $text = t('There was a problem checking <a href=":update-report">available updates</a>.',
+        [':update-report' => Url::fromRoute('update.status')->toString()],
+        ['langcode' => $langcode]
+      );
       break;
+
   }
 
   return $text;
