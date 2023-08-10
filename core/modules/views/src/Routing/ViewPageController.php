@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a page controller to execute and render a view.
  */
-class ViewPageController implements ContainerInjectionInterface{
+class ViewPageController implements ContainerInjectionInterface {
 
   /**
    * The add contextual links service.
