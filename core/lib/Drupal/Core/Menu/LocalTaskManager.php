@@ -390,9 +390,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *
    * @return array
    *   The local task data with the following keys:
-   *   - base_routes: Base routes of the given route.
-   *   - children: Child routes of the given route.
-   *   - parents: Parent routes for the given route.
+   *   - base_routes: An array of base route names of the given route.
+   *   - children: An array of the route's child local task definitions keyed by
+   *     local task ID.
+   *   - parents: An array of the route's parent local task definitions.
    */
   protected function doGetLocalTasksForRoute(string $route_name): array {
     if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
