@@ -973,16 +973,15 @@
     const timer = setTimeout(function () {
       $.ajax({
         type: 'POST',
-        data: { "PHP_SESSION_UPLOAD_PROGRESS": val },
+        data: { PHP_SESSION_UPLOAD_PROGRESS: val },
         url: Drupal.url('core/modules/file/session-upload-progress.php'),
         success: (msg) => {
-          let parsed_msg = JSON.parse(msg);
-          if (parsed_msg['percentage'] === 100) {
+          const parsedMsg = JSON.parse(msg);
+          if (parsedMsg.percentage === 100) {
             clearInterval(timer);
-            progressBar.setProgress(100, parsed_msg['message']);
-          }
-          else {
-            progressBar.setProgress(parsed_msg['percentage'], parsed_msg['message']);
+            progressBar.setProgress(100, parsedMsg.message);
+          } else {
+            progressBar.setProgress(parsedMsg.percentage, parsedMsg.message);
           }
         },
       });
