@@ -126,7 +126,8 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalGet('admin/people');
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/config');
-    $this->assertSession()->statusCodeEquals(403);
+    // As menu_test adds a menu link under config.
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
