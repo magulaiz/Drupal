@@ -4,6 +4,7 @@ namespace Drupal\views\Routing;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\AddContextualLinks;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
@@ -12,6 +13,37 @@ use Drupal\views\Views;
  * Defines a page controller to execute and render a view.
  */
 class ViewPageController {
+
+  /**
+   * The add contextual links service.
+   *
+   * @var \Drupal\views\AddContextualLinks
+   */
+  protected $addContextualLinks;
+
+  /**
+   * ViewPageController constructor.
+   *
+   * @param \Drupal\views\AddContextualLinks $add_contextual_links
+   *   The add contextual links service.
+   */
+  public function __construct(AddContextualLinks $add_contextual_links) {
+    $this->addContextualLinks  = $add_contextual_links;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The Drupal service container.
+   *
+   * @return static
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('views.add_contextual_links')
+    );
+  }
 
   /**
    * Handler a response for a given view and display.
@@ -60,7 +92,7 @@ class ViewPageController {
       $build = $class::buildBasicRenderable($view_id, $display_id, $args, $route);
       Page::setPageRenderArray($build);
 
-      views_add_contextual_links($build, 'page', $display_id, $build);
+      $this->addContextualLinks->viewsAddContextualLinks($build, 'page', $display_id, $build);
 
       return $build;
     }
