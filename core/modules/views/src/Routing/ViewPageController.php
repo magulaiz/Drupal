@@ -3,6 +3,7 @@
 namespace Drupal\views\Routing;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\AddContextualLinks;
 use Drupal\views\Plugin\views\display\Page;
@@ -13,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a page controller to execute and render a view.
  */
-class ViewPageController {
+class ViewPageController implements ContainerInjectionInterface{
 
   /**
    * The add contextual links service.

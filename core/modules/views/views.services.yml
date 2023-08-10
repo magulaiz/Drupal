@@ -107,3 +107,4 @@ services:
   views.add_contextual_links:
     class: Drupal\views\AddContextualLinks
     arguments: ['@module_handler', '@entity_type.manager']
+  Drupal\views\AddContextualLinks: '@views.add_contextual_links'
