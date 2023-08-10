@@ -1,10 +1,13 @@
-{% embed 'demo_umami:search' with {
-    attributes: attributes,
-    title_prefix: title_prefix,
-    title_suffix: title_suffix,
-    label: label,
-    title_attributes: title_attributes,
-    content: content,
+{% embed 'umami:search' with {
+  attributes,
+  title_prefix,
+  title_suffix,
+  label,
+  title_attributes,
 } %}
+
+{% block content %}
+  {{ content }}
+{% endblock %}
 
 {% endembed %}
