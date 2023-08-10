@@ -39,9 +39,6 @@ export default class DrupalImageTitleCommand extends Command {
     const imageUtils = editor.plugins.get( 'ImageUtils' );
     const model = editor.model;
     const imageElement = imageUtils.getClosestSelectedImageElement( model.document.selection );
-    console.log("EXECUTING DrupalImageTitleCommand");
-    console.log(options.newValue);
-    console.log(imageElement);
     model.change( writer => {
       writer.setAttribute( 'title', options.newValue, imageElement );
     } );
