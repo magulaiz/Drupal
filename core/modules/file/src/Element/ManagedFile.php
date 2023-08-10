@@ -289,7 +289,9 @@ class ManagedFile extends FormElement {
         ];
       }
       elseif ($implementation == 'session') {
-        $element[ini_get('session.upload_progress.name')] = [
+        $session_upload_progress_name = ini_get('session.upload_progress.name');
+        $element[$session_upload_progress_name] = [
+          '#name' => $session_upload_progress_name,
           '#type' => 'hidden',
           '#value' => $upload_progress_key,
           '#attributes' => ['class' => ['file-progress']],
