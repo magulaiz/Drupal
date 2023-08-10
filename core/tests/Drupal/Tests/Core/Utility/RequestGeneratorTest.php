@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Utility;
 
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -134,6 +135,7 @@ class RequestGeneratorTest extends UnitTestCase {
    *   The test cases.
    */
   public function providerTestGenerateRequestForPathWithException() {
+    yield 'ParamNotConvertedException' => [ParamNotConvertedException::class, ''];
     yield 'ResourceNotFoundException' => [ResourceNotFoundException::class, ''];
     yield 'MethodNotAllowedException' => [MethodNotAllowedException::class, []];
     yield 'AccessDeniedHttpException' => [AccessDeniedHttpException::class, ''];
