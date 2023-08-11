@@ -29,3 +29,7 @@ services:
     tags:
       - {name: access_check, applies_to: _file_upload_access}
   Drupal\file\Upload\FileUploadAccessCheck: '@file.upload_access_check'
+  file.upload_route_alter_subscriber:
+    class: Drupal\file\EventSubscriber\FileUploadRouteAlterSubscriber
+    arguments: ['@entity_type.manager', '@module_handler']
+  Drupal\file\EventSubscriber\FileUploadRouteAlterSubscriber: '@file.upload_route_alter_subscriber'

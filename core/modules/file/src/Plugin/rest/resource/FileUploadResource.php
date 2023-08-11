@@ -52,6 +52,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *     "create" = "/file/upload/{entity_type_id}/{bundle}/{field_name}"
  *   }
  * )
+ *
+ * @see \Drupal\file\Event\RouteAlterSubscriber
  */
 class FileUploadResource extends ResourceBase {
 
