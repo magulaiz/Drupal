@@ -767,6 +767,7 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->assertNoFieldByXpath('//input[@id="edit-name--2" and contains(@class, "error")]', NULL, 'No error input form element class found for second element.');
   }
 }
+
 /**
  * Tests validation of additional Form API properties.
  *
@@ -806,8 +807,8 @@ class FormsElementsValidationTestCase extends DrupalWebTestCase {
         '#maxlength' => $max_length,
       ),
       'machine_name' => array(
-        '#type' => 'password',
-        '#title' => 'Password',
+        '#type' => 'machine_name',
+        '#title' => 'Machine Name',
         '#maxlength' => $max_length,
       ),
     );
