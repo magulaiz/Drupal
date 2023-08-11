@@ -162,7 +162,9 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       if ($base_route_name !== $route_name) {
         $path = $this->urlGenerator->getPathFromRoute($base_route_name, $this->routeMatch->getRawParameters()->all());
         $route_request = $this->requestGenerator->generateRequestForPath($path, []);
-        $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route_name));
+        if ($route_request) {
+          $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route_name));
+        }
       }
       else {
         $title = $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());

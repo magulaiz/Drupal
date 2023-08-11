@@ -43,6 +43,7 @@ class PageTitleBlockTest extends BrowserTestBase {
       'administer themes',
       'administer software updates',
       'administer nodes',
+      'administer modules',
       'create article content',
       'edit any article content',
       'delete any article content',
@@ -118,6 +119,35 @@ class PageTitleBlockTest extends BrowserTestBase {
     // Make sure the title shown is contextualized.
     $this->drupalGet('admin/modules/update');
     $this->assertSession()->elementTextEquals('css', 'h1', $contextualized_title);
+  }
+
+  /**
+   * Tests the contextualized title if base route is not accessible.
+   */
+  public function testContextualizeTitleWhenBaseRouteIsNotAccessible(): void {
+    // Create administrative user with access to 'admin/modules/update' but no
+    // access to base route 'admin/modules'.
+    $admin_user = $this->drupalCreateUser([
+      'administer blocks',
+      'administer software updates',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $non_contextualized_title = 'Update';
+    // Make sure the title shown is non-contextualized.
+    $this->drupalGet('admin/modules/update');
+    $this->assertSession()->elementTextEquals('css', 'h1', $non_contextualized_title);
+
+    // Configure title block to show contextualized title.
+    $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
+    $this->assertSession()->checkboxNotChecked('settings[contextualize_title]');
+    $this->submitForm(['settings[contextualize_title]' => TRUE], 'Save block');
+
+    // Make sure the title shown is non-contextualized because the base route is
+    // not accessible.
+    // @see \Drupal\Core\Block\Plugin\Block\PageTitleBlock::getTitleBasedOnBaseRoute()
+    $this->drupalGet('admin/modules/update');
+    $this->assertSession()->elementTextEquals('css', 'h1', $non_contextualized_title);
   }
 
   /**
