@@ -146,7 +146,9 @@ trait SchemaCheckTrait {
     ],
     'system.file' => [
       '' => [
+        "'allow_insecure_uploads' is a required key.",
         "'path' is a required key.",
+        "'temporary_maximum_age' is a required key.",
       ],
     ],
     'system.site' => [
@@ -218,6 +220,7 @@ trait SchemaCheckTrait {
         "'link_url' is a required key.",
         "'menu' is a required key.",
         "'pager' is a required key.",
+        "'path' is a required key.",
         "'query' is a required key.",
         "'relationships' is a required key.",
         "'render_pager' is a required key.",
@@ -241,6 +244,7 @@ trait SchemaCheckTrait {
       ],
       'display.default.display_options.query' => [
         "'options' is a required key.",
+        "'type' is a required key.",
       ],
       'display.default.display_options.style' => [
         "'options' is a required key.",
@@ -248,10 +252,22 @@ trait SchemaCheckTrait {
       'display.default.display_options.exposed_form' => [
         "'options' is a required key.",
       ],
+      'display.default.display_options.pager' => [
+        "'type' is a required key.",
+        "'options' is a required key.",
+      ],
+      'display.default.display_options.access' => [
+        "'type' is a required key.",
+        "'options' is a required key.",
+      ],
       'display.default.display_options.sorts.*' => [
         "'granularity' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
+        "'group_type' is a required key.",
+        "'admin_label' is a required key.",
+        "'expose' is a required key.",
+        "'exposed' is a required key.",
       ],
       'display.*.display_options.header.*' => [
         "'label' is a required key.",
@@ -356,6 +372,15 @@ trait SchemaCheckTrait {
         "'footer' is a required key.",
       ],
       'display.*.display_options.fields.*' => [
+        "'label' is a required key.",
+        "'decimal' is a required key.",
+        "'set_precision' is a required key.",
+        "'precision' is a required key.",
+        "'format_plural' is a required key.",
+        "'format_plural_string' is a required key.",
+        "'prefix' is a required key.",
+        "'suffix' is a required key.",
+        "'plugin_id' is a required key.",
         "'exclude' is a required key.",
         "'alter' is a required key.",
         "'element_class' is a required key.",
@@ -398,6 +423,7 @@ trait SchemaCheckTrait {
         "'destination' is a required key.",
       ],
       'display.default.display_options.fields.*.alter' => [
+        "'alter_text' is a required key.",
         "'make_link' is a required key.",
         "'absolute' is a required key.",
         "'word_boundary' is a required key.",
