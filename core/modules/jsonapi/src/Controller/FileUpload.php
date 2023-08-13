@@ -19,7 +19,6 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -115,8 +114,6 @@ class FileUpload {
     $file_field_name = $resource_type->getInternalName($file_field_name);
     $field_definition = $this->validateAndLoadFieldDefinition($resource_type->getEntityTypeId(), $resource_type->getBundle(), $file_field_name);
 
-    static::ensureFileUploadAccess($this->currentUser, $field_definition, $entity);
-
     $filename = $this->fileUploader->validateAndParseContentDispositionHeader($request);
     $file = $this->fileUploader->handleFileUploadForField($field_definition, $filename, $this->currentUser);
 
@@ -165,8 +162,6 @@ class FileUpload {
     $file_field_name = $resource_type->getInternalName($file_field_name);
     $field_definition = $this->validateAndLoadFieldDefinition($resource_type->getEntityTypeId(), $resource_type->getBundle(), $file_field_name);
 
-    static::ensureFileUploadAccess($this->currentUser, $field_definition);
-
     $filename = $this->fileUploader->validateAndParseContentDispositionHeader($request);
     $file = $this->fileUploader->handleFileUploadForField($field_definition, $filename, $this->currentUser);
 
@@ -199,8 +194,14 @@ class FileUpload {
    *   The field for which the file is to be uploaded.
    * @param \Drupal\Core\Entity\FieldableEntityInterface|null $entity
    *   The entity, if one exists, for which the file is to be uploaded.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Upload\FileUploadAccessCheck instead.
+   *
+   * @see https://www.drupal.org/node/3380927
    */
   protected static function ensureFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, FieldableEntityInterface $entity = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileUploadAccessCheck instead. See https://www.drupal.org/node/3380927', E_USER_DEPRECATED);
     $access_result = $entity
       ? TemporaryJsonapiFileFieldUploader::checkFileUploadAccess($account, $field_definition, $entity)
       : TemporaryJsonapiFileFieldUploader::checkFileUploadAccess($account, $field_definition);
@@ -237,14 +238,7 @@ class FileUpload {
     if (!isset($field_definitions[$field_name])) {
       throw new NotFoundHttpException(sprintf('Field "%s" does not exist.', $field_name));
     }
-
-    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
-    $field_definition = $field_definitions[$field_name];
-    if ($field_definition->getSetting('target_type') !== 'file') {
-      throw new AccessDeniedException(sprintf('"%s" is not a file field', $field_name));
-    }
-
-    return $field_definition;
+    return $field_definitions[$field_name];
   }
 
 }

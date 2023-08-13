@@ -30,7 +30,7 @@ class FileUploadAccessCheck implements AccessInterface {
   public function access(AccountInterface $account, string $entity_type_id, ?string $bundle, string $field_name): AccessResultInterface {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
     if (!isset($field_definitions[$field_name])) {
-      return AccessResult::forbidden(sprintf('Field "%s" does not exist', $field_name));
+      return AccessResult::neutral(sprintf('Field "%s" does not exist', $field_name));
     }
 
     $field_definition = $field_definitions[$field_name];

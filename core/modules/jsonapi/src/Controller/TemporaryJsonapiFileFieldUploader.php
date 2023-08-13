@@ -305,8 +305,14 @@ class TemporaryJsonapiFileFieldUploader {
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The file upload access result.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Upload\FileUploadAccessCheck instead.
+   *
+   * @see https://www.drupal.org/node/3380927
    */
   public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileUploadAccessCheck instead. See https://www.drupal.org/node/3380927', E_USER_DEPRECATED);
     assert(is_null($entity) ||
       $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() &&
       // Base fields do not have target bundles.
