@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -103,13 +104,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name = $this->randomMachineName(8) . '_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->contentType = $type->id();
 
     // Create random field name with markup to test escaping.
     $this->fieldLabel = '<em>' . $this->randomMachineName(8) . '</em>';
-    $this->fieldNameInput = strtolower($this->randomMachineName(8));
+    $this->fieldNameInput = $this->randomMachineName(8);
     $this->fieldName = 'field_' . $this->fieldNameInput;
 
     // Create Basic page and Article node types.
@@ -476,7 +477,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function testFieldPrefix() {
     // Change default field prefix.
-    $field_prefix = strtolower($this->randomMachineName(10));
+    $field_prefix = $this->randomMachineName(10);
     $this->config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
 
     // Create a field input and label exceeding the new maxlength, which is 22.
@@ -599,7 +600,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->fieldUIAddNewField($bundle_path1, $this->fieldNameInput, $this->fieldLabel);
 
     // Create an additional node type.
-    $type_name2 = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name2 = $this->randomMachineName(8) . '_test';
     $type2 = $this->drupalCreateContentType(['name' => $type_name2, 'type' => $type_name2]);
     $type_name2 = $type2->id();
 
@@ -658,7 +659,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testLockedField() {
     // Create a locked field and attach it to a bundle. We need to do this
     // programmatically as there's no way to create a locked field through UI.
-    $field_name = strtolower($this->randomMachineName(8));
+    $field_name = $this->randomMachineName(8);
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
@@ -692,8 +693,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testHiddenFields() {
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->assertSession()->optionNotExists('edit-new-storage-type', 'hidden_test_field');
-    $this->assertSession()->optionExists('edit-new-storage-type', 'shape');
+    $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='hidden_test_field']");
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='shape']");
 
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
@@ -731,10 +732,19 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
     foreach ($field_types as $field_type => $definition) {
       if (empty($definition['no_ui'])) {
-        $this->assertSession()->optionExists('edit-new-storage-type', $field_type);
+        try {
+          $this->assertSession()
+            ->elementExists('css', "[name='new_storage_type'][value='$field_type']");
+        }
+        catch (ElementNotFoundException) {
+          if ($this->getFieldFromGroup($field_type)) {
+            $this->assertSession()
+              ->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
+          }
+        }
       }
       else {
-        $this->assertSession()->optionNotExists('edit-new-storage-type', $field_type);
+        $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='$field_type']");
       }
     }
   }
@@ -745,17 +755,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testDuplicateFieldName() {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
-    $edit = [
-      'field_name' => 'tags',
-      'label' => $this->randomMachineName(),
-      'new_storage_type' => 'entity_reference',
-    ];
-    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
-    $this->drupalGet($url);
-    $this->submitForm($edit, 'Save and continue');
+    $url = 'admin/structure/types/manage/' . $this->contentType;
+    $this->fieldUIAddNewField($url, 'tags', $this->randomMachineName(), 'entity_reference', [], [], FALSE);
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-    $this->assertSession()->addressEquals($url);
+    $this->assertSession()->addressEquals($url . '/fields/add-field');
   }
 
   /**
@@ -855,8 +859,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the preconfigured field option exist alongside the regular
     // field type option.
-    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:test_field_with_preconfigured_options:custom_options');
-    $this->assertSession()->optionExists('edit-new-storage-type', 'test_field_with_preconfigured_options');
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='field_ui:test_field_with_preconfigured_options:custom_options']");
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='test_field_with_preconfigured_options']");
 
     // Add a field with every possible preconfigured value.
     $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');

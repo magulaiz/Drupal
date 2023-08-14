@@ -9,6 +9,8 @@ use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+// cspell:ignore nocdata
+
 /**
  * Fetches and caches oEmbed resources.
  */

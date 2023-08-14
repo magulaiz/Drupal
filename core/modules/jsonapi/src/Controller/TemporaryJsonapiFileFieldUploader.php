@@ -2,30 +2,27 @@
 
 namespace Drupal\jsonapi\Controller;
 
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\Validation\DrupalTranslator;
-use Drupal\file\FileInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
-use Drupal\Component\Render\PlainTextOutput;
-use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
+use Drupal\file\Validation\FileValidatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -110,6 +107,13 @@ class TemporaryJsonapiFileFieldUploader {
   protected $eventDispatcher;
 
   /**
+   * The file validator.
+   *
+   * @var \Drupal\file\Validation\FileValidatorInterface
+   */
+  protected FileValidatorInterface $fileValidator;
+
+  /**
    * Constructs a FileUploadResource instance.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -126,6 +130,8 @@ class TemporaryJsonapiFileFieldUploader {
    *   The config factory.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
+   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
+   *   The file validator.
    */
   public function __construct(
     #[Autowire(service: 'logger.channel.file')]
@@ -147,6 +153,11 @@ class TemporaryJsonapiFileFieldUploader {
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
     $this->eventDispatcher = $event_dispatcher;
+    if (!$file_validator) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $file_validator argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+      $file_validator = \Drupal::service('file.validator');
+    }
+    $this->fileValidator = $file_validator;
   }
 
   /**
@@ -216,21 +227,8 @@ class TemporaryJsonapiFileFieldUploader {
     // leave that method behavior unchanged.
     // @todo Improve this with a file uploader service in
     //   https://www.drupal.org/project/drupal/issues/2940383
-    $errors = file_validate($file, $validators);
-    if (!empty($errors)) {
-      $violations = new EntityConstraintViolationList($file);
-      $translator = new DrupalTranslator();
-      $entity = EntityAdapter::createFromEntity($file);
-      foreach ($errors as $error) {
-        $violation = new ConstraintViolation($translator->trans($error),
-          $error,
-          [],
-          $entity,
-          '',
-          NULL
-        );
-        $violations->add($violation);
-      }
+    $violations = $this->fileValidator->validate($file, $validators);
+    if (count($violations) > 0) {
       return $violations;
     }
 
@@ -405,7 +403,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\file\FileInterface $file
    *   The file entity to validate.
    * @param array $validators
-   *   An array of upload validators to pass to file_validate().
+   *   An array of upload validators to pass to FileValidator.
    *
    * @return \Drupal\Core\Entity\EntityConstraintViolationListInterface
    *   The list of constraint violations, if any.
@@ -418,20 +416,7 @@ class TemporaryJsonapiFileFieldUploader {
     $violations->filterByFieldAccess();
 
     // Validate the file based on the field definition configuration.
-    $errors = file_validate($file, $validators);
-    if (!empty($errors)) {
-      $translator = new DrupalTranslator();
-      foreach ($errors as $error) {
-        $violation = new ConstraintViolation($translator->trans($error),
-          $error,
-          [],
-          EntityAdapter::createFromEntity($file),
-          '',
-          NULL
-        );
-        $violations->add($violation);
-      }
-    }
+    $violations->addAll($this->fileValidator->validate($file, $validators));
 
     return $violations;
   }
@@ -450,7 +435,7 @@ class TemporaryJsonapiFileFieldUploader {
   protected function prepareFilename($filename, array &$validators) {
     // The actual extension validation occurs in
     // \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader::validate().
-    $extensions = $validators['file_validate_extensions'][0] ?? '';
+    $extensions = $validators['FileExtension']['extensions'] ?? '';
     $event = new FileUploadSanitizeNameEvent($filename, $extensions);
     $this->eventDispatcher->dispatch($event);
     return $event->getFilename();
@@ -491,7 +476,7 @@ class TemporaryJsonapiFileFieldUploader {
   protected function getUploadValidators(FieldDefinitionInterface $field_definition) {
     $validators = [
       // Add in our check of the file name length.
-      'file_validate_name_length' => [],
+      'FileNameLength' => [],
     ];
     $settings = $field_definition->getSettings();
 
@@ -502,11 +487,13 @@ class TemporaryJsonapiFileFieldUploader {
     }
 
     // There is always a file size limit due to the PHP server limit.
-    $validators['file_validate_size'] = [$max_filesize];
+    $validators['FileSizeLimit'] = ['fileLimit' => $max_filesize];
 
     // Add the extension check if necessary.
     if (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = [$settings['file_extensions']];
+      $validators['FileExtension'] = [
+        'extensions' => $settings['file_extensions'],
+      ];
     }
 
     return $validators;

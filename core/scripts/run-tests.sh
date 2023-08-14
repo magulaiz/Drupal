@@ -57,7 +57,7 @@ if ($args['help'] || $count == 0) {
 simpletest_script_init();
 
 if (!class_exists(TestCase::class)) {
-  echo "\nrun-tests.sh requires the PHPUnit testing framework. Please use 'composer install' to ensure that it is present.\n\n";
+  echo "\nrun-tests.sh requires the PHPUnit testing framework. Use 'composer install' to ensure that it is present.\n\n";
   exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
@@ -338,8 +338,8 @@ All arguments are long options.
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
-              as the names of test groups as shown at
-              admin/config/development/testing.
+              as the names of test groups which are derived from test class
+              @group annotations.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "Database".
               If --class is specified then these are interpreted as the names of
@@ -1236,7 +1236,7 @@ function simpletest_script_format_result($result) {
 
   $message = trim(strip_tags($result->message));
   if ($args['non-html']) {
-    $message = Html::decodeEntities($message, ENT_QUOTES, 'UTF-8');
+    $message = Html::decodeEntities($message);
   }
   $lines = explode("\n", wordwrap($message), 76);
   foreach ($lines as $line) {

@@ -415,7 +415,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media');
     $this->assertEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000));
     $assert_session->elementNotExists('css', '.ck-widget.drupal-media .media');
-    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Please save your work and reload this page.'));
+    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Save your work and reload this page.'));
     // Now assert that the error doesn't appear when the override to force an
     // error is removed.
     $this->container->get('state')->set('test_media_filter_controller_throw_error', FALSE);
@@ -1508,7 +1508,7 @@ class MediaTest extends WebDriverTestBase {
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
-    $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
+    $assert_session->waitForElement('css', 'article.media--view-mode-view-mode-1');
 
     // Test that setting allowed_view_modes back to two items restores the
     // field.
@@ -1551,7 +1551,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View Mode 1')->click();
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
-    $assert_session->elementExists('css', 'article.media--view-mode-_2222');
+    $assert_session->waitForElement('css', 'article.media--view-mode-_2222');
     $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
 
     // Test that a media with no view modes configured will be
@@ -1671,6 +1671,27 @@ class MediaTest extends WebDriverTestBase {
 })()
 JS;
     return $this->getSession()->evaluateScript($javascript);
+  }
+
+  /**
+   * Ensure media preview isn't clickable.
+   */
+  public function testMediaPointerEvent() {
+    $entityViewDisplay = EntityViewDisplay::load('media.image.view_mode_1');
+    $thumbnail = $entityViewDisplay->getComponent('thumbnail');
+    $thumbnail['settings']['image_link'] = 'file';
+    $entityViewDisplay->setComponent('thumbnail', $thumbnail);
+    $entityViewDisplay->save();
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $url = $this->host->toUrl('edit-form');
+    $this->drupalGet($url);
+    $this->waitForEditor();
+    $assert_session->waitForLink('default alt');
+    $page->find('css', '.ck .drupal-media')->click();
+    // Assert that the media preview is not clickable by comparing the URL.
+    $this->assertEquals($url->toString(), $this->getUrl());
   }
 
 }
