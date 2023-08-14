@@ -83,6 +83,8 @@ trait SchemaCheckTrait {
         "'target_bundles' is a required key.",
         "'sort' is a required key.",
         "'auto_create' is a required key.",
+        "'filter' is a required key.",
+        "'include_anonymous' is a required key.",
       ],
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",
@@ -213,6 +215,7 @@ trait SchemaCheckTrait {
         "'attachment_position' is a required key.",
         "'argument' is a required key.",
         "'arguments' is a required key.",
+        "'auth' is a required key.",
         "'block_category' is a required key.",
         "'block_description' is a required key.",
         "'block_hide_empty' is a required key.",
@@ -310,6 +313,10 @@ trait SchemaCheckTrait {
         "'relationship' is a required key.",
         "'content' is a required key.",
         "'tokenize' is a required key.",
+        "'bypass_access' is a required key.",
+        "'empty' is a required key.",
+        "'custom_access' is a required key.",
+        "'string' is a required key.",
       ],
       'display.*.display_options.cache.options' => [
         "'results_lifespan_custom' is a required key.",
@@ -340,8 +347,14 @@ trait SchemaCheckTrait {
         "'group_type' is a required key.",
         "'relationship' is a required key.",
         "'content' is a required key.",
+        "'title' is a required key.",
+        "'empty' is a required key.",
+        "'custom_access' is a required key.",
+        "'string' is a required key.",
       ],
       'display.*.display_options.arguments.*' => [
+        "'plugin_id' is a required key.",
+        "'must_not_be' is a required key.",
         "'day' is a required key.",
         "'month' is a required key.",
         "'default_action' is a required key.",
@@ -378,6 +391,9 @@ trait SchemaCheckTrait {
       'display.*.display_options.arguments.*.summary' => [
         "'sort_order' is a required key.",
         "'number_of_records' is a required key.",
+      ],
+      'display.*.display_options.arguments.*.validate' => [
+        "'fail' is a required key.",
       ],
       'display.*.display_options.arguments.*.exception' => [
         "'title' is a required key.",
@@ -432,8 +448,13 @@ trait SchemaCheckTrait {
         "'relationship' is a required key.",
         "'group_type' is a required key.",
         "'tokenize' is a required key.",
+        "'custom_access' is a required key.",
+        "'string' is a required key.",
+        "'empty' is a required key.",
+        "'bypass_access' is a required key.",
       ],
       'display.*.display_options.fields.*' => [
+        "'link_to_user' is a required key.",
         "'link_to_node' is a required key.",
         "'field' is a required key.",
         "'table' is a required key.",
@@ -537,6 +558,7 @@ trait SchemaCheckTrait {
         "'tokenize' is a required key.",
       ],
       'display.*.display_options.filters.*' => [
+        "'reduce_duplicates' is a required key.",
         "'type' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
@@ -576,8 +598,10 @@ trait SchemaCheckTrait {
       ],
       'display.*.display_options.sorts.*.expose' => [
         "'field_identifier' is a required key.",
+        "'label' is a required key.",
       ],
       'display.*.display_options.filters.*.expose' => [
+        "'reduce' is a required key.",
         "'placeholder' is a required key.",
         "'min_placeholder' is a required key.",
         "'max_placeholder' is a required key.",
