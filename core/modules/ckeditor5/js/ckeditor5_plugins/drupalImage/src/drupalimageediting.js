@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words downcasted linkimageediting emptyelement downcastdispatcher
+// cSpell:words datafilter downcasted linkimageediting emptyelement downcastdispatcher
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
 
