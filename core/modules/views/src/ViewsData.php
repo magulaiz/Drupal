@@ -61,13 +61,6 @@ class ViewsData {
   protected $fullyLoaded = FALSE;
 
   /**
-   * Whether or not to skip data caching and rebuild data each time.
-   *
-   * @var bool
-   */
-  protected $skipCache = FALSE;
-
-  /**
    * The current language code.
    *
    * @var string
@@ -93,11 +86,9 @@ class ViewsData {
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend to use.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
-   *   The configuration factory object to use.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\Config\ConfigFactoryInterface $module_handler
    *   The module handler class to use for invoking hooks.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface|\Drupal\Core\Extension\ModuleHandlerInterface $language_manager
    *   The language manager.
    */
   public function __construct(
@@ -108,11 +99,17 @@ class ViewsData {
     LanguageManagerInterface $language_manager,
   ) {
     $this->cacheBackend = $cache_backend;
-    $this->moduleHandler = $module_handler;
-    $this->languageManager = $language_manager;
-
-    $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
-    $this->skipCache = $config->get('views.settings')->get('skip_cache');
+    if ($module_handler instanceof ConfigFactoryInterface) {
+      $this->moduleHandler = $language_manager;
+      $this->languageManager = func_get_arg(3);
+      $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
+      @trigger_error('Calling ' . __CLASS__ . '::_construct() with the $config argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2541974', E_USER_DEPRECATED);
+    }
+    else {
+      $this->moduleHandler = $module_handler;
+      $this->languageManager = $language_manager;
+      $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
+    }
   }
 
   /**
@@ -187,14 +184,9 @@ class ViewsData {
    *   The cache ID to return.
    *
    * @return mixed
-   *   The cached data, if any. This will immediately return FALSE if the
-   *   $skipCache property is TRUE.
+   *   The cached data.
    */
   protected function cacheGet($cid) {
-    if ($this->skipCache) {
-      return FALSE;
-    }
-
     return $this->cacheBackend->get($this->prepareCid($cid));
   }
 

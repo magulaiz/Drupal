@@ -362,7 +362,7 @@
    * @prop {string} [progress.type='throbber']
    *   Type of progress element, core provides `'bar'`, `'throbber'` and
    *   `'fullscreen'`.
-   * @prop {string} [progress.message=Drupal.t('Please wait...')]
+   * @prop {string} [progress.message=Drupal.t('Processing...')]
    *   Custom message to be used with the bar indicator.
    * @prop {object} [submit]
    *   Extra data to be sent with the Ajax request.
@@ -407,7 +407,7 @@
       method: 'replaceWith',
       progress: {
         type: 'throbber',
-        message: Drupal.t('Please wait...'),
+        message: Drupal.t('Processing...'),
       },
       submit: {
         js: true,
@@ -459,7 +459,7 @@
     // If no Ajax callback URL was given, use the link href or form action.
     if (!this.url) {
       const $element = $(this.element);
-      if ($element.is('a')) {
+      if (this.element.tagName === 'A') {
         this.url = $element.attr('href');
       } else if (this.element && element.form) {
         this.url = this.$form.attr('action');
@@ -1486,6 +1486,7 @@
      *   The XMLHttpRequest status.
      */
     css(ajax, response, status) {
+      // eslint-disable-next-line jquery/no-css
       $(response.selector).css(response.argument);
     },
 
