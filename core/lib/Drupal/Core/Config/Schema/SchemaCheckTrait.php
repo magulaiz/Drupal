@@ -124,6 +124,21 @@ trait SchemaCheckTrait {
         "'method_weights' is a required key.",
       ],
     ],
+    'test_basetheme.settings' => [
+      '' => [
+        "'favicon' is a required key.",
+        "'logo' is a required key.",
+        "'features' is a required key.",
+      ],
+      'features' => [
+        "'logo' is a required key.",
+        "'name' is a required key.",
+        "'slogan' is a required key.",
+        "'comment_user_picture' is a required key.",
+        "'comment_user_verification' is a required key.",
+        "'node_user_picture' is a required key.",
+      ],
+    ],
     'olivero.settings' => [
       'favicon' => [
         "'mimetype' is a required key.",
@@ -242,28 +257,28 @@ trait SchemaCheckTrait {
         "'use_more_always' is a required key.",
         "'use_more_text' is a required key.",
       ],
-      'display.default.display_options.cache' => [
+      'display.*.display_options.cache' => [
         "'options' is a required key.",
       ],
       'display.default.display_options.query' => [
         "'options' is a required key.",
         "'type' is a required key.",
       ],
-      'display.default.display_options.style' => [
+      'display.*.display_options.style' => [
         "'options' is a required key.",
       ],
-      'display.default.display_options.exposed_form' => [
+      'display.*.display_options.exposed_form' => [
         "'options' is a required key.",
       ],
       'display.default.display_options.pager' => [
         "'type' is a required key.",
         "'options' is a required key.",
       ],
-      'display.default.display_options.access' => [
+      'display.*.display_options.access' => [
         "'type' is a required key.",
         "'options' is a required key.",
       ],
-      'display.default.display_options.sorts.*' => [
+      'display.*.display_options.sorts.*' => [
         "'granularity' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
@@ -288,6 +303,7 @@ trait SchemaCheckTrait {
         "'total_pages' is a required key.",
         "'id' is a required key.",
         "'items_per_page' is a required key.",
+        "'tags' is a required key.",
       ],
       'display.*.display_options.query.options' => [
         "'query_comment' is a required key.",
