@@ -203,7 +203,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $permutations = $this->generatePermutations($combinations);
     foreach ($permutations as $combination) {
       $case = [
-        $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count'], $combination['has_access_comments'], $combination['has_post_comments']),
+        $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']),
         ['view_mode' => $combination['view_mode']],
         $combination['has_access_comments'],
         $combination['history_exists'],
