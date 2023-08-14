@@ -55,7 +55,7 @@ interface EntityRepositoryInterface {
    * and if not, it will fall back to the most appropriate translation based on
    * the provided context.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param T $entity
    *   The entity whose translation will be returned.
    * @param string $langcode
    *   (optional) The language of the current context. Defaults to the current
@@ -64,8 +64,10 @@ interface EntityRepositoryInterface {
    *   (optional) An associative array of arbitrary data that can be useful to
    *   determine the proper fallback sequence.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return T
    *   An entity object for the translated data.
+   *
+   * @template T of \Drupal\Core\Entity\EntityInterface
    *
    * @see \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    */
