@@ -69,7 +69,7 @@ class SyslogTest extends KernelTestBase {
    */
   public function testSyslogMissingFacility() {
     $config = $this->container->get('config.factory')->getEditable('syslog.settings');
-    $config->clear('facility');
+    $config->set('facility', NULL);
     $config->save();
     \Drupal::logger('my_module')->warning('My warning message.');
     $log_filename = $this->container->get('file_system')->realpath('public://syslog.log');
