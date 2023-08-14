@@ -53,6 +53,7 @@ trait SchemaCheckTrait {
         "'info' is a required key.",
         "'view_mode' is a required key.",
         "'context_mapping' is a required key.",
+        "'items_per_page' is a required key.",
       ],
       'visibility.request_path' => [
         "'uuid' is a required key.",
@@ -271,6 +272,15 @@ trait SchemaCheckTrait {
       'display.*.display_options.exposed_form' => [
         "'options' is a required key.",
       ],
+      'display.*.display_options.exposed_form.options' => [
+        "'submit_button' is a required key.",
+        "'reset_button' is a required key.",
+        "'reset_button_label' is a required key.",
+        "'exposed_sorts_label' is a required key.",
+        "'expose_sort_order' is a required key.",
+        "'sort_asc_label' is a required key.",
+        "'sort_desc_label' is a required key.",
+      ],
       'display.*.display_options.pager' => [
         "'type' is a required key.",
         "'options' is a required key.",
@@ -289,6 +299,7 @@ trait SchemaCheckTrait {
         "'exposed' is a required key.",
         "'relationship' is a required key.",
         "'order' is a required key.",
+        "'plugin_id' is a required key.",
       ],
       'display.*.display_options.header.*' => [
         "'label' is a required key.",
@@ -299,6 +310,10 @@ trait SchemaCheckTrait {
         "'relationship' is a required key.",
         "'content' is a required key.",
         "'tokenize' is a required key.",
+      ],
+      'display.*.display_options.cache.options' => [
+        "'results_lifespan_custom' is a required key.",
+        "'output_lifespan_custom' is a required key.",
       ],
       'display.*.display_options.pager.options' => [
         "'quantity' is a required key.",
@@ -419,6 +434,11 @@ trait SchemaCheckTrait {
         "'tokenize' is a required key.",
       ],
       'display.*.display_options.fields.*' => [
+        "'link_to_node' is a required key.",
+        "'field' is a required key.",
+        "'table' is a required key.",
+        "'id' is a required key.",
+        "'output_url_as_text' is a required key.",
         "'absolute' is a required key.",
         "'label' is a required key.",
         "'decimal' is a required key.",
@@ -530,11 +550,29 @@ trait SchemaCheckTrait {
         "'expose' is a required key.",
         "'group' is a required key.",
         "'value' is a required key.",
+        "'plugin_id' is a required key.",
+      ],
+      'display.*.display_options.filters.*.group_info' => [
+        "'default_group_multiple' is a required key.",
+        "'remember' is a required key.",
+        "'multiple' is a required key.",
+        "'widget' is a required key.",
+        "'optional' is a required key.",
+        "'description' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*' => [
         "'title' is a required key.",
         "'operator' is a required key.",
         "'value' is a required key.",
+      ],
+      'display.*.display_options.filters.*.group_info.group_items.*.value' => [
+        "'value' is a required key.",
+        "'min' is a required key.",
+        "'max' is a required key.",
+      ],
+      'display.*.display_options.filters.*.value' => [
+        "'min' is a required key.",
+        "'max' is a required key.",
       ],
       'display.*.display_options.sorts.*.expose' => [
         "'field_identifier' is a required key.",
@@ -571,6 +609,9 @@ trait SchemaCheckTrait {
         "'sticky' is a required key.",
         "'summary' is a required key.",
         "'empty_table' is a required key.",
+        "'alignment' is a required key.",
+        "'cell_min_width' is a required key.",
+        "'grid_gutter' is a required key.",
       ],
       'display.*.display_options.style.options.info.*' => [
         "'align' is a required key.",
