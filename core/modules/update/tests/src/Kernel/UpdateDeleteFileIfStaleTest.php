@@ -23,6 +23,8 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
    * Tests the deletion of stale files.
    */
   public function testUpdateDeleteFileIfStale() {
+    $this->installConfig('system');
+
     $file_system = $this->container->get('file_system');
 
     $file_name = $file_system->saveData($this->randomMachineName(), 'public://');

@@ -33,6 +33,7 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('language');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
 
