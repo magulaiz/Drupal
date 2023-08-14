@@ -3,9 +3,11 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Utility\Error;
 use Peast\Formatter\Compact as CompactFormatter;
 use Peast\Peast;
 use Peast\Renderer;
+use Peast\Syntax\Exception as PeastSyntaxException;
 
 /**
  * Optimizes a JavaScript asset.
@@ -34,10 +36,28 @@ class JsOptimizer implements AssetOptimizerInterface {
       $data = Unicode::convertToUtf8($data, $js_asset['attributes']['charset']);
     }
     // Remove comments, whitespace, and optional braces.
-    $ast = Peast::latest($data)->parse();
-    $renderer = new Renderer();
-    $renderer->setFormatter(new CompactFormatter());
-    return $renderer->render($ast);
+    try {
+      $ast = Peast::latest($data)->parse();
+      $renderer = new Renderer();
+      $renderer->setFormatter(new CompactFormatter());
+      return $renderer->render($ast);
+    }
+    catch (\Exception $exception) {
+      $logger = \Drupal::logger('JS asset optimizer');
+      if ($exception instanceof PeastSyntaxException) {
+        $position = $exception->getPosition();
+        Error::logException($logger, $exception,  'Syntax error:  @message, File: @asset_file, Line: @asset_line, Column: @asset_column, Index: @asset_index', [
+          '@asset_file' => $js_asset['data'],
+          '@asset_line' => $position->getLine(),
+          '@asset_column' => $position->getColumn(),
+          '@asset_index' => $position->getIndex(),
+        ]);
+      }
+      else {
+        Error::logException($logger, $exception);
+      }
+      return $data;
+    }
   }
 
   /**
