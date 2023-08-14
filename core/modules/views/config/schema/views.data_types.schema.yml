@@ -57,9 +57,6 @@ views_display:
           type: views.access.[%parent.type]
     cache:
       type: views.cache.[type]
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.cache
     empty:
       type: sequence
       label: 'No results behavior'
@@ -864,6 +861,9 @@ views_cache:
     type:
       type: string
       label: 'Cache type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.cache
 
 views_display_extender:
   type: mapping
