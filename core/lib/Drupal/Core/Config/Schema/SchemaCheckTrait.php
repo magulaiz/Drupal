@@ -232,6 +232,7 @@ trait SchemaCheckTrait {
         "'group_by' is a required key.",
         "'header' is a required key.",
         "'hide_attachment_summary' is a required key.",
+        "'inherit_arguments' is a required key.",
         "'inherit_exposed_filters' is a required key.",
         "'inherit_pager' is a required key.",
         "'link_display' is a required key.",
@@ -270,7 +271,7 @@ trait SchemaCheckTrait {
       'display.*.display_options.exposed_form' => [
         "'options' is a required key.",
       ],
-      'display.default.display_options.pager' => [
+      'display.*.display_options.pager' => [
         "'type' is a required key.",
         "'options' is a required key.",
       ],
@@ -287,6 +288,7 @@ trait SchemaCheckTrait {
         "'expose' is a required key.",
         "'exposed' is a required key.",
         "'relationship' is a required key.",
+        "'order' is a required key.",
       ],
       'display.*.display_options.header.*' => [
         "'label' is a required key.",
@@ -295,6 +297,8 @@ trait SchemaCheckTrait {
         "'entity_type' is a required key.",
         "'group_type' is a required key.",
         "'relationship' is a required key.",
+        "'content' is a required key.",
+        "'tokenize' is a required key.",
       ],
       'display.*.display_options.pager.options' => [
         "'quantity' is a required key.",
@@ -320,8 +324,11 @@ trait SchemaCheckTrait {
         "'tokenize' is a required key.",
         "'group_type' is a required key.",
         "'relationship' is a required key.",
+        "'content' is a required key.",
       ],
       'display.*.display_options.arguments.*' => [
+        "'day' is a required key.",
+        "'month' is a required key.",
         "'default_action' is a required key.",
         "'exception' is a required key.",
         "'title' is a required key.",
@@ -401,7 +408,18 @@ trait SchemaCheckTrait {
         "'header' is a required key.",
         "'footer' is a required key.",
       ],
+      'display.*.display_options.footer.*' => [
+        "'content' is a required key.",
+        "'entity_field' is a required key.",
+        "'entity_type' is a required key.",
+        "'label' is a required key.",
+        "'admin_label' is a required key.",
+        "'relationship' is a required key.",
+        "'group_type' is a required key.",
+        "'tokenize' is a required key.",
+      ],
       'display.*.display_options.fields.*' => [
+        "'absolute' is a required key.",
         "'label' is a required key.",
         "'decimal' is a required key.",
         "'set_precision' is a required key.",
@@ -452,7 +470,7 @@ trait SchemaCheckTrait {
         "'entity_field' is a required key.",
         "'destination' is a required key.",
       ],
-      'display.default.display_options.fields.*.alter' => [
+      'display.*.display_options.fields.*.alter' => [
         "'alter_text' is a required key.",
         "'make_link' is a required key.",
         "'absolute' is a required key.",
@@ -484,6 +502,7 @@ trait SchemaCheckTrait {
         "'granularity' is a required key.",
         "'past_format' is a required key.",
         "'future_format' is a required key.",
+        "'image_loading' is a required key.",
       ],
       'display.*.display_options.pager.options.tags' => [
         "'quantity' is a required key.",
@@ -508,6 +527,9 @@ trait SchemaCheckTrait {
         "'exposed' is a required key.",
         "'is_grouped' is a required key.",
         "'group_info' is a required key.",
+        "'expose' is a required key.",
+        "'group' is a required key.",
+        "'value' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*' => [
         "'title' is a required key.",
@@ -581,6 +603,7 @@ trait SchemaCheckTrait {
         "'group_type' is a required key.",
         "'relationship' is a required key.",
         "'admin_label' is a required key.",
+        "'required' is a required key.",
       ],
       'display.default.display_options.cache_metadata' => [
         "'cacheable' is a required key.",
