@@ -254,13 +254,13 @@
           }
           // This region has become empty.
           if (
-            $this.next('tr').length === 0 ||
-            !$this.next('tr')[0].matches('.draggable')
+            $this.next('tr').is(':not(.draggable)') ||
+            $this.next('tr').length === 0
           ) {
             $this.removeClass('region-populated').addClass('region-empty');
           }
           // This region has become populated.
-          else if (this.matches('.region-empty')) {
+          else if ($this.is('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });
@@ -506,37 +506,6 @@
           keydown: preventEnterKey,
         });
       }
-    },
-  };
-
-  /**
-   * Allows users to select an element which checks a radio button.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches behavior for selecting field.
-   */
-  Drupal.behaviors.clickToSelect = {
-    attach(context) {
-      $(once('field-click-to-select', '.js-click-to-select', context)).on(
-        'click',
-        (event) => {
-          const clickToSelect = event.target.closest('.js-click-to-select');
-          const input = clickToSelect.querySelector('input');
-          input.checked = true;
-          // Ensure focus is added at the end of the process so wrap in
-          // a timeout.
-          setTimeout(() => {
-            // Remove the disabled attribute added by Drupal ajax so the
-            // element is focusable. This is safe as clicking the element
-            // multiple times causes no problems.
-            input.removeAttribute('disabled');
-            input.focus();
-          }, 0);
-          $(input).trigger('updateOptions');
-        },
-      );
     },
   };
 })(jQuery, Drupal, drupalSettings, Drupal.debounce);

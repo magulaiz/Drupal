@@ -117,9 +117,8 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     // Assert the exposed filters can be applied.
     $page->fillField('Name', 'Dog');
     $page->pressButton('Apply filters');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Crocodile');
+    $this->waitForText('Dog');
+    $this->waitForNoText('Crocodile');
     $assert_session->pageTextNotContains('Turtle');
     $page->checkField('Select Dog');
     $assert_session->linkExists('Table');

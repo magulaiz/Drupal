@@ -10,8 +10,6 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-// cspell:ignore omitscript
-
 /**
  * Converts oEmbed media URLs into endpoint-specific resource URLs.
  */

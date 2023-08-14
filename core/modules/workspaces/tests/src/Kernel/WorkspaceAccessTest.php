@@ -112,7 +112,7 @@ class WorkspaceAccessTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection::getReferenceableEntities
+   * @coversDefaultClass \Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection
    */
   public function testWorkspaceSelection() {
     $own_permission_user = $this->createUser(['view own workspace']);

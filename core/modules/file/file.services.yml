@@ -13,14 +13,3 @@ services:
   file.repository:
     class: Drupal\file\FileRepository
   Drupal\file\FileRepositoryInterface: '@file.repository'
-  file.recursive_validator_factory:
-    class: Drupal\file\Validation\RecursiveValidatorFactory
-    arguments: ['@class_resolver', '@typed_data_manager']
-  Drupal\file\Validation\RecursiveValidatorFactory: '@file.recursive_validator_factory'
-  file.recursive_validator:
-    class: Symfony\Component\Validator\Validator\ValidatorInterface
-    factory: ['@file.recursive_validator_factory', 'createValidator']
-  file.validator:
-    class: Drupal\file\Validation\FileValidator
-    arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
-  Drupal\file\Validation\FileValidatorInterface: '@file.validator'

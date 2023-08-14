@@ -533,14 +533,14 @@ class EntityDisplayTest extends KernelTestBase {
     // Create two arbitrary user roles.
     for ($i = 0; $i < 2; $i++) {
       $roles[$i] = Role::create([
-        'id' => $this->randomMachineName(),
+        'id' => mb_strtolower($this->randomMachineName()),
         'label' => $this->randomString(),
       ]);
       $roles[$i]->save();
     }
 
     // Create a field of type 'test_field' attached to 'entity_test'.
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

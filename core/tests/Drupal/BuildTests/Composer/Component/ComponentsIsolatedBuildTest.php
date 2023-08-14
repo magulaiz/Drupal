@@ -13,6 +13,8 @@ use Drupal\Composer\Composer;
  * @group Component
  *
  * @coversNothing
+ *
+ * @requires externalCommand composer
  */
 class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
 
@@ -66,10 +68,12 @@ class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
    *   The working directory.
    */
   protected function addExpectedRepositories(string $working_dir): void {
-    foreach ($this->provideComponentPaths() as $path) {
-      $path = $path[0];
-      $package_name = 'drupal/core' . strtolower(preg_replace('/[A-Z]/', '-$0', substr($path, 1)));
-      $path_repo = $this->getWorkingPath() . static::$componentsPath . $path;
+    $repo_paths = [
+      'Render' => 'drupal/core-render',
+      'Utility' => 'drupal/core-utility',
+    ];
+    foreach ($repo_paths as $path => $package_name) {
+      $path_repo = $this->getWorkingPath() . static::$componentsPath . '/' . $path;
       $repo_name = strtolower($path);
       // Add path repositories with the current version number to the current
       // package under test.

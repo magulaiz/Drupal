@@ -500,7 +500,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->createEntityReferenceField('node', 'dog', 'field_test', NULL, 'node');
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
-    $dog = Node::create(['type' => 'dog', 'title' => 'retriever']);
+    $dog = Node::create(['type' => 'dog', 'title' => 'Rosie P. Mosie']);
     $dog->save();
 
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog/' . $dog->uuid() . '/field_test'), $request_options);
@@ -1300,13 +1300,10 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $methods = [
       'HEAD',
       'GET',
+      'PATCH',
+      'DELETE',
     ];
-    foreach ($methods as $method) {
-      $response = $this->request($method, Url::fromUri('internal:/jsonapi/node/article/' . $node->uuid()), $base_request_options);
-      $this->assertSame(200, $response->getStatusCode());
-    }
-
-    $patch_request_options = $base_request_options + [
+    $non_post_request_options = $base_request_options + [
       RequestOptions::JSON => [
         'data' => [
           'type' => 'node--article',
@@ -1314,11 +1311,10 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         ],
       ],
     ];
-    $response = $this->request('PATCH', Url::fromUri('internal:/jsonapi/node/article/' . $node->uuid()), $patch_request_options);
-    $this->assertSame(200, $response->getStatusCode());
-
-    $response = $this->request('DELETE', Url::fromUri('internal:/jsonapi/node/article/' . $node->uuid()), $base_request_options);
-    $this->assertSame(204, $response->getStatusCode());
+    foreach ($methods as $method) {
+      $response = $this->request($method, Url::fromUri('internal:/jsonapi/node/article/' . $node->uuid()), $non_post_request_options);
+      $this->assertSame($method === 'DELETE' ? 204 : 200, $response->getStatusCode());
+    }
 
     $post_request_options = $base_request_options + [
       RequestOptions::JSON => [

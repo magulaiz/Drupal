@@ -25,7 +25,6 @@ class SerializerTest extends JsonapiKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
     'serialization',
     'system',
     'node',

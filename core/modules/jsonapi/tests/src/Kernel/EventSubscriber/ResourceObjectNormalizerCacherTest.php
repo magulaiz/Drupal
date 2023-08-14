@@ -26,7 +26,6 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
     'system',
     'serialization',
     'jsonapi',

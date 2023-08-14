@@ -101,7 +101,7 @@ abstract class Random {
    * @see \Drupal\Component\Utility\Random::name()
    */
   public static function machineName(int $length = 8): string {
-    return static::getGenerator()->machineName($length, TRUE);
+    return static::getGenerator()->name($length, TRUE);
   }
 
   /**

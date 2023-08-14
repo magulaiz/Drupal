@@ -12,9 +12,10 @@ use Drupal\Core\Access\CustomAccessCheck;
 use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Access\CustomAccessCheck
@@ -104,13 +105,13 @@ class CustomAccessCheckTest extends UnitTestCase {
    * Tests the access method exception for invalid access callbacks.
    */
   public function testAccessException() {
-    $callableResolver = $this->createMock(CallableResolver::class);
-    $callableResolver->method('getCallableFromDefinition')
-      ->willThrowException(new \InvalidArgumentException());
+    // Create two mocks for the ControllerResolver constructor.
+    $httpMessageFactory = $this->getMockBuilder(HttpMessageFactoryInterface::class)->getMock();
+    $controllerResolver = $this->getMockBuilder(ClassResolverInterface::class)->getMock();
 
     // Re-create the controllerResolver mock with proxy to original methods.
     $this->controllerResolver = $this->getMockBuilder(ControllerResolver::class)
-      ->setConstructorArgs([$callableResolver])
+      ->setConstructorArgs([$httpMessageFactory, $controllerResolver])
       ->enableProxyingToOriginalMethods()
       ->getMock();
 

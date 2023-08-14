@@ -68,11 +68,6 @@ export function getClosestSelectedDrupalMediaWidget(selection) {
     return viewElement;
   }
 
-  // Perhaps nothing is selected.
-  if (selection.getFirstPosition() === null) {
-    return null;
-  }
-
   let parent = selection.getFirstPosition().parent;
 
   while (parent) {

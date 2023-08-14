@@ -5,13 +5,10 @@
  * Batch process to check the availability of remote or local po files.
  */
 
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -299,29 +296,17 @@ function locale_translation_http_check($uri) {
  *   Directory where the downloaded file will be saved. Defaults to the
  *   temporary file path.
  *
- * @return object|false
+ * @return object
  *   File object if download was successful. FALSE on failure.
  */
 function locale_translation_download_source($source_file, $directory = 'temporary://') {
-  try {
-    $data = (string) \Drupal::httpClient()->get($source_file->uri)->getBody();
-    /** @var \Drupal\Core\File\FileSystemInterface $fileSystem */
-    $fileSystem = \Drupal::service('file_system');
-    $filename = $fileSystem->basename($source_file->uri);
-    if ($uri = $fileSystem->saveData($data, $directory . $filename, FileSystemInterface::EXISTS_REPLACE)) {
-      $file = clone($source_file);
-      $file->type = LOCALE_TRANSLATION_LOCAL;
-      $file->uri = $uri;
-      $file->directory = $directory;
-      $file->timestamp = filemtime($uri);
-      return $file;
-    }
-  }
-  catch (TransferException $exception) {
-    \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
-  }
-  catch (FileException | InvalidStreamWrapperException $e) {
-    \Drupal::messenger()->addError(t('Failed to save file due to error "%error"', ['%error' => $e->getMessage()]));
+  if ($uri = system_retrieve_file($source_file->uri, $directory, FALSE, FileSystemInterface::EXISTS_REPLACE)) {
+    $file = clone($source_file);
+    $file->type = LOCALE_TRANSLATION_LOCAL;
+    $file->uri = $uri;
+    $file->directory = $directory;
+    $file->timestamp = filemtime($uri);
+    return $file;
   }
   \Drupal::logger('locale')->error('Unable to download translation file @uri.', ['@uri' => $source_file->uri]);
   return FALSE;

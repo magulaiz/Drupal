@@ -4,7 +4,6 @@ namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
@@ -115,7 +114,6 @@ class CommentTest extends ResourceTestBase {
     $this->commentedEntity = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
-      'comment' => CommentItemInterface::OPEN,
     ]);
     $this->commentedEntity->save();
 

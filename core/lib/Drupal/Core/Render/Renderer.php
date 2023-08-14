@@ -233,14 +233,6 @@ class Renderer implements RendererInterface {
       if ($elements['#access'] instanceof AccessResultInterface) {
         $this->addCacheableDependency($elements, $elements['#access']);
         if (!$elements['#access']->isAllowed()) {
-          // Abort, but bubble new cache metadata from the access result.
-          $context = $this->getCurrentRenderContext();
-          if (!isset($context)) {
-            throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
-          }
-          $context->push(new BubbleableMetadata());
-          $context->update($elements);
-          $context->bubble();
           return '';
         }
       }
@@ -600,7 +592,7 @@ class Renderer implements RendererInterface {
   /**
    * Returns the current render context.
    *
-   * @return \Drupal\Core\Render\RenderContext|null
+   * @return \Drupal\Core\Render\RenderContext
    *   The current render context.
    */
   protected function getCurrentRenderContext() {

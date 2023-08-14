@@ -27,7 +27,6 @@ use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -143,12 +142,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container
       ->register('test.http_client.middleware', 'Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware')
       ->addTag('http_client_middleware');
-    // Add the wait terminate middleware which acquires a lock to signal request
-    // termination to the test runner.
-    $container
-      ->register('test.http_middleware.wait_terminate_middleware', 'Drupal\Core\Test\StackMiddleware\TestWaitTerminateMiddleware')
-      ->setArguments([new Reference('state'), new Reference('lock')])
-      ->addTag('http_middleware', ['priority' => -1024]);
   }
 
 }

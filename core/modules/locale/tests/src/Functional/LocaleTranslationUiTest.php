@@ -179,11 +179,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Test invalidation of 'rendered' cache tag after string translation.
     $this->drupalLogout();
     $this->drupalGet('xx/user/login');
-    $this->assertSession()->pageTextContains('Password');
+    $this->assertSession()->pageTextContains('Enter the password that accompanies your username.');
 
     $this->drupalLogin($translate_user);
     $search = [
-      'string' => 'Password',
+      'string' => 'accompanies your username',
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];
@@ -192,14 +192,14 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
-      $lid => 'Llamas are larger than frogs.',
+      $lid => 'Please enter your Llama username.',
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($edit, 'Save translations');
 
     $this->drupalLogout();
     $this->drupalGet('xx/user/login');
-    $this->assertSession()->pageTextContains('Llamas are larger than frogs.');
+    $this->assertSession()->pageTextContains('Please enter your Llama username.');
 
     // Delete the language.
     $this->drupalLogin($admin_user);

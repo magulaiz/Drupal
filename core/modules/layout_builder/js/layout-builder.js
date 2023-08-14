@@ -48,11 +48,7 @@
             link.textContent.toLowerCase().indexOf(query) !== -1;
           // Checks if a category is currently hidden.
           // Toggles the category on if so.
-          if (
-            Drupal.elementIsHidden(
-              $link.closest('.js-layout-builder-category')[0],
-            )
-          ) {
+          if ($link.closest('.js-layout-builder-category').is(':hidden')) {
             $link.closest('.js-layout-builder-category').show();
           }
           // Toggle the li tag of the matching link.
@@ -409,7 +405,7 @@
       };
 
       $('#layout-builder-content-preview', context).on('change', (event) => {
-        const isChecked = event.currentTarget.checked;
+        const isChecked = $(event.currentTarget).is(':checked');
 
         localStorage.setItem(contentPreviewId, JSON.stringify(isChecked));
 

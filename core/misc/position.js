@@ -42,7 +42,7 @@
   }
 
   function parseCss(element, property) {
-    return parseInt(window.getComputedStyle(element)[property], 10) || 0;
+    return parseInt($.css(element, property), 10) || 0;
   }
 
   function getDimensions(elem) {
@@ -311,7 +311,7 @@
 
       $('body').append(div);
       const w1 = innerDiv.offsetWidth;
-      div[0].style.overflow = 'scroll';
+      div.css('overflow', 'scroll');
 
       let w2 = innerDiv.offsetWidth;
 
@@ -327,11 +327,11 @@
       const overflowX =
         within.isWindow || within.isDocument
           ? ''
-          : window.getComputedStyle(within.element[0])['overflow-x'];
+          : within.element.css('overflow-x');
       const overflowY =
         within.isWindow || within.isDocument
           ? ''
-          : window.getComputedStyle(within.element[0])['overflow-y'];
+          : within.element.css('overflow-y');
       const hasOverflowX =
         overflowX === 'scroll' ||
         (overflowX === 'auto' && within.width < within.element[0].scrollWidth);

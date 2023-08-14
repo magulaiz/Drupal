@@ -10,7 +10,6 @@ use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the content translation settings UI.
@@ -20,7 +19,6 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 class ContentTranslationSettingsTest extends BrowserTestBase {
 
   use CommentTestTrait;
-  use FieldUiTestTrait;
 
   /**
    * Modules to enable.
@@ -174,7 +172,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('language_configuration[content_translation]');
     $this->assertSession()->checkboxNotChecked('edit-language-configuration-content-translation');
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
@@ -217,7 +215,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'language_configuration[content_translation]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
     $this->getSession()->getPage()->hasContent('"Show language selector" is not compatible with translating content that has default language: und. Either do not hide the language selector or pick a specific language.');
 
     // Test that the order of the language list is similar to other language
@@ -258,8 +256,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Make sure account settings can be saved.
     $this->drupalGet('admin/config/people/accounts');
-    $this->submitForm(['anonymous' => 'Save me!'], 'Save configuration');
-    $this->assertSession()->fieldValueEquals('anonymous', 'Save me!');
+    $this->submitForm(['anonymous' => 'Save me please!'], 'Save configuration');
+    $this->assertSession()->fieldValueEquals('anonymous', 'Save me please!');
     $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
   }
 
@@ -292,7 +290,13 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // At least one field needs to be translatable to enable article for
     // translation. Create an extra field to be used for this purpose. We use
     // the UI to test our form alterations.
-    $this->fieldUIAddNewField('admin/structure/types/manage/article', 'article_text', 'Test', 'text');
+    $edit = [
+      'new_storage_type' => 'text',
+      'label' => 'Test',
+      'field_name' => 'article_text',
+    ];
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $this->submitForm($edit, 'Save and continue');
 
     // Tests that field doesn't have translatable setting if bundle is not
     // translatable.

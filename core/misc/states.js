@@ -477,7 +477,7 @@
       // Attach the event callback.
       this.element.on(
         event,
-        function (e) {
+        $.proxy(function (e) {
           const value = valueFn.call(this.element, e);
           // Only trigger the event if the value has actually changed.
           if (oldValue !== value) {
@@ -488,18 +488,18 @@
             });
             oldValue = value;
           }
-        }.bind(this),
+        }, this),
       );
 
       states.postponed.push(
-        function () {
+        $.proxy(function () {
           // Trigger the event once for initialization purposes.
           this.element.trigger({
             type: `state:${this.state}`,
             value: oldValue,
             oldValue: null,
           });
-        }.bind(this),
+        }, this),
       );
     },
   };
@@ -573,7 +573,7 @@
       collapsed(e) {
         return typeof e !== 'undefined' && 'value' in e
           ? e.value
-          : !this[0].hasAttribute('open');
+          : !this.is('[open]');
       },
     },
   };
@@ -742,7 +742,7 @@
 
   $document.on('state:collapsed', (e) => {
     if (e.trigger) {
-      if (e.target.hasAttribute('open') === e.value) {
+      if ($(e.target).is('[open]') === e.value) {
         $(e.target).find('> summary').trigger('click');
       }
     }

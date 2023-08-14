@@ -53,7 +53,7 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     $this->createEntityReferenceField('node', 'article', 'field_relationships', 'Relationship', 'node', 'default', ['target_bundles' => ['article']], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     Role::create([
-      'id' => 'article_editor',
+      'id' => 'article editor',
       'label' => 'article editor',
       'permissions' => [
         'access content',
@@ -63,7 +63,7 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     ])->save();
 
     Role::create([
-      'id' => 'page_editor',
+      'id' => 'page editor',
       'label' => 'page editor',
       'permissions' => [
         'access content',
@@ -92,14 +92,14 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
       'status' => 1,
       // Do not use UID 1 as that has access to everything.
       'uid' => 2,
-      'roles' => ['article_editor'],
+      'roles' => ['article editor'],
     ]);
     $page_editor = User::create([
       'name' => 'page editor',
       'mail' => 'page@localhost',
       'status' => 1,
       'uid' => 3,
-      'roles' => ['page_editor'],
+      'roles' => ['page editor'],
     ]);
     $editor = User::create([
       'name' => 'editor',

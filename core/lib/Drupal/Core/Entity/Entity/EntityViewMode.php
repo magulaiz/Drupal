@@ -29,13 +29,11 @@ use Drupal\Core\Entity\EntityViewModeInterface;
  *   label = @Translation("View mode"),
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "description" = "description",
+ *     "label" = "label"
  *   },
  *   config_export = {
  *     "id",
  *     "label",
- *     "description",
  *     "targetEntityType",
  *     "cache",
  *   }

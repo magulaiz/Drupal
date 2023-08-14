@@ -66,7 +66,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'block' => 37,
+      'block' => 36,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 8,
@@ -87,7 +87,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 14,
-      'search_page' => 3,
+      'search_page' => 2,
       'shortcut' => 2,
       'shortcut_set' => 1,
       'action' => 33,
@@ -95,6 +95,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'path_alias' => 8,
       'taxonomy_term' => 15,
       'taxonomy_vocabulary' => 7,
+      'tour' => 6,
       'user' => 7,
       'user_role' => 7,
       'menu_link_content' => 10,

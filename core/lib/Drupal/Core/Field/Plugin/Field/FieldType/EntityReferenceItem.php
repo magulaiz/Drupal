@@ -13,6 +13,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldException;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -35,13 +36,13 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *   id = "entity_reference",
  *   label = @Translation("Entity reference"),
  *   description = @Translation("An entity field containing an entity reference."),
- *   category = "reference",
+ *   category = @Translation("Reference"),
  *   default_widget = "entity_reference_autocomplete",
  *   default_formatter = "entity_reference_label",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  * )
  */
-class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
+class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
 
   /**
    * {@inheritdoc}
@@ -775,21 +776,6 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     }
 
     return $options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition): array {
-    $settings = $field_definition->getSettings();
-    $target_type_id = $settings['target_type'];
-    $handler_settings = $settings['handler_settings'];
-
-    $has_target_bundles = isset($handler_settings['target_bundles']) && !empty($handler_settings['target_bundles']);
-    $target_bundles = $has_target_bundles
-      ? $handler_settings['target_bundles']
-      : array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($target_type_id));
-    return [$target_type_id => $target_bundles];
   }
 
 }

@@ -58,7 +58,7 @@ class ImageFormatterTest extends FieldKernelTestBase {
 
     $this->entityType = 'entity_test';
     $this->bundle = $this->entityType;
-    $this->fieldName = $this->randomMachineName();
+    $this->fieldName = mb_strtolower($this->randomMachineName());
 
     FieldStorageConfig::create([
       'entity_type' => $this->entityType,

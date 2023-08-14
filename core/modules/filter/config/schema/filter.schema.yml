@@ -19,13 +19,8 @@ filter.format.*:
       type: label
       label: 'Name'
     format:
-      type: machine_name
+      type: string
       label: 'Machine name'
-      # Filter format machine names can be up to 255 characters.
-      # @see \Drupal\filter\FilterFormatFormBase::form()
-      constraints:
-        Length:
-          max: 255
     weight:
       type: integer
       label: 'Weight'

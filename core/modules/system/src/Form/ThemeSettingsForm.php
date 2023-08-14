@@ -236,7 +236,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         '#title' => $this->t('Upload logo image'),
         '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your logo."),
         '#upload_validators' => [
-          'FileIsImage' => [],
+          'file_validate_is_image' => [],
         ],
       ];
     }
@@ -279,8 +279,8 @@ class ThemeSettingsForm extends ConfigFormBase {
         '#title' => $this->t('Upload favicon image'),
         '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your shortcut icon."),
         '#upload_validators' => [
-          'FileExtension' => [
-            'extensions' => 'ico png gif jpg jpeg apng svg webp',
+          'file_validate_extensions' => [
+            'ico png gif jpg jpeg apng svg webp',
           ],
         ],
       ];

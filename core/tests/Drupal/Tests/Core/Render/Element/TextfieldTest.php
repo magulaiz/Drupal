@@ -33,7 +33,7 @@ class TextfieldTest extends UnitTestCase {
     $data[] = ['', ['test']];
     $data[] = ['test', 'test'];
     $data[] = ['123', 123];
-    $data[] = ['testWithNewline', "test\nWith\rNewline"];
+    $data[] = ['testwithnewline', "test\nwith\rnewline"];
 
     return $data;
   }

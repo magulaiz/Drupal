@@ -84,14 +84,13 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ]);
-    $field_storage->save();
+
     // Check that the default settings have been populated.
     $expected_settings = [
       'test_field_storage_setting' => 'dummy test string',
       'changeable' => 'a changeable field storage setting',
       'unchangeable' => 'an unchangeable field storage setting',
       'translatable_storage_setting' => 'a translatable field storage setting',
-      'storage_setting_from_config_data' => 'TRUE',
     ];
     $this->assertEquals($expected_settings, $field_storage->getSettings());
 
@@ -112,7 +111,6 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ]);
-    $field_storage->save();
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
@@ -132,7 +130,6 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'test_field_setting' => 'dummy test string',
       'translatable_field_setting' => 'a translatable field setting',
       'field_setting_from_config_data' => 'TRUE',
-      'storage_setting_from_config_data' => 'TRUE',
     ];
     $this->assertEquals($expected_settings, $field->getSettings());
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\FunctionalJavascript;
+namespace Drupal\Tests\system\FunctionalJavaScript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use Drupal\node\NodeInterface;

@@ -4,9 +4,6 @@ parameters:
   # allow IDEs to autocomplete them when writing new service YAML files.
   app.root: ''
   site.path: ''
-  # \Drupal\Core\Cache\ListCacheBinsPass::process() will override this but defining this allows the cache system to
-  # function properly before that runs.
-  cache_default_bin_backends: []
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -295,12 +292,6 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
-  Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
-  asset.query_string:
-    class: Drupal\Core\Asset\AssetQueryString
-    arguments:
-      - '@state'
-      - '@datetime.time'
   cache_router_rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
   page_cache_request_policy:
@@ -447,7 +438,7 @@ services:
   Drupal\Core\Form\FormValidatorInterface: '@form_validator'
   form_submitter:
     class: Drupal\Core\Form\FormSubmitter
-    arguments: ['@request_stack', '@url_generator', '@redirect_response_subscriber']
+    arguments: ['@request_stack', '@url_generator']
   Drupal\Core\Form\FormSubmitterInterface: '@form_submitter'
   form_error_handler:
     class: Drupal\Core\Form\FormErrorHandler
@@ -748,12 +739,8 @@ services:
   Drupal\Core\Block\BlockManagerInterface: '@plugin.manager.block'
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager', '@plugin.manager.field.field_type_category']
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager']
   Drupal\Core\Field\FieldTypePluginManagerInterface: '@plugin.manager.field.field_type'
-  plugin.manager.field.field_type_category:
-    class: \Drupal\Core\Field\FieldTypeCategoryManager
-    arguments: [ '%app.root%', '@module_handler', '@cache.discovery' ]
-  Drupal\Core\Field\FieldTypeCategoryManagerInterface: '@plugin.manager.field.field_type_category'
   plugin.manager.field.widget:
     class: Drupal\Core\Field\WidgetPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@plugin.manager.field.field_type']
@@ -845,7 +832,7 @@ services:
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@callable_resolver']
+    arguments: ['@psr7.http_message_factory', '@class_resolver']
   Drupal\Core\Controller\ControllerResolverInterface: '@controller_resolver'
   Symfony\Component\HttpKernel\Controller\ControllerResolverInterface: '@controller_resolver'
   class_resolver:
@@ -853,10 +840,6 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\DependencyInjection\ClassResolverInterface: '@class_resolver'
-  callable_resolver:
-    class: Drupal\Core\Utility\CallableResolver
-    arguments: ['@class_resolver']
-  Drupal\Core\Utility\CallableResolver: '@callable_resolver'
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation', '@http_kernel.controller.argument_resolver']
@@ -1440,7 +1423,7 @@ services:
   Drupal\Core\Executable\ExecutableManagerInterface: '@plugin.manager.condition'
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@theme_handler', '@module_handler', '@theme.manager']
+    arguments: ['@container.namespaces', '@cache.discovery', '@cache_tags.invalidator', '@module_handler', '@theme.manager']
   Drupal\Core\Render\ElementInfoManagerInterface: '@plugin.manager.element_info'
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
@@ -1605,7 +1588,7 @@ services:
   Drupal\Core\Asset\AssetCollectionRendererInterface $css_collection_renderer: '@asset.css.collection_renderer'
   asset.css.collection_optimizer:
     class: Drupal\Core\Asset\CssCollectionOptimizerLazy
-    arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager']
+    arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
   asset.css.optimizer:
     class: Drupal\Core\Asset\CssOptimizer
     arguments: ['@file_url_generator']
@@ -1620,7 +1603,7 @@ services:
   Drupal\Core\Asset\AssetCollectionRendererInterface $js_collection_renderer: '@asset.js.collection_renderer'
   asset.js.collection_optimizer:
     class: Drupal\Core\Asset\JsCollectionOptimizerLazy
-    arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager']
+    arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
   asset.js.optimizer:
     class: Drupal\Core\Asset\JsOptimizer
   asset.js.collection_grouper:

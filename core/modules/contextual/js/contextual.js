@@ -71,8 +71,7 @@
       $trigger.addClass('visually-hidden');
 
       // Adjust nested contextual link's position.
-      $nestedContextual[0].style.top =
-        $nestedContextual.position().top + height;
+      $nestedContextual.css({ top: $nestedContextual.position().top + height });
     }
   }
 

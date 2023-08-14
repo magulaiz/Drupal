@@ -6,7 +6,6 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\views\Entity\View;
 
 /**
@@ -15,8 +14,6 @@ use Drupal\views\Entity\View;
  * @group layout_builder
  */
 class LayoutBuilderTest extends BrowserTestBase {
-
-  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}
@@ -447,7 +444,15 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->linkNotExists('Layout');
 
     // Add a new field.
-    $this->fieldUIAddNewField($field_ui_prefix, 'my_text', 'My text field', 'string');
+    $edit = [
+      'new_storage_type' => 'string',
+      'label' => 'My text field',
+      'field_name' => 'my_text',
+    ];
+    $this->drupalGet("{$field_ui_prefix}/fields/add-field");
+    $this->submitForm($edit, 'Save and continue');
+    $page->pressButton('Save field settings');
+    $page->pressButton('Save settings');
     $this->drupalGet("$field_ui_prefix/display/default/layout");
     $assert_session->pageTextContains('My text field');
     $assert_session->elementExists('css', '.field--name-field-my-text');

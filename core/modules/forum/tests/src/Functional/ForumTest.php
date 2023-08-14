@@ -97,7 +97,6 @@ class ForumTest extends BrowserTestBase {
     // Create users.
     $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
-      'access help pages',
       'administer modules',
       'administer blocks',
       'administer forums',
@@ -108,7 +107,6 @@ class ForumTest extends BrowserTestBase {
     ]);
     $this->editAnyTopicsUser = $this->drupalCreateUser([
       'access administration pages',
-      'access help pages',
       'create forum content',
       'edit any forum content',
       'delete any forum content',
@@ -230,7 +228,7 @@ class ForumTest extends BrowserTestBase {
       'post comments',
     ]));
     $this->drupalGet('admin/structure/types/manage/forum');
-    $this->submitForm(['options[promote]' => 'promote'], 'Save');
+    $this->submitForm(['options[promote]' => 'promote'], 'Save content type');
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);
     $this->drupalGet('node');

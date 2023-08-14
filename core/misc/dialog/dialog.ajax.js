@@ -89,15 +89,14 @@
         '.form-actions input[type=submit], .form-actions a.button, .form-actions a.action-link',
       );
       $buttons.each(function () {
-        const $originalButton = $(this);
-        this.style.display = 'none';
+        const $originalButton = $(this).css({ display: 'none' });
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
             // event will not simulate a click. Use the click method instead.
-            if ($originalButton[0].tagName === 'A') {
+            if ($originalButton.is('a')) {
               $originalButton[0].click();
             } else {
               $originalButton

@@ -2,8 +2,6 @@
 
 namespace Drupal\field\Plugin\migrate\source\d6;
 
-// cspell:ignore objectid objectindex
-
 /**
  * Drupal 6 i18n field option labels source from database.
  *
@@ -35,7 +33,7 @@ class FieldOptionTranslation extends Field {
       ->condition('i18n.type', 'field')
       ->condition('property', 'option\_%', 'LIKE');
     $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
-    $query->leftJoin('content_node_field', 'cnf', '[cnf].[field_name] = [i18n].[objectid]');
+    $query->leftjoin('content_node_field', 'cnf', '[cnf].[field_name] = [i18n].[objectid]');
     $query->addField('cnf', 'field_name');
     $query->addField('cnf', 'global_settings');
     // Minimise changes to the d6_field_option_translation.yml, which is copied

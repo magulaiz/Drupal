@@ -989,7 +989,7 @@
           // Update status.
           Drupal.filterConfiguration.statuses[filterID].active = $(
             `[name="filters[${filterID}][status]"]`,
-          )[0].checked;
+          ).is(':checked');
 
           // Update current rules.
           if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {

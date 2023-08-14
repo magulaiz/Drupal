@@ -107,7 +107,7 @@
       )}-${settings.view_display_id.replace(/_/g, '-')}`,
     );
     once('exposed-form', this.$exposed_form).forEach(
-      this.attachExposedFormAjax.bind(this),
+      $.proxy(this.attachExposedFormAjax, this),
     );
 
     // Add the ajax to pagers.
@@ -116,8 +116,8 @@
       this.$view
         // Don't attach to nested views. Doing so would attach multiple behaviors
         // to a given element.
-        .filter(this.filterNestedViews.bind(this)),
-    ).forEach(this.attachPagerAjax.bind(this));
+        .filter($.proxy(this.filterNestedViews, this)),
+    ).forEach($.proxy(this.attachPagerAjax, this));
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.
@@ -174,7 +174,7 @@
       .find(
         '.js-pager__items a, th.views-field a, .attachment .views-summary a',
       )
-      .each(this.attachPagerLinkAjax.bind(this));
+      .each($.proxy(this.attachPagerLinkAjax, this));
   };
 
   /**

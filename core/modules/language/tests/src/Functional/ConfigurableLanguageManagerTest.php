@@ -11,7 +11,6 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * Tests Language Negotiation.
@@ -21,8 +20,6 @@ use Drupal\Tests\WaitTerminateTestTrait;
  * @group language
  */
 class ConfigurableLanguageManagerTest extends BrowserTestBase {
-
-  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -47,8 +44,6 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->setWaitForTerminate();
 
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->createUser([], '', TRUE);
@@ -217,8 +212,8 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     ]);
 
     // Create a field on the user entity.
-    $field_name = $this->randomMachineName();
-    $label = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
+    $label = mb_strtolower($this->randomMachineName());
     $field_label_en = "English $label";
     $field_label_es = "Español $label";
 

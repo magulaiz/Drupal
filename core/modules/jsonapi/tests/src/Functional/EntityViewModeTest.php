@@ -55,7 +55,6 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
     $entity_view_mode = EntityViewMode::create([
       'id' => 'user.test',
       'label' => 'Test',
-      'description' => '',
       'targetEntityType' => 'user',
     ]);
     $entity_view_mode->save();
@@ -94,7 +93,6 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
           ],
           'label' => 'Test',
           'langcode' => 'en',
-          'description' => '',
           'status' => TRUE,
           'targetEntityType' => 'user',
           'drupal_internal__id' => 'user.test',

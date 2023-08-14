@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Asset;
 
 use Drupal\Component\Utility\UrlHelper;
@@ -59,15 +57,6 @@ class AssetOptimizationTest extends BrowserTestBase {
   }
 
   /**
-   * Creates a user and requests a page.
-   */
-  protected function requestPage(): void {
-    $user = $this->createUser();
-    $this->drupalLogin($user);
-    $this->drupalGet('');
-  }
-
-  /**
    * Helper to test aggregate file URLs.
    *
    * @param array $settings
@@ -84,38 +73,44 @@ class AssetOptimizationTest extends BrowserTestBase {
       'preprocess' => TRUE,
       'gzip' => TRUE,
     ])->save();
-    $this->requestPage();
+    $user = $this->createUser();
+    $this->drupalLogin($user);
+    $this->drupalGet('');
     $session = $this->getSession();
     $page = $session->getPage();
 
-    // Collect all the URLs for all the script and styles prior to making any
-    // more requests.
-    $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
-    $script_elements = $page->findAll('xpath', '//script[@src]');
-    $style_urls = [];
-    foreach ($style_elements as $element) {
-      $style_urls[] = $element->getAttribute('href');
+    $elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
+    $urls = [];
+    foreach ($elements as $element) {
+      if ($element->hasAttribute('href')) {
+        $urls[] = $element->getAttribute('href');
+      }
     }
-    $script_urls = [];
-    foreach ($script_elements as $element) {
-      $script_urls[] = $element->getAttribute('src');
+    foreach ($urls as $url) {
+      $this->assertAggregate($url);
     }
-    foreach ($style_urls as $url) {
-      $this->assertAggregate($url, TRUE, 'text/css');
-      // Once the file has been requested once, it's on disk. It is possible for
-      // a second request to hit the controller, and then find that another
-      // request has created the file already. Actually simulating this race
-      // condition is not really possible since it relies on timing. However, by
-      // changing the case of the part of the URL that is handled by Drupal
-      // routing, we can force the request to be served by Drupal.
-      $this->assertAggregate(str_replace($this->fileAssetsPath, strtoupper($this->fileAssetsPath), $url), TRUE, 'text/css');
-      $this->assertAggregate($url, FALSE, 'text/css');
+    foreach ($urls as $url) {
+      $this->assertAggregate($url, FALSE);
+    }
+
+    foreach ($urls as $url) {
       $this->assertInvalidAggregates($url);
     }
 
-    foreach ($script_urls as $url) {
+    $elements = $page->findAll('xpath', '//script');
+    $urls = [];
+    foreach ($elements as $element) {
+      if ($element->hasAttribute('src')) {
+        $urls[] = $element->getAttribute('src');
+      }
+    }
+    foreach ($urls as $url) {
       $this->assertAggregate($url);
+    }
+    foreach ($urls as $url) {
       $this->assertAggregate($url, FALSE);
+    }
+    foreach ($urls as $url) {
       $this->assertInvalidAggregates($url);
     }
   }
@@ -127,27 +122,19 @@ class AssetOptimizationTest extends BrowserTestBase {
    *   The source URL.
    * @param bool $from_php
    *   (optional) Is the result from PHP or disk? Defaults to TRUE (PHP).
-   * @param string|null $content_type
-   *   The expected content type, or NULL to skip checking.
    */
-  protected function assertAggregate(string $url, bool $from_php = TRUE, string $content_type = NULL): void {
+  protected function assertAggregate(string $url, bool $from_php = TRUE): void {
     $url = $this->getAbsoluteUrl($url);
-    if (!stripos($url, $this->fileAssetsPath) !== FALSE) {
-      return;
-    }
+    $this->assertStringContainsString($this->fileAssetsPath, $url);
     $session = $this->getSession();
     $session->visit($url);
     $this->assertSession()->statusCodeEquals(200);
     $headers = $session->getResponseHeaders();
-    if (isset($content_type)) {
-      $this->assertStringContainsString($content_type, $headers['Content-Type'][0]);
-    }
     if ($from_php) {
-      $this->assertStringContainsString('no-store', $headers['Cache-Control'][0]);
-      $this->assertArrayHasKey('X-Generator', $headers);
+      $this->assertEquals(['no-store, private'], $headers['Cache-Control']);
     }
     else {
-      $this->assertArrayNotHasKey('X-Generator', $headers);
+      $this->assertArrayNotHasKey('Cache-Control', $headers);
     }
   }
 
@@ -160,11 +147,6 @@ class AssetOptimizationTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   protected function assertInvalidAggregates(string $url): void {
-    $url = $this->getAbsoluteUrl($url);
-    // Not every script or style on a page is aggregated.
-    if (!str_contains($url, $this->fileAssetsPath)) {
-      return;
-    }
     $session = $this->getSession();
     $session->visit($this->replaceGroupDelta($url));
     $this->assertSession()->statusCodeEquals(200);
@@ -179,9 +161,6 @@ class AssetOptimizationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(400);
 
     $session->visit($this->invalidExclude($url));
-    $this->assertSession()->statusCodeEquals(400);
-
-    $session->visit($this->replaceFileNamePrefix($url));
     $this->assertSession()->statusCodeEquals(400);
 
     $session->visit($this->setInvalidLibrary($url));
@@ -229,19 +208,6 @@ class AssetOptimizationTest extends BrowserTestBase {
     $hash = strtok($parts[1], '.');
     $parts[1] = str_replace($hash, 'abcdefghijklmnop', $parts[1]);
     return $this->getAbsoluteUrl(implode('_', $parts));
-  }
-
-  /**
-   * Replaces the filename prefix in the given URL.
-   *
-   * @param string $url
-   *   The source URL.
-   *
-   * @return string
-   *   The URL with the file name prefix replaced.
-   */
-  protected function replaceFileNamePrefix(string $url): string {
-    return str_replace(['/css_', '/js_'], '/xyz_', $url);
   }
 
   /**

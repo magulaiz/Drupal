@@ -4,7 +4,6 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
@@ -16,7 +15,6 @@ use Drupal\workspaces\Entity\Workspace;
 class PathWorkspacesTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;
-  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -69,7 +67,6 @@ class PathWorkspacesTest extends BrowserTestBase {
     \Drupal::entityTypeManager()->clearCachedDefinitions();
 
     $this->setupWorkspaceSwitcherBlock();
-    $this->setWaitForTerminate();
   }
 
   /**
@@ -150,7 +147,6 @@ class PathWorkspacesTest extends BrowserTestBase {
     // Publish the workspace and check that the alias can be accessed in Live.
     $this->drupalLogin($this->rootUser);
     $stage->publish();
-
     $this->drupalLogout();
     $this->assertAccessiblePaths([$path]);
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:/node/1'));

@@ -57,7 +57,7 @@ class SeparatorTranslationTest extends KernelTestBase {
 
     // Add a datetime range field.
     $this->fieldStorage = FieldStorageConfig::create([
-      'field_name' => $this->randomMachineName(),
+      'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'daterange',
       'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],

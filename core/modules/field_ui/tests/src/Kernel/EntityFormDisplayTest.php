@@ -25,9 +25,8 @@ class EntityFormDisplayTest extends KernelTestBase {
     'field',
     'entity_test',
     'field_test',
-    'system',
-    'text',
     'user',
+    'text',
   ];
 
   /**
@@ -35,8 +34,6 @@ class EntityFormDisplayTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('action');
-    $this->installConfig('user');
     $this->installEntitySchema('entity_test');
   }
 

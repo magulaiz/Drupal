@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
-use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests creating entity reference fields in the UI.
@@ -14,7 +13,6 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
   use EntityReferenceTestTrait;
-  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}
@@ -35,7 +33,13 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
     // Entity types without an ID key should not be presented as options when
     // creating an entity reference field in the UI.
-    $this->fieldUIAddNewField("/admin/structure/types/manage/$node_type", 'test_reference_field', 'Test Field', 'entity_reference', [], [], FALSE);
+    $this->drupalGet("/admin/structure/types/manage/$node_type/fields/add-field");
+    $edit = [
+      'new_storage_type' => 'entity_reference',
+      'label' => 'Test Field',
+      'field_name' => 'test_reference_field',
+    ];
+    $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->optionNotExists('settings[target_type]', 'entity_test_no_id');
 
     // Trying to do it programmatically should raise an exception.

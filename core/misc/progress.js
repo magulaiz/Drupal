@@ -76,9 +76,7 @@
         if (percentage >= 0 && percentage <= 100) {
           $(this.element)
             .find('div.progress__bar')
-            .each(function () {
-              this.style.width = `${percentage}%`;
-            });
+            .css('width', `${percentage}%`);
           $(this.element)
             .find('div.progress__percentage')
             .html(`${percentage}%`);

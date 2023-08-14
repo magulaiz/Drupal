@@ -53,7 +53,7 @@ class HelpTest extends BrowserTestBase {
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser([
-      'access help pages',
+      'access administration pages',
       'view the administration theme',
       'administer permissions',
     ]);
@@ -138,10 +138,7 @@ class HelpTest extends BrowserTestBase {
         $this->assertSession()->titleEquals("$name | Drupal");
         $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
         $info = $module_list->getExtensionInfo($module);
-        $admin_tasks = \Drupal::service('system.module_admin_links_helper')->getModuleAdminLinks($module);
-        if ($module_permissions_link = \Drupal::service('user.module_permissions_link_helper')->getModulePermissionsLink($module, $info['name'])) {
-          $admin_tasks["user.admin_permissions.{$module}"] = $module_permissions_link;
-        }
+        $admin_tasks = system_get_module_admin_tasks($module, $info['name']);
         if (!empty($admin_tasks)) {
           $this->assertSession()->pageTextContains($name . ' administration pages');
         }

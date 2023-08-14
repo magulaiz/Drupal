@@ -71,7 +71,7 @@ class UserRoleConditionTest extends KernelTestBase {
     ])->save();
 
     // Create new role.
-    $rid = $this->randomMachineName(8);
+    $rid = strtolower($this->randomMachineName(8));
     $label = $this->randomString(8);
     $role = Role::create([
       'id' => $rid,
