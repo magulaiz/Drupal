@@ -22,13 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NegotiationConfigureForm extends ConfigFormBase {
 
   /**
-   * Stores the configuration object for language.types.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $languageTypes;
-
-  /**
    * The language manager.
    *
    * @var \Drupal\language\ConfigurableLanguageManagerInterface
@@ -81,7 +74,6 @@ class NegotiationConfigureForm extends ConfigFormBase {
    */
   public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManagerInterface $block_manager, ThemeHandlerInterface $theme_handler, EntityStorageInterface $block_storage = NULL) {
     parent::__construct($config_factory);
-    $this->languageTypes = $this->config('language.types');
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
     $this->blockManager = $block_manager;
@@ -123,7 +115,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $configurable = $this->languageTypes->get('configurable');
+    $configurable = $this->config('language.types')->get('configurable');
 
     $form = [
       '#theme' => 'language_negotiation_configure_form',
@@ -159,7 +151,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $configurable_types = $form['#language_types'];
 
-    $stored_values = $this->languageTypes->get('configurable');
+    $stored_values = $this->config('language.types')->get('configurable');
     $customized = [];
     $method_weights_type = [];
 
@@ -180,7 +172,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
       }
 
       $method_weights_type[$type] = $method_weights;
-      $this->languageTypes->set('negotiation.' . $type . '.method_weights', $method_weights_input)->save();
+      $this->config('language.types')->set('negotiation.' . $type . '.method_weights', $method_weights_input)->save();
     }
 
     // Update non-configurable language types and the related language
@@ -227,7 +219,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
     ];
     // Only show configurability checkbox for the unlocked language types.
     if (empty($info['locked'])) {
-      $configurable = $this->languageTypes->get('configurable');
+      $configurable = $this->config('language.types')->get('configurable');
       $table_form['configurable'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Customize %language_name language detection to differ from Interface text language detection settings', ['%language_name' => $info['name']]),
@@ -242,8 +234,8 @@ class NegotiationConfigureForm extends ConfigFormBase {
     }
 
     $negotiation_info = $form['#language_negotiation_info'];
-    $enabled_methods = $this->languageTypes->get('negotiation.' . $type . '.enabled') ?: [];
-    $methods_weight = $this->languageTypes->get('negotiation.' . $type . '.method_weights') ?: [];
+    $enabled_methods = $this->config('language.types')->get('negotiation.' . $type . '.enabled') ?: [];
+    $methods_weight = $this->config('language.types')->get('negotiation.' . $type . '.method_weights') ?: [];
 
     // Add missing data to the methods lists.
     foreach ($negotiation_info as $method_id => $method) {
