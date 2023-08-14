@@ -50,6 +50,9 @@ views_display:
         type:
           type: string
           label: 'Access type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.access
         options:
           type: views.access.[%parent.type]
     cache:
