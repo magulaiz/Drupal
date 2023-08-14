@@ -418,6 +418,9 @@ views_argument:
         type:
           type: string
           label: 'Validator'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.argument_validator
         fail:
           type: string
           label: 'Action to take if filter value does not validate'
