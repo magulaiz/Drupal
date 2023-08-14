@@ -76,6 +76,10 @@ field_formatter:
     type:
       type: string
       label: 'Format type machine name'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.field.formatter
+          interface: 'Drupal\Core\Field\FormatterInterface'
     label:
       type: string
       label: 'Label setting machine name'
