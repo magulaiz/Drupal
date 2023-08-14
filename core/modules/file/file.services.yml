@@ -32,4 +32,6 @@ services:
   file.upload_route_alter_subscriber:
     class: Drupal\file\EventSubscriber\FileUploadRouteAlterSubscriber
     arguments: ['@entity_type.manager', '@module_handler']
+    tags:
+      - {name: event_subscriber}
   Drupal\file\EventSubscriber\FileUploadRouteAlterSubscriber: '@file.upload_route_alter_subscriber'
