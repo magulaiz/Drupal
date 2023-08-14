@@ -38,6 +38,29 @@ menu_test.callback_description_plain:
   requirements:
     _access: 'TRUE'
 
+menu_test.parent_test:
+  path: '/parent_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access parent test page'
+    _access_admin_menu_block_page: 'TRUE'
+
+menu_test.child_test:
+  path: '/parent_test/child_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access child test page'
+    _access_admin_menu_block_page: 'TRUE'
+
+menu_test.super_child_test:
+  path: '/parent_test/child_test/super_child_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access super child test page'
+
 menu_test.menu_no_title_callback:
   path: '/menu_no_title_callback'
   defaults:

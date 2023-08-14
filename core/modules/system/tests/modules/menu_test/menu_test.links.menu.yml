@@ -15,6 +15,20 @@ menu_test.menu_callback_description.description-plain:
   description: 'Menu item description text'
   route_name: menu_test.callback_description_plain
   parent: menu_test.menu_callback_description
+menu_test.parent_test:
+  title: 'Menu item title'
+  description: 'Menu item description parent'
+  route_name: menu_test.parent_test
+menu_test.parent_test.child_test:
+  title: 'Menu item with a regular description'
+  description: 'Menu item description child'
+  route_name: menu_test.child_test
+  parent: menu_test.parent_test
+menu_test.parent_test.child_test.super_child_test:
+  title: 'Menu item with a super regular description'
+  description: 'Menu item description super child'
+  route_name: menu_test.super_child_test
+  parent: menu_test.parent_test.child_test
 menu_test.menu_no_title_callback:
   title: 'A title with @placeholder'
   route_name: menu_test.menu_no_title_callback

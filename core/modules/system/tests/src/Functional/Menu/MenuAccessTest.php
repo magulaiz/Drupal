@@ -17,7 +17,7 @@ class MenuAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'filter', 'menu_test'];
+  protected static $modules = ['block', 'filter', 'menu_test', 'toolbar'];
 
   /**
    * {@inheritdoc}
@@ -127,6 +127,30 @@ class MenuAccessTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/config');
     // As menu_test adds a menu link under config.
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Some comment.
+    // Create a user with access to the parent but not to the child.
+    $testUser1 = $this->drupalCreateUser([
+      'access parent test page',
+    ]);
+    $testUser2 = $this->drupalCreateUser([
+      'access parent test page',
+      'access child test page',
+    ]);
+    $testUser3 = $this->drupalCreateUser([
+      'access parent test page',
+      'access child test page',
+      'access super child test page',
+    ]);
+    $this->drupalLogin($testUser1);
+    $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalLogin($testUser2);
+    $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalLogin($testUser3);
+    $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
     $this->assertSession()->statusCodeEquals(200);
   }
 

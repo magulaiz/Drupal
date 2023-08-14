@@ -1,0 +1,9 @@
+access parent test page:
+  title: 'Access parent test page'
+  restrict access: true
+access child test page:
+  title: 'Access child test page'
+  restrict access: true
+access super child test page:
+  title: 'Access super child test page'
+  restrict access: true
