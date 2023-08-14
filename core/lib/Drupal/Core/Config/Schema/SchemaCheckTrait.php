@@ -59,6 +59,15 @@ trait SchemaCheckTrait {
         "'uuid' is a required key.",
       ],
     ],
+    'core.base_field_override.*.*.*' => [
+      'settings.handler_settings' => [
+        "'target_type' is a required key.",
+        "'target_bundles' is a required key.",
+        "'sort' is a required key.",
+        "'auto_create' is a required key.",
+        "'auto_create_bundle' is a required key.",
+      ],
+    ],
     'core.entity_form_display.*.*.*' => [
       'content.*' => [
         "'type' is a required key.",
@@ -92,10 +101,22 @@ trait SchemaCheckTrait {
       'settings.handler_settings.view' => [
         "'arguments' is a required key.",
       ],
+      'default_value.*.options' => [
+        "'query' is a required key.",
+        "'fragment' is a required key.",
+        "'absolute' is a required key.",
+        "'https' is a required key.",
+      ],
     ],
     'field.storage.*.*' => [
       'settings' => [
         "'allowed_formats' is a required key.",
+      ],
+      'settings.default_image' => [
+        "'alt' is a required key.",
+        "'title' is a required key.",
+        "'width' is a required key.",
+        "'height' is a required key.",
       ],
     ],
     'filter.format.*' => [
@@ -174,12 +195,44 @@ trait SchemaCheckTrait {
         "'features' is a required key.",
         "'logo' is a required key.",
       ],
+      'favicon' => [
+        "'mimetype' is a required key.",
+        "'url' is a required key.",
+      ],
+      'features' => [
+        "'logo' is a required key.",
+      ],
+      'logo' => [
+        "'url' is a required key.",
+      ],
+    ],
+    'stark.settings' => [
+      '' => [
+        "'favicon' is a required key.",
+        "'features' is a required key.",
+      ],
+      'logo' => [
+        "'url' is a required key.",
+      ],
     ],
     'system.file' => [
       '' => [
         "'allow_insecure_uploads' is a required key.",
         "'path' is a required key.",
         "'temporary_maximum_age' is a required key.",
+      ],
+    ],
+    'rest.resource.*' => [
+      'configuration' => [
+        "'HEAD' is a required key.",
+        "'GET' is a required key.",
+        "'POST' is a required key.",
+        "'PUT' is a required key.",
+        "'DELETE' is a required key.",
+        "'TRACE' is a required key.",
+        "'OPTIONS' is a required key.",
+        "'CONNECT' is a required key.",
+        "'PATCH' is a required key.",
       ],
     ],
     'system.site' => [
