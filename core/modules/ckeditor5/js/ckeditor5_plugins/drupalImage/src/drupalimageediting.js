@@ -539,6 +539,52 @@ function viewImageToModelImage(editor) {
 }
 
 /**
+ * General HTML Support integration for attributes on links wrapping images.
+ *
+ * @param {module:html-support/datafilter~DataFilter} dataFilter
+ *   The General HTML support data filter.
+ *
+ * @return {function}
+ *   Callback that binds an event to its parameter.
+ */
+function upcastBlockImageLinkGhsAttributes(dataFilter) {
+  /**
+   * Callback for the element:img upcast event.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
+    if (!data.modelRange) {
+      return;
+    }
+
+    const viewImageElement = data.viewItem;
+    const viewContainerElement = viewImageElement.parent;
+
+    if (viewContainerElement.is('element', 'a')) {
+      const viewAttributes = dataFilter.processViewAttributes(
+        viewContainerElement,
+        conversionApi,
+      );
+
+      if (viewAttributes) {
+        conversionApi.writer.setAttribute(
+          'htmlLinkAttributes',
+          viewAttributes,
+          data.modelRange,
+        );
+      }
+    }
+  }
+
+  return (dispatcher) => {
+    dispatcher.on('element:img', converter, {
+      priority: 'high',
+    });
+  };
+}
+
+/**
  * Modified alternative implementation of linkimageediting.js' downcastImageLink.
  *
  * @return {function}
@@ -684,6 +730,13 @@ export default class DrupalImageEditing extends Plugin {
           },
         },
       });
+
+    if (editor.plugins.has('DataFilter')) {
+      const dataFilter = editor.plugins.get('DataFilter');
+      conversion
+        .for('upcast')
+        .add(upcastBlockImageLinkGhsAttributes(dataFilter));
+    }
 
     conversion
       .for('downcast')
