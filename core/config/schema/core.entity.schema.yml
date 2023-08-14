@@ -132,6 +132,10 @@ core.entity_form_display.*.*.*:
           type:
             type: string
             label: 'Widget type machine name'
+            constraints:
+              PluginExists:
+                manager: plugin.manager.field.widget
+                interface: '\Drupal\Core\Field\WidgetInterface'
           weight:
             type: integer
             label: 'Weight'
