@@ -694,6 +694,10 @@ field.field_settings.entity_reference:
     handler:
       type: string
       label: 'Reference method'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.entity_reference_selection
+          interface: 'Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface'
     handler_settings:
       type: entity_reference_selection.[%parent.handler]
       label: 'Entity reference selection plugin settings'
