@@ -89,6 +89,9 @@ trait SchemaCheckTrait {
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",
       ],
+      'settings.handler_settings.view' => [
+        "'arguments' is a required key.",
+      ],
     ],
     'field.storage.*.*' => [
       'settings' => [
@@ -125,6 +128,13 @@ trait SchemaCheckTrait {
     'language.types' => [
       'negotiation.*' => [
         "'method_weights' is a required key.",
+      ],
+    ],
+    'test_subtheme.settings' => [
+      '' => [
+        "'favicon' is a required key.",
+        "'logo' is a required key.",
+        "'features' is a required key.",
       ],
     ],
     'test_basetheme.settings' => [
@@ -175,6 +185,13 @@ trait SchemaCheckTrait {
     'system.site' => [
       '' => [
         "'mail_notification' is a required key.",
+        "'uuid' is a required key.",
+        "'name' is a required key.",
+        "'slogan' is a required key.",
+        "'page' is a required key.",
+        "'admin_compact_mode' is a required key.",
+        "'weight_select_max' is a required key.",
+        "'default_langcode' is a required key.",
       ],
     ],
     'system.performance' => [
@@ -209,6 +226,9 @@ trait SchemaCheckTrait {
       ],
     ],
     'views.view.*' => [
+      'display.*' => [
+        "'cache_metadata' is a required key.",
+      ],
       'display.*.display_options' => [
         "'access' is a required key.",
         "'allow' is a required key.",
@@ -395,6 +415,10 @@ trait SchemaCheckTrait {
       'display.*.display_options.arguments.*.validate' => [
         "'fail' is a required key.",
       ],
+      'display.*.display_options.arguments.*.validate_options' => [
+        "'vids' is a required key.",
+        "'multiple' is a required key.",
+      ],
       'display.*.display_options.arguments.*.exception' => [
         "'title' is a required key.",
         "'value' is a required key.",
@@ -544,6 +568,8 @@ trait SchemaCheckTrait {
         "'past_format' is a required key.",
         "'future_format' is a required key.",
         "'image_loading' is a required key.",
+        "'link_to_entity' is a required key.",
+        "'link_to_file' is a required key.",
       ],
       'display.*.display_options.pager.options.tags' => [
         "'quantity' is a required key.",
@@ -595,6 +621,7 @@ trait SchemaCheckTrait {
       'display.*.display_options.filters.*.value' => [
         "'min' is a required key.",
         "'max' is a required key.",
+        "'type' is a required key.",
       ],
       'display.*.display_options.sorts.*.expose' => [
         "'field_identifier' is a required key.",
