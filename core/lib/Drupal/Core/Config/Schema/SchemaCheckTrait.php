@@ -64,6 +64,17 @@ trait SchemaCheckTrait {
   }
 
   /**
+   * Whether the current test is for a contrib module.
+   *
+   * @return bool
+   */
+  private function isContribViolation(): bool {
+    $test_file_name = (new \ReflectionClass($this))->getFileName();
+    $root = dirname(__DIR__, 6);
+    return !str_starts_with($test_file_name, $root . DIRECTORY_SEPARATOR . 'core');
+  }
+
+  /**
    * Helper method to check data type.
    *
    * @param string $key
