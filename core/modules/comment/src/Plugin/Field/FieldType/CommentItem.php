@@ -117,7 +117,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
 
     $element['default_mode'] = [
       '#type' => 'radios',
-      '#title' => t('Threading mode'),
+      '#title' => $this->t('Threading mode'),
       '#options' => [
         CommentManagerInterface::COMMENT_MODE_FLAT => $this->t('Flat list'),
         CommentManagerInterface::COMMENT_MODE_THREADED => $this->t('Threaded (no depth limit)'),

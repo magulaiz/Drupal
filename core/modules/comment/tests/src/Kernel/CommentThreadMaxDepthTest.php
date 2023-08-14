@@ -290,8 +290,8 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
     $entity->save();
 
     $this->comment[0]['entity'] = $this->createComment([
-     'entity_type' => 'entity_test',
-     'entity_id' => $entity->id(),
+      'entity_type' => 'entity_test',
+      'entity_id' => $entity->id(),
     ]);
     $this->comment[0][0]['entity'] = $this->createComment([
       'pid' => $this->comment[0]['entity']->id(),

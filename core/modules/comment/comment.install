@@ -122,7 +122,6 @@ function comment_update_last_removed() {
 }
 
 /**
-<<<<<<< HEAD
  * Remove the year 2038 date limitation.
  */
 function comment_update_10100(&$sandbox = NULL) {

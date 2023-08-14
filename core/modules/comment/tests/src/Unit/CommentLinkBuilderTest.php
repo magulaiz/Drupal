@@ -270,7 +270,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @return \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject
    *   Mock node for testing.
    */
-  protected function getMockNode($has_field, $comment_status, $form_location, $comment_count, $has_access_comments = FALSE, $has_post_comments = FALSE) {
+  protected function getMockNode($has_field, $comment_status, $form_location, $comment_count) {
     $node = $this->createMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('hasField')
@@ -291,7 +291,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ]));
     $field_item->expects($this->any())
       ->method('access')
-      ->will($this->returnCallback(function ($operation, $account) use ($has_access_comments, $has_post_comments) {
+      ->will($this->returnCallback(function ($operation, $account) {
         switch ($operation) {
           case 'view only':
             return $account->hasPermission('access comments');
