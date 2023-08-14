@@ -67,16 +67,15 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     // that the cache ID for said entry is set according to the passed in
     // account's data.
     //
-    // Drupal core does not help us here because there is no way to reuse the
-    // cache context logic outside of the caching layer. This means that in
-    // order to generate a cache ID based on, let's say, one's permissions, we'd
-    // have to copy all of the permission hash generation logic. Same goes for
-    // the optimizing/folding of cache contexts.
+    // Sadly, there is currently no way to reuse the cache context logic outside
+    // of the caching layer. If we every get a system that allows us to process
+    // cache contexts with a provided environmental value (such as the current
+    // user), then we should update the logic below to use that instead.
     //
-    // Instead of doing so, we simply set the current user to the passed in
+    // For the time being, we simply set the current user to the passed in
     // account, calculate the cache ID and then immediately switch back. It's
     // the cleanest solution we could come up with that doesn't involve copying
-    // half of core's caching layer and that still allows us to use the
+    // half of the caching layer and that still allows us to use the
     // VariationCache for accounts other than the current user.
     $switch_account = FALSE;
     foreach ($persistent_cache_contexts as $cache_context) {
