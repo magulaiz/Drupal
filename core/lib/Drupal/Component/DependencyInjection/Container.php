@@ -232,7 +232,7 @@ class Container implements ContainerInterface, ResetInterface {
     // Specific protection against https://github.com/ambionics/phpggc/tree/master/gadgetchains/Drupal9/RCE/1
     if ($id === '1000000' && isset($definition['factory'])) {
       $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-      if ($backtrace[2]['class'] == 'Drupal\Core\Config\CachedStorage' && $backtrace[2]['function'] == 'read') {
+      if ((strpos($backtrace[2]['class'], '\Core\Config\CachedStorage') !== 0) && $backtrace[2]['function'] == 'read') {
         throw new RuntimeException('Halting on suspicious call to ' . __CLASS__ . ':' . __FUNCTION__);
       }
     }
