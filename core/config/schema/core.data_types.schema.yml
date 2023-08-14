@@ -407,6 +407,10 @@ condition.plugin:
     id:
       type: string
       label: 'ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.condition
+          interface: 'Drupal\Core\Condition\ConditionInterface'
     negate:
       type: boolean
       label: 'Negate'
