@@ -10,9 +10,6 @@ views.settings:
       sequence:
         type: string
         label: 'Display extender'
-        constraints:
-          PluginExists:
-            manager: plugin.manager.views.display_extender
     sql_signature:
       type: boolean
       label: 'Add Views signature to all SQL queries'
