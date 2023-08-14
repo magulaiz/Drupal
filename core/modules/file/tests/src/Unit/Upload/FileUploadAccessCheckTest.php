@@ -87,7 +87,7 @@ class FileUploadAccessCheckTest extends UnitTestCase {
   /**
    * @covers ::access
    */
-  public function testAccessFailedNoFieldDefinition(): void {
+  public function testAccessNeutralNoFieldDefinition(): void {
     $fieldDefinitions = [];
     $this->entityFieldManager->expects($this->once())
       ->method('getFieldDefinitions')
@@ -97,13 +97,13 @@ class FileUploadAccessCheckTest extends UnitTestCase {
     $account = $this->createMock(AccountInterface::class);
     $result = $this->accessCheck->access($account, 'foo_type', 'bar_bundle', 'whiz_field');
 
-    $this->assertTrue($result->isForbidden());
+    $this->assertTrue($result->isNeutral());
   }
 
   /**
    * @covers ::access
    */
-  public function testAccessFailedWrongTargetType(): void {
+  public function testAccessForbiddenWrongTargetType(): void {
     $fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
     $fieldDefinition->expects($this->once())
       ->method('getSetting')
@@ -127,7 +127,7 @@ class FileUploadAccessCheckTest extends UnitTestCase {
   /**
    * @covers ::access
    */
-  public function testAccessFailedNoCreateAccess(): void {
+  public function testAccessForbiddenNoCreateAccess(): void {
     $account = $this->createMock(AccountInterface::class);
     $fieldDefinitions = [
       'whiz_field' => $this->fieldDefinition,
@@ -155,7 +155,7 @@ class FileUploadAccessCheckTest extends UnitTestCase {
   /**
    * @covers ::access
    */
-  public function testAccessFailedNoFieldAccess(): void {
+  public function testAccessForbiddenNoFieldAccess(): void {
     $account = $this->createMock(AccountInterface::class);
     $fieldDefinitions = [
       'whiz_field' => $this->fieldDefinition,
@@ -183,7 +183,7 @@ class FileUploadAccessCheckTest extends UnitTestCase {
   /**
    * @covers ::access
    */
-  public function testAccessSuccess(): void {
+  public function testAccessAllowed(): void {
     $account = $this->createMock(AccountInterface::class);
     $fieldDefinitions = [
       'whiz_field' => $this->fieldDefinition,
