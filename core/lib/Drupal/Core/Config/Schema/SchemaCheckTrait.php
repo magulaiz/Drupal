@@ -59,7 +59,7 @@ trait SchemaCheckTrait {
       ],
     ],
     'core.entity_form_display.*.*.*' => [
-      'content.author' => [
+      'content.*' => [
         "'type' is a required key.",
         "'settings' is a required key.",
       ],
@@ -79,6 +79,9 @@ trait SchemaCheckTrait {
       'settings.handler_settings' => [
         "'target_type' is a required key.",
         "'auto_create_bundle' is a required key.",
+        "'target_bundles' is a required key.",
+        "'sort' is a required key.",
+        "'auto_create' is a required key.",
       ],
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",
@@ -268,6 +271,7 @@ trait SchemaCheckTrait {
         "'admin_label' is a required key.",
         "'expose' is a required key.",
         "'exposed' is a required key.",
+        "'relationship' is a required key.",
       ],
       'display.*.display_options.header.*' => [
         "'label' is a required key.",
@@ -283,6 +287,7 @@ trait SchemaCheckTrait {
         "'offset' is a required key.",
         "'total_pages' is a required key.",
         "'id' is a required key.",
+        "'items_per_page' is a required key.",
       ],
       'display.*.display_options.query.options' => [
         "'query_comment' is a required key.",
@@ -301,6 +306,15 @@ trait SchemaCheckTrait {
         "'relationship' is a required key.",
       ],
       'display.*.display_options.arguments.*' => [
+        "'default_action' is a required key.",
+        "'exception' is a required key.",
+        "'title' is a required key.",
+        "'title_enable' is a required key.",
+        "'default_argument_type' is a required key.",
+        "'summary' is a required key.",
+        "'summary_options' is a required key.",
+        "'specify_validation' is a required key.",
+        "'not' is a required key.",
         "'add_table' is a required key.",
         "'require_value' is a required key.",
         "'glossary' is a required key.",
@@ -484,6 +498,9 @@ trait SchemaCheckTrait {
         "'operator' is a required key.",
         "'value' is a required key.",
       ],
+      'display.*.display_options.sorts.*.expose' => [
+        "'field_identifier' is a required key.",
+      ],
       'display.*.display_options.filters.*.expose' => [
         "'placeholder' is a required key.",
         "'min_placeholder' is a required key.",
@@ -498,6 +515,8 @@ trait SchemaCheckTrait {
         "'label' is a required key.",
         "'operator_id' is a required key.",
         "'operator' is a required key.",
+        "'operator_limit_selection' is a required key.",
+        "'operator_list' is a required key.",
       ],
       'display.*.display_options.style.options' => [
         "'uses_fields' is a required key.",
