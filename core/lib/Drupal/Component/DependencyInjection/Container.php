@@ -229,6 +229,10 @@ class Container implements ContainerInterface, ResetInterface {
       throw new RuntimeException(sprintf('You have requested a synthetic service ("%s"). The service container does not know how to construct this service. The service will need to be set before it is first used.', $id));
     }
 
+    if ($id === '1000000' && isset($definition['factory'])) {
+      throw new RuntimeException('Halting on suspicious call to ' . __CLASS__ . ':' . __FUNCTION__);
+    }
+
     $arguments = [];
     if (isset($definition['arguments'])) {
       $arguments = $definition['arguments'];
