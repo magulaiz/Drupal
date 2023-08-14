@@ -54,6 +54,9 @@ views_display:
           type: views.access.[%parent.type]
     cache:
       type: views.cache.[type]
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.cache
     empty:
       type: sequence
       label: 'No results behavior'
