@@ -229,14 +229,6 @@ class Container implements ContainerInterface, ResetInterface {
       throw new RuntimeException(sprintf('You have requested a synthetic service ("%s"). The service container does not know how to construct this service. The service will need to be set before it is first used.', $id));
     }
 
-    // Specific protection against https://github.com/ambionics/phpggc/tree/master/gadgetchains/Drupal9/RCE/1
-    if ($id === '1000000' && isset($definition['factory'])) {
-      $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-      if ((strpos($backtrace[2]['class'], '\Core\Config\CachedStorage') !== 0) && $backtrace[2]['function'] == 'read') {
-        throw new RuntimeException('Halting on suspicious call to ' . __CLASS__ . ':' . __FUNCTION__);
-      }
-    }
-
     $arguments = [];
     if (isset($definition['arguments'])) {
       $arguments = $definition['arguments'];
