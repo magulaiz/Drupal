@@ -306,6 +306,10 @@ system.mail:
       sequence:
         type: string
         label: 'Interface'
+        constraints:
+          PluginExists:
+            manager: plugin.manager.mail
+            interface: 'Drupal\Core\Mail\MailInterface'
 
 system.theme.global:
   type: theme_settings
