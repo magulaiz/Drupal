@@ -30,6 +30,20 @@ menu_test.parent_test.child_test.super_child_test:
   description: 'Menu item description super child'
   route_name: menu_test.super_child_test
   parent: menu_test.parent_test.child_test
+menu_test.menu_parent_test_param:
+  title: 'Menu item title'
+  description: 'Menu item description parent'
+  route_name: menu_test.parent_test_param
+  parent: system.admin
+  route_parameters:
+    param: 'any'
+menu_test.menu_parent_test.child_test_param:
+  title: 'Menu item with a regular description'
+  description: 'Menu item description child'
+  route_name: menu_test.child_test_param
+  parent: menu_test.menu_parent_test_param
+  route_parameters:
+    param: 'any'
 menu_test.menu_no_title_callback:
   title: 'A title with @placeholder'
   route_name: menu_test.menu_no_title_callback

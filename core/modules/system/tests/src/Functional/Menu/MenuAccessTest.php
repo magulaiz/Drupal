@@ -131,26 +131,33 @@ class MenuAccessTest extends BrowserTestBase {
 
     // Some comment.
     // Create a user with access to the parent but not to the child.
-    $testUser1 = $this->drupalCreateUser([
+    $parentUser = $this->drupalCreateUser([
       'access parent test page',
     ]);
-    $testUser2 = $this->drupalCreateUser([
+    $childUser = $this->drupalCreateUser([
       'access parent test page',
       'access child test page',
     ]);
-    $testUser3 = $this->drupalCreateUser([
+    $superChildUser = $this->drupalCreateUser([
       'access parent test page',
       'access child test page',
       'access super child test page',
     ]);
-    $this->drupalLogin($testUser1);
+    $this->drupalLogin($parentUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalLogin($testUser2);
+    $this->drupalLogin($childUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalLogin($testUser3);
+    $this->drupalLogin($superChildUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->drupalLogin($parentUser);
+    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any']));
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalLogin($childUser);
+    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any']));
     $this->assertSession()->statusCodeEquals(200);
   }
 

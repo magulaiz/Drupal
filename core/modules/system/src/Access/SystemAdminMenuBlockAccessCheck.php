@@ -47,9 +47,22 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account): AccessResultInterface {
     // Load links matching this route.
-    $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), [], 'admin');
-    // Select the first matching link.
+    $route = $route_match->getRouteObject();
+    $parameters = $route_match->getParameters()->getIterator()->getArrayCopy();
+    $route_defaults = $route->getDefaults();
+    // @todo Why do we need to unset the parameters if they match the default?
+    //   Looking at an actual site 'menu_tree' table entry for the row for
+    //   route_name=system.admin_config has
+    //   route_param_key="link_id=system.admin_config" but in the test database
+    //   route_param_key is empty so it this does not match any links.
+    foreach (array_keys($parameters) as $key) {
+      if (isset($route_defaults[$key]) && $route_defaults[$key] === $parameters[$key]) {
+        unset($parameters[$key]);
+      }
+    }
+    $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
     if (empty($links)) {
+      // If we did not find a link then we have no opinion on access.
       return AccessResult::neutral();
     }
     return $this->hasAccessToChildMenuItems(reset($links), $account)->cachePerPermissions();
@@ -68,8 +81,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    */
   protected function hasAccessToChildMenuItems(MenuLinkInterface $link, AccountInterface $account): AccessResultInterface {
     $parameters = new MenuTreeParameters();
-    $link_id = $link->getPluginId();
-    $parameters->setRoot($link_id)
+    $parameters->setRoot($link->getPluginId())
       ->excludeRoot()
       ->setTopLevelOnly()
       ->onlyEnabledLinks();
@@ -85,8 +97,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     }
 
     foreach ($tree as $element) {
-      $url = $element->link->getUrlObject();
-      if (!$this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $account)) {
+      if (!$this->accessManager->checkNamedRoute($element->link->getRouteName(), $element->link->getRouteParameters(), $account)) {
         continue;
       }
 
