@@ -19,6 +19,7 @@ menu_test.parent_test:
   title: 'Menu item title'
   description: 'Menu item description parent'
   route_name: menu_test.parent_test
+  parent: system.admin
 menu_test.parent_test.child_test:
   title: 'Menu item with a regular description'
   description: 'Menu item description child'

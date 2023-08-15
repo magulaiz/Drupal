@@ -9,7 +9,7 @@ services:
       - { name: access_check, applies_to: _access_system_update }
   access_check.admin_menu_block_page:
     class: Drupal\system\Access\SystemAdminMenuBlockAccessCheck
-    arguments: ['@access_manager', '@menu.link_tree', '@router']
+    arguments: ['@access_manager', '@menu.link_tree', '@router', '@plugin.manager.menu.link']
     tags:
       - { name: access_check, applies_to: _access_admin_menu_block_page }
   system.manager:
