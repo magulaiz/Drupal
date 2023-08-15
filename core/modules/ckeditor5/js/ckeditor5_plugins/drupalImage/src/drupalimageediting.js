@@ -547,7 +547,7 @@ function viewImageToModelImage(editor) {
  * @return {function}
  *   Callback that binds an event to its parameter.
  */
-function upcastBlockImageLinkGhsAttributes(dataFilter) {
+function upcastImageBlockLinkGhsAttributes(dataFilter) {
   /**
    * Callback for the element:img upcast event.
    *
@@ -561,19 +561,24 @@ function upcastBlockImageLinkGhsAttributes(dataFilter) {
     const viewImageElement = data.viewItem;
     const viewContainerElement = viewImageElement.parent;
 
-    if (viewContainerElement.is('element', 'a')) {
-      const viewAttributes = dataFilter.processViewAttributes(
-        viewContainerElement,
-        conversionApi,
-      );
+    if (!viewContainerElement.is('element', 'a')) {
+      return;
+    }
+    if (!data.modelRange.getContainedElement().is('element', 'imageBlock')) {
+      return;
+    }
 
-      if (viewAttributes) {
-        conversionApi.writer.setAttribute(
-          'htmlLinkAttributes',
-          viewAttributes,
-          data.modelRange,
-        );
-      }
+    const viewAttributes = dataFilter.processViewAttributes(
+      viewContainerElement,
+      conversionApi,
+    );
+
+    if (viewAttributes) {
+      conversionApi.writer.setAttribute(
+        'htmlLinkAttributes',
+        viewAttributes,
+        data.modelRange,
+      );
     }
   }
 
@@ -735,7 +740,7 @@ export default class DrupalImageEditing extends Plugin {
       const dataFilter = editor.plugins.get('DataFilter');
       conversion
         .for('upcast')
-        .add(upcastBlockImageLinkGhsAttributes(dataFilter));
+        .add(upcastImageBlockLinkGhsAttributes(dataFilter));
     }
 
     conversion
