@@ -21,7 +21,7 @@ class EventDispatchingTest extends KernelTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+   * @var list<string>
    */
   protected static $modules = ['event_test', 'event_test_autoconfigure'];
 
@@ -63,10 +63,19 @@ class EventDispatchingTest extends KernelTestBase {
     });
     $dispatcher->dispatch($event, 'ordered_event');
     $this->assertSameListsOfStrings([
-      // The listener with the highest priority is called first.
+      // Listeners with highest priority are called first.
+      // Callbacks from subscribers are generally called before listeners added
+      // at runtime.
+      PrioritizingSubscriber::class . '::fiveOrFifteen',
       'listener.15',
       PrioritizingSubscriber::class . '::plusTen',
+      // The same method can be subscribed twice, with different weight.
+      PrioritizingSubscriber::class . '::fiveOrFifteen',
+      PrioritizingSubscriber::class . '::zero',
       'listener',
+      AutoconfigureSubscriberService::class . '::minusSeven',
+      // The same method can be subscribed twice, with same weight.
+      PrioritizingSubscriber::class . '::minusTen',
       PrioritizingSubscriber::class . '::minusTen',
     ], $event->export());
   }

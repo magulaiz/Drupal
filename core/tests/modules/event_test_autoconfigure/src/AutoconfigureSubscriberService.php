@@ -11,11 +11,20 @@ class AutoconfigureSubscriberService implements EventSubscriberInterface {
 
   public static function getSubscribedEvents(): array {
     return [
-      TestEvent::class => 'testMethod',
+      // The array keys are event ids or event class names.
+      // A possible array value is an array with a single method name and a
+      // priority.
+      'ordered_event' => ['minusSeven', -7],
+      // The priority is optional.
+      TestEvent::class => ['testMethod'],
     ];
   }
 
   public function testMethod(TestEvent $event): void {
+    $event->report(__METHOD__);
+  }
+
+  public function minusSeven(TestEvent $event): void {
     $event->report(__METHOD__);
   }
 

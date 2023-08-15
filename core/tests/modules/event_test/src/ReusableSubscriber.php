@@ -14,6 +14,7 @@ class ReusableSubscriber implements EventSubscriberInterface {
 
   public static function getSubscribedEvents(): array {
     return [
+      // A subscriber can return a single method name for an event.
       TestEvent::class => 'testMethod',
     ];
   }
