@@ -97,7 +97,6 @@ class MenuAccessTest extends BrowserTestBase {
 
     // An admin user has access to all parent pages.
     $this->drupalLogin($adminUser);
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getContent());
     $this->drupalGet('admin/structure');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/people');
