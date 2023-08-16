@@ -54,8 +54,16 @@ trait SchemaCheckTrait {
         "'view_mode' is a required key.",
         "'context_mapping' is a required key.",
         "'items_per_page' is a required key.",
+        "'level' is a required key.",
+        "'depth' is a required key.",
+        "'expand_all_items' is a required key.",
+        "'views_label' is a required key.",
       ],
       'visibility.request_path' => [
+        "'uuid' is a required key.",
+        "'context_mapping' is a required key.",
+      ],
+      'visibility.user_role' => [
         "'uuid' is a required key.",
       ],
     ],
@@ -84,6 +92,43 @@ trait SchemaCheckTrait {
         "'type' is a required key.",
         "'settings' is a required key.",
       ],
+      'third_party_settings.layout_builder' => [
+        "'sections' is a required key.",
+        "'allow_custom' is a required key.",
+        "'enabled' is a required key.",
+      ],
+      'third_party_settings.layout_builder.sections.*.layout_settings' => [
+        "'label' is a required key.",
+        "'context_mapping' is a required key.",
+      ],
+      'third_party_settings.field_layout.settings' => [
+        "'context_mapping' is a required key.",
+      ],
+      'third_party_settings.layout_builder.sections.*.components.*.configuration' => [
+        "'label' is a required key.",
+        "'label_display' is a required key.",
+        "'provider' is a required key.",
+        "'info' is a required key.",
+        "'view_mode' is a required key.",
+        "'status' is a required key.",
+        "'context_mapping' is a required key.",
+        "'formatter' is a required key.",
+      ],
+    ],
+    'layout_builder_test.test_simple_config.*' => [
+      'sections.*.layout_settings' => [
+        "'label' is a required key.",
+        "'context_mapping' is a required key.",
+      ],
+      'sections.*.components.*.configuration' => [
+        "'label' is a required key.",
+        "'label_display' is a required key.",
+        "'provider' is a required key.",
+        "'info' is a required key.",
+        "'view_mode' is a required key.",
+        "'status' is a required key.",
+        "'context_mapping' is a required key.",
+      ],
     ],
     'field.field.*.*.*' => [
       'settings.handler_settings' => [
@@ -100,6 +145,10 @@ trait SchemaCheckTrait {
       ],
       'settings.handler_settings.view' => [
         "'arguments' is a required key.",
+      ],
+      'default_value.*' => [
+        "'format' is a required key.",
+        "'attributes' is a required key.",
       ],
       'default_value.*.options' => [
         "'query' is a required key.",
@@ -260,6 +309,7 @@ trait SchemaCheckTrait {
         "'admin_compact_mode' is a required key.",
         "'weight_select_max' is a required key.",
         "'default_langcode' is a required key.",
+        "'mail' is a required key.",
       ],
     ],
     'system.performance' => [
@@ -282,6 +332,33 @@ trait SchemaCheckTrait {
         "'logo' is a required key.",
         "'name' is a required key.",
         "'slogan' is a required key.",
+      ],
+    ],
+    'locale.settings' => [
+      '' => [
+        "'translate_english' is a required key.",
+        "'translation' is a required key.",
+        "'cache_strings' is a required key.",
+        "'javascript' is a required key.",
+      ],
+    ],
+    'search.settings' => [
+      '' => [
+        "'and_or_limit' is a required key.",
+        "'default_page' is a required key.",
+      ],
+      'index' => [
+        "'tag_weights' is a required key.",
+      ],
+    ],
+    'syslog.settings' => [
+      '' => [
+        "'format' is a required key.",
+      ],
+    ],
+    'taxonomy.settings' => [
+      '' => [
+        "'maintain_index_table' is a required key.",
       ],
     ],
     'tour.tour.*' => [
@@ -799,6 +876,11 @@ trait SchemaCheckTrait {
       ],
       'display.*.cache_metadata' => [
         "'cacheable' is a required key.",
+      ],
+    ],
+    'workflows.workflow.*' => [
+      'type_settings' => [
+        "'default_moderation_state' is a required key.",
       ],
     ],
   ];
