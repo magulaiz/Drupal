@@ -234,10 +234,10 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * Whether the migration allows concurrency.
    *
-   * Normally, migrations won't run if the migration is not idle but in
+   * Normally, migrations won't run if the migration status is not idle but in
    * cases where individual items from the migration are split up (e.g.
-   * using a queue) and processed concurrently, the migration 
-   * @var bool
+   * using a queue) and processed concurrently, enabling this setting
+   * will ignore this check.
    */
   protected bool $allow_concurrency = FALSE;
 
