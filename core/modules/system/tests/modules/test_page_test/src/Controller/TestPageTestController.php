@@ -12,8 +12,7 @@ class TestPageTestController {
   /**
    * Returns a test page and sets the title.
    */
-  public function testPage($param = 'nothing') {
-    \Drupal::messenger()->addStatus("param=" . $param);
+  public function testPage() {
     $link_text = t('Visually identical test links');
     return [
       '#title' => t('Test page'),
