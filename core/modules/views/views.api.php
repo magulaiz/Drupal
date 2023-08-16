@@ -433,7 +433,7 @@ function hook_views_data() {
     'title' => t('Computed Bundle Field'),
     'help' => t('The computed bundle field'),
     'field' => [
-      'id' => 'computed',
+      'id' => 'field',
       'default_formatter' => 'string',
       'field_name' => 'computed_bundle_field',
     ],
