@@ -27,7 +27,7 @@ class Xss {
    *
    * @see \Drupal\Component\Utility\Xss::filter()
    */
-  protected static $htmlTags = ['a', 'video', 'source', 'iframe', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd'];
+  protected static $htmlTags = ['a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd'];
 
   /**
    * Filters HTML to prevent cross-site-scripting (XSS) vulnerabilities.
