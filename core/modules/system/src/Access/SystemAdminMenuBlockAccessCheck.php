@@ -31,7 +31,12 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link manager service.
    */
-  public function __construct(private readonly AccessManagerInterface $accessManager, private readonly MenuLinkTreeInterface $menuLinkTree, private readonly AccessAwareRouter $router, private readonly MenuLinkManagerInterface $menuLinkManager) {
+  public function __construct(
+    private readonly AccessManagerInterface $accessManager,
+    private readonly MenuLinkTreeInterface $menuLinkTree,
+    private readonly AccessAwareRouter $router,
+    private readonly MenuLinkManagerInterface $menuLinkManager,
+  ) {
   }
 
   /**
