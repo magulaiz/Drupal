@@ -9,6 +9,10 @@
 
   // Constant variables for consistency.
   const onceName = 'readingTime';
+
+  // Use any valid selector to target DOM elements.
+  // Example: '.my-wrapper-class .myclass' or 'article > h1'.
+  // @see https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector#parameters
   const elementSelector = 'main[role="main"]';
 
   // Custom value coming from the backend (see starterkit_theme_attachments()).
