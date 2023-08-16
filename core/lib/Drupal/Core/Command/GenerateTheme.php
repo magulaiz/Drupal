@@ -220,10 +220,14 @@ class GenerateTheme extends Command {
       }
     }
 
-    // Rename hooks.
+    // Rename hooks, drupalSettings and library values.
     $theme_file = "$tmp_dir/$destination_theme.theme";
     if (file_exists($theme_file)) {
-      if (!file_put_contents($theme_file, preg_replace("/(function )($source_theme_name)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
+      $patterns = [];
+      $patterns[] = "/(function )($source_theme_name)(_.*)/";
+      $patterns[] = "/(drupalSettings'\]\[')($source_theme_name)('\]*)/";
+      $patterns[] = "/(= ')($source_theme_name)(\/*)/";
+      if (!file_put_contents($theme_file, preg_replace($patterns, "$1$destination_theme$3", file_get_contents($theme_file)))) {
         $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
         return 1;
       }
@@ -240,6 +244,21 @@ class GenerateTheme extends Command {
       $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme_name(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
       if (!file_put_contents($template_file, $new_template_content)) {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
+        return 1;
+      }
+    }
+
+    // Rename references to theme in JS files.
+    $iterator = new TemplateDirIterator(new \RegexIterator(
+      new \RecursiveIteratorIterator(
+        new \RecursiveDirectoryIterator($tmp_dir), \RecursiveIteratorIterator::LEAVES_ONLY
+      ), '/' . preg_quote('.js') . '$/'
+    ));
+
+    foreach ($iterator as $template_file => $contents) {
+      $new_template_content = preg_replace("/$source_theme_name/", "$destination_theme", $contents);
+      if (!file_put_contents($template_file, $new_template_content)) {
+        $io->getErrorStyle()->error("The JS file $template_file could not be written.");
         return 1;
       }
     }
