@@ -195,6 +195,7 @@ test.plugin_types.*:
     plugin_id:
       type: string
     value:
+      requiredKey: false
       type: string
 
 test_with_parents.plugin_types.*:
@@ -302,20 +303,24 @@ config_schema_test.schema_sequence_sort:
   type: config_object
   mapping:
     keyed_sort:
+      requiredKey: false
       type: sequence
       orderby: key
       sequence:
         - type: string
     value_sort:
+      requiredKey: false
       type: sequence
       orderby: value
       sequence:
         - type: string
     no_sort:
+      requiredKey: false
       type: sequence
       sequence:
         - type: string
     complex_sort_value:
+      requiredKey: false
       type: sequence
       orderby: value
       sequence:
@@ -326,6 +331,7 @@ config_schema_test.schema_sequence_sort:
             bar:
               type: string
     complex_sort_key:
+      requiredKey: false
       type: sequence
       orderby: key
       sequence:
@@ -344,6 +350,7 @@ config_schema_test.schema_mapping_sort:
     foo:
       type: string
     map:
+      requiredKey: false
       type: mapping
       mapping:
         sub_foo:
