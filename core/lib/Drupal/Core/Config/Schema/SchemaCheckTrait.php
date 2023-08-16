@@ -408,8 +408,18 @@ trait SchemaCheckTrait {
       ],
     ],
     'views.view.*' => [
+      '' => [
+        "'uuid' is a required key.",
+        "'label' is a required key.",
+        "'dependencies' is a required key.",
+        "'description' is a required key.",
+        "'tag' is a required key.",
+      ],
       'display.*' => [
         "'cache_metadata' is a required key.",
+        "'display_options' is a required key.",
+        "'display_title' is a required key.",
+        "'position' is a required key.",
       ],
       'display.*.display_options' => [
         "'access' is a required key.",
@@ -424,8 +434,10 @@ trait SchemaCheckTrait {
         "'cache' is a required key.",
         "'css_class' is a required key.",
         "'defaults' is a required key.",
+        "'displays' is a required key.",
         "'display_comment' is a required key.",
         "'display_description' is a required key.",
+        "'display_extenders' is a required key.",
         "'empty' is a required key.",
         "'enabled' is a required key.",
         "'exposed_block' is a required key.",
@@ -553,6 +565,8 @@ trait SchemaCheckTrait {
         "'empty' is a required key.",
         "'custom_access' is a required key.",
         "'string' is a required key.",
+        "'view_mode' is a required key.",
+        "'bypass_access' is a required key.",
       ],
       'display.*.display_options.arguments.*' => [
         "'plugin_id' is a required key.",
@@ -600,6 +614,7 @@ trait SchemaCheckTrait {
       'display.*.display_options.arguments.*.validate_options' => [
         "'vids' is a required key.",
         "'multiple' is a required key.",
+        "'bundles' is a required key.",
       ],
       'display.*.display_options.arguments.*.exception' => [
         "'title' is a required key.",
@@ -753,6 +768,15 @@ trait SchemaCheckTrait {
         "'image_loading' is a required key.",
         "'link_to_entity' is a required key.",
         "'link_to_file' is a required key.",
+        "'tooltip' is a required key.",
+        "'time_diff' is a required key.",
+      ],
+      'display.*.display_options.pager.options.expose' => [
+        "'items_per_page_label' is a required key.",
+        "'items_per_page_options' is a required key.",
+        "'items_per_page_options_all' is a required key.",
+        "'items_per_page_options_all_label' is a required key.",
+        "'offset_label' is a required key.",
       ],
       'display.*.display_options.pager.options.tags' => [
         "'quantity' is a required key.",
@@ -765,6 +789,9 @@ trait SchemaCheckTrait {
         "'entity_field' is a required key.",
         "'label' is a required key.",
         "'tokenize' is a required key.",
+      ],
+      'display.*.display_options.filter_groups' => [
+        "'operator' is a required key.",
       ],
       'display.*.display_options.filters.*' => [
         "'reduce_duplicates' is a required key.",
@@ -853,6 +880,7 @@ trait SchemaCheckTrait {
         "'default_sort_order' is a required key.",
         "'empty_column' is a required key.",
         "'responsive' is a required key.",
+        "'separator' is a required key.",
       ],
       'display.*.display_options.row' => [
         "'options' is a required key.",
@@ -863,6 +891,7 @@ trait SchemaCheckTrait {
         "'hide_empty' is a required key.",
         "'relationship' is a required key.",
         "'default_field_elements' is a required key.",
+        "'view_mode' is a required key.",
       ],
       'display.*.display_options.menu' => [
         "'enabled' is a required key.",
@@ -885,6 +914,8 @@ trait SchemaCheckTrait {
       ],
       'display.*.cache_metadata' => [
         "'cacheable' is a required key.",
+        "'max-age' is a required key.",
+        "'tags' is a required key.",
       ],
     ],
     'workflows.workflow.*' => [
