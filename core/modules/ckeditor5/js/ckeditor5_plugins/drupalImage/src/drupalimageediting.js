@@ -541,6 +541,10 @@ function viewImageToModelImage(editor) {
 /**
  * General HTML Support integration for attributes on links wrapping images.
  *
+ * This plugin needs to integrate with GHS manually because upstream image link
+ * plugin GHS integration assumes that the `<a>` element is inside the
+ * `<imageBlock>` which is not true in the case of Drupal.
+ *
  * @param {module:html-support/datafilter~DataFilter} dataFilter
  *   The General HTML support data filter.
  *
@@ -649,8 +653,10 @@ function downcastBlockImageLink() {
 }
 
 /**
- * Add handling of 'dataEntityUuid', 'dataEntityType', 'isDecorative', 'width',
- * 'height' attributes on image elements.
+ * Drupal Image plugin.
+ *
+ * This plugin extends the CKEditor 5 image plugin with custom attributes, and
+ * removes a wrapping `<figure>` from `<img>` elements in the data downcast.
  *
  * @private
  */
