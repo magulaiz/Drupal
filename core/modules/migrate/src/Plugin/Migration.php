@@ -802,7 +802,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function allowsConcurrency(): bool {
     return $this->allow_concurrency;
