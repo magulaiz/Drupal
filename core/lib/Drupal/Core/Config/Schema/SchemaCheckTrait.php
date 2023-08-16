@@ -235,6 +235,21 @@ trait SchemaCheckTrait {
         "'PATCH' is a required key.",
       ],
     ],
+    'contact.settings' => [
+      'flood' => [
+        "'interval' is a required key.",
+      ],
+    ],
+    'file.settings' => [
+      '' => [
+        "'make_unused_managed_files_temporary' is a required key.",
+      ],
+    ],
+    'statistics.settings' => [
+      '' => [
+        "'display_max_age' is a required key.",
+      ],
+    ],
     'system.site' => [
       '' => [
         "'mail_notification' is a required key.",
@@ -276,6 +291,35 @@ trait SchemaCheckTrait {
       'tips.*' => [
         "'position' is a required key.",
         "'selector' is a required key.",
+      ],
+    ],
+    'update.settings' => [
+      'check' => [
+        "'disabled_extensions' is a required key.",
+      ],
+      'fetch' => [
+        "'timeout' is a required key.",
+      ],
+    ],
+    'user.mail' => [
+      '' => [
+        "'register_pending_approval_admin' is a required key.",
+        "'status_canceled' is a required key.",
+      ],
+    ],
+    'user.settings' => [
+      '' => [
+        "'cancel_method' is a required key.",
+        "'password_reset_timeout' is a required key.",
+        "'password_strength' is a required key.",
+      ],
+      'notify' => [
+        "'cancel_confirm' is a required key.",
+        "'password_reset' is a required key.",
+        "'status_canceled' is a required key.",
+        "'register_admin_created' is a required key.",
+        "'register_no_approval_required' is a required key.",
+        "'register_pending_approval' is a required key.",
       ],
     ],
     'views.view.*' => [
