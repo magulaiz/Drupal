@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Functional\Module;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\workspaces\Entity\Workspace;
+use Drupal\Tests\system\Traits\LogMessageAssertionTrait;
 
 /**
  * Install/uninstall core module and confirm table creation/deletion.
@@ -13,6 +14,7 @@ use Drupal\workspaces\Entity\Workspace;
  * @group Module
  */
 class InstallUninstallTest extends ModuleTestBase {
+  use LogMessageAssertionTrait;
 
   /**
    * {@inheritdoc}

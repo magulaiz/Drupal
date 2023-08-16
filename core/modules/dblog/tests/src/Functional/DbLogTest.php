@@ -12,6 +12,7 @@ use Drupal\dblog\Controller\DbLogController;
 use Drupal\error_test\Controller\ErrorTestController;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use Drupal\Tests\system\Traits\LogMessageAssertionTrait;
 
 /**
  * Verifies log entries and user access based on permissions.
@@ -21,6 +22,7 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;
   use AssertBreadcrumbTrait;
+  use LogMessageAssertionTrait;
 
   /**
    * Modules to enable.
