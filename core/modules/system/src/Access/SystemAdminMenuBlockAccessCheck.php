@@ -54,13 +54,6 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     // Load links matching this route.
     $route = $route_match->getRouteObject();
     $parameters = $route_match->getParameters()->getIterator()->getArrayCopy();
-    $parameters_without_defaults = $parameters;
-    $route_defaults = $route->getDefaults();
-    foreach (array_keys($parameters) as $key) {
-      if (isset($route_defaults[$key]) && $route_defaults[$key] === $parameters[$key]) {
-        unset($parameters_without_defaults[$key]);
-      }
-    }
     // First try to find the menu link using all specified parameters.
     $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
     // If the menu link was not found, try finding it without the parameters
@@ -71,6 +64,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     // parameters. This fallback method of finding the menu item is needed so
     // that menu items will work in either case.
     if (empty($links)) {
+      $parameters_without_defaults = array_filter($parameters, fn ($key) => !$route->hasDefault($key) || $route->getDefault($key) !== $parameters[$key], ARRAY_FILTER_USE_KEY);
       $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters_without_defaults, 'admin');
     }
     if (empty($links)) {
