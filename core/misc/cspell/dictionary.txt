@@ -521,6 +521,7 @@ httponly
 hurlant
 hustlin
 hwldf
+iban
 icann
 iconwrap
 idconflict
@@ -547,6 +548,7 @@ invokable
 iopt
 isam
 isinstallable
+issn
 itoa
 itok
 ized
@@ -629,6 +631,7 @@ lowline
 lrdd
 lstitle
 ltitle
+luhn
 lundi
 lzma
 lzop
