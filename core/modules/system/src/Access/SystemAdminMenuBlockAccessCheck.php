@@ -49,18 +49,25 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     // Load links matching this route.
     $route = $route_match->getRouteObject();
     $parameters = $route_match->getParameters()->getIterator()->getArrayCopy();
+    $parameters_without_defaults = $parameters;
     $route_defaults = $route->getDefaults();
-    // @todo Why do we need to unset the parameters if they match the default?
-    //   Looking at an actual site 'menu_tree' table entry for the row for
-    //   route_name=system.admin_config has
-    //   route_param_key="link_id=system.admin_config" but in the test database
-    //   route_param_key is empty so it this does not match any links.
     foreach (array_keys($parameters) as $key) {
       if (isset($route_defaults[$key]) && $route_defaults[$key] === $parameters[$key]) {
-        unset($parameters[$key]);
+        unset($parameters_without_defaults[$key]);
       }
     }
+    // First try to find the menu link using all specified parameters.
     $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
+    // If the menu link was not found, try finding it without the parameters that
+    // matched the route defaults. Depending on whether the parameter is
+    // specified in the menu item with a value matching the default or not
+    // specified at all will change how it is stored in the menu_tree table but
+    // in either case the route match parameters will always include the default
+    // parameters. This fallback method of finding the menu item is needed so
+    // that menu items will work in either case.
+    if (empty($links)) {
+      $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters_without_defaults, 'admin');
+    }
     if (empty($links)) {
       // If we did not find a link then we have no opinion on access.
       return AccessResult::neutral();
