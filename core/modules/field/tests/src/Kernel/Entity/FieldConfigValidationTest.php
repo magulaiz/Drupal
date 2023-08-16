@@ -77,6 +77,11 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
           'format' => 'basic_html',
         ],
       ],
+      'settings' => [
+        'display_summary' => FALSE,
+        'required_summary' => FALSE,
+        'allowed_formats' => [],
+      ],
       'dependencies' => [
         'config' => [
           $text_field_storage_config->getConfigDependencyName(),
