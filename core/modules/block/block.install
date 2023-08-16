@@ -27,7 +27,7 @@ function block_update_last_removed() {
 /**
  * Add 'contextualize_title' setting for page title blocks.
  */
-function block_update_11100() {
+function block_post_update_11100() {
   $config_factory = \Drupal::configFactory();
   foreach ($config_factory->listAll('block.block.') as $block_config_name) {
     if (!str_contains($block_config_name, 'page_title')) {
