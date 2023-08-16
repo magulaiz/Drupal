@@ -91,6 +91,10 @@ trait SchemaCheckTrait {
         "'label' is a required key.",
         "'type' is a required key.",
         "'settings' is a required key.",
+        "'weight' is a required key.",
+      ],
+      'content.*.settings' => [
+        "'pager_id' is a required key.",
       ],
       'third_party_settings.layout_builder' => [
         "'sections' is a required key.",
@@ -102,6 +106,7 @@ trait SchemaCheckTrait {
         "'context_mapping' is a required key.",
       ],
       'third_party_settings.field_layout.settings' => [
+        "'label' is a required key.",
         "'context_mapping' is a required key.",
       ],
       'third_party_settings.layout_builder.sections.*.components.*.configuration' => [
@@ -139,6 +144,7 @@ trait SchemaCheckTrait {
         "'auto_create' is a required key.",
         "'filter' is a required key.",
         "'include_anonymous' is a required key.",
+        "'view' is a required key.",
       ],
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",
@@ -149,6 +155,7 @@ trait SchemaCheckTrait {
       'default_value.*' => [
         "'format' is a required key.",
         "'attributes' is a required key.",
+        "'target_uuid' is a required key.",
       ],
       'default_value.*.options' => [
         "'query' is a required key.",
@@ -178,6 +185,7 @@ trait SchemaCheckTrait {
         "'status' is a required key.",
         "'weight' is a required key.",
         "'settings' is a required key.",
+        "'restrictions' is a required key.",
       ],
     ],
     'language.content_settings.*.*' => [
@@ -652,6 +660,7 @@ trait SchemaCheckTrait {
         "'bypass_access' is a required key.",
       ],
       'display.*.display_options.fields.*' => [
+        "'replace_variables' is a required key.",
         "'link_to_user' is a required key.",
         "'link_to_node' is a required key.",
         "'field' is a required key.",
@@ -882,6 +891,12 @@ trait SchemaCheckTrait {
       'type_settings' => [
         "'default_moderation_state' is a required key.",
       ],
+      'type_settings.states.*' => [
+        "'published' is a required key.",
+        "'default_revision' is a required key.",
+        "'extra' is a required key.",
+      ],
+
     ],
   ];
 
