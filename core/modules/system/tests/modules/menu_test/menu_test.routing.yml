@@ -57,7 +57,7 @@ menu_test.child_test:
 menu_test.super_child_test:
   path: '/parent_test/child_test/super_child_test'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
     _permission: 'access super child test page'
 
@@ -73,7 +73,7 @@ menu_test.parent_test_param:
 menu_test.child_test_param:
   path: '/parent_test_child_test_param/{param}'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
     param: 'my_default'
   requirements:
     _permission: 'access child test page'
@@ -90,10 +90,11 @@ menu_test.parent_test_param_explicit:
 menu_test.child_test_param_explicit:
   path: '/parent_test_child_test_param_explicit/{param}'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
     param: 'my_default'
   requirements:
     _permission: 'access child test page'
+
 menu_test.parent_test_default:
   path: '/parent_test_default'
   defaults:
@@ -106,10 +107,11 @@ menu_test.parent_test_default:
 menu_test.child_test_default:
   path: '/child_test_default'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
     custom_default: 'the_default'
   requirements:
     _permission: 'access child test page'
+
 menu_test.menu_no_title_callback:
   path: '/menu_no_title_callback'
   defaults:
