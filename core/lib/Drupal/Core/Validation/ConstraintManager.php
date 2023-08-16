@@ -151,7 +151,7 @@ class ConstraintManager extends DefaultPluginManager {
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('Cidr', [
-      'label' => new TranslatableMarkup('CIDR'),
+      'label' => new TranslatableMarkup('CIDR range'),
       'class' => Cidr::class,
       'type' => FALSE,
     ]);
@@ -266,7 +266,7 @@ class ConstraintManager extends DefaultPluginManager {
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('Luhn', [
-      'label' => new TranslatableMarkup('Luhn'),
+      'label' => new TranslatableMarkup('Luhn checksum'),
       'class' => Luhn::class,
       'type' => FALSE,
     ]);
@@ -346,7 +346,7 @@ class ConstraintManager extends DefaultPluginManager {
       'type' => 'string',
     ]);
     $this->getDiscovery()->setDefinition('Email', [
-      'label' => new TranslatableMarkup('E-mail'),
+      'label' => new TranslatableMarkup('Email'),
       'class' => EmailConstraint::class,
       'type' => ['string'],
     ]);
