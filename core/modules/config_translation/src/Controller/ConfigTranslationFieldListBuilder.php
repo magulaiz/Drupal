@@ -59,7 +59,8 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
       $entity_type,
       $entity_type_manager->getStorage($entity_type->id()),
       $entity_type_manager,
-      $entity_type_bundle_info
+      $entity_type_bundle_info,
+      $container->get('current_user')
     );
   }
 

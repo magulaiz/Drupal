@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 
 /**
@@ -22,6 +23,13 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   protected $displayContext;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new ConfigTranslationEntityDisplayListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -33,10 +41,11 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, AccountInterface $current_user) {
     parent::__construct($entity_type, $storage, $entity_type_manager, $entity_type_bundle_info);
     // @todo There must be a better way to get this information?
     $this->displayContext = preg_replace('/^entity_(.+)_display$/', '\1', $this->entityType->id());
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -93,26 +102,29 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
-    // Entity displays have no canonical no direct edit-form links so we
-    // hard-code the route to the translation operation.
-    // @todo Use config-translation-overview link template like field_ui does.
-    $route_parameters = [
-      $this->displayContext . '_mode_name' => $entity->getMode(),
-    ];
+    if ($this->currentUser->hasPermission('translate configuration')) {
+      // Entity displays have no canonical no direct edit-form links so we
+      // hard-code the route to the translation operation.
+      // @todo Use config-translation-overview link template like field_ui does.
+      $route_parameters = [
+        $this->displayContext . '_mode_name' => $entity->getMode(),
+      ];
 
-    $bundle_type = $this->entityTypeManager
-      ->getDefinition($entity->getTargetEntityTypeId())
-      ->getBundleEntityType();
-    if ($bundle_type) {
-      $route_parameters[$bundle_type] = $entity->getTargetBundle();
+      $bundle_type = $this->entityTypeManager
+        ->getDefinition($entity->getTargetEntityTypeId())
+        ->getBundleEntityType();
+      if ($bundle_type) {
+        $route_parameters[$bundle_type] = $entity->getTargetBundle();
+      }
+
+      $operations['translate'] = [
+        'title' => $this->t('Translate'),
+        'url' => $this->ensureDestination(Url::fromRoute("entity.{$this->entityType->id()}.config_translation_overview.{$entity->getTargetEntityTypeId()}", $route_parameters)),
+      ];
+
+      return $operations;
     }
-
-    $operations['translate'] = [
-      'title' => $this->t('Translate'),
-      'url' => $this->ensureDestination(Url::fromRoute("entity.{$this->entityType->id()}.config_translation_overview.{$entity->getTargetEntityTypeId()}", $route_parameters)),
-    ];
-
-    return $operations;
+    return [];
   }
 
 }
