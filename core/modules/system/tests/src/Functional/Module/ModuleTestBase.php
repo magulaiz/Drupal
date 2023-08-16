@@ -144,4 +144,5 @@ abstract class ModuleTestBase extends BrowserTestBase {
       $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), new FormattableMarkup($message, ['@module' => $module]));
     }
   }
+
 }
