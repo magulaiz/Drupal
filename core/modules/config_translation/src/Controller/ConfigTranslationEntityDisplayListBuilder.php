@@ -105,7 +105,6 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
     if ($this->currentUser->hasPermission('translate configuration')) {
       // Entity displays have no canonical no direct edit-form links so we
       // hard-code the route to the translation operation.
-      // @todo Use config-translation-overview link template like field_ui does.
       $route_parameters = [
         $this->displayContext . '_mode_name' => $entity->getMode(),
       ];

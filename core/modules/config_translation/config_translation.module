@@ -90,7 +90,6 @@ function config_translation_entity_type_alter(array &$entity_types) {
       }
       elseif ($entity_type->entityClassImplements(EntityDisplayInterface::class)) {
         $class = ConfigTranslationEntityDisplayListBuilder::class;
-        // @todo Link template is not used but should be set so other logic can apply.
       }
       else {
         $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListBuilder';
