@@ -16,6 +16,9 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Access check for routes implementing _access_admin_menu_block_page.
+ *
+ * @see \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber
+ * @see \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage()
  */
 class SystemAdminMenuBlockAccessCheck implements AccessInterface {
 
