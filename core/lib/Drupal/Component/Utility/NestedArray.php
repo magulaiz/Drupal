@@ -356,14 +356,13 @@ class NestedArray {
    *   The filtered array.
    */
   public static function filter(array $array, callable $callable = NULL) {
-    $array = is_callable($callable) ? array_filter($array, $callable) : array_filter($array);
     foreach ($array as &$element) {
       if (is_array($element)) {
         $element = static::filter($element, $callable);
       }
     }
 
-    return $array;
+    return is_callable($callable) ? array_filter($array, $callable) : array_filter($array);
   }
 
 }
