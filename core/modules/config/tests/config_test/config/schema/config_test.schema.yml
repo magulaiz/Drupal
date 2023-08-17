@@ -173,6 +173,10 @@ config_test.foo:
       label: 'Value'
       mapping:
         key:
+          # This is not part of any real `config_test.foo` config, it's used
+          # only for testing configuration system functionality.
+          # @see \Drupal\KernelTests\Core\Config\ConfigLanguageOverrideTest::testConfigLanguageOverride()
+          requiredKey: false
           type: string
           label: 'Key'
     label:
