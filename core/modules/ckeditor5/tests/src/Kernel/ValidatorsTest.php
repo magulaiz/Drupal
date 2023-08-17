@@ -86,7 +86,9 @@ class ValidatorsTest extends KernelTestBase {
       'format' => 'dummy',
       'editor' => 'ckeditor5',
       'settings' => $ckeditor5_settings,
-      'image_upload' => [],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
 
     $typed_config = $this->typedConfig->createFromNameAndData(
@@ -1530,7 +1532,9 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [],
       ],
-      'image_upload' => [],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
 
     $this->assertSame([], $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));
