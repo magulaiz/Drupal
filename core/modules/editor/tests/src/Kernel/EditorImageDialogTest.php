@@ -68,6 +68,10 @@ class EditorImageDialogTest extends EntityKernelTestBase {
         'max_size' => 100,
         'scheme' => 'public',
         'directory' => '',
+        'max_dimensions' => [
+          'width' => 0,
+          'height' => 0,
+        ],
         'status' => TRUE,
       ],
     ]);

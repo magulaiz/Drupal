@@ -967,7 +967,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
       ],
       'filters' => [],
       'violations' => [
@@ -1013,7 +1013,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
       ],
       'filters' => [],
       'violations' => [
