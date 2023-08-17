@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Test function.
+ */
+function hooks_test_all2_testhook($arg) {
+  return __FUNCTION__ . '(' . $arg . ')';
+}
+
+function hooks_test_all2_byref(&$arg) {
+  $arg[] = __FUNCTION__;
+  return __FUNCTION__;
+}
