@@ -79,4 +79,46 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->markTestSkipped();
   }
 
+  /**
+   * Tests validating an editor with an unknown plugin ID.
+   */
+  public function testImageUploadSettingsAreConditionallyRequired(): void {
+    // When image uploads are disabled, no other key-value pairs are needed.
+    $this->entity->setImageUploadSettings(['status' => FALSE]);
+    $this->assertValidationErrors([]);
+
+    // But when they are enabled, many others are needed.
+    $this->entity->setImageUploadSettings(['status' => TRUE]);
+    $this->assertValidationErrors([
+      'image_upload' => [
+        "'scheme' is a required key.",
+        "'directory' is a required key.",
+        "'max_size' is a required key.",
+        "'max_dimensions' is a required key.",
+      ]
+    ]);
+
+    // Specify all required keys, but forget one.
+    $this->entity->setImageUploadSettings([
+      'status' => TRUE,
+      'scheme' => 'public',
+      'directory' => 'uploaded-images',
+      'max_size' => '5 MB',
+    ]);
+    $this->assertValidationErrors(['image_upload' => "'max_dimensions' is a required key."]);
+
+    // Specify all required keys.
+    $this->entity->setImageUploadSettings([
+      'status' => TRUE,
+      'scheme' => 'public',
+      'directory' => 'uploaded-images',
+      'max_size' => '5 MB',
+      'max_dimensions' => [
+        'width' => 10000,
+        'height' => 10000,
+      ]
+    ]);
+    $this->assertValidationErrors([]);
+  }
+
 }
