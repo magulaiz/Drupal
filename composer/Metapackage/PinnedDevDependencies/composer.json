@@ -82,6 +82,7 @@
         "symfony/browser-kit": "v6.3.0",
         "symfony/css-selector": "v6.3.0",
         "symfony/dom-crawler": "v6.3.0",
+        "symfony/filesystem": "v6.3.0",
         "symfony/finder": "v6.3.0",
         "symfony/lock": "v6.3.0",
         "symfony/phpunit-bridge": "v6.3.0",
