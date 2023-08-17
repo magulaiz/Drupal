@@ -44,7 +44,6 @@ menu_test.parent_test:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access parent test page'
-    _access_admin_menu_block_page: 'TRUE'
 
 menu_test.child_test:
   path: '/parent_test/child_test'
@@ -52,7 +51,6 @@ menu_test.child_test:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access child test page'
-    _access_admin_menu_block_page: 'TRUE'
 
 menu_test.super_child_test:
   path: '/parent_test/child_test/super_child_test'
@@ -68,7 +66,6 @@ menu_test.parent_test_param:
     param: 'my_default'
   requirements:
     _permission: 'access parent test page'
-    _access_admin_menu_block_page: 'TRUE'
 
 menu_test.child_test_param:
   path: '/parent_test_child_test_param/{param}'
@@ -85,7 +82,6 @@ menu_test.parent_test_param_explicit:
     param: 'my_default'
   requirements:
     _permission: 'access parent test page'
-    _access_admin_menu_block_page: 'TRUE'
 
 menu_test.child_test_param_explicit:
   path: '/parent_test_child_test_param_explicit/{param}'
@@ -102,7 +98,6 @@ menu_test.parent_test_default:
     custom_default: 'the_default'
   requirements:
     _permission: 'access parent test page'
-    _access_admin_menu_block_page: 'TRUE'
 
 menu_test.child_test_default:
   path: '/child_test_default'
