@@ -9,7 +9,6 @@ use Drupal\views\Entity\View;
  * Tests the upgrade path for revision ids in field aliases.
  *
  * @see views_post_update_fix_revision_id_part()
- * @see views_post_update_add_missing_labels()
  *
  * @group Update
  * @group legacy
@@ -46,7 +45,6 @@ class ViewsFixRevisionIdUpdateTest extends UpdatePathTestBase {
   public function testViewsPostUpdateFixRevisionId() {
     $view = View::load('test_fix_revision_id_update');
     $data = $view->toArray();
-    $this->assertEmpty($data['label']);
     $fields = $data['display']['default']['display_options']['fields'];
 
     $this->assertArrayHasKey('field_test-revision_id_1', $fields);
@@ -63,7 +61,6 @@ class ViewsFixRevisionIdUpdateTest extends UpdatePathTestBase {
 
     $view = View::load('test_fix_revision_id_update');
     $data = $view->toArray();
-    $this->assertSame('test_fix_revision_id_update', $data['label']);
     $fields = $data['display']['default']['display_options']['fields'];
 
     $this->assertArrayNotHasKey('field_test-revision_id_1', $fields);
