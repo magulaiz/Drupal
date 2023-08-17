@@ -216,7 +216,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
       // Remove duplicate headers.
       foreach ($attached['http_header'] as $header_key => $header_value) {
-        if (in_array($header_value[1], $headers)) {
+        if (in_array($header_value[1], $headers) && $header_value[0] === 'Link') {
           assert(isset($attached['http_header'][$header_key]), 'Duplicate header ' . $header_value[1] . ' found.');
           unset($attached['http_header'][$header_key]);
         }
