@@ -65,6 +65,7 @@ class PendingRevisionTest extends KernelTestBase {
 
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
 
     FieldStorageConfig::create([
