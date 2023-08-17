@@ -6,7 +6,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 
 /**
- * Tests the upgrade path for revision ids in field aliases.
+ * Tests the upgrade path for adding missing labels.
  *
  * @see views_post_update_add_missing_labels()
  *
@@ -40,7 +40,7 @@ class ViewsAddMissingLabelsUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests the upgrade path for revision ids in field aliases.
+   * Tests the upgrade path for adding missing labels.
    */
   public function testViewsPostUpdateFixRevisionId() {
     $view = View::load('test_fix_revision_id_update');
