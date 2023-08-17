@@ -167,6 +167,7 @@ trait SchemaCheckTrait {
     'field.storage.*.*' => [
       'settings' => [
         "'allowed_formats' is a required key.",
+        "'is_ascii' is a required key.",
       ],
       'settings.default_image' => [
         "'alt' is a required key.",
