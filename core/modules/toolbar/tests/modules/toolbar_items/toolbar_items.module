@@ -159,7 +159,7 @@ function toolbar_items_toolbar() {
 /**
  * Implements hook_preprocess_HOOK().
  *
- * @see core/modules/toolbar/tests/modules/toolbar_test/toolbar_test.module::toolbar_test_preprocess_menu
+ * @see toolbar_test_preprocess_menu()
  */
 function toolbar_items_preprocess_menu(&$variables) {
   // All the standard hook_theme variables should be populated when the
