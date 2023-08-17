@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests;
 
+use Drupal\Core\Shutdown\ShutdownHandler;
+
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
  *
@@ -39,7 +41,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
    */
   public function testShutdownFunction() {
     $this->expectedShutdownCalled = ['shutdownFunction', 'shutdownFunction2'];
-    drupal_register_shutdown_function([$this, 'shutdownFunction']);
+    ShutdownHandler::getInstance()->set([$this, 'shutdownFunction']);
   }
 
   /**
@@ -54,7 +56,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
    */
   public function shutdownFunction() {
     self::$shutdownCalled[] = 'shutdownFunction';
-    drupal_register_shutdown_function([$this, 'shutdownFunction2']);
+    ShutdownHandler::getInstance()->set([$this, 'shutdownFunction2']);
   }
 
   /**

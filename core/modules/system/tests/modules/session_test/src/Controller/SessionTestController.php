@@ -3,6 +3,7 @@
 namespace Drupal\session_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Shutdown\ShutdownHandler;
 use Drupal\session_test\Session\TestSessionBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -275,7 +276,7 @@ class SessionTestController extends ControllerBase {
       'primary key' => ['sid'],
     ]);
 
-    drupal_register_shutdown_function(function () {
+    ShutdownHandler::getInstance()->set(function () {
       $schema = \Drupal::database()->schema();
       $schema->dropTable('sessions');
       $schema->renameTable('sessions_tmp', 'sessions');
