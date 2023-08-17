@@ -103,6 +103,7 @@ class ViewListBuilderTest extends UnitTestCase {
       ->getMock();
 
     $values = [];
+    $values['label'] = 'Test';
     $values['status'] = FALSE;
     $values['display']['default']['id'] = 'default';
     $values['display']['default']['display_title'] = 'Display';
