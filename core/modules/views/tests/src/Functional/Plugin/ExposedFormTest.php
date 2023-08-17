@@ -25,7 +25,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_form_required_text_filter', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager', 'test_remember_selected'];
+  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_form_required_filters', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager', 'test_remember_selected'];
 
   /**
    * Modules to enable.
@@ -377,20 +377,47 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
-   * Tests the input required exposed form type with a text type filter.
+   * Tests required exposed filters.
    */
-  public function testInputRequiredTextFilter() {
-    $this->drupalGet('test_exposed_form_required_text_filter');
+  public function testRequiredExposedFilters() {
+    $this->drupalGet('test_exposed_form_required_filters');
     $this->assertSession()->statusCodeEquals(200);
-    $this->helperButtonHasLabel('edit-submit-test-exposed-form-required-text-filter', 'Apply');
 
-    // Ensure that no results are displayed by default when no input is
-    // provided.
-    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-row')]");
-
-    // Ensure that no error element is shown.
+    // Ensure that no error element is shown when a text filter is required.
     $this->assertSession()->elementNotExists('css', '.messages--error');
     $this->assertFalse($this->getSession()->getPage()->findField('title')->hasClass('error'));
+
+    $view = Views::getView('test_exposed_form_required_filters');
+    $display = &$view->storage->getDisplay('default');
+
+    // Turn off required text filter.
+    $display['display_options']['filters']['title']['expose']['required'] = FALSE;
+    $view->save();
+
+    // Test for regression: https://www.drupal.org/node/3327193
+    $this->drupalGet('test_exposed_form_required_filters');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Ensure that results are displayed by default when no input is provided.
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 10);
+
+    $view = Views::getView('test_exposed_form_required_filters');
+    $display = &$view->storage->getDisplay('default');
+
+    // Turn on required type filter.
+    $display['display_options']['filters']['type']['expose']['required'] = TRUE;
+    $display['display_options']['filters']['type']['value'] = [
+      'article' => 'article',
+      'page' => 'page',
+    ];
+    $view->save();
+
+    $this->drupalGet('test_exposed_form_required_filters');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Ensure that only article results are displayed by default when required.
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 5);
+
   }
 
   /**
