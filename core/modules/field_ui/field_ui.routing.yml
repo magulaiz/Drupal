@@ -13,7 +13,6 @@ field_ui.display_mode:
     _title: 'Display modes'
   requirements:
     _permission: 'administer display modes'
-    _access_admin_menu_block_page: 'TRUE'
 
 entity.entity_view_mode.collection:
   path: '/admin/structure/display-modes/view'

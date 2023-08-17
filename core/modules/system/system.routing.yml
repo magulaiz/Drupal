@@ -37,7 +37,6 @@ system.admin:
     _title: 'Administration'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_structure:
   path: '/admin/structure'
@@ -46,7 +45,6 @@ system.admin_structure:
     _title: 'Structure'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_reports:
   path: '/admin/reports'
@@ -55,7 +53,6 @@ system.admin_reports:
     _title: 'Reports'
   requirements:
     _permission: 'access site reports'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_media:
   path: '/admin/config/media'
@@ -64,7 +61,6 @@ system.admin_config_media:
     _title: 'Media'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_services:
   path: '/admin/config/services'
@@ -73,7 +69,6 @@ system.admin_config_services:
     _title: 'Web services'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_development:
   path: '/admin/config/development'
@@ -82,7 +77,6 @@ system.admin_config_development:
     _title: 'Development'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_regional:
   path: '/admin/config/regional'
@@ -91,7 +85,6 @@ system.admin_config_regional:
     _title: 'Region and language'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_search:
   path: '/admin/config/search'
@@ -100,7 +93,6 @@ system.admin_config_search:
     _title: 'Search and metadata'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_system:
   path: '/admin/config/system'
@@ -109,7 +101,6 @@ system.admin_config_system:
     _title: 'System'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_ui:
   path: '/admin/config/user-interface'
@@ -118,7 +109,6 @@ system.admin_config_ui:
     _title: 'User interface'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_workflow:
   path: '/admin/config/workflow'
@@ -127,7 +117,6 @@ system.admin_config_workflow:
     _title: 'Workflow'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.admin_config_content:
   path: '/admin/config/content'
@@ -136,7 +125,6 @@ system.admin_config_content:
     _title: 'Content authoring'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.cron:
   path: '/cron/{key}'
@@ -490,7 +478,6 @@ system.admin_config:
     _title: 'Configuration'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.batch_page.html:
   path: '/batch'
@@ -533,7 +520,6 @@ system.admin_content:
     _title: 'Content'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.entity_autocomplete:
   path: '/entity_reference_autocomplete/{target_type}/{selection_handler}/{selection_settings_key}'
