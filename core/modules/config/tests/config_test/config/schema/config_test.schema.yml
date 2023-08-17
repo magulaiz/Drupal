@@ -143,9 +143,19 @@ config_test.new:
   label: 'Configuration test'
   mapping:
     key:
+      # This is not part of any real `config_test.new` config, it's used only
+      # for testing configuration system functionality.
+      # @see \Drupal\KernelTests\Core\Config\ConfigImportRenameValidationTest::testRenameSimpleConfigValidation()
+      # @see \Drupal\KernelTests\Core\Config\ConfigOverrideTest::testConfOverride()
+      requiredKey: false
       type: string
       label: 'Test setting'
     new_key:
+      # This is not part of any real `config_test.new` config, it's used only
+      # for testing configuration system functionality.
+      # @see \Drupal\KernelTests\Core\Config\ConfigImportRenameValidationTest::testRenameSimpleConfigValidation()
+      # @see \Drupal\KernelTests\Core\Config\ConfigOverrideTest::testConfOverride()
+      requiredKey: false
       type: string
       label: 'Test setting'
     uuid:
