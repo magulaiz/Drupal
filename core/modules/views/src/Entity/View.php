@@ -138,6 +138,17 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
+  public function label() {
+    if (!$label = $this->get('label')) {
+      @trigger_error('Saving a view without an explicit label is deprecated in drupal:10.2.0 and will raise an error in drupal:11.0.0. See https://www.drupal.org/node/3381669.', E_USER_DEPRECATED);
+      $label = $this->id();
+    }
+    return $label;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     if (empty($plugin_id)) {
       return FALSE;
