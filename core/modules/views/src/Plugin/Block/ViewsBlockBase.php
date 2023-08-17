@@ -47,13 +47,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   protected $user;
 
   /**
-   * The add contextual links service.
-   *
-   * @var \Drupal\views\AddContextualLinks
-   */
-  protected $addContextualLinks;
-
-  /**
    * Constructs a \Drupal\views\Plugin\Block\ViewsBlockBase object.
    *
    * @param array $configuration
@@ -68,10 +61,10 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *   The views storage.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
-   * @param \Drupal\views\AddContextualLinks $add_contextual_links
+   * @param \Drupal\views\AddContextualLinks|null $addContextualLinks
    *   The add contextual links service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user, AddContextualLinks $add_contextual_links) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user, protected ?AddContextualLinks $addContextualLinks = NULL) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
     [$name, $this->displayID] = explode('-', $delta, 2);
@@ -80,7 +73,10 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
     $this->user = $user;
-    $this->addContextualLinks = $add_contextual_links;
+    if ($this->addContextualLinks === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $addContextualLinks argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2571679', E_USER_DEPRECATED);
+      $this->addContextualLinks = \Drupal::service('views.add_contextual_links');
+    }
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
