@@ -82,3 +82,7 @@ services:
     arguments: ['@menu.link_tree', '@system.module_admin_links_memory_cache']
   system.module_admin_links_memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
+  system.access_route_alter_subscriber:
+    class: Drupal\system\EventSubscriber\AccessRouteAlterSubscriber
+    tags:
+      - { name: event_subscriber }
