@@ -30,7 +30,6 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
     foreach ($missing_keys as $key) {
       $this->context->addViolation($constraint->message, ['@key' => $key]);
     }
-
   }
 
 }

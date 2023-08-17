@@ -59,7 +59,7 @@ class RequiredKeysConstraint extends Constraint {
   public function getRequiredKeys(ExecutionContextInterface $context): array {
     // The only value currently supported is the string `<infer>`.
     if ($this->requiredKeys !== '<infer>') {
-      throw new \DomainException();
+      throw new \DomainException("Only '<infer>' is allowed.");
     }
 
     // Important! This infers keys from the config schema definition, not the
@@ -92,7 +92,52 @@ class RequiredKeysConstraint extends Constraint {
       ARRAY_FILTER_USE_BOTH
     );
 
-    return array_keys($required_keys);
+    $conditionally_required_keys = array_filter(
+      $definition['mapping'],
+      fn (array $value, string $key) => array_key_exists('requiredKey', $value) && is_array($value['requiredKey']),
+      ARRAY_FILTER_USE_BOTH
+    );
+
+    // Validate.
+    foreach ($conditionally_required_keys as $key => $definition) {
+      assert(array_key_exists('requiredKey', $definition));
+      // Require fully defined conditional required keys.
+      if (!array_key_exists('path', $definition['requiredKey']) || !array_key_exists('requiredValue', $definition['requiredKey'])) {
+        throw new \LogicException('When `requiredKey` is not a boolean, it must be an array with two key-value pairs: `path` containing a property path string and `requiredValue` containing the value required at that property path for this key to be required.');
+      }
+      $path = $definition['requiredKey']['path'];
+
+      // Forbid conditionally required keys from depending on anything else than
+      // unconditionally required keys: not on optional keys nor
+      // conditionally required keys.
+      if (!array_key_exists($path, $required_keys)) {
+        throw new \LogicException(sprintf('Conditionally required keys must depend only on unconditionally required keys. The dependency of `%s` on `%s` violates this.',
+          $mapping->getPropertyPath() . ":$key",
+          $mapping->getPropertyPath() . ":$path",
+        ));
+      }
+    }
+
+    // Evaluate which conditionally required keys are actually required for the
+    // provided data.
+    foreach ($conditionally_required_keys as $key => $definition) {
+      $path = $definition['requiredKey']['path'];
+      $required_value = $definition['requiredKey']['requiredValue'];
+      try {
+        if ($mapping->get($path)->getValue() !== $required_value) {
+          unset($conditionally_required_keys[$key]);
+        }
+      }
+      catch (\InvalidArgumentException $e) {
+        // Even though conditionally required keys depend only on
+        // unconditionally required keys (see earlier exception), it's still
+        // possible that the data violates this requirement. The only possible
+        // decision here is to treat this key as optional.
+        unset($conditionally_required_keys[$key]);
+      }
+    }
+
+    return array_keys($required_keys + $conditionally_required_keys);
   }
 
 }
