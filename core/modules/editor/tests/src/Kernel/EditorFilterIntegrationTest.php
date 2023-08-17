@@ -35,7 +35,7 @@ class EditorFilterIntegrationTest extends KernelTestBase {
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-      ]
+      ],
     ])->save();
 
     // Disable the text format.
