@@ -95,7 +95,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
         "'directory' is a required key.",
         "'max_size' is a required key.",
         "'max_dimensions' is a required key.",
-      ]
+      ],
     ]);
 
     // Specify all required keys, but forget one.
@@ -116,7 +116,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
       'max_dimensions' => [
         'width' => 10000,
         'height' => 10000,
-      ]
+      ],
     ]);
     $this->assertValidationErrors([]);
   }
