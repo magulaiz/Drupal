@@ -474,9 +474,8 @@ class ConfigImporterTest extends KernelTestBase {
 
     // Replace the file content of the existing configuration objects in the
     // sync directory.
-    $original_name_data = [
-      'foo' => 'beer',
-    ];
+    $original_name_data = $storage->read($name);
+    $original_name_data['foo'] = 'beer';
     $sync->write($name, $original_name_data);
     $original_dynamic_data = $storage->read($dynamic_name);
     $original_dynamic_data['label'] = 'Updated';
