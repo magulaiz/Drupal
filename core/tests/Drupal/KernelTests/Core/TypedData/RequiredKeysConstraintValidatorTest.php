@@ -66,18 +66,18 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
     $this->assertSame("'mail_notification' is a required key.", (string) $violations->get(0)->getMessage());
 
     // Unless a key is conditionally required.
-    $mapping['mail_notification']['requiredKey'] = [
+    $mapping['mail_notification']['requiredKeyIf'] = [
       'path' => 'admin_compact_mode',
-      'requiredValue' => TRUE,
+      'value' => TRUE,
     ];
     $this->config->getDataDefinition()['mapping'] = $mapping;
     $violations = $this->config->validate();
     $this->assertCount(0, $violations);
 
     // Unless a key is conditionally required.
-    $mapping['mail_notification']['requiredKey'] = [
+    $mapping['mail_notification']['requiredKeyIf'] = [
       'path' => 'admin_compact_mode',
-      'requiredValue' => TRUE,
+      'value' => TRUE,
     ];
     $this->config->getDataDefinition()['mapping'] = $mapping;
     $violations = $this->config->validate();
@@ -99,20 +99,20 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
    * Tests exception is thrown for incorrect conditionally required keys.
    *
    * @testWith ["path"]
-   *           ["requiredValue"]
+   *           ["value"]
    */
-  public function testConditionallyRequiredKeyWithoutPath(string $key): void {
+  public function testInvalidConditionallyRequiredKeys(string $key): void {
     $mapping = $this->config->getDataDefinition()['mapping'];
-    $mapping['mail_notification']['requiredKey'] = [
+    $mapping['mail_notification']['requiredKeyIf'] = [
       'path' => 'admin_compact_mode',
-      'requiredValue' => TRUE,
+      'value' => TRUE,
     ];
     // Make this invalid based on $key.
-    unset($mapping['mail_notification']['requiredKey'][$key]);
+    unset($mapping['mail_notification']['requiredKeyIf'][$key]);
     $this->config->getDataDefinition()['mapping'] = $mapping;
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("When `requiredKey` is not a boolean, it must be an array with two key-value pairs: `path` containing a property path string and `requiredValue` containing the value required at that property path for this key to be required.");
+    $this->expectExceptionMessage("`requiredKeyIf` must contain two key-value pairs: `path` containing a property path string and `value` containing the value required at that property path for this key to be required.");
     $this->config->validate();
   }
 
@@ -121,13 +121,13 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
    */
   public function testConditionallyRequiredKeysMustDependOnRequiredKeys(): void {
     $mapping = $this->config->getDataDefinition()['mapping'];
-    $mapping['mail_notification']['requiredKey'] = [
+    $mapping['mail_notification']['requiredKeyIf'] = [
       'path' => 'admin_compact_mode',
-      'requiredValue' => TRUE,
+      'value' => TRUE,
     ];
-    $mapping['admin_compact_mode']['requiredKey'] = [
+    $mapping['admin_compact_mode']['requiredKeyIf'] = [
       'path' => 'uuid',
-      'requiredValue' => TRUE,
+      'value' => TRUE,
     ];
     $this->config->getDataDefinition()['mapping'] = $mapping;
 

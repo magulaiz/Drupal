@@ -88,24 +88,24 @@ class RequiredKeysConstraint extends Constraint {
     // property that is set to `false`
     $required_keys = array_filter(
       $definition['mapping'],
-      fn (array $value, string $key) => !array_key_exists('requiredKey', $value) || $value['requiredKey'] === TRUE,
+      fn (array $value, string $key) => !array_key_exists('requiredKeyIf', $value) && (!array_key_exists('requiredKey', $value) || $value['requiredKey'] === TRUE),
       ARRAY_FILTER_USE_BOTH
     );
 
     $conditionally_required_keys = array_filter(
       $definition['mapping'],
-      fn (array $value, string $key) => array_key_exists('requiredKey', $value) && is_array($value['requiredKey']),
+      fn (array $value, string $key) => array_key_exists('requiredKeyIf', $value) && is_array($value['requiredKeyIf']),
       ARRAY_FILTER_USE_BOTH
     );
 
     // Validate.
     foreach ($conditionally_required_keys as $key => $definition) {
-      assert(array_key_exists('requiredKey', $definition));
+      assert(array_key_exists('requiredKeyIf', $definition));
       // Require fully defined conditional required keys.
-      if (!array_key_exists('path', $definition['requiredKey']) || !array_key_exists('requiredValue', $definition['requiredKey'])) {
-        throw new \LogicException('When `requiredKey` is not a boolean, it must be an array with two key-value pairs: `path` containing a property path string and `requiredValue` containing the value required at that property path for this key to be required.');
+      if (!array_key_exists('path', $definition['requiredKeyIf']) || !array_key_exists('value', $definition['requiredKeyIf'])) {
+        throw new \LogicException('`requiredKeyIf` must contain two key-value pairs: `path` containing a property path string and `value` containing the value required at that property path for this key to be required.');
       }
-      $path = $definition['requiredKey']['path'];
+      $path = $definition['requiredKeyIf']['path'];
 
       // Forbid conditionally required keys from depending on anything else than
       // unconditionally required keys: not on optional keys nor
@@ -121,8 +121,8 @@ class RequiredKeysConstraint extends Constraint {
     // Evaluate which conditionally required keys are actually required for the
     // provided data.
     foreach ($conditionally_required_keys as $key => $definition) {
-      $path = $definition['requiredKey']['path'];
-      $required_value = $definition['requiredKey']['requiredValue'];
+      $path = $definition['requiredKeyIf']['path'];
+      $required_value = $definition['requiredKeyIf']['value'];
       try {
         if ($mapping->get($path)->getValue() !== $required_value) {
           unset($conditionally_required_keys[$key]);

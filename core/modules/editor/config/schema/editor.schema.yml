@@ -25,30 +25,30 @@ editor.editor.*:
           label: 'Status'
         scheme:
           # Conditionally required: only required if `status === true`.
-          requiredKey:
+          requiredKeyIf:
             path: status
-            requiredValue: true
+            value: true
           type: string
           label: 'File storage'
         directory:
           # Conditionally required: only required if `status === true`.
-          requiredKey:
+          requiredKeyIf:
             path: status
-            requiredValue: true
+            value: true
           type: string
           label: 'Upload directory'
         max_size:
           # Conditionally required: only required if `status === true`.
-          requiredKey:
+          requiredKeyIf:
             path: status
-            requiredValue: true
+            value: true
           type: string
           label: 'Maximum file size'
         max_dimensions:
           # Conditionally required: only required if `status === true`.
-          requiredKey:
+          requiredKeyIf:
             path: status
-            requiredValue: true
+            value: true
           type: mapping
           label: 'Maximum dimensions'
           mapping:
