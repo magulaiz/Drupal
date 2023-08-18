@@ -53,6 +53,10 @@ trait SchemaCheckTrait {
       // @see search.schema.yml
       'label' => [
         'This value should not be blank.',
+        'This value should not be null.',
+      ],
+      'path' => [
+        'This value should not be null.',
       ],
     ],
     // @todo Remove in https://www.drupal.org/project/drupal/issues/3379725
@@ -339,16 +343,6 @@ trait SchemaCheckTrait {
         'This value should not be null.',
       ],
       'help' => [
-        'This value should not be null.',
-      ],
-    ],
-    'search.page.*' => [
-      // @todo Fix config or tweak schema of `type: search.page.*`.
-      // @see search.schema.yml
-      'label' => [
-        'This value should not be null.',
-      ],
-      'path' => [
         'This value should not be null.',
       ],
     ],
