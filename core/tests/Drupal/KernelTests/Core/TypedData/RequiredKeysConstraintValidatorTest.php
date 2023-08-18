@@ -96,6 +96,25 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Tests exception is thrown when `requiredKey` is anything but `false`.
+   *
+   * @testWith [true]
+   *           ["false"]
+   *           ["true"]
+   *           [""]
+   *           [null]
+   */
+  public function testExceptionWhenInvalidRequiredKey(mixed $value): void {
+    $mapping = $this->config->getDataDefinition()['mapping'];
+    $mapping['mail_notification']['requiredKey'] = $value;
+    $this->config->getDataDefinition()['mapping'] = $mapping;
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage("The `requiredKey` flag must either be omitted or have `false` as the value.");
+    $this->config->validate();
+  }
+
+  /**
    * Tests exception is thrown for incorrect conditionally required keys.
    *
    * @testWith ["path"]

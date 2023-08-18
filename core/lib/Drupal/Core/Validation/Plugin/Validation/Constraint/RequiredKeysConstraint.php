@@ -69,6 +69,46 @@ class RequiredKeysConstraint extends Constraint {
   }
 
   /**
+   * Validates optional `requiredKey` and `requiredKeyIf` flags in mappings.
+   *
+   * Validates that the values for either optional flag are correct. Does not
+   * validate the semantics, only the shapes.
+   *
+   * @param \Drupal\Core\TypedData\MapDataDefinition $definition
+   *   The config schema definition for a `type: mapping`.
+   *
+   * @return void
+   */
+  protected static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): void {
+    $definition = $definition->toArray();
+    assert(array_key_exists('mapping', $definition));
+
+    // Validates `requiredKey` flag in mapping definitions.
+    foreach ($definition['mapping'] as $options) {
+      if (!array_key_exists('requiredKey', $options)) {
+        // This flag is optional.
+        continue;
+      }
+      if ($options['requiredKey'] !== FALSE) {
+        throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
+      }
+    }
+
+    // Validates `requiredKeyIf` flag in mapping definitions.
+    foreach ($definition['mapping'] as $options) {
+      if (!array_key_exists('requiredKeyIf', $options)) {
+        // This flag is optional.
+        continue;
+      }
+
+      // Require fully defined conditional required keys.
+      if (!array_key_exists('path', $options['requiredKeyIf']) || !array_key_exists('value', $options['requiredKeyIf'])) {
+        throw new \LogicException('`requiredKeyIf` must contain two key-value pairs: `path` containing a property path string and `value` containing the value required at that property path for this key to be required.');
+      }
+    }
+  }
+
+  /**
    * Tries to auto-detect the schema-defined keys in a mapping.
    *
    * @param \Drupal\Core\Config\Schema\Mapping $mapping
@@ -81,14 +121,16 @@ class RequiredKeysConstraint extends Constraint {
     $definition = $mapping->getDataDefinition();
     assert($definition instanceof MapDataDefinition);
 
+    self::validateMappingConfigSchemaDefinition($definition);
+
     $definition = $definition->toArray();
     assert(array_key_exists('mapping', $definition));
 
     // Mapping keys are required by default, unless they have a `requiredKey`
-    // property that is set to `false`
+    // or `requiredKeyIf` property.
     $required_keys = array_filter(
       $definition['mapping'],
-      fn (array $value, string $key) => !array_key_exists('requiredKeyIf', $value) && (!array_key_exists('requiredKey', $value) || $value['requiredKey'] === TRUE),
+      fn (array $value, string $key) => !array_key_exists('requiredKey', $value) && !array_key_exists('requiredKeyIf', $value),
       ARRAY_FILTER_USE_BOTH
     );
 
@@ -100,11 +142,6 @@ class RequiredKeysConstraint extends Constraint {
 
     // Validate.
     foreach ($conditionally_required_keys as $key => $definition) {
-      assert(array_key_exists('requiredKeyIf', $definition));
-      // Require fully defined conditional required keys.
-      if (!array_key_exists('path', $definition['requiredKeyIf']) || !array_key_exists('value', $definition['requiredKeyIf'])) {
-        throw new \LogicException('`requiredKeyIf` must contain two key-value pairs: `path` containing a property path string and `value` containing the value required at that property path for this key to be required.');
-      }
       $path = $definition['requiredKeyIf']['path'];
 
       // Forbid conditionally required keys from depending on anything else than
