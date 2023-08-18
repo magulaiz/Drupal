@@ -473,13 +473,11 @@ system.timezone:
 system.admin_config:
   path: '/admin/config'
   defaults:
-    # @todo: Replace with '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage' in https://www.drupal.org/project/drupal/issues/3381929
     _controller: '\Drupal\system\Controller\SystemController::overview'
     link_id: 'system.admin_config'
     _title: 'Configuration'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: 'TRUE'
 
 system.batch_page.html:
   path: '/batch'
@@ -517,13 +515,10 @@ system.db_update:
 system.admin_content:
   path: '/admin/content'
   defaults:
-    # @todo: Replace with '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage' in https://www.drupal.org/project/drupal/issues/3381929
-    _controller: '\Drupal\system\Controller\SystemController::overview'
-    link_id: 'system.admin_content'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Content'
   requirements:
     _permission: 'access administration pages'
-    _access_admin_menu_block_page: TRUE
 
 system.entity_autocomplete:
   path: '/entity_reference_autocomplete/{target_type}/{selection_handler}/{selection_settings_key}'
