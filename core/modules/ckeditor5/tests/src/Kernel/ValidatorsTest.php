@@ -194,7 +194,10 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_language' => 'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
+        'settings.plugins.ckeditor5_language' => [
+          'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
+          "'language_list' is a required key.",
+        ],
       ],
     ];
     $data['valid language plugin configuration: un'] = [
