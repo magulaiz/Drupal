@@ -64,8 +64,7 @@ class RequiredKeysConstraint extends Constraint {
 
     // Important! This infers keys from the config schema definition, not the
     // provided data.
-    $inferred_keys = static::inferKeys($context->getObject());
-    return $inferred_keys;
+    return static::inferKeys($context->getObject());
   }
 
   /**
@@ -165,7 +164,7 @@ class RequiredKeysConstraint extends Constraint {
           unset($conditionally_required_keys[$key]);
         }
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         // Even though conditionally required keys depend only on
         // unconditionally required keys (see earlier exception), it's still
         // possible that the data violates this requirement. The only possible
