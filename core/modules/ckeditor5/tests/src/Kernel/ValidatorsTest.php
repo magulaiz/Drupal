@@ -1508,6 +1508,7 @@ class ValidatorsTest extends KernelTestBase {
           'id' => 'filter_test_restrict_tags_and_attributes',
           'provider' => 'filter_test',
           'status' => TRUE,
+          'weight' => 0,
           'settings' => [
             'restrictions' => [
               'allowed' => [
