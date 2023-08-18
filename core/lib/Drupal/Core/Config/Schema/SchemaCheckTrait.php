@@ -47,6 +47,14 @@ trait SchemaCheckTrait {
    * @var \string[][][]
    */
   protected static array $ignoredPropertyPaths = [
+    'search.page.*' => [
+      // @todo Fix config or tweak schema of `type: search.page.*` in
+      //   https://drupal.org/i/3380475.
+      // @see search.schema.yml
+      'label' => [
+        'This value should not be blank.',
+      ],
+    ],
     // @todo Remove in https://www.drupal.org/project/drupal/issues/3379725
     'block.block.*' => [
       'weight' => [
