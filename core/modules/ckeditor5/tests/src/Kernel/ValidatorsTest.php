@@ -1074,8 +1074,15 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image' => [
+      'image_upload' => [
         'status' => TRUE,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+        'max_size' => '',
+        'max_dimensions' => [
+          'width' => 0,
+          'height' => 0,
+        ],
       ],
       'filters' => [],
       'violations' => [],
