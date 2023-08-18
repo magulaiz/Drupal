@@ -99,7 +99,17 @@ class ValidatorsTest extends KernelTestBase {
 
     $actual_violations = [];
     foreach ($violations as $violation) {
-      $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
+      if (!isset($actual_violations[$violation->getPropertyPath()])) {
+        $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
+      }
+      else {
+        // Transform value from string to array.
+        if (is_string($actual_violations[$violation->getPropertyPath()])) {
+          $actual_violations[$violation->getPropertyPath()] = (array) $actual_violations[$violation->getPropertyPath()];
+        }
+        // And append.
+        $actual_violations[$violation->getPropertyPath()][] = (string) $violation->getMessage();
+      }
     }
     $this->assertSame($expected_violations, $actual_violations);
 
