@@ -110,14 +110,15 @@
 
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
-body .toolbar-oriented .toolbar-bar {
+.toolbar-oriented.toolbar-oriented .toolbar-bar {
   position: fixed;
   width: 100vw;
+  max-width: 100%;
 }
 /* When the configured narrow breakpoint is active, the toolbar is sized to wrap
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
-body.toolbar-tray-open.toolbar-vertical .toolbar-oriented {
+.toolbar-tray-open.toolbar-vertical.toolbar-tray-open.toolbar-vertical .toolbar-oriented {
   bottom: 0;
   width: 15rem;
 }
@@ -190,7 +191,7 @@ body.toolbar-tray-open.toolbar-vertical .toolbar-oriented {
  * the tray scroll within the confines of the viewport.
  */
 .toolbar .toolbar-tray-vertical.is-active,
-body .toolbar .toolbar-tray-vertical {
+.toolbar.toolbar .toolbar-tray-vertical {
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
