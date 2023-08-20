@@ -18,6 +18,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a book manager.
@@ -122,7 +123,19 @@ class BookManager implements BookManagerInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $memory_cache
    *   The book memory cache service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer, LanguageManagerInterface $language_manager, EntityRepositoryInterface $entity_repository, CacheBackendInterface $backend_chained_cache, CacheBackendInterface $memory_cache) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    TranslationInterface $translation,
+    ConfigFactoryInterface $config_factory,
+    BookOutlineStorageInterface $book_outline_storage,
+    RendererInterface $renderer,
+    LanguageManagerInterface $language_manager,
+    EntityRepositoryInterface $entity_repository,
+    #[Autowire(service: 'book.backend_chained_cache')]
+    CacheBackendInterface $backend_chained_cache,
+    #[Autowire(service: 'book.memory_cache')]
+    CacheBackendInterface $memory_cache,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;

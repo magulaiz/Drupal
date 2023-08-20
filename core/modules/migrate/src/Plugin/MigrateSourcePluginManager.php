@@ -7,6 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\migrate\Plugin\Discovery\AnnotatedClassDiscoveryAutomatedProviders;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Plugin manager for migrate source plugins.
@@ -34,7 +35,13 @@ class MigrateSourcePluginManager extends MigratePluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    $type,
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+  ) {
     parent::__construct($type, $namespaces, $cache_backend, $module_handler, 'Drupal\migrate\Annotation\MigrateSource');
   }
 

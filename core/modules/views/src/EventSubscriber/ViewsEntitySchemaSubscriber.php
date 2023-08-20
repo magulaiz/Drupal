@@ -10,6 +10,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\Views;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -98,7 +99,11 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    #[Autowire(service: 'logger.channel.default')]
+    LoggerInterface $logger,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->logger = $logger;
   }

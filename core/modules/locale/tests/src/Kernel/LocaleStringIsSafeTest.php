@@ -16,7 +16,7 @@ class LocaleStringIsSafeTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale', 'locale_test'];
+  protected static $modules = ['language', 'locale', 'locale_test'];
 
   /**
    * Tests for locale_string_is_safe().

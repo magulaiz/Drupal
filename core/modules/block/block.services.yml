@@ -9,5 +9,5 @@ services:
       - { name: event_subscriber }
   block.repository:
     class: Drupal\block\BlockRepository
-    arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
+    autowire: true
   Drupal\block\BlockRepositoryInterface: '@block.repository'

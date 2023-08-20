@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Class to manage and lazy load cached views data.
@@ -90,7 +91,13 @@ class ViewsData {
    * @param \Drupal\Core\Language\LanguageManagerInterface|\Drupal\Core\Extension\ModuleHandlerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ModuleHandlerInterface|ConfigFactoryInterface $module_handler, LanguageManagerInterface|ModuleHandlerInterface $language_manager) {
+  public function __construct(
+    #[Autowire(service: 'cache.default')]
+    CacheBackendInterface $cache_backend,
+    ConfigFactoryInterface $config,
+    ModuleHandlerInterface $module_handler,
+    LanguageManagerInterface $language_manager,
+  ) {
     $this->cacheBackend = $cache_backend;
     if ($module_handler instanceof ConfigFactoryInterface) {
       $this->moduleHandler = $language_manager;

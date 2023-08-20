@@ -5,6 +5,7 @@ namespace Drupal\language;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Manages language negotiation methods.
@@ -22,7 +23,12 @@ class LanguageNegotiationMethodManager extends DefaultPluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   An object that implements ModuleHandlerInterface
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+  ) {
     parent::__construct('Plugin/LanguageNegotiation', $namespaces, $module_handler, 'Drupal\language\LanguageNegotiationMethodInterface', 'Drupal\language\Annotation\LanguageNegotiation');
     $this->cacheBackend = $cache_backend;
     $this->setCacheBackend($cache_backend, 'language_negotiation_plugins');

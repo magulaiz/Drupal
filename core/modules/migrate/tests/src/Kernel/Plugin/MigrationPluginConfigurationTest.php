@@ -20,6 +20,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
     'migrate_drupal',
     // Test with a simple migration.
     'ban',
+    'language',
     'locale',
   ];
 

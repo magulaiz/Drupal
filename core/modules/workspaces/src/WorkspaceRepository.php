@@ -7,6 +7,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides the default workspace tree lookup operations.
@@ -42,7 +43,11 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    #[Autowire(service: 'cache.default')]
+    CacheBackendInterface $cache_backend,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
   }

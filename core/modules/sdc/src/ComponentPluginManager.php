@@ -20,6 +20,7 @@ use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\IncompatibleComponentSchema;
 use Drupal\sdc\Plugin\Component;
 use Drupal\sdc\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a plugin manager to deal with sdc.
@@ -67,6 +68,7 @@ final class ComponentPluginManager extends DefaultPluginManager {
   public function __construct(
     ModuleHandlerInterface $module_handler,
     protected ThemeHandlerInterface $themeHandler,
+    #[Autowire(service: 'cache.discovery')]
     CacheBackendInterface $cacheBackend,
     protected ConfigFactoryInterface $configFactory,
     protected ThemeManagerInterface $themeManager,
@@ -74,6 +76,7 @@ final class ComponentPluginManager extends DefaultPluginManager {
     protected FileSystemInterface $fileSystem,
     protected SchemaCompatibilityChecker $compatibilityChecker,
     protected ComponentValidator $componentValidator,
+    #[Autowire('%app.root')]
     protected string $appRoot,
   ) {
     // We are skipping the call to the parent constructor to avoid initializing

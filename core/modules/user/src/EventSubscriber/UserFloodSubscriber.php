@@ -5,6 +5,7 @@ namespace Drupal\user\EventSubscriber;
 use Drupal\user\Event\UserEvents;
 use Drupal\user\Event\UserFloodEvent;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Psr\Log\LoggerInterface;
 
@@ -26,7 +27,10 @@ class UserFloodSubscriber implements EventSubscriberInterface {
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(LoggerInterface $logger = NULL) {
+  public function __construct(
+    #[Autowire(service: 'logger.channel.user')]
+    LoggerInterface $logger = NULL
+  ) {
     $this->logger = $logger;
   }
 

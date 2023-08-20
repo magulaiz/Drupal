@@ -53,7 +53,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     if ($default_language_values = $this->getDefaultLanguageValues()) {
       $container->setParameter('language.default_values', $default_language_values);
     }
-
+    $container->addAliases([ConfigurableLanguageManagerInterface::class => 'language_manager']);
   }
 
   /**

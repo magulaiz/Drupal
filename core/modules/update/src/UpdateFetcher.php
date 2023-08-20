@@ -9,6 +9,7 @@ use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Fetches project information from remote locations.
@@ -62,7 +63,13 @@ class UpdateFetcher implements UpdateFetcherInterface {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client, Settings $settings, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    ClientInterface $http_client,
+    Settings $settings,
+    #[Autowire(service: 'logger.channel.update')]
+    protected ?LoggerInterface $logger = NULL
+  ) {
     $this->fetchUrl = $config_factory->get('update.settings')->get('fetch.url');
     $this->httpClient = $http_client;
     $this->updateSettings = $config_factory->get('update.settings');

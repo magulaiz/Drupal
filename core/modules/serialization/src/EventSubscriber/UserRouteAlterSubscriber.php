@@ -4,6 +4,7 @@ namespace Drupal\serialization\EventSubscriber;
 
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RoutingEvents;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -24,7 +25,10 @@ class UserRouteAlterSubscriber implements EventSubscriberInterface {
    * @param array $serializer_formats
    *   The available serializer formats.
    */
-  public function __construct(array $serializer_formats) {
+  public function __construct(
+    #[Autowire('%serializer.formats%')]
+    array $serializer_formats,
+  ) {
     $this->serializerFormats = $serializer_formats;
   }
 

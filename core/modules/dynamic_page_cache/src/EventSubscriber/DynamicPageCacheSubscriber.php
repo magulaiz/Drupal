@@ -9,6 +9,7 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\VariationCacheInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -112,7 +113,17 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, VariationCacheInterface $cache, CacheContextsManager $cache_contexts_manager, array $renderer_config) {
+  public function __construct(
+    #[Autowire(service: 'dynamic_page_cache_request_policy')]
+    RequestPolicyInterface $request_policy,
+    #[Autowire(service: 'dynamic_page_cache_response_policy')]
+    ResponsePolicyInterface $response_policy,
+    #[Autowire(service: 'variation_cache.dynamic_page_cache')]
+    VariationCacheInterface $cache,
+    CacheContextsManager $cache_contexts_manager,
+    #[Autowire('%renderer.config%')]
+    array $renderer_config,
+  ) {
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
     $this->cache = $cache;

@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    autowire: true
+
+  help.breadcrumb:
+    class: Drupal\help_topics\HelpBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 900 }
+    public: false
+  plugin.manager.help_topic:
+    class: Drupal\help_topics\HelpTopicPluginManager
+  Drupal\help_topics\HelpTopicPluginManagerInterface: '@plugin.manager.help_topic'
+  help.twig.loader:
+    class: Drupal\help_topics\HelpTopicTwigLoader
+    # Lowest core priority because loading help topics is not the usual case.
+    tags:
+      - { name: twig.loader, priority: -200 }
+    public: false
+  plugin.manager.help_section_topics:
+    class: Drupal\help_topics\HelpSectionManager
+    decorates: plugin.manager.help_section
+    parent: plugin.manager.help_section
+    calls:
+      - [setSearchManager, ['@?plugin.manager.search']]
+    tags:
+      - { name: plugin_manager_cache_clear }
+  help_twig.extension:
+    class: Drupal\help_topics\HelpTwigExtension
+    tags:
+      - { name: twig.extension }

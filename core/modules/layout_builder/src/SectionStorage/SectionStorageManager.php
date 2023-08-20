@@ -10,6 +10,7 @@ use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\layout_builder\Annotation\SectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides the Section Storage type plugin manager.
@@ -42,7 +43,13 @@ class SectionStorageManager extends DefaultPluginManager implements SectionStora
    * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
    *   The context handler.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ContextHandlerInterface $context_handler) {
+  public function __construct(
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    ContextHandlerInterface $context_handler,
+  ) {
     parent::__construct('Plugin/SectionStorage', $namespaces, $module_handler, SectionStorageInterface::class, SectionStorage::class);
 
     $this->contextHandler = $context_handler;

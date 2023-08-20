@@ -9,6 +9,7 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -87,7 +88,14 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactoryInterface $config_factory, Settings $settings, RequestStack $requestStack) {
+  public function __construct(
+    ConfigurableLanguageManagerInterface $language_manager,
+    #[Autowire(service: 'plugin.manager.language_negotiation_method')]
+    PluginManagerInterface $negotiator_manager,
+    ConfigFactoryInterface $config_factory,
+    Settings $settings,
+    RequestStack $requestStack,
+  ) {
     $this->languageManager = $language_manager;
     $this->negotiatorManager = $negotiator_manager;
     $this->configFactory = $config_factory;

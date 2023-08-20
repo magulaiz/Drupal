@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 // cspell:ignore nocdata
 
@@ -46,7 +47,12 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend) {
+  public function __construct(
+    ClientInterface $http_client,
+    ProviderRepositoryInterface $providers,
+    #[Autowire(service: 'cache.default')]
+    CacheBackendInterface $cache_backend,
+  ) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
     $this->cacheBackend = $cache_backend;
