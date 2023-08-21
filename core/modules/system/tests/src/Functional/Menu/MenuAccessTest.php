@@ -152,6 +152,7 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($superChildUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
 
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);
@@ -160,6 +161,7 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($childUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
 
     // Test a route that does not have a parameter defined in the menu item but
     // uses the route default parameter.
@@ -169,6 +171,7 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($childUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
 
     // Test a route that does have a parameter defined in the menu item and that
     // parameter value is equal to the default value specific in the route.
@@ -178,6 +181,7 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($childUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
 
     // If we try to access a route that takes a parameter but route is not in the
     // with that parameter we should always be denied access.
@@ -194,6 +198,7 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($childUser);
     $this->drupalGet(Url::fromRoute('menu_test.parent_test_default'));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
   }
 
 }
