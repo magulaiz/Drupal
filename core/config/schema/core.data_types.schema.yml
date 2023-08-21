@@ -510,6 +510,10 @@ field_config_base:
     field_type:
       type: string
       label: 'Field type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.field.field_type
+          interface: '\Drupal\Core\Field\FieldItemInterface'
 
 core.base_field_override.*.*.*:
   type: field_config_base
