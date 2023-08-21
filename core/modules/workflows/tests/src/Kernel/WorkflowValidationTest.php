@@ -31,4 +31,14 @@ class WorkflowValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the workflow type plugin is validated.
+   */
+  public function testTypePluginIsValidated(): void {
+    $this->entity->set('type', 'non_existent');
+    $this->assertValidationErrors([
+      'type' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }
