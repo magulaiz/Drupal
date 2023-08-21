@@ -837,6 +837,12 @@ views_relationship:
     required:
       type: boolean
       label: 'Require this relationship'
+    plugin_id:
+      type: string
+      label: 'The plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.relationship
 
 views_query:
   type: mapping
