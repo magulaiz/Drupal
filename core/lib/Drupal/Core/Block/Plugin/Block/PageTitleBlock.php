@@ -145,8 +145,15 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   private function getTitleBasedOnBaseRoute(): array|string|null|\Stringable {
     $base_route_title = $this->baseRouteTitle->getBaseRouteTitle();
     if (!is_null($base_route_title)) {
+      if (is_array($base_route_title)) {
+        $base_route_title = \Drupal::service('renderer')->render($base_route_title);
+      }
+      $current_title = $this->title;
+      if (is_array($current_title)) {
+        $current_title = \Drupal::service('renderer')->render($current_title);
+      }
       return $this->t('<span class="visually-hidden">@current_title for </span>@section_title', [
-        '@current_title' => $this->title,
+        '@current_title' => $current_title,
         '@section_title' => $base_route_title,
       ]);
     }
