@@ -501,6 +501,17 @@ function system_requirements($phase) {
     }
   }
 
+  if ($phase === 'runtime') {
+    if (!function_exists('fastcgi_finish_request') && !function_exists('litespeed_finish_request') && !ob_get_status()) {
+      $requirements['output_buffering'] = [
+        'title' => t('Output Buffering'),
+        'error_value' => t('Not enabled'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('<a href="https://www.php.net/manual/en/function.ob-start.php">Output buffering</a> is not enabled. This may degrade Drupal\'s performance. You can enable output buffering by default <a href="https://www.php.net/manual/en/outcontrol.configuration.php#ini.output-buffering">in your PHP settings</a>.'),
+      ];
+    }
+  }
+
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = [
@@ -544,7 +555,7 @@ function system_requirements($phase) {
 
   if ($phase === 'runtime' || $phase === 'update') {
     // Database information.
-    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
+    $class = Database::getConnection()->getConnectionOptions()['namespace'] . '\\Install\\Tasks';
     /** @var \Drupal\Core\Database\Install\Tasks $tasks */
     $tasks = new $class();
     $requirements['database_system'] = [
@@ -629,7 +640,7 @@ function system_requirements($phase) {
     }
   }
 
-  // Test configuration files and directory for writability.
+  // Test if configuration files and directory are writable.
   if ($phase == 'runtime') {
     $conf_errors = [];
     // Find the site path. Kernel service is not always available at this point,
@@ -1278,7 +1289,7 @@ function system_requirements($phase) {
       break;
 
     case 'mbstring.encoding_translation':
-      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
       break;
   }
 
@@ -1582,7 +1593,7 @@ function system_install() {
   $site->save(TRUE);
 
   // Populate the dummy query string added to all CSS and JavaScript files.
-  _drupal_flush_css_js();
+  \Drupal::service('asset.query_string')->reset();
 }
 
 /**
