@@ -111,13 +111,6 @@ class NodeForm extends ContentEntityForm {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entity;
 
-    if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit @type</em> @title', [
-        '@type' => node_get_type_label($node),
-        '@title' => $node->label(),
-      ]);
-    }
-
     // Changed must be sent to the client, for later overwrite error checking.
     $form['changed'] = [
       '#type' => 'hidden',

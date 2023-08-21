@@ -1325,18 +1325,21 @@ function template_preprocess_html(&$variables) {
     // Marking the title as safe since it has had the tags stripped.
     $head_title['title'] = Markup::create(trim(strip_tags($variables['page']['#title'])));
 
-    $base_route_title = \Drupal::service('base_route_title')->getBaseRouteTitle();
-    if (is_array($base_route_title)) {
-      $base_route_title = (string) \Drupal::service('renderer')->render($base_route_title);
-    }
-    if ($base_route_title) {
-      // Marking the title as safe since it has had the tags stripped.
-      $base_route_title = Markup::create(trim(strip_tags($base_route_title)));
+    $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
+    if (!$maintenance_mode) {
+      $base_route_title = \Drupal::service('base_route_title')->getBaseRouteTitle();
+      if (is_array($base_route_title)) {
+        $base_route_title = (string) \Drupal::service('renderer')->render($base_route_title);
+      }
+      if ($base_route_title) {
+        // Marking the title as safe since it has had the tags stripped.
+        $base_route_title = Markup::create(trim(strip_tags($base_route_title)));
 
-      // If the base route title is not the same as the current title, append it
-      // to the head title.
-      if ((string) $base_route_title !== (string) $head_title['title']) {
-        $head_title['base_route_title'] = $base_route_title;
+        // If the base route title is not the same as the current title, append it
+        // to the head title.
+        if ((string) $base_route_title !== (string) $head_title['title']) {
+          $head_title['base_route_title'] = $base_route_title;
+        }
       }
     }
 
