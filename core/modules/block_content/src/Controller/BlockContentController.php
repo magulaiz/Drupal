@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Controller;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\PathChangedHelper;
@@ -248,14 +249,14 @@ class BlockContentController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
    *   /admin/content/block/{block_content}/delete directly instead of
    *   /block/{block_content}.
    *
    * @see https://www.drupal.org/node/3320855
    */
   public function deleteRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
-    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    @trigger_error('The path /block/{block_content}/delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
     $helper = new PathChangedHelper($route_match, $request);
     $params = [
       '%old_path' => $helper->oldPath(),
@@ -285,6 +286,7 @@ class BlockContentController extends ControllerBase {
       ],
     ];
     $build['#content'] = $this->entityTypeManager->getViewBuilder('block_content')->view($block_content);
+    CacheableMetadata::createFromObject($block_content)->applyTo($build);
     return $build;
   }
 
