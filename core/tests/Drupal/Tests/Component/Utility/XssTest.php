@@ -609,6 +609,8 @@ class XssTest extends TestCase {
 
   /**
    * Checks that escaped HTML embedded in an attribute is not filtered.
+   *
+   * @see \Drupal\Component\Utility\HtmlSerializerRules
    */
   public function testFilterNormalizedHtml5() {
     $input = '<span data-caption="foo &lt;em&gt;bar&lt;/em&gt;"></span>';
