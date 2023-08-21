@@ -99,14 +99,11 @@ function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
  * Add labels to views which don't have one.
  */
 function views_post_update_add_missing_labels(&$sandbox = NULL): void {
-  \Drupal::classResolver(ConfigEntityUpdater::class)
-    ->update($sandbox, 'view', function (ViewEntityInterface $view): bool {
-      if (!$view->get('label')) {
-        $view->set('label', $view->id());
-        return TRUE;
-      }
-      return FALSE;
-    });
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->addLabelIfMissing($view);
+  });
 }
 
 /**

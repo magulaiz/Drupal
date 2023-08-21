@@ -148,8 +148,28 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->addLabelIfMissing($view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
+  }
+
+  /**
+   * Adds a label to views which don't have one.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function addLabelIfMissing(ViewEntityInterface $view): bool {
+    if (!$view->get('label')) {
+      $view->set('label', $view->id());
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
