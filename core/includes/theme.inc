@@ -1320,11 +1320,21 @@ function template_preprocess_html(&$variables) {
     $variables['page']['#title'] = (string) \Drupal::service('renderer')->render($variables['page']['#title']);
   }
   if (!empty($variables['page']['#title'])) {
-    $head_title = [
+    $head_title = [];
+
+    // Marking the title as safe since it has had the tags stripped.
+    $head_title['title'] = Markup::create(trim(strip_tags($variables['page']['#title'])));
+
+    $base_route_title = \Drupal::service('base_route_title')->getBaseRouteTitle();
+    if (is_array($base_route_title)) {
+      $base_route_title = (string) \Drupal::service('renderer')->render($base_route_title);
+    }
+    if ($base_route_title) {
       // Marking the title as safe since it has had the tags stripped.
-      'title' => Markup::create(trim(strip_tags($variables['page']['#title']))),
-      'name' => $site_config->get('name'),
-    ];
+      $head_title['base_route_title'] = Markup::create(trim(strip_tags($base_route_title)));
+    }
+
+    $head_title['name'] = $site_config->get('name');
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
   //   @see https://www.drupal.org/node/2068471
