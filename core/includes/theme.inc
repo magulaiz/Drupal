@@ -1331,7 +1331,13 @@ function template_preprocess_html(&$variables) {
     }
     if ($base_route_title) {
       // Marking the title as safe since it has had the tags stripped.
-      $head_title['base_route_title'] = Markup::create(trim(strip_tags($base_route_title)));
+      $base_route_title = Markup::create(trim(strip_tags($base_route_title)));
+
+      // If the base route title is not the same as the current title, append it
+      // to the head title.
+      if ((string) $base_route_title !== (string) $head_title['title']) {
+        $head_title['base_route_title'] = $base_route_title;
+      }
     }
 
     $head_title['name'] = $site_config->get('name');

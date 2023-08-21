@@ -152,6 +152,12 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       if (is_array($current_title)) {
         $current_title = \Drupal::service('renderer')->render($current_title);
       }
+
+      // If the titles are equal, return the original title.
+      if ((string) $base_route_title === (string) $current_title) {
+        return $this->title;
+      }
+
       return $this->t('<span class="visually-hidden">@current_title for </span>@section_title', [
         '@current_title' => $current_title,
         '@section_title' => $base_route_title,
