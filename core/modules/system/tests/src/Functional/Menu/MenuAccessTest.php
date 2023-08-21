@@ -97,37 +97,28 @@ class MenuAccessTest extends BrowserTestBase {
 
     // An admin user has access to all parent pages.
     $this->drupalLogin($adminUser);
-    $this->drupalGet('admin/structure');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->drupalGet('admin/people');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertMenuItemRouteAccess('admin/structure', 200);
+    $this->assertMenuItemRouteAccess('admin/people', 200);
 
     // This user has access to administer menus so the structure parent page
     // should be accessible.
     $this->drupalLogin($menuAdmin);
-    $this->drupalGet('admin/structure');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->drupalGet('admin/people');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess('admin/structure', 200);
+    $this->assertMenuItemRouteAccess('admin/people', 403);
 
     // This user has access to administer filters so the config parent page
     // should be accessible.
     $this->drupalLogin($filterAdmin);
-    $this->drupalGet('admin/config');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->drupalGet('admin/people');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess('admin/config', 200);
+    $this->assertMenuItemRouteAccess('admin/people', 403);
 
     // This user doesn't have access to any of the child pages, so the parent
     // pages should not be accessible.
     $this->drupalLogin($webUser);
-    $this->drupalGet('admin/structure');
-    $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('admin/people');
-    $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('admin/config');
+    $this->assertMenuItemRouteAccess('admin/structure', 403);
+    $this->assertMenuItemRouteAccess('admin/people', 403);
     // As menu_test adds a menu link under config.
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertMenuItemRouteAccess('admin/config', 200);
 
     // Some comment.
     // Create a user with access to the parent but not to the child.
@@ -144,60 +135,56 @@ class MenuAccessTest extends BrowserTestBase {
       'access super child test page',
     ]);
     $this->drupalLogin($parentUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 403);
     $this->drupalLogin($childUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 403);
     $this->drupalLogin($superChildUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test'));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 200);
 
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']), 403);
     $this->drupalLogin($childUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']), 200);
 
     // Test a route that does not have a parameter defined in the menu item but
     // uses the route default parameter.
     $this->drupalLogin($parentUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']), 403);
     $this->drupalLogin($childUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']), 200);
 
     // Test a route that does have a parameter defined in the menu item and that
     // parameter value is equal to the default value specific in the route.
     $this->drupalLogin($parentUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']), 403);
     $this->drupalLogin($childUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']), 200);
 
     // If we try to access a route that takes a parameter but route is not in the
     // with that parameter we should always be denied access.
     $this->drupalLogin($parentUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']), 403);
     $this->drupalLogin($childUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']), 403);
 
     $this->drupalLogin($parentUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_default'));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_default'), 403);
     $this->drupalLogin($childUser);
-    $this->drupalGet(Url::fromRoute('menu_test.parent_test_default'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_default'), 200);
+  }
+
+  /**
+   * Assert a route request connected to a menu item has the expected access.
+   *
+   * @param string|\Drupal\Core\Url $path
+   *   The path variable as passed to \Drupal\Tests\UiHelperTrait::drupalGet().
+   * @param int $expected_status
+   *   The expected request status.
+   */
+  private function assertMenuItemRouteAccess(string|Url $path, int $expected_status): void {
+    $this->drupalGet($path);
+    $this->assertSession()->statusCodeEquals($expected_status);
     $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
   }
 
