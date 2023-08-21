@@ -49,6 +49,13 @@ class PluginExistsConstraint extends Constraint implements ContainerFactoryPlugi
   public ?string $interface = NULL;
 
   /**
+   * Whether the key of the validated value is to be used as the plugin ID.
+   *
+   * @var bool
+   */
+  public bool $pluginIdFromKey = FALSE;
+
+  /**
    * Constructs a PluginExistsConstraint.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager

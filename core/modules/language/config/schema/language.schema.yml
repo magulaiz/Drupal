@@ -16,6 +16,11 @@ language_type_negotiation:
       sequence:
         type: integer
         label: Weight
+  constraints:
+    PluginExists:
+      manager: plugin.manager.language_negotiation_method
+      interface: '\Drupal\language\LanguageNegotiationMethodInterface'
+      pluginIdFromKey: true
 
 language.types:
   type: config_object
