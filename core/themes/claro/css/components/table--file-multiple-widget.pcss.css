@@ -20,14 +20,10 @@
     padding: 0;
   }
   & .tabledrag-handle {
-    float: left; /* LTR */
-
-    @nest [dir="rtl"] & {
-      float: right;
-    }
+    float: inline-start;
   }
   & .tabledrag-changed {
-    float: left; /* LTR */
+    float: inline-start;
     line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
   }
   & td {

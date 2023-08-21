@@ -29,15 +29,11 @@
 }
 
 .table-file-multiple-widget .tabledrag-handle {
-  float: left; /* LTR */
-}
-
-[dir="rtl"] :is(.table-file-multiple-widget .tabledrag-handle) {
-  float: right;
+  float: inline-start;
 }
 
 .table-file-multiple-widget .tabledrag-changed {
-  float: left; /* LTR */
+  float: inline-start;
   line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
 }
 
