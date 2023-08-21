@@ -5,6 +5,7 @@ namespace Drupal\system\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
@@ -22,6 +23,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  use DependencyTrait;
 
   /**
    * Stores the configuration factory.
@@ -179,6 +182,13 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       parent::getCacheTags(),
       $this->configFactory->get('system.site')->getCacheTags()
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return $this->addDependency('config', 'system.site');
   }
 
 }

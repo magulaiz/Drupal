@@ -115,6 +115,22 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->elementNotExists('xpath', $site_name_xpath);
     $this->assertSession()->elementTextNotContains('xpath', $site_slogan_xpath, 'Community carpentry');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
+
+    // Turn the site name on and change it.
+    $this->config('block.block.site_branding')
+      ->set('settings.use_site_name', 1)
+      ->set('settings.use_site_slogan', 0)
+      ->save();
+    $this->config('system.site')
+      ->set('name', 'Drupal Community')
+      ->save();
+    $this->drupalGet('');
+    $new_site_name_xpath = '//div[@id="block-site-branding"]/a[text() = "Drupal Community"]';
+    $this->drupalGet('');
+
+    // Re-test all branding elements.
+    $this->assertSession()->pageTextContains('');
+    $this->assertSession()->elementExists('xpath', $new_site_name_xpath);
   }
 
 }
