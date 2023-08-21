@@ -45,24 +45,24 @@ menu_test.menu_parent_test.child_test_param:
   route_parameters:
     param: 'param-in-menu'
 menu_test.menu_parent_test_param_default:
-  title: 'Menu Parent Param'
+  title: 'Menu Parent Param Default'
   description: 'Menu item description parent'
   route_name: menu_test.parent_test_param
   parent: system.admin
 menu_test.menu_parent_test.child_test_param_default:
-  title: 'Menu Child Param'
+  title: 'Menu Child Param Default'
   description: 'Menu item description child'
   route_name: menu_test.child_test_param
   parent: menu_test.menu_parent_test_param_default
 menu_test.menu_parent_test_param_default_explicit:
-  title: 'Menu Parent Param'
+  title: 'Menu Parent Param Default Explicit'
   description: 'Menu item description parent'
   route_name: menu_test.parent_test_param_explicit
   parent: system.admin
   route_parameters:
     param: 'my_default'
 menu_test.menu_parent_test.child_test_param_default_explicit:
-  title: 'Menu Child Param'
+  title: 'Menu Child Param Default Explicit'
   description: 'Menu item description child'
   route_name: menu_test.child_test_param_explicit
   parent: menu_test.menu_parent_test_param_default_explicit
