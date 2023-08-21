@@ -8,9 +8,9 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Utility\BaseRouteTitle;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Utility\RequestGenerator;
@@ -45,32 +45,23 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
-   *   The url generator.
    * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver.
    * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match.
-   * @param \Drupal\Core\Menu\LocalTaskManager $localTaskManager
-   *   The local task manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
-   *   The route provider.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Utility\RequestGenerator $requestGenerator
-   *   The request generator.
+   * @param \Drupal\Core\Utility\BaseRouteTitle $baseRouteTitle
+   *   The base route title.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    protected UrlGeneratorInterface $urlGenerator,
     protected TitleResolverInterface $titleResolver,
     protected RouteMatchInterface $routeMatch,
-    protected LocalTaskManager $localTaskManager,
-    protected RouteProviderInterface $routeProvider,
     protected RequestStack $requestStack,
-    protected RequestGenerator $requestGenerator,
+    protected BaseRouteTitle $baseRouteTitle,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -83,13 +74,10 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('url_generator'),
       $container->get('title_resolver'),
       $container->get('current_route_match'),
-      $container->get('plugin.manager.menu.local_task'),
-      $container->get('router.route_provider'),
       $container->get('request_stack'),
-      $container->get('request_generator'),
+      $container->get('base_route_title'),
     );
   }
 
@@ -155,22 +143,16 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The title based on base route.
    */
   private function getTitleBasedOnBaseRoute(): array|string|null|\Stringable {
-    $route_name = $this->routeMatch->getRouteName();
-    $base_route_name = $this->localTaskManager->getBaseRouteName($route_name);
-    $title = NULL;
-    if ($base_route_name) {
-      if ($base_route_name !== $route_name) {
-        $path = $this->urlGenerator->getPathFromRoute($base_route_name, $this->routeMatch->getRawParameters()->all());
-        $route_request = $this->requestGenerator->generateRequestForPath($path, []);
-        if ($route_request) {
-          $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route_name));
-        }
-      }
-      else {
-        $title = $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
-      }
+    $base_route_title = $this->baseRouteTitle->getBaseRouteTitle();
+    if (!is_null($base_route_title)) {
+      return $this->t('<span class="visually-hidden">@current_title for </span>@section_title', [
+        '@current_title' => $this->title,
+        '@section_title' => $base_route_title,
+      ]);
     }
-    return $title;
+    else {
+      return $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
+    }
   }
 
 }
