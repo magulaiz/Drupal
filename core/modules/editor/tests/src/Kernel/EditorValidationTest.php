@@ -122,6 +122,27 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
       ],
     ]);
     $this->assertValidationErrors([]);
+
+    // Specify all required keys … but now disable image uploads again. This
+    // should trigger a validation error from the ValidKeys constraint.
+    $this->entity->setImageUploadSettings([
+      'status' => FALSE,
+      'scheme' => 'public',
+      'directory' => 'uploaded-images',
+      'max_size' => '5 MB',
+      'max_dimensions' => [
+        'width' => 10000,
+        'height' => 10000,
+      ],
+    ]);
+    $this->assertValidationErrors([
+      'image_upload' => [
+        "'scheme' is an extraneous key.",
+        "'directory' is an extraneous key.",
+        "'max_size' is an extraneous key.",
+        "'max_dimensions' is an extraneous key.",
+      ],
+    ]);
   }
 
 }
