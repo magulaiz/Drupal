@@ -94,10 +94,10 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->setImageUploadSettings(['status' => TRUE]);
     $this->assertValidationErrors([
       'image_upload' => [
-        "'scheme' is a required key.",
-        "'directory' is a required key.",
-        "'max_size' is a required key.",
-        "'max_dimensions' is a required key.",
+        "'scheme' is a conditionally required key.",
+        "'directory' is a conditionally required key.",
+        "'max_size' is a conditionally required key.",
+        "'max_dimensions' is a conditionally required key.",
       ],
     ]);
 
@@ -108,7 +108,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
       'directory' => 'uploaded-images',
       'max_size' => '5 MB',
     ]);
-    $this->assertValidationErrors(['image_upload' => "'max_dimensions' is a required key."]);
+    $this->assertValidationErrors(['image_upload' => "'max_dimensions' is a conditionally required key."]);
 
     // Specify all required keys.
     $this->entity->setImageUploadSettings([
