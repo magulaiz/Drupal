@@ -20,13 +20,6 @@ class PluginExistsConstraintValidator extends ConstraintValidator {
   public function validate(mixed $plugin_id, Constraint $constraint) {
     assert($constraint instanceof PluginExistsConstraint);
 
-    // If the plugin ID should be derived from the key of the value being
-    // validated, it should be the final part of the property path.
-    if ($constraint->pluginIdFromKey) {
-      $property_path = explode('.', $this->context->getPropertyPath());
-      $plugin_id = end($property_path);
-    }
-
     $definition = $constraint->pluginManager->getDefinition($plugin_id, FALSE);
     // Some plugin managers provide fallbacks.
     if ($constraint->pluginManager instanceof FallbackPluginManagerInterface) {
