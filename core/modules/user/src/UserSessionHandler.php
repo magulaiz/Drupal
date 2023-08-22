@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\user;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -27,6 +28,7 @@ class UserSessionHandler implements UserSessionHandlerInterface {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected ModuleHandlerInterface $moduleHandler,
     protected LoggerInterface $logger,
+    protected TimeInterface $time,
   ) {}
 
   /**
@@ -37,7 +39,7 @@ class UserSessionHandler implements UserSessionHandlerInterface {
     $this->logger->info('Session opened for %name.', ['%name' => $user->getAccountName()]);
     // Update the user table timestamp noting user has logged in.
     // This is also used to invalidate one-time login links.
-    $user->setLastLoginTime(\Drupal::time()->getRequestTime());
+    $user->setLastLoginTime($this->time->getRequestTime());
     $this->entityTypeManager->getStorage('user')
       ->updateLastLoginTimestamp($user);
 

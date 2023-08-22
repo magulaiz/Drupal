@@ -39,6 +39,10 @@ class RegisterForm extends AccountForm {
    */
   public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, UserSessionHandlerInterface $userSessionHandler = NULL) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
+    if (!$userSessionHandler) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $userSessionHandler = \Drupal::service('user.session_handler');
+    }
     $this->userSessionHandler = $userSessionHandler;
   }
 

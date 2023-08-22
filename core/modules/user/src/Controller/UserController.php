@@ -75,7 +75,7 @@ class UserController extends ControllerBase {
    *   The flood service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\user\UserSessionHandlerInterface $userSessionHandler
+   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
    *   The user session handler.
    */
   public function __construct(
@@ -98,7 +98,7 @@ class UserController extends ControllerBase {
     }
     if ($this->userSessionHandler === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $userSessionHandler argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $this->userSessionHandler = \Drupal::service('user.user_session_handler');
+      $this->userSessionHandler = \Drupal::service('user.session_handler');
     }
   }
 
