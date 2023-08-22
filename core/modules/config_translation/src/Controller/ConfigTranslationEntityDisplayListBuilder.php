@@ -40,6 +40,8 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user service.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, AccountInterface $current_user) {
     parent::__construct($entity_type, $storage, $entity_type_manager, $entity_type_bundle_info);
