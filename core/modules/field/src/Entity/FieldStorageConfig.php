@@ -46,6 +46,9 @@ use Drupal\field\FieldStorageConfigInterface;
  *     "indexes",
  *     "persist_with_no_fields",
  *     "custom_storage",
+ *   },
+ *   constraints = {
+ *     "ImmutableFields" = {"entity_type", "field_name", "type"}
  *   }
  * )
  */
