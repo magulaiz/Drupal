@@ -86,4 +86,18 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->assertValidationErrors([]);
   }
 
+  /**
+   * Tests that the field type plugin's existence is validated.
+   */
+  public function testFieldTypePluginIsValidated(): void {
+    // We need to clear the current settings, or we will get validation errors
+    // because the old settings are not supported by the new field type.
+    $this->entity->set('settings', [])
+      ->set('field_type', 'invalid');
+
+    $this->assertValidationErrors([
+      'field_type' => "The 'invalid' plugin does not exist.",
+    ]);
+  }
+
 }

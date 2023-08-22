@@ -27,8 +27,18 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
     $fields = $this->container->get('entity_field.manager')
       ->getBaseFieldDefinitions('user');
 
-    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'user');
+    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition($fields['uuid'], 'user');
     $this->entity->save();
+  }
+
+  /**
+   * Tests that the field type plugin's existence is validated.
+   */
+  public function testFieldTypePluginIsValidated(): void {
+    $this->entity->set('field_type', 'invalid');
+    $this->assertValidationErrors([
+      'field_type' => "The 'invalid' plugin does not exist.",
+    ]);
   }
 
 }
