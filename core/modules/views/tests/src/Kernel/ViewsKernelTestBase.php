@@ -47,6 +47,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
+    $this->installConfig(['system']);
     $this->setUpFixtures();
 
     if ($import_test_views) {
