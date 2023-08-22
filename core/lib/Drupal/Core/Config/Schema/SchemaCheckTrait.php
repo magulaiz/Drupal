@@ -144,6 +144,9 @@ trait SchemaCheckTrait {
       ],
     ],
     'field.field.*.*.*' => [
+      'settings' => [
+        "'allowed_formats' is a required key.",
+      ],
       'settings.handler_settings' => [
         "'target_type' is a required key.",
         "'auto_create_bundle' is a required key.",
@@ -159,6 +162,9 @@ trait SchemaCheckTrait {
       ],
       'settings.handler_settings.view' => [
         "'arguments' is a required key.",
+      ],
+      'settings.handler_settings.filter' => [
+        "'role' is a required key.",
       ],
       'default_value.*' => [
         "'format' is a required key.",
@@ -286,6 +292,9 @@ trait SchemaCheckTrait {
         "'allow_insecure_uploads' is a required key.",
         "'path' is a required key.",
         "'temporary_maximum_age' is a required key.",
+      ],
+      'path' => [
+        "'temporary' is a required key.",
       ],
     ],
     'rest.resource.*' => [
@@ -908,6 +917,10 @@ trait SchemaCheckTrait {
         "'parent' is a required key.",
         "'description' is a required key.",
         "'context' is a required key.",
+        "'type' is a required key.",
+        "'title' is a required key.",
+        "'weight' is a required key.",
+        "'menu_name' is a required key.",
       ],
       'display.*.display_options.relationships.*' => [
         "'entity_type' is a required key.",
