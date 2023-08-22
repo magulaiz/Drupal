@@ -116,8 +116,7 @@ class RequiredKeysConstraint extends Constraint {
     // property.
     $required_keys = array_filter(
       $definition['mapping'],
-      fn (array $value, string $key) => !array_key_exists('requiredKey', $value),
-      ARRAY_FILTER_USE_BOTH
+      fn (array $value) => !array_key_exists('requiredKey', $value)
     );
 
     return array_keys($required_keys);
