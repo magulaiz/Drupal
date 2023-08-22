@@ -43,13 +43,6 @@ class EditorDialogAccessTest extends BrowserTestBase {
       'format' => 'plain_text',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => 'public',
-        'directory' => 'inline-images',
-        'max_size' => '',
-        'max_dimensions' => [
-          'width' => 0,
-          'height' => 0,
-        ],
       ],
     ]);
     $editor->save();
@@ -61,8 +54,16 @@ class EditorDialogAccessTest extends BrowserTestBase {
 
     // With image upload settings, expect a 200, and now there should be an
     // input[type=file].
-    $editor->setImageUploadSettings(['status' => TRUE] + $editor->getImageUploadSettings())
-      ->save();
+    $editor->setImageUploadSettings([
+      'status' => TRUE,
+      'scheme' => 'public',
+      'directory' => 'inline-images',
+      'max_size' => '',
+      'max_dimensions' => [
+        'width' => 0,
+        'height' => 0,
+      ],
+    ])->save();
     $this->resetAll();
     $this->drupalGet($url);
     $this->assertEmpty($this->cssSelect('input[type=text][name="attributes[src]"]'), 'Image uploads enabled: input[type=text][name="attributes[src]"] is absent.');
