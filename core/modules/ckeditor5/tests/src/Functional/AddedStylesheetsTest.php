@@ -65,6 +65,9 @@ class AddedStylesheetsTest extends BrowserTestBase {
           'items' => [],
         ],
       ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $this->editor->save();
     $this->assertSame([], array_map(
