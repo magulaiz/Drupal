@@ -374,31 +374,10 @@ function field_ui_form_config_translation_form_alter(&$form, FormStateInterface 
   $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
   /** @var array $components */
   $components = $entity->getComponents();
-  $element_names = [];
   $layout_builder = FALSE;
   if (isset($form_elements['third_party_settings']['layout_builder']['sections'])) {
     $layout_builder = TRUE;
-    /** @var \Drupal\layout_builder\Section $section */
-    foreach ($entity->getSections() as $i => $section) {
-      $section_components = $section->toArray()['components'];
-      if (empty($section_components)) {
-        continue;
-      }
-      foreach ($section_components as $j => $component) {
-        if (explode(PluginBase::DERIVATIVE_SEPARATOR, $component['configuration']['id'])[0] === 'field_block' &&
-          isset($component['configuration']['formatter']['settings']) &&
-          !empty($component['configuration']['formatter']['settings']) &&
-          isset($form_elements['third_party_settings']['layout_builder']['sections'][$i]['components'][$j]['configuration']['formatter']['settings'])) {
-          try {
-            [,,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component['configuration']['id'], 4);
-          }
-          catch (\Exception $e) {
-            continue;
-          }
-          $element_names[] = $i . PluginBase::DERIVATIVE_SEPARATOR . $j . PluginBase::DERIVATIVE_SEPARATOR . $field_name;
-        }
-      }
-    }
+    $element_names = layout_builder_get_element_names($form, $form_state);
   }
   else {
     $form_elements['content']['#collapsible'] = FALSE;
