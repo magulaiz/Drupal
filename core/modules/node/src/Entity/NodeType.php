@@ -52,9 +52,6 @@ use Drupal\node\NodeTypeInterface;
  *     "new_revision",
  *     "preview_mode",
  *     "display_submitted",
- *   },
- *   constraints = {
- *     "ImmutableFields" = {"type"}
  *   }
  * )
  */

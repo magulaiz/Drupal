@@ -134,11 +134,8 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       $expected_errors = [$id_key => sprintf('The <em class="placeholder">&quot;%s&quot;</em> machine name is not valid.', $machine_name)];
     }
 
-    // If the entity type expects its ID key to be immutable, we should get an
-    // error message about that.
-    if ($this->isIdKeyImmutable()) {
-      $expected_errors[''] = "The '$id_key' property cannot be changed.";
-    }
+    // Config entity IDs are immutable by default.
+    $expected_errors[''] = "The '$id_key' property cannot be changed.";
 
     $this->entity->set($id_key, $machine_name);
     $this->assertValidationErrors($expected_errors);
@@ -157,10 +154,9 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $id_key = $this->entity->getEntityType()->getKey('id');
     $expected_errors = [
       $id_key => 'This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.',
+      // Config entity IDs are immutable by default.
+      '' => "The '$id_key' property cannot be changed.",
     ];
-    if ($this->isIdKeyImmutable()) {
-      $expected_errors[''] = "The '$id_key' property cannot be changed.";
-    }
     $this->entity->set($id_key, $this->randomMachineName($max_length + 2));
     $this->assertValidationErrors($expected_errors);
   }
@@ -438,9 +434,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    */
   public function testImmutableFields(array $valid_values = []): void {
     $constraints = $this->entity->getEntityType()->getConstraints();
-    if (!array_key_exists('ImmutableFields', $constraints)) {
-      $this->markTestSkipped('This entity type has no immutable fields.');
-    }
+    $this->assertNotEmpty($constraints['ImmutableFields'], 'All config entities should have at least one immutable ID field.');
 
     foreach ($constraints['ImmutableFields'] as $property_name) {
       $original_value = $this->entity->get($property_name);
@@ -450,25 +444,6 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       ]);
       $this->entity->set($property_name, $original_value);
     }
-  }
-
-  /**
-   * Checks if the ID of the entity under test can be changed.
-   *
-   * @return bool
-   *   TRUE if the entity's ID can be changed, otherwise FALSE.
-   */
-  protected function isIdKeyImmutable(): bool {
-    $entity_type = $this->entity->getEntityType();
-    $id_key = $entity_type->getKey('id');
-    if (empty($id_key)) {
-      return FALSE;
-    }
-    $constraints = $entity_type->getConstraints();
-    if (array_key_exists('ImmutableFields', $constraints)) {
-      return in_array($id_key, $constraints['ImmutableFields'], TRUE);
-    }
-    return FALSE;
   }
 
 }
