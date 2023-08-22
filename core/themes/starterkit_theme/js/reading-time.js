@@ -55,16 +55,14 @@
     attach(context) {
       // Process the current content to calculate the reading time.
       // We use `once()` from core to avoid processing the content multiple time.
-      once(onceName, elementSelector, context).forEach(
-        (element) => {
-          const time = readingTime(element, wordsPerMinute);
-          console.log(
-            Drupal.t('This page will take you @minutes to read', {
-              '@minutes': Drupal.formatPlural(time, '1·minute', '@count·minutes'),
-            })
-          );
-        }
-      );
+      once(onceName, elementSelector, context).forEach((element) => {
+        const time = readingTime(element, wordsPerMinute);
+        console.log(
+          Drupal.t('This page will take you @minutes to read', {
+            '@minutes': Drupal.formatPlural(time, '1·minute', '@count·minutes'),
+          }),
+        );
+      });
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
