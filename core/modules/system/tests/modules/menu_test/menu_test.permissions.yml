@@ -1,8 +1,14 @@
 access parent test page:
   title: 'Access parent test page'
   restrict access: true
-access child test page:
-  title: 'Access child test page'
+access child1 test page:
+  title: 'Access child1 test page'
+  restrict access: true
+access child2 test page:
+  title: 'Access child2 test page'
+  restrict access: true
+access child3 test page:
+  title: 'Access child3 test page'
   restrict access: true
 access super child test page:
   title: 'Access super child test page'

@@ -125,18 +125,18 @@ class MenuAccessTest extends BrowserTestBase {
     $parentUser = $this->drupalCreateUser([
       'access parent test page',
     ]);
-    $childUser = $this->drupalCreateUser([
+    $child1User = $this->drupalCreateUser([
       'access parent test page',
-      'access child test page',
+      'access child1 test page',
     ]);
     $superChildUser = $this->drupalCreateUser([
       'access parent test page',
-      'access child test page',
+      'access child1 test page',
       'access super child test page',
     ]);
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 403);
-    $this->drupalLogin($childUser);
+    $this->drupalLogin($child1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 403);
     $this->drupalLogin($superChildUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 200);
@@ -144,33 +144,33 @@ class MenuAccessTest extends BrowserTestBase {
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']), 403);
-    $this->drupalLogin($childUser);
+    $this->drupalLogin($child1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']), 200);
 
     // Test a route that does not have a parameter defined in the menu item but
     // uses the route default parameter.
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']), 403);
-    $this->drupalLogin($childUser);
+    $this->drupalLogin($child1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'my_default']), 200);
 
     // Test a route that does have a parameter defined in the menu item and that
     // parameter value is equal to the default value specific in the route.
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']), 403);
-    $this->drupalLogin($childUser);
+    $this->drupalLogin($child1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']), 200);
 
     // If we try to access a route that takes a parameter but route is not in the
     // with that parameter we should always be denied access.
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']), 403);
-    $this->drupalLogin($childUser);
+    $this->drupalLogin($child1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']), 403);
 
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_default'), 403);
-    $this->drupalLogin($childUser);
+    $this->drupalLogin($child1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test_default'), 200);
   }
 
