@@ -78,7 +78,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
     ]);
     $camelids
       ->setImageUploadSettings([
-        'status' => FALSE,
+        'status' => TRUE,
         'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
@@ -126,7 +126,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
           ],
           'editor' => 'ckeditor5',
           'image_upload' => [
-            'status' => FALSE,
+            'status' => TRUE,
             'scheme' => 'public',
             'directory' => 'inline-images',
             'max_size' => '',
@@ -190,7 +190,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
     ]);
 
     $entity->setImageUploadSettings([
-      'status' => FALSE,
+      'status' => TRUE,
       'scheme' => 'public',
       'directory' => 'inline-images',
       'max_size' => '',
