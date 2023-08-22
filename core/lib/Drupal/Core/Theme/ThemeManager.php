@@ -217,7 +217,34 @@ class ThemeManager implements ThemeManagerInterface {
       'theme_hook_original' => $original_hook,
     ];
 
-    $suggestions = $this->buildThemeHookSuggestions($hook, $info['base hook'] ?? '', $variables);
+    // Set base hook for later use. For example if '#theme' => 'node__article'
+    // is called, we run hook_theme_suggestions_node_alter() rather than
+    // hook_theme_suggestions_node__article_alter(), and also pass in the base
+    // hook as the last parameter to the suggestions alter hooks.
+    if (isset($info['base hook'])) {
+      $base_theme_hook = $info['base hook'];
+    }
+    else {
+      $base_theme_hook = $hook;
+    }
+
+    // Invoke hook_theme_suggestions_HOOK().
+    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
+    // If the theme implementation was invoked with a direct theme suggestion
+    // like '#theme' => 'node__article', add it to the suggestions array before
+    // invoking suggestion alter hooks.
+    if (isset($info['base hook'])) {
+      $suggestions[] = $hook;
+    }
+
+    // Invoke hook_theme_suggestions_alter() and
+    // hook_theme_suggestions_HOOK_alter().
+    $hooks = [
+      'theme_suggestions',
+      'theme_suggestions_' . $base_theme_hook,
+    ];
+    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
+    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
