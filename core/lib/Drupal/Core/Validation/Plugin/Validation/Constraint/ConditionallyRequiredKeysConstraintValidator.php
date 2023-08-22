@@ -25,9 +25,15 @@ class ConditionallyRequiredKeysConstraintValidator extends ConstraintValidator {
 
     $constraint->validateOptions($this->context);
 
-    // It is safe to access this array index because $condition_key is
-    // guaranteed to be a required key.
+    // It should be safe to access this array index because $condition_key is
+    // guaranteed to be a required key. But unfortunately, there's no way to
+    // ensure constraints are validated in a specific order, so we still need to
+    // be careful.
     // @see ConditionallyRequiredKeysConstraint::validateOptions()
+    if (!array_key_exists($constraint->condition['key'], $value)) {
+      return;
+    }
+
     if ($value[$constraint->condition['key']] === $constraint->condition['value']) {
       $missing_keys = array_diff($constraint->keys, array_keys($value));
       foreach ($missing_keys as $key) {
