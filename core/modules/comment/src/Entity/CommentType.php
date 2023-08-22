@@ -48,6 +48,9 @@ use Drupal\comment\CommentTypeInterface;
  *     "label",
  *     "target_entity_type_id",
  *     "description",
+ *   },
+ *   constraints = {
+ *     "ImmutableFields" = {"id"}
  *   }
  * )
  */

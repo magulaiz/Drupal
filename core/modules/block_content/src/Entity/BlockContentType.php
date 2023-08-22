@@ -50,6 +50,9 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     "label",
  *     "revision",
  *     "description",
+ *   },
+ *   constraints = {
+ *     "ImmutableFields" = {"id"}
  *   }
  * )
  */

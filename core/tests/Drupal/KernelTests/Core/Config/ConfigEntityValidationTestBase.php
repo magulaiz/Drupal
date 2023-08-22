@@ -134,10 +134,13 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       $expected_errors = [$id_key => sprintf('The <em class="placeholder">&quot;%s&quot;</em> machine name is not valid.', $machine_name)];
     }
 
-    $this->entity->set(
-      $id_key,
-      $machine_name
-    );
+    // If the entity type expects its ID key to be immutable, we should get an
+    // error message about that.
+    if ($this->isIdKeyImmutable()) {
+      $expected_errors[''] = "The '$id_key' property cannot be changed.";
+    }
+
+    $this->entity->set($id_key, $machine_name);
     $this->assertValidationErrors($expected_errors);
   }
 
@@ -152,13 +155,14 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $this->assertGreaterThan(0, $max_length);
 
     $id_key = $this->entity->getEntityType()->getKey('id');
-    $this->entity->set(
-      $id_key,
-      $this->randomMachineName($max_length + 2)
-    );
-    $this->assertValidationErrors([
+    $expected_errors = [
       $id_key => 'This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.',
-    ]);
+    ];
+    if ($this->isIdKeyImmutable()) {
+      $expected_errors[''] = "The '$id_key' property cannot be changed.";
+    }
+    $this->entity->set($id_key, $this->randomMachineName($max_length + 2));
+    $this->assertValidationErrors($expected_errors);
   }
 
   /**
@@ -356,18 +360,22 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     $actual_messages = [];
     foreach ($violations as $violation) {
-      if (!isset($actual_messages[$violation->getPropertyPath()])) {
-        $actual_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();
+      $property_path = $violation->getPropertyPath();
+
+      if (!isset($actual_messages[$property_path])) {
+        $actual_messages[$property_path] = (string) $violation->getMessage();
       }
       else {
         // Transform value from string to array.
-        if (is_string($actual_messages[$violation->getPropertyPath()])) {
-          $actual_messages[$violation->getPropertyPath()] = (array) $actual_messages[$violation->getPropertyPath()];
+        if (is_string($actual_messages[$property_path])) {
+          $actual_messages[$property_path] = (array) $actual_messages[$violation->getPropertyPath()];
         }
         // And append.
-        $actual_messages[$violation->getPropertyPath()][] = (string) $violation->getMessage();
+        $actual_messages[$property_path][] = (string) $violation->getMessage();
       }
     }
+    ksort($expected_messages);
+    ksort($actual_messages);
     $this->assertSame($expected_messages, $actual_messages);
   }
 
@@ -418,6 +426,25 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // Once we create the language, it should be a valid choice.
     ConfigurableLanguage::createFromLangcode('kthxbai')->save();
     $this->assertValidationErrors([]);
+  }
+
+  /**
+   * Checks if the ID of the entity under test can be changed.
+   *
+   * @return bool
+   *   TRUE if the entity's ID can be changed, otherwise FALSE.
+   */
+  protected function isIdKeyImmutable(): bool {
+    $entity_type = $this->entity->getEntityType();
+    $id_key = $entity_type->getKey('id');
+    if (empty($id_key)) {
+      return FALSE;
+    }
+    $constraints = $entity_type->getConstraints();
+    if (array_key_exists('ImmutableFields', $constraints)) {
+      return in_array($id_key, $constraints['ImmutableFields'], TRUE);
+    }
+    return FALSE;
   }
 
 }

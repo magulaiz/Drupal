@@ -57,6 +57,9 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "vid",
  *     "description",
  *     "weight",
+ *   },
+ *   constraints = {
+ *     "ImmutableFields" = {"vid"}
  *   }
  * )
  */
