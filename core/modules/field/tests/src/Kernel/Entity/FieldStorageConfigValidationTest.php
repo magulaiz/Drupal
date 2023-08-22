@@ -32,4 +32,14 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the field type plugin's existence is validated.
+   */
+  public function testFieldTypePluginIsValidated(): void {
+    $this->entity->set('type', 'invalid');
+    $this->assertValidationErrors([
+      'type' => "The 'invalid' plugin does not exist.",
+    ]);
+  }
+
 }
