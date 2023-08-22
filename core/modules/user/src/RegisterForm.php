@@ -113,7 +113,7 @@ class RegisterForm extends AccountForm {
     }
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
-      _user_mail_notify('register_no_approval_required', $account);
+      \Drupal::service('mailer')->mail('user.register_no_approval_required', ['account' => $account]);
       user_login_finalize($account);
       $this->messenger()->addStatus($this->t('Registration successful. You are now logged in.'));
       $form_state->setRedirect('<front>');
@@ -125,7 +125,7 @@ class RegisterForm extends AccountForm {
       }
       else {
         $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-        if (_user_mail_notify($op, $account)) {
+        if (\Drupal::service('mailer')->mail("user.$op", ['account' => $account])) {
           if ($notify) {
             $this->messenger()->addStatus($this->t('A welcome message with further instructions has been emailed to the new user <a href=":url">%name</a>.', [':url' => $account->toUrl()->toString(), '%name' => $account->getAccountName()]));
           }
@@ -138,7 +138,7 @@ class RegisterForm extends AccountForm {
     }
     // Administrator approval required.
     else {
-      _user_mail_notify('register_pending_approval', $account);
+      \Drupal::service('mailer')->mail('user.register_pending_approval', ['account' => $account]);
       $this->messenger()->addStatus($this->t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your email address.'));
       $form_state->setRedirect('<front>');
     }

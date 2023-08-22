@@ -73,19 +73,12 @@ class MailHandler implements MailHandlerInterface {
   public function sendMailMessages(MessageInterface $message, AccountInterface $sender) {
     // Clone the sender, as we make changes to mail and name properties.
     $sender_cloned = clone $this->userStorage->load($sender->id());
-    $params = [];
-    $current_langcode = $this->languageManager->getCurrentLanguage()->getId();
-    $recipient_langcode = $this->languageManager->getDefaultLanguage()->getId();
-    $contact_form = $message->getContactForm();
 
     if ($sender_cloned->isAnonymous()) {
       // At this point, $sender contains an anonymous user, so we need to take
-      // over the submitted form values.
-      $sender_cloned->name = $message->getSenderName();
+      // over the submitted form values. Clarify that the sender name is not
+      // verified; it could potentially clash with a username on this site.
       $sender_cloned->mail = $message->getSenderMail();
-
-      // For the email message, clarify that the sender name is not verified; it
-      // could potentially clash with a username on this site.
       $sender_cloned->name = $this->t('@name (not verified)', ['@name' => $message->getSenderName()]);
     }
 
@@ -94,45 +87,9 @@ class MailHandler implements MailHandlerInterface {
     $params['sender'] = $sender_cloned;
 
     if (!$message->isPersonal()) {
-      // Send to the form recipient(s), using the site's default language.
+      $contact_form = $message->getContactForm();
       $params['contact_form'] = $contact_form;
-
-      $to = implode(', ', $contact_form->getRecipients());
-    }
-    elseif ($recipient = $message->getPersonalRecipient()) {
-      // Send to the user in the user's preferred language.
-      $to = $recipient->getEmail();
-      $recipient_langcode = $recipient->getPreferredLangcode();
-      $params['recipient'] = $recipient;
-    }
-    else {
-      throw new MailHandlerException('Unable to determine message recipient');
-    }
-
-    // Send email to the recipient(s).
-    $key_prefix = $message->isPersonal() ? 'user' : 'page';
-    $this->mailManager->mail('contact', $key_prefix . '_mail', $to, $recipient_langcode, $params, $sender_cloned->getEmail());
-
-    // If requested, send a copy to the user, using the current language.
-    if ($message->copySender()) {
-      $this->mailManager->mail('contact', $key_prefix . '_copy', $sender_cloned->getEmail(), $current_langcode, $params, $sender_cloned->getEmail());
-    }
-
-    // If configured, send an auto-reply, using the current language.
-    if (!$message->isPersonal() && $contact_form->getReply()) {
-      // User contact forms do not support an auto-reply message, so this
-      // message always originates from the site.
-      if (!$sender_cloned->getEmail()) {
-        $this->logger->error('Error sending auto-reply, missing sender email address in %contact_form', [
-          '%contact_form' => $contact_form->label(),
-        ]);
-      }
-      else {
-        $this->mailManager->mail('contact', 'page_autoreply', $sender_cloned->getEmail(), $current_langcode, $params);
-      }
-    }
-
-    if (!$message->isPersonal()) {
+      $this->mailer->mail('contact__page.mail', $params);
       $this->logger->notice('%sender-name (@sender-from) sent an email regarding %contact_form.', [
         '%sender-name' => $sender_cloned->getAccountName(),
         '@sender-from' => $sender_cloned->getEmail() ?? '',
@@ -140,10 +97,13 @@ class MailHandler implements MailHandlerInterface {
       ]);
     }
     else {
+      $recipient = $message->getPersonalRecipient();
+      $params['recipient'] = $recipient;
+      $this->mailer->mail('contact__user.mail', $params);
       $this->logger->notice('%sender-name (@sender-from) sent %recipient-name an email.', [
         '%sender-name' => $sender_cloned->getAccountName(),
         '@sender-from' => $sender_cloned->getEmail(),
-        '%recipient-name' => $message->getPersonalRecipient()->getAccountName(),
+        '%recipient-name' => $recipient->getAccountName(),
       ]);
     }
   }

@@ -178,12 +178,12 @@ class UserRegistrationResource extends ResourceBase {
     if ($approval_settings == UserInterface::REGISTER_VISITORS) {
       if ($this->userSettings->get('verify_mail')) {
         // No administrator approval required.
-        _user_mail_notify('register_no_approval_required', $account);
+        \Drupal::service('mailer')->mail('user.register_no_approval_required', ['account' => $account]);
       }
     }
     // Administrator approval required.
     elseif ($approval_settings == UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) {
-      _user_mail_notify('register_pending_approval', $account);
+      \Drupal::service('mailer')->mail('user.register_pending_approval', ['account' => $account]);
     }
   }
 

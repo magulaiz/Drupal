@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation for update status notify emails.
+ *
+ * Variables:
+ * - site_name: Site name.
+ * - notification_threshold: Email notification threshold: 'all' or 'security'.
+ * - update_status: URL for the update status page.
+ * - update_settings: URL for the update settings page.
+ * - messages: Array of security update messages.
+ *
+ * @see Drupal\update\Plugin\EmailBuilder\UpdateEmailBuilder
+ *
+ * @ingroup themeable
+ */
+#}
+
+<p>{% trans %}You need to take action to secure your server {{ site_name }}.{% endtrans %}</p>
+<ul>
+  {% for message in messages %}
+    <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+
+<p>{% trans %}See the <a href="{{ update_status }}">available updates</a> page for more information.{% endtrans %}
+  {% if update_manager %}
+    {% trans %}You can automatically install your updates using the <a href="{{ update_manager }}">Update manager</a>.{% endtrans %}
+  {% endif %}
+</p>
+
+<p>
+  {% if notification_threshold == 'all') %}
+    {% trans %}Your site is currently configured to send these emails when any updates are available.{% endtrans %}
+  {% else %}
+    {% trans %}Your site is currently configured to send these emails only when security updates are available.{% endtrans %}
+  {% endif %}
+  {% trans %}You can <a href="{{ update_settings }}">change your settings</a> for what update notifications you receive.{% endtrans %}
+</p>

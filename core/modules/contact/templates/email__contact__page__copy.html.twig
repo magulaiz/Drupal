@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation for contact page copy emails.
+ *
+ * Variables:
+ * - message: The body of the message sent.
+ * - subject: The subject of the message sent.
+ * - site_name: Site name.
+ * - sender_name: The sender name.
+ * - sender_url: The sender URL.
+ * - form: The name of the form used.
+ * - form_url: The URL of the form used.
+ *
+ * @see Drupal\contact\Plugin\EmailBuilder\ContactPageEmailBuilder
+ *
+ * @ingroup themeable
+ */
+#}
+
+<p class="contact-email-intro">
+  {% trans %}Here is a copy of the message you sent using the contact form <a href="{{ form_url }}">{{ form }}</a>.{% endtrans %}
+</p>
+<hr>
+{{ message }}

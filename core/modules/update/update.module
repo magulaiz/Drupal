@@ -189,8 +189,7 @@ function update_cron() {
   if (($request_time - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.
-    \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
-    _update_cron_notify();
+    \Drupal::service('mailer')->mail('update.status_notify');
   }
 
   // Clear garbage from disk.
@@ -382,12 +381,8 @@ function update_fetch_data_finished($success, $results) {
 /**
  * Implements hook_mail().
  *
- * Constructs the email notification message when the site is out of date.
- *
- * @see \Drupal\Core\Mail\MailManagerInterface::mail()
- * @see _update_cron_notify()
- * @see _update_message_text()
- * @see \Drupal\update\UpdateManagerInterface
+ * This is only used for sending with the old mailer API and will eventually be
+ * deprecated and removed.
  */
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];

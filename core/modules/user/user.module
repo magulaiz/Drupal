@@ -668,7 +668,7 @@ function _user_cancel($edit, $account, $method) {
     default:
       // Send account blocked notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        _user_mail_notify('status_blocked', $account);
+        \Drupal::service('mailer')->mail('user.status_blocked', ['account' => $account]);
       }
       $account->block();
       $account->save();
@@ -680,7 +680,7 @@ function _user_cancel($edit, $account, $method) {
     case 'user_cancel_delete':
       // Send account canceled notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        _user_mail_notify('status_canceled', $account);
+        \Drupal::service('mailer')->mail('user.status_canceled', ['account' => $account]);
       }
       $account->delete();
       \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));
@@ -768,6 +768,9 @@ function user_cancel_methods() {
 
 /**
  * Implements hook_mail().
+ *
+ * This is only used for sending with the old mailer API and will eventually be
+ * deprecated and removed.
  */
 function user_mail($key, &$message, $params) {
   $token_service = \Drupal::token();
@@ -1023,56 +1026,6 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
     $role->revokePermission($permission);
   }
   $role->trustData()->save();
-}
-
-/**
- * Creates and sends a notification email following a change to a user account.
- *
- * @param string $op
- *   The operation being performed on the account. Possible values:
- *   - 'register_admin_created': Welcome message for user created by the admin.
- *   - 'register_no_approval_required': Welcome message when user
- *     self-registers.
- *   - 'register_pending_approval': Welcome message, user pending admin
- *     approval.
- *   - 'password_reset': Password recovery request.
- *   - 'status_activated': Account activated.
- *   - 'status_blocked': Account blocked.
- *   - 'cancel_confirm': Account cancellation request.
- *   - 'status_canceled': Account canceled.
- * @param \Drupal\Core\Session\AccountInterface $account
- *   The user object of the account being notified. Must contain at
- *   least the fields 'uid', 'name', and 'mail'.
- *
- * @return array
- *   An array containing various information about the message.
- *   See \Drupal\Core\Mail\MailManagerInterface::mail() for details.
- *
- * @see user_mail_tokens()
- */
-function _user_mail_notify($op, AccountInterface $account) {
-
-  if (\Drupal::config('user.settings')->get('notify.' . $op)) {
-    $params['account'] = $account;
-    // Get the custom site notification email to use as the from email address
-    // if it has been set.
-    $site_mail = \Drupal::config('system.site')->get('mail_notification');
-    // If the custom site notification email has not been set, we use the site
-    // default for this.
-    if (empty($site_mail)) {
-      $site_mail = \Drupal::config('system.site')->get('mail');
-    }
-    if (empty($site_mail)) {
-      $site_mail = ini_get('sendmail_from');
-    }
-    $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $account->getPreferredLangcode(), $params, $site_mail);
-    if ($op == 'register_pending_approval') {
-      // If a user registered requiring admin approval, notify the admin, too.
-      // We use the site default language for this.
-      \Drupal::service('plugin.manager.mail')->mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
-    }
-  }
-  return empty($mail) ? NULL : $mail['result'];
 }
 
 /**
