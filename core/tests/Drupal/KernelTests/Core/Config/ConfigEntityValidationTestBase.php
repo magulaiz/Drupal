@@ -429,6 +429,25 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   }
 
   /**
+   * Tests that immutable fields cannot be changed.
+   */
+  public function testImmutableFields(): void {
+    $constraints = $this->entity->getEntityType()->getConstraints();
+    if (!array_key_exists('ImmutableFields', $constraints)) {
+      $this->markTestSkipped('This entity type has no immutable fields.');
+    }
+
+    foreach ($constraints['ImmutableFields'] as $property_name) {
+      $original_value = $this->entity->get($property_name);
+      $this->entity->set($property_name, $this->randomMachineName());
+      $this->assertValidationErrors([
+        '' => "The '$property_name' property cannot be changed.",
+      ]);
+      $this->entity->set($property_name, $original_value);
+    }
+  }
+
+  /**
    * Checks if the ID of the entity under test can be changed.
    *
    * @return bool

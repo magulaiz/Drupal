@@ -48,7 +48,8 @@ use Drupal\field\FieldConfigInterface;
  *   constraints = {
  *     "RequiredConfigDependencies" = {
  *       "field_storage_config"
- *     }
+ *     },
+ *     "ImmutableFields" = {"entity_type", "field_name", "bundle", "field_type"}
  *   }
  * )
  */

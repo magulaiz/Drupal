@@ -32,23 +32,4 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
-  /**
-   * Tests that immutable fields cannot be changed.
-   *
-   * @param string $property
-   *   The name of the immutable property.
-   * @param mixed $value
-   *   The value to set for the property.
-   *
-   * @testWith ["entity_type", "node"]
-   *   ["field_name", "field_test_changed"]
-   *   ["type", "integer"]
-   */
-  public function testImmutableFields(string $property, mixed $value): void {
-    $this->entity->set($property, $value);
-    $this->assertValidationErrors([
-      '' => "The '$property' property cannot be changed.",
-    ]);
-  }
-
 }
