@@ -95,7 +95,8 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
 
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->assertSession()->titleEquals('Edit comment ' . $comment->getSubject() . ' | Drupal');
+    $comment_subject = $comment->getSubject();
+    $this->assertSession()->titleEquals("Edit comment $comment_subject | $comment_subject | Drupal");
 
     // Test changing the comment author to "Anonymous".
     $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => '']);

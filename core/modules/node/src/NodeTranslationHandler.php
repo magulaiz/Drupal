@@ -49,6 +49,14 @@ class NodeTranslationHandler extends ContentTranslationHandler {
   /**
    * {@inheritdoc}
    */
+  protected function entityFormTitle(EntityInterface $entity) {
+    $type_name = node_get_type_label($entity);
+    return t('<em>Edit @type</em> @title', ['@type' => $type_name, '@title' => $entity->label()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     if ($form_state->hasValue('content_translation')) {
       $translation = &$form_state->getValue('content_translation');
