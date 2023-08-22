@@ -95,11 +95,8 @@ class ValidatorsTest extends KernelTestBase {
     );
     $violations = $typed_config->validate();
 
-    $actual_violations = [];
-    foreach ($violations as $violation) {
-      $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
-    }
-    $this->assertSame($expected_violations, $actual_violations);
+    $actual_violations = self::violationsToArray($violations);
+    $this->assertSame($expected_violations, self::violationsToArray($violations));
 
     if (empty($expected_violations)) {
       $this->assertConfigSchema(
