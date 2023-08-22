@@ -30,12 +30,12 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableFields(): void {
+  public function testImmutableFields(array $valid_values = []): void {
     // Clear the source configuration so that, when the immutable `source`
     // property is changed by the parent method, we don't get errors about
     // unsupported configuration keys.
     $this->entity->set('source_configuration', []);
-    parent::testImmutableFields();
+    parent::testImmutableFields($valid_values);
   }
 
 }
