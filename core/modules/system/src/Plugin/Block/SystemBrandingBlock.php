@@ -188,7 +188,8 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return $this->addDependency('config', 'system.site');
+    $this->addDependency('config', 'system.site');
+    return $this->dependencies;
   }
 
 }

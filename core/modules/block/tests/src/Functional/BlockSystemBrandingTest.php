@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\block\Functional;
 
+use Drupal\block\Entity\Block;
+
 /**
  * Tests branding block display.
  *
@@ -131,6 +133,10 @@ class BlockSystemBrandingTest extends BlockTestBase {
     // Re-test all branding elements.
     $this->assertSession()->pageTextContains('');
     $this->assertSession()->elementExists('xpath', $new_site_name_xpath);
+    // Check for the configuration dependencies of branding block.
+    $block = Block::load('site_branding');
+    $expected_config = ['system.site'];
+    $this->assertSame($expected_config, $block->getDependencies()['config']);
   }
 
 }
