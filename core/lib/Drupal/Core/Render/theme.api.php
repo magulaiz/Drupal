@@ -681,8 +681,6 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * hook_theme_suggestions_HOOK_alter(). So, for each module or theme, the more
  * general hooks are called first followed by the more specific.
  *
- * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
- *
  * In the following example, we provide an alternative template suggestion to
  * node and taxonomy term templates based on the user being logged in.
  *
@@ -727,13 +725,6 @@ function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $h
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
  *
- * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
- * For example, consider the below suggestions from hook_theme_suggestions_node_alter:
- *   - node__article is valid
- *   - node__article__custom_template is valid
- *   - node--article is invalid
- *   - article__custom_template is invalid
- *
  * Implementations of this hook must be placed in *.module or *.theme files, or
  * must otherwise make sure that the hook implementation is available at
  * any given time.
@@ -741,7 +732,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $h
  * In the following example, we provide an alternative template suggestion to
  * node templates based on the user being logged in.
  * @code
- * function MY_MODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+ * function MYMODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
  *   if (\Drupal::currentUser()->isAuthenticated()) {
  *     $suggestions[] = 'node__logged_in';
  *   }
