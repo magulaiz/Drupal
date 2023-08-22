@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Implements hook_help().
@@ -44,9 +45,7 @@ function block_content_theme($existing, $type, $theme, $path) {
       'file' => 'block_content.pages.inc',
     ],
     'block_content' => [
-      'variables' => [
-        'content' => NULL,
-      ],
+      'render element' => 'elements',
     ],
   ];
 }
@@ -142,6 +141,27 @@ function block_content_query_entity_reference_alter(AlterableInterface $query) {
     if (array_key_exists($data_table, $query->getTables()) && !_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
       $query->condition("$data_table.reusable", TRUE);
     }
+  }
+}
+
+/**
+ * Prepares variables for block content templates.
+ *
+ * Default template: block-content.html.twig.
+ *
+ * Prepares the values passed to the block_content template.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the block content and any
+ *     fields attached to the block_content entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_block_content(&$variables) {
+  // Helpful $content variable for templates.
+  $variables['content'] = [];
+  foreach (Element::children($variables['elements']['#content']) as $key) {
+    $variables['content'][$key] = $variables['elements']['#content'][$key];
   }
 }
 

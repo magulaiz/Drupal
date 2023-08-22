@@ -63,7 +63,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
   public function testBlockContentDeleteRedirect(): void {
     $block = $this->createBlockContent();
     $this->drupalLogin($this->adminUser);
-    $this->expectDeprecation('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/3320855.');
+    $this->expectDeprecation('The path /block/{block_content}/delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/3320855.');
     $this->drupalGet("/block/{$block->id()}/delete");
     $this->assertSession()
       ->pageTextContains("You have been redirected from block/{$block->id()}/delete. Update links, shortcuts, and bookmarks to use admin/content/block/{$block->id()}/delete.");
