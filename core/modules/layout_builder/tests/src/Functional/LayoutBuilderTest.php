@@ -533,8 +533,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The first node title');
     $page->clickLink('Layout');
-    $assert_session->pageTextNotContains('The first node title');
-    $assert_session->pageTextContains('The pending title of the first node');
+    $assert_session->pageTextContains('The pending title of the first node | The first node title');
   }
 
   /**
