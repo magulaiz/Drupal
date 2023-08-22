@@ -130,6 +130,9 @@ class SystemManager {
    *
    * @return int
    *   The highest severity in the array.
+   *
+   * @deprecated Will be removed in Drupal 9.0.0
+   * @see \Drupal\Core\Extension\Requirement\RequirementHelper::getMaxSeverity()
    */
   public function getMaxSeverity(&$requirements) {
     $severity = static::REQUIREMENT_OK;
