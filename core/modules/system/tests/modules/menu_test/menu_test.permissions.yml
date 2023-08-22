@@ -10,6 +10,9 @@ access child2 test page:
 access child3 test page:
   title: 'Access child3 test page'
   restrict access: true
-access super child test page:
-  title: 'Access super child test page'
+access super child1 test page:
+  title: 'Access super child1 test page'
+  restrict access: true
+access super child2 test page:
+  title: 'Access super child2 test page'
   restrict access: true

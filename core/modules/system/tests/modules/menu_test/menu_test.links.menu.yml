@@ -20,16 +20,21 @@ menu_test.parent_test:
   description: 'Menu item description parent'
   route_name: menu_test.parent_test
   parent: system.admin
-menu_test.parent_test.child_test:
+menu_test.parent_test.child1_test:
   title: 'Menu child'
   description: 'Menu item description child'
-  route_name: menu_test.child_test
+  route_name: menu_test.child1_test
   parent: menu_test.parent_test
-menu_test.parent_test.child_test.super_child_test:
-  title: 'Menu super child'
-  description: 'Menu item description super child'
-  route_name: menu_test.super_child_test
-  parent: menu_test.parent_test.child_test
+menu_test.parent_test.child_test.super_child1_test:
+  title: 'Menu super child1'
+  description: 'Menu item description super child1'
+  route_name: menu_test.super_child1_test
+  parent: menu_test.parent_test.child1_test
+menu_test.parent_test.child_test.super_child2_test:
+  title: 'Menu super child2'
+  description: 'Menu item description super child2'
+  route_name: menu_test.super_child2_test
+  parent: menu_test.parent_test.child1_test
 menu_test.menu_parent_test_param:
   title: 'Menu Parent Param'
   description: 'Menu item description parent'
@@ -49,6 +54,8 @@ menu_test.menu_parent_test_param_default:
   description: 'Menu item description parent'
   route_name: menu_test.parent_test_param
   parent: system.admin
+  route_parameters:
+    param: 'child_uses_default'
 menu_test.menu_parent_test.child_test_param_default:
   title: 'Menu Child Param Default'
   description: 'Menu item description child'
