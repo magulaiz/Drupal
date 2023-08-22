@@ -152,7 +152,7 @@ class ThemeManager implements ThemeManagerInterface {
     // While the other elements must match exactly, the final element is
     // expanded to create multiple possible matches by iteratively striping
     // everything after the last '__' delimiter.
-    $last_hook = $suggestion = $is_hook_array ? $hook[array_key_last($hook)] : $hook;
+    $suggestion = $original_hook = $template_suggestions[array_key_last($template_suggestions)];
     while ($pos = strrpos($suggestion, '__')) {
       $suggestion = substr($suggestion, 0, $pos);
       $template_suggestions[] = $suggestion;
@@ -163,7 +163,9 @@ class ThemeManager implements ThemeManagerInterface {
       if ($theme_registry->has($candidate)) {
         // Save the original theme hook, so it can be supplied to theme variable
         // preprocess callbacks.
-        $original_hook = $is_hook_array && in_array($candidate, $hook) ? $candidate : $last_hook;
+        if ($is_hook_array && in_array($candidate, $hook)) {
+          $original_hook = $candidate;
+        }
         $hook = $candidate;
         $info = $theme_registry->get($hook);
         break;
@@ -176,7 +178,7 @@ class ThemeManager implements ThemeManagerInterface {
       // #theme to an array containing the form ID and don't implement that as a
       // theme hook, so we want to prevent errors for that common use case.
       if (!$is_hook_array) {
-        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $candidate]);
+        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $original_hook]);
       }
       // There is no theme implementation for the hook passed. Return FALSE so
       // the function calling
@@ -221,12 +223,7 @@ class ThemeManager implements ThemeManagerInterface {
     // is called, we run hook_theme_suggestions_node_alter() rather than
     // hook_theme_suggestions_node__article_alter(), and also pass in the base
     // hook as the last parameter to the suggestions alter hooks.
-    if (isset($info['base hook'])) {
-      $base_theme_hook = $info['base hook'];
-    }
-    else {
-      $base_theme_hook = $hook;
-    }
+    $base_theme_hook = $info['base hook'] ?? $hook;
 
     // The $hook's theme registry may specify a "base hook" that differs from
     // the base string of $hook. If so, we need to be aware of both strings.
@@ -345,15 +342,13 @@ class ThemeManager implements ThemeManagerInterface {
     // The theme engine may use a different extension and a different
     // renderer.
     $theme_engine = $active_theme->getEngine();
-    if (isset($theme_engine)) {
-      if ($info['type'] != 'module') {
-        if (function_exists($theme_engine . '_render_template')) {
-          $render_function = $theme_engine . '_render_template';
-        }
-        $extension_function = $theme_engine . '_extension';
-        if (function_exists($extension_function)) {
-          $extension = $extension_function();
-        }
+    if ($info['type'] != 'module') {
+      if (function_exists($theme_engine . '_render_template')) {
+        $render_function = $theme_engine . '_render_template';
+      }
+      $extension_function = $theme_engine . '_extension';
+      if (function_exists($extension_function)) {
+        $extension = $extension_function();
       }
     }
 
