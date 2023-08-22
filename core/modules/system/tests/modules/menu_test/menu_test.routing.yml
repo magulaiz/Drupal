@@ -46,25 +46,38 @@ menu_test.parent_test:
     _permission: 'access parent test page'
 
 menu_test.child1_test:
-  path: '/parent_test/child_test'
+  path: '/parent_test/child1_test'
   defaults:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access child1 test page'
 
+menu_test.child2_test:
+  path: '/parent_test/child2_test'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access child2 test page'
+
 menu_test.super_child1_test:
-  path: '/parent_test/child_test/super_child_test'
+  path: '/parent_test/child_test/super_child1_test'
   defaults:
     _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
     _permission: 'access super child1 test page'
-
 menu_test.super_child2_test:
-  path: '/parent_test/child_test/super_child_test'
+  path: '/parent_test/child_test/super_child2_test'
   defaults:
     _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
     _permission: 'access super child2 test page'
+
+menu_test.super_child3_test:
+  path: '/parent_test/child_test/super_child3_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access super child3 test page'
 
 menu_test.parent_test_param:
   path: '/parent_test_param/{param}'

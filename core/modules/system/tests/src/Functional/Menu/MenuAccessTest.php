@@ -97,6 +97,7 @@ class MenuAccessTest extends BrowserTestBase {
 
     // An admin user has access to all parent pages.
     $this->drupalLogin($adminUser);
+    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $this->assertMenuItemRouteAccess('admin/structure', 200);
     $this->assertMenuItemRouteAccess('admin/people', 200);
 
@@ -132,12 +133,20 @@ class MenuAccessTest extends BrowserTestBase {
     $superChild1User = $this->drupalCreateUser([
       'access parent test page',
       'access child1 test page',
+      'access child2 test page',
       'access super child1 test page',
     ]);
     $superChild2User = $this->drupalCreateUser([
       'access parent test page',
       'access child1 test page',
+      'access child2 test page',
       'access super child2 test page',
+    ]);
+    $superChild3User = $this->drupalCreateUser([
+      'access parent test page',
+      'access child1 test page',
+      'access child2 test page',
+      'access super child3 test page',
     ]);
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 403);
@@ -145,8 +154,25 @@ class MenuAccessTest extends BrowserTestBase {
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 403);
     $this->drupalLogin($superChild1User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.child1_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.child2_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child1_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child2_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child3_test'), 403);
     $this->drupalLogin($superChild2User);
     $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.child1_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.child2_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child1_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child2_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child3_test'), 403);
+    $this->drupalLogin($superChild3User);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.parent_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.child1_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.child2_test'), 200);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child1_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child2_test'), 403);
+    $this->assertMenuItemRouteAccess(Url::fromRoute('menu_test.super_child3_test'), 200);
 
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);

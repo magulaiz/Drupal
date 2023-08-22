@@ -25,6 +25,11 @@ menu_test.parent_test.child1_test:
   description: 'Menu item description child'
   route_name: menu_test.child1_test
   parent: menu_test.parent_test
+menu_test.parent_test.child2_test:
+  title: 'Menu child'
+  description: 'Menu item description child'
+  route_name: menu_test.child2_test
+  parent: menu_test.parent_test
 menu_test.parent_test.child_test.super_child1_test:
   title: 'Menu super child1'
   description: 'Menu item description super child1'
@@ -34,7 +39,12 @@ menu_test.parent_test.child_test.super_child2_test:
   title: 'Menu super child2'
   description: 'Menu item description super child2'
   route_name: menu_test.super_child2_test
-  parent: menu_test.parent_test.child1_test
+  parent: menu_test.parent_test.child2_test
+menu_test.parent_test.child_test.super_child3_test:
+  title: 'Menu super child3'
+  description: 'Menu item description super child3'
+  route_name: menu_test.super_child3_test
+  parent: menu_test.parent_test.child2_test
 menu_test.menu_parent_test_param:
   title: 'Menu Parent Param'
   description: 'Menu item description parent'
