@@ -39,6 +39,15 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $configSchemaCheckerExclusions = [
+    // Necessary to allow testing invalid default image settings.
+    // @see testInvalidDefaultImage()
+    'field.field.node.page.invalid_default_image',
+  ];
+
+  /**
    * Tests CRUD for fields and field storages with default images.
    */
   public function testDefaultImages() {
@@ -258,10 +267,12 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
   /**
    * Tests image field and field storage having an invalid default image.
+   *
+   * @todo Move to FieldConfigValidationTest + FieldStorageConfigValidationTest
    */
   public function testInvalidDefaultImage() {
     $field_storage = FieldStorageConfig::create([
-      'field_name' => $this->randomMachineName(),
+      'field_name' => 'invalid_default_image',
       'entity_type' => 'node',
       'type' => 'image',
       'settings' => [
