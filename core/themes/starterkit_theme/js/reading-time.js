@@ -16,7 +16,7 @@
   const wordsPerMinute = drupalSettings.starterkit_theme.wordsPerMinute || 300;
 
   /**
-   * Calculate the time to read a content, in minutes.
+   * Calculate how many minutes it will take to read the piece of content.
    *
    * This helper method is encapsulated in script.
    *
@@ -36,7 +36,7 @@
   }
 
   /**
-   * Log approximate playing time of main content in console.
+   * Log approximate reading time of main content in console.
    *
    * This registers the Drupal behaviors which is triggered on every page load and
    * when data is loaded by AJAX.
