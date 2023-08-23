@@ -1,3 +1,4 @@
+// cspell:ignore oddbird iife
 /**
  * @file
  * Copy files for JS vendor dependencies from node_modules to the assets/vendor
