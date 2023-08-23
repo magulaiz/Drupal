@@ -936,4 +936,3 @@ popover.polyfill:
   css:
     component:
       assets/vendor/oddbird/popover-polyfill/popover.css: {}
-
