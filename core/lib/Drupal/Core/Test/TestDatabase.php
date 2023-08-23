@@ -115,6 +115,7 @@ class TestDatabase {
    *   TRUE if successful, FALSE if not.
    */
   public function releaseLock(): bool {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
     return unlink($this->getLockFile($this->lockId));
   }
 
@@ -124,6 +125,7 @@ class TestDatabase {
    * This should only be called once all the test fixtures have been cleaned up.
    */
   public static function releaseAllTestLocks(): void {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
     $tmp = FileSystem::getOsTemporaryDirectory();
     $dir = dir($tmp);
     while (($entry = $dir->read()) !== FALSE) {
@@ -157,6 +159,7 @@ class TestDatabase {
    *   The relative path to the test site PHP error log file.
    */
   public function getPhpErrorLogPath(): string {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
     return $this->getTestSitePath() . '/error.log';
   }
 
