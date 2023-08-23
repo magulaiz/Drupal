@@ -137,6 +137,17 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
+      pack: '@oddbird/popover-polyfill',
+      files: [
+        { from: 'dist/popover.iife.min.js', to: 'popover.iife.min.js' },
+        {
+          from: 'dist/popover.iife.min.js.map',
+          to: 'popover.iife.min.js.map',
+        },
+        { from: 'dist/popover.css', to: 'popover.css' },
+      ],
+    },
+    {
       pack: 'jquery-ui',
       folder: 'jquery.ui',
       process: {

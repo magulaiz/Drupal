@@ -58,6 +58,7 @@
     "@ckeditor/ckeditor5-table": "~43.1.1",
     "@drupal/once": "^1.0.1",
     "@floating-ui/dom": "^1.6.8",
+    "@oddbird/popover-polyfill": "^0.4.3",
     "backbone": "^1.6.0",
     "chokidar": "^3.6.0",
     "ckeditor5": "~43.1.1",
