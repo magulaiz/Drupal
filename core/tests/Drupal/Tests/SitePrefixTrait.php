@@ -30,13 +30,12 @@ trait SitePrefixTrait {
   }
 
   /**
-   * Gets the test database prefix.
-   *
-   * @return string
-   *   The test database prefix.
+   * Generates the test database prefix and sets it as a property.
    */
-  public function getDatabasePrefix(): string {
-    return 'test' . $this->lockId;;
+  protected function prepareDatabasePrefix() {
+    if (!isset($this->databasePrefix)) {
+      $this->databasePrefix = 'test' . $this->lockId;
+    }
   }
 
   /**
