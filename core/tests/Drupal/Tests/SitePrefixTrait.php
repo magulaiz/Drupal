@@ -41,7 +41,24 @@ trait SitePrefixTrait {
   }
 
   /**
-   * Generates the test database prefix and sets it as a property.
+   * Generates the database prefix for running tests and sets it as a property.
+   *
+   * The database prefix is used by prepareEnvironment() to setup a public files
+   * directory for the test to be run, which also contains the PHP error log,
+   * which is written to in case of a fatal error. Since that directory is based
+   * on the database prefix, all tests (even unit tests) need to have one, in
+   * order to access and read the error log.
+   *
+   * The generated database table prefix is used for the Drupal installation
+   * being performed for the test. It is also used as user agent HTTP header it
+   * is also used in the user agent HTTP header value by BrowserTestBase, which
+   * is sent to the Drupal installation of the test. During early Drupal all
+   * bootstrap, the user agent HTTP header is parsed, and if it matches,
+   * database queries use the database table prefix that has been generated
+   * here.
+   *
+   * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
+   * @see drupal_valid_test_ua()
    */
   protected function prepareDatabasePrefix() {
     if (!isset($this->databasePrefix)) {
