@@ -63,6 +63,9 @@ class TestDatabase {
    *
    * @return string
    *   The relative path to the test site directory.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+   *   method from \Drupal\Core\Test\SitePrefixTrait instead.
    */
   public function getTestSitePath(): string {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
@@ -113,6 +116,9 @@ class TestDatabase {
    *
    * @return bool
    *   TRUE if successful, FALSE if not.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+   *   method from \Drupal\Core\Test\SitePrefixTrait instead.
    */
   public function releaseLock(): bool {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
@@ -123,6 +129,9 @@ class TestDatabase {
    * Releases all test locks.
    *
    * This should only be called once all the test fixtures have been cleaned up.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+   *   method from \Drupal\Core\Test\SitePrefixTrait instead.
    */
   public static function releaseAllTestLocks(): void {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
@@ -157,6 +166,9 @@ class TestDatabase {
    *
    * @return string
    *   The relative path to the test site PHP error log file.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+   *   method from \Drupal\Core\Test\SitePrefixTrait instead.
    */
   public function getPhpErrorLogPath(): string {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\Core\\Test\\SitePrefixTrait instead. See https://www.drupal.org/project/drupal/issues/3382586", E_USER_DEPRECATED);
