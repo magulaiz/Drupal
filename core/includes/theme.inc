@@ -1110,7 +1110,6 @@ function template_preprocess(&$variables, $hook, $info) {
     if (isset($variables[$key]['#attributes'])) {
       $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
     }
-
   }
 }
 

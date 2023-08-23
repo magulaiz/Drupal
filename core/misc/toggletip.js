@@ -129,6 +129,9 @@
    * @see https://codepen.io/aardrian/pen/NWpoVQd
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   * Attaches the autocomplete behaviors.
    */
   Drupal.behaviors.toggleTip = {
     attach(context) {
