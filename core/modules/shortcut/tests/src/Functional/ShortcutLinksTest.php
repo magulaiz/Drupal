@@ -226,7 +226,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertSession()->pageTextContains($page_title);
     // Add shortcut to this page.
     $this->clickLink('Add to Default shortcuts');
-    file_put_contents("/Users/kunal.sachdev/www/test_sample.html", $this->getSession()->getPage()->getContent());
     $this->assertSession()->pageTextContains("Added a shortcut for {$page_title}.");
   }
 
