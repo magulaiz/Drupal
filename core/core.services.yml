@@ -1080,7 +1080,7 @@ services:
   base_route_title:
     class: Drupal\Core\Utility\BaseRouteTitle
     arguments: [ '@url_generator', '@title_resolver', '@current_route_match', '@plugin.manager.menu.local_task', '@router.route_provider', '@request_stack', '@request_generator' ]
-    Drupal\Core\Utility\BaseRouteTitle: '@base_route_title'
+  Drupal\Core\Utility\BaseRouteTitle: '@base_route_title'
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']
