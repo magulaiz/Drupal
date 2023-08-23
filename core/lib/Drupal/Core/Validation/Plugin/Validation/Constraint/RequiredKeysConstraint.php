@@ -190,7 +190,7 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     $dynamically_typed_keys = array_diff_key($resolved_mapping_definition, $statically_typed_keys);
 
     // Assign each of $statically_typed_keys to one of 2 buckets.
-    $unconditionally_required_keys = array_filter($statically_typed_keys, 'self::isRequiredMappingKey');
+    $unconditionally_required_keys = array_filter($statically_typed_keys, [__CLASS__, 'isRequiredMappingKey']);
     $unconditionally_optional_keys = array_diff_key($statically_typed_keys, $unconditionally_required_keys);
 
     // Assign each of $dynamically_typed_keys to one of 4 buckets.
