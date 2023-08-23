@@ -47,7 +47,7 @@
 
     /* Ensure title does not wrap under image until necessary. */
     & + .node__title {
-      flex-basis: calc(100% - calc(4.5 * var(--sp)));
+      flex-basis: calc(100% - calc(var(--sp4-5)));
 
       @media (--lg) {
         flex-basis: auto;
