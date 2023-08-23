@@ -304,7 +304,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     Database::addConnectionInfo('default', 'test-runner', $this->getDatabaseConnectionInfo()['default']);
 
-    $this->databasePrefix = $this->getDatabasePrefix();
+    $this->prepareDatabasePrefix();
 
     // Ensure that all code that relies on drupal_valid_test_ua() can still be
     // safely executed. This primarily affects the (test) site directory
