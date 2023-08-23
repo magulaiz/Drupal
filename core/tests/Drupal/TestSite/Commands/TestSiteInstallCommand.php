@@ -296,6 +296,7 @@ class TestSiteInstallCommand extends Command {
    * {@inheritdoc}
    */
   protected function prepareDatabasePrefix() {
+    // !!
     // Override this method so that we can force a lock to be created.
     $test_db = new TestDatabase(NULL, TRUE);
     $this->siteDirectory = $test_db->getTestSitePath();

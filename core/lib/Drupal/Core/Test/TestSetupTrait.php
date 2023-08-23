@@ -133,6 +133,8 @@ trait TestSetupTrait {
   /**
    * Generates a database prefix for running tests.
    *
+   * MOVE DOCS to trait!
+   *
    * The database prefix is used by prepareEnvironment() to setup a public files
    * directory for the test to be run, which also contains the PHP error log,
    * which is written to in case of a fatal error. Since that directory is based
@@ -150,7 +152,7 @@ trait TestSetupTrait {
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    * @see drupal_valid_test_ua()
    */
-  protected function prepareDatabasePrefix() {
+  protected function XXXprepareDatabasePrefix() {
     $test_db = new TestDatabase();
     $this->siteDirectory = $test_db->getTestSitePath();
     $this->databasePrefix = $test_db->getDatabasePrefix();
