@@ -98,7 +98,7 @@ trait SchemaCheckTrait {
       'content.*' => [
         "'label' is a required key.",
         "'type' is a required key.",
-        "'settings' is a required key.",
+        "'settings' is a conditionally required key.",
         "'weight' is a required key.",
       ],
       'content.*.settings' => [
