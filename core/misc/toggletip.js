@@ -180,7 +180,12 @@
           }
 
           // Create the toggle button.
-          const button = Drupal.theme.button(descriptionId, tipId, toggleId);
+          const button = Drupal.theme.button(
+            descriptionId,
+            tipId,
+            toggleId,
+            config,
+          );
 
           // Create the toggletip content container.
           const tip = Drupal.theme.tip(descriptionId, tipId, toggletipConfig);
@@ -340,11 +345,12 @@
    *   The tipId.
    * @param {string} toggleId
    *   The toggleId.
-   *
+   * @param {object} config
+   *   The config.
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.button = (descriptionId, tipId, toggleId) => {
+  Drupal.theme.button = (descriptionId, tipId, toggleId, config) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.setAttribute('data-drupal-toggletip-toggle-button', true);
