@@ -891,6 +891,7 @@ drupal.toggletip:
     - core/drupal
     - core/drupal.displace
     - core/internal.floating-ui
+    - core/popover.polyfill
 
 internal.floating-ui:
   remote: https://github.com/floating-ui/floating-ui
@@ -921,3 +922,17 @@ drupal.fieldListKeyboardNavigation:
   dependencies:
     - core/drupal
     - core/tabbable
+
+popover.polyfill:
+  remote: https://github.com/oddbird/popover-polyfill
+  version: "0.2.2"
+  license:
+    name: BSD 3-Clause
+    url: https://raw.githubusercontent.com/oddbird/popover-polyfill/v0.2.2/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/oddbird/popover-polyfill/popover.iife.min.js: {}
+  css:
+    component:
+      assets/vendor/oddbird/popover-polyfill/popover.css: {}
+
