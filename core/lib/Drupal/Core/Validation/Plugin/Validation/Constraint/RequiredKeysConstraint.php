@@ -165,6 +165,16 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     // The resolved mapping definition is used to determine the resolved types.
     // (This contains the resolved definitions, after resolving dynamic types.)
     $resolved_mapping_definition = $this->resolveMapping($mapping);
+    assert(count($original_mapping_definition) === count($resolved_mapping_definition));
+
+    // Some mappings are empty.
+    if (empty($original_mapping_definition)) {
+      return [
+        'unconditional' => [],
+        'conditional' => [],
+        'extraneous' => [],
+      ];
+    }
 
     // This is complex, so assertions help understand what is happening. The
     // original mapping definition is an array of arrays, the resolved one is an
