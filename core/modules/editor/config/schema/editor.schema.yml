@@ -19,39 +19,21 @@ editor.editor.*:
     image_upload:
       type: mapping
       label: 'Image upload settings'
-      constraints:
-        ConditionallyRequiredKeys:
-          condition:
-            key: status
-            value: true
-          keys:
-            - scheme
-            - directory
-            - max_size
-            - max_dimensions
       mapping:
         status:
           type: boolean
           label: 'Status'
         scheme:
-          # Conditionally required: only required if `status === true`. See ConditionallyRequiredKeys constraint.
-          requiredKey: false
-          type: string
+          type: optional_type.string.image_upload_status_[%parent.status]
           label: 'File storage'
         directory:
-          # Conditionally required: only required if `status === true`. See ConditionallyRequiredKeys constraint.
-          requiredKey: false
-          type: string
+          type: optional_type.string.image_upload_status_[%parent.status]
           label: 'Upload directory'
         max_size:
-          # Conditionally required: only required if `status === true`. See ConditionallyRequiredKeys constraint.
-          requiredKey: false
-          type: string
+          type: optional_type.string.image_upload_status_[%parent.status]
           label: 'Maximum file size'
         max_dimensions:
-          # Conditionally required: only required if `status === true`. See ConditionallyRequiredKeys constraint.
-          requiredKey: false
-          type: mapping
+          type: optional_type.mapping.image_upload_status_[%parent.status]
           label: 'Maximum dimensions'
           mapping:
             width:
@@ -62,3 +44,16 @@ editor.editor.*:
               type: integer
               nullable: true
               label: 'Maximum height'
+
+optional_type.string.*:
+  type: string
+
+optional_type.mapping.*:
+  type: mapping
+
+optional_type.string.image_upload_status_0:
+  type: string
+  requiredKey: false
+optional_type.mapping.image_upload_status_0:
+  type: mapping
+  requiredKey: false
