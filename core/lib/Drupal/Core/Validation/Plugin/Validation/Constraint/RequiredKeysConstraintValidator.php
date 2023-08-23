@@ -23,12 +23,21 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
       throw new UnexpectedTypeException($value, 'array');
     }
 
-    $missing_keys = array_diff(
-      $constraint->getRequiredKeys($this->context),
-      array_keys($value)
-    );
+    $required_keys = $constraint->getRequiredKeys($this->context);
+
+    $missing_keys = array_diff($required_keys['unconditional'], array_keys($value));
     foreach ($missing_keys as $key) {
       $this->context->addViolation($constraint->message, ['@key' => $key]);
+    }
+
+    $missing_conditional_keys = array_diff($required_keys['conditional'], array_keys($value));
+    foreach ($missing_conditional_keys as $key) {
+      $this->context->addViolation($constraint->conditionalMessage, ['@key' => $key]);
+    }
+
+    $extraneous_keys = array_intersect($required_keys['extraneous'], array_keys($value));
+    foreach ($extraneous_keys as $key) {
+      $this->context->addViolation($constraint->extraneousMessage, ['@key' => $key]);
     }
   }
 
