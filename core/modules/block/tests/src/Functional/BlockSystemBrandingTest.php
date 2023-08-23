@@ -131,12 +131,10 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->drupalGet('');
 
     // Re-test all branding elements.
-    $this->assertSession()->pageTextContains('');
     $this->assertSession()->elementExists('xpath', $new_site_name_xpath);
     // Check for the configuration dependencies of branding block.
-    $block = Block::load('site_branding');
     $expected_config = ['system.site'];
-    $this->assertSame($expected_config, $block->getDependencies()['config']);
+    $this->assertSame($expected_config, Block::load('site_branding')->getDependencies()['config']);
   }
 
 }
