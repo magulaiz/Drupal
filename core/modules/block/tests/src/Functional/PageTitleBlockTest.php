@@ -64,21 +64,21 @@ class PageTitleBlockTest extends BrowserTestBase {
         $this->defaultTheme,
         FALSE,
         'Update',
-        'Extend',
+        'Extend: Update',
       ],
       // For Claro theme the contextualize_title settings is enabled by default
       // hence the title will always be contextualized.
       'Claro theme' => [
         'claro',
         TRUE,
-        'Extend',
-        'Extend',
+        'Extend: Update',
+        'Extend: Update',
       ],
       'Olivero theme' => [
         'olivero',
         FALSE,
         'Update',
-        'Extend',
+        'Extend: Update',
       ],
     ];
   }
@@ -198,13 +198,22 @@ class PageTitleBlockTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
 
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "$node_title: Edit Article $node_title");
+    $title = $this->assertSession()->elementExists('xpath', '//h1');
+    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ": Edit Article $node_title");
 
     $this->drupalGet('node/' . $node->id() . '/delete');
-    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "$node_title: Are you sure you want to delete the content item $node_title?");
+    $title = $this->assertSession()->elementExists('xpath', '//h1');
+    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ": Are you sure you want to delete the content item $node_title?");
 
     $this->drupalGet('node/' . $node->id() . '/revisions');
-    $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "$node_title: Revisions for $node_title");
+    $title = $this->assertSession()->elementExists('xpath', '//h1');
+    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ": Revisions for $node_title");
 
   }
 
