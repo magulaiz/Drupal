@@ -163,9 +163,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
         '@current_title' => $current_title,
       ]);
     }
-    else {
-      return $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
-    }
+    return NULL;
   }
 
 }

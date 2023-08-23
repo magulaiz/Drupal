@@ -88,7 +88,7 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertTitle('Test title | ');
 
     $this->setRawContent($this->httpKernelHandle($entity->toUrl('edit-form')->toString()));
-    $this->assertTitle('Edit Test title | ');
+    $this->assertTitle('Edit Test title | Test title | ');
 
     $this->setRawContent($this->httpKernelHandle($entity->toUrl('delete-form')->toString()));
     $this->assertTitle('Are you sure you want to delete the test entity - data table Test title? | ');

@@ -218,7 +218,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $node = $this->createSectionNode([]);
 
     $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
-    $this->assertSession()->titleEquals('Edit layout for The node title | Drupal');
+    $this->assertSession()->titleEquals('Edit layout for The node title | The node title | Drupal');
     $this->assertEquals('Edit layout for The node title', $this->cssSelect('h1.page-title')[0]->getText());
   }
 
