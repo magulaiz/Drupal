@@ -4,6 +4,9 @@ namespace Drupal\Tests;
 
 use Drupal\Component\FileSystem\FileSystem;
 
+/**
+ * Trait for creating a test ID from which derives the site path and DB prefix.
+ */
 trait SitePrefixTrait {
 
   /**
