@@ -267,6 +267,47 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   }
 
   /**
+   * Returns all possible types for the type with the given name.
+   *
+   * @param string $name
+   *   Configuration name or key.
+   *
+   * @return string[]
+   *   All possible types for a given type. For example,
+   *   `core_date_format_pattern.[%parent.locked]` will return:
+   *   - `core_date_format_pattern.0`
+   *   - `core_date_format_pattern.1`
+   *   If a fallback name is available, that will be returned too. In this
+   *   example, that would be `core_date_format_pattern.*`.
+   *
+   * @see ::getFallbackName()
+   */
+  public function getPossibleTypes(string $name): array {
+    // First, convert e.g.
+    // `module.something.foo_[%parent.locked]`
+    // to
+    // `module.something\.foo_[%parent.locked\]`
+    $escaped = preg_quote($name);
+    // Then, replace every sequence that starts with `\[` and ends with `\]`
+    // with `.*`, hence resulting in a regex that would match
+    // `module.something.foo_foo` and `module.something.foo_bar`.
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+    $regex = preg_replace('/(\\\\\[.*\\\\\])/', ".*", $escaped);
+    // Now find all possible types:
+    // 1. `module.something.foo_foo`, `module.something.foo_bar`, etc.
+    $possible_types = array_filter(
+      array_keys($this->definitions),
+      fn (string $type) => preg_match("/^$regex$/", $type) === 1
+    );
+    // 2. The fallback: `module.something.*`.
+    $fallback_type = $this->getFallbackName($name);
+    if ($fallback_type) {
+      $possible_types[] = $fallback_type;
+    }
+    return $possible_types;
+  }
+
+  /**
    * Replaces variables in configuration name.
    *
    * The configuration name may contain one or more variables to be replaced,
