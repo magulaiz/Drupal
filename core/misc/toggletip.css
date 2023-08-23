@@ -1,5 +1,4 @@
 .toggletip__tip {
-  z-index: 1;
   width: max-content;
   max-width: 800px;
   margin: 0 1rem;
@@ -10,6 +9,11 @@
   background: #232429;
   font-size: 14px;
   font-weight: 400;
+}
+
+[data-drupal-toggletip-tip][popover] {
+  overflow: visible;
+  border: none;
 }
 
 .toggletip__tip a,
