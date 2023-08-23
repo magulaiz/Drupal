@@ -8,6 +8,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Provides a class which gets title based on base route.
@@ -55,7 +57,12 @@ class BaseRouteTitle {
     $title = NULL;
     if ($base_route_name) {
       if ($base_route_name !== $route_name) {
-        $path = $this->urlGenerator->getPathFromRoute($base_route_name, $this->routeMatch->getRawParameters()->all());
+        try {
+          $path = $this->urlGenerator->getPathFromRoute($base_route_name, $this->routeMatch->getRawParameters()->all());
+        }
+        catch (RouteNotFoundException | InvalidParameterException) {
+          return NULL;
+        }
         $route_request = $this->requestGenerator->generateRequestForPath($path, []);
         if ($route_request) {
           $title = $this->titleResolver->getTitle($route_request, $this->routeProvider->getRouteByName($base_route_name));
