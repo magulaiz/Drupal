@@ -299,7 +299,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->classLoader = require $this->root . '/autoload.php';
 
     // Set up site prefix.
-    $this->lockId = $this->createTestLock();
+    $this->lockId = $this->createTestLockId();
     $this->siteDirectory = $this->getTestSitePath();
 
     Database::addConnectionInfo('default', 'test-runner', $this->getDatabaseConnectionInfo()['default']);

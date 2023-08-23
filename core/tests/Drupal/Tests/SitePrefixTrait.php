@@ -10,7 +10,7 @@ use Drupal\Component\FileSystem\FileSystem;
 trait SitePrefixTrait {
 
   /**
-   * Undocumented function
+   * Generates a unique lock ID for the test method.
    *
    * @param boolean $create_lock
    *   (optional) Whether or not to create a lock file. Defaults to FALSE. If
@@ -20,13 +20,24 @@ trait SitePrefixTrait {
    * @return int
    *   The unique lock ID for the test method.
    */
-  // KILL
-  protected function createLockId(bool $create_lock = FALSE): int {
-    if (!isset($this->lockId)) {
-      $this->lockId = $this->getTestLock($create_lock);
+  protected function createTestLockId(bool $create_lock = FALSE): int {
+    // There is a risk that the generated random number is a duplicate. This
+    // would cause different tests to try to use the same database prefix.
+    // Therefore, if running with a concurrency of greater than 1, we need to
+    // create a lock.
+    if (getenv('RUN_TESTS_CONCURRENCY') > 1) {
+      $create_lock = TRUE;
     }
 
-    return $this->lockId;
+    do {
+      $lock_id = mt_rand(10000000, 99999999);
+      if ($create_lock && @symlink(__FILE__, $this->getLockFile($lock_id)) === FALSE) {
+        // If we can't create a symlink, the lock ID is in use. Generate another
+        // one. Symlinks are used because they are atomic and reliable.
+        $lock_id = NULL;
+      }
+    } while ($lock_id === NULL);
+    return $lock_id;
   }
 
   /**
@@ -46,35 +57,6 @@ trait SitePrefixTrait {
    */
   public function getTestSitePath(): string {
     return 'sites/simpletest/' . $this->lockId;
-  }
-
-  /**
-   * Generates a unique lock ID for the test method.
-   *
-   * @param bool $create_lock
-   *   (optional) Whether or not to create a lock file. Defaults to FALSE.
-   *
-   * @return int
-   *   The unique lock ID for the test method.
-   */
-  protected function createTestLock(bool $create_lock = FALSE): int {
-    // There is a risk that the generated random number is a duplicate. This
-    // would cause different tests to try to use the same database prefix.
-    // Therefore, if running with a concurrency of greater than 1, we need to
-    // create a lock.
-    if (getenv('RUN_TESTS_CONCURRENCY') > 1) {
-      $create_lock = TRUE;
-    }
-
-    do {
-      $lock_id = mt_rand(10000000, 99999999);
-      if ($create_lock && @symlink(__FILE__, $this->getLockFile($lock_id)) === FALSE) {
-        // If we can't create a symlink, the lock ID is in use. Generate another
-        // one. Symlinks are used because they are atomic and reliable.
-        $lock_id = NULL;
-      }
-    } while ($lock_id === NULL);
-    return $lock_id;
   }
 
   /**
