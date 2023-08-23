@@ -158,9 +158,9 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
         return $this->title;
       }
 
-      return $this->t('<span class="visually-hidden">@current_title for </span>@section_title', [
-        '@current_title' => $current_title,
+      return $this->t('@section_title<span class="visually-hidden">: @current_title</span>', [
         '@section_title' => $base_route_title,
+        '@current_title' => $current_title,
       ]);
     }
     else {
