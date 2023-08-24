@@ -90,16 +90,6 @@ menu_test.menu_parent_test.child_test_param_default_explicit:
   parent: menu_test.menu_parent_test_param_default_explicit
   route_parameters:
     param: 'my_default'
-menu_test.menu_parent_test_default:
-  title: 'Menu Parent default'
-  description: 'Menu item description parent'
-  route_name: menu_test.parent_test_default
-  parent: system.admin
-menu_test.menu_child_test_default:
-  title: 'Menu Child default'
-  description: 'Menu item description child'
-  route_name: menu_test.child_test_default
-  parent: menu_test.menu_parent_test_default
 menu_test.menu_no_title_callback:
   title: 'A title with @placeholder'
   route_name: menu_test.menu_no_title_callback
