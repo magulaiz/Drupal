@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Menu;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -73,6 +74,9 @@ class MenuAccessTest extends BrowserTestBase {
 
   /**
    * Test routes implementing _access_admin_menu_block_page.
+   *
+   * @covers \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::accessAdminMenuBlockPage
+   * @covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
    */
   public function testSystemAdminMenuBlockAccessCheck(): void {
     // Create an admin user.
@@ -118,11 +122,36 @@ class MenuAccessTest extends BrowserTestBase {
     // As menu_test adds a menu link under config.
     $this->assertMenuItemRoutesAccess(200, 'admin/config');
 
+    // Test access to routes in the admin menu. The routes are in a menu tree
+    // of the hierarchy:
+    // menu_test.parent_test
+    // -menu_test.child1_test
+    // --menu_test.super_child1_test
+    // -menu_test.child2_test
+    // --menu_test.super_child2_test
+    // --menu_test.super_child3_test
+    // -menu_test.child3_test
+    // All routes in this tree except the "super_child" routes should have the
+    // '_access_admin_menu_block_page' requirement which denies access unless
+    // the user has access to a menu item under that route. Route
+    // 'menu_test.child3_test' has no menu items underneath it so no user should
+    // have access to this route even though it has the requirement
+    // `_access: 'TRUE'`.
+    $tree_routes = [
+      'menu_test.parent_test',
+      'menu_test.child1_test',
+      'menu_test.child2_test',
+      'menu_test.child3_test',
+      'menu_test.super_child1_test',
+      'menu_test.super_child2_test',
+      'menu_test.super_child3_test',
+    ];
+
     // Create a user with access to only the top level parent.
     $parentUser = $this->drupalCreateUser([
       'access parent test page',
     ]);
-    // Create a user with access to the parent and chile routes but none of the
+    // Create a user with access to the parent and child routes but none of the
     // super child routes.
     $childOnlyUser = $this->drupalCreateUser([
       'access parent test page',
@@ -156,38 +185,33 @@ class MenuAccessTest extends BrowserTestBase {
       'access super child2 test page',
       'access super child3 test page',
     ]);
-    $tree_routes = [
-      'menu_test.parent_test',
-      'menu_test.child1_test',
-      'menu_test.child2_test',
-      'menu_test.super_child1_test',
-      'menu_test.super_child2_test',
-      'menu_test.super_child3_test',
-    ];
-    // The users that only have access to the routes in the tree that use
-    // \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage()
-    // and have the `_access_admin_menu_block_page` requirement but none of the
-    // routes under them in the menu tree will have no access to any of the
-    // routes in the tree.
-    $this->drupalLogin($parentUser);
-    $this->assertAccessToRoutes([], ...$tree_routes);
-    $this->drupalLogin($childOnlyUser);
-    $this->assertAccessToRoutes([], ...$tree_routes);
-    $this->drupalLogin($noParentAccessUser);
-    $this->assertAccessToRoutes(
-      array_diff($tree_routes, ['menu_test.parent_test']),
+
+    // Users that do not have access to any of the 'super_child' routes will
+    // not have access to any of the routes in the tree.
+    $this->assertUserRoutesAccess($parentUser, [], ...$tree_routes);
+    $this->assertUserRoutesAccess($childOnlyUser, [], ...$tree_routes);
+
+    // A user that does not have access to the top level parent but has access
+    // to all the other routes will have access to all routes except the parent
+    // and 'menu_test.child3_test', because it has no items underneath in the
+    // menu.
+    $this->assertUserRoutesAccess(
+      $noParentAccessUser,
+      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test']),
       ...$tree_routes
     );
-    $this->drupalLogin($superChild1User);
-    $this->assertAccessToRoutes(
+    // Users who have only access to one super child route should have access
+    // only to that route and its parents.
+    $this->assertUserRoutesAccess(
+      $superChild1User,
       ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.super_child1_test'],
       ...$tree_routes);
-    $this->drupalLogin($superChild2User);
-    $this->assertAccessToRoutes(
+    $this->assertUserRoutesAccess(
+      $superChild2User,
       ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.super_child2_test'],
       ...$tree_routes);
-    $this->drupalLogin($superChild3User);
-    $this->assertAccessToRoutes(
+    $this->assertUserRoutesAccess(
+      $superChild3User,
       ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.super_child3_test'],
       ...$tree_routes);
 
@@ -200,7 +224,7 @@ class MenuAccessTest extends BrowserTestBase {
     // Test a route that does not have a parameter defined in the menu item but
     // uses the route default parameter.
     // @todo Change the following test case to use a parent menu item that also
-    // uses the routes default parameter.
+    //   uses the routes default parameter.
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRoutesAccess(403, Url::fromRoute('menu_test.parent_test_param', ['param' => 'child_uses_default']));
     $this->drupalLogin($childOnlyUser);
@@ -237,7 +261,18 @@ class MenuAccessTest extends BrowserTestBase {
     }
   }
 
-  private function assertAccessToRoutes(array $accessibleRoutes, string ...$allRoutes) {
+  /**
+   * Asserts which routes a user has access to.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user account for which to check access.
+   * @param array $accessibleRoutes
+   *   The routes the user should have access to.
+   * @param string ...$allRoutes
+   *   The routes to check.
+   */
+  private function assertUserRoutesAccess(AccountInterface $user, array $accessibleRoutes, string ...$allRoutes): void {
+    $this->drupalLogin($user);
     foreach ($allRoutes as $route) {
       $this->assertMenuItemRoutesAccess(
         in_array($route, $accessibleRoutes, TRUE) ? 200 : 403,

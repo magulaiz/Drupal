@@ -21,14 +21,19 @@ menu_test.parent_test:
   route_name: menu_test.parent_test
   parent: system.admin
 menu_test.parent_test.child1_test:
-  title: 'Menu child'
-  description: 'Menu item description child'
+  title: 'Menu child1'
+  description: 'Menu item description child1'
   route_name: menu_test.child1_test
   parent: menu_test.parent_test
 menu_test.parent_test.child2_test:
-  title: 'Menu child'
-  description: 'Menu item description child'
+  title: 'Menu child2'
+  description: 'Menu item description child2'
   route_name: menu_test.child2_test
+  parent: menu_test.parent_test
+menu_test.parent_test.child3_test:
+  title: 'Menu child3'
+  description: 'Menu item description child3'
+  route_name: menu_test.child3_test
   parent: menu_test.parent_test
 menu_test.parent_test.child_test.super_child1_test:
   title: 'Menu super child1'

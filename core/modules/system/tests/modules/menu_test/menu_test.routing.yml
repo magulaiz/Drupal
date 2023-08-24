@@ -59,6 +59,13 @@ menu_test.child2_test:
   requirements:
     _permission: 'access child2 test page'
 
+menu_test.child3_test:
+  path: '/parent_test/child3_test'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _access: 'TRUE'
+
 menu_test.super_child1_test:
   path: '/parent_test/child_test/super_child1_test'
   defaults:
