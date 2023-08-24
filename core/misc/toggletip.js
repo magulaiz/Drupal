@@ -12,13 +12,15 @@
 ) => {
   // Keeps track of generated ids to ensure no duplicates are created.
   const toggleTipIds = new Set();
-  Drupal.toggletip.defaultConfig = {
-    atDescription: '',
-    placement: 'top-end',
-    offset: 24,
-    positionOffsetPrimary: 0,
-    positionOffsetSecondary: 0,
-    shiftPadding: 5,
+  Drupal.toggletip = {
+    defaultConfig: {
+      atDescription: '',
+      placement: 'top-end',
+      offset: 24,
+      positionOffsetPrimary: 0,
+      positionOffsetSecondary: 0,
+      shiftPadding: 5,
+    }
   };
 
   /**
@@ -152,7 +154,7 @@
         return id;
       };
 
-      const { defaultConfig } = Drupal.toggletip.defaultConfig;
+      const { defaultConfig } = Drupal.toggletip;
 
       once('drupal-tip', '[data-drupal-toggletip]', context).forEach(
         (tipElement) => {
@@ -377,7 +379,7 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.button = (descriptionId, tipId, toggletipConfig) => {
+  Drupal.theme.tip = (descriptionId, tipId, toggletipConfig) => {
     const tip = document.createElement('div');
     tip.classList.add('toggletip__tip');
     tip.setAttribute('tabindex', '0');
