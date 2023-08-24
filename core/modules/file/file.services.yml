@@ -28,3 +28,22 @@ services:
     class: Drupal\file\Validation\FileValidator
     arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
+  file.form_uploaded_file_retriever:
+    class: Drupal\file\Upload\FormUploadedFileRetriever
+    arguments: ['@request_stack']
+  Drupal\file\Upload\FormUploadedFileRetriever: '@file.form_uploaded_file_retriever'
+  file.upload_memory_cache:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+  file.form_file_upload_handler:
+    class: Drupal\file\Upload\FormFileUploadHandler
+    arguments: ['@file.upload_memory_cache', '@file.upload_handler', '@file.form_uploaded_file_retriever', '@event_dispatcher']
+  Drupal\file\Upload\FormFileUploadHandler: '@file.form_file_upload_handler'
+  file.element_helper:
+    class: Drupal\file\Upload\FileElementHelper
+    arguments: ['@request_stack', '@file_system', '@logger.channel.file', '@messenger', '@renderer', '@file.form_file_upload_handler', '@file.form_uploaded_file_retriever']
+  Drupal\file\Upload\FileElementHelper: '@file.element_helper'
+  file.messenger_uploaded_subscriber:
+    class: Drupal\file\Upload\MessengerFileUploadedSubscriber
+    arguments: ['@messenger']
+    tags:
+      - { name: 'event_subscriber' }

@@ -5,6 +5,7 @@ namespace Drupal\file_test\Form;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Upload\MessageCollectingErrorCallback;
 
 /**
  * File test form class.
@@ -88,7 +89,7 @@ class FileTestForm implements FormInterface {
       \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
     }
     else {
-      $destination = FALSE;
+      $destination = NULL;
     }
 
     // Setup validators.
@@ -115,7 +116,12 @@ class FileTestForm implements FormInterface {
       define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     }
 
-    $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));
+    /** @var \Drupal\file\Upload\FormFileUploadHandler $uploadHandler */
+    $uploadHandler = \Drupal::service('file.form_file_upload_handler');
+    $errorHandler = new MessageCollectingErrorCallback(\Drupal::logger('file_test'));
+    /** @var \Drupal\file\Upload\FileUploadResult $result */
+    $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $errorHandler->onError(...), $destination, $form_state->getValue('file_test_replace'));
+    $file = reset($files);
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
       \Drupal::messenger()->addStatus(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
