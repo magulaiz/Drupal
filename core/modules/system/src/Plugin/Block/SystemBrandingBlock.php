@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:ignoreFile
+
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
@@ -181,15 +183,15 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    return [
-      'config' => [
-        'system.site',
-      ],
-    ];
-  }
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function calculateDependencies() {
+//    return [
+//      'config' => [
+//        'system.site',
+//      ],
+//    ];
+//  }
 
 }

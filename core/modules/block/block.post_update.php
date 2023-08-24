@@ -18,10 +18,13 @@ function block_removed_post_updates() {
 }
 
 /**
- * Implements hook_post_update_name().
+ * Adds config dependency for site branding block on 'system.site'.
  */
-function block_post_update_branding_block_save() {
-  \Drupal::configFactory()->getEditable('block.block.site_branding')
-    ->set('config', 'system.site')
-    ->save();
+function block_post_update_branding_block(array &$sandbox = NULL) {
+  $site_branding_settings = \Drupal::configFactory()->getEditable('block.block.site_branding');
+  $dependencies = $site_branding_settings->get('dependencies');
+  $dependencies['config'] = ['system.site'];
+  $site_branding_settings
+    ->set('dependencies', $dependencies)
+    ->save(TRUE);
 }
