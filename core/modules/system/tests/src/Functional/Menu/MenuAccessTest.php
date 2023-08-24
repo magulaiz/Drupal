@@ -226,23 +226,49 @@ class MenuAccessTest extends BrowserTestBase {
     // @todo Change the following test case to use a parent menu item that also
     //   uses the routes default parameter.
     $this->drupalLogin($parentUser);
-    $this->assertMenuItemRoutesAccess(403, Url::fromRoute('menu_test.parent_test_param', ['param' => 'child_uses_default']));
+    $this->assertMenuItemRoutesAccess(
+      403,
+      Url::fromRoute('menu_test.parent_test_param', ['param' => 'child_uses_default']),
+      Url::fromRoute('menu_test.child_test_param', ['param' => 'child_uses_default']),
+
+    );
     $this->drupalLogin($childOnlyUser);
-    $this->assertMenuItemRoutesAccess(200, Url::fromRoute('menu_test.parent_test_param', ['param' => 'child_uses_default']));
+    $this->assertMenuItemRoutesAccess(
+      200,
+      Url::fromRoute('menu_test.parent_test_param', ['param' => 'child_uses_default']),
+      Url::fromRoute('menu_test.child_test_param', ['param' => 'child_uses_default']),
+    );
 
     // Test a route that does have a parameter defined in the menu item and that
     // parameter value is equal to the default value specific in the route.
     $this->drupalLogin($parentUser);
-    $this->assertMenuItemRoutesAccess(403, Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']));
+    $this->assertMenuItemRoutesAccess(
+      403,
+      Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']),
+      Url::fromRoute('menu_test.child_test_param_explicit', ['param' => 'my_default'])
+    );
     $this->drupalLogin($childOnlyUser);
-    $this->assertMenuItemRoutesAccess(200, Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']));
+    $this->assertMenuItemRoutesAccess(
+      200,
+      Url::fromRoute('menu_test.parent_test_param_explicit', ['param' => 'my_default']),
+      Url::fromRoute('menu_test.child_test_param_explicit', ['param' => 'my_default'])
+    );
 
     // If we try to access a route that takes a parameter but route is not in the
-    // with that parameter we should always be denied access.
+    // with that parameter we should always be denied access because the sole
+    // purpose of \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage
+    // is to display items in the menu.
     $this->drupalLogin($parentUser);
-    $this->assertMenuItemRoutesAccess(403, Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']));
+    $this->assertMenuItemRoutesAccess(
+      403,
+      Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']),
+      // $parentUser does not have the 'access child1 test page' permission.
+      Url::fromRoute('menu_test.child_test_param', ['param' => 'any-other'])
+    );
     $this->drupalLogin($childOnlyUser);
     $this->assertMenuItemRoutesAccess(403, Url::fromRoute('menu_test.parent_test_param', ['param' => 'any-other']));
+    // $childOnlyUser has the 'access child1 test page' permission.
+    $this->assertMenuItemRoutesAccess(200, Url::fromRoute('menu_test.child_test_param', ['param' => 'any-other']));
   }
 
   /**

@@ -54,8 +54,8 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account): AccessResultInterface {
-    // Load links matching this route.
     $parameters = $route_match->getParameters()->all();
+    // Load links in the 'admin' menu matching this route.
     $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
     if (empty($links)) {
       // If we did not find a link then we have no opinion on access.
