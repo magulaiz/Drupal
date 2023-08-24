@@ -88,11 +88,8 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     ]);
     $entity->save();
 
-    $constraints = [
-      'ImmutableProperties' => ['id'],
-    ];
     $definition = DataDefinition::createFromDataType('entity:block_content_type')
-      ->setConstraints($constraints);
+      ->addConstraint('ImmutableProperties', ['id', 'description']);
 
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager */
     $typed_data_manager = $this->container->get(TypedDataManagerInterface::class);
@@ -105,8 +102,6 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
     // Ensure we get multiple violations if more than one immutable property is
     // changed.
-    $constraints['ImmutableProperties'][] = 'description';
-    $definition->setConstraints($constraints);
     $entity->set('description', "From hell's heart, I describe thee!");
     $violations = $typed_data_manager->create($definition, $entity)->validate();
     $this->assertCount(2, $violations);
