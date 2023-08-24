@@ -253,7 +253,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
   }
 
   /**
-   * Tests autocreation for an entity that has no bundles.
+   * Tests auto create for an entity that has no bundles.
    */
   public function testNoBundles() {
     $account = $this->drupalCreateUser([
