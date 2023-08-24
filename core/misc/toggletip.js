@@ -20,7 +20,7 @@
       positionOffsetPrimary: 0,
       positionOffsetSecondary: 0,
       shiftPadding: 5,
-    }
+    },
   };
 
   /**
