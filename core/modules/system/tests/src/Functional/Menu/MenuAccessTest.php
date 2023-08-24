@@ -97,7 +97,6 @@ class MenuAccessTest extends BrowserTestBase {
 
     // An admin user has access to all parent pages.
     $this->drupalLogin($adminUser);
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $this->assertMenuItemRoutesAccess(200, 'admin/structure', 'admin/people');
 
     // This user has access to administer menus so the structure parent page
