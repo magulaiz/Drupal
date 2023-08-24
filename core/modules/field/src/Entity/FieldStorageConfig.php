@@ -48,7 +48,7 @@ use Drupal\field\FieldStorageConfigInterface;
  *     "custom_storage",
  *   },
  *   constraints = {
- *     "ImmutableFields" = {"entity_type", "field_name", "type"}
+ *     "ImmutableFields" = {"id", "entity_type", "field_name", "type"}
  *   }
  * )
  */

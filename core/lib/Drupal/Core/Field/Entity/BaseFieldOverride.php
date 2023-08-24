@@ -39,7 +39,7 @@ use Drupal\Core\Field\FieldException;
  *     "field_type",
  *   },
  *   constraints = {
- *     "ImmutableFields" = {"entity_type", "bundle", "field_name", "field_type"}
+ *     "ImmutableFields" = {"id", "entity_type", "bundle", "field_name", "field_type"}
  *   }
  * )
  */
