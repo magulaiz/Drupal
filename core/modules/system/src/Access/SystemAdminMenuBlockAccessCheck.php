@@ -100,7 +100,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       // Check if it's again route with inaccessible children.
       return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account)->isAllowed());
     }
-    return AccessResult::forbidden();
+    return AccessResult::neutral();
   }
 
 }
