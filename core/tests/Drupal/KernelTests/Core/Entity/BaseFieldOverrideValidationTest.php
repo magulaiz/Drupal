@@ -35,9 +35,10 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
    * {@inheritdoc}
    */
   public function testImmutableProperties(array $valid_values = []): void {
-    // Clear all settings so that, when the immutable `field_type` property is
-    // changed by the parent method, we don't get errors about unsupported
-    // settings.
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* field_type won't match the config schema for the
+    // settings of the *new* field_type.
     $this->entity->set('settings', []);
     parent::testImmutableProperties($valid_values);
   }

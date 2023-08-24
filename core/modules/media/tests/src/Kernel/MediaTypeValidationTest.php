@@ -31,9 +31,10 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
    * {@inheritdoc}
    */
   public function testImmutableProperties(array $valid_values = []): void {
-    // Clear the source configuration so that, when the immutable `source`
-    // property is changed by the parent method, we don't get errors about
-    // unsupported configuration keys.
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* source won't match the config schema for the
+    // settings of the *new* source.
     $this->entity->set('source_configuration', []);
     parent::testImmutableProperties($valid_values);
   }

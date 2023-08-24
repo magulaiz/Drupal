@@ -60,7 +60,7 @@ use Drupal\media\MediaTypeInterface;
  *     "collection" = "/admin/structure/media",
  *   },
  *   constraints = {
- *     "ImmutableProperties" = {"id", "source"}
+ *     "ImmutableProperties" = {"id", "source"},
  *   }
  * )
  */
