@@ -38,6 +38,28 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the validator throws an exception for non-existent properties.
+   */
+  public function testValidatorRejectsANonExistentProperty(): void {
+    /** @var \Drupal\block_content\BlockContentTypeInterface $entity */
+    $entity = BlockContentType::create([
+      'id' => 'test',
+      'label' => 'Test',
+    ]);
+    $entity->save();
+    $this->assertFalse(property_exists($entity, 'non_existent'));
+
+    $definition = DataDefinition::createFromDataType('entity:block_content_type')
+      ->addConstraint('ImmutableProperties', ['non_existent']);
+
+    $this->expectException(LogicException::class);
+    $this->expectExceptionMessage("The entity does not have a 'non_existent' property.");
+    $violations = $this->container->get(TypedDataManagerInterface::class)
+      ->create($definition, $entity)
+      ->validate();
+  }
+
+  /**
    * Tests that entities without an ID will raise an exception.
    */
   public function testValidatedEntityMustHaveAnId(): void {

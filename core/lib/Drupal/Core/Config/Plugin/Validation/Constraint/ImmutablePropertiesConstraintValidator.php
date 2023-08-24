@@ -63,6 +63,11 @@ class ImmutablePropertiesConstraintValidator extends ConstraintValidator impleme
     }
 
     foreach ($constraint->properties as $name) {
+      // The property must be concretely defined in the class.
+      if (!property_exists($value, $name)) {
+        throw new LogicException("The entity does not have a '$name' property.");
+      }
+
       if ($original->get($name) !== $value->get($name)) {
         $this->context->addViolation($constraint->message, ['@name' => $name]);
       }
