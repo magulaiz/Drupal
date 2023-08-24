@@ -14,10 +14,10 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  * @group Entity
  * @group Validation
  *
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ImmutableFieldsConstraint
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ImmutableFieldsConstraintValidator
+ * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
+ * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
  */
-class ImmutableFieldsConstraintValidatorTest extends KernelTestBase {
+class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,7 @@ class ImmutableFieldsConstraintValidatorTest extends KernelTestBase {
    */
   public function testValidatorRequiresAConfigEntity(): void {
     $definition = DataDefinition::createFromDataType('any')
-      ->addConstraint('ImmutableFields', ['read_only']);
+      ->addConstraint('ImmutableProperties', ['read_only']);
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, 39);
     $this->expectException(UnexpectedValueException::class);
@@ -47,7 +47,7 @@ class ImmutableFieldsConstraintValidatorTest extends KernelTestBase {
     $entity->id()->shouldBeCalled();
 
     $definition = DataDefinition::createFromDataType('any')
-      ->addConstraint('ImmutableFields', ['read_only']);
+      ->addConstraint('ImmutableProperties', ['read_only']);
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, $entity->reveal());
     $this->expectException(LogicException::class);
@@ -56,9 +56,9 @@ class ImmutableFieldsConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests that changing an immutable field of a config entity raises an error.
+   * Tests that changing a config entity's immutable property raises an error.
    */
-  public function testImmutableFieldCannotBeChanged(): void {
+  public function testImmutablePropertyCannotBeChanged(): void {
     /** @var \Drupal\block_content\BlockContentTypeInterface $entity */
     $entity = BlockContentType::create([
       'id' => 'test',
@@ -69,7 +69,7 @@ class ImmutableFieldsConstraintValidatorTest extends KernelTestBase {
     $entity->set('id', 'foo')->set('label', 'Testing!');
 
     $definition = DataDefinition::createFromDataType('entity:block_content_type')
-      ->addConstraint('ImmutableFields', ['id']);
+      ->addConstraint('ImmutableProperties', ['id']);
     $violations = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, $entity)
       ->validate();

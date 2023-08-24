@@ -15,12 +15,12 @@ use Symfony\Component\Validator\Exception\RuntimeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
- * Validates the ImmutableFields constraint.
+ * Validates the ImmutableProperties constraint.
  */
-class ImmutableFieldsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+class ImmutablePropertiesConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * Constructs an ImmutableFieldsConstraintValidator object.
+   * Constructs an ImmutablePropertiesConstraintValidator object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
@@ -41,7 +41,7 @@ class ImmutableFieldsConstraintValidator extends ConstraintValidator implements 
    * {@inheritdoc}
    */
   public function validate(mixed $value, Constraint $constraint) {
-    assert($constraint instanceof ImmutableFieldsConstraint);
+    assert($constraint instanceof ImmutablePropertiesConstraint);
 
     if (!$value instanceof ConfigEntityInterface) {
       throw new UnexpectedValueException($value, ConfigEntityInterface::class);
@@ -62,7 +62,7 @@ class ImmutableFieldsConstraintValidator extends ConstraintValidator implements 
       throw new RuntimeException('The original entity could not be loaded.');
     }
 
-    foreach ($constraint->fields as $name) {
+    foreach ($constraint->properties as $name) {
       if ($original->get($name) !== $value->get($name)) {
         $this->context->addViolation($constraint->message, ['@name' => $name]);
       }

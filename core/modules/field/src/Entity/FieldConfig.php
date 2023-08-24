@@ -49,7 +49,7 @@ use Drupal\field\FieldConfigInterface;
  *     "RequiredConfigDependencies" = {
  *       "field_storage_config"
  *     },
- *     "ImmutableFields" = {"id", "entity_type", "field_name", "bundle", "field_type"}
+ *     "ImmutableProperties" = {"id", "entity_type", "field_name", "bundle", "field_type"}
  *   }
  * )
  */

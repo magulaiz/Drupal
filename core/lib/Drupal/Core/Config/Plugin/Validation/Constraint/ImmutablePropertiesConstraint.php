@@ -10,12 +10,12 @@ use Symfony\Component\Validator\Constraint;
  * Checks if config entity properties have been changed.
  *
  * @Constraint(
- *   id = "ImmutableFields",
- *   label = @Translation("Fields are unchanged", context = "Validation"),
+ *   id = "ImmutableProperties",
+ *   label = @Translation("Properties are unchanged", context = "Validation"),
  *   type = { "entity" }
  * )
  */
-class ImmutableFieldsConstraint extends Constraint {
+class ImmutablePropertiesConstraint extends Constraint {
 
   /**
    * The error message if an immutable property has been changed.
@@ -25,24 +25,24 @@ class ImmutableFieldsConstraint extends Constraint {
   public string $message = "The '@name' property cannot be changed.";
 
   /**
-   * The names of the immutable fields.
+   * The names of the immutable properties.
    *
    * @var string[]
    */
-  public array $fields = [];
+  public array $properties = [];
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultOption() {
-    return 'fields';
+    return 'properties';
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRequiredOptions() {
-    return ['fields'];
+    return ['properties'];
   }
 
 }
