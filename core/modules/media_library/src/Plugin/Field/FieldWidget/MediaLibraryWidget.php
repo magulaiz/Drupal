@@ -1003,8 +1003,10 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    *   The form array.
    */
   public static function validateRequired(array $element, FormStateInterface $form_state, array $form) {
-    // If a remove button triggered submit, this validation isn't needed.
-    if (in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {
+    // If a remove button triggered submit, or the element is not accessible,
+    // this validation isn't needed.
+    if ((isset($element['selection']['#access']) && !$element['selection']['#access']) ||
+      in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {
       return;
     }
 
