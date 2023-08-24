@@ -132,7 +132,7 @@ class SelectionTest extends BrowserTestBase {
   /**
    * Tests autocreation in a views selection plugin.
    */
-  public function testAutocompleteAutocreation() {
+  public function testAutocompleteAutoCreate() {
     $type3 = $this->drupalCreateContentType()->id();
 
     $account = $this->drupalCreateUser([
