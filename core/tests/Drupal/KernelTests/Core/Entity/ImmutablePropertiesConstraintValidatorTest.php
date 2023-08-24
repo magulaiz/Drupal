@@ -66,15 +66,30 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     ]);
     $entity->save();
 
-    $entity->set('id', 'foo')->set('label', 'Testing!');
-
+    $constraints = [
+      'ImmutableProperties' => ['id'],
+    ];
     $definition = DataDefinition::createFromDataType('entity:block_content_type')
-      ->addConstraint('ImmutableProperties', ['id']);
-    $violations = $this->container->get(TypedDataManagerInterface::class)
-      ->create($definition, $entity)
-      ->validate();
+      ->setConstraints($constraints);
+
+    /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager */
+    $typed_data_manager = $this->container->get(TypedDataManagerInterface::class);
+
+    // Try changing one immutable property, and one mutable property.
+    $entity->set('id', 'foo')->set('label', 'Testing!');
+    $violations = $typed_data_manager->create($definition, $entity)->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("The 'id' property cannot be changed.", (string) $violations[0]->getMessage());
+
+    // Ensure we get multiple violations if more than one immutable property is
+    // changed.
+    $constraints['ImmutableProperties'][] = 'description';
+    $definition->setConstraints($constraints);
+    $entity->set('description', "From hell's heart, I describe thee!");
+    $violations = $typed_data_manager->create($definition, $entity)->validate();
+    $this->assertCount(2, $violations);
+    $this->assertSame("The 'id' property cannot be changed.", (string) $violations[0]->getMessage());
+    $this->assertSame("The 'description' property cannot be changed.", (string) $violations[1]->getMessage());
   }
 
 }
