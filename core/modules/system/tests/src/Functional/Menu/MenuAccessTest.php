@@ -157,12 +157,12 @@ class MenuAccessTest extends BrowserTestBase {
       'access super child3 test page',
     ]);
     $tree_routes = [
-      'parent' => Url::fromRoute('menu_test.parent_test'),
-      'child1' => Url::fromRoute('menu_test.child1_test'),
-      'child2' => Url::fromRoute('menu_test.child2_test'),
-      'super_child1' => Url::fromRoute('menu_test.super_child1_test'),
-      'super_child2' => Url::fromRoute('menu_test.super_child2_test'),
-      'super_child3' => Url::fromRoute('menu_test.super_child3_test'),
+      'menu_test.parent_test',
+      'menu_test.child1_test',
+      'menu_test.child2_test',
+      'menu_test.super_child1_test',
+      'menu_test.super_child2_test',
+      'menu_test.super_child3_test',
     ];
     // The users that only have access to the routes in the tree that use
     // \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage()
@@ -173,18 +173,23 @@ class MenuAccessTest extends BrowserTestBase {
     $this->assertAccessToRoutes([], ...$tree_routes);
     $this->drupalLogin($childOnlyUser);
     $this->assertAccessToRoutes([], ...$tree_routes);
-    $all_route_expect_parent = array_diff_key(array_flip(['parent']), $tree_routes);
     $this->drupalLogin($noParentAccessUser);
     $this->assertAccessToRoutes(
-      array_diff(array_keys($tree_routes), ['parent']),
+      array_diff($tree_routes, ['menu_test.parent_test']),
       ...$tree_routes
     );
     $this->drupalLogin($superChild1User);
-    $this->assertAccessToRoutes(['parent', 'child', 'super_child1'], ...$tree_routes);
+    $this->assertAccessToRoutes(
+      ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.super_child1_test'],
+      ...$tree_routes);
     $this->drupalLogin($superChild2User);
-    $this->assertAccessToRoutes(['parent', 'child2', 'super_child2'], ...$tree_routes);
+    $this->assertAccessToRoutes(
+      ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.super_child2_test'],
+      ...$tree_routes);
     $this->drupalLogin($superChild3User);
-    $this->assertAccessToRoutes(['parent', 'child2', 'super_child3'], ...$tree_routes);
+    $this->assertAccessToRoutes(
+      ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.super_child3_test'],
+      ...$tree_routes);
 
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);
@@ -232,19 +237,13 @@ class MenuAccessTest extends BrowserTestBase {
     }
   }
 
-  private function assertAccessToRoutes(array $accessibleRoutes, Url ...$routes) {
-    $access_routes = array_intersect_key(
-      $routes,
-      array_flip($accessibleRoutes)
-    );
-    $this->assertMenuItemRoutesAccess(
-      200,
-      ...$access_routes
-    );
-    $this->assertMenuItemRoutesAccess(
-      403,
-      ...array_diff_key($access_routes, $routes)
-    );
+  private function assertAccessToRoutes(array $accessibleRoutes, string ...$allRoutes) {
+    foreach ($allRoutes as $route) {
+      $this->assertMenuItemRoutesAccess(
+        in_array($route, $accessibleRoutes, TRUE) ? 200 : 403,
+        Url::fromRoute($route)
+      );
+    }
   }
 
 }
