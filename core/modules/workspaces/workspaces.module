@@ -7,20 +7,9 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\views\ViewExecutable;
-use Drupal\workspaces\EntityAccess;
-use Drupal\workspaces\EntityOperations;
-use Drupal\workspaces\EntityTypeInfo;
-use Drupal\workspaces\FormOperations;
-use Drupal\workspaces\ViewsQueryAlter;
 
 /**
  * Implements hook_help().
@@ -34,114 +23,6 @@ function workspaces_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The Workspaces module allows workspaces to be defined and switched between. Content is then assigned to the active workspace when created. For more information, see the <a href=":workspaces">online documentation for the Workspaces module</a>.', [':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
       return $output;
   }
-}
-
-/**
- * Implements hook_entity_type_build().
- */
-function workspaces_entity_type_build(array &$entity_types) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityTypeBuild($entity_types);
-}
-
-/**
- * Implements hook_entity_type_alter().
- */
-function workspaces_entity_type_alter(array &$entity_types) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityTypeAlter($entity_types);
-}
-
-/**
- * Implements hook_form_alter().
- */
-function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if ($form_state->getFormObject() instanceof EntityFormInterface) {
-    \Drupal::service('class_resolver')
-      ->getInstanceFromDefinition(EntityOperations::class)
-      ->entityFormAlter($form, $form_state, $form_id);
-  }
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(FormOperations::class)
-    ->formAlter($form, $form_state, $form_id);
-}
-
-/**
- * Implements hook_field_info_alter().
- */
-function workspaces_field_info_alter(&$definitions) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->fieldInfoAlter($definitions);
-}
-
-/**
- * Implements hook_entity_base_field_info().
- */
-function workspaces_entity_base_field_info(EntityTypeInterface $entity_type) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityBaseFieldInfo($entity_type);
-}
-
-/**
- * Implements hook_entity_preload().
- */
-function workspaces_entity_preload(array $ids, $entity_type_id) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityPreload($ids, $entity_type_id);
-}
-
-/**
- * Implements hook_entity_presave().
- */
-function workspaces_entity_presave(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityPresave($entity);
-}
-
-/**
- * Implements hook_entity_insert().
- */
-function workspaces_entity_insert(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() === 'workspace') {
-    \Drupal::service('workspaces.association')->workspaceInsert($entity);
-    \Drupal::service('workspaces.repository')->resetCache();
-  }
-
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityInsert($entity);
-}
-
-/**
- * Implements hook_entity_update().
- */
-function workspaces_entity_update(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() === 'workspace') {
-    \Drupal::service('workspaces.repository')->resetCache();
-  }
-
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityUpdate($entity);
-}
-
-/**
- * Implements hook_entity_predelete().
- */
-function workspaces_entity_predelete(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() === 'workspace') {
-    \Drupal::service('workspaces.repository')->resetCache();
-  }
-
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityPredelete($entity);
 }
 
 /**
@@ -165,28 +46,6 @@ function workspaces_entity_revision_delete(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_access().
- *
- * @see \Drupal\workspaces\EntityAccess
- */
-function workspaces_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityAccess::class)
-    ->entityOperationAccess($entity, $operation, $account);
-}
-
-/**
- * Implements hook_entity_create_access().
- *
- * @see \Drupal\workspaces\EntityAccess
- */
-function workspaces_entity_create_access(AccountInterface $account, array $context, $entity_bundle) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityAccess::class)
-    ->entityCreateAccess($account, $context, $entity_bundle);
-}
-
-/**
  * Implements hook_ENTITY_TYPE_update() for the 'menu_link_content' entity type.
  */
 function workspaces_menu_link_content_update(EntityInterface $entity) {
@@ -200,22 +59,6 @@ function workspaces_menu_link_content_update(EntityInterface $entity) {
     $cache_tags = Cache::buildTags('config:system.menu', [$entity->getMenuName()], '.');
     \Drupal::service('cache_tags.invalidator')->invalidateTags($cache_tags);
   }
-}
-
-/**
- * Implements hook_views_query_alter().
- */
-function workspaces_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(ViewsQueryAlter::class)
-    ->alterQuery($view, $query);
-}
-
-/**
- * Implements hook_cron().
- */
-function workspaces_cron() {
-  \Drupal::service('workspaces.manager')->purgeDeletedWorkspacesBatch();
 }
 
 /**

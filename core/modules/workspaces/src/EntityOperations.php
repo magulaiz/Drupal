@@ -2,7 +2,10 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\FormAlter;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -71,9 +74,8 @@ class EntityOperations implements ContainerInjectionInterface {
 
   /**
    * Acts on entity IDs before they are loaded.
-   *
-   * @see hook_entity_preload()
    */
+  #[Hook('entity_preload')]
   public function entityPreload(array $ids, $entity_type_id) {
     $entities = [];
 
@@ -105,9 +107,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being saved.
-   *
-   * @see hook_entity_presave()
    */
+  #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {
     $entity_type = $entity->getEntityType();
 
@@ -163,9 +164,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
-   *
-   * @see hook_entity_insert()
    */
+  #[Hook('entity_insert')]
   public function entityInsert(EntityInterface $entity) {
     /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
     // Only run if the entity type can belong to a workspace and we are in a
@@ -198,9 +198,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
-   *
-   * @see hook_entity_update()
    */
+  #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity) {
     // Only run if the entity type can belong to a workspace and we are in a
     // non-default workspace.
@@ -220,9 +219,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being deleted.
-   *
-   * @see hook_entity_predelete()
    */
+  #[Hook('entity_predelete')]
   public function entityPredelete(EntityInterface $entity) {
     $entity_type = $entity->getEntityType();
 
@@ -249,10 +247,12 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The current state of the form.
    * @param string $form_id
    *   The form ID.
-   *
-   * @see hook_form_alter()
    */
+  #[FormAlter]
   public function entityFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
+    if (!$form_state->getFormObject() instanceof EntityFormInterface) {
+      return;
+    }
     /** @var \Drupal\Core\Entity\RevisionableInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     if (!$this->workspaceManager->isEntityTypeSupported($entity->getEntityType())) {

@@ -5,31 +5,27 @@
  * Contains content_moderation.module.
  */
 
-use Drupal\content_moderation\EntityOperations;
-use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Action\Plugin\Action\PublishAction;
+use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\filter\Broken;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
-use Drupal\workflows\WorkflowInterface;
-use Drupal\Core\Action\Plugin\Action\PublishAction;
-use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\workflows\Entity\Workflow;
-use Drupal\views\Entity\View;
+use Drupal\workflows\WorkflowInterface;
 
 /**
  * Implements hook_help().
@@ -60,15 +56,6 @@ function content_moderation_help($route_name, RouteMatchInterface $route_match) 
 }
 
 /**
- * Implements hook_entity_base_field_info().
- */
-function content_moderation_entity_base_field_info(EntityTypeInterface $entity_type) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityBaseFieldInfo($entity_type);
-}
-
-/**
  * Implements hook_entity_bundle_field_info().
  */
 function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
@@ -85,111 +72,12 @@ function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity
 }
 
 /**
- * Implements hook_entity_type_alter().
- */
-function content_moderation_entity_type_alter(array &$entity_types) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityTypeAlter($entity_types);
-}
-
-/**
- * Implements hook_entity_presave().
- */
-function content_moderation_entity_presave(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityPresave($entity);
-}
-
-/**
- * Implements hook_entity_insert().
- */
-function content_moderation_entity_insert(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityInsert($entity);
-}
-
-/**
- * Implements hook_entity_update().
- */
-function content_moderation_entity_update(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityUpdate($entity);
-}
-
-/**
- * Implements hook_entity_delete().
- */
-function content_moderation_entity_delete(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityDelete($entity);
-}
-
-/**
- * Implements hook_entity_revision_delete().
- */
-function content_moderation_entity_revision_delete(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityRevisionDelete($entity);
-}
-
-/**
- * Implements hook_entity_translation_delete().
- */
-function content_moderation_entity_translation_delete(EntityInterface $translation) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityTranslationDelete($translation);
-}
-
-/**
- * Implements hook_entity_prepare_form().
- */
-function content_moderation_entity_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityPrepareForm($entity, $operation, $form_state);
-}
-
-/**
- * Implements hook_form_alter().
- */
-function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->formAlter($form, $form_state, $form_id);
-}
-
-/**
  * Implements hook_preprocess_HOOK().
  */
 function content_moderation_preprocess_node(&$variables) {
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(ContentPreprocess::class)
     ->preprocessNode($variables);
-}
-
-/**
- * Implements hook_entity_extra_field_info().
- */
-function content_moderation_entity_extra_field_info() {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityExtraFieldInfo();
-}
-
-/**
- * Implements hook_entity_view().
- */
-function content_moderation_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityView($build, $entity, $display, $view_mode);
 }
 
 /**

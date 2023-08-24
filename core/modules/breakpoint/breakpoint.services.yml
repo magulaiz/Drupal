@@ -4,4 +4,5 @@ services:
     arguments: ['@module_handler', '@theme_handler', '@cache.discovery', '@string_translation']
     tags:
       - { name: plugin_manager_cache_clear }
+      - { name: 'hooks' }
   Drupal\breakpoint\BreakpointManagerInterface: '@breakpoint.manager'

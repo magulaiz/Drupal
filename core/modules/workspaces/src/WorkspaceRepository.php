@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Graph\Graph;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -144,6 +145,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
   /**
    * {@inheritdoc}
    */
+  #[Hook('workspace_(insert|update|predelete)')]
   public function resetCache() {
     $this->cache->invalidate('workspace_tree');
     $this->tree = NULL;

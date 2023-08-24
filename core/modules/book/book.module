@@ -258,35 +258,6 @@ function book_node_presave(EntityInterface $node) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert() for node entities.
- */
-function book_node_insert(EntityInterface $node) {
-  /** @var \Drupal\book\BookManagerInterface $book_manager */
-  $book_manager = \Drupal::service('book.manager');
-  $book_manager->updateOutline($node);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for node entities.
- */
-function book_node_update(EntityInterface $node) {
-  /** @var \Drupal\book\BookManagerInterface $book_manager */
-  $book_manager = \Drupal::service('book.manager');
-  $book_manager->updateOutline($node);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for node entities.
- */
-function book_node_predelete(EntityInterface $node) {
-  if (!empty($node->book['bid'])) {
-    /** @var \Drupal\book\BookManagerInterface $book_manager */
-    $book_manager = \Drupal::service('book.manager');
-    $book_manager->deleteFromBook($node->book['nid']);
-  }
-}
-
-/**
  * Implements hook_ENTITY_TYPE_prepare_form() for node entities.
  */
 function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {

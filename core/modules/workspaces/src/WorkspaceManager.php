@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
@@ -303,6 +304,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   /**
    * {@inheritdoc}
    */
+  #[Hook('cron')]
   public function purgeDeletedWorkspacesBatch() {
     $deleted_workspace_ids = $this->state->get('workspace.deleted', []);
 

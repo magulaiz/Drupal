@@ -370,8 +370,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   /**
    * Tests the workspace association data integrity for entity CRUD operations.
    *
-   * @covers ::workspaces_entity_presave
-   * @covers ::workspaces_entity_insert
+   * @covers \Drupal\workspaces\EntityOperations::entityPresave
+   * @covers \Drupal\workspaces\EntityOperations::entityInsert
    * @covers ::workspaces_entity_delete
    * @covers ::workspaces_entity_revision_delete
    */

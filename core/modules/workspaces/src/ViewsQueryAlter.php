@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Alter;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -112,9 +113,8 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
   /**
    * Implements a hook bridge for hook_views_query_alter().
-   *
-   * @see hook_views_query_alter()
    */
+  #[Alter('views_query')]
   public function alterQuery(ViewExecutable $view, QueryPluginBase $query) {
     // Don't alter any views queries if we're not in a workspace context.
     if (!$this->workspaceManager->hasActiveWorkspace()) {

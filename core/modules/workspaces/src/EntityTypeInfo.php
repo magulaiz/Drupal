@@ -2,6 +2,8 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Alter;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -62,9 +64,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   An associative array of all entity type definitions, keyed by the entity
    *   type name. Passed by reference.
-   *
-   * @see hook_entity_type_build()
    */
+  #[Hook('entity_type_build')]
   public function entityTypeBuild(array &$entity_types) {
     foreach ($entity_types as $entity_type) {
       if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
@@ -79,9 +80,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   An array of entity types.
-   *
-   * @see hook_entity_type_alter()
    */
+  #[Alter('entity_type')]
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type) {
       // Non-default workspaces display the active revision on the canonical
@@ -97,9 +97,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param array[] $definitions
    *   An array of field plugin definitions.
-   *
-   * @see hook_field_info_alter()
    */
+  #[Alter('field_info')]
   public function fieldInfoAlter(&$definitions) {
     if (isset($definitions['entity_reference'])) {
       $definitions['entity_reference']['constraints']['EntityReferenceSupportedNewEntities'] = [];
@@ -119,9 +118,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of field definitions, keyed by field name.
-   *
-   * @see hook_entity_base_field_info()
    */
+  #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
       $field_name = $entity_type->getRevisionMetadataKey('workspace');

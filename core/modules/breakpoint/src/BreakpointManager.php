@@ -2,6 +2,7 @@
 
 namespace Drupal\breakpoint;
 
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -226,6 +227,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
   /**
    * {@inheritdoc}
    */
+  #[Hook('themes_(un|)installed')]
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
     $this->breakpointsByGroup = NULL;

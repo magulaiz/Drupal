@@ -4,6 +4,8 @@ namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Entity\ContentModerationState as ContentModerationStateEntity;
 use Drupal\content_moderation\Entity\ContentModerationStateInterface;
+use Drupal\content_moderation\Form\EntityModerationForm;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -12,7 +14,6 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\content_moderation\Form\EntityModerationForm;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\workflows\Entity\Workflow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -99,9 +100,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being saved.
-   *
-   * @see hook_entity_presave()
    */
+  #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {
     if (!$this->moderationInfo->isModeratedEntity($entity)) {
       return;
@@ -129,9 +129,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
-   *
-   * @see hook_entity_insert()
    */
+  #[Hook('entity_insert')]
   public function entityInsert(EntityInterface $entity) {
     if ($this->moderationInfo->isModeratedEntity($entity)) {
       $this->updateOrCreateFromEntity($entity);
@@ -141,9 +140,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
-   *
-   * @see hook_entity_update()
    */
+  #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity) {
     if ($this->moderationInfo->isModeratedEntity($entity)) {
       $this->updateOrCreateFromEntity($entity);
@@ -218,9 +216,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being deleted.
-   *
-   * @see hook_entity_delete()
    */
+  #[Hook('entity_delete')]
   public function entityDelete(EntityInterface $entity) {
     $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
     if ($content_moderation_state) {
@@ -231,9 +228,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity revision being deleted.
-   *
-   * @see hook_entity_revision_delete()
    */
+  #[Hook('entity_revision_delete')]
   public function entityRevisionDelete(EntityInterface $entity) {
     if ($content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity)) {
       if ($content_moderation_state->isDefaultRevision()) {
@@ -250,9 +246,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $translation
    *   The entity translation being deleted.
-   *
-   * @see hook_entity_translation_delete()
    */
+  #[Hook('entity_translation_delete')]
   public function entityTranslationDelete(EntityInterface $translation) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
     if (!$translation->isDefaultTranslation()) {
@@ -268,9 +263,9 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Act on entities being assembled before rendering.
    *
-   * @see hook_entity_view()
    * @see EntityFieldManagerInterface::getExtraFields()
    */
+  #[Hook('entity_view')]
   public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$this->moderationInfo->isModeratedEntity($entity)) {

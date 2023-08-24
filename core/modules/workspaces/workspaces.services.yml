@@ -4,6 +4,7 @@ services:
     arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
+      - { name: hooks }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
@@ -15,10 +16,41 @@ services:
     tags:
       - { name: backend_overridable }
       - { name: event_subscriber }
+      - { name: hooks }
+  Drupal\workspaces\EntityAccess:
+    class: Drupal\workspaces\EntityAccess
+    autowire: true
+    tags:
+      - { name: hooks }
+  Drupal\workspaces\ViewsQueryAlter:
+    class: Drupal\workspaces\ViewsQueryAlter
+    autowire: true
+    arguments:
+      '$views_join_plugin_manager': '@plugin.manager.views.join'
+    tags:
+      - { name: hooks }
+      - { name: require_module, module: 'views' }
+  Drupal\workspaces\EntityTypeInfo:
+    class: Drupal\workspaces\EntityTypeInfo
+    autowire: true
+    tags:
+      - { name: hooks }
+  Drupal\workspaces\EntityOperations:
+    class: Drupal\workspaces\EntityOperations
+    autowire: true
+    tags:
+      - { name: hooks }
+  Drupal\workspaces\FormOperations:
+    class: Drupal\workspaces\FormOperations
+    autowire: true
+    tags:
+      - { name: hooks }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
     arguments: ['@entity_type.manager', '@cache.default']
+    tags:
+      - { name: hooks }
   Drupal\workspaces\WorkspaceRepositoryInterface: '@workspaces.repository'
 
   workspaces.negotiator.session:

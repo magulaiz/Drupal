@@ -3,6 +3,7 @@
 namespace Drupal\book;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -299,8 +300,19 @@ class BookManager implements BookManagerInterface {
   }
 
   /**
+   * Implements hook_node_predelete().
+   */
+  #[Hook('node_predelete')]
+  public function nodePreDelete(NodeInterface $node): void {
+    if (!empty($node->book['bid'])) {
+      $this->deleteFromBook($node->book['nid']);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
+  #[Hook('node_(insert|update)')]
   public function updateOutline(NodeInterface $node) {
     if (empty($node->book['bid'])) {
       return FALSE;

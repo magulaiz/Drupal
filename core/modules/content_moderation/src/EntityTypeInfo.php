@@ -2,10 +2,17 @@
 
 namespace Drupal\content_moderation;
 
+use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
+use Drupal\content_moderation\Entity\Handler\ModerationHandler;
+use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
+use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
+use Drupal\Core\Attribute\Hook\Alter;
+use Drupal\Core\Attribute\Hook\FormAlter;
+use Drupal\Core\Attribute\Hook\Hook;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\ContentEntityFormInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -17,10 +24,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
-use Drupal\content_moderation\Entity\Handler\ModerationHandler;
-use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
-use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -126,9 +129,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   The master entity type list to alter.
-   *
-   * @see hook_entity_type_alter()
    */
+  #[Alter('entity_type')]
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type_id => $entity_type) {
       // Internal entity types should never be moderated, and the 'path_alias'
@@ -204,9 +206,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   - delete: (optional) String containing markup (normally a link) used as
    *     the element's 'delete' operation in the administration interface. Only
    *     for 'form' context.
-   *
-   * @see hook_entity_extra_field_info()
    */
+  #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo() {
     $return = [];
     foreach ($this->getModeratedBundles() as $bundle) {
@@ -255,6 +256,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @see hook_entity_base_field_info()
    */
+  #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     if (!$this->moderationInfo->isModeratedEntityType($entity_type)) {
       return [];
@@ -294,9 +296,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   The entity form operation.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
-   *
-   * @see hook_entity_prepare_form()
    */
+  #[Hook('entity_prepare_form')]
   public function entityPrepareForm(EntityInterface $entity, $operation, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
@@ -328,9 +329,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   The current state of the form.
    * @param string $form_id
    *   The form id.
-   *
-   * @see hook_form_alter()
    */
+  #[FormAlter]
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof BundleEntityFormBase) {

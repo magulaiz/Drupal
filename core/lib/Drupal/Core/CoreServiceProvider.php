@@ -10,7 +10,9 @@ use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
+use Drupal\Core\DependencyInjection\Compiler\HookPass;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
+use Drupal\Core\DependencyInjection\Compiler\RequireModulePass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
@@ -93,6 +95,12 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new CacheContextsPass());
     $container->addCompilerPass(new ContextProvidersPass());
     $container->addCompilerPass(new AuthenticationProviderPass());
+
+    // Look for services with hook implementations.
+    $container->addCompilerPass(new HookPass());
+
+    // Remove services that require non-installed modules.
+    $container->addCompilerPass(new RequireModulePass());
 
     // Register plugin managers.
     $container->addCompilerPass(new PluginManagerPass());

@@ -15,6 +15,7 @@ services:
     arguments: ['@database', '@current_user', '@entity_type.manager', '@state', '@database.replica']
     tags:
       - { name: backend_overridable }
+      - { name: 'hooks' }
   Drupal\comment\CommentStatisticsInterface: '@comment.statistics'
 
   comment.lazy_builders:
