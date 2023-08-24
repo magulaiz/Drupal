@@ -123,10 +123,11 @@ class BlockSystemBrandingTest extends BlockTestBase {
       ->set('settings.use_site_name', 1)
       ->set('settings.use_site_slogan', 0)
       ->save();
+    $this->drupalGet('');
+    $this->assertSession()->pageTextNotContains('Drupal Community');
     $this->config('system.site')
       ->set('name', 'Drupal Community')
       ->save();
-    $this->drupalGet('');
     $new_site_name_xpath = '//div[@id="block-site-branding"]/a[text() = "Drupal Community"]';
     $this->drupalGet('');
 

@@ -16,3 +16,12 @@ function block_removed_post_updates() {
     'block_post_update_replace_node_type_condition' => '10.0.0',
   ];
 }
+
+/**
+ * Implements hook_post_update_name().
+ */
+function block_post_update_branding_block_save() {
+  \Drupal::configFactory()->getEditable('block.block.site_branding')
+    ->set('config', 'system.site')
+    ->save();
+}
