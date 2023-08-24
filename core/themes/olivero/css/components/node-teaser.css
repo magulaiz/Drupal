@@ -57,7 +57,7 @@
 }
 
 :is(.node--view-mode-teaser .primary-image) + .node__title {
-  flex-basis: calc(100% - calc(var(--sp4-5)));
+  flex-basis: calc(100% - var(--sp4-5));
 }
 
 @media (min-width: 62.5rem) {

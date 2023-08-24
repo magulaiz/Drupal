@@ -135,7 +135,7 @@
   --color--green: #3fa21c; /* Green */
 
   /* Header */
-  --header-height-wide-when-fixed: calc(var(--sp6));
+  --header-height-wide-when-fixed: var(--sp6);
 
   /* Width of slide out navigation */
   --mobile-nav-width: 500px;
