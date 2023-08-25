@@ -134,7 +134,6 @@ class Toolbar extends RenderElement {
         '#wrapper_attributes' => [
           'data-drupal-selector' => 'toolbar-extra-item-toggle',
         ],
-        '#id' => 'extra-item-toggle',
         'tab' => [
           '#type' => 'html_tag',
           '#tag' => 'a',
