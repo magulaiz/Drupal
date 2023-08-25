@@ -159,7 +159,10 @@ class ImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $this->file = _file_save_upload_from_form($form['file'], $form_state, 0);
+    /** @var \Drupal\file\Upload\FileElementHelper $fileElementHelper */
+    $fileElementHelper = \Drupal::service('file.element_helper');
+    $files = $fileElementHelper->saveFileUploads($form['file'], $form_state);
+    $this->file = reset($files);
 
     // Ensure we have the file uploaded.
     if (!$this->file) {
