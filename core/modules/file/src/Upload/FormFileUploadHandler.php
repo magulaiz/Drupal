@@ -77,8 +77,8 @@ class FormFileUploadHandler {
     // Return cached objects without processing since the file will have
     // already been processed and the paths in $_FILES will be invalid.
     /** @var \Drupal\file\FileInterface[] $files */
-    if ($files = $this->memoryCache->get($uploadName)) {
-      return $files;
+    if ($cacheItem = $this->memoryCache->get($uploadName)) {
+      return $cacheItem->data;
     }
 
     $uploadedFiles = $this->uploadedFileRetriever->getUploadedFiles($uploadName);
