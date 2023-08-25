@@ -46,7 +46,7 @@ class JsOptimizer implements AssetOptimizerInterface {
       $logger = \Drupal::logger('JS asset optimizer');
       if ($exception instanceof PeastSyntaxException) {
         $position = $exception->getPosition();
-        Error::logException($logger, $exception,  'Syntax error:  @message, File: @asset_file, Line: @asset_line, Column: @asset_column, Index: @asset_index', [
+        Error::logException($logger, $exception, 'Syntax error:  @message, File: @asset_file, Line: @asset_line, Column: @asset_column, Index: @asset_index', [
           '@asset_file' => $js_asset['data'],
           '@asset_line' => $position->getLine(),
           '@asset_column' => $position->getColumn(),
