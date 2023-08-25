@@ -24,8 +24,8 @@ class JsOptimizerUnitTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->optimizer = new JsOptimizer();
+    $logger = $this->createMock('\Psr\Log\LoggerInterface');
+    $this->optimizer = new JsOptimizer($logger);
   }
 
   /**
