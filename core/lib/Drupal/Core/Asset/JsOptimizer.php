@@ -8,11 +8,20 @@ use Peast\Formatter\Compact as CompactFormatter;
 use Peast\Peast;
 use Peast\Renderer;
 use Peast\Syntax\Exception as PeastSyntaxException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Optimizes a JavaScript asset.
  */
 class JsOptimizer implements AssetOptimizerInterface {
+
+  /**
+   * Constructs a new JsOptimizer object.
+   *
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
+   */
+  public function __construct(protected readonly LoggerInterface $logger) {}
 
   /**
    * {@inheritdoc}
@@ -43,10 +52,9 @@ class JsOptimizer implements AssetOptimizerInterface {
       return $renderer->render($ast);
     }
     catch (\Exception $exception) {
-      $logger = \Drupal::logger('JS asset optimizer');
       if ($exception instanceof PeastSyntaxException) {
         $position = $exception->getPosition();
-        Error::logException($logger, $exception, 'Syntax error:  @message, File: @asset_file, Line: @asset_line, Column: @asset_column, Index: @asset_index', [
+        Error::logException($this->logger, $exception, 'Syntax error:  @message, File: @asset_file, Line: @asset_line, Column: @asset_column, Index: @asset_index', [
           '@asset_file' => $js_asset['data'],
           '@asset_line' => $position->getLine(),
           '@asset_column' => $position->getColumn(),
@@ -54,7 +62,7 @@ class JsOptimizer implements AssetOptimizerInterface {
         ]);
       }
       else {
-        Error::logException($logger, $exception);
+        Error::logException($this->logger, $exception);
       }
       return $data;
     }
