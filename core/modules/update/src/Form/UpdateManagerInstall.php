@@ -9,6 +9,7 @@ use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Updater\Updater;
+use Drupal\file\Upload\MessageCollectingErrorCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -168,9 +169,15 @@ class UpdateManagerInstall extends FormBase {
     }
     elseif (!empty($all_files['project_upload']) && $this->moduleHandler->moduleExists('file')) {
       $validators = ['FileExtension' => ['extensions' => $this->archiverManager->getExtensions()]];
-      if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FileSystemInterface::EXISTS_REPLACE))) {
-        // Failed to upload the file. file_save_upload() calls
-        // \Drupal\Core\Messenger\MessengerInterface::addError() on failure.
+      /** @var \Drupal\file\Upload\FormFileUploadHandler $fileUploadHandler */
+      $fileUploadHandler = \Drupal::service('file.form_file_upload_handler');
+      $errorCallback = new MessageCollectingErrorCallback();
+      $files = $fileUploadHandler->saveFileUploads('project_upload', $validators, $errorCallback->onError(...), NULL, FileSystemInterface::EXISTS_REPLACE);
+      $finfo = reset($files);
+      if (!$finfo) {
+        foreach ($errorCallback->getErrors() as $error) {
+          $this->messenger()->addError($error);
+        }
         return;
       }
       $local_cache = $finfo->getFileUri();
