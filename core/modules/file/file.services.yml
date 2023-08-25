@@ -34,9 +34,12 @@ services:
   Drupal\file\Upload\FormUploadedFileRetriever: '@file.form_uploaded_file_retriever'
   file.upload_memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
+  file.default_error_handler:
+    class: Drupal\file\Upload\MessageErrorHandler
+    arguments: ['@messenger', '@logger.channel.file']
   file.form_file_upload_handler:
     class: Drupal\file\Upload\FormFileUploadHandler
-    arguments: ['@file.upload_memory_cache', '@file.upload_handler', '@file.form_uploaded_file_retriever', '@event_dispatcher']
+    arguments: ['@file.upload_memory_cache', '@file.upload_handler', '@file.form_uploaded_file_retriever', '@event_dispatcher', '@file.default_error_handler']
   Drupal\file\Upload\FormFileUploadHandler: '@file.form_file_upload_handler'
   file.element_helper:
     class: Drupal\file\Upload\FileElementHelper

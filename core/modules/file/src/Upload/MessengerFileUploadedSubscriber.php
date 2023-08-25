@@ -22,11 +22,9 @@ class MessengerFileUploadedSubscriber implements EventSubscriberInterface {
 
   /**
    * Conditionally displays a message when a file is uploaded.
-   *
-   * @param \Drupal\file\Upload\FileUploadResult $result
-   *   The file upload result.
    */
-  public function onFileUploaded(FileUploadResult $result): void {
+  public function onFileUploaded(FileUploadedEvent $event): void {
+    $result = $event->result;
     if ($result->isRenamed()) {
       if ($result->isSecurityRename()) {
         $this->messenger->addStatus($this->t('For security reasons, your upload has been renamed to %filename.', [
@@ -45,7 +43,8 @@ class MessengerFileUploadedSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    return [FileUploadedEvent::class => 'onFileUploaded'];
+    $events[FileUploadedEvent::class][] = ['onFileUploaded'];
+    return $events;
   }
 
 }

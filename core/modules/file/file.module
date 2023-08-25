@@ -618,6 +618,9 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   /** @var \Drupal\file\Upload\FormFileUploadHandler $upload_handler */
   $upload_handler = \Drupal::service('file.form_file_upload_handler');
+  if ($destination === FALSE) {
+    $destination = 'temporary://';
+  }
   $files = $upload_handler->saveFileUploads($form_field_name, $validators, $destination, $replace);
   // Return NULL for BC.
   if (count($files) === 0) {

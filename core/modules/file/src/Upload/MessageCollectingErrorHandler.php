@@ -17,9 +17,9 @@ use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
 
 /**
- * An error callback that collects error messages.
+ * An error callback that collects error messages for later retrieval.
  */
-class MessageCollectingErrorCallback {
+class MessageCollectingErrorHandler implements FileUploadErrorHandlerInterface {
 
   use StringTranslationTrait;
 
@@ -55,7 +55,7 @@ class MessageCollectingErrorCallback {
    * @param \Exception $e
    *   The exception that was caught.
    */
-  public function onError(UploadedFileInterface $uploadedFile, string $destination, \Exception $e): void {
+  public function handleError(UploadedFileInterface $uploadedFile, string $destination, \Exception $e): void {
     switch ($e) {
       case $e instanceof FileExistsException:
         $this->errors[] = $this->t('Destination file "%file" exists', ['%file' => $destination . $uploadedFile->getFilename()]);

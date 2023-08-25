@@ -5,8 +5,8 @@ namespace Drupal\file\Upload;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException as SymfonyFileException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Helper class for multiple form file uploads.
@@ -29,6 +29,7 @@ class FormFileUploadHandler {
     protected FileUploadHandler $fileUploadHandler,
     protected FormUploadedFileRetriever $uploadedFileRetriever,
     protected EventDispatcherInterface $eventDispatcher,
+    protected FileUploadErrorHandlerInterface $defaultErrorHandler
   ) {}
 
   /**
@@ -43,7 +44,7 @@ class FormFileUploadHandler {
    * file upload widgets in core do support this. It is advised to use these in
    * any custom form, instead of calling this function.
    *
-   * @param string $uploadKey
+   * @param string $uploadName
    *   The key of the upload form element in the form array.
    * @param array $validators
    *   (optional) An associative array of callback functions used to validate
@@ -53,11 +54,6 @@ class FormFileUploadHandler {
    *   ppt pps odt ods odp". To allow all extensions, you must explicitly set
    *   this array to ['file_validate_extensions' => '']. (Beware: this is not
    *   safe and should only be allowed for trusted users, if at all.)
-   * @param callable $errorHandler
-   *   The error handler. This is a callable that accepts three arguments:
-   *    - \Drupal\file\Upload\UploadedFileInterface $uploadedFile
-   *    - string $destination
-   *    - \Exception $e.
    * @param string $destination
    *   (optional) A string containing the URI that the file should be copied
    *   to.
@@ -71,46 +67,48 @@ class FormFileUploadHandler {
    *   - FileSystemInterface::EXISTS_RENAME: (default) Append
    *     _{incrementing number} until the filename is unique.
    *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
+   * @param callable $errorHandler
+   *   (optional) The error handler. Defaults to the default error handler.
    *
    * @return \Drupal\file\FileInterface[]
-   *   An array of files..
+   *   An array of files.
    */
-  public function saveFileUploads(string $uploadKey, array $validators, callable $errorHandler, ?string $destination = 'temporary://', string $replace = FileSystemInterface::EXISTS_RENAME): array {
+  public function saveFileUploads(string $uploadName, array $validators, ?string $destination = 'temporary://', string $replace = FileSystemInterface::EXISTS_RENAME, FileUploadErrorHandlerInterface $errorHandler = NULL): array {
     // Return cached objects without processing since the file will have
     // already been processed and the paths in $_FILES will be invalid.
     /** @var \Drupal\file\FileInterface[] $files */
-    if ($files = $this->memoryCache->get($uploadKey)) {
+    if ($files = $this->memoryCache->get($uploadName)) {
       return $files;
     }
 
-    $uploadedFiles = $this->uploadedFileRetriever->getUploadedFiles($uploadKey);
+    $uploadedFiles = $this->uploadedFileRetriever->getUploadedFiles($uploadName);
 
     if (!$destination) {
       $destination = 'temporary://';
+    }
+
+    if (!$errorHandler) {
+      $errorHandler = $this->defaultErrorHandler;
     }
 
     $files = [];
     foreach ($uploadedFiles as $i => $uploadedFile) {
       // Use a FormUploadedFile adapter to pass to FileUploadHandler.
       $formUploadedFile = new FormUploadedFile($uploadedFile);
-      $result = NULL;
       try {
         $result = $this->fileUploadHandler->handleFileUpload($formUploadedFile, $validators, $destination, $replace);
+        $this->eventDispatcher->dispatch(new FileUploadedEvent($result));
         $files[$i] = $result->getFile();
       }
       // Only catch exceptions that we can recover from.
       catch (SymfonyFileException | FileException | FileValidationException $e) {
-        call_user_func_array($errorHandler, [
-          $formUploadedFile,
-          $destination,
-          $e,
-        ]);
+        $errorHandler->handleError($formUploadedFile, $destination, $e);
         // Set to keep the array index in sync.
         $files[$i] = NULL;
       }
     }
     // Add files to the cache.
-    $this->memoryCache->set($uploadKey, $files);
+    $this->memoryCache->set($uploadName, $files);
 
     return $files;
   }

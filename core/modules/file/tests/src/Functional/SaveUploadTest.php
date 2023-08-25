@@ -27,7 +27,7 @@ class SaveUploadTest extends FileManagedTestBase {
    *
    * @var array
    */
-  protected static $modules = ['dblog', 'file_validator_test'];
+  protected static $modules = ['file_validator_test'];
 
   /**
    * {@inheritdoc}

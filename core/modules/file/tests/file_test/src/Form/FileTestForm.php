@@ -5,7 +5,6 @@ namespace Drupal\file_test\Form;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Upload\MessageCollectingErrorCallback;
 
 /**
  * File test form class.
@@ -118,9 +117,7 @@ class FileTestForm implements FormInterface {
 
     /** @var \Drupal\file\Upload\FormFileUploadHandler $uploadHandler */
     $uploadHandler = \Drupal::service('file.form_file_upload_handler');
-    $errorHandler = new MessageCollectingErrorCallback(\Drupal::logger('file_test'));
-    /** @var \Drupal\file\Upload\FileUploadResult $result */
-    $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $errorHandler->onError(...), $destination, $form_state->getValue('file_test_replace'));
+    $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $destination, $form_state->getValue('file_test_replace'));
     $file = reset($files);
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
@@ -129,7 +126,7 @@ class FileTestForm implements FormInterface {
       \Drupal::messenger()->addStatus(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
       \Drupal::messenger()->addStatus(t('You WIN!'));
     }
-    elseif ($file === FALSE) {
+    elseif ($file === NULL) {
       \Drupal::messenger()->addError(t('Epic upload FAIL!'));
     }
   }
