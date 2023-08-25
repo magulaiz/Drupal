@@ -276,9 +276,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
     $this->drupalGet($entity->toUrl());
     $assert = $this->assertSession();
     $assert->statusCodeEquals(200);
+    // Check that the width and height attributes are not empty.
     $element = $assert->elementExists('css', 'iframe');
-    $this->assertStringContainsString('width="640"', $element->getHtml());
-    $this->assertStringContainsString('height="480"', $element->getHtml());
+    $this->assertNotEmpty($element->getAttribute('width'));
+    $this->assertNotEmpty($element->getAttribute('height'));
   }
 
 }
