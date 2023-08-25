@@ -109,7 +109,9 @@ class DateRangeItem extends DateTimeItem {
 
     // Just pick a date in the past year. No guidance is provided by this Field
     // type.
+    // phpcs:disable
     $start = \Drupal::time()->getRequestTime() - mt_rand(0, 86400 * 365) - 86400;
+    // phpcs:enable
     $end = $start + 86400;
     if ($type == static::DATETIME_TYPE_DATETIME) {
       $values['value'] = gmdate(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $start);
