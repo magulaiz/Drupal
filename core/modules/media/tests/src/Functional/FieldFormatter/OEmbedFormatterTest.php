@@ -235,4 +235,50 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
     }
   }
 
+  /**
+   * Tests oEmbed formatter with empty width and height settings.
+   */
+  public function testEmptyWidthHeightSettings() {
+    $account = $this->drupalCreateUser(['view media']);
+    $this->drupalLogin($account);
+
+    $media_type = $this->createMediaType('oembed:video');
+
+    $source = $media_type->getSource();
+    $source_field = $source->getSourceFieldDefinition($media_type);
+
+    EntityViewDisplay::create([
+      'targetEntityType' => 'media',
+      'bundle' => $media_type->id(),
+      'mode' => 'full',
+      'status' => TRUE,
+    ])->removeComponent('thumbnail')
+      ->setComponent($source_field->getName(), [
+        'type' => 'oembed',
+        'settings' => [
+          'max_width' => '',
+          'max_height' => '',
+        ],
+      ])
+      ->save();
+
+    $this->hijackProviderEndpoints();
+
+    ResourceController::setResourceUrl('https://vimeo.com/7073899', $this->getFixturesDirectory() . '/video_vimeo.json');
+    UrlResolver::setEndpointUrl('https://vimeo.com/7073899', 'video_vimeo.json');
+
+    $entity = Media::create([
+      'bundle' => $media_type->id(),
+      $source_field->getName() => 'https://vimeo.com/7073899',
+    ]);
+    $entity->save();
+
+    $this->drupalGet($entity->toUrl());
+    $assert = $this->assertSession();
+    $assert->statusCodeEquals(200);
+    $element = $assert->elementExists('css', 'iframe');
+    $this->assertStringContainsString('width="640"', $element->getHtml());
+    $this->assertStringContainsString('height="480"', $element->getHtml());
+  }
+
 }
