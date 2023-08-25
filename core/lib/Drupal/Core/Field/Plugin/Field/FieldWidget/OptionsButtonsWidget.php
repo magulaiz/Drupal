@@ -59,7 +59,7 @@ class OptionsButtonsWidget extends OptionsWidgetBase {
     $bundles = $items->getItemDefinition()->getSettings();
     $type = implode('', $bundles['handler_settings']['target_bundles']);
     if (count($options) < 1) {
-      $element['#description'] = $this->t('There are no @type types available. Please contact a site administrator.', [
+      $element['#description'] = $this->t('There are no @type types available. Contact the site administrator.', [
         '@type' => $type,
       ]);
     }
