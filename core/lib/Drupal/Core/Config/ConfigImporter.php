@@ -299,8 +299,8 @@ class ConfigImporter {
    */
   public function hasUnprocessedConfigurationChanges() {
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
-      foreach (['delete', 'create', 'rename', 'update'] as $op) {
-        if (count($this->getUnprocessedConfiguration($op, $collection))) {
+      foreach (['delete', 'create', 'rename', 'update'] as $operation) {
+        if (count($this->getUnprocessedConfiguration($operation, $collection))) {
           return TRUE;
         }
       }
@@ -327,19 +327,19 @@ class ConfigImporter {
    *
    * @param string $collection
    *   The configuration collection to set a change as processed for.
-   * @param string $op
+   * @param string $operation
    *   The change operation performed, either delete, create, rename, or update.
    * @param string $name
    *   The name of the configuration processed.
    */
-  protected function setProcessedConfiguration($collection, $op, $name) {
-    $this->processedConfiguration[$collection][$op][] = $name;
+  protected function setProcessedConfiguration($collection, $operation, $name) {
+    $this->processedConfiguration[$collection][$operation][] = $name;
   }
 
   /**
    * Gets a list of unprocessed changes for a given operation.
    *
-   * @param string $op
+   * @param string $operation
    *   The change operation to get the unprocessed list for, either delete,
    *   create, rename, or update.
    * @param string $collection
@@ -349,8 +349,8 @@ class ConfigImporter {
    * @return array
    *   An array of configuration names.
    */
-  public function getUnprocessedConfiguration($op, $collection = StorageInterface::DEFAULT_COLLECTION) {
-    return array_diff($this->storageComparer->getChangelist($op, $collection), $this->processedConfiguration[$collection][$op]);
+  public function getUnprocessedConfiguration($operation, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    return array_diff($this->storageComparer->getChangelist($operation, $collection), $this->processedConfiguration[$collection][$operation]);
   }
 
   /**
@@ -368,13 +368,13 @@ class ConfigImporter {
    *
    * @param string $type
    *   The type of extension, either 'theme' or 'module'.
-   * @param string $op
+   * @param string $operation
    *   The change operation performed, either install or uninstall.
    * @param string $name
    *   The name of the extension processed.
    */
-  protected function setProcessedExtension($type, $op, $name) {
-    $this->processedExtensions[$type][$op][] = $name;
+  protected function setProcessedExtension($type, $operation, $name) {
+    $this->processedExtensions[$type][$operation][] = $name;
   }
 
   /**
@@ -488,16 +488,16 @@ class ConfigImporter {
    *
    * @param string $type
    *   The type of extension, either 'theme' or 'module'.
-   * @param string $op
+   * @param string $operation
    *   The change operation to get the unprocessed list for, either install
    *   or uninstall.
    *
    * @return array
    *   An array of extension names.
    */
-  public function getExtensionChangelist($type, $op = NULL) {
-    if ($op) {
-      return $this->extensionChangelist[$type][$op];
+  public function getExtensionChangelist($type, $operation = NULL) {
+    if ($operation) {
+      return $this->extensionChangelist[$type][$operation];
     }
     return $this->extensionChangelist[$type];
   }
@@ -592,12 +592,12 @@ class ConfigImporter {
 
     $sync_steps = [];
     $modules = $this->getUnprocessedExtensions('module');
-    foreach (['install', 'uninstall'] as $op) {
-      $this->totalExtensionsToProcess += count($modules[$op]);
+    foreach (['install', 'uninstall'] as $operation) {
+      $this->totalExtensionsToProcess += count($modules[$operation]);
     }
     $themes = $this->getUnprocessedExtensions('theme');
-    foreach (['install', 'uninstall'] as $op) {
-      $this->totalExtensionsToProcess += count($themes[$op]);
+    foreach (['install', 'uninstall'] as $operation) {
+      $this->totalExtensionsToProcess += count($themes[$operation]);
     }
 
     // We have extensions to process.
@@ -646,8 +646,8 @@ class ConfigImporter {
     if ($this->totalConfigurationToProcess == 0) {
       $this->storageComparer->reset();
       foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
-        foreach (['delete', 'create', 'rename', 'update'] as $op) {
-          $this->totalConfigurationToProcess += count($this->getUnprocessedConfiguration($op, $collection));
+        foreach (['delete', 'create', 'rename', 'update'] as $operation) {
+          $this->totalConfigurationToProcess += count($this->getUnprocessedConfiguration($operation, $collection));
         }
       }
 
@@ -670,8 +670,8 @@ class ConfigImporter {
       }
       $processed_count = 0;
       foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
-        foreach (['delete', 'create', 'rename', 'update'] as $op) {
-          $processed_count += count($this->processedConfiguration[$collection][$op]);
+        foreach (['delete', 'create', 'rename', 'update'] as $operation) {
+          $processed_count += count($this->processedConfiguration[$collection][$operation]);
         }
       }
       $context['finished'] = $processed_count / $this->totalConfigurationToProcess;
@@ -740,15 +740,15 @@ class ConfigImporter {
    *   on. If there is nothing left to do returns FALSE;
    */
   protected function getNextExtensionOperation() {
-    foreach (['uninstall', 'install'] as $op) {
-      $types = $op === 'uninstall' ? ['theme', 'module'] : ['module', 'theme'];
+    foreach (['uninstall', 'install'] as $operation) {
+      $types = $operation === 'uninstall' ? ['theme', 'module'] : ['module', 'theme'];
       foreach ($types as $type) {
         $unprocessed = $this->getUnprocessedExtensions($type);
-        if (!empty($unprocessed[$op])) {
+        if (!empty($unprocessed[$operation])) {
           return [
-            'op' => $op,
+            'op' => $operation,
             'type' => $type,
-            'name' => array_shift($unprocessed[$op]),
+            'name' => array_shift($unprocessed[$operation]),
           ];
         }
       }
@@ -767,11 +767,11 @@ class ConfigImporter {
     // The order configuration operations is processed is important. Deletes
     // have to come first so that recreates can work.
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
-      foreach (['delete', 'create', 'rename', 'update'] as $op) {
-        $config_names = $this->getUnprocessedConfiguration($op, $collection);
+      foreach (['delete', 'create', 'rename', 'update'] as $operation) {
+        $config_names = $this->getUnprocessedConfiguration($operation, $collection);
         if (!empty($config_names)) {
           return [
-            'op' => $op,
+            'op' => $operation,
             'name' => array_shift($config_names),
             'collection' => $collection,
           ];
@@ -825,7 +825,7 @@ class ConfigImporter {
    *
    * @param string $collection
    *   The configuration collection to process changes for.
-   * @param string $op
+   * @param string $operation
    *   The change operation.
    * @param string $name
    *   The name of the configuration to process.
@@ -835,21 +835,21 @@ class ConfigImporter {
    *   set, otherwise the exception message is logged and the configuration
    *   is skipped.
    */
-  protected function processConfiguration($collection, $op, $name) {
+  protected function processConfiguration($collection, $operation, $name) {
     try {
       $processed = FALSE;
       if ($collection == StorageInterface::DEFAULT_COLLECTION) {
-        $processed = $this->importInvokeOwner($collection, $op, $name);
+        $processed = $this->importInvokeOwner($collection, $operation, $name);
       }
       if (!$processed) {
-        $this->importConfig($collection, $op, $name);
+        $this->importConfig($collection, $operation, $name);
       }
     }
     catch (\Exception $e) {
-      $this->logError($this->t('Unexpected error during import with operation @op for @name: @message', ['@op' => $op, '@name' => $name, '@message' => $e->getMessage()]));
+      $this->logError($this->t('Unexpected error during import with operation @op for @name: @message', ['@op' => $operation, '@name' => $name, '@message' => $e->getMessage()]));
       // Error for that operation was logged, mark it as processed so that
       // the import can continue.
-      $this->setProcessedConfiguration($collection, $op, $name);
+      $this->setProcessedConfiguration($collection, $operation, $name);
     }
   }
 
@@ -858,18 +858,18 @@ class ConfigImporter {
    *
    * @param string $type
    *   The type of extension, either 'module' or 'theme'.
-   * @param string $op
+   * @param string $operation
    *   The change operation.
    * @param string $name
    *   The name of the extension to process.
    */
-  protected function processExtension($type, $op, $name) {
+  protected function processExtension($type, $operation, $name) {
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op([$name], FALSE);
+      $this->moduleInstaller->$operation([$name], FALSE);
       // Installing a module can cause a kernel boot therefore reinject all the
       // services.
       $this->reInjectMe();
@@ -883,15 +883,15 @@ class ConfigImporter {
       // need to import this before doing any. If there are no uninstalls and
       // the default or admin theme is changing this will be picked up whilst
       // processing configuration.
-      if ($op == 'uninstall' && $this->processedSystemTheme === FALSE) {
+      if ($operation == 'uninstall' && $this->processedSystemTheme === FALSE) {
         $this->importConfig(StorageInterface::DEFAULT_COLLECTION, 'update', 'system.theme');
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;
       }
-      \Drupal::service('theme_installer')->$op([$name]);
+      \Drupal::service('theme_installer')->$operation([$name]);
     }
 
-    $this->setProcessedExtension($type, $op, $name);
+    $this->setProcessedExtension($type, $operation, $name);
   }
 
   /**
@@ -903,7 +903,7 @@ class ConfigImporter {
    *
    * @param string $collection
    *   The configuration collection.
-   * @param string $op
+   * @param string $operation
    *   The change operation.
    * @param string $name
    *   The name of the configuration to process.
@@ -913,8 +913,8 @@ class ConfigImporter {
    *
    * @throws \Drupal\Core\Config\ConfigImporterException
    */
-  protected function checkOp($collection, $op, $name) {
-    if ($op == 'rename') {
+  protected function checkOp($collection, $operation, $name) {
+    if ($operation == 'rename') {
       $names = $this->storageComparer->extractRenameNames($name);
       $target_exists = $this->storageComparer->getTargetStorage($collection)->exists($names['new_name']);
       if ($target_exists) {
@@ -929,12 +929,12 @@ class ConfigImporter {
       return TRUE;
     }
     $target_exists = $this->storageComparer->getTargetStorage($collection)->exists($name);
-    switch ($op) {
+    switch ($operation) {
       case 'delete':
         if (!$target_exists) {
           // The configuration has already been deleted. For example, a field
           // is automatically deleted if all the instances are.
-          $this->setProcessedConfiguration($collection, $op, $name);
+          $this->setProcessedConfiguration($collection, $operation, $name);
           return FALSE;
         }
         break;
@@ -964,7 +964,7 @@ class ConfigImporter {
           // Mark as processed so that the synchronization continues. Once the
           // the current synchronization is complete it will show up as a
           // create.
-          $this->setProcessedConfiguration($collection, $op, $name);
+          $this->setProcessedConfiguration($collection, $operation, $name);
           return FALSE;
         }
         break;
@@ -977,12 +977,12 @@ class ConfigImporter {
    *
    * @param string $collection
    *   The configuration collection.
-   * @param string $op
+   * @param string $operation
    *   The change operation.
    * @param string $name
    *   The name of the configuration to process.
    */
-  protected function importConfig($collection, $op, $name) {
+  protected function importConfig($collection, $operation, $name) {
     // Allow config factory overriders to use a custom configuration object if
     // they are responsible for the collection.
     $overrider = $this->configManager->getConfigCollectionInfo()->getOverrideService($collection);
@@ -992,7 +992,7 @@ class ConfigImporter {
     else {
       $config = new Config($name, $this->storageComparer->getTargetStorage($collection), $this->eventDispatcher, $this->typedConfigManager);
     }
-    if ($op == 'delete') {
+    if ($operation == 'delete') {
       $config->delete();
     }
     else {
@@ -1000,7 +1000,7 @@ class ConfigImporter {
       $config->setData($data ? $data : []);
       $config->save();
     }
-    $this->setProcessedConfiguration($collection, $op, $name);
+    $this->setProcessedConfiguration($collection, $operation, $name);
   }
 
   /**
@@ -1013,7 +1013,7 @@ class ConfigImporter {
    *
    * @param string $collection
    *   The configuration collection.
-   * @param string $op
+   * @param string $operation
    *   The change operation to get the unprocessed list for, either delete,
    *   create, rename, or update.
    * @param string $name
@@ -1027,9 +1027,9 @@ class ConfigImporter {
    *   Thrown if the data is owned by an entity type, but the entity storage
    *   does not support imports.
    */
-  protected function importInvokeOwner($collection, $op, $name) {
+  protected function importInvokeOwner($collection, $operation, $name) {
     // Renames are handled separately.
-    if ($op == 'rename') {
+    if ($operation == 'rename') {
       return $this->importInvokeRename($collection, $name);
     }
     // Validate the configuration object name before importing it.
@@ -1046,7 +1046,7 @@ class ConfigImporter {
         $new_config->setData($data);
       }
 
-      $method = 'import' . ucfirst($op);
+      $method = 'import' . ucfirst($operation);
       $entity_storage = $this->configManager->getEntityTypeManager()->getStorage($entity_type);
       // Call to the configuration entity's storage to handle the configuration
       // change.
@@ -1054,7 +1054,7 @@ class ConfigImporter {
         throw new EntityStorageException(sprintf('The entity storage "%s" for the "%s" entity type does not support imports', get_class($entity_storage), $entity_type));
       }
       $entity_storage->$method($name, $new_config, $old_config);
-      $this->setProcessedConfiguration($collection, $op, $name);
+      $this->setProcessedConfiguration($collection, $operation, $name);
       return TRUE;
     }
     return FALSE;

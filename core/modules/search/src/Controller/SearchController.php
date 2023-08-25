@@ -196,19 +196,19 @@ class SearchController extends ControllerBase {
    *
    * @param \Drupal\search\SearchPageInterface $search_page
    *   The search page entity.
-   * @param string $op
+   * @param string $operation
    *   The operation to perform, usually 'enable' or 'disable'.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect back to the search settings page.
    */
-  public function performOperation(SearchPageInterface $search_page, $op) {
-    $search_page->$op()->save();
+  public function performOperation(SearchPageInterface $search_page, $operation) {
+    $search_page->$operation()->save();
 
-    if ($op == 'enable') {
+    if ($operation == 'enable') {
       $this->messenger()->addStatus($this->t('The %label search page has been enabled.', ['%label' => $search_page->label()]));
     }
-    elseif ($op == 'disable') {
+    elseif ($operation == 'disable') {
       $this->messenger()->addStatus($this->t('The %label search page has been disabled.', ['%label' => $search_page->label()]));
     }
 

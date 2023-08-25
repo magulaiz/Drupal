@@ -155,7 +155,7 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * Stores the values passed to a toolkit call.
    *
-   * @param string $op
+   * @param string $operation
    *   One of the toolkit methods 'parseFile', 'save', 'settings', or 'apply'.
    * @param array $args
    *   Values passed to hook.
@@ -163,13 +163,13 @@ class TestToolkit extends ImageToolkitBase {
    * @see \Drupal\Tests\system\Functional\Image\ToolkitTestBase::imageTestReset()
    * @see \Drupal\Tests\system\Functional\Image\ToolkitTestBase::imageTestGetAllCalls()
    */
-  protected function logCall($op, $args) {
+  protected function logCall($operation, $args) {
     $results = $this->state->get('image_test.results', []);
-    $results[$op][] = $args;
+    $results[$operation][] = $args;
     // A call to apply is also logged under its operation name whereby the
     // array of arguments are logged as separate arguments, this because at the
     // ImageInterface level we still have methods named after the operations.
-    if ($op === 'apply') {
+    if ($operation === 'apply') {
       $operation = array_shift($args);
       $results[$operation][] = array_values(reset($args));
     }

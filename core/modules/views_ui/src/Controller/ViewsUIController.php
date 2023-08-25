@@ -147,7 +147,7 @@ class ViewsUIController extends ControllerBase {
    *
    * @param \Drupal\views\ViewEntityInterface $view
    *   The view being acted upon.
-   * @param string $op
+   * @param string $operation
    *   The operation to perform, e.g., 'enable' or 'disable'.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
@@ -156,9 +156,9 @@ class ViewsUIController extends ControllerBase {
    *   Either returns a rebuilt listing page as an AJAX response, or redirects
    *   back to the listing page.
    */
-  public function ajaxOperation(ViewEntityInterface $view, $op, Request $request) {
+  public function ajaxOperation(ViewEntityInterface $view, $operation, Request $request) {
     // Perform the operation.
-    $view->$op()->save();
+    $view->$operation()->save();
 
     // If the request is via AJAX, return the rendered list as JSON.
     if ($request->request->get('js')) {

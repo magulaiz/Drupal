@@ -46,7 +46,7 @@ function file_test_reset() {
  *
  * Arguments are gathered since file_test_reset() was last called.
  *
- * @param string $op
+ * @param string $operation
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'insert', 'update', 'copy', 'move', 'delete'.
  *
@@ -56,9 +56,9 @@ function file_test_reset() {
  * @see _file_test_log_call()
  * @see file_test_reset()
  */
-function file_test_get_calls($op) {
+function file_test_get_calls($operation) {
   $results = \Drupal::state()->get('file_test.results', []);
-  return $results[$op];
+  return $results[$operation];
 }
 
 /**
@@ -76,7 +76,7 @@ function file_test_get_all_calls() {
 /**
  * Store the values passed to a hook invocation.
  *
- * @param string $op
+ * @param string $operation
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'insert', 'update', 'copy', 'move', 'delete'.
  * @param array $args
@@ -85,10 +85,10 @@ function file_test_get_all_calls() {
  * @see file_test_get_calls()
  * @see file_test_reset()
  */
-function _file_test_log_call($op, $args) {
+function _file_test_log_call($operation, $args) {
   if (\Drupal::state()->get('file_test.count_hook_invocations', TRUE)) {
     $results = \Drupal::state()->get('file_test.results', []);
-    $results[$op][] = $args;
+    $results[$operation][] = $args;
     \Drupal::state()->set('file_test.results', $results);
   }
 }
@@ -96,7 +96,7 @@ function _file_test_log_call($op, $args) {
 /**
  * Load the appropriate return value.
  *
- * @param string $op
+ * @param string $operation
  *   One of the hook_file_[validate,download] operations.
  *
  * @return mixed
@@ -105,15 +105,15 @@ function _file_test_log_call($op, $args) {
  * @see file_test_set_return()
  * @see file_test_reset()
  */
-function _file_test_get_return($op) {
-  $return = \Drupal::state()->get('file_test.return', [$op => NULL]);
-  return $return[$op];
+function _file_test_get_return($operation) {
+  $return = \Drupal::state()->get('file_test.return', [$operation => NULL]);
+  return $return[$operation];
 }
 
 /**
  * Assign a return value for a given operation.
  *
- * @param string $op
+ * @param string $operation
  *   One of the hook_file_[validate,download] operations.
  * @param mixed $value
  *   Value for the hook to return.
@@ -121,9 +121,9 @@ function _file_test_get_return($op) {
  * @see _file_test_get_return()
  * @see file_test_reset()
  */
-function file_test_set_return($op, $value) {
+function file_test_set_return($operation, $value) {
   $return = \Drupal::state()->get('file_test.return', []);
-  $return[$op] = $value;
+  $return[$operation] = $value;
   \Drupal::state()->set('file_test.return', $return);
 }
 

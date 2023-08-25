@@ -60,16 +60,16 @@ trait EntityDefinitionTestTrait {
   /**
    * Performs an entity type definition update.
    *
-   * @param string $op
+   * @param string $operation
    *   The operation to perform, either static::DEFINITION_CREATED or
    *   static::DEFINITION_UPDATED.
    * @param string $entity_type_id
    *   The entity type ID.
    */
-  protected function doEntityUpdate($op, $entity_type_id) {
+  protected function doEntityUpdate($operation, $entity_type_id) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
-    switch ($op) {
+    switch ($operation) {
       case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
         \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
         break;
@@ -86,7 +86,7 @@ trait EntityDefinitionTestTrait {
   /**
    * Performs a field storage definition update.
    *
-   * @param string $op
+   * @param string $operation
    *   The operation to perform, possible values are static::DEFINITION_CREATED,
    *   static::DEFINITION_UPDATED or static::DEFINITION_DELETED.
    * @param array|null $storage_definition
@@ -94,8 +94,8 @@ trait EntityDefinitionTestTrait {
    * @param array|null $original_storage_definition
    *   The original field storage definition.
    */
-  protected function doFieldUpdate($op, $storage_definition = NULL, $original_storage_definition = NULL) {
-    switch ($op) {
+  protected function doFieldUpdate($operation, $storage_definition = NULL, $original_storage_definition = NULL) {
+    switch ($operation) {
       case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
         \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
         break;

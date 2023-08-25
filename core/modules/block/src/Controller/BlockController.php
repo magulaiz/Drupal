@@ -45,14 +45,14 @@ class BlockController extends ControllerBase {
    *
    * @param \Drupal\block\BlockInterface $block
    *   The block being acted upon.
-   * @param string $op
+   * @param string $operation
    *   The operation to perform, e.g., 'enable' or 'disable'.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect back to the listing page.
    */
-  public function performOperation(BlockInterface $block, $op) {
-    $block->$op()->save();
+  public function performOperation(BlockInterface $block, $operation) {
+    $block->$operation()->save();
     $this->messenger()->addStatus($this->t('The block settings have been updated.'));
     return $this->redirect('block.admin_display');
   }
