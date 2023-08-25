@@ -166,6 +166,29 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalGet('test-page');
     $this->assertSession()->linkExists($node_title);
 
+    // Enable the settings "Provide menu link by default" to content type
+    // and verify that the "Menu Settings" enables automatically while creating
+    // a new node.
+    $edit = [
+      'menu_link_by_default' => 1,
+    ];
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->checkboxChecked('edit-menu-enabled');
+
+    // Disable the settings "Provide menu link by default" and verify that the
+    // "Menu Settings" does not enable automatically while creating a new node.
+    $edit = [
+      'menu_link_by_default' => 0,
+    ];
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->checkboxNotChecked('edit-menu-enabled');
+
     // Make sure the menu links only appear when the node is published.
     // These buttons just appear for 'administer nodes' users.
     $admin_user = $this->drupalCreateUser([

@@ -21,3 +21,6 @@ node.type.*.third_party.menu_ui:
     parent:
       type: string
       label: 'Parent'
+    link_by_default:
+      type: boolean
+      label: 'Provide menu link by default'
