@@ -5,7 +5,6 @@ namespace Drupal\file\Upload;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +32,6 @@ class FileElementHelper {
     protected FileSystemInterface $fileSystem,
     protected LoggerInterface $logger,
     protected MessengerInterface $messenger,
-    protected RendererInterface $renderer,
     protected FormFileUploadHandler $formUploadHandler,
     protected FormUploadedFileRetriever $uploadedFileRetriever,
   ) {}
@@ -80,7 +78,15 @@ class FileElementHelper {
     $files = array_filter($files);
 
     if (count($errorHandler->getErrors()) > 0) {
-      $formState->setError($element, $this->renderErrorMessage($errorHandler->getErrors()));
+      $formState->setError($element, [
+        'error' => [
+          '#markup' => $this->t('One or more files could not be uploaded.'),
+        ],
+        'item_list' => [
+          '#theme' => 'item_list',
+          '#items' => $errorHandler->getErrors(),
+        ],
+      ]);
     }
 
     if (count($files) === 0) {
@@ -93,30 +99,6 @@ class FileElementHelper {
     // Value callback expects FIDs to be keys.
     $fids = array_map(fn($file) => $file->id(), $files);
     return array_combine($fids, $files);
-  }
-
-  /**
-   * Renders an error message from multiple errors.
-   *
-   * This is needed because only one error per element is supported.
-   *
-   * @param array $errors
-   *   The errors to render.
-   *
-   * @return string
-   *   The rendered error message.
-   */
-  protected function renderErrorMessage(array $errors): string {
-    $render_array = [
-      'error' => [
-        '#markup' => $this->t('One or more files could not be uploaded.'),
-      ],
-      'item_list' => [
-        '#theme' => 'item_list',
-        '#items' => $errors,
-      ],
-    ];
-    return $this->renderer->renderPlain($render_array);
   }
 
 }
