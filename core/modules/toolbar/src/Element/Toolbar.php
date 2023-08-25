@@ -138,10 +138,10 @@ class Toolbar extends RenderElement {
         'tab' => [
           '#type' => 'html_tag',
           '#tag' => 'a',
-          '#aria-label' => t('...'),
           '#value' => t('...'),
           '#attributes' => [
             'type' => 'button',
+            '#aria-label' => t('More toolbar items'),
             'data-toolbar-extra-item-toggle-button' => TRUE,
           ],
         ],
