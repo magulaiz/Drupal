@@ -415,7 +415,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media');
     $this->assertEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000));
     $assert_session->elementNotExists('css', '.ck-widget.drupal-media .media');
-    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Please save your work and reload this page.'));
+    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Save your work and reload this page.'));
     // Now assert that the error doesn't appear when the override to force an
     // error is removed.
     $this->container->get('state')->set('test_media_filter_controller_throw_error', FALSE);
@@ -791,7 +791,7 @@ class MediaTest extends WebDriverTestBase {
   public function testTranslationAlt() {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);
     $this->resetAll();
-    ConfigurableLanguage::create(['id' => 'fr'])->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
     ContentLanguageSettings::loadByEntityTypeBundle('media', 'image')
       ->setDefaultLangcode('en')
       ->setLanguageAlterable(TRUE)
@@ -1671,6 +1671,27 @@ class MediaTest extends WebDriverTestBase {
 })()
 JS;
     return $this->getSession()->evaluateScript($javascript);
+  }
+
+  /**
+   * Ensure media preview isn't clickable.
+   */
+  public function testMediaPointerEvent() {
+    $entityViewDisplay = EntityViewDisplay::load('media.image.view_mode_1');
+    $thumbnail = $entityViewDisplay->getComponent('thumbnail');
+    $thumbnail['settings']['image_link'] = 'file';
+    $entityViewDisplay->setComponent('thumbnail', $thumbnail);
+    $entityViewDisplay->save();
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $url = $this->host->toUrl('edit-form');
+    $this->drupalGet($url);
+    $this->waitForEditor();
+    $assert_session->waitForLink('default alt');
+    $page->find('css', '.ck .drupal-media')->click();
+    // Assert that the media preview is not clickable by comparing the URL.
+    $this->assertEquals($url->toString(), $this->getUrl());
   }
 
 }

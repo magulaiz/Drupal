@@ -8,8 +8,11 @@ core.entity_view_mode.*.*:
       type: string
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'The human-readable name of the view mode'
+    description:
+      type: text
+      label: 'Description'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -25,8 +28,11 @@ core.entity_form_mode.*.*:
       type: string
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
+    description:
+      type: text
+      label: 'Description'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -372,10 +378,10 @@ field.formatter.settings.timestamp_ago:
   label: 'Timestamp ago display format settings'
   mapping:
     future_format:
-      type: label
+      type: required_label
       label: 'Future format'
     past_format:
-      type: label
+      type: required_label
       label: 'Past format'
     granularity:
       type: integer

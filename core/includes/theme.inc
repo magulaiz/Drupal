@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -1629,6 +1630,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
         'colspan' => 2,
         'class' => ['field-label'],
       ],
+      [],
       t('Order', [], ['context' => 'Sort order']),
     ];
     $rows = [];
@@ -1656,9 +1658,17 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       $delta_element = $item['_weight'];
       unset($item['_weight']);
 
+      // Render actions in a separate column.
+      $actions = [];
+      if (isset($item['_actions'])) {
+        $actions = $item['_actions'];
+        unset($item['_actions']);
+      }
+
       $cells = [
         ['data' => '', 'class' => ['field-multiple-drag']],
         ['data' => $item],
+        ['data' => $actions],
         ['data' => $delta_element, 'class' => ['delta-order']],
       ];
       $rows[] = [
@@ -1827,6 +1837,7 @@ function template_preprocess_pager(&$variables) {
     $items['pages'][$i]['attributes'] = new Attribute();
     if ($i == $pager_current) {
       $variables['current'] = $i;
+      $items['pages'][$i]['attributes']->setAttribute('aria-current', new TranslatableMarkup('Current page'));
     }
   }
   // Add an ellipsis if there are further next pages.

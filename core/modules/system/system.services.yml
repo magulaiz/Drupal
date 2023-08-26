@@ -41,7 +41,7 @@ services:
       - { name: event_subscriber }
   system.config_cache_tag:
     class: Drupal\system\EventSubscriber\ConfigCacheTag
-    arguments: ['@theme_handler', '@cache_tags.invalidator']
+    arguments: ['@theme_handler', '@cache_tags.invalidator', '@theme.registry']
     tags:
       - { name: event_subscriber }
   system.timezone_resolver:
@@ -71,3 +71,9 @@ services:
     arguments: ['%authentication_providers%', '@config.factory', '@router.builder']
     tags:
       - { name: event_subscriber }
+  Drupal\system\ModuleAdminLinksHelper: '@system.module_admin_links_helper'
+  system.module_admin_links_helper:
+    class: Drupal\system\ModuleAdminLinksHelper
+    arguments: ['@menu.link_tree', '@system.module_admin_links_memory_cache']
+  system.module_admin_links_memory_cache:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
