@@ -20,53 +20,32 @@ class LanguagePluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public static function providerGetDynamicPluginConfig(): array {
-    $un_expected_output = [
-      'language' => [
-        'textPartLanguage' => [
-          [
-            'title' => 'Arabic',
-            'languageCode' => 'ar',
-            'textDirection' => 'rtl',
-          ],
-          [
-            'title' => 'Chinese, Simplified',
-            'languageCode' => 'zh-hans',
-          ],
-          [
-            'title' => 'English',
-            'languageCode' => 'en',
-          ],
-          [
-            'title' => 'French',
-            'languageCode' => 'fr',
-          ],
-          [
-            'title' => 'Russian',
-            'languageCode' => 'ru',
-          ],
-          [
-            'title' => 'Spanish',
-            'languageCode' => 'es',
-          ],
-        ],
-      ],
-    ];
+    $un_language_list = LanguageManager::getUnitedNationsLanguageList();
+    $standard_language_list = LanguageManager::getStandardLanguageList();
     return [
       'un' => [
         ['language_list' => 'un'],
-        $un_expected_output,
+        [
+          'language' => [
+            'textPartLanguage' => static::buildExpectedDynamicConfig($un_language_list),
+          ],
+        ],
       ],
       'all' => [
         ['language_list' => 'all'],
         [
           'language' => [
-            'textPartLanguage' => static::buildExpectedDynamicConfig(LanguageManager::getStandardLanguageList()),
+            'textPartLanguage' => static::buildExpectedDynamicConfig($standard_language_list),
           ],
         ],
       ],
       'default configuration' => [
         [],
-        $un_expected_output,
+        [
+          'language' => [
+            'textPartLanguage' => static::buildExpectedDynamicConfig($un_language_list),
+          ],
+        ],
       ],
     ];
   }
