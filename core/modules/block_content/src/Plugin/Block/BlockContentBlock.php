@@ -174,7 +174,11 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   protected function blockAccess(AccountInterface $account) {
     if ($this->getEntity()) {
-      return $this->getEntity()->access('view', $account, TRUE);
+      $blockContent = $this->getEntity();
+      if (!$blockContent->get('status')->value && !$blockContent->access('view', $account)) {
+        return AccessResult::forbidden();
+      }
+      return $blockContent->access('view', $account, TRUE);
     }
     return AccessResult::forbidden();
   }
@@ -207,10 +211,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     if (!isset($this->blockContent)) {
       $uuid = $this->getDerivativeId();
       if ($id = $this->uuidLookup->get($uuid)) {
-        $blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
-        if ($blockContent->get('status') !== NULL && $blockContent->get('status')->value) {
-          $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
-        }
+        $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
       }
     }
     return $this->blockContent;
