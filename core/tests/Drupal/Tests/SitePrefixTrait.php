@@ -10,6 +10,23 @@ use Drupal\Component\FileSystem\FileSystem;
 trait SitePrefixTrait {
 
   /**
+   * The test lock ID.
+   *
+   * A random number used to ensure that test fixtures are unique to each test
+   * method.
+   *
+   * @var int
+   */
+  protected $lockId;
+
+  /**
+   * The test database prefix.
+   *
+   * @var string
+   */
+  protected $databasePrefix;
+
+  /**
    * Generates a unique lock ID for the test method.
    *
    * @param boolean $create_lock
