@@ -16,7 +16,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Tests the content translation settings UI.
  *
  * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @covers _content_translation_form_language_content_settings_form_alter()
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationSettingsTest extends BrowserTestBase {
