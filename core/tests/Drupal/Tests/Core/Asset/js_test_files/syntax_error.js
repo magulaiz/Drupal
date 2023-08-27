@@ -2,12 +2,8 @@
  * Some comments.
  */
 
-// Some more comments, followed by some line breaks.
-
-
-
 (function foo() {
-  // Missing closing bracket.
+  // Missing closing parenthesis.
   if (true {
     'print 1';
   }
