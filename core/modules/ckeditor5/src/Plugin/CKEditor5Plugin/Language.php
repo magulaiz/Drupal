@@ -4,16 +4,12 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\EditorInterface;
@@ -51,16 +47,15 @@ class Language extends CKEditor5PluginDefault implements ContainerFactoryPluginI
    * Language constructor.
    *
    * @param array $configuration
-   *    A configuration array containing information about the plugin instance.
-   *
+   *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *    The plugin_id for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition $plugin_definition
-   *    The plugin implementation definition.
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager
+   *   The language manager.
    */
-  public function __construct(array $configuration, string $plugin_id, CKEditor5PluginDefinition $plugin_definition, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->languageManager = $language_manager;
   }
@@ -69,7 +64,6 @@ class Language extends CKEditor5PluginDefault implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    // @TODO Handle unconfigured state here, where language_list is unset?
     switch ($this->configuration['language_list']) {
       case 'all':
         $predefined_languages = LanguageManager::getStandardLanguageList();
