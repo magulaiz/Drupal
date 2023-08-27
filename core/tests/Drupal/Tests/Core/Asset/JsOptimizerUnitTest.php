@@ -125,7 +125,9 @@ class JsOptimizerUnitTest extends UnitTestCase {
           'preprocess' => TRUE,
           'data' => $path . 'syntax_error.js',
         ],
-        file_get_contents($path . 'syntax_error.optimized.js'),
+        // When there is a syntax error, the 'optimized' contents are the
+        // contents of the original file.
+        file_get_contents($path . 'syntax_error.js'),
       ],
     ];
   }
