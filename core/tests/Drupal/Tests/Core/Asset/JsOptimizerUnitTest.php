@@ -119,6 +119,14 @@ class JsOptimizerUnitTest extends UnitTestCase {
         ],
         file_get_contents($path . 'to_be_minified.js.optimized.js'),
       ],
+      3 => [
+        [
+          'type' => 'file',
+          'preprocess' => TRUE,
+          'data' => $path . 'syntax_error.js',
+        ],
+        file_get_contents($path . 'syntax_error.optimized.js'),
+      ],
     ];
   }
 
