@@ -26,6 +26,7 @@ class TestSiteInstallCommand extends Command {
 
   use FunctionalTestSetupTrait {
     installParameters as protected installParametersTrait;
+    createTestLockId as protected createTestLockIdTrait;
   }
   use RandomGeneratorTrait;
   use TestSetupTrait {
@@ -295,12 +296,9 @@ class TestSiteInstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function prepareDatabasePrefix() {
-    // !!
-    // Override this method so that we can force a lock to be created.
-    $test_db = new TestDatabase(NULL, TRUE);
-    $this->siteDirectory = $test_db->getTestSitePath();
-    $this->databasePrefix = $test_db->getDatabasePrefix();
+  protected function createTestLockId(bool $create_lock = FALSE): int {
+    // Force a lock to be created.
+    return $this->createTestLockIdTrait(TRUE);
   }
 
 }
