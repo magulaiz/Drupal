@@ -344,6 +344,7 @@ class Select extends Query implements SelectInterface {
     // Start of BC layer.
     $parts = explode('\\', $extender_name);
     $class = end($parts);
+    // @phpstan-ignore-next-line
     $driver_class = $this->connection->getDriverClass($class);
     if ($driver_class !== $class) {
       return new $driver_class($this, $this->connection);

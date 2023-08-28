@@ -979,6 +979,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new ExceptionHandler instance directly.
    */
   public function exceptionHandler() {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('ExceptionHandler');
     return new $class();
   }
@@ -1006,6 +1007,7 @@ abstract class Connection {
    */
   public function select($table, $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Select');
     return new $class($this, $table, $alias, $options);
   }
@@ -1029,6 +1031,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Insert instance directly.
    */
   public function insert($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Insert');
     return new $class($this, $table, $options);
   }
@@ -1079,6 +1082,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Merge instance directly.
    */
   public function merge($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Merge');
     return new $class($this, $table, $options);
   }
@@ -1100,6 +1104,7 @@ abstract class Connection {
    *   an abstract class.
    */
   public function upsert($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Upsert');
     return new $class($this, $table, $options);
   }
@@ -1123,6 +1128,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Update instance directly.
    */
   public function update($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Update');
     return new $class($this, $table, $options);
   }
@@ -1146,6 +1152,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Delete instance directly.
    */
   public function delete($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Delete');
     return new $class($this, $table, $options);
   }
@@ -1166,6 +1173,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Truncate instance directly.
    */
   public function truncate($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Truncate');
     return new $class($this, $table, $options);
   }
@@ -1183,6 +1191,7 @@ abstract class Connection {
    */
   public function schema() {
     if (empty($this->schema)) {
+      // @phpstan-ignore-next-line
       $class = $this->getDriverClass('Schema');
       $this->schema = new $class($this);
     }
@@ -1203,6 +1212,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Condition instance directly.
    */
   public function condition($conjunction) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Condition');
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
     // should only be created from the database layer. This will allow database
@@ -1362,6 +1372,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Transaction instance directly.
    */
   public function startTransaction($name = '') {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Transaction');
     return new $class($this, $name);
   }
