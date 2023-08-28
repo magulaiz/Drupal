@@ -119,9 +119,12 @@ class HtaccessWriter implements HtaccessWriterInterface, CronInterface {
     return $protected_dirs;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function run() {
     $this->ensure();
+    return TRUE;
   }
-
 
 }

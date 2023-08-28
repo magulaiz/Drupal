@@ -11,16 +11,13 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\PageCache\RequestPolicyInterface;
-use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Site\Settings;
@@ -991,6 +988,35 @@ function system_cron() {
     $fetcher = \Drupal::service('system.sa_fetcher');
     $fetcher->getSecurityAdvisories();
   }
+}
+
+/**
+ * Generate a list of tasks offered by a specified module.
+ *
+ * @param string $module
+ *   Module name.
+ * @param string|array $module_name
+ *   The module's display name. Passing information, as provided by
+ *   \Drupal::service('extension.list.module')->getExtensionInfo() is
+ *   deprecated in drupal:10.2.0. Pass only $info["name"] instead.
+ *
+ * @return array
+ *   An array of task links.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+ *   'system.module_admin_links_helper' service with the getModuleAdminLinks() method
+ *   and 'user.module_permissions_link_helper' service with the
+ *   ::getModulePermissionsLink() method instead.
+ *
+ * @see https://www.drupal.org/node/3038972
+ */
+function system_get_module_admin_tasks($module, string|array $module_name) {
+  @trigger_error("system_get_module_admin_tasks() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the 'system.module_admin_links_helper' service with the getModuleAdminLinks() method and 'user.module_permissions_link_helper' service with the ::getModulePermissionsLink() method instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
+  $module_admin_links = \Drupal::service('system.module_admin_links_helper')->getModuleAdminLinks($module);
+  if ($module_permissions_link = \Drupal::service('user.module_permissions_link_helper')->getModulePermissionsLink($module, $module_name)) {
+    $module_admin_links["user.admin_permissions.{$module}"] = $module_permissions_link;
+  }
+  return $module_admin_links;
 }
 
 /**

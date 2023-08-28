@@ -199,6 +199,8 @@ services:
     arguments: ['@settings', '%cache_default_bin_backends%', '%memory_cache_default_bin_backends%']
     calls:
       - [setContainer, ['@service_container']]
+    tags:
+      - { name: cron }
   Drupal\Core\Cache\CacheFactoryInterface: '@cache_factory'
   variation_cache_factory:
     class: Drupal\Core\Cache\VariationCacheFactory
@@ -432,7 +434,7 @@ services:
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time', '%queue.config%']
     lazy: true
     tags:
-      - { name: cron, call: addCronService, tag: cron }
+      - { name: service_collector, call: addCronService, tag: cron }
   Drupal\Core\CronInterface: '@cron'
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
@@ -846,6 +848,8 @@ services:
   plugin.manager.queue_worker:
     class: Drupal\Core\Queue\QueueWorkerManager
     parent: default_plugin_manager
+    tags:
+      - { name: cron }
   Drupal\Core\Queue\QueueWorkerManagerInterface: '@plugin.manager.queue_worker'
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
@@ -1469,6 +1473,7 @@ services:
     arguments: ['@database', '@request_stack', '@datetime.time']
     tags:
       - { name: backend_overridable }
+      - { name: cron }
   Drupal\Core\Flood\FloodInterface: '@flood'
   plugin.manager.mail:
     class: Drupal\Core\Mail\MailManager

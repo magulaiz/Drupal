@@ -77,9 +77,12 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function run() {
     $this->garbageCollection();
+    return TRUE;
   }
-
 
 }
