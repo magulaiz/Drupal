@@ -63,10 +63,6 @@ class DevelopmentSettingsForm extends FormBase {
     $directory = 'assets://';
     $is_writable = is_dir($directory) && is_writable($directory);
     $disabled = !$is_writable;
-    $disabled_message = '';
-    if (!$is_writable) {
-      $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">optimized assets file system path</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
-    }
     $system_performance = $this->configFactory->get('system.performance');
     $performance_css_config = $system_performance->get('css.preprocess');
     $performance_js_config = $system_performance->get('js.preprocess');
