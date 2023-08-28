@@ -503,6 +503,7 @@ trait SchemaCheckTrait {
       ],
       'display.*.display_options.style' => [
         "'options' is a conditionally required key.",
+        "'options' is a required key.",
       ],
       'display.*.display_options.exposed_form' => [
         "'options' is a required key.",
@@ -517,20 +518,21 @@ trait SchemaCheckTrait {
         "'sort_desc_label' is a required key.",
       ],
       'display.*.display_options.pager' => [
-        "'options' is a conditionally required key.",
         "'type' is a required key.",
+        "'options' is a required key.",
+        "'options' is a conditionally required key.",
       ],
       'display.*.display_options.access' => [
         "'type' is a required key.",
         "'options' is a required key.",
       ],
-      'display.*.display_options.sorts.*' => [
-        "'expose' is a conditionally required key.",
-        "'granularity' is a required key.",
+      'display.*.display_options.sorts.*' => ["'granularity' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'group_type' is a required key.",
         "'admin_label' is a required key.",
+        "'expose' is a required key.",
+        "'expose' is a conditionally required key.",
         "'exposed' is a required key.",
         "'relationship' is a required key.",
         "'order' is a required key.",
@@ -587,9 +589,6 @@ trait SchemaCheckTrait {
         "'bypass_access' is a required key.",
       ],
       'display.*.display_options.arguments.*' => [
-        "'default_argument_options' is a conditionally required key.",
-        "'summary_options' is a conditionally required key.",
-        "'validate_options' is a conditionally required key.",
         "'plugin_id' is a required key.",
         "'must_not_be' is a required key.",
         "'day' is a required key.",
@@ -600,6 +599,8 @@ trait SchemaCheckTrait {
         "'title_enable' is a required key.",
         "'default_argument_type' is a required key.",
         "'summary' is a required key.",
+        "'summary_options' is a conditionally required key.",
+        "'summary_options' is a required key.",
         "'specify_validation' is a required key.",
         "'not' is a required key.",
         "'add_table' is a required key.",
@@ -614,8 +615,12 @@ trait SchemaCheckTrait {
         "'admin_label' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
+        "'default_argument_options' is a required key.",
+        "'default_argument_options' is a conditionally required key.",
         "'default_argument_skip_url' is a required key.",
         "'validate' is a required key.",
+        "'validate_options' is a required key.",
+        "'validate_options' is a conditionally required key.",
         "'break_phrase' is a required key.",
         "'date' is a required key.",
         "'node_created' is a required key.",
@@ -840,6 +845,7 @@ trait SchemaCheckTrait {
       'display.*.display_options.filters.*.group_info.group_items.*' => [
         "'title' is a required key.",
         "'operator' is a required key.",
+        "'value' is a conditionally required key.",
         "'value' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*.value' => [
@@ -903,6 +909,7 @@ trait SchemaCheckTrait {
       ],
       'display.*.display_options.row' => [
         "'options' is a conditionally required key.",
+        "'options' is a required key.",
       ],
       'display.*.display_options.row.options' => [
         "'inline' is a required key.",
