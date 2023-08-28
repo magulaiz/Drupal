@@ -132,4 +132,29 @@ class DevelopmentSettingsFormTest extends WebDriverTestBase {
     }
   }
 
+  /**
+   * Tests the behavior of the Bandwidth Optimization checkbox.
+   */
+  public function testBandwidthOptimizationCheckbox() {
+    // Load the development settings form.
+    $this->drupalGet('/admin/config/development/settings');
+
+    // Check the "Bandwidth optimization" checkbox.
+    $this->getSession()->getPage()->checkField('Bandwidth optimization');
+
+    // Check the "Aggregate CSS files" checkbox.
+    $this->getSession()->getPage()->checkField('Aggregate CSS files');
+    $this->assertSession()->checkboxChecked('Aggregate CSS files');
+
+    // Save the settings.
+    $this->getSession()->getPage()->pressButton('Save settings');
+
+    // Assert the success message.
+    $this->assertSession()->pageTextContains('The settings have been saved.');
+
+    // Assert that the checkbox "Bandwidth optimization" and "Aggregate CSS files" both are checked.
+    $this->assertSession()->checkboxChecked('Aggregate CSS files');
+    $this->assertSession()->checkboxChecked('Bandwidth optimization');
+  }
+
 }
