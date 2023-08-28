@@ -137,7 +137,7 @@ class DevelopmentSettingsForm extends FormBase {
       '#description' => $this->t("External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.") . $disabled_message,
       '#states' => [
         'visible' => [
-          $bandwidth_optimization_state_condition
+          $bandwidth_optimization_state_condition,
         ],
       ],
     ];
