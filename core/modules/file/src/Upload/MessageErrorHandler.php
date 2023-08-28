@@ -8,6 +8,7 @@ use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException as SymfonyFileException;
@@ -29,6 +30,7 @@ class MessageErrorHandler implements FileUploadErrorHandlerInterface {
   public function __construct(
     protected MessengerInterface $messenger,
     protected LoggerInterface $logger,
+    protected RendererInterface $renderer,
   ) {}
 
   /**
@@ -66,9 +68,19 @@ class MessageErrorHandler implements FileUploadErrorHandlerInterface {
         break;
 
       case $e instanceof FileValidationException:
-        foreach ($e->getErrors() as $error) {
-          $this->messenger->addError($error);
-        }
+        $message = [
+          'error' => [
+            '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $e->getFilename()]),
+          ],
+          'item_list' => [
+            '#theme' => 'item_list',
+            '#items' => $e->getErrors(),
+          ],
+        ];
+        // @todo Add support for render arrays in
+        // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
+        // @see https://www.drupal.org/node/2505497.
+        $this->messenger->addError($this->renderer->renderPlain($message));
         break;
 
       case $e instanceof FileWriteException:

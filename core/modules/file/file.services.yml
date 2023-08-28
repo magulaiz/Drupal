@@ -36,7 +36,7 @@ services:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
   file.default_error_handler:
     class: Drupal\file\Upload\MessageErrorHandler
-    arguments: ['@messenger', '@logger.channel.file']
+    arguments: ['@messenger', '@logger.channel.file', '@renderer']
   file.form_file_upload_handler:
     class: Drupal\file\Upload\FormFileUploadHandler
     arguments: ['@file.upload_memory_cache', '@file.upload_handler', '@file.form_uploaded_file_retriever', '@event_dispatcher', '@file.default_error_handler']
