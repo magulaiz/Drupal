@@ -95,7 +95,7 @@ class Module extends Updater implements UpdaterInterface {
     if (!\Drupal::service('update.update_hook_registry')->getAvailableUpdates($this->name)) {
       return [];
     }
-    $modules_with_updates = \Drupal::service(Update::class)->getList();
+    $modules_with_updates = \Drupal::service('update')->getList();
     if ($updates = $modules_with_updates[$this->name]) {
       if ($updates['start']) {
         return $updates['pending'];

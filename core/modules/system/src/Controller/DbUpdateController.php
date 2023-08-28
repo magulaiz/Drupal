@@ -133,7 +133,7 @@ class DbUpdateController extends ControllerBase {
 
     if ($this->update === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $update argument is deprecated in drupal:10.2.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
-      $this->update = \Drupal::service(Update::class);
+      $this->update = \Drupal::service('update');
     }
   }
 
