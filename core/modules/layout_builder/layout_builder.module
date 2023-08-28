@@ -499,10 +499,8 @@ function layout_builder_entity_operation(EntityInterface $entity): array {
 /**
  * Implements template_preprocess_links().
  */
-function layout_builder_preprocess_links(&$variables) {
-  if ($variables['theme_hook_original'] == 'links__dropbutton__operations'
-    && isset($variables['links']['layout']['link'])
-    ) {
+function layout_builder_preprocess_links__dropbutton__operations(&$variables) {
+  if (isset($variables['links']['layout']['link'])) {
     // The 'destination' query parameter is hardcoded by
     // \Drupal\views\Plugin\views\field\EntityOperations::render().
     // Until https://www.drupal.org/project/drupal/issues/2950883 is committed,
