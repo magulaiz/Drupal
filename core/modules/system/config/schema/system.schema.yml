@@ -221,7 +221,7 @@ system.menu.*:
         Length:
           max: 32
     label:
-      type: label
+      type: required_label
       label: 'Label'
     description:
       type: label
@@ -237,8 +237,14 @@ system.action.*:
     id:
       type: machine_name
       label: 'ID'
+      constraints:
+        # Action IDs also allow periods.
+        # @see user_user_role_insert()
+        Regex:
+          pattern: '/^[a-z0-9_\.]+$/'
+          message: "The %value machine name is not valid."
     label:
-      type: label
+      type: required_label
       label: 'Label'
     type:
       type: string
