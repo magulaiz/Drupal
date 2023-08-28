@@ -184,6 +184,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   public function query($query, array $args = [], $options = []) {
     $options += $this->defaultOptions();
 
+    // The PDO PostgreSQL driver has a bug which doesn't type cast booleans
+    // correctly when parameters are bound using associative arrays.
+    // @see http://bugs.php.net/bug.php?id=48383
+    foreach ($args as &$value) {
+      if (is_bool($value)) {
+        $value = (int) $value;
+      }
+    }
+
     // We need to wrap queries with a savepoint if:
     // - Currently in a transaction.
     // - A 'mimic_implicit_commit' does not exist already.
@@ -283,6 +292,28 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
   public function mapConditionOperator($operator) {
     return static::$postgresqlConditionOperatorMap[$operator] ?? NULL;
+  }
+
+  /**
+   * Creates the appropriate sequence name for a given table and serial field.
+   *
+   * This method should only be called by the driver's code.
+   *
+   * @param string $table
+   *   The table name to use for the sequence.
+   * @param string $field
+   *   The field name to use for the sequence.
+   *
+   * @return string
+   *   A table prefix-parsed string for the sequence name.
+   *
+   * @internal
+   */
+  public function makeSequenceName($table, $field) {
+    $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
+    // Remove identifier quotes as we are constructing a new name from a
+    // prefixed and quoted table name.
+    return str_replace($this->identifierQuotes, '', $sequence_name);
   }
 
   /**

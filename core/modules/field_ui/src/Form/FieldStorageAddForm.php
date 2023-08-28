@@ -156,14 +156,18 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions());
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
         $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
         if ($this->fieldTypeCategoryManager->hasDefinition($category)) {
-          $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name]);
+          $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name], $category_definitions[$category]);
           $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
+        }
+        else {
+          $field_type_options[(string) $field_type['label']] = ['unique_identifier' => $name] + $field_type;
         }
       }
     }
@@ -180,16 +184,16 @@ class FieldStorageAddForm extends FormBase {
       ],
     ];
     $field_type_options_radios = [];
-    foreach ($field_type_options as $field_option => $val) {
+    foreach ($field_type_options as $id => $field_type) {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
-      $category_info = $this->fieldTypeCategoryManager->createInstance($val['category'], $val);
+      $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
       $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
-      $cleaned_class_name = Html::getClass($val['unique_identifier']);
-      $field_type_options_radios[$field_option] = [
+      $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
+      $field_type_options_radios[$id] = [
         '#type' => 'container',
         '#attributes' => [
           'class' => ['field-option', 'js-click-to-select'],
-          'checked' => $this->getRequest()->request->get('new_storage_type') !== NULL && $this->getRequest()->request->get('new_storage_type') == ($display_as_group ? $val['category'] : $val['unique_identifier']),
+          'checked' => $this->getRequest()->request->get('new_storage_type') !== NULL && $this->getRequest()->request->get('new_storage_type') == ($display_as_group ? $field_type['category'] : $field_type['unique_identifier']),
         ],
         '#weight' => $category_info->getWeight(),
         'thumb' => [
@@ -201,7 +205,7 @@ class FieldStorageAddForm extends FormBase {
             '#type' => 'container',
             '#attributes' => [
               'class' => ['field-option__icon', $display_as_group ?
-                "field-icon-$val[category]" : "field-icon-$cleaned_class_name",
+                "field-icon-$field_type[category]" : "field-icon-$cleaned_class_name",
               ],
             ],
           ],
@@ -219,7 +223,7 @@ class FieldStorageAddForm extends FormBase {
           '#theme_wrappers' => ['form_element__new_storage_type'],
           // If it is a category, set return value as the category label,
           // otherwise, set it as the field type id.
-          '#return_value' => $display_as_group ? $val['category'] : $val['unique_identifier'],
+          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
           '#attributes' => [
             'class' => ['field-option-radio'],
           ],
@@ -240,6 +244,10 @@ class FieldStorageAddForm extends FormBase {
           '#variant' => 'field-option',
         ],
       ];
+
+      if ($libraries = $category_info->getLibraries()) {
+        $field_type_options_radios[$id]['#attached']['library'] = $libraries;
+      }
     }
     uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
     $form['add']['new_storage_type'] = $field_type_options_radios;
@@ -292,6 +300,7 @@ class FieldStorageAddForm extends FormBase {
               '#items' => $unique_definitions[$selected_field_type][$option_key]['description'],
             ],
             '#id' => $option['unique_identifier'],
+            '#weight' => $option['weight'],
             '#parents' => ['group_field_options_wrapper'],
             '#attributes' => [
               'class' => ['field-option-radio'],
@@ -307,8 +316,10 @@ class FieldStorageAddForm extends FormBase {
             $radio_element['#title'] = 'Other';
             $radio_element['#weight'] = 10;
           }
-          $form['group_field_options_wrapper']['fields'][$option['unique_identifier']] = $radio_element;
+          $group_field_options[$option['unique_identifier']] = $radio_element;
         }
+        uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
+        $form['group_field_options_wrapper']['fields'] += $group_field_options;
       }
     }
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
