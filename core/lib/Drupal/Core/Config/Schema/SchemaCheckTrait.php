@@ -87,7 +87,7 @@ trait SchemaCheckTrait {
     'core.entity_form_display.*.*.*' => [
       'content.*' => [
         "'type' is a required key.",
-        "'settings' is a conditionally required key.",
+        "'settings' is a conditionally required key because content\..* is .* \(see config schema type field\.widget\.settings\..*",
       ],
       'content.description.settings' => [
         "'size' is a required key.",
@@ -98,7 +98,7 @@ trait SchemaCheckTrait {
       'content.*' => [
         "'label' is a required key.",
         "'type' is a required key.",
-        "'settings' is a conditionally required key.",
+        "'settings' is a conditionally required key because content\..* is .* \(see config schema type field\.formatter\.settings\..*",
         "'weight' is a required key.",
       ],
       'content.*.settings' => [
@@ -502,7 +502,7 @@ trait SchemaCheckTrait {
         "'type' is a required key.",
       ],
       'display.*.display_options.style' => [
-        "'options' is a conditionally required key.",
+        "'options' is a conditionally required key because display\..* is .* \(see config schema type views\.style\..*",
         "'options' is a required key.",
       ],
       'display.*.display_options.exposed_form' => [
@@ -599,7 +599,7 @@ trait SchemaCheckTrait {
         "'title_enable' is a required key.",
         "'default_argument_type' is a required key.",
         "'summary' is a required key.",
-        "'summary_options' is a conditionally required key.",
+        "'summary_options' is a conditionally required key because display\..* is .* \(see config schema type views\.style\..*",
         "'summary_options' is a required key.",
         "'specify_validation' is a required key.",
         "'not' is a required key.",
@@ -616,11 +616,11 @@ trait SchemaCheckTrait {
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'default_argument_options' is a required key.",
-        "'default_argument_options' is a conditionally required key.",
+        "'default_argument_options' is a conditionally required key because display\..* is .* \(see config schema type views\.argument_default\..*",
         "'default_argument_skip_url' is a required key.",
         "'validate' is a required key.",
         "'validate_options' is a required key.",
-        "'validate_options' is a conditionally required key.",
+        "'validate_options' is a conditionally required key because display\..* is .* \(see config schema type views\.argument_validator\..*",
         "'break_phrase' is a required key.",
         "'date' is a required key.",
         "'node_created' is a required key.",
@@ -698,7 +698,7 @@ trait SchemaCheckTrait {
         "'bypass_access' is a required key.",
       ],
       'display.*.display_options.fields.*' => [
-        "'settings' is a conditionally required key.",
+        "'settings' is a conditionally required key because display\..* is .* \(see config schema type field\.formatter\.settings\..*",
         "'replace_variables' is a required key.",
         "'link_to_user' is a required key.",
         "'link_to_node' is a required key.",
@@ -908,7 +908,7 @@ trait SchemaCheckTrait {
         "'separator' is a required key.",
       ],
       'display.*.display_options.row' => [
-        "'options' is a conditionally required key.",
+        "'options' is a conditionally required key because display\..* is .* \(see config schema type views\.row\..*",
         "'options' is a required key.",
       ],
       'display.*.display_options.row.options' => [
