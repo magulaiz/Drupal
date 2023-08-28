@@ -1761,8 +1761,6 @@ services:
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     factory: ['@update.post_update_registry_factory', create]
-    tags:
-      - { name: event_subscriber }
   Drupal\Core\Update\UpdateRegistry: "@update.post_update_registry"
   update.post_update_registry_factory:
     class: Drupal\Core\Update\UpdateRegistryFactory
