@@ -91,6 +91,13 @@ class Cron implements CronInterface {
   protected array $queueConfig;
 
   /**
+   * List of tagged services that implement the cron interface.
+   *
+   * @var \Drupal\Core\CronInterface[]
+   */
+  protected $cronServices = [];
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -347,6 +354,12 @@ class Cron implements CronInterface {
         '@time' => Timer::read('cron_' . $module_previous) . 'ms',
       ]);
     }
+
+    // Also call all tagged services.
+    foreach ($this->cronServices as $cron_service) {
+      $cron_service->run();
+    }
+
   }
 
   /**
@@ -357,6 +370,10 @@ class Cron implements CronInterface {
    */
   protected function usleep(int $microseconds): void {
     usleep($microseconds);
+  }
+
+  public function addCronService(CronInterface $cron) {
+    $this->cronServices[] = $cron;
   }
 
 }
