@@ -36,14 +36,14 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
    *
    * @var string
    */
-  public string $conditionalMessage = "'@key' is a conditionally required key because @condition_property_path is set to @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $conditionalMessage = "'@key' is a conditionally required key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * The error message if a key is extraneous.
    *
    * @var string
    */
-  public string $extraneousMessage = "'@key' is an extraneous key because @condition_property_path is set to @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $extraneousMessage = "'@key' is an extraneous key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * Keys which are required — only `<infer>` supported currently.
@@ -320,6 +320,11 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     assert($original_type !== $resolved_type);
     assert(!strpos($resolved_type, ']'));
 
+    $message_parameters = [
+      '@original_dynamic_type' => $original_type,
+      '@resolved_dynamic_type' => $resolved_type,
+    ];
+
     $matches = [];
     // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
     assert(preg_match("/\[(.*)\]/U", $original_type, $matches) === 1);
@@ -330,13 +335,38 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     // %parent: to go from the level of a key's definition up to the level
     // of the mapping.
     assert(array_shift($parts) === '%parent');
+
+    // Special case: no match with a concrete subtype, resulting in using the
+    // fallback type. Typically due to a missing key-value pair.
+    // For example:
+    // - original type: `field.formatter.settings.[%parent.type]`
+    // - resolved type: `field.formatter.settings.*`
+    // This happens in the case of for example core/modules/file/config/optional/views.view.files.yml.
+    // @see \Drupal\Core\Config\TypedConfigManager::getFallbackName()
+    if (str_replace($matches[0], '*', $original_type) === $resolved_type) {
+      $relative_property_path_parts = explode('.',
+        str_replace(
+        $node->getRoot()->getPropertyPath() . '.',
+        '',
+        $node->getPropertyPath(),
+      ));
+      // Compensate for '%parent': it means going up one level, so the last part
+      // of the relative property path is irrelevant.
+      array_pop($relative_property_path_parts);
+      // Now append
+      $relative_property_path_parts = array_merge($relative_property_path_parts, $parts);
+      return $message_parameters + [
+        '@condition_property_path' => implode('.', $relative_property_path_parts),
+        '@condition_property_value' => 'invalid or absent',
+      ];
+    }
+
     // In a mapping, to be able to refer
     while ($name = array_shift($parts)) {
       $node = $node->getElements()[$name];
     }
-    return [
-      '@original_dynamic_type' => $original_type,
-      '@resolved_dynamic_type' => $resolved_type,
+
+    return $message_parameters + [
       '@condition_property_path' => str_replace(
         $node->getRoot()->getPropertyPath() . '.',
         '',
