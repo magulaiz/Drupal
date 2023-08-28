@@ -8,8 +8,6 @@
  * installation. It is included and used extensively by update.php.
  */
 
-use Drupal\Core\Update\Update;
-
 /**
  * Returns whether the minimum schema requirement has been satisfied.
  *

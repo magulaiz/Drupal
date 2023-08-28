@@ -3,7 +3,6 @@
 namespace Drupal\Tests;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Update\Update;
 use Drupal\Core\Url;
 
 /**

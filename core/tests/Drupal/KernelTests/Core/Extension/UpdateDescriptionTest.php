@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Extension;
 
-use Drupal\Core\Update\Update;
 use Drupal\KernelTests\KernelTestBase;
 
 /**

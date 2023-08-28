@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Updater;
 
-use Drupal\Core\Update\Update;
 use Drupal\Core\Url;
 
 /**

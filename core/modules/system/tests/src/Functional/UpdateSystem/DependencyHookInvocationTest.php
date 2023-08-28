@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
-use Drupal\Core\Update\Update;
 use Drupal\Tests\BrowserTestBase;
 
 /**
