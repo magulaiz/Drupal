@@ -212,6 +212,9 @@ class MenuAccessTest extends BrowserTestBase {
       ...$tree_routes);
     $this->assertUserRoutesAccess(
       $superChild3User,
+      // The 'menu_test.super_child3_test' menu item is nested under
+      // 'menu_test.child2_test' to ensure access is correct when there are
+      // multiple items nested at the same level.
       ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.super_child3_test'],
       ...$tree_routes);
 
