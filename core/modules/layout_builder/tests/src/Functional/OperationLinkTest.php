@@ -114,8 +114,8 @@ class OperationLinkTest extends BrowserTestBase {
     $vocabulary_with_section_field = $this->createVocabulary();
 
     // Create terms.
-    $this->createTerm($vocabulary);
-    $this->createTerm($vocabulary_with_section_field);
+    $termNoLayoutBuilder = $this->createTerm($vocabulary);
+    $termWithLayoutBuilder = $this->createTerm($vocabulary_with_section_field);
     $vocabulary_id = $vocabulary->id();
     $vocabulary_with_section_field_id = $vocabulary_with_section_field->id();
 
@@ -135,11 +135,11 @@ class OperationLinkTest extends BrowserTestBase {
 
     $this->drupalGet("admin/structure/taxonomy/manage/$vocabulary_id/overview/");
 
-    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/1/layout")]');
+    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/' . $termNoLayoutBuilder->id() . '/layout")]');
 
     $this->drupalGet("admin/structure/taxonomy/manage/$vocabulary_with_section_field_id/overview/");
 
-    $assert_session->elementExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/2/layout")]');
+    $assert_session->elementExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/' . $termWithLayoutBuilder->id() . '/layout")]');
 
     // Check for Layout operation link with user without Layout Builder
     // permissions.
@@ -154,15 +154,15 @@ class OperationLinkTest extends BrowserTestBase {
     $this->drupalLogin($auth_user);
 
     $this->drupalGet('/admin/content');
-    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "node/2/layout")]');
+    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "node/' . $this->layoutBuilderNode->id() . '/layout")]');
 
     $this->drupalGet("admin/structure/taxonomy/manage/$vocabulary_id/overview/");
 
-    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/1/layout")]');
+    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/' . $termNoLayoutBuilder->id() . '/layout")]');
 
     $this->drupalGet("admin/structure/taxonomy/manage/$vocabulary_with_section_field_id/overview/");
 
-    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/2/layout")]');
+    $assert_session->elementNotExists('xpath', '//table//ul[contains(@class, "dropbutton")]//a[contains(@href, "term/' . $termWithLayoutBuilder->id() . '/layout")]');
   }
 
   /**
