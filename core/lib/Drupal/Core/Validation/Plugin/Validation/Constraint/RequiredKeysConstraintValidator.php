@@ -30,14 +30,14 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
       $this->context->addViolation($constraint->message, ['@key' => $key]);
     }
 
-    $missing_conditional_keys = array_diff($required_keys['conditional'], array_keys($value));
+    $missing_conditional_keys = array_diff(array_keys($required_keys['conditional']), array_keys($value));
     foreach ($missing_conditional_keys as $key) {
-      $this->context->addViolation($constraint->conditionalMessage, ['@key' => $key]);
+      $this->context->addViolation($constraint->conditionalMessage, ['@key' => $key] + $required_keys['conditional'][$key]);
     }
 
-    $extraneous_keys = array_intersect($required_keys['extraneous'], array_keys($value));
+    $extraneous_keys = array_intersect(array_keys($required_keys['extraneous']), array_keys($value));
     foreach ($extraneous_keys as $key) {
-      $this->context->addViolation($constraint->extraneousMessage, ['@key' => $key]);
+      $this->context->addViolation($constraint->extraneousMessage, ['@key' => $key] + $required_keys['extraneous'][$key]);
     }
   }
 

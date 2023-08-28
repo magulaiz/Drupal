@@ -36,14 +36,14 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
    *
    * @var string
    */
-  public string $conditionalMessage = "'@key' is a conditionally required key.";
+  public string $conditionalMessage = "'@key' is a conditionally required key because @condition_property_path is set to @condition_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * The error message if a key is extraneous.
    *
    * @var string
    */
-  public string $extraneousMessage = "'@key' is an extraneous key.";
+  public string $extraneousMessage = "'@key' is an extraneous key because @condition_property_path is set to @condition_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * Keys which are required — only `<infer>` supported currently.
@@ -209,9 +209,11 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     $dyn_typed_keys_conditionally_required = [];
     $dyn_typed_keys_conditionally_optional = [];
     $all_type_definitions = $this->typedConfigManager->getDefinitions();
+    $conditional_message_parameters = [];
     foreach ($dynamically_typed_keys as $key => $resolved_element_definition) {
       $original_type = $definition['mapping'][$key]['type'];
-      assert($original_type !== $resolved_element_definition->toArray()['type'], 'This is not a dynamic type.');
+      $resolved_type = $resolved_element_definition->toArray()['type'];
+      assert($original_type !== $resolved_type, 'This is not a dynamic type.');
 
       // For each dynamic type, there must be >=1 possible types to resolve to.
       // To determine the conditionality of a key being required or not, it is
@@ -258,6 +260,8 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
             // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
             $bucket = &$dyn_typed_keys_conditionally_optional;
           }
+          // Ensure a helpful violation message can be provided.
+          $conditional_message_parameters[$key] = self::getConditionalMessageParameters($mapping, $original_type, $resolved_type);
           break;
       }
 
@@ -284,11 +288,62 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
       // - The 2 unconditionally required buckets: self::$message.
       'unconditional' => array_keys($unconditionally_required_keys + $dyn_typed_keys_unconditionally_required),
       // - The 1 conditionally required buckets: self::$conditionalMessage.
-      'conditional' => array_keys($dyn_typed_keys_conditionally_required),
+      'conditional' => array_intersect_key($conditional_message_parameters, $dyn_typed_keys_conditionally_required),
       // - The 1 conditionally optional bucket: self::$extraneousMessage,
       //   because when the condition is not met (i.e. it is optional), it
       //   should not be present. Otherwise it is just noise.
-      'extraneous' => array_keys($dyn_typed_keys_conditionally_optional),
+      'extraneous' => array_intersect_key($conditional_message_parameters, $dyn_typed_keys_conditionally_optional),
+    ];
+  }
+
+  /**
+   * For $conditionalMessage and $extraneousMessage, compute message parameters.
+   *
+   * @param \Drupal\Core\Config\Schema\Mapping $mapping
+   *   A `type: mapping` instance, with values.
+   * @param string $original_type
+   *   The original (dynamic) type (defined on a key in this mapping).
+   * @param string $resolved_type
+   *   The resolved type.
+   *
+   * @return array
+   *   An array containing the following message parameters:
+   *   - '@original_dynamic_type': original dynamic type
+   *   - '@resolved_dynamic_type': resolved dynamic type
+   *   - '@condition_property_path': (relative) property path of the condition
+   *   - '@condition_property_value': value of the condition
+   */
+  protected static function getConditionalMessageParameters(Mapping $mapping, string $original_type, string $resolved_type): array {
+    // $original_type must be a dynamic type and the resolved type must be
+    // different and not be dynamic.
+    assert(strpos($original_type, ']'));
+    assert($original_type !== $resolved_type);
+    assert(!strpos($resolved_type, ']'));
+
+    $matches = [];
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
+    assert(preg_match("/\[(.*)\]/U", $original_type, $matches) === 1);
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+    $node = $mapping;
+    $parts = explode('.', $matches[1]);
+    // To have dynamic types in a mapping, the first part MUST be
+    // %parent: to go from the level of a key's definition up to the level
+    // of the mapping.
+    assert(array_shift($parts) === '%parent');
+    // In a mapping, to be able to refer
+    while ($name = array_shift($parts)) {
+      $node = $node->getElements()[$name];
+    }
+    return [
+      '@original_dynamic_type' => $original_type,
+      '@resolved_dynamic_type' => $resolved_type,
+      '@condition_property_path' => str_replace(
+        $node->getRoot()->getPropertyPath() . '.',
+        '',
+        $node->getPropertyPath(),
+      ),
+      // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+      '@condition_property_value' => is_bool($node->getValue()) ? (int) $node->getValue() : $node->getValue(),
     ];
   }
 
