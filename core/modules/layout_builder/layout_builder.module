@@ -459,7 +459,7 @@ function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $
 /**
  * Implements hook_entity_operation().
  */
-function layout_builder_entity_operation(EntityInterface $entity) {
+function layout_builder_entity_operation(EntityInterface $entity): array {
   $account = \Drupal::currentUser();
   $entity_type_id = $entity->getEntityTypeId();
 
@@ -470,11 +470,11 @@ function layout_builder_entity_operation(EntityInterface $entity) {
   $route_options = [];
 
   // If current user has access to route, then add the operation link. The
-  // access check will only return TRUE if the bundle is Layout Builder-
+  // access check will only return TRUE if the bundle is Layout Builder
   // enabled, overrides are allowed, and user has necessary permissions.
   $access_manager = \Drupal::service('access_manager');
   if (!$access_manager->checkNamedRoute($route_name, $route_parameters, $account)) {
-    return;
+    return [];
   }
 
   // Add entity's language as a route option if layouts are translatable
