@@ -129,6 +129,7 @@ class DevelopmentSettingsForm extends FormBase {
     $form['bandwidth_optimization'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Bandwidth optimization'),
+      '#description' => $this->t("External resources can be optimized automatically, which can reduce both the size and number of requests made to your website."),
       '#states' => [
         'visible' => [
           'input[data-drupal-selector="edit-bandwidth-optimization-checkbox"]' => [
