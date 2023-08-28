@@ -73,7 +73,12 @@ class FileElementHelper {
     $validators = $element['#upload_validators'] ?? [];
     $errorHandler = new MessageCollectingErrorHandler($this->logger);
 
-    $files = $this->formUploadHandler->saveFileUploads($uploadName, $validators, $destination, FileSystemInterface::EXISTS_RENAME, $errorHandler);
+    $files = $this->formUploadHandler->saveFileUploads(
+      uploadName: $uploadName,
+      validators: $validators,
+      destination: $destination,
+      errorHandler: $errorHandler
+    );
 
     $files = array_filter($files);
 
