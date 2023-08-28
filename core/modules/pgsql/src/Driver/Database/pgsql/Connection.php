@@ -278,13 +278,14 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // the database with these first.
     $ctype = setlocale(LC_CTYPE, 0);
     $collate = setlocale(LC_COLLATE, 0);
-    if (($ctype && $ctype != 'en_US') || ($collate && $collate != 'en_US')) {
+    if ($ctype && $collate) {
       try {
         $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='UTF8' LC_CTYPE='$ctype.UTF-8' LC_COLLATE='$collate.UTF-8'");
         $db_created = TRUE;
       }
       catch (\Exception $e) {
-        // At this point no exception is thrown as we'll be trying it again.
+        // It might be that the server is remote and does not support the
+        // locale and collation of the webserver, so we will try again.
       }
     }
 
