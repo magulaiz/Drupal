@@ -43,7 +43,6 @@ services:
     public: false
     tags:
       - { name: cache_tags_invalidator }
-    arguments: ['@plugin.manager.block']
   layout_builder.sample_entity_generator:
     class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
     arguments: ['@tempstore.shared', '@entity_type.manager']
