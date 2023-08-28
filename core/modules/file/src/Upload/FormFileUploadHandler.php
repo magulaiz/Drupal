@@ -83,6 +83,10 @@ class FormFileUploadHandler {
 
     $uploadedFiles = $this->uploadedFileRetriever->getUploadedFiles($uploadName);
 
+    if (count($uploadedFiles) === 0) {
+      return [];
+    }
+
     if (!$destination) {
       $destination = 'temporary://';
     }
@@ -104,7 +108,7 @@ class FormFileUploadHandler {
       catch (SymfonyFileException | FileException | FileValidationException $e) {
         $errorHandler->handleError($formUploadedFile, $destination, $e);
         // Set to keep the array index in sync.
-        $files[$i] = NULL;
+        $files[$i] = FALSE;
       }
     }
     // Add files to the cache.

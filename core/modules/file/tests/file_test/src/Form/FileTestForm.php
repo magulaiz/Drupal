@@ -118,6 +118,9 @@ class FileTestForm implements FormInterface {
     /** @var \Drupal\file\Upload\FormFileUploadHandler $uploadHandler */
     $uploadHandler = \Drupal::service('file.form_file_upload_handler');
     $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $destination, $form_state->getValue('file_test_replace'));
+    if (count($files) === 0) {
+      return;
+    }
     $file = reset($files);
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
@@ -126,7 +129,7 @@ class FileTestForm implements FormInterface {
       \Drupal::messenger()->addStatus(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
       \Drupal::messenger()->addStatus(t('You WIN!'));
     }
-    elseif ($file === NULL) {
+    elseif ($file === FALSE) {
       \Drupal::messenger()->addError(t('Epic upload FAIL!'));
     }
   }
