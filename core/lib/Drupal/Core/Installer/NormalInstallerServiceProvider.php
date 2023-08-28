@@ -44,6 +44,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     $definition->setClass(MemoryBackendFactory::class);
     $definition->setArguments([new Time()]);
     $definition->setMethodCalls([]);
+    $definition->setTags([]);
 
     // Replace lock service with no-op implementation as Drupal installation can
     // only occur in a single thread and the site should not be publicly
