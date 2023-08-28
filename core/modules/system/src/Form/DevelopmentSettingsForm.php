@@ -6,6 +6,7 @@ use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 
@@ -64,7 +65,7 @@ class DevelopmentSettingsForm extends FormBase {
     if (!$is_writable) {
       $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">optimized assets file system path</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
     }
-    $system_performance = $this->configFactory->get('system.performance');
+    $system_performance = $this->config_factory->get('system.performance');
     $performance_css_config = $system_performance->get('css.preprocess');
     $performance_js_config = $system_performance->get('js.preprocess');
 
@@ -119,10 +120,16 @@ class DevelopmentSettingsForm extends FormBase {
       '#description' => $this->t('Disables render cache, dynamic page cache, and page cache.'),
       '#default_value' => $this->state->get('disable_rendered_output_cache_bins', FALSE),
     ];
+    $bandwidth_optimization_state_condition = [
+      'input[data-drupal-selector="edit-bandwidth-optimization-checkbox"]' => [
+        'checked' => TRUE,
+      ],
+    ];
     $form['bandwidth_optimization_checkbox'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Bandwidth optimization'),
       '#description' => $this->t('Exposes Bandwidth optimization settings.'),
+      '#default_value' => $performance_css_config || $performance_js_config,
     ];
     $form['bandwidth_optimization'] = [
       '#type' => 'fieldset',
@@ -130,9 +137,7 @@ class DevelopmentSettingsForm extends FormBase {
       '#description' => $this->t("External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.") . $disabled_message,
       '#states' => [
         'visible' => [
-          'input[data-drupal-selector="edit-bandwidth-optimization-checkbox"]' => [
-            'checked' => TRUE,
-          ],
+          $bandwidth_optimization_state_condition
         ],
       ],
     ];
@@ -194,7 +199,7 @@ class DevelopmentSettingsForm extends FormBase {
     // Save system performance aggregation configuration.
     $performance_css_config = $form_state->getValue('preprocess_css');
     $performance_js_config = $form_state->getValue('preprocess_js');
-    $this->configFactory->getEditable('system.performance')
+    $this->config_factory->getEditable('system.performance')
       ->set('css.preprocess', $performance_css_config)
       ->set('js.preprocess', $performance_js_config)
       ->save();
