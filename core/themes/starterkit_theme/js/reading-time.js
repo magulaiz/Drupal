@@ -12,7 +12,8 @@
   // @see https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector#parameters
   const elementSelector = 'main[role="main"]';
 
-  // Custom value coming from the backend (see starterkit_theme_attachments()).
+  // Custom value coming from the backend.
+  // @see starterkit_theme_attachments() in starterkit_theme.theme.
   const wordsPerMinute = drupalSettings.starterkit_theme.wordsPerMinute || 300;
 
   /**
@@ -50,6 +51,10 @@
    *   Where dependencies to core/drupalSettings and core/once are defined.
    * @see https://www.drupal.org/docs/drupal-apis/javascript-api/javascript-api-overview
    *   An introduction to the art of using JavaScript in Drupal.
+   * @see https://www.drupal.org/node/3158256
+   *   The change notice with examples of how to use once().
+   * @see https://www.npmjs.com/package/@drupal/once
+   *   The NPM package with the full documentation about once().
    */
   Drupal.behaviors.readingTime = {
     attach(context) {
