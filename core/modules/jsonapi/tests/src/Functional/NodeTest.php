@@ -11,6 +11,7 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
+use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
@@ -22,6 +23,7 @@ use GuzzleHttp\RequestOptions;
 class NodeTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -315,6 +317,11 @@ class NodeTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   public function testGetIndividual() {
+    // Cacheable normalizations are written after the response is flushed to
+    // the client. We use WaitTerminateTestTrait to wait for Drupal to perform
+    // its termination work before continuing.
+    $this->setWaitForTerminate();
+
     parent::testGetIndividual();
 
     $this->assertCacheableNormalizations();

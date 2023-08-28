@@ -64,10 +64,12 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
 
     NodeType::create([
       'type' => 'foo',
+      'name' => 'Foo',
     ])->save();
 
     NodeType::create([
       'type' => 'bar',
+      'name' => 'Bar',
     ])->save();
 
     $this->createEntityReferenceField(
@@ -205,7 +207,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     }
     catch (Warning $e) {
       static::assertSame(
-        'The "field_ref_with_missing_bundle" at "node:foo" references the "node:missing_bundle" entity type that does not exist. Please take action.',
+        'The "field_ref_with_missing_bundle" at "node:foo" references the "node:missing_bundle" entity type that does not exist.',
         $e->getMessage()
       );
     }

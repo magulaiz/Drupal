@@ -174,7 +174,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('language_configuration[content_translation]');
     $this->assertSession()->checkboxNotChecked('edit-language-configuration-content-translation');
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
@@ -217,7 +217,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'language_configuration[content_translation]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->getSession()->getPage()->hasContent('"Show language selector" is not compatible with translating content that has default language: und. Either do not hide the language selector or pick a specific language.');
 
     // Test that the order of the language list is similar to other language
@@ -258,8 +258,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Make sure account settings can be saved.
     $this->drupalGet('admin/config/people/accounts');
-    $this->submitForm(['anonymous' => 'Save me please!'], 'Save configuration');
-    $this->assertSession()->fieldValueEquals('anonymous', 'Save me please!');
+    $this->submitForm(['anonymous' => 'Save me!'], 'Save configuration');
+    $this->assertSession()->fieldValueEquals('anonymous', 'Save me!');
     $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
   }
 

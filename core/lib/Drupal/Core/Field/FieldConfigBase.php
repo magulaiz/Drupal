@@ -279,6 +279,13 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     if (empty($this->field_type)) {
       $this->field_type = $this->getFieldStorageDefinition()->getType();
     }
+
+    // Make sure all expected runtime settings are present.
+    $default_settings = \Drupal::service('plugin.manager.field.field_type')
+      ->getDefaultFieldSettings($this->getType());
+    // Filter out any unknown (unsupported) settings.
+    $supported_settings = array_intersect_key($this->getSettings(), $default_settings);
+    $this->set('settings', $supported_settings + $default_settings);
   }
 
   /**
@@ -490,6 +497,12 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function getDataType() {
+    // This object serves as data definition for field item lists, thus
+    // the correct data type is 'list'. This is not to be confused with
+    // the config schema type, 'field_config_base', which is used to
+    // describe the schema of the configuration backing this objects.
+    // @see \Drupal\Core\Field\FieldItemList
+    // @see \Drupal\Core\TypedData\DataDefinitionInterface
     return 'list';
   }
 

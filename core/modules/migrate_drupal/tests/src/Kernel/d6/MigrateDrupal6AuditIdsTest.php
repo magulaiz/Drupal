@@ -10,6 +10,8 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
+// cspell:ignore sourceid
+
 /**
  * Tests the migration auditor for ID conflicts.
  *
@@ -45,7 +47,10 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     // Enable content moderation for nodes of type page.
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ])->save();
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->save();
