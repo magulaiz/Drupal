@@ -520,19 +520,20 @@ trait SchemaCheckTrait {
       'display.*.display_options.pager' => [
         "'type' is a required key.",
         "'options' is a required key.",
-        "'options' is a conditionally required key.",
+        "'options' is a conditionally required key because display\..* is .* \(see config schema type views\.pager\..*",
       ],
       'display.*.display_options.access' => [
         "'type' is a required key.",
         "'options' is a required key.",
       ],
-      'display.*.display_options.sorts.*' => ["'granularity' is a required key.",
+      'display.*.display_options.sorts.*' => [
+        "'granularity' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'group_type' is a required key.",
         "'admin_label' is a required key.",
         "'expose' is a required key.",
-        "'expose' is a conditionally required key.",
+        "'expose' is a conditionally required key because display\..* is .* \(see config schema type views\.sort_expose\..*",
         "'exposed' is a required key.",
         "'relationship' is a required key.",
         "'order' is a required key.",
@@ -830,7 +831,7 @@ trait SchemaCheckTrait {
         "'group_info' is a required key.",
         "'expose' is a required key.",
         "'group' is a required key.",
-        "'value' is a conditionally required key.",
+        "'value' is a conditionally required key because display\..* is .* \(see config schema type views\.filter_value\..*",
         "'value' is a required key.",
         "'plugin_id' is a required key.",
       ],
@@ -845,7 +846,6 @@ trait SchemaCheckTrait {
       'display.*.display_options.filters.*.group_info.group_items.*' => [
         "'title' is a required key.",
         "'operator' is a required key.",
-        "'value' is a conditionally required key.",
         "'value' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*.value' => [
