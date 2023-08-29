@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\Mapping;
-use Drupal\Core\TypedData\MapDataDefinition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -71,27 +70,11 @@ class ValidKeysConstraint extends Constraint {
     }
     // The only other value we'll accept is the string `<infer>`.
     elseif ($this->allowedKeys === '<infer>') {
-      return static::inferKeys($context->getObject());
+      $mapping = $context->getObject();
+      assert($mapping instanceof Mapping);
+      return $mapping->getValidKeys();
     }
     throw new InvalidArgumentException("'$this->allowedKeys' is not a valid set of allowed keys.");
-  }
-
-  /**
-   * Tries to auto-detect the schema-defined keys in a mapping.
-   *
-   * @param \Drupal\Core\Config\Schema\Mapping $mapping
-   *   The mapping to inspect.
-   *
-   * @return string[]
-   *   The keys defined in the mapping's schema.
-   */
-  protected static function inferKeys(Mapping $mapping): array {
-    $definition = $mapping->getDataDefinition();
-    assert($definition instanceof MapDataDefinition);
-
-    $definition = $definition->toArray();
-    assert(array_key_exists('mapping', $definition));
-    return array_keys($definition['mapping']);
   }
 
 }
