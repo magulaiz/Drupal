@@ -41,6 +41,7 @@ services:
   file.collecting_error_handler_factory:
     class: Drupal\file\Upload\MessageCollectingErrorHandlerFactory
     arguments: ['@logger.channel.file', '@renderer']
+  Drupal\file\Upload\MessageCollectingErrorHandlerFactory: '@file.collecting_error_handler_factory'
   file.form_file_upload_handler:
     class: Drupal\file\Upload\FormFileUploadHandler
     arguments: ['@file.upload_memory_cache', '@file.upload_handler', '@file.form_uploaded_file_retriever', '@event_dispatcher', '@file.default_error_handler']
