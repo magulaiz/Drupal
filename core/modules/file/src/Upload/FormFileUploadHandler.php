@@ -54,7 +54,7 @@ class FormFileUploadHandler {
    *   ppt pps odt ods odp". To allow all extensions, you must explicitly set
    *   this array to ['file_validate_extensions' => '']. (Beware: this is not
    *   safe and should only be allowed for trusted users, if at all.)
-   * @param string $destination
+   * @param string|null $destination
    *   (optional) A string containing the URI that the file should be copied
    *   to.
    *   This must be a stream wrapper URI. If this value is omitted or set to
@@ -67,7 +67,7 @@ class FormFileUploadHandler {
    *   - FileSystemInterface::EXISTS_RENAME: (default) Append
    *     _{incrementing number} until the filename is unique.
    *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
-   * @param callable $errorHandler
+   * @param \Drupal\file\Upload\FileUploadErrorHandlerInterface|null $errorHandler
    *   (optional) The error handler. Defaults to the default error handler.
    *
    * @return \Drupal\file\FileInterface[]

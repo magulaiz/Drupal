@@ -127,7 +127,7 @@ class FileUploadResult {
    *
    * @return \Drupal\file\FileInterface
    */
-  public function getFile(): ?FileInterface {
+  public function getFile(): FileInterface {
     return $this->file;
   }
 
