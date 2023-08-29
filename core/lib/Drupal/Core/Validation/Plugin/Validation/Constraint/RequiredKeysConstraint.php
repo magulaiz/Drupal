@@ -261,7 +261,7 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
             $bucket = &$dyn_typed_keys_conditionally_optional;
           }
           // Ensure a helpful violation message can be provided.
-          $conditional_message_parameters[$key] = self::getConditionalMessageParameters($mapping, $original_type, $resolved_type);
+          $conditional_message_parameters[$key] = self::getConditionalMessageParameters($mapping, $key, $original_type, $resolved_type);
           break;
       }
 
@@ -301,6 +301,8 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
    *
    * @param \Drupal\Core\Config\Schema\Mapping $mapping
    *   A `type: mapping` instance, with values.
+   * @param string $key
+   *   The key whose conditional message parameters to compute.
    * @param string $original_type
    *   The original (dynamic) type (defined on a key in this mapping).
    * @param string $resolved_type
@@ -313,7 +315,7 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
    *   - '@condition_property_path': (relative) property path of the condition
    *   - '@condition_property_value': value of the condition
    */
-  protected static function getConditionalMessageParameters(Mapping $mapping, string $original_type, string $resolved_type): array {
+  protected static function getConditionalMessageParameters(Mapping $mapping, string $key, string $original_type, string $resolved_type): array {
     // $original_type must be a dynamic type and the resolved type must be
     // different and not be dynamic.
     assert(strpos($original_type, ']'));
@@ -325,61 +327,50 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
       '@resolved_dynamic_type' => $resolved_type,
     ];
 
+    $config = $mapping->getRoot();
+    // Determine the absolute property path to the given key.
+    $absolute_property_path_key = sprintf("%s.%s", $mapping->getPropertyPath(), $key);
+    // Strip the prefix for the containing config.
+    $property_path_start = substr($absolute_property_path_key, strlen($config->getName()) + 1);
+
+    // Extract the instructions stored in the dynamic type.
     $matches = [];
     // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
     assert(preg_match("/\[(.*)\]/U", $original_type, $matches) === 1);
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-    $node = $mapping;
-    $parts = explode('.', $matches[1]);
-    // To have dynamic types in a mapping, the first part MUST be
-    // %parent: to go from the level of a key's definition up to the level
-    // of the mapping.
-    assert(array_shift($parts) === '%parent');
+    $instructions = explode('.', $matches[1]);
 
-    // Special case: no match with a concrete subtype, resulting in using the
-    // fallback type. Typically due to a missing key-value pair.
-    // For example:
-    // - original type: `field.formatter.settings.[%parent.type]`
-    // - resolved type: `field.formatter.settings.*`
-    // This happens in the case of for example core/modules/file/config/optional/views.view.files.yml.
-    // @see \Drupal\Core\Config\TypedConfigManager::getFallbackName()
-    if (str_replace($matches[0], '*', $original_type) === $resolved_type) {
-      $relative_property_path_parts = explode('.',
-        str_replace(
-        $node->getRoot()->getPropertyPath() . '.',
-        '',
-        $node->getPropertyPath(),
-      ));
-      // Compensate for '%parent': it means going up one level, so the last part
-      // of the relative property path is irrelevant.
-      array_pop($relative_property_path_parts);
-      // Now append
-      $relative_property_path_parts = array_merge($relative_property_path_parts, $parts);
+    // Start from the relative path for the key and follow the instructions.
+    $property_path_parts = explode('.', $property_path_start);
+    while ($instructions) {
+      $instruction = array_shift($instructions);
+      switch ($instruction) {
+        case '%parent';
+          array_pop($property_path_parts);
+          break;
+
+        default:
+          array_push($property_path_parts, $instruction);
+          break;
+      }
+    }
+    $resolved_property_path = implode('.', $property_path_parts);
+    $message_parameters += [
+      '@condition_property_path' => $resolved_property_path,
+    ];
+    try {
+      $val = $config->get($resolved_property_path)->getValue();
+      // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+      $val = is_bool($val) ? (int) $val : $val;
       return $message_parameters + [
-        '@condition_property_path' => implode('.', $relative_property_path_parts),
-        '@condition_property_value' => 'invalid or absent',
+        '@condition_property_value' => $val,
       ];
     }
-
-    // In a mapping, to be able to refer
-    while ($name = array_shift($parts)) {
-      if ($name === '%parent') {
-        $node = $node->getParent();
-      }
-      else {
-        $node = $node->getElements()[$name];
-      }
+    catch (\InvalidArgumentException) {
+      return $message_parameters + [
+        '@condition_property_value' => '<absent>',
+      ];
     }
-
-    return $message_parameters + [
-      '@condition_property_path' => str_replace(
-        $node->getRoot()->getPropertyPath() . '.',
-        '',
-        $node->getPropertyPath(),
-      ),
-      // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-      '@condition_property_value' => is_bool($node->getValue()) ? (int) $node->getValue() : $node->getValue(),
-    ];
   }
 
   /**
