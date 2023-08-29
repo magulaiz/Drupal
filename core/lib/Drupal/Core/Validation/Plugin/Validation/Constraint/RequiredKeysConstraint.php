@@ -363,7 +363,12 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
 
     // In a mapping, to be able to refer
     while ($name = array_shift($parts)) {
-      $node = $node->getElements()[$name];
+      if ($name === '%parent') {
+        $node = $node->getParent();
+      }
+      else {
+        $node = $node->getElements()[$name];
+      }
     }
 
     return $message_parameters + [
