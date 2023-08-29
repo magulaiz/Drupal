@@ -96,10 +96,10 @@
       once('drupal-states-init', '[data-drupal-states]', context)
         .forEach(function (element) {
           const $element = $(element);
-          const config = JSON.parse(
-            element.getAttribute('data-drupal-states'),
-          );
-          Object.keys(config || {}).forEach((state) => {
+          const encodedConfig = element.getAttribute('data-drupal-states');
+          const config = JSON.parse(encodedConfig) || {};
+
+          Object.keys(config).forEach((state) => {
             new states.Dependent({
               element: $element,
               state: states.State.sanitize(state),
