@@ -112,35 +112,6 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
   }
 
   /**
-   * Validates optional `requiredKey` flags in mappings.
-   *
-   * Validates that the values for either optional flag are correct. Does not
-   * validate the semantics, only the shapes.
-   *
-   * @param \Drupal\Core\TypedData\MapDataDefinition $definition
-   *   The config schema definition for a `type: mapping`.
-   *
-   * @return bool
-   */
-  protected static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): bool {
-    $definition = $definition->toArray();
-    assert(array_key_exists('mapping', $definition));
-
-    // Validates `requiredKey` flag in mapping definitions.
-    foreach ($definition['mapping'] as $options) {
-      if (!array_key_exists('requiredKey', $options)) {
-        // This flag is optional.
-        continue;
-      }
-      if ($options['requiredKey'] !== FALSE) {
-        throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
-      }
-    }
-
-    return TRUE;
-  }
-
-  /**
    * Infers schema-defined keys in a mapping, resolving types using the value.
    *
    * @param \Drupal\Core\Config\Schema\Mapping $mapping
@@ -157,14 +128,14 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     $definition = $mapping->getDataDefinition();
     assert($definition instanceof MapDataDefinition);
 
-    self::validateMappingConfigSchemaDefinition($definition);
+    Mapping::validateMappingConfigSchemaDefinition($definition);
 
     // The original mapping definition is used to determine the original types.
     // (This contains the raw definitions for types, as in `*.schema.yml`.)
     $original_mapping_definition = $definition->toArray()['mapping'];
     // The resolved mapping definition is used to determine the resolved types.
     // (This contains the resolved definitions, after resolving dynamic types.)
-    $resolved_mapping_definition = $this->resolveMapping($mapping);
+    $resolved_mapping_definition = $mapping->getResolvedDataDefinitions();
     assert(count($original_mapping_definition) === count($resolved_mapping_definition));
 
     // Some mappings are empty.
@@ -181,8 +152,8 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     // array of data definitions. But they are equally complete: they have the
     // same keys, just not the same values.
     assert(Inspector::assertAllArrays($original_mapping_definition));
-    assert(!self::isArrayOfDataDefinitions($original_mapping_definition));
-    assert(self::isArrayOfDataDefinitions($resolved_mapping_definition));
+    assert(!Mapping::isArrayOfDataDefinitions($original_mapping_definition));
+    assert(Mapping::isArrayOfDataDefinitions($resolved_mapping_definition));
     assert([] === array_diff_key($original_mapping_definition, $resolved_mapping_definition));
 
     // Statically typed keys are those whose type DID NOT change after resolving
@@ -200,7 +171,7 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     $dynamically_typed_keys = array_diff_key($resolved_mapping_definition, $statically_typed_keys);
 
     // Assign each of $statically_typed_keys to one of 2 buckets.
-    $unconditionally_required_keys = array_filter($statically_typed_keys, [__CLASS__, 'isRequiredMappingKey']);
+    $unconditionally_required_keys = array_filter($statically_typed_keys, [Mapping::class, 'isRequiredMappingKey']);
     $unconditionally_optional_keys = array_diff_key($statically_typed_keys, $unconditionally_required_keys);
 
     // Assign each of $dynamically_typed_keys to one of 4 buckets.
@@ -371,73 +342,6 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
         '@condition_property_value' => '<absent>',
       ];
     }
-  }
-
-  /**
-   * Resolves a `type: mapping` instance to its data definitions.
-   *
-   * @param \Drupal\Core\Config\Schema\Mapping $mapping
-   *   A `type: mapping` instance, with values.
-   *
-   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
-   *   The data definition for each of the keys.
-   */
-  protected function resolveMapping(Mapping $mapping) : array {
-    $definition = $mapping->getDataDefinition();
-    assert($definition instanceof MapDataDefinition);
-    assert(self::validateMappingConfigSchemaDefinition($definition));
-
-    // TRICKY: Mapping::getElementDefinition() because it is protected.
-    // TRICKY: This also cannot use Mapping::getElements() because it only
-    // considers keys that are present, making that impossible to use
-    // detecting missing keys.
-    // @todo Consider adding ArrayElement::getSchemaElements() that does not
-    // look at the keys that are present, but the keys that are defined in the
-    // schema. That would allow this to be removed.
-    $resolved_mapping = [];
-    // @see \Drupal\Core\Config\Schema\Mapping::getElementDefinition()
-    $elements = $mapping->getElements();
-    foreach ($definition['mapping'] as $key => $element_definition) {
-      $resolved_mapping[$key] = $this->typedConfigManager->buildDataDefinition(
-        $element_definition,
-        array_key_exists($key, $elements) ? $elements[$key]->getValue() : NULL,
-        $key,
-        $mapping
-      );
-    }
-    assert(self::isArrayOfDataDefinitions($resolved_mapping));
-    return $resolved_mapping;
-  }
-
-  /**
-   * Checks whether the specified data definition for a mapping key is required.
-   *
-   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
-   *   The data definition to evaluate.
-   *
-   * @return bool
-   *   Whether the `requiredKey` property is set or not.
-   */
-  protected static function isRequiredMappingKey(DataDefinitionInterface $definition): bool {
-    return !array_key_exists('requiredKey', $definition->toArray());
-  }
-
-  /**
-   * Asserts argument is an array containing DataDefinitionInterface instances.
-   *
-   * @param array $array
-   *   Variable to be examined.
-   *
-   * @return bool
-   *   TRUE if $array contains only DataDefinitionInterface instances.
-   */
-  protected static function isArrayOfDataDefinitions(array $array): bool {
-    foreach ($array as $value) {
-      if (!$value instanceof DataDefinitionInterface) {
-        return FALSE;
-      }
-    }
-    return TRUE;
   }
 
 }
