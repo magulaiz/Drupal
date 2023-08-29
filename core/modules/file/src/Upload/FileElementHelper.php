@@ -4,10 +4,8 @@ namespace Drupal\file\Upload;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Helper class for ManagedFile element form file uploads.
@@ -28,10 +26,8 @@ class FileElementHelper {
    * Constructs a FileFormHelper object.
    */
   public function __construct(
-    protected RequestStack $requestStack,
     protected FileSystemInterface $fileSystem,
     protected LoggerInterface $logger,
-    protected MessengerInterface $messenger,
     protected FormFileUploadHandler $formUploadHandler,
     protected FormUploadedFileRetriever $uploadedFileRetriever,
     protected MessageCollectingErrorHandlerFactory $errorHandlerFactory,
