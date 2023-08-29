@@ -87,7 +87,7 @@ trait SchemaCheckTrait {
     'core.entity_form_display.*.*.*' => [
       'content.*' => [
         "'type' is a required key.",
-        "'settings' is a conditionally required key because content\..* is .* \(see config schema type field\.widget\.settings\..*",
+        "'settings' is a required key.",
       ],
       'content.description.settings' => [
         "'size' is a required key.",
