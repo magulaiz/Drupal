@@ -846,6 +846,7 @@ trait SchemaCheckTrait {
       'display.*.display_options.filters.*.group_info.group_items.*' => [
         "'title' is a required key.",
         "'operator' is a required key.",
+        "'value' is a conditionally required key because display\..* is .* \(see config schema type views\.filter_value\..*",
         "'value' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*.value' => [
