@@ -299,9 +299,10 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       array_keys($this->definitions),
       fn (string $type) => preg_match("/^$regex$/", $type) === 1
     );
-    // 2. The fallback: `module.something.*`.
+    // 2. The fallback: `module.something.*` — if no concrete definition for it
+    // exists.
     $fallback_type = $this->getFallbackName($name);
-    if ($fallback_type) {
+    if ($fallback_type && !in_array($fallback_type, $possible_types, TRUE)) {
       $possible_types[] = $fallback_type;
     }
     return $possible_types;
