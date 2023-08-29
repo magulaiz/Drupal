@@ -34,6 +34,7 @@ class FileElementHelper {
     protected MessengerInterface $messenger,
     protected FormFileUploadHandler $formUploadHandler,
     protected FormUploadedFileRetriever $uploadedFileRetriever,
+    protected MessageCollectingErrorHandlerFactory $errorHandlerFactory,
   ) {}
 
   /**
@@ -71,27 +72,38 @@ class FileElementHelper {
     }
 
     $validators = $element['#upload_validators'] ?? [];
-    $errorHandler = new MessageCollectingErrorHandler($this->logger);
+
+    $collectingErrorHandler = $this->errorHandlerFactory->create();
 
     $files = $this->formUploadHandler->saveFileUploads(
       uploadName: $uploadName,
       validators: $validators,
       destination: $destination,
-      errorHandler: $errorHandler
+      errorHandler: $collectingErrorHandler
     );
 
     $files = array_filter($files);
 
-    if (count($errorHandler->getErrors()) > 0) {
-      $formState->setError($element, [
-        'error' => [
-          '#markup' => $this->t('One or more files could not be uploaded.'),
-        ],
-        'item_list' => [
-          '#theme' => 'item_list',
-          '#items' => $errorHandler->getErrors(),
-        ],
-      ]);
+    // Add any collected error messages to the form.
+    $errors = $collectingErrorHandler->getErrors();
+    if (count($errors) > 0) {
+      if (count($errors) === 1) {
+        // Use the first error message as the form error.
+        $message = reset($errors);
+      }
+      else {
+        // Combine the error messages into a list.
+        $message = [
+          'error' => [
+            '#markup' => $this->t('One or more files could not be uploaded.'),
+          ],
+          'item_list' => [
+            '#theme' => 'item_list',
+            '#items' => $errors,
+          ],
+        ];
+      }
+      $formState->setError($element, $message);
     }
 
     if (count($files) === 0) {
