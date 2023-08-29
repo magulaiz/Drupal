@@ -98,7 +98,7 @@ trait SchemaCheckTrait {
       'content.*' => [
         "'label' is a required key.",
         "'type' is a required key.",
-        "'settings' is a conditionally required key because content\..* is .* \(see config schema type field\.formatter\.settings\..*",
+        "'settings' is a required key.",
         "'weight' is a required key.",
       ],
       'content.*.settings' => [
@@ -699,7 +699,7 @@ trait SchemaCheckTrait {
         "'bypass_access' is a required key.",
       ],
       'display.*.display_options.fields.*' => [
-        "'settings' is a conditionally required key because display\..* is .* \(see config schema type field\.formatter\.settings\..*",
+        "'settings' is a required key.",
         "'replace_variables' is a required key.",
         "'link_to_user' is a required key.",
         "'link_to_node' is a required key.",
