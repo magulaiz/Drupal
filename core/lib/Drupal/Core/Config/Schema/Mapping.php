@@ -67,10 +67,8 @@ class Mapping extends ArrayElement {
    *   The config schema definition for a `type: mapping`.
    *
    * @return bool
-   *
-   * @todo make protected
    */
-  public static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): bool {
+  protected static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): bool {
     $definition = $definition->toArray();
     assert(array_key_exists('mapping', $definition));
 

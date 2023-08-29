@@ -128,8 +128,6 @@ class RequiredKeysConstraint extends Constraint implements ContainerFactoryPlugi
     $definition = $mapping->getDataDefinition();
     assert($definition instanceof MapDataDefinition);
 
-    Mapping::validateMappingConfigSchemaDefinition($definition);
-
     // The original mapping definition is used to determine the original types.
     // (This contains the raw definitions for types, as in `*.schema.yml`.)
     $original_mapping_definition = $definition->toArray()['mapping'];
