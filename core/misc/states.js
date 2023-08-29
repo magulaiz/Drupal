@@ -93,20 +93,20 @@
    */
   Drupal.behaviors.states = {
     attach(context, settings) {
-      const $states = $(context).find('[data-drupal-states]');
-      const il = $states.length;
-      for (let i = 0; i < il; i++) {
-        const config = JSON.parse(
-          $states[i].getAttribute('data-drupal-states'),
-        );
-        Object.keys(config || {}).forEach((state) => {
-          new states.Dependent({
-            element: $($states[i]),
-            state: states.State.sanitize(state),
-            constraints: config[state],
+      once('drupal-states-init', '[data-drupal-states]', context)
+        .forEach(function (element) {
+          const $element = $(element);
+          const config = JSON.parse(
+            element.getAttribute('data-drupal-states'),
+          );
+          Object.keys(config || {}).forEach((state) => {
+            new states.Dependent({
+              element: $element,
+              state: states.State.sanitize(state),
+              constraints: config[state],
+            });
           });
         });
-      }
 
       // Execute all postponed functions now.
       while (states.postponed.length) {
