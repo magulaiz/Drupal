@@ -108,7 +108,6 @@ class MenuAccessTest extends BrowserTestBase {
     // should be accessible.
     $this->drupalLogin($menuAdmin);
     $this->assertMenuItemRoutesAccess(200, 'admin/structure');
-    return;
     $this->assertMenuItemRoutesAccess(403, 'admin/people');
 
     // This user has access to administer filters so the config parent page
@@ -122,9 +121,7 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($webUser);
     $this->assertMenuItemRoutesAccess(403, 'admin/structure', 'admin/people');
     // As menu_test adds a menu link under config.
-    file_put_contents("/Users/ted.bowman/sites/test1.html", $this->getSession()->getPage()->getOuterHtml());
     $this->assertMenuItemRoutesAccess(200, 'admin/config');
-    return;
 
     $this->container->get('module_installer')->install(['menu_test']);
 
@@ -291,8 +288,6 @@ class MenuAccessTest extends BrowserTestBase {
   private function assertMenuItemRoutesAccess(int $expected_status, string|Url ...$paths): void {
     foreach ($paths as $path) {
       $this->drupalGet($path);
-      $f = $this->loggedInUser->getAccountName() . '-' . str_replace('/', '-', (string) $path);
-      file_put_contents("/Users/ted.bowman/sites/$f.html", $this->getSession()->getPage()->getOuterHtml());
       $this->assertSession()->statusCodeEquals($expected_status);
       $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
     }

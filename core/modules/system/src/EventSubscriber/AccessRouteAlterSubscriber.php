@@ -35,8 +35,8 @@ class AccessRouteAlterSubscriber implements EventSubscriberInterface {
       // because the leading slash in a fully-qualified method name is optional.
       if ($route->hasDefault('_controller') &&
         (
-          ltrim($route->getDefault('_controller'), '\\') === 'Drupal\system\Controller\SystemController::systemAdminMenuBlockPage' || 0
-          //ltrim($route->getDefault('_controller'), '\\') === 'Drupal\system\Controller\SystemController::overview'
+          ltrim($route->getDefault('_controller'), '\\') === 'Drupal\system\Controller\SystemController::systemAdminMenuBlockPage' ||
+          ltrim($route->getDefault('_controller'), '\\') === 'Drupal\system\Controller\SystemController::overview'
         )
       ) {
         $route->setRequirement('_access_admin_menu_block_page', 'TRUE');
