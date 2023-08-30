@@ -51,6 +51,9 @@ function demo_umami_set_users_passwords(#[\SensitiveParameter] $admin_password) 
  * Implements hook_toolbar().
  */
 function demo_umami_toolbar() {
+  // Show warning only on administration pages.
+  $admin_context = \Drupal::service('router.admin_context');
+
   // Add a warning about using an experimental profile.
   // @todo This can be removed once a generic warning for experimental profiles
   //   has been introduced. https://www.drupal.org/project/drupal/issues/2934374
@@ -59,13 +62,8 @@ function demo_umami_toolbar() {
     '#cache' => [
       'contexts' => ['route'],
     ],
-  ];
-
-  // Show warning only on administration pages.
-  $admin_context = \Drupal::service('router.admin_context');
-  if ($admin_context->isAdminRoute()) {
-    $items['experimental-profile-warning']['#type'] = 'toolbar_item';
-    $items['experimental-profile-warning']['tab'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
       '#type' => 'inline_template',
       '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This site is intended for demonstration purposes.</a>',
       '#context' => [
@@ -74,7 +72,9 @@ function demo_umami_toolbar() {
       '#attached' => [
         'library' => ['demo_umami/toolbar-warning'],
       ],
-    ];
-  }
+      '#access' => $admin_context->isAdminRoute(),
+   ],
+  ];
+
   return $items;
 }
