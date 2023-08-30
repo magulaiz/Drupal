@@ -18,6 +18,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\field_ui\Form\FieldStorageConfigEditForm;
+use Drupal\field_ui\FormElement\EntityFormDisplayElement;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 use Drupal\field_ui\ConfigTranslation\EntityDisplayMapper;
 
@@ -78,6 +79,24 @@ function field_ui_theme() {
       'render element' => 'element',
     ],
   ];
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function field_ui_config_schema_info_alter(&$definitions) {
+  $map = [
+    'core.entity_form_display.*.*.*' => EntityFormDisplayElement::class,
+  ];
+
+  // Enhance the text and date type definitions with classes to generate proper
+  // form elements in ConfigTranslationFormBase. Other translatable types will
+  // appear as a one line textfield.
+  foreach ($definitions as $type => &$definition) {
+    if (isset($map[$type]) && !isset($definition['form_element_class'])) {
+      $definition['form_element_class'] = $map[$type];
+    }
+  }
 }
 
 /**
