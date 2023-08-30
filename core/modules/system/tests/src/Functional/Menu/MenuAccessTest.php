@@ -18,7 +18,7 @@ class MenuAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'filter', 'menu_test', 'toolbar'];
+  protected static $modules = ['block', 'filter', 'toolbar'];
 
   /**
    * {@inheritdoc}
@@ -40,6 +40,7 @@ class MenuAccessTest extends BrowserTestBase {
    * @see \Drupal\menu_test\Access\AccessCheck::access()
    */
   public function testMenuBlockLinksAccessCheck() {
+    $this->container->get('module_installer')->install(['menu_test']);
     $this->drupalPlaceBlock('system_menu_block:account');
     // Test that there's link rendered on the route.
     $this->drupalGet('menu_test_access_check_session');
@@ -118,9 +119,9 @@ class MenuAccessTest extends BrowserTestBase {
     // This user doesn't have access to any of the child pages, so the parent
     // pages should not be accessible.
     $this->drupalLogin($webUser);
-    $this->assertMenuItemRoutesAccess(403, 'admin/structure', 'admin/people');
-    // As menu_test adds a menu link under config.
-    $this->assertMenuItemRoutesAccess(200, 'admin/config');
+    $this->assertMenuItemRoutesAccess(403, 'admin/structure', 'admin/people', 'admin/config');
+
+    $this->container->get('module_installer')->install(['menu_test']);
 
     // Test access to routes in the admin menu. The routes are in a menu tree
     // of the hierarchy:
