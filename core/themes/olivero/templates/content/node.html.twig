@@ -91,18 +91,6 @@
         attributes: create_attribute({class: 'node__meta'}),
         author_attributes,
       } only %}
-
-      <div class="node__meta">
-      {% if author_picture %}
-        <div class="node__author-image">
-          {{ author_picture }}
-        </div>
-      {% endif %}
-        <span{{ author_attributes }}>
-          {{ 'By'|t }} <span class="node__author">{{- author_name -}}</span>, {{ date }}
-        </span>
-        {{ metadata }}
-      </div>
     {% endif %}
   </header>
   <div{{ content_attributes.addClass('node__content', layout) }}>

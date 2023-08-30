@@ -100,12 +100,6 @@
         attributes: create_attribute({class: 'node__meta'}),
         author_attributes,
       } only %}
-      <div class="node__meta">
-        <span{{ author_attributes }}>
-          {{ 'By'|t }} <span class="node__author">{{- author_name -}}</span>, {{ date }}
-        </span>
-        {{ metadata }}
-      </div>
     {% endif %}
   {% endblock %}
   {% block image %}{{~ content.field_image ~}}{% endblock %}
