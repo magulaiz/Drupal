@@ -94,10 +94,10 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->setImageUploadSettings(['status' => TRUE]);
     $this->assertValidationErrors([
       'image_upload' => [
-        "'scheme' is a conditionally required key because image_upload.status is 1 (see config schema type optional_type.string.*).",
-        "'directory' is a conditionally required key because image_upload.status is 1 (see config schema type optional_type.string.*).",
-        "'max_size' is a conditionally required key because image_upload.status is 1 (see config schema type optional_type.string.*).",
-        "'max_dimensions' is a conditionally required key because image_upload.status is 1 (see config schema type optional_type.mapping.*).",
+        "'scheme' is a conditionally required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+        "'directory' is a conditionally required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+        "'max_size' is a conditionally required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+        "'max_dimensions' is a conditionally required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
       ],
     ]);
 
@@ -108,7 +108,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
       'directory' => 'uploaded-images',
       'max_size' => '5 MB',
     ]);
-    $this->assertValidationErrors(['image_upload' => "'max_dimensions' is a conditionally required key because image_upload.status is 1 (see config schema type optional_type.mapping.*)."]);
+    $this->assertValidationErrors(['image_upload' => "'max_dimensions' is a conditionally required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1)."]);
 
     // Specify all required keys.
     $this->entity->setImageUploadSettings([
@@ -137,10 +137,10 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     ]);
     $this->assertValidationErrors([
       'image_upload' => [
-        "'scheme' is an extraneous key because image_upload.status is 0 (see config schema type optional_type.string.image_upload_status_0).",
-        "'directory' is an extraneous key because image_upload.status is 0 (see config schema type optional_type.string.image_upload_status_0).",
-        "'max_size' is an extraneous key because image_upload.status is 0 (see config schema type optional_type.string.image_upload_status_0).",
-        "'max_dimensions' is an extraneous key because image_upload.status is 0 (see config schema type optional_type.mapping.image_upload_status_0).",
+        "'scheme' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+        "'directory' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+        "'max_size' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+        "'max_dimensions' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
       ],
     ]);
   }
