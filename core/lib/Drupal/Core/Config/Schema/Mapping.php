@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Config\Schema;
 
-use Drupal\Component\Assertion\Inspector;
-use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
 
 /**
@@ -37,9 +35,8 @@ class Mapping extends ArrayElement {
    *   A list of valid keys given the values in this mapping.
    */
   public function getValidKeys(): array {
-    $definition = $this->getDataDefinition();
-    assert($definition instanceof MapDataDefinition && self::validateMappingConfigSchemaDefinition($definition));
-    return array_keys($definition->toArray()['mapping']);
+    $all_keys = $this->getLocallyDefinedKeys() + $this->getInheritedKeys();
+    return array_keys($all_keys);
   }
 
   /**
@@ -49,16 +46,50 @@ class Mapping extends ArrayElement {
    *   A list of required keys given the values in this mapping.
    */
   public function getRequiredKeys(): array {
+    $all_keys = $this->getLocallyDefinedKeys() + $this->getInheritedKeys();
+    $required_keys = array_filter(
+      $all_keys,
+      fn (array $raw_schema_definition) => !array_key_exists('requiredKey', $raw_schema_definition),
+    );
+    return array_keys($required_keys);
+  }
+
+  /**
+   * Gets the mapping keys defined locally.
+   *
+   * @return array
+   *   Raw schema definitions: keys are mapping keys, values are their
+   *   definitions.
+   */
+  protected function getLocallyDefinedKeys(): array {
     $definition = $this->getDataDefinition();
     assert($definition instanceof MapDataDefinition && self::validateMappingConfigSchemaDefinition($definition));
+    // f.e. when using `type: mapping`, no keys have been defined, but it's
+    // still possible to define keys under `mapping: {…}`.
+    return $definition->toArray()['mapping'];
+  }
 
-    $required_keys = array_keys(array_filter(
-      $this->getResolvedDataDefinitions(),
-      [__CLASS__, 'isRequiredMappingKey']
-    ));
-
-    assert(empty(array_diff($required_keys, $this->getValidKeys())), 'Required keys must also be valid keys.');
-    return $required_keys;
+  /**
+   * Gets the mapping keys defined in the schema, including inheritance.
+   *
+   * TRICKY: $this->getDataDefinition() returns only the subset of the
+   * definition based on the values that are present
+   * TRICKY: $this->getTypedDataManager()->getDefinition() performs inheritance
+   * for us, but ignores the locally defined keys.
+   *
+   * @return array
+   *   Raw schema definitions: keys are mapping keys, values are their
+   *   definitions.
+   *
+   * @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
+   */
+  protected function getInheritedKeys(): array {
+    $definition = $this->getDataDefinition();
+    assert($definition instanceof MapDataDefinition);
+    $config_schema_definition = $this->getTypedDataManager()->getDefinition($definition->getDataType());
+    // f.e. when using `type: _core_config_info`, which extends `type: mapping`,
+    // we need the keys defined for `type: _core_config_info` to be inherited.
+    return $config_schema_definition['mapping'];
   }
 
   /**
@@ -98,19 +129,6 @@ class Mapping extends ArrayElement {
     }
 
     return TRUE;
-  }
-
-  /**
-   * Checks whether the specified data definition for a mapping key is required.
-   *
-   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
-   *   The data definition to evaluate.
-   *
-   * @return bool
-   *   Whether the `requiredKey` property is set or not.
-   */
-  protected static function isRequiredMappingKey(DataDefinitionInterface $definition): bool {
-    return !array_key_exists('requiredKey', $definition->toArray());
   }
 
 }
