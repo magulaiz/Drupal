@@ -1,0 +1,26 @@
+.meta__avatar {
+  width: var(--sp2-5);
+  height: var(--sp2-5);
+  margin-inline-end: var(--sp0-5);
+}
+
+.meta__avatar img {
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.meta__content {
+  display: flex;
+  align-items: center;
+}
+
+.meta__text {
+  color: var(--color-text-neutral-soft);
+  font-size: 0.875rem;
+  line-height: var(--sp);
+}
+
+.meta__text a {
+  color: var(--color-text-primary-medium);
+  font-weight: bold;
+}

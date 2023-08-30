@@ -8,11 +8,6 @@
 .node--view-mode-teaser {
   & .node__meta {
     margin-block-end: var(--sp);
-
-    & a {
-      color: var(--color-text-primary-medium);
-      font-weight: bold;
-    }
   }
 
   & .field--tag-ref {

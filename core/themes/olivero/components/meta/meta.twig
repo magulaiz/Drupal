@@ -1,0 +1,19 @@
+<div{{attributes.addClass('meta')}}>
+  <div class="meta__content">
+    {% if avatar %}
+      <div class="meta__avatar">
+        {{ avatar }}
+      </div>
+    {% endif %}
+    <span class="meta__text">
+      {% apply spaceless %}
+        {% if author %}
+          <span>
+            {{ 'By'|t }} <span{{author_attributes.addClass('meta__author')}}>{{ author }}</span>{% if date %}, {{ date }}{% endif %}
+          </span>
+        {% endif %}
+      {% endapply %}
+      {{ metadata }}
+    </span>
+  </div>
+</div>

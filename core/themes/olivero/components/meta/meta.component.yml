@@ -1,0 +1,30 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+name: Meta
+status: experimental
+props:
+  type: object
+  properties:
+    attributes:
+      title: Attributes
+      description: Meta attributes.
+      type: Drupal\Core\Template\Attribute
+    author_attributes:
+      title: Author attributes
+      description: Meta Author attributes.
+      type: Drupal\Core\Template\Attribute
+    avatar:
+      title: Avatar
+      description: Avatar image
+      type: object
+    author:
+      title: Author
+      description: Author name
+      type: string
+    date:
+      title: Date
+      description: Date
+      type: string
+    metadata:
+      title: Metadata
+      description: Additional metadata
+      type: string

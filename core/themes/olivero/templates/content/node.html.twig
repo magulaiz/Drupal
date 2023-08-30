@@ -83,6 +83,15 @@
     {% endif %}
     {{ title_suffix }}
     {% if display_submitted %}
+      {% include "olivero:meta" with {
+        avatar: author_picture,
+        author: author_name,
+        date,
+        metadata,
+        attributes: create_attribute({class: 'node__meta'}),
+        author_attributes,
+      } only %}
+
       <div class="node__meta">
       {% if author_picture %}
         <div class="node__author-image">
