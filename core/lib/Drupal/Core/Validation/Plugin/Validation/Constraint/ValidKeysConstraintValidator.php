@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\Mapping;
-use Drupal\Core\TypedData\MapDataDefinition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -52,7 +51,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
         $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + RequiredKeysConstraintValidator::getConditionalMessageParameters($mapping));
       }
     }
-    else if (is_array($constraint->allowedKeys)) {
+    elseif (is_array($constraint->allowedKeys)) {
       $invalid_keys = array_diff(array_keys($value), $constraint->allowedKeys);
       foreach ($invalid_keys as $key) {
         $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
