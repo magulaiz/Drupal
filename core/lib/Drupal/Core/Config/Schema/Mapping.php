@@ -31,34 +31,6 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Resolves a `type: mapping` instance to its data definitions.
-   *
-   * Resolves (dynamic) subtypes of `type: mapping`, to determine the exact data
-   * definitions for each key in the mapping, as prescribed by config schema.
-   *
-   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
-   *   The data definition for each of the keys.
-   */
-  public function getResolvedDataDefinitions() : array {
-    $definition = $this->getDataDefinition();
-    assert($definition instanceof MapDataDefinition);
-    assert(self::validateMappingConfigSchemaDefinition($definition));
-
-    // TRICKY: This cannot use Mapping::getElements() because it only considers
-    // keys that are present, making that impossible to use detecting missing
-    // keys.
-    // @todo Consider adding ArrayElement::getSchemaElements() that does not
-    // look at the keys that are present, but the keys that are defined in the
-    // schema. That would allow this to be removed.
-    $resolved_mapping = [];
-    foreach (array_keys($definition['mapping']) as $key) {
-      $resolved_mapping[$key] = $this->getElementDefinition($key);
-    }
-    assert(self::isArrayOfDataDefinitions($resolved_mapping));
-    return $resolved_mapping;
-  }
-
-  /**
    * Gets all valid keys in this mapping.
    *
    * @return string[]
@@ -139,24 +111,6 @@ class Mapping extends ArrayElement {
    */
   protected static function isRequiredMappingKey(DataDefinitionInterface $definition): bool {
     return !array_key_exists('requiredKey', $definition->toArray());
-  }
-
-  /**
-   * Asserts argument is an array containing DataDefinitionInterface instances.
-   *
-   * @param array $array
-   *   Variable to be examined.
-   *
-   * @return bool
-   *   TRUE if $array contains only DataDefinitionInterface instances.
-   */
-  protected static function isArrayOfDataDefinitions(array $array): bool {
-    foreach ($array as $value) {
-      if (!$value instanceof DataDefinitionInterface) {
-        return FALSE;
-      }
-    }
-    return TRUE;
   }
 
 }
