@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config\Schema;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\TypedData\MapDataDefinition;
 
 /**
@@ -90,6 +91,94 @@ class Mapping extends ArrayElement {
     // f.e. when using `type: _core_config_info`, which extends `type: mapping`,
     // we need the keys defined for `type: _core_config_info` to be inherited.
     return $config_schema_definition['mapping'];
+  }
+
+  /**
+   * Gets all conditionally valid keys.
+   *
+   * (When the `type` of the mapping is dynamic itself.)
+   *
+   * @return string[]
+   *   A list of conditionally optional keys. An array with:
+   *   - a key for every possible resolved type
+   *   - the corresponding value an array of the additional mapping keys that
+   *     are supported for this resolved type
+   */
+  public function getConditionallyValidKeys(): array {
+    if ($this->getParent() === NULL) {
+      return [];
+    }
+
+    // The original mapping definition is used to determine the original type.
+    // f.e.:
+    // 1. `type: editor.settings.[%parent.editor]`
+    // 2. `type: editor.image_upload_settings.[status]`.
+    $parent_data_def = $this->getParent()->getDataDefinition();
+    $original_mapping_type = match (TRUE) {
+      $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$this->getName()]['type'],
+      $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
+      default => throw new \LogicException('Invalid config schema detected.'),
+    };
+
+    // If the original mapping type is not dynamic, there's no additional work.
+    if (strpos($original_mapping_type, ']') === FALSE) {
+      return [];
+    }
+
+    // Find all possible types for the given original mapping type.
+    // f.e.:
+    // 1. `editor.settings.unicorn` or `editor.settings.trex`
+    // 2. `editor.image_upload_settings.*` or `editor.image_upload_settings.1`
+    $possible_types = $this->getTypedDataManager()->getPossibleTypes($original_mapping_type);
+
+    // This used a dynamic type, but only one concrete type is installed.
+    if (count($possible_types) <= 1) {
+      return [];
+    }
+
+    // Determine all valid keys across all possible types.
+    $all_type_definitions = $this->getTypedDataManager()->getDefinitions();
+    $possible_type_definitions = array_intersect_key($all_type_definitions, array_fill_keys($possible_types, TRUE));
+    // TRICKY: \Drupal\Core\Config\TypedConfigManager::getDefinition() does the
+    // necessary resolving, but TypedConfigManager::getDefinitions() does not! 🤷‍♂️
+    // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
+    // @see ::getValidKeys()
+    $valid_keys_per_type = array_map(
+      fn (string $possible_type) => array_keys($this->getTypedDataManager()->getDefinition($possible_type)['mapping'] ?? []),
+      // Keep the original types, but array_map() does not allow using the keys,
+      // so pass the same information twice: this logic will replace the values.
+      array_combine(
+        array_keys($possible_type_definitions),
+        array_keys($possible_type_definitions),
+      ),
+    );
+
+    // From all valid keys, determine which ones are supported everywhere:
+    // inspect the fallback type — if it exists.
+    // @todo use \Drupal\Core\Config\TypedConfigManager::getFallbackName()?
+    $valid_keys_everywhere = array_filter(
+      $valid_keys_per_type,
+      fn (array $valid_keys, string $type) => str_ends_with($type, '.*'),
+      ARRAY_FILTER_USE_BOTH
+    );
+    // There can only be one fallback type whose definition is inherited by all
+    // children.
+    // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
+    // assert(count($valid_keys_all) <= 1);
+    if (count($valid_keys_everywhere) > 1) {
+      // @todo BROKEN! Fix this in \Drupal\Core\Config\TypedConfigManager::getPossibleTypes()
+    }
+    $unconditional_keys = NestedArray::mergeDeepArray($valid_keys_everywhere);
+
+    // Now that unconditionally valid keys are known, determine which valid keys
+    // are only valid in some cases: filter away the unconditional keys that are
+    // present in each per-type array of valid keys.
+    $valid_keys_some = array_diff_key($valid_keys_per_type, $valid_keys_everywhere);
+    $valid_keys_some_processed = array_map(
+      fn (array $keys) => array_filter($keys, fn (string $key) => !in_array($key, $unconditional_keys, TRUE)),
+      $valid_keys_some
+    );
+    return $valid_keys_some_processed;
   }
 
   /**

@@ -281,18 +281,30 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *   example, that would be `core_date_format_pattern.*`.
    *
    * @see ::getFallbackName()
+   *
+   * todo move to mapping as protected?
    */
   public function getPossibleTypes(string $name): array {
-    // First, convert e.g.
+    // First, parse from e.g.
     // `module.something.foo_[%parent.locked]`
-    // to
-    // `module.something\.foo_[%parent.locked\]`
-    $escaped = preg_quote($name);
-    // Then, replace every sequence that starts with `\[` and ends with `\]`
-    // with `.*`, hence resulting in a regex that would match
-    // `module.something.foo_foo` and `module.something.foo_bar`.
+    // this:
+    // `[%parent.locked]`
+    // or from
+    // `[%parent.%parent.%type].third_party.[%key]`
+    // this:
+    // `[%parent.%parent.%type]` and `[%key]`.
+    // And collapse all these to just `[]`.
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-    $regex = preg_replace('/(\\\\\[.*\\\\\])/', ".*", $escaped);
+    $matches = [];
+    if (preg_match_all('/(\[[^\]]+\])/', $name, $matches) >= 1) {
+      $name = str_replace($matches[0], '[]', $name);
+    }
+    // Then, replace all `[]` occurrences with `.*` and escape all periods for
+    // use in a regex. So:
+    // `module\.something\.foo_.*`
+    // or
+    // `.*\.third_party\..*`
+    $regex = str_replace(['.', '[]'], ['\.', '.*'], $name);
     // Now find all possible types:
     // 1. `module.something.foo_foo`, `module.something.foo_bar`, etc.
     $possible_types = array_filter(
@@ -305,6 +317,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     if ($fallback_type && !in_array($fallback_type, $possible_types, TRUE)) {
       $possible_types[] = $fallback_type;
     }
+    // TODO: for third party settings on config entities, this finds impossible matches! The logic is a bit too generic ATM. Ideally we can reuse logic somewhere in the config system?
     return $possible_types;
   }
 
