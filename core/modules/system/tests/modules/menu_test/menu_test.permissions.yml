@@ -16,3 +16,6 @@ access super child2 test page:
 access super child3 test page:
   title: 'Access super child3 test page'
   restrict access: true
+access super duper child1 test page:
+  title: 'Access super duper child1 test page'
+  restrict access: true

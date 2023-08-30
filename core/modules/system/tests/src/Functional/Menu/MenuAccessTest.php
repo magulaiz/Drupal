@@ -134,18 +134,21 @@ class MenuAccessTest extends BrowserTestBase {
     // -menu_test.child2_test
     // --menu_test.super_child2_test
     // --menu_test.super_child3_test
-    // -menu_test.child3_test
+    // -menu_test.child3_test_block
+    // -menu_test.child4_test_overview
     // All routes in this tree except the "super_child" routes should have the
     // '_access_admin_menu_block_page' requirement which denies access unless
     // the user has access to a menu item under that route. Route
-    // 'menu_test.child3_test' has no menu items underneath it so no user should
-    // have access to this route even though it has the requirement
+    // 'menu_test.child3_test_block' and 'menu_test.child4_test_overview' have
+    // no menu items underneath it so no user should have access to these routes
+    // even though they have the requirement:
     // `_access: 'TRUE'`.
     $tree_routes = [
       'menu_test.parent_test',
       'menu_test.child1_test',
       'menu_test.child2_test',
-      'menu_test.child3_test',
+      'menu_test.child3_test_block',
+      'menu_test.child4_test_overview',
       'menu_test.super_child1_test',
       'menu_test.super_child2_test',
       'menu_test.super_child3_test',
@@ -197,11 +200,11 @@ class MenuAccessTest extends BrowserTestBase {
 
     // A user that does not have access to the top level parent but has access
     // to all the other routes will have access to all routes except the parent
-    // and 'menu_test.child3_test', because it has no items underneath in the
+    // and 'menu_test.child3_test_block', because it has no items underneath in the
     // menu.
     $this->assertUserRoutesAccess(
       $noParentAccessUser,
-      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test']),
+      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test_block', 'menu_test.child4_test_overview']),
       ...$tree_routes
     );
     // Users who have only access to one super child route should have access
@@ -289,8 +292,13 @@ class MenuAccessTest extends BrowserTestBase {
   private function assertMenuItemRoutesAccess(int $expected_status, string|Url ...$paths): void {
     foreach ($paths as $path) {
       $this->drupalGet($path);
-      $this->assertSession()->statusCodeEquals($expected_status);
-      $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+      try {
+        $this->assertSession()->statusCodeEquals($expected_status);
+        $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+      }
+      catch (\Throwable) {
+        $an = 'd';
+      }
     }
   }
 

@@ -42,6 +42,10 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
   ) {
   }
 
+  private static function getChildLevelForRout(\Symfony\Component\Routing\Route $route): int {
+    return $route->getRequirement('_access_admin_overview_page') ? 2 : 1;
+  }
+
   /**
    * Checks access.
    *
@@ -55,6 +59,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account): AccessResultInterface {
     $parameters = $route_match->getParameters()->all();
+    $route = $route_match->getRouteObject();
     // Load links in the 'admin' menu matching this route.
     // First try to find the menu link using all specified parameters.
     $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
@@ -67,7 +72,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     // that menu items will work in either case.
     // @todo Remove this fallback in https://drupal.org/i/3359511.
     if (empty($links)) {
-      $route = $route_match->getRouteObject();
+
       $parameters_without_defaults = array_filter($parameters, fn ($key) => !$route->hasDefault($key) || $route->getDefault($key) !== $parameters[$key], ARRAY_FILTER_USE_KEY);
       $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters_without_defaults, 'admin');
     }
@@ -75,7 +80,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       // If we did not find a link then we have no opinion on access.
       return AccessResult::neutral();
     }
-    return $this->hasAccessToChildMenuItems(reset($links), $account)->cachePerPermissions();
+    return $this->hasAccessToChildMenuItems(reset($links), $account, static::getChildLevelForRout($route))->cachePerPermissions();
   }
 
   /**
@@ -89,7 +94,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  protected function hasAccessToChildMenuItems(MenuLinkInterface $link, AccountInterface $account): AccessResultInterface {
+  protected function hasAccessToChildMenuItems(MenuLinkInterface $link, AccountInterface $account, int $child_level): AccessResultInterface {
     $parameters = new MenuTreeParameters();
     $parameters->setRoot($link->getPluginId())
       ->excludeRoot()
@@ -101,7 +106,10 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     if (empty($tree)) {
       $route = $this->router->getRouteCollection()->get($link->getRouteName());
       if ($route) {
-        return AccessResult::allowedIf(empty($route->getRequirement('_access_admin_menu_block_page')));
+        return AccessResult::allowedIf(
+          empty($route->getRequirement('_access_admin_menu_block_page'))
+          && empty($route->getRequirement('_access_admin_overview_page'))
+        );
       }
       return AccessResult::neutral();
     }
@@ -113,7 +121,8 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
 
       // If access is allowed to this element in the tree check for access to
       // its own children.
-      return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account)->isAllowed());
+      $elementRoute = $this->router->getRouteCollection()->get($element->link->getRouteName());
+      return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account, static::getChildLevelForRout($elementRoute))->isAllowed());
     }
     return AccessResult::neutral();
   }
