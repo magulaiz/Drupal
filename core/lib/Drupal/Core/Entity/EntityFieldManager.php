@@ -569,7 +569,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function rebuildBundleFieldMap() {
     $map = [];
