@@ -113,7 +113,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     $this->messenger = $messenger;
     $this->entityRepository = $entity_repository;
     if (!$route_match) {
-      @trigger_error('Calling BulkForm::__construct() without the $route_match argument is deprecated in drupal:8.9.0 and the $route_match argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3115868', E_USER_DEPRECATED);
+      @trigger_error('Calling  ' . __METHOD__ . ' without the $route_match argument is deprecated in drupal:10.2.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3115868', E_USER_DEPRECATED);
       $route_match = \Drupal::routeMatch();
     }
     $this->routeMatch = $route_match;
