@@ -73,7 +73,7 @@ function demo_umami_toolbar() {
         'library' => ['demo_umami/toolbar-warning'],
       ],
       '#access' => $admin_context->isAdminRoute(),
-   ],
+    ],
   ];
 
   return $items;
