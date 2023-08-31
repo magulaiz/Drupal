@@ -18,14 +18,10 @@ editor.editor.*:
       type: editor.settings.[%parent.editor]
     image_upload:
       type: editor.image_upload_settings.[status]
-      label: 'Image upload settings'
-      mapping:
-        status:
-          type: boolean
-          label: 'Status'
 
 editor.image_upload_settings.*:
   type: mapping
+  label: 'Image upload settings'
   mapping:
     status:
       type: boolean
@@ -44,7 +40,7 @@ editor.image_upload_settings.1:
       type: string
       label: 'Maximum file size'
     max_dimensions:
-      type: string
+      type: mapping
       label: 'Maximum dimensions'
       mapping:
         width:
