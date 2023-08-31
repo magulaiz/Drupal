@@ -68,13 +68,8 @@ trait SchemaCheckTrait {
         // @see \Drupal\views\Plugin\Block\ViewsExposedFilterBlock
         "'items_per_page' is a conditionally required key because plugin is views_exposed_filter_block:.* \(see config schema type block\.settings\.views_exposed_filter_block:*.*",
       ],
-      'visibility.request_path' => [
-        "'uuid' is a required key.",
-        "'context_mapping' is a required key.",
-      ],
-      'visibility.user_role' => [
-        // @see \Drupal\user\Plugin\Condition\UserRole
-        "'uuid' is a conditionally required key because visibility\..*\.id is user_role \(see config schema type condition\.plugin\.user_role.*",
+      'visibility.*' => [
+        "'.*' is a conditionally required key because visibility\..* is .* \(see config schema type condition\.plugin\..*",
       ],
     ],
     'core.base_field_override.*.*.*' => [
@@ -214,7 +209,8 @@ trait SchemaCheckTrait {
         "'status' is a required key.",
         "'weight' is a required key.",
         "'settings' is a required key.",
-        "'restrictions' is a required key.",
+        // @see \Drupal\filter_test\Plugin\Filter\FilterTestRestrictTagsAndAttributes
+        "'restrictions' is a conditionally required key because filters\..*\.id is filter_test_restrict_tags_and_attributes \(see config schema type filter_settings\.filter_test_restrict_tags_and_attributes.*",
       ],
     ],
     'language.content_settings.*.*' => [
