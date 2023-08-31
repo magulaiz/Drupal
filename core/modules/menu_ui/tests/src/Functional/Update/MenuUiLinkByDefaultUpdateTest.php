@@ -1,20 +1,17 @@
 <?php
 
-namespace Drupal\Tests\media\Functional\Update;
+namespace Drupal\Tests\menu_ui\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use Drupal\Tests\UpdatePathTestTrait;
 
 /**
  * Tests that link_by_default is added in third_party.menu_ui settings.
  *
- * @group system
+ * @group Update
  * @group legacy
  * @covers \menu_ui_post_update_add_link_by_default
  */
 class MenuUiLinkByDefaultUpdateTest extends UpdatePathTestBase {
-
-  use UpdatePathTestTrait;
 
   /**
    * {@inheritdoc}
