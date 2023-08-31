@@ -289,7 +289,7 @@ class Statement extends StatementWrapperIterator {
     // SELECT query should not use this method.
     if ($this->rowCountEnabled) {
       // @todo The most accurate value to return for Drupal here is the first
-      //   occurence of an integer in the string stored by the connection's
+      //   occurrence of an integer in the string stored by the connection's
       //   $info property.
       //   This is something like 'Rows matched: 1  Changed: 1  Warnings: 0' for
       //   UPDATE or DELETE operations, and

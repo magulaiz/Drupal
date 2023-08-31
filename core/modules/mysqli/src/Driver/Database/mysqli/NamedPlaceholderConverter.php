@@ -2,6 +2,8 @@
 
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
+// cspell:ignore DBAL MULTICHAR
+
 /**
  * A class to convert a SQL statement with named placeholders to positional.
  *
