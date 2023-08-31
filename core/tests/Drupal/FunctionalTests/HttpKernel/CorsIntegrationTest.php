@@ -106,9 +106,9 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Specify a valid origin that matches allowedOriginsPatterns.
-    $this->drupalGet('/test-page', [], ['Origin' => 'http://domainX.valid.com']);
+    $this->drupalGet('/test-page', [], ['Origin' => 'http://domainX.com']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderDoesNotExist('Access-Control-Allow-Origin');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://domainX.com');
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Configure the CORS stack to allow a specific origin.
