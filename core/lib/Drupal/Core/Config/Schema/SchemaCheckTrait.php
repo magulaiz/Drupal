@@ -73,7 +73,8 @@ trait SchemaCheckTrait {
         "'context_mapping' is a required key.",
       ],
       'visibility.user_role' => [
-        "'uuid' is a required key.",
+        // @see \Drupal\user\Plugin\Condition\UserRole
+        "'uuid' is a conditionally required key because visibility\..*\.id is user_role \(see config schema type condition\.plugin\.user_role.*",
       ],
     ],
     'core.base_field_override.*.*.*' => [
@@ -173,9 +174,14 @@ trait SchemaCheckTrait {
         "'role' is a required key.",
       ],
       'default_value.*' => [
-        "'format' is a required key.",
-        "'attributes' is a required key.",
-        "'target_uuid' is a required key.",
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem
+        // @see \Drupal\file\Plugin\Field\FieldType\FileItem (inherited)
+        // @see \Drupal\image\Plugin\Field\FieldType\ImageItem (inherited)
+        "'target_uuid' is a conditionally required key because field_type is (entity_reference|file|image) \(see config schema type field\.value\..*",
+        // @see \Drupal\link\Plugin\Field\FieldType\LinkItem
+        "'attributes' is a conditionally required key because field_type is link \(see config schema type field\.value\.link.*",
+        // @see \Drupal\text\Plugin\Field\FieldType\TextItemBase
+        "'format' is a conditionally required key because field_type is (text|text_long|text_with_summary) \(see config schema type field\.value\.text.*",
       ],
       'default_value.*.options' => [
         "'query' is a required key.",
@@ -186,9 +192,10 @@ trait SchemaCheckTrait {
     ],
     'field.storage.*.*' => [
       'settings' => [
-        "'is_ascii' is a required key.",
         // @see \Drupal\text\Plugin\Field\FieldType\TextItemBase
         "'allowed_formats' is a conditionally required key because type is (text|text_long|text_with_summary) \(see config schema type field\.storage_settings\.text.*",
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\UriItem
+        "'is_ascii' is a conditionally required key because type is uri \(see config schema type field\.storage_settings\.uri.*",
       ],
       'settings.default_image' => [
         "'alt' is a required key.",
@@ -391,8 +398,8 @@ trait SchemaCheckTrait {
         "'route_params' is a required key.",
       ],
       'tips.*' => [
-        "'position' is a required key.",
-        "'selector' is a required key.",
+        "'position' is a conditionally required key because tips\..*\.plugin is text \(see config schema type tour\.tip\.text.*",
+        "'selector' is a conditionally required key because tips\..*\.plugin is text \(see config schema type tour\.tip\.text.*",
       ],
     ],
     'update.settings' => [
@@ -854,7 +861,12 @@ trait SchemaCheckTrait {
         // @see \Drupal\views\Plugin\views\field\EntityLinkEdit (inherited)
         "'absolute' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (entity_link|entity_link_delete|entity_link_edit) \(see config schema type views\.field\.entity_link.*",
         "'output_url_as_text' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (entity_link|entity_link_delete|entity_link_edit) \(see config schema type views\.field\.entity_link.*",
-        "'text' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (entity_link|entity_link_delete|entity_link_edit) \(see config schema type views\.field\.entity_link.*",
+        // @see \Drupal\views\Plugin\views\field\LinkBase
+        // @see \Drupal\views\Plugin\views\field\EntityLink (inherited)
+        // @see \Drupal\views\Plugin\views\field\EntityLinkDelete (inherited)
+        // @see \Drupal\views\Plugin\views\field\EntityLinkEdit (inherited)
+        // @see \Drupal\comment\Plugin\views\field\LinkApprove (inherited)
+        "'text' is a conditionally required key because display\..*\.fields\..*\.plugin_id is .* \(see config schema type views\.field\..*",
       ],
       'display.*.display_options.fields.*.alter' => [
         "'alter_text' is a required key.",
@@ -885,7 +897,6 @@ trait SchemaCheckTrait {
         "'preserve_tags' is a required key.",
       ],
       'display.*.display_options.fields.*.settings' => [
-        "'link_to_file' is a required key.",
         // @see \Drupal\views\Plugin\views\field\EntityField
         // @see \Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter
         // @see \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter (inherited)
@@ -899,6 +910,9 @@ trait SchemaCheckTrait {
         // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\LanguageFormatter (inherited)
         // @see \Drupal\user\Plugin\Field\FieldFormatter\UserNameFormatter
         "'link_to_entity' is a conditionally required key because display\..*\.fields\..*\.type is (string|language|user_name) \(see config schema type field\.formatter\.settings\..*",
+        // @see \Drupal\views\Plugin\views\field\EntityField
+        // @see \Drupal\file\Plugin\Field\FieldFormatter\DefaultFileFormatter
+        "'link_to_file' is a conditionally required key because display\..*\.fields\..*\.type is file_link \(see config schema type field\.formatter\.settings\.file_link.*",
         // @see \Drupal\views\Plugin\views\field\EntityField
         // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampAgoFormatter
         "'future_format' is a conditionally required key because display\..*\.fields\..*\.type is timestamp_ago \(see config schema type field\.formatter\.settings\.timestamp_ago.*",
