@@ -116,7 +116,9 @@ class Mapping extends ArrayElement {
     $parent_data_def = $this->getParent()->getDataDefinition();
     $original_mapping_type = match (TRUE) {
       $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$this->getName()]['type'],
-      $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
+      // @todo: Remove BC layer for sequence with hyphen in front. https://www.drupal.org/node/2444979
+      // @see \Drupal\Core\Config\Schema\Sequence::getElementDefinition()
+      $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'] ?? $parent_data_def->toArray()['sequence'][0]['type'],
       default => throw new \LogicException('Invalid config schema detected.'),
     };
 
