@@ -48,7 +48,7 @@ class MenuUiLinkByDefaultUpdateTest extends UpdatePathTestBase {
 
     $page_third_party_menu_ui_settings = $this->config('node.type.page')->get('third_party_settings.menu_ui');
     $this->assertNotNull($page_third_party_menu_ui_settings['link_by_default']);
-    $this->assertSame(FALSE, $page_third_party_menu_ui_settings['link_by_default']);
+    $this->assertFalse($page_third_party_menu_ui_settings['link_by_default']);
   }
 
 }
