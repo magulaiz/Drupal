@@ -6,6 +6,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 
 /**
+ * Tests that link_by_default is added in third_party.menu_ui settings.
  *
  * @group system
  * @group legacy
@@ -36,7 +37,7 @@ class MenuUiLinkByDefaultUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Test that link_by_default is added in node.type.*.third_party.menu_ui.
+   * Tests that link_by_default is added in node.type.page.third_party.menu_ui.
    *
    * @see menu_ui_post_update_add_link_by_default()
    */
