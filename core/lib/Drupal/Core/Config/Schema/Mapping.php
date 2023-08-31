@@ -161,10 +161,10 @@ class Mapping extends ArrayElement {
     // 2. `editor.image_upload_settings.*` or `editor.image_upload_settings.1`
     $possible_types = $this->getTypedDataManager()->getPossibleTypes($original_mapping_type);
 
-    // This used a dynamic type, but only one concrete type is installed.
-    if (count($possible_types) <= 1) {
-      return [];
-    }
+    // TRICKY: it is tempting to not consider this a dynamic type if only one
+    // concrete type is installed. But this would lead to different validation
+    // errors when modules are installed or uninstalled.
+    assert(!empty($possible_types));
 
     // Determine all valid keys across all possible types.
     $all_type_definitions = $this->getTypedDataManager()->getDefinitions();
