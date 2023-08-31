@@ -454,6 +454,11 @@ class FieldConfigEditForm extends EntityForm {
       $field_storage->setSetting('target_type', $new_target_type);
       if ($handler = $this->entity->getSetting('handler')) {
         [$current_handler] = explode(':', $handler, 2);
+        // The handler will need to change. Can entity reference
+        // @see field_field_storage_config_update()
+        // We can't really save but could we override \Drupal\field\Entity\FieldConfig::save() to call save on the regular storage but
+        // call on a new starage that always saves to the tempstore. Then we could call
+        // $this->entity->save() which fire all hooks needed.
         $this->entity->setSetting('handler', $this->selectionManager->getPluginId($new_target_type, $current_handler));
         // @see field_field_storage_config_update
         $this->entity->setSetting('handler_settings', []);
@@ -462,11 +467,15 @@ class FieldConfigEditForm extends EntityForm {
     else {
       $parents = array_slice($form_state->getTriggeringElement()['#parents'], 0, -1);
       $parents[] = 'settings';
+      // @todo Do we still need to do this?
       if ($form_state->getValue($parents) !== NULL) {
         $field_storage->setSettings($form_state->getValue($parents));
       }
     }
+    // @todo Do we still need to do this?
+    // Can we call build entity on the subform?
     $field_storage->set('cardinality', $form_state->getValue(['field_storage', 'subform', 'cardinality_number']));
+
 
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();
