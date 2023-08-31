@@ -200,10 +200,14 @@ class FieldConfigEditForm extends EntityForm {
     }
     $form['field_storage']['subform']['field_storage_submit'] = [
       '#type' => 'submit',
+      '#name' => 'field_storage_submit',
       '#value' => $this->t('Update settings'),
       '#limit_validation_errors' => [],
       '#process' => [[static::class, 'processFieldStorageSubmit']],
       '#submit' => [[$this, 'fieldStorageSubmit']],
+      '#ajax' => [
+        'callback' => [$this, 'showUpdated'],
+      ],
     ];
     // Add field settings for the field type and a container for third party
     // settings that modules can add to via hook_form_FORM_ID_alter().
@@ -261,7 +265,6 @@ class FieldConfigEditForm extends EntityForm {
    * Callback for relaoding the form.
    */
   public function showUpdated($form, FormStateInterface &$form_state) {
-    //$this->fieldStorageSubmit($form, $form_state);
     return $form;
   }
 
@@ -435,6 +438,7 @@ class FieldConfigEditForm extends EntityForm {
    */
   public static function processFieldStorageSubmit(array $element, FormStateInterface $form_state, &$complete_form) {
     $element['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
+    $complete_form['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
     return $element;
   }
 
@@ -500,7 +504,7 @@ class FieldConfigEditForm extends EntityForm {
         if (!empty($element_info['#input'])) {
           $child_is_input = TRUE;
           $child['#ajax'] = [
-            'callback' => [$this, 'showUpdated'],
+            'trigger_as' => ['name' => 'op'],
             'wrapper' => 'field-combined',
             'event' => 'change',
           ];
