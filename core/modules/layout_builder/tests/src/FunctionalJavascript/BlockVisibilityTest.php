@@ -152,7 +152,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
     }
 
     // Test Request Path visibility rule.
-    $this->beginAddCondition('request_path');
+    $this->beginAddCondition('Request Path');
     $page->checkField('settings[negate]');
     $page->findField('settings[pages]')->setValue('/node/2');
     $page->pressButton('Add condition');
@@ -181,16 +181,25 @@ class BlockVisibilityTest extends WebDriverTestBase {
     $assert_session->pageTextContains('The node body');
 
     // Confirm 'or' operator works ('and' is the default operator)
-    $this->beginAddCondition('request_path', 'or');
+    $this->beginAddCondition('Request Path');
     $page->checkField('settings[negate]');
     $page->findField('settings[pages]')->setValue('/node/2');
     $page->pressButton('Add condition');
     $assert_session->assertWaitOnAjaxRequest();
+    $this->clickContextualLink(static::BODY_FIELDBLOCK_SELECTOR, 'Control visibility');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->findField('operator')->setValue('or');
+    $page->pressButton('Update operator');
+    $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The node body');
+    $this->drupalGet('node/2');
+    $assert_session->pageTextContains('The node body');
 
     // Test Current Theme visibility rule.
     $this->removeVisibilityConditions();
-    $this->beginAddCondition('current_theme');
+    $this->beginAddCondition('Current Theme');
     $page->checkField('settings[negate]');
     $page->findField('settings[theme]')->setValue('olivero');
     $page->pressButton('Add condition');
@@ -203,7 +212,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
 
     // Test User Role visibility rule.
     $this->removeVisibilityConditions();
-    $this->beginAddCondition('user_role');
+    $this->beginAddCondition('User Role');
     $page->checkField('settings[negate]');
     $page->checkField('settings[roles][anonymous]');
     $page->pressButton('Add condition');
@@ -227,10 +236,8 @@ class BlockVisibilityTest extends WebDriverTestBase {
    *
    * @param string $condition
    *   The visibility condition to add.
-   * @param string $operator
-   *   The and/or operator when multiple conditions present.
    */
-  protected function beginAddCondition($condition, $operator = '') {
+  protected function beginAddCondition($condition) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -238,12 +245,9 @@ class BlockVisibilityTest extends WebDriverTestBase {
     $this->clickContextualLink(static::BODY_FIELDBLOCK_SELECTOR, 'Control visibility');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
-    $page->findField('condition')->setValue($condition);
+    $page->pressButton('Add a visibility condition');
+    $page->clickLink($condition);
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[value="Add condition"]'));
-    if (!empty($operator)) {
-      $page->findField('operator')->setValue($operator);
-    }
-    $page->pressButton('Add condition');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[name="settings[negate]"]'));
   }
 
