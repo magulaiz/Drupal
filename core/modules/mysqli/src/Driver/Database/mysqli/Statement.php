@@ -107,7 +107,7 @@ class Statement extends StatementWrapperIterator {
         $this->connection->getKey(),
         $this->connection->getTarget(),
         $this->getQueryString(),
-        $args ?? [],
+        $args,
         $this->connection->findCallerFromDebugBacktrace()
       );
       $this->connection->dispatchEvent($startEvent);
@@ -273,7 +273,7 @@ class Statement extends StatementWrapperIterator {
    */
   public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
     if (isset($class_name)) {
-      $this->fetchStyle = \PDO::FETCH_CLASS;
+      $this->defaultFetchStyle = \PDO::FETCH_CLASS;
       $this->fetchOptions = [
         'class' => $class_name,
         'constructor_args' => $constructor_arguments,

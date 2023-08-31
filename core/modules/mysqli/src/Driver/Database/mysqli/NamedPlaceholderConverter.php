@@ -123,7 +123,7 @@ final class NamedPlaceholderConverter {
         $offset += strlen($matches[0]);
       }
       elseif (preg_last_error() !== PREG_NO_ERROR) {
-        throw \RuntimeException('Regular expression error');
+        throw new \RuntimeException('Regular expression error');
       }
       else {
         next($patterns);
@@ -159,7 +159,7 @@ final class NamedPlaceholderConverter {
     $index = $this->originalParameterIndex;
 
     if (!array_key_exists($index, $this->originalParameters)) {
-      throw \RuntimeException('Missing Positional Parameter ' . $index);
+      throw new \RuntimeException('Missing Positional Parameter ' . $index);
     }
 
     $this->convertedSQL[] = '?';
@@ -178,7 +178,7 @@ final class NamedPlaceholderConverter {
     $name = substr($sql, 1);
 
     if (!array_key_exists($name, $this->originalParameters)) {
-      throw \RuntimeException('Missing Named Parameter ' . $name);
+      throw new \RuntimeException('Missing Named Parameter ' . $name);
     }
 
     $this->convertedSQL[] = '?';
