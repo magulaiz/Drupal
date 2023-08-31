@@ -61,11 +61,12 @@ trait SchemaCheckTrait {
         "'info' is a required key.",
         "'view_mode' is a required key.",
         "'context_mapping' is a required key.",
-        "'items_per_page' is a required key.",
         "'level' is a required key.",
         "'depth' is a required key.",
         "'expand_all_items' is a required key.",
         "'views_label' is a required key.",
+        // @see \Drupal\views\Plugin\Block\ViewsExposedFilterBlock
+        "'items_per_page' is a conditionally required key because plugin is views_exposed_filter_block:.* \(see config schema type block\.settings\.views_exposed_filter_block:*.*",
       ],
       'visibility.request_path' => [
         "'uuid' is a required key.",
@@ -78,10 +79,12 @@ trait SchemaCheckTrait {
     'core.base_field_override.*.*.*' => [
       'settings.handler_settings' => [
         "'target_type' is a required key.",
-        "'target_bundles' is a required key.",
-        "'sort' is a required key.",
-        "'auto_create' is a required key.",
-        "'auto_create_bundle' is a required key.",
+        // @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
+        // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection (inherited)
+        "'auto_create' is a conditionally required key because settings\.handler is default \(see config schema type entity_reference_selection\.default.*",
+        "'auto_create_bundle' is a conditionally required key because settings\.handler is default \(see config schema type entity_reference_selection\.default.*",
+        "'sort' is a conditionally required key because settings\.handler is default \(see config schema type entity_reference_selection\.default.*",
+        "'target_bundles' is a conditionally required key because settings\.handler is default \(see config schema type entity_reference_selection\.default.*",
       ],
     ],
     'core.entity_form_display.*.*.*' => [
@@ -101,7 +104,7 @@ trait SchemaCheckTrait {
         "'weight' is a required key.",
       ],
       'content.*.settings' => [
-        "'pager_id' is a required key.",
+        "'pager_id' is a conditionally required key because content\..*\.type is comment_default \(see config schema type field\.formatter\.settings\.comment_default.*",
       ],
       'third_party_settings.layout_builder' => [
         "'sections' is a required key.",
@@ -148,7 +151,6 @@ trait SchemaCheckTrait {
       ],
       'settings.handler_settings' => [
         "'target_type' is a required key.",
-        "'view' is a required key.",
         // @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
         // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection (inherited)
         "'auto_create' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
@@ -158,6 +160,8 @@ trait SchemaCheckTrait {
         // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection
         "'filter' is a conditionally required key because settings\.handler is default:user \(see config schema type entity_reference_selection\.default:user.*",
         "'include_anonymous' is a conditionally required key because settings\.handler is default:user \(see config schema type entity_reference_selection\.default:user.*",
+        // @see \Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection
+        "'view' is a conditionally required key because settings\.handler is views \(see config schema type entity_reference_selection\.views.*",
       ],
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",
@@ -924,7 +928,6 @@ trait SchemaCheckTrait {
         "'operator' is a required key.",
       ],
       'display.*.display_options.filters.*' => [
-        "'reduce_duplicates' is a required key.",
         "'type' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
@@ -942,6 +945,8 @@ trait SchemaCheckTrait {
         // @see \Drupal\views\Plugin\views\filter\Date
         // @see \Drupal\datetime\Plugin\views\filter\Date (inherited)
         "'type' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (date|datetime) \(see config schema type views\.filter\..*",
+        // @see \Drupal\user\Plugin\views\filter\Roles
+        "'reduce_duplicates' is a conditionally required key because display\..*\.filters\..*\.plugin_id is user_roles \(see config schema type views\.filter\.user_roles.*",
       ],
       'display.*.display_options.filters.*.group_info' => [
         "'default_group_multiple' is a required key.",
@@ -957,9 +962,14 @@ trait SchemaCheckTrait {
         "'value' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*.value' => [
-        "'value' is a required key.",
-        "'min' is a required key.",
-        "'max' is a required key.",
+        // @see \Drupal\views\Plugin\views\filter\NumericFilter
+        // @see \Drupal\views\Plugin\views\filter\Date (inherited)
+        // @see \Drupal\views\Plugin\views\filter\GroupByNumeric (inherited)
+        // @see \Drupal\comment\Plugin\views\filter\StatisticsLastUpdated (inherited)
+        // @see \Drupal\datetime\Plugin\views\filter\Date (inherited)
+        "'min' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (numeric|date|groupby_numeric|comment_ces_last_updated|datetime) \(see config schema type views\.filter_value\..*",
+        "'max' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (numeric|date|groupby_numeric|comment_ces_last_updated|datetime) \(see config schema type views\.filter_value\..*",
+        "'value' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (numeric|date|groupby_numeric|comment_ces_last_updated|datetime) \(see config schema type views\.filter_value\..*",
       ],
       'display.*.display_options.filters.*.value' => [
         // @see \Drupal\views\Plugin\views\filter\Date
