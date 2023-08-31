@@ -97,46 +97,50 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
 
     $config = $mapping->getRoot();
     // Find the relative property path where this mapping starts.
-    $property_path_start = substr($mapping->getPropertyPath(), strlen($config->getName()) + 1);
+    $property_path_mapping = substr($mapping->getPropertyPath(), strlen($config->getName()) + 1);
 
-    // Extract the instructions stored in the dynamic type.
+    // Extract the variable values stored in the dynamic type.
     $matches = [];
     // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
     assert(preg_match("/\[(.*)\]/U", $original_type, $matches) === 1);
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-    $instructions = explode('.', $matches[1]);
+    $variable_value = $matches[1];
+    // From the variable value, extract the instructions for where to retrieve a
+    // value.
+    $instructions = explode('.', $variable_value);
 
-    // Start from the relative path for the key and follow the instructions.
-    $property_path_parts = explode('.', $property_path_start);
+    // Determine the property path to the configuration key that has determined
+    // this type.
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+    $property_path_parts = explode('.', $property_path_mapping);
+    // @see \Drupal\Core\Config\Schema\Mapping::getConditionallyValidKeys()
+    assert(!in_array(['%key', '%type'], $instructions));
+    // Do not replace variables, do not traverse the tree of data, but instead
+    // resolve the property path that contains the value causing this particular
+    // type to be selected.
     while ($instructions) {
       $instruction = array_shift($instructions);
-      switch ($instruction) {
-        case '%parent';
-          array_pop($property_path_parts);
-          break;
-
-        default:
-          array_push($property_path_parts, $instruction);
-          break;
+      // Go up one level: remove the last part of the property path.
+      if ($instruction === '%parent') {
+        array_pop($property_path_parts);
+      }
+      // Go down one level: append the given key.
+      else {
+        array_push($property_path_parts, $instruction);
       }
     }
     $resolved_property_path = implode('.', $property_path_parts);
     $message_parameters += [
       '@condition_property_path' => $resolved_property_path,
     ];
-    try {
-      $val = $config->get($resolved_property_path)->getValue();
-      // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-      $val = is_bool($val) ? (int) $val : $val;
-      return $message_parameters + [
-        '@condition_property_value' => $val,
-      ];
-    }
-    catch (\InvalidArgumentException) {
-      return $message_parameters + [
-        '@condition_property_value' => '<absent>',
-      ];
-    }
+
+    // Determine the corresponding value for that property path.
+    $val = $config->get($resolved_property_path)->getValue();
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+    $val = is_bool($val) ? (int) $val : $val;
+    return $message_parameters + [
+      '@condition_property_value' => $val,
+    ];
   }
 
 }

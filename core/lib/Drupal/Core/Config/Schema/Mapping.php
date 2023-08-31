@@ -125,6 +125,36 @@ class Mapping extends ArrayElement {
       return [];
     }
 
+    // When using dynamic typing, the type names contain variable values. These
+    // refer to nested configuration keys (that will be replaced by their value)
+    // or the special strings '%key', '%parent' or '%type'.
+    // When only those special strings are used, then no conditionality exists:
+    // only if a non-special string is used, will any other configuration key's
+    // value actually be used to determine the type.
+    // Explained by examples:
+    // - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no
+    //   stored somewhere: the chosen key (in a sequence) determines the type.
+    // - third party settings use '[%parent.%parent.%type].third_party.[%key]',
+    //   but the first variable value only causes the config entity type (at the
+    //   root) to be inherited (f.e. 'node.type.third_party.[%key]').
+    // - field instances 'field.value.[%parent.%parent.field_type]', which is
+    //   used to determine the type of the default field value, to ensure
+    //   matches the precise config schema type of the field type
+    // - views use 'views.filter.[plugin_id]' to allow the value itself to
+    //   determine which filter plugin it  uses, in the 'plugin_id' key.
+    // Note that only the last two examples contained strings other than the 3
+    // special ones.
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
+    $matches = [];
+    preg_match_all("/\[(.*)\]/U", $original_mapping_type, $matches);
+    $variable_values = array_merge(...array_map(
+      fn (string $s) => explode('.', $s),
+      $matches[1]
+    ));
+    if (empty(array_diff($variable_values, ['%key', '%parent', '%type']))) {
+      return [];
+    }
+
     // Find all possible types for the given original mapping type.
     // f.e.:
     // 1. `editor.settings.unicorn` or `editor.settings.trex`
