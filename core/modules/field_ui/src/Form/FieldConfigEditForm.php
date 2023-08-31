@@ -463,6 +463,10 @@ class FieldConfigEditForm extends EntityForm {
         // We can't really save but could we override \Drupal\field\Entity\FieldConfig::save() to call save on the regular storage but
         // call on a new starage that always saves to the tempstore. Then we could call
         // $this->entity->save() which fire all hooks needed.
+        // This might now work because field_field_storage_config_update() uses
+        // `$field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());`
+        // which would load the actual field config and save it. Other contrib
+        // modules may also do this.
         $this->entity->setSetting('handler', $this->selectionManager->getPluginId($new_target_type, $current_handler));
         // @see field_field_storage_config_update
         $this->entity->setSetting('handler_settings', []);
