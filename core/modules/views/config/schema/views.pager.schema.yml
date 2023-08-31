@@ -1,5 +1,6 @@
 # Schema for the views pager plugins.
 
+# Specify defaults.
 views.pager.*:
   type: views_pager
   label: 'Default pager'

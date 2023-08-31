@@ -1,5 +1,6 @@
 # Schema for the views row.
 
+# Specify defaults.
 views.row.*:
   type: views_row
 

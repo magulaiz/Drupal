@@ -1,5 +1,6 @@
 # Schema for the views style plugins.
 
+# Specify defaults.
 views.style.*:
   type: views_style
   label: 'Default style'

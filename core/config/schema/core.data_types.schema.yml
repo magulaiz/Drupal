@@ -461,6 +461,7 @@ layout_plugin.settings:
       sequence:
         type: string
 
+# Specify defaults.
 layout_plugin.settings.*:
   type: layout_plugin.settings
 

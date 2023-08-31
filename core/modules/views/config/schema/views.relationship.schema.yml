@@ -1,5 +1,6 @@
 # Schema for the views relationship.
 
+# Specify defaults.
 views.relationship.*:
   type: views_relationship
   label: 'Standard'
