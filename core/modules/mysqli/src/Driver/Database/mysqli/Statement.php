@@ -6,7 +6,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
-use Drupal\Core\Database\FetchModeTrait;
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementWrapperIterator;
 
@@ -182,7 +181,7 @@ class Statement extends StatementWrapperIterator {
       \PDO::FETCH_CLASS => $this->assocToClass($row, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
       // @phpstan-ignore-next-line
       \PDO::FETCH_INTO => $this->assocIntoObject($row, $this->fetchOptions['object']),
-      \PDO::FETCH_COLUMN => $this->assocToColumn($row, $this->columnNames, $this->fetchOptions['column']),
+      \PDO::FETCH_COLUMN => $this->assocToColumn($row, $columnNames, $this->fetchOptions['column']),
       default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported.'),
     };
 

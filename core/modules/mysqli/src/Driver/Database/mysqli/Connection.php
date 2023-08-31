@@ -2,12 +2,9 @@
 
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
-use Drupal\Core\Database\Connection as BaseConnection;
-use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseAccessDeniedException;
+use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
-use Drupal\Core\Database\TransactionNameNonUniqueException;
-use Drupal\Core\Database\TransactionNoActiveException;
-use Drupal\Core\Database\TransactionOutOfOrderException;
 use Drupal\mysql\Driver\Database\mysql\Connection as BaseMySqlConnection;
 
 /**

@@ -13,8 +13,7 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
  *
  * @see https://github.com/doctrine/dbal/tree/3.6.x/src/SQL/Parser
  */
-final class NamedPlaceholderConverter
-{
+final class NamedPlaceholderConverter {
   /**
    * A list of regex patterns for parsing.
    */
@@ -90,7 +89,7 @@ final class NamedPlaceholderConverter
    */
   public function parse(string $sql, array $args): void {
     // Remove the initial colon from the placeholders.
-    foreach($args as $key => $value) {
+    foreach ($args as $key => $value) {
       $this->originalParameters[substr($key, 1)] = $value;
     }
     $this->originalParameterIndex = 0;
@@ -115,7 +114,7 @@ final class NamedPlaceholderConverter
 
     $offset = 0;
 
-    while (($handler = current($patterns)) !== false) {
+    while (($handler = current($patterns)) !== FALSE) {
       if (preg_match('~\G' . key($patterns) . '~s', $sql, $matches, 0, $offset) === 1) {
         $handler($matches[0]);
         reset($patterns);

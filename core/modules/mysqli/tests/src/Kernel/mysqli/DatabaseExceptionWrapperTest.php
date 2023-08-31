@@ -10,6 +10,7 @@ use Drupal\Tests\mysql\Kernel\mysql\DatabaseExceptionWrapperTest as BaseMySqlTes
  * @group Database
  */
 class DatabaseExceptionWrapperTest extends BaseMySqlTest {
+
   /**
    * Tests Connection::prepareStatement exceptions on preparation.
    *
