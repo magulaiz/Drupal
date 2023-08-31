@@ -190,6 +190,8 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage_form->setEntity($field_storage);
     $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity->id());
     unset($form['field_storage']['subform']['actions']);
+    $this->addAjaxCallBacks($form['field_storage']['subform']);
+
     if (isset($form['field_storage']['subform']['cardinality_container'])) {
       $form['field_storage']['subform']['cardinality_container']['#parents'] = [
         'field_storage',
@@ -250,7 +252,16 @@ class FieldConfigEditForm extends EntityForm {
 
       $form['default_value'] = $element;
     }
+    $form['#prefix'] = '<div id="field-combined" >';
+    $form['#suffix'] = '</div>';
+    return $form;
+  }
 
+  /**
+   * Callback for relaoding the form.
+   */
+  public function showUpdated($form, FormStateInterface &$form_state) {
+    //$this->fieldStorageSubmit($form, $form_state);
     return $form;
   }
 
@@ -461,6 +472,35 @@ class FieldConfigEditForm extends EntityForm {
     $form_storage = &$form_state->getStorage();
     unset($form_storage['default_value_widget']);
     $form_state->setRebuild();
+  }
+
+  /**
+   * Add Ajax callback for all inputs.
+   *
+   * @param array $form
+   */
+  private function addAjaxCallBacks(array &$form): void {
+    /** @var \Drupal\Core\Render\ElementInfoManagerInterface $element_manager */
+    $element_manager = \Drupal::service('plugin.manager.element_info');
+    $children = Element::children($form);
+    foreach ($children as $key) {
+      $child_is_input = FALSE;
+      $child = &$form[$key];
+      if (isset($child['#type'])) {
+        $element_info = $element_manager->getInfo($child['#type']);
+        if (!empty($element_info['#input'])) {
+          $child_is_input = TRUE;
+          $child['#ajax'] = [
+            'callback' => [$this, 'showUpdated'],
+            'wrapper' => 'field-combined',
+            'event' => 'change',
+          ];
+        }
+      }
+      if (!$child_is_input) {
+        $this->addAjaxCallBacks($child);
+      }
+    }
   }
 
 }
