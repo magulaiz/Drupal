@@ -441,14 +441,12 @@ trait SchemaCheckTrait {
       ],
       'display.*.display_options' => [
         "'access' is a required key.",
-        "'attachment_position' is a required key.",
         "'argument' is a required key.",
         "'arguments' is a required key.",
         "'auth' is a required key.",
         "'cache' is a required key.",
         "'css_class' is a required key.",
         "'defaults' is a required key.",
-        "'displays' is a required key.",
         "'display_comment' is a required key.",
         "'display_description' is a required key.",
         "'display_extenders' is a required key.",
@@ -464,20 +462,14 @@ trait SchemaCheckTrait {
         "'group_by' is a required key.",
         "'header' is a required key.",
         "'hide_attachment_summary' is a required key.",
-        "'inherit_arguments' is a required key.",
-        "'inherit_exposed_filters' is a required key.",
-        "'inherit_pager' is a required key.",
         "'link_display' is a required key.",
         "'link_url' is a required key.",
         "'pager' is a required key.",
-        "'path' is a required key.",
         "'query' is a required key.",
         "'relationships' is a required key.",
-        "'render_pager' is a required key.",
         "'rendering_language' is a required key.",
         "'row' is a required key.",
         "'show_admin_links' is a required key.",
-        "'sitename_title' is a required key.",
         "'sorts' is a required key.",
         "'style' is a required key.",
         "'title' is a required key.",
@@ -485,19 +477,37 @@ trait SchemaCheckTrait {
         "'use_more' is a required key.",
         "'use_more_always' is a required key.",
         "'use_more_text' is a required key.",
+        // @see \Drupal\views\Plugin\views\display\Attachment
+        "'attachment_position' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
+        "'inherit_arguments' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
+        "'inherit_exposed_filters' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
+        "'inherit_pager' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
+        "'render_pager' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
+        // @see \Drupal\rest\Plugin\views\display\RestExport
+        "'auth' is a conditionally required key because display\..*\.display_plugin is rest_export \(see config schema type views\.display\.rest_export.*",
         // @see \Drupal\views\Plugin\views\display\Block
         "'block_category' is a conditionally required key because display\..*\.display_plugin is block \(see config schema type views\.display\.block.*",
         "'block_description' is a conditionally required key because display\..*\.display_plugin is block \(see config schema type views\.display\.block.*",
         "'block_hide_empty' is a conditionally required key because display\..*\.display_plugin is block \(see config schema type views\.display\.block.*",
         "'block_hide_empty' is a conditionally required key because display\..*\.display_plugin is block \(see config schema type views\.display\.block.*",
         "'allow' is a conditionally required key because display\..*\.display_plugin is block \(see config schema type views\.display\.block.*",
+        // @see \Drupal\views\Plugin\views\display\Feed
+        "'displays' is a conditionally required key because display\..*\.display_plugin is feed \(see config schema type views\.display\.feed.*",
+        "'sitename_title' is a conditionally required key because display\..*\.display_plugin is feed \(see config schema type views\.display\.feed.*",
         // @see \Drupal\views\Plugin\views\display\Page
-        "'route_name' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
         "'menu' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
         "'tab_options' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
         "'use_admin_theme' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
+        // @see \Drupal\views\Plugin\views\display\PathPluginBase
+        // @see \Drupal\views\Plugin\views\display\Feed (inherited)
+        // @see \Drupal\views\Plugin\views\display\Page (inherited)
+        // @see \Drupal\rest\Plugin\views\display\RestExport (inherited)
+        "'path' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export) \(see config schema type views\.display\..*",
+        "'route_name' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export) \(see config schema type views\.display\..*",
       ],
       'display.*.display_options.cache' => [
+        // @see \Drupal\views\Plugin\views\cache\Tag
+        // @see \Drupal\views\Plugin\views\cache\Time
         "'options' is a conditionally required key because display\..*\.cache\.type is .* \(see config schema type views\.cache\..*",
       ],
       'display.default.display_options.query' => [
@@ -505,7 +515,6 @@ trait SchemaCheckTrait {
         "'type' is a required key.",
       ],
       'display.*.display_options.style' => [
-        "'options' is a conditionally required key because display\..* is .* \(see config schema type views\.style\..*",
         "'options' is a required key.",
       ],
       'display.*.display_options.exposed_form' => [
@@ -523,24 +532,23 @@ trait SchemaCheckTrait {
       'display.*.display_options.pager' => [
         "'type' is a required key.",
         "'options' is a required key.",
-        "'options' is a conditionally required key because display\..* is .* \(see config schema type views\.pager\..*",
       ],
       'display.*.display_options.access' => [
         "'type' is a required key.",
         "'options' is a required key.",
       ],
       'display.*.display_options.sorts.*' => [
-        "'granularity' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'group_type' is a required key.",
         "'admin_label' is a required key.",
         "'expose' is a required key.",
-        "'expose' is a conditionally required key because display\..* is .* \(see config schema type views\.sort_expose\..*",
         "'exposed' is a required key.",
         "'relationship' is a required key.",
         "'order' is a required key.",
         "'plugin_id' is a required key.",
+        // @see \Drupal\views\Plugin\views\sort\Date
+        "'granularity' is a conditionally required key because display\..*\.sorts\..*\.plugin_id is date \(see config schema type views\.sort\.date.*",
       ],
       'display.*.display_options.header.*' => [
         "'label' is a required key.",
@@ -549,64 +557,82 @@ trait SchemaCheckTrait {
         "'entity_type' is a required key.",
         "'group_type' is a required key.",
         "'relationship' is a required key.",
-        "'content' is a required key.",
-        "'tokenize' is a required key.",
-        "'bypass_access' is a required key.",
         "'empty' is a required key.",
-        "'custom_access' is a required key.",
-        "'string' is a required key.",
+        // @see \Drupal\views\Plugin\views\area\TokenizeAreaPluginBase
+        // @see \Drupal\views\Plugin\views\area\Entity (inherited)
+        // @see \Drupal\views\Plugin\views\area\Text (inherited)
+        // @see \Drupal\views\Plugin\views\area\TextCustom (inherited)
+        "'tokenize' is a conditionally required key because display\..*\.header\..*\.plugin_id is (entity|text|text_custom) \(see config schema type views\.area\..*",
+        // @see \Drupal\views\Plugin\views\area\Text
+        // @see \Drupal\views\Plugin\views\area\TextCustom
+        "'content' is a conditionally required key because display\..*\.header\..*\.plugin_id is (text|text_custom) \(see config schema type views\.area\.text.*",
+        // @see \Drupal\views\Plugin\views\area\Entity
+        "'bypass_access' is a conditionally required key because display\..*\.header\..*\.plugin_id is entity \(see config schema type views\.area\.entity.*",
+        // @see \Drupal\views_test_data\Plugin\views\area\TestExample
+        "'custom_access' is a conditionally required key because display\..*\.header\..*\.plugin_id is test_example \(see config schema type views\.area\.test_example.*",
+        "'string' is a conditionally required key because display\..*\.header\..*\.plugin_id is test_example \(see config schema type views\.area\.test_example.*",
       ],
       'display.*.display_options.cache.options' => [
         "'results_lifespan_custom' is a required key.",
         "'output_lifespan_custom' is a required key.",
       ],
       'display.*.display_options.pager.options' => [
-        "'quantity' is a required key.",
-        "'expose' is a required key.",
         "'offset' is a required key.",
-        "'total_pages' is a required key.",
-        "'id' is a required key.",
         "'items_per_page' is a required key.",
-        "'tags' is a required key.",
+        // @see \Drupal\views\Plugin\views\pager\Full
+        "'expose' is a conditionally required key because display\..*\.pager\.type is full \(see config schema type views\.pager\.full.*",
+        "'id' is a conditionally required key because display\..*\.pager\.type is full \(see config schema type views\.pager\.full.*",
+        "'quantity' is a conditionally required key because display\..*\.pager\.type is full \(see config schema type views\.pager\.full.*",
+        "'tags' is a conditionally required key because display\..*\.pager\.type is full \(see config schema type views\.pager\.full.*",
+        "'total_pages' is a conditionally required key because display\..*\.pager\.type is full \(see config schema type views\.pager\.full.*",
+        // @see \Drupal\views\Plugin\views\pager\Mini
+        "'expose' is a conditionally required key because display\..*\.pager\.type is mini \(see config schema type views\.pager\.mini.*",
+        "'id' is a conditionally required key because display\..*\.pager\.type is mini \(see config schema type views\.pager\.mini.*",
+        "'tags' is a conditionally required key because display\..*\.pager\.type is mini \(see config schema type views\.pager\.mini.*",
+        "'total_pages' is a conditionally required key because display\..*\.pager\.type is mini \(see config schema type views\.pager\.mini.*",
       ],
       'display.*.display_options.query.options' => [
-        "'query_comment' is a required key.",
-        "'disable_sql_rewrite' is a required key.",
-        "'distinct' is a required key.",
-        "'replica' is a required key.",
-        "'query_tags' is a required key.",
+        // @see \Drupal\views\Plugin\views\query\Sql
+        "'disable_sql_rewrite' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
+        "'distinct' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
+        "'query_comment' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
+        "'query_tags' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
+        "'replica' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
       ],
       'display.default.display_options.empty.*' => [
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'label' is a required key.",
         "'admin_label' is a required key.",
-        "'tokenize' is a required key.",
         "'group_type' is a required key.",
         "'relationship' is a required key.",
-        "'content' is a required key.",
         "'title' is a required key.",
         "'empty' is a required key.",
-        "'custom_access' is a required key.",
-        "'string' is a required key.",
-        "'view_mode' is a required key.",
-        "'bypass_access' is a required key.",
+        // @see \Drupal\views\Plugin\views\area\Text
+        // @see \Drupal\views\Plugin\views\area\TextCustom
+        "'content' is a conditionally required key because display\..*\.empty\..*\.plugin_id is (text|text_custom) \(see config schema type views\.area\.text.*",
+        // @see \Drupal\views\Plugin\views\area\TokenizeAreaPluginBase
+        // @see \Drupal\views\Plugin\views\area\Entity (inherited)
+        // @see \Drupal\views\Plugin\views\area\Text (inherited)
+        // @see \Drupal\views\Plugin\views\area\TextCustom (inherited)
+        "'tokenize' is a conditionally required key because display\..*\.empty\..*\.plugin_id is (entity|text|text_custom) \(see config schema type views\.area\..*",
+        // @see \Drupal\views\Plugin\views\area\Entity
+        "'bypass_access' is a conditionally required key because display\..*\.empty\..*\.plugin_id is entity \(see config schema type views\.area\.entity.*",
+        "'view_mode' is a conditionally required key because display\..*\.empty\..*\.plugin_id is entity \(see config schema type views\.area\.entity.*",
+        // @see \Drupal\views_test_data\Plugin\views\area\TestExample
+        "'custom_access' is a conditionally required key because display\..*\.empty\..*\.plugin_id is test_example \(see config schema type views\.area\.test_example.*",
+        "'string' is a conditionally required key because display\..*\.empty\..*\.plugin_id is test_example \(see config schema type views\.area\.test_example.*",
       ],
       'display.*.display_options.arguments.*' => [
         "'plugin_id' is a required key.",
-        "'must_not_be' is a required key.",
-        "'day' is a required key.",
-        "'month' is a required key.",
         "'default_action' is a required key.",
         "'exception' is a required key.",
         "'title' is a required key.",
         "'title_enable' is a required key.",
         "'default_argument_type' is a required key.",
         "'summary' is a required key.",
-        "'summary_options' is a conditionally required key because display\..* is .* \(see config schema type views\.style\..*",
         "'summary_options' is a required key.",
         "'specify_validation' is a required key.",
-        "'not' is a required key.",
         "'glossary' is a required key.",
         "'limit' is a required key.",
         "'case' is a required key.",
@@ -618,20 +644,56 @@ trait SchemaCheckTrait {
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'default_argument_options' is a required key.",
-        "'default_argument_options' is a conditionally required key because display\..* is .* \(see config schema type views\.argument_default\..*",
         "'default_argument_skip_url' is a required key.",
         "'validate' is a required key.",
         "'validate_options' is a required key.",
-        "'validate_options' is a conditionally required key because display\..* is .* \(see config schema type views\.argument_validator\..*",
         "'break_phrase' is a required key.",
-        "'created' is a required key.",
-        // @see \Drupal\datetime\Plugin\views\argument\Date
-        "'date' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is date \(see config schema type views\.argument\.date.*",
-        "'node_created' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is date \(see config schema type views\.argument\.date.*",
-        "'node_changed' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is date \(see config schema type views\.argument\.date.*",
+        // @see \Drupal\views\Plugin\views\argument\NullArgument
+        "'must_not_be' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is null \(see config schema type views\.argument\.null.*",
+        // @see \Drupal\views\Plugin\views\argument\NumericArgument
+        // @see \Drupal\file\Plugin\views\argument\Fid (inherited)
+        // @see \Drupal\options\Plugin\views\argument\NumberListField (inherited)
+        // @see \Drupal\node\Plugin\views\argument\Nid (inherited)
+        // @see \Drupal\node\Plugin\views\argument\UidRevision (inherited)
+        // @see \Drupal\node\Plugin\views\argument\Vid (inherited)
+        // @see \Drupal\taxonomy\Plugin\views\argument\Taxonomy (inherited)
+        // @see \Drupal\taxonomy\Plugin\views\argument\VocabularyVid (inherited)
+        // @see \Drupal\user\Plugin\views\argument\Uid (inherited)
+        "'not' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (numeric|file_fid|number_list_field|node_nid|node_uid_revision|node_vid|taxonomy|vocabulary_vid|user_uid) \(see config schema type views\.argument\..*",
+        // @see \Drupal\views\Plugin\views\argument\Date
+        // @see \Drupal\views\Plugin\views\argument\DayDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\YearMonthDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\FullDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\MonthDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\WeekDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\YearDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\YearMonthDate (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\Date (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\DayDate (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\FullDate (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\MonthDate (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\WeekDate (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\YearDate (inherited)
+        // @see \Drupal\datetime\Plugin\views\argument\YearMonthDate (inherited)
+        "'date' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (date|date_day|date_fulldate|date_month|date_week|date_year|date_year_month|date_year_month|datetime|datetime_day|datetime_full_date|datetime_month|datetime_week|datetime_year_month|datetime_year) \(see config schema type views\.argument\.date.*",
+        "'node_created' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (date|date_day|date_fulldate|date_month|date_week|date_year|date_year_month|date_year_month|datetime|datetime_day|datetime_full_date|datetime_month|datetime_week|datetime_year_month|datetime_year) \(see config schema type views\.argument\.date.*",
+        "'node_changed' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (date|date_day|date_fulldate|date_month|date_week|date_year|date_year_month|date_year_month|datetime|datetime_day|datetime_full_date|datetime_month|datetime_week|datetime_year_month|datetime_year) \(see config schema type views\.argument\.date.*",
+        // @see \Drupal\views\Plugin\views\argument\DayDate
+        // @see \Drupal\datetime\Plugin\views\argument\DayDate (inherited)
+        "'day' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (date_day|datetime_day) \(see config schema type views\.argument\.date.*",
+        // @see \Drupal\views\Plugin\views\argument\MonthDate
+        // @see \Drupal\datetime\Plugin\views\argument\MonthDate (inherited)
+        "'month' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (date_month|datetime_month) \(see config schema type views\.argument\.date.*",
+        // @see \Drupal\views\Plugin\views\argument\YearMonthDate
+        // @see \Drupal\datetime\Plugin\views\argument\YearMonthDate (inherited)
+        // @see \Drupal\views\Plugin\views\argument\FullDate
+        // @see \Drupal\datetime\Plugin\views\argument\FullDate (inherited)
+        "'created' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (date_year_month|datetime_year_month|date_fulldate|datetime_fulldate) \(see config schema type views\.argument\.date.*",
         // @see \Drupal\views\Plugin\views\argument\StringArgument
-        "'add_table' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is string \(see config schema type views\.argument\.string.*",
-        "'require_value' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is string \(see config schema type views\.argument\.string.*",
+        // @see \Drupal\node\Plugin\views\argument\Type (inherited)
+        // @see \Drupal\options\Plugin\views\argument\StringListField (inherited)
+        "'add_table' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (string|node_type|string_list_field) \(see config schema type views\.argument\..*",
+        "'require_value' is a conditionally required key because display\..*\.arguments\..*\.plugin_id is (string|node_type|string_list_field) \(see config schema type views\.argument\..*",
       ],
       'display.*.display_options.arguments.*.summary' => [
         "'sort_order' is a required key.",
@@ -641,23 +703,30 @@ trait SchemaCheckTrait {
         "'fail' is a required key.",
       ],
       'display.*.display_options.arguments.*.validate_options' => [
-        "'vids' is a required key.",
-        "'multiple' is a required key.",
-        "'bundles' is a required key.",
+        // @see \Drupal\views\Plugin\views\argument_validator\Entity
+        // @see \Drupal\views\Plugin\Derivative\ViewsEntityArgumentValidator
+        // @see \Drupal\taxonomy\Plugin\views\argument_validator\TermName (inherited)
+        // @see \Drupal\user\Plugin\views\argument_validator\UserName (inherited)
+        "'bundles' is a conditionally required key because display\..*\.arguments\..*\.validate\.type is (entity:.*|taxonomy_term_name|user_name) \(see config schema type views\.argument_validator\..*",
+        "'multiple' is a conditionally required key because display\..*\.arguments\..*\.validate\.type is (entity:.*|taxonomy_term_name|user_name) \(see config schema type views\.argument_validator\..*",
+        // @see \Drupal\taxonomy\Plugin\views\argument_validator\TermName
+        "'vids' is a conditionally required key because display\..*\.arguments\..*\.validate\.type is taxonomy_term_name \(see config schema type views\.argument_validator\.taxonomy_term_name.*",
       ],
       'display.*.display_options.arguments.*.exception' => [
         "'title' is a required key.",
         "'value' is a required key.",
       ],
       'display.*.display_options.arguments.*.summary_options' => [
-        "'items_per_page' is a required key.",
         "'grouping' is a required key.",
         "'row_class' is a required key.",
         "'default_row_class' is a required key.",
         "'uses_fields' is a required key.",
-        "'base_path' is a required key.",
-        "'count' is a required key.",
-        "'override' is a required key.",
+        // @see \Drupal\views\Plugin\views\style\DefaultSummary
+        // @see \Drupal\views\Plugin\views\style\UnformattedSummary (inherited)
+        "'base_path' is a conditionally required key because display\..*\.arguments\..*\.summary\.format is (default_summary|unformatted_summary) \(see config schema type views\.style\..*",
+        "'count' is a conditionally required key because display\..*\.arguments\..*\.summary\.format is (default_summary|unformatted_summary) \(see config schema type views\.style\..*",
+        "'items_per_page' is a conditionally required key because display\..*\.arguments\..*\.summary\.format is (default_summary|unformatted_summary) \(see config schema type views\.style\..*",
+        "'override' is a conditionally required key because display\..*\.arguments\..*\.summary\.format is (default_summary|unformatted_summary) \(see config schema type views\.style\..*",
       ],
       'display.*.display_options.defaults' => [
         "'pager' is a required key.",
@@ -690,37 +759,32 @@ trait SchemaCheckTrait {
         "'footer' is a required key.",
       ],
       'display.*.display_options.footer.*' => [
-        "'content' is a required key.",
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'label' is a required key.",
         "'admin_label' is a required key.",
         "'relationship' is a required key.",
         "'group_type' is a required key.",
-        "'tokenize' is a required key.",
-        "'custom_access' is a required key.",
-        "'string' is a required key.",
         "'empty' is a required key.",
-        "'bypass_access' is a required key.",
+        // @see \Drupal\views\Plugin\views\area\TokenizeAreaPluginBase
+        // @see \Drupal\views\Plugin\views\area\Entity (inherited)
+        // @see \Drupal\views\Plugin\views\area\Text (inherited)
+        // @see \Drupal\views\Plugin\views\area\TextCustom (inherited)
+        "'tokenize' is a conditionally required key because display\..*\.footer\..*\.plugin_id is (entity|text|text_custom) \(see config schema type views\.area\..*",
+        // @see \Drupal\views\Plugin\views\area\Text
+        // @see \Drupal\views\Plugin\views\area\TextCustom
+        "'content' is a conditionally required key because display\..*\.footer\..*\.plugin_id is (text|text_custom) \(see config schema type views\.area\.text.*",
+        // @see \Drupal\views\Plugin\views\area\Entity
+        "'bypass_access' is a conditionally required key because display\..*\.footer\..*\.plugin_id is entity \(see config schema type views\.area\..*",
+        // @see \Drupal\views_test_data\Plugin\views\area\TestExample
+        "'custom_access' is a conditionally required key because display\..*\.footer\..*\.plugin_id is test_example \(see config schema type views\.area\.test_example.*",
+        "'string' is a conditionally required key because display\..*\.footer\..*\.plugin_id is test_example \(see config schema type views\.area\.test_example.*",
       ],
       'display.*.display_options.fields.*' => [
-        "'settings' is a required key.",
-        "'replace_variables' is a required key.",
-        "'link_to_user' is a required key.",
-        "'link_to_node' is a required key.",
         "'field' is a required key.",
         "'table' is a required key.",
         "'id' is a required key.",
-        "'output_url_as_text' is a required key.",
-        "'absolute' is a required key.",
         "'label' is a required key.",
-        "'decimal' is a required key.",
-        "'set_precision' is a required key.",
-        "'precision' is a required key.",
-        "'format_plural' is a required key.",
-        "'format_plural_string' is a required key.",
-        "'prefix' is a required key.",
-        "'suffix' is a required key.",
         "'plugin_id' is a required key.",
         "'exclude' is a required key.",
         "'alter' is a required key.",
@@ -739,28 +803,59 @@ trait SchemaCheckTrait {
         "'element_label_colon' is a required key.",
         "'element_wrapper_type' is a required key.",
         "'element_wrapper_class' is a required key.",
-        "'action_title' is a required key.",
-        "'include_exclude' is a required key.",
-        "'selected_actions' is a required key.",
         "'destination' is a required key.",
-        "'click_sort_column' is a required key.",
-        "'type' is a required key.",
-        "'group_column' is a required key.",
-        "'group_columns' is a required key.",
-        "'group_rows' is a required key.",
-        "'delta_limit' is a required key.",
-        "'delta_offset' is a required key.",
-        "'delta_reversed' is a required key.",
-        "'delta_first_last' is a required key.",
-        "'multi_type' is a required key.",
-        "'separator' is a required key.",
-        "'field_api_classes' is a required key.",
-        "'text' is a required key.",
         "'path' is a required key.",
         "'external' is a required key.",
         "'entity_type' is a required key.",
         "'entity_field' is a required key.",
         "'destination' is a required key.",
+        // 🐛 This appears dead code: `link_to_user` only exists in tests, no code uses it!
+        "'link_to_user' is a conditionally required key because display\..*\.fields\..*\.plugin_id is user \(see config schema type views\.field\.user.*",
+        // @see \Drupal\comment\Plugin\views\field\NodeNewComments
+        "'format_plural' is a conditionally required key because display\..*\.fields\..*\.plugin_id is node_new_comments \(see config schema type views\.field\.node_new_comments.*",
+        "'format_plural_string' is a conditionally required key because display\..*\.fields\..*\.plugin_id is node_new_comments \(see config schema type views\.field\.node_new_comments.*",
+        "'separator' is a conditionally required key because display\..*\.fields\..*\.plugin_id is node_new_comments \(see config schema type views\.field\.node_new_comments.*",
+        // @see \Drupal\dblog\Plugin\views\field\DblogMessage
+        "'replace_variables' is a conditionally required key because display\..*\.fields\..*\.plugin_id is dblog_message \(see config schema type views\.field\.dblog_message.*",
+        // @see \Drupal\node\Plugin\views\field\Node
+        "'link_to_node' is a conditionally required key because display\..*\.fields\..*\.plugin_id is node \(see config schema type views\.field\.node.*",
+        // @see \Drupal\views\Plugin\views\field\BulkForm
+        // @see \Drupal\comment\Plugin\views\field\CommentBulkForm (inherited)
+        // @see \Drupal\node\Plugin\views\field\NodeBulkForm (inherited)
+        // @see \Drupal\user\Plugin\views\field\UserBulkForm (inherited)
+        "'action_title' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (bulk_form|comment_bulk_form|node_bulk_form|user_bulk_form) \(see config schema type views\.field\..*",
+        "'include_exclude' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (bulk_form|comment_bulk_form|node_bulk_form|user_bulk_form) \(see config schema type views\.field\..*",
+        "'selected_actions' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (bulk_form|comment_bulk_form|node_bulk_form|user_bulk_form) \(see config schema type views\.field\..*",
+        // @see \Drupal\views\Plugin\views\field\NumericField
+        "'decimal' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'format_plural' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'format_plural_string' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'precision' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'prefix' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'separator' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'set_precision' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        "'suffix' is a conditionally required key because display\..*\.fields\..*\.plugin_id is numeric \(see config schema type views\.field\.numeric.*",
+        // @see \Drupal\views\Plugin\views\field\EntityField
+        // @see \Drupal\taxonomy\Plugin\views\field\TermName (inherited)
+        "'click_sort_column' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'delta_first_last' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'delta_limit' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'delta_offset' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'delta_reversed' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'field_api_classes' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'group_column' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'group_columns' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'group_rows' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'multi_type' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'separator' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'settings' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        "'type' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
+        // @see \Drupal\views\Plugin\views\field\EntityLink
+        // @see \Drupal\views\Plugin\views\field\EntityLinkDelete (inherited)
+        // @see \Drupal\views\Plugin\views\field\EntityLinkEdit (inherited)
+        "'absolute' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (entity_link|entity_link_delete|entity_link_edit) \(see config schema type views\.field\.entity_link.*",
+        "'output_url_as_text' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (entity_link|entity_link_delete|entity_link_edit) \(see config schema type views\.field\.entity_link.*",
+        "'text' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (entity_link|entity_link_delete|entity_link_edit) \(see config schema type views\.field\.entity_link.*",
       ],
       'display.*.display_options.fields.*.alter' => [
         "'alter_text' is a required key.",
@@ -791,15 +886,25 @@ trait SchemaCheckTrait {
         "'preserve_tags' is a required key.",
       ],
       'display.*.display_options.fields.*.settings' => [
-        "'granularity' is a required key.",
-        "'past_format' is a required key.",
-        "'future_format' is a required key.",
-        "'image_loading' is a required key.",
         "'link_to_file' is a required key.",
-        "'tooltip' is a required key.",
-        "'time_diff' is a required key.",
+        // @see \Drupal\views\Plugin\views\field\EntityField
+        // @see \Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter
+        // @see \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter (inherited)
+        "'image_loading' is a conditionally required key because display\..*\.fields\..*\.type is (image|media_thumbnail) \(see config schema type field\.formatter\.settings\..*",
+        // @see \Drupal\views\Plugin\views\field\EntityField
+        // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter
+        "'time_diff' is a conditionally required key because display\..*\.fields\..*\.type is timestamp \(see config schema type field\.formatter\.settings\.timestamp.*",
+        "'tooltip' is a conditionally required key because display\..*\.fields\..*\.type is timestamp \(see config schema type field\.formatter\.settings\.timestamp.*",
+        // @see \Drupal\views\Plugin\views\field\EntityField
         // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter
-        "'link_to_entity' is a conditionally required key because display\..*\.fields\..*\.type is string \(see config schema type field\.formatter\.settings\.string.*",
+        // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\LanguageFormatter (inherited)
+        // @see \Drupal\user\Plugin\Field\FieldFormatter\UserNameFormatter
+        "'link_to_entity' is a conditionally required key because display\..*\.fields\..*\.type is (string|language|user_name) \(see config schema type field\.formatter\.settings\..*",
+        // @see \Drupal\views\Plugin\views\field\EntityField
+        // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampAgoFormatter
+        "'future_format' is a conditionally required key because display\..*\.fields\..*\.type is timestamp_ago \(see config schema type field\.formatter\.settings\.timestamp_ago.*",
+        "'granularity' is a conditionally required key because display\..*\.fields\..*\.type is timestamp_ago \(see config schema type field\.formatter\.settings\.timestamp_ago.*",
+        "'past_format' is a conditionally required key because display\..*\.fields\..*\.type is timestamp_ago \(see config schema type field\.formatter\.settings\.timestamp_ago.*",
       ],
       'display.*.display_options.pager.options.expose' => [
         "'items_per_page_label' is a required key.",
@@ -837,9 +942,11 @@ trait SchemaCheckTrait {
         "'group_info' is a required key.",
         "'expose' is a required key.",
         "'group' is a required key.",
-        "'value' is a conditionally required key because display\..* is .* \(see config schema type views\.filter_value\..*",
         "'value' is a required key.",
         "'plugin_id' is a required key.",
+        // @see \Drupal\views\Plugin\views\filter\Date
+        // @see \Drupal\datetime\Plugin\views\filter\Date (inherited)
+        "'type' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (date|datetime) \(see config schema type views\.filter\..*",
       ],
       'display.*.display_options.filters.*.group_info' => [
         "'default_group_multiple' is a required key.",
@@ -852,7 +959,6 @@ trait SchemaCheckTrait {
       'display.*.display_options.filters.*.group_info.group_items.*' => [
         "'title' is a required key.",
         "'operator' is a required key.",
-        "'value' is a conditionally required key because display\..* is .* \(see config schema type views\.filter_value\..*",
         "'value' is a required key.",
       ],
       'display.*.display_options.filters.*.group_info.group_items.*.value' => [
@@ -861,9 +967,16 @@ trait SchemaCheckTrait {
         "'max' is a required key.",
       ],
       'display.*.display_options.filters.*.value' => [
-        "'min' is a required key.",
-        "'max' is a required key.",
-        "'type' is a required key.",
+        // @see \Drupal\views\Plugin\views\filter\Date
+        // @see \Drupal\datetime\Plugin\views\filter\Date (inherited)
+        "'type' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (date|datetime) \(see config schema type views\.filter_value\.date.*",
+        // @see \Drupal\views\Plugin\views\filter\NumericFilter
+        // @see \Drupal\views\Plugin\views\filter\Date (inherited)
+        // @see \Drupal\views\Plugin\views\filter\GroupByNumeric (inherited)
+        // @see \Drupal\comment\Plugin\views\filter\StatisticsLastUpdated (inherited)
+        // @see \Drupal\datetime\Plugin\views\filter\Date (inherited)
+        "'min' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (numeric|date|groupby_numeric|comment_ces_last_updated|datetime) \(see config schema type views\.filter_value\..*",
+        "'max' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (numeric|date|groupby_numeric|comment_ces_last_updated|datetime) \(see config schema type views\.filter_value\..*",
       ],
       'display.*.display_options.sorts.*.expose' => [
         "'field_identifier' is a required key.",
@@ -889,23 +1002,25 @@ trait SchemaCheckTrait {
       ],
       'display.*.display_options.style.options' => [
         "'uses_fields' is a required key.",
-        "'description' is a required key.",
-        "'caption' is a required key.",
         "'default_row_class' is a required key.",
         "'row_class' is a required key.",
         "'grouping' is a required key.",
-        "'columns' is a required key.",
-        "'default' is a required key.",
-        "'info' is a required key.",
-        "'override' is a required key.",
-        "'sticky' is a required key.",
-        "'summary' is a required key.",
-        "'empty_table' is a required key.",
-        "'alignment' is a required key.",
-        "'cell_min_width' is a required key.",
-        "'grid_gutter' is a required key.",
+        // @see \Drupal\views\Plugin\views\style\GridResponsive
+        "'alignment' is a conditionally required key because display\..*\.style\.type is grid_responsive \(see config schema type views\.style\.grid_responsive.*",
+        "'cell_min_width' is a conditionally required key because display\..*\.style\.type is grid_responsive \(see config schema type views\.style\.grid_responsive.*",
+        "'columns' is a conditionally required key because display\..*\.style\.type is grid_responsive \(see config schema type views\.style\.grid_responsive.*",
+        "'grid_gutter' is a conditionally required key because display\..*\.style\.type is grid_responsive \(see config schema type views\.style\.grid_responsive.*",
         // @see \Drupal\views\Plugin\views\style\Table
+        "'caption' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'columns' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'default' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'description' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'empty_table' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'info' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
         "'order' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'override' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'sticky' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
+        "'summary' is a conditionally required key because display\..*\.style\.type is table \(see config schema type views\.style\.table.*",
       ],
       'display.*.display_options.style.options.info.*' => [
         "'align' is a required key.",
@@ -916,16 +1031,17 @@ trait SchemaCheckTrait {
         "'separator' is a required key.",
       ],
       'display.*.display_options.row' => [
-        "'options' is a conditionally required key because display\..* is .* \(see config schema type views\.row\..*",
         "'options' is a required key.",
       ],
       'display.*.display_options.row.options' => [
-        "'inline' is a required key.",
-        "'separator' is a required key.",
-        "'hide_empty' is a required key.",
         "'relationship' is a required key.",
-        "'default_field_elements' is a required key.",
-        "'view_mode' is a required key.",
+        // @see \Drupal\views\Plugin\views\row\Fields
+        "'default_field_elements' is a conditionally required key because display\..*\.row\.type is fields \(see config schema type views\.row\.fields.*",
+        "'hide_empty' is a conditionally required key because display\..*\.row\.type is fields \(see config schema type views\.row\.fields.*",
+        "'inline' is a conditionally required key because display\..*\.row\.type is fields \(see config schema type views\.row\.fields.*",
+        "'separator' is a conditionally required key because display\..*\.row\.type is fields \(see config schema type views\.row\.fields.*",
+        // @see \Drupal\comment\Plugin\views\row\Rss
+        "'view_mode' is a conditionally required key because display\..*\.row\.type is comment_rss \(see config schema type views\.row\.comment_rss.*",
       ],
       'display.*.display_options.menu' => [
         "'enabled' is a required key.",
