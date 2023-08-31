@@ -89,9 +89,8 @@ trait SchemaCheckTrait {
         "'type' is a required key.",
         "'settings' is a required key.",
       ],
-      'content.description.settings' => [
-        "'size' is a required key.",
-        "'placeholder' is a required key.",
+      'content.*.settings' => [
+        "'.*' is a conditionally required key because content\..*\.type is .* \(see config schema type field\.widget\.settings\..*",
       ],
     ],
     'core.entity_view_display.*.*.*' => [
@@ -125,7 +124,7 @@ trait SchemaCheckTrait {
         "'view_mode' is a required key.",
         "'status' is a required key.",
         "'context_mapping' is a required key.",
-        "'formatter' is a required key.",
+        "'formatter' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.configuration\.id is extra_field_block:.* \(see config schema type block\.settings\.extra_field_block:\*:\*:\*.*",
       ],
     ],
     'layout_builder_test.test_simple_config.*' => [
@@ -149,13 +148,16 @@ trait SchemaCheckTrait {
       ],
       'settings.handler_settings' => [
         "'target_type' is a required key.",
-        "'auto_create_bundle' is a required key.",
-        "'target_bundles' is a required key.",
-        "'sort' is a required key.",
-        "'auto_create' is a required key.",
-        "'filter' is a required key.",
-        "'include_anonymous' is a required key.",
         "'view' is a required key.",
+        // @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
+        // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection (inherited)
+        "'auto_create' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
+        "'auto_create_bundle' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
+        "'sort' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
+        "'target_bundles' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
+        // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection
+        "'filter' is a conditionally required key because settings\.handler is default:user \(see config schema type entity_reference_selection\.default:user.*",
+        "'include_anonymous' is a conditionally required key because settings\.handler is default:user \(see config schema type entity_reference_selection\.default:user.*",
       ],
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",
@@ -180,8 +182,9 @@ trait SchemaCheckTrait {
     ],
     'field.storage.*.*' => [
       'settings' => [
-        "'allowed_formats' is a required key.",
         "'is_ascii' is a required key.",
+        // @see \Drupal\text\Plugin\Field\FieldType\TextItemBase
+        "'allowed_formats' is a conditionally required key because type is (text|text_long|text_with_summary) \(see config schema type field\.storage_settings\.text.*",
       ],
       'settings.default_image' => [
         "'alt' is a required key.",
@@ -299,15 +302,7 @@ trait SchemaCheckTrait {
     ],
     'rest.resource.*' => [
       'configuration' => [
-        "'HEAD' is a required key.",
-        "'GET' is a required key.",
-        "'POST' is a required key.",
-        "'PUT' is a required key.",
-        "'DELETE' is a required key.",
-        "'TRACE' is a required key.",
-        "'OPTIONS' is a required key.",
-        "'CONNECT' is a required key.",
-        "'PATCH' is a required key.",
+        "'.*' is a conditionally required key because granularity is method \(see config schema type rest_resource.method.*",
       ],
     ],
     'contact.settings' => [
@@ -1074,7 +1069,7 @@ trait SchemaCheckTrait {
     ],
     'workflows.workflow.*' => [
       'type_settings' => [
-        "'default_moderation_state' is a required key.",
+        "'default_moderation_state' is a conditionally required key because type is content_moderation \(see config schema type workflow\.type_settings\.content_moderation.*",
       ],
       'type_settings.states.*' => [
         "'published' is a required key.",
