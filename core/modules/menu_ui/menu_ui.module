@@ -400,7 +400,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   $options_cacheability->applyTo($form['menu']['menu_parent']);
   $form['menu']['menu_link_by_default'] = [
     '#type' => 'checkbox',
-    '#title' => t('Provide menu link by default'),
+    '#title' => t('Provide a menu link by default when saving new content of this type.'),
     '#default_value' => $type->getThirdPartySetting('menu_ui', 'link_by_default', FALSE),
     '#states' => [
       'invisible' => [
