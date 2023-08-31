@@ -9,9 +9,8 @@
   .badge__container {
     flex-direction: column;
     gap: 0;
-    padding-top: 0.96em;
-    padding-bottom: 0.96em;
     width: 100%;
+    padding-block: 0.96em;
   }
 }
 
@@ -36,6 +35,6 @@
   font-weight: bold;
 }
 
-.badge__label:after {
+.badge__label::after {
   content: ":";
 }
