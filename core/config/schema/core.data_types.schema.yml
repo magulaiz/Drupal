@@ -921,7 +921,7 @@ entity_reference_selection.default:
     auto_create_bundle:
       type: string
       label: 'Bundle assigned to the auto-created entities.'
-    config_include_disabled:
+    include_disabled_config:
       type: boolean
       label: 'Include disabled configuration entities.'
       nullable: true
