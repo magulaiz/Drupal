@@ -322,7 +322,7 @@ class EntityReference extends ManyToOne {
         static::WIDGET_SELECT => $this->t('Select list'),
         static::WIDGET_AUTOCOMPLETE => $this->t('Autocomplete'),
       ],
-      '#description' => $this->t('For performance and UX reasons, the maximum count of selectable entities for the "Select list" selection type is limited to @count. If more is expected, please select "Autocomplete" instead.', [
+      '#description' => $this->t('For performance and UX reasons, the maximum count of selectable entities for the "Select list" selection type is limited to @count. If more is expected, select "Autocomplete" instead.', [
         '@count' => static::WIDGET_SELECT_LIMIT,
       ]),
     ];
