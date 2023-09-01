@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Configure development settings for this site.
@@ -24,13 +23,10 @@ class DevelopmentSettingsForm extends FormBase {
    *   The state service.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The Drupal kernel.
-   * @param \Drupal\Core\ConfigFactoryInterface $config_factory
-   *   The Drupal config_factory.
    */
   public function __construct(
     protected StateInterface $state,
     protected DrupalKernelInterface $kernel,
-    protected ConfigFactoryInterface $config_factory
   ) {}
 
   /**
@@ -40,7 +36,6 @@ class DevelopmentSettingsForm extends FormBase {
     $instance = new static(
       $container->get('state'),
       $container->get('kernel'),
-      $container->get('config.factory')
     );
     $instance->setMessenger($container->get('messenger'));
     return $instance;
