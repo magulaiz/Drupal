@@ -320,6 +320,7 @@ trait SchemaCheckTrait {
     'file.settings' => [
       '' => [
         "'make_unused_managed_files_temporary' is a required key.",
+        "'filename_sanitization' is a required key.",
       ],
     ],
     'statistics.settings' => [
