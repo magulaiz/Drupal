@@ -316,7 +316,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
-      $optimize_css = !$maintenance_mode && $this->config->get('css.preprocess');
+      $optimize_css = !$maintenance_mode && \Drupal::state()->get('css.preprocess');
       $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css, $this->languageManager->getCurrentLanguage()));
     }
 

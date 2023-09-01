@@ -110,7 +110,9 @@ class ThemeTest extends BrowserTestBase {
     // file, so it doesn't matter what page we get, as long as it is themed with
     // the test theme. First we test with CSS aggregation disabled.
     $config = $this->config('system.performance');
-    $config->set('css.preprocess', 0);
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => 0,
+    ]);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
     // We add a "?" to the assertion, because drupalSettings may include
@@ -123,10 +125,13 @@ class ThemeTest extends BrowserTestBase {
     // triggered during drupal_build_css_cache() when a source file doesn't
     // exist. Then allow remaining tests to continue with aggregation disabled
     // by default.
-    $config->set('css.preprocess', 1);
-    $config->save();
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => 1,
+    ]);
     $this->drupalGet('theme-test/suggestion');
-    $config->set('css.preprocess', 0);
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => 1,
+    ]);
     $config->save();
   }
 

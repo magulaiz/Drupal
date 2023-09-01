@@ -30,10 +30,10 @@ class PerformanceTestBase extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    \Drupal::configFactory()->getEditable('system.performance')
-      ->set('css.preprocess', TRUE)
-      ->set('js.preprocess', TRUE)
-      ->save();
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => TRUE,
+      'js.preprocess' => TRUE,
+    ]);
   }
 
   /**

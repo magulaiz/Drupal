@@ -47,10 +47,10 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
     // Configure 'node' as front page.
     $this->config('system.site')->set('page.front', '/node')->save();
-    $this->config('system.performance')
-      ->set('js.preprocess', 1)
-      ->set('css.preprocess', 1)
-      ->save();
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => 1,
+      'js.preprocess' => 1,
+    ]);
 
     // Create a user allowed to access site in maintenance mode.
     $this->user = $this->drupalCreateUser(['access site in maintenance mode']);

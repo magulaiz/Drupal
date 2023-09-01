@@ -336,10 +336,10 @@ trait FunctionalTestSetupTrait {
     $config->getEditable('system.logging')
       ->set('error_level', 'verbose')
       ->save();
-    $config->getEditable('system.performance')
-      ->set('css.preprocess', FALSE)
-      ->set('js.preprocess', FALSE)
-      ->save();
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => FALSE,
+      'js.preprocess' => FALSE,
+    ]);
 
     // Set an explicit time zone to not rely on the system one, which may vary
     // from setup to setup. The Australia/Sydney time zone is chosen so all
