@@ -453,6 +453,11 @@ class FieldConfigEditForm extends EntityForm {
 
   /**
    * Submit handler for subform submit.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
     // The default value widget needs to be regenerated.
