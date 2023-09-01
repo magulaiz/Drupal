@@ -110,8 +110,8 @@
           }
           // This region has become empty.
           if (
-            !$this.next('tr')[0].matches('.draggable') ||
-            $this.next('tr').length === 0
+            $this.next('tr').length === 0 ||
+            !$this.next('tr')[0].matches('.draggable')
           ) {
             $this.removeClass('region-populated').addClass('region-empty');
           }
@@ -172,7 +172,7 @@
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
-        updateLastPlaced(table, this);
+        updateLastPlaced(table, this.element);
       };
 
       // Add a handler so when a row is dropped, update fields dropped into
@@ -244,7 +244,7 @@
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, tableDrag.rowObject);
           // Update last placed block indication.
-          updateLastPlaced(table, row);
+          updateLastPlaced(table, row[0]);
           // Show unsaved changes warning.
           if (!tableDrag.changed) {
             $(Drupal.theme('tableDragChangedWarning'))
