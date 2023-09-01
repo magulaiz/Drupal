@@ -178,6 +178,10 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
     $field_storage_form->setEntity($field_storage);
     $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity->id());
+    // @todo Is there a better way to pass the previous field storage to
+    //   \field_form_field_config_edit_form_entity_builder. We can use
+    //   $this->entity, because it's not being updated incrementally as changes
+    //   are being made on form.
     $form_state->set('previous_field_storage', $form_state->get('current_field_storage') ?? NULL);
     $form_state->set('current_field_storage', $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
 

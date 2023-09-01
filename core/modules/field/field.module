@@ -449,6 +449,10 @@ function field_field_config_presave(FieldConfigInterface $field) {
   }
 }
 
+/**
+ * @see \Drupal\field_ui\Form\FieldConfigEditForm::form
+ * @see \Drupal\field_ui\Form\FieldConfigEditForm::copyFormValuesToEntity
+ */
 function field_form_field_config_edit_form_entity_builder($entity_type_id, $entity, &$form, FormStateInterface $form_state) {
   assert($entity instanceof FieldConfigInterface);
   $previous_field_storage = $form_state->get('previous_field_storage');
@@ -456,16 +460,21 @@ function field_form_field_config_edit_form_entity_builder($entity_type_id, $enti
     return;
   }
   assert($previous_field_storage instanceof FieldStorageConfigInterface);
+
+  // Act on all sub-types of the entity_reference field type.
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+  $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+  $class = $field_type_manager->getPluginClass($entity->getFieldStorageDefinition()->getType());
+  if ($class !== $item_class && !is_subclass_of($class, $item_class)) {
+    return;
+  }
+
+  // Update handler settings when target_type is changed.
   if ($entity->getFieldStorageDefinition()->getSetting('target_type') !== $previous_field_storage->getSetting('target_type')) {
-    // Act on all sub-types of the entity_reference field type.
-    /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
-    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-    $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
-    $class = $field_type_manager->getPluginClass($entity->getFieldStorageDefinition()->getType());
-    if ($class !== $item_class && !is_subclass_of($class, $item_class)) {
-      return;
-    }
+    // @see field_field_storage_config_update().
     $entity->setSetting('handler_settings', []);
+    // @see field_field_config_presave().
     field_field_config_create($entity);
   }
 };
