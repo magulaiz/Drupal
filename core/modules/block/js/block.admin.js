@@ -108,6 +108,24 @@
   };
 
   /**
+   * Theme function for the block filter empty message on the block layout page.
+   */
+  Drupal.theme.blockFilterEmptyMessage = function () {
+    const message = Drupal.t(
+      `There are no blocks matching the filter conditions.`,
+    );
+    return `
+      <tr id="block-filter-region-empty-message">
+        <td colspan='5'>
+          <div class="text-align-center">
+            <strong>${message}</strong>
+          </div>
+        </td>
+      </tr>
+    `;
+  };
+
+  /**
    * Filter the block list on block layout page by a text input search string.
    *
    * The target elements to search are block label and block region name.
@@ -158,7 +176,7 @@
         // Hidden regions that don't have any blocks displayed.
         $table.find('tr.region-message:visible').each((i, el) => {
           $(el).hide();
-          const regionSelector = $(el).data('regionMessage')
+          const regionSelector = $(el).data('regionMessage');
           $(`[data-region="${regionSelector}"]`).hide();
         });
         // If there are no blocks, display empty message.
