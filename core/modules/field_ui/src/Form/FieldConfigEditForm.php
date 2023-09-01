@@ -271,7 +271,7 @@ class FieldConfigEditForm extends EntityForm {
   }
 
   /**
-   * Callback for relaoding the form.
+   * Callback for reloading the form.
    */
   public function showUpdated($form, FormStateInterface &$form_state) {
     return $form;
