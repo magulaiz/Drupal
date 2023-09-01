@@ -61,10 +61,15 @@ trait SchemaCheckTrait {
         "'info' is a required key.",
         "'view_mode' is a required key.",
         "'context_mapping' is a required key.",
-        "'level' is a required key.",
-        "'depth' is a required key.",
-        "'expand_all_items' is a required key.",
-        "'views_label' is a required key.",
+        // @see \Drupal\forum\Plugin\Block\ForumBlockBase
+        // @see \Drupal\node\Plugin\Block\SyndicateBlock
+        "'block_count' is an extraneous key because plugin is aggregator_feed_block \(see config schema type block\.settings\..*",
+        // @see \Drupal\system\Plugin\Block\SystemMenuBlock
+        "'depth' is a conditionally required key because plugin is system_menu_block:.* \(see config schema type block\.settings\.system_menu_block:\*.*",
+        "'expand_all_items' is a conditionally required key because plugin is system_menu_block:.* \(see config schema type block\.settings\.system_menu_block:\*.*",
+        "'level' is a conditionally required key because plugin is system_menu_block:.* \(see config schema type block\.settings\.system_menu_block:\*.*",
+        // @see \Drupal\views\Plugin\Block\ViewsBlock
+        "'views_label' is a conditionally required key because plugin is views_block:.* \(see config schema type block\.settings\.views_block:\*.*",
         // @see \Drupal\views\Plugin\Block\ViewsExposedFilterBlock
         "'items_per_page' is a conditionally required key because plugin is views_exposed_filter_block:.* \(see config schema type block\.settings\.views_exposed_filter_block:*.*",
       ],
