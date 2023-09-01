@@ -147,6 +147,28 @@ class AccountSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString()]),
     ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
+
+    $default_value_methods = [];
+    foreach ($config->get('cancel_methods') as $method => $access) {
+      if ($access) {
+        $default_value_methods[] = $method;
+      }
+    }
+    $form['registration_cancellation']['user_cancel_methods'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Available cancel methods'),
+      '#default_value' => $default_value_methods,
+      '#description' => $this->t('Choose the method that will be available for the user when canceling the account'),
+    ];
+    $form['registration_cancellation']['user_cancel_methods'] += user_cancel_methods();
+
+    // Do not hide options on user cancel methods.
+    foreach (array_keys($form['registration_cancellation']['user_cancel_methods']['#options']) as $method_name) {
+      if (isset($form['registration_cancellation']['user_cancel_methods'][$method_name]['#access'])) {
+        unset($form['registration_cancellation']['user_cancel_methods'][$method_name]['#access']);
+      }
+    }
+
     foreach (Element::children($form['registration_cancellation']['user_cancel_method']) as $key) {
       // All account cancellation methods that specify #access cannot be
       // configured as default method.
@@ -415,6 +437,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('password_strength', $form_state->getValue('user_password_strength'))
       ->set('verify_mail', $form_state->getValue('user_email_verification'))
       ->set('cancel_method', $form_state->getValue('user_cancel_method'))
+      ->set('cancel_methods', $form_state->getValue('user_cancel_methods'))
       ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
       ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
       ->set('notify.status_canceled', $form_state->getValue('user_mail_status_canceled_notify'))
