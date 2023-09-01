@@ -159,7 +159,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $configuration = $this->getConfiguration();
-    $entity_type_id = $configuration['target_type'];
+    $entity_type_id = $form_state->getValue('field_storage')['subform']['settings']['target_type'] ?? $configuration['target_type'];
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
 
@@ -171,7 +171,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       natsort($bundle_options);
       $selected_bundles = array_intersect_key(
         $bundle_options,
-        array_filter((array) $configuration['target_bundles'])
+        array_filter(array_merge(($form_state->getUserInput()['settings']['handler_settings']['target_bundles'] ?? []), (array) $configuration['target_bundles']))
       );
 
       $form['target_bundles'] = [
@@ -198,6 +198,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       ];
     }
     else {
+      $selected_bundles = [];
       $form['target_bundles'] = [
         '#type' => 'value',
         '#value' => [],

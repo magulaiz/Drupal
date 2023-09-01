@@ -1063,7 +1063,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setTriggeringElement($triggering_element);
+  public function setTriggeringElement(&$triggering_element);
 
   /**
    * Gets the form element that triggered submission.

@@ -439,7 +439,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Add a new comment field.
     $storage_edit = [
-      'settings[comment_type]' => 'foobar',
+      'field_storage[subform][settings][comment_type]' => 'foobar',
     ];
     $this->fieldUIAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
 

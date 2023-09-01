@@ -367,7 +367,7 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTriggeringElement($triggering_element) {
+  public function setTriggeringElement(&$triggering_element) {
     $this->decoratedFormState->setTriggeringElement($triggering_element);
 
     return $this;

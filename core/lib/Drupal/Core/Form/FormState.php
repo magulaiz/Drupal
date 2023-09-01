@@ -841,8 +841,8 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTriggeringElement($triggering_element) {
-    $this->triggering_element = $triggering_element;
+  public function setTriggeringElement(&$triggering_element) {
+    $this->triggering_element = &$triggering_element;
     return $this;
   }
 

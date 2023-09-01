@@ -155,7 +155,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
       $operations['manage-display'] = [
         'title' => t('Manage display'),
         'weight' => 25,
-        'url' => Url::fromRoute("entity.entity_view_display.{$bundle_of}.default", [
+        'url' => Url::fromRoute("entity.entity_view_display.$bundle_of.default", [
           $entity->getEntityTypeId() => $entity->id(),
         ]),
       ];

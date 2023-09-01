@@ -63,6 +63,18 @@ final class FieldConfigAddController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
+    $field_storage_config = [
+      'entity_type' => $entity_type,
+      'field_name' => $field_name,
+      'type' => $temp_storage['field_storage']->getType(),
+    ];
+    if ($temp_storage['field_storage']->getSettings()) {
+      $field_storage_config['settings'] = $temp_storage['field_storage']->getSettings();
+    }
+    $field_storage_entity = $this->entityTypeManager()->getStorage('field_storage_config')->create($field_storage_config);
+
+    $temp_storage['field_storage'] = $field_storage_entity;
+    $this->tempStore->set($entity_type . ':' . $field_name, $temp_storage);
     /** @var \Drupal\Core\Field\FieldConfigInterface $entity */
     $entity = $this->entityTypeManager()->getStorage('field_config')->create([
       ...$temp_storage['field_config_values'],

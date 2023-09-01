@@ -128,7 +128,7 @@ class UserSelection extends DefaultSelection {
       '#process' => [['\Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem', 'formProcessMergeParent']],
     ];
 
-    if ($configuration['filter']['type'] == 'role') {
+    if ($configuration['filter']['type'] == 'role' || (isset($form_state->getUserInput()['settings']['handler_settings']['filter']['type']) && $form_state->getUserInput()['settings']['handler_settings']['filter']['type'] == 'role')) {
       $roles = Role::loadMultiple();
       unset($roles[RoleInterface::ANONYMOUS_ID]);
       unset($roles[RoleInterface::AUTHENTICATED_ID]);

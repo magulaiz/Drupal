@@ -3,6 +3,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -35,14 +36,21 @@ class FieldStorageConfigEditForm extends EntityForm {
    *   The typed data manager.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
    *   The private tempstore.
+   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface|null $selectionManager
+   *   The entity reference selection plugin manager.
    */
   public function __construct(
     protected TypedDataManagerInterface $typedDataManager,
     protected ?PrivateTempStore $tempStore = NULL,
+    protected ?SelectionPluginManagerInterface $selectionManager = NULL
   ) {
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldStorageConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383720', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
+    }
+    if ($this->selectionManager === NULL) {
+      @trigger_error('Calling FieldStorageConfigEditForm::__construct() without the $selectionManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
+      $this->selectionManager = \Drupal::service('plugin.manager.entity_reference_selection');
     }
   }
 
@@ -52,7 +60,8 @@ class FieldStorageConfigEditForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('typed_data_manager'),
-      $container->get('tempstore.private')->get('field_ui')
+      $container->get('tempstore.private')->get('field_ui'),
+      $container->get('plugin.manager.entity_reference_selection'),
     );
   }
 
@@ -82,11 +91,19 @@ class FieldStorageConfigEditForm extends EntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $field_config = NULL) {
     if ($field_config) {
-      $field = FieldConfig::load($field_config);
-      $form_state->set('field_config', $field);
+      if (!$this->entity->isNew()) {
+        $field = FieldConfig::load($field_config);
+        $form_state->set('field_config', $field);
 
-      $form_state->set('entity_type_id', $field->getTargetEntityTypeId());
-      $form_state->set('bundle', $field->getTargetBundle());
+        $form_state->set('entity_type_id', $field->getTargetEntityTypeId());
+        $form_state->set('bundle', $field->getTargetBundle());
+      }
+      else {
+        $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+
+        $form_state->set('entity_type_id', $temp_storage['field_config_values']['entity_type']);
+        $form_state->set('bundle', $temp_storage['field_config_values']['bundle']);
+      }
     }
 
     return parent::buildForm($form, $form_state);
@@ -170,7 +187,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       $form['cardinality'] = ['#markup' => $markup];
     }
     else {
-      $form['#element_validate'][] = '::validateCardinality';
+      $form['#element_validate'][] = [$this, 'validateCardinality'];
       $cardinality = $this->entity->getCardinality();
       $form['cardinality'] = [
         '#type' => 'select',
@@ -191,10 +208,10 @@ class FieldStorageConfigEditForm extends EntityForm {
         '#size' => 2,
         '#states' => [
           'visible' => [
-            ':input[name="cardinality"]' => ['value' => 'number'],
+            ':input[id="edit-field-storage-subform-cardinality"]' => ['value' => 'number'],
           ],
           'disabled' => [
-            ':input[name="cardinality"]' => ['value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+            ':input[id="edit-field-storage-subform-cardinality"]' => ['value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
           ],
         ],
       ];
@@ -224,24 +241,33 @@ class FieldStorageConfigEditForm extends EntityForm {
   public function validateCardinality(array &$element, FormStateInterface $form_state) {
     $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entity->getTargetEntityTypeId());
 
+    $cardinality = $form_state->getValue([
+      ...$element['#parents'],
+      'cardinality',
+    ]);
+    $cardinality_number = $form_state->getValue([
+      ...$element['#parents'],
+      'cardinality_number',
+    ]);
+
     // Validate field cardinality.
-    if ($form_state->getValue('cardinality') === 'number' && !$form_state->getValue('cardinality_number')) {
+    if ($cardinality === 'number' && !$cardinality_number) {
       $form_state->setError($element['cardinality_number'], $this->t('Number of values is required.'));
     }
     // If a specific cardinality is used, validate that there are no entities
     // with a higher delta.
-    elseif (!$this->entity->isNew() && isset($field_storage_definitions[$this->entity->getName()]) && $form_state->getValue('cardinality') != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+    elseif (!$this->entity->isNew() && isset($field_storage_definitions[$this->entity->getName()]) && $cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
 
       // Get a count of entities that have a value in a delta higher than the
       // one selected. Deltas start with 0, so the selected value does not
       // need to be incremented.
       $entities_with_higher_delta = \Drupal::entityQuery($this->entity->getTargetEntityTypeId())
         ->accessCheck(FALSE)
-        ->condition($this->entity->getName() . '.%delta', $form_state->getValue('cardinality'))
+        ->condition($this->entity->getName() . '.%delta', $cardinality_number)
         ->count()
         ->execute();
       if ($entities_with_higher_delta) {
-        $form_state->setError($element['cardinality_number'], $this->formatPlural($entities_with_higher_delta, 'There is @count entity with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.', 'There are @count entities with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.', ['@delta' => $form_state->getValue('cardinality') + 1, '@allowed' => $form_state->getValue('cardinality')]));
+        $form_state->setError($element['cardinality_number'], $this->formatPlural($entities_with_higher_delta, 'There is @count entity with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.', 'There are @count entities with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.', ['@delta' => $cardinality_number + 1, '@allowed' => $cardinality_number]));
       }
     }
   }

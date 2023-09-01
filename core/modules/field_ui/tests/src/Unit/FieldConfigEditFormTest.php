@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field_ui\Unit;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\Tests\UnitTestCase;
@@ -31,7 +32,8 @@ class FieldConfigEditFormTest extends UnitTestCase {
     $typed_data = $this->createMock('\Drupal\Core\TypedData\TypedDataManagerInterface');
     $temp_store = $this->createMock(PrivateTempStore::class);
     $entity_display_repository = $this->createMock(EntityDisplayRepositoryInterface::class);
-    $this->fieldConfigEditForm = new FieldConfigEditForm($entity_type_bundle_info, $typed_data, $entity_display_repository, $temp_store);
+    $selection_manager = $this->createMock(SelectionPluginManagerInterface::class);
+    $this->fieldConfigEditForm = new FieldConfigEditForm($entity_type_bundle_info, $typed_data, $entity_display_repository, $temp_store, $selection_manager);
   }
 
   /**

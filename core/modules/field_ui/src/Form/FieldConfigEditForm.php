@@ -5,11 +5,13 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -67,12 +69,15 @@ class FieldConfigEditForm extends EntityForm {
    *   The entity display repository.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
    *   The private tempstore.
+   * @param Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface|null $selectionManager
+   *   The entity reference selection plugin manager.
    */
   public function __construct(
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     protected TypedDataManagerInterface $typedDataManager,
     protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
-    protected ?PrivateTempStore $tempStore = NULL) {
+    protected ?PrivateTempStore $tempStore = NULL,
+    protected ?SelectionPluginManagerInterface $selectionManager = NULL) {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     if ($this->entityDisplayRepository === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
@@ -81,6 +86,10 @@ class FieldConfigEditForm extends EntityForm {
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
+    }
+    if ($this->selectionManager === NULL) {
+      @trigger_error('Calling FieldConfigEditForm::__construct() without the $selectionManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
+      $this->selectionManager = \Drupal::service('plugin.manager.entity_reference_selection');
     }
   }
 
@@ -92,7 +101,8 @@ class FieldConfigEditForm extends EntityForm {
       $container->get('entity_type.bundle.info'),
       $container->get('typed_data_manager'),
       $container->get('entity_display.repository'),
-      $container->get('tempstore.private')->get('field_ui')
+      $container->get('tempstore.private')->get('field_ui'),
+      $container->get('plugin.manager.entity_reference_selection')
     );
   }
 
@@ -151,9 +161,48 @@ class FieldConfigEditForm extends EntityForm {
       'entity_id' => NULL,
     ];
     $form['#entity'] = _field_create_entity_from_ids($ids);
-    $items = $this->getTypedData($form['#entity']);
+    $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
     $item = $items->first() ?: $items->appendItem();
 
+    $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $class = $field_type_manager->getPluginClass($this->entity->getType());
+    if ($class === $item_class || is_subclass_of($class, $item_class)) {
+      if ($target_type = $field_storage->getSetting('target_type') ?? $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_storage']->getSetting('target_type')) {
+        $field_storage->setSetting('target_type', $target_type);
+        $item->getFieldDefinition()->setSetting('target_type', $target_type);
+        [$current_handler] = explode(':', $item->getFieldDefinition()->getSetting('handler'), 2);
+        $item->getFieldDefinition()
+          ->setSetting('handler', $this->selectionManager->getPluginId($target_type, $current_handler));
+      }
+      $item->getFieldDefinition()->setSetting('handler_settings', []);
+    }
+    $form['field_storage'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Field Storage'),
+      '#weight' => -15,
+      '#tree' => TRUE,
+    ];
+    $form['field_storage']['subform'] = [];
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
+    $field_storage_form->setEntity($field_storage);
+    $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity->id());
+    unset($form['field_storage']['subform']['actions']);
+    if (isset($form['field_storage']['subform']['cardinality_container'])) {
+      $form['field_storage']['subform']['cardinality_container']['#parents'] = [
+        'field_storage',
+        'subform',
+      ];
+    }
+    $form['field_storage']['subform']['field_storage_submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Update settings'),
+      '#limit_validation_errors' => [],
+      '#process' => [[static::class, 'processFieldStorageSubmit']],
+      '#submit' => [[$this, 'fieldStorageSubmit']],
+    ];
     // Add field settings for the field type and a container for third party
     // settings that modules can add to via hook_form_FORM_ID_alter().
     $form['settings'] = [
@@ -168,7 +217,7 @@ class FieldConfigEditForm extends EntityForm {
 
     // Create a new instance of typed data for the field to ensure that default
     // value widget is always rendered from a clean state.
-    $items = $this->getTypedData($form['#entity']);
+    $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
@@ -267,16 +316,18 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // Before proceeding validation, rebuild the entity to make sure it's
-    // up-to-date. This is needed because element validators may update form
-    // state, and other validators use the entity for validating the field.
-    // @todo remove in https://www.drupal.org/project/drupal/issues/3372934.
-    $this->entity = $this->buildEntity($form, $form_state);
-
     if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
-      $items = $this->getTypedData($form['#entity']);
+      // Make sure that the default value form is validated using the field
+      // configuration that was just submitted. Do not update $this->entity as
+      // the field configuration may contain invalid values at this point.
+      $field_config = $this->buildEntity($form, $form_state);
+      $items = $this->getTypedData($field_config, $form['#entity']);
       $items->defaultValuesFormValidate($form['default_value'], $form, $form_state);
     }
+
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
+    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+    $field_storage_form->validateForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
   }
 
   /**
@@ -288,10 +339,15 @@ class FieldConfigEditForm extends EntityForm {
     // Handle the default value.
     $default_value = [];
     if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
-      $items = $this->getTypedData($form['#entity']);
+      $items = $this->getTypedData($this->entity, $form['#entity']);
       $default_value = $items->defaultValuesFormSubmit($form['default_value'], $form, $form_state);
     }
     $this->entity->setDefaultValue($default_value);
+
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
+    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+    $field_storage_form->submitForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
+    $field_storage_form->save($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
   }
 
   /**
@@ -300,18 +356,14 @@ class FieldConfigEditForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
     if ($this->entity->isNew()) {
-      // @todo remove in https://www.drupal.org/project/drupal/issues/3347291.
-      if ($temp_storage && $temp_storage['field_storage']->isNew()) {
-        // Save field storage.
-        try {
-          $temp_storage['field_storage']->save();
-        }
-        catch (EntityStorageException $e) {
-          $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
-          $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
-          $this->messenger()->addError($this->t('An error occurred while saving the field: @error', ['@error' => $e->getMessage()]));
-          return;
-        }
+      try {
+        $temp_storage['field_storage']->save();
+      }
+      catch (EntityStorageException $e) {
+        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+        $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
+        $this->messenger()->addError($this->t('An error occurred while saving the field: @error', ['@error' => $e->getMessage()]));
+        return;
       }
     }
     // Save field config.
@@ -355,14 +407,60 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * Gets typed data object for the field.
    *
+   * @param \Drupal\field\FieldConfigInterface $field_config
+   *   The field configuration.
    * @param \Drupal\Core\Entity\FieldableEntityInterface $parent
    *   The parent entity that the field is attached to.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
-  private function getTypedData(FieldableEntityInterface $parent): TypedDataInterface {
+  private function getTypedData(FieldConfigInterface $field_config, FieldableEntityInterface $parent): TypedDataInterface {
     $entity_adapter = EntityAdapter::createFromEntity($parent);
-    return $this->typedDataManager->create($this->entity, $this->entity->getDefaultValue($parent), $this->entity->getName(), $entity_adapter);
+    return $this->typedDataManager->create($field_config, $field_config->getDefaultValue($parent), $field_config->getName(), $entity_adapter);
+  }
+
+  /**
+   * Process handler for subform submit.
+   */
+  public static function processFieldStorageSubmit(array $element, FormStateInterface $form_state, &$complete_form) {
+    $element['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
+    return $element;
+  }
+
+  /**
+   * Submit handler for subform submit.
+   */
+  public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
+    $field_storage = $this->entity->getFieldStorageDefinition();
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $class = $field_type_manager->getPluginClass($this->entity->getType());
+    $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+    if ($class === $item_class || is_subclass_of($class, $item_class)) {
+      $parents = array_slice($form_state->getTriggeringElement()['#parents'], 0, -1);
+      array_push($parents, 'settings', 'target_type');
+      $new_target_type = $form_state->getValue($parents);
+      $field_storage->setSetting('target_type', $new_target_type);
+      if ($handler = $this->entity->getSetting('handler')) {
+        [$current_handler] = explode(':', $handler, 2);
+        $this->entity->setSetting('handler', $this->selectionManager->getPluginId($new_target_type, $current_handler));
+        // @see field_field_storage_config_update
+        $this->entity->setSetting('handler_settings', []);
+      }
+    }
+    else {
+      $parents = array_slice($form_state->getTriggeringElement()['#parents'], 0, -1);
+      $parents[] = 'settings';
+      if ($form_state->getValue($parents) !== NULL) {
+        $field_storage->setSettings($form_state->getValue($parents));
+      }
+    }
+    $field_storage->set('cardinality', $form_state->getValue(['field_storage', 'subform', 'cardinality_number']));
+
+    // The default value widget needs to be regenerated.
+    $form_storage = &$form_state->getStorage();
+    unset($form_storage['default_value_widget']);
+    $form_state->setRebuild();
   }
 
 }

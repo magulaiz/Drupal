@@ -588,7 +588,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // as triggering_element.
       $buttons = $form_state->getButtons();
       if ($form_state->isProgrammed() && !$form_state->getTriggeringElement() && count($buttons) == 1) {
-        $form_state->setTriggeringElement(reset($buttons));
+        $button = reset($buttons);
+        $form_state->setTriggeringElement($button);
       }
       $this->formValidator->validateForm($form_id, $form, $form_state);
 

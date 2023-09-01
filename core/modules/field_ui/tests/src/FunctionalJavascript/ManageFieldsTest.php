@@ -212,8 +212,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
     $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-storage\/node\/field_test_field_1.*/', $this->getUrl());
-    $page->pressButton('Continue');
     $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
@@ -240,8 +238,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
     $assert_session->pageTextNotContains('Choose an option below');
 
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-storage\/node\/field_test_field_2.*/', $this->getUrl());
     $page->pressButton('Continue');
     $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
     $page->pressButton('Save settings');
