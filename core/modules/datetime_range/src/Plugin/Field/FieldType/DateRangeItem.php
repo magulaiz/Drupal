@@ -1,5 +1,5 @@
 <?php
-// @phpcs:ignoreFile
+// phpcs:ignoreFile
 namespace Drupal\datetime_range\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
