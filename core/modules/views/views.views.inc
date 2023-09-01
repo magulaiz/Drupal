@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
@@ -805,7 +806,9 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
           $data[$table_name][$table_field_name . '_reference'] = $entity_reference;
         }
       }
+    }
 
+    if ($target_entity_type instanceof ContentEntityTypeInterface) {
       // Provide a relationship for the entity type with the entity reference
       // field.
       $args = [
