@@ -163,9 +163,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *   The migration to execute, or its ID.
    */
   protected function executeMigration($migration) {
-    // Ignore $this->collectMessages to be able to at least
-    $this->migrateMessages = ['status' => [], 'error' => []];
-
     if (is_string($migration)) {
       $this->migration = $this->getMigration($migration);
     }
@@ -181,7 +178,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
 
     // No migration error messages should have occurred! (Migration
     // messages are fine.)
-    $this->assertSame([], $this->migrateMessages['error']);
+    $this->assertSame([], $this->migrateMessages['error'] ?? []);
 
     // Respect $this->collectMessages.
     if (!$this->collectMessages) {
@@ -222,7 +219,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   public function startCollectingMessages() {
     $this->collectMessages = TRUE;
-    $this->migrateMessages = ['status' => [], 'error' => []];
+    $this->migrateMessages = [];
   }
 
   /**
