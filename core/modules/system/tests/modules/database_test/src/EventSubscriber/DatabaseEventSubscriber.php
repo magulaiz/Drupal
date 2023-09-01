@@ -63,7 +63,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Subscribes to a TransactionBeginEvent
+   * Subscribes to a TransactionBeginEvent.
    *
    * @param \Drupal\Core\Database\Event\TransactionBeginEvent $event
    *   The transaction event.
@@ -73,7 +73,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Subscribes to a TransactionSavepointEvent
+   * Subscribes to a TransactionSavepointEvent.
    *
    * @param \Drupal\Core\Database\Event\TransactionSavepointEvent $event
    *   The transaction event.
