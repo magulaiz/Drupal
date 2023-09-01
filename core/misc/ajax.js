@@ -228,16 +228,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (elementSettings.dialog) {
       ajax.options.data.dialogOptions = elementSettings.dialog;
     }
-    if (ajax.options.url.indexOf('?') === -1) {
-      ajax.options.url += '?';
-    } else {
-      ajax.options.url += '&';
-    }
     var wrapper = "drupal_".concat(elementSettings.dialogType || 'ajax');
     if (elementSettings.dialogRenderer) {
       wrapper += ".".concat(elementSettings.dialogRenderer);
     }
-    ajax.options.url += "".concat(Drupal.ajax.WRAPPER_FORMAT, "=").concat(wrapper);
+    var queryParameter = $("Drupal.ajax.WRAPPER_FORMAT + '=' + wrapper");
+    if (ajax.options.url.indexOf(Drupal.ajax.WRAPPER_FORMAT) === -1) {
+      ajax.options.url += ajax.options.url.indexOf('?') === -1 ? '?' : '&';
+      ajax.options.url += queryParameter;
+    } else {
+      var regexPattern = new RegExp($("Drupal.ajax.WRAPPER_FORMAT + '=[^&]*'"), 'i');
+      ajax.options.url = ajax.options.url.replace(regexPattern, queryParameter);
+    }
     $(ajax.element).on(elementSettings.event, function (event) {
       if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {
         throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {
