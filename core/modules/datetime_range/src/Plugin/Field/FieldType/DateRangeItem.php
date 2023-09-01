@@ -1,5 +1,5 @@
 <?php
-// phpcs:ignoreFile
+
 namespace Drupal\datetime_range\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -109,6 +109,7 @@ class DateRangeItem extends DateTimeItem {
 
     // Just pick a date in the past year. No guidance is provided by this Field
     // type.
+    // @phpstan-ignore-next-line
     $start = \Drupal::time()->getRequestTime() - mt_rand(0, 86400 * 365) - 86400;
     $end = $start + 86400;
     if ($type == static::DATETIME_TYPE_DATETIME) {
