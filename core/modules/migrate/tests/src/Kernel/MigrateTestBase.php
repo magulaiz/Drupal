@@ -175,15 +175,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
 
     $this->prepareMigration($this->migration);
     (new MigrateExecutable($this->migration, $this))->import();
-
-    // No migration error messages should have occurred! (Migration
-    // messages are fine.)
-    $this->assertSame([], $this->migrateMessages['error'] ?? []);
-
-    // Respect $this->collectMessages.
-    if (!$this->collectMessages) {
-      $this->migrateMessages = [];
-    }
   }
 
   /**
@@ -207,11 +198,12 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    * {@inheritdoc}
    */
   public function display($message, $type = 'status') {
-    // Collect messages even when $this->collectMessages === FALSE, to prevent
-    // config schema errors from interrupting a migration prematurely: assert
-    // the absence of errors in ::executeMigration(), and only then erase the
-    // collected messages if $this->collectMessages === FALSE.
-    $this->migrateMessages[$type][] = $message;
+    if ($this->collectMessages) {
+      $this->migrateMessages[$type][] = $message;
+    }
+    else {
+      $this->assertEquals('status', $type, $message);
+    }
   }
 
   /**
