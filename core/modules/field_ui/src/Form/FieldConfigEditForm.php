@@ -4,6 +4,7 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -114,6 +115,7 @@ class FieldConfigEditForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['#parents'] = [];
+    $form['#entity_builders'][] = 'field_form_field_config_edit_form_entity_builder';
 
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
@@ -163,24 +165,6 @@ class FieldConfigEditForm extends EntityForm {
       'bundle' => $this->entity->getTargetBundle(),
       'entity_id' => NULL,
     ];
-    $form['#entity'] = _field_create_entity_from_ids($ids);
-    $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
-    $item = $items->first() ?: $items->appendItem();
-
-    $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
-    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
-    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-    $class = $field_type_manager->getPluginClass($this->entity->getType());
-    if ($class === $item_class || is_subclass_of($class, $item_class)) {
-      if ($target_type = $field_storage->getSetting('target_type') ?? $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_storage']->getSetting('target_type')) {
-        $field_storage->setSetting('target_type', $target_type);
-        $item->getFieldDefinition()->setSetting('target_type', $target_type);
-        [$current_handler] = explode(':', $item->getFieldDefinition()->getSetting('handler'), 2);
-        $item->getFieldDefinition()
-          ->setSetting('handler', $this->selectionManager->getPluginId($target_type, $current_handler));
-      }
-      $item->getFieldDefinition()->setSetting('handler_settings', []);
-    }
     $form['field_storage'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Field Storage'),
@@ -194,7 +178,13 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
     $field_storage_form->setEntity($field_storage);
     $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity->id());
-    $current_field_storage = $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state);
+    $form_state->set('previous_field_storage', $form_state->get('current_field_storage') ?? NULL);
+    $form_state->set('current_field_storage', $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
+
+    $form['#entity'] = _field_create_entity_from_ids($ids);
+    $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
+    $item = $items->first() ?: $items->appendItem();
+
     unset($form['field_storage']['subform']['actions']);
 //    $this->addAjaxCallBacks($form['field_storage']['subform']);
 
@@ -230,9 +220,6 @@ class FieldConfigEditForm extends EntityForm {
     // Create a new instance of typed data for the field to ensure that default
     // value widget is always rendered from a clean state.
     $current_field_config = $this->buildEntity($form, $form_state);
-    $reflector = new \ReflectionObject($current_field_config);
-    $property = $reflector->getProperty('fieldStorage');
-    $property->setValue($current_field_config, clone $current_field_storage);
     $items = $this->getTypedData($current_field_config, $form['#entity']);
 
     // Add handling for default value.
@@ -271,7 +258,17 @@ class FieldConfigEditForm extends EntityForm {
     return $form;
   }
 
-  /**
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    parent::copyFormValuesToEntity($entity, $form, $form_state);
+
+    if ($form_state->has('current_field_storage')) {
+      $reflector = new \ReflectionObject($entity);
+      $property = $reflector->getProperty('fieldStorage');
+      $property->setValue($entity, $form_state->get('current_field_storage'));
+    }
+  }
+
+    /**
    * Callback for relaoding the form.
    */
   public function showUpdated($form, FormStateInterface &$form_state) {
@@ -456,33 +453,6 @@ class FieldConfigEditForm extends EntityForm {
    * Submit handler for subform submit.
    */
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
-    $field_storage = $this->entity->getFieldStorageDefinition();
-    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
-    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-    $class = $field_type_manager->getPluginClass($this->entity->getType());
-    $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
-    if ($class === $item_class || is_subclass_of($class, $item_class)) {
-      $parents = array_slice($form_state->getTriggeringElement()['#parents'], 0, -1);
-      array_push($parents, 'settings', 'target_type');
-      $new_target_type = $form_state->getValue($parents);
-      $field_storage->setSetting('target_type', $new_target_type);
-      if ($handler = $this->entity->getSetting('handler')) {
-        [$current_handler] = explode(':', $handler, 2);
-        // The handler will need to change. Can entity reference
-        // @see field_field_storage_config_update()
-        // We can't really save but could we override \Drupal\field\Entity\FieldConfig::save() to call save on the regular storage but
-        // call on a new starage that always saves to the tempstore. Then we could call
-        // $this->entity->save() which fire all hooks needed.
-        // This might now work because field_field_storage_config_update() uses
-        // `$field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());`
-        // which would load the actual field config and save it. Other contrib
-        // modules may also do this.
-        $this->entity->setSetting('handler', $this->selectionManager->getPluginId($new_target_type, $current_handler));
-        // @see field_field_storage_config_update
-        $this->entity->setSetting('handler_settings', []);
-      }
-    }
-
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();
     unset($form_storage['default_value_widget']);
