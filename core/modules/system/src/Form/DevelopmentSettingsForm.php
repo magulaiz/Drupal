@@ -60,9 +60,9 @@ class DevelopmentSettingsForm extends FormBase {
     if (!$is_writable) {
       $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">optimized assets file system path</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
     }
-    $development_settings = \Drupal::state()->get('system.development_settings', []);
-    $performance_css_config = $development_settings['css.preprocess'];
-    $performance_js_config = $development_settings['js.preprocess'];
+    $development_settings = $this->state->get('system.development_settings', []);
+    $performance_css_config = isset($development_settings['css.preprocess']) ? (bool) $development_settings['css.preprocess'] : TRUE;
+    $performance_js_config = isset($development_settings['js.preprocess']) ? (bool) $development_settings['js.preprocess'] : TRUE;
 
     $form['description'] = [
       '#plain_text' => $this->t('These settings should only be enabled on development environments and never on production.'),
@@ -192,10 +192,10 @@ class DevelopmentSettingsForm extends FormBase {
       $this->kernel->invalidateContainer();
     }
     // Save system performance aggregation configuration.
-    $performance_css_config = $form_state->getValue('preprocess_css');
-    $performance_js_config = $form_state->getValue('preprocess_js');
+    $performance_css_config = (bool) $form_state->getValue('preprocess_css');
+    $performance_js_config = (bool) $form_state->getValue('preprocess_js');
     // Store the configuration values in a state variable.
-    \Drupal::state()->set('system.development_settings', [
+    $this->state->set('system.development_settings', [
       'css.preprocess' => $performance_css_config,
       'js.preprocess' => $performance_js_config,
     ]);
