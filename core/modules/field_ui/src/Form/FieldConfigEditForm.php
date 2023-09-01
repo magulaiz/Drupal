@@ -188,7 +188,7 @@ class FieldConfigEditForm extends EntityForm {
     $item = $items->first() ?: $items->appendItem();
 
     unset($form['field_storage']['subform']['actions']);
-    // $this->addAjaxCallBacks($form['field_storage']['subform']);
+    $this->addAjaxCallBacks($form['field_storage']['subform']);
 
     if (isset($form['field_storage']['subform']['cardinality_container'])) {
       $form['field_storage']['subform']['cardinality_container']['#parents'] = [
@@ -484,7 +484,7 @@ class FieldConfigEditForm extends EntityForm {
         if (!empty($element_info['#input'])) {
           $child_is_input = TRUE;
           $child['#ajax'] = [
-            'trigger_as' => ['name' => 'op'],
+            'trigger_as' => ['name' => 'field_storage_submit'],
             'wrapper' => 'field-combined',
             'event' => 'change',
           ];
