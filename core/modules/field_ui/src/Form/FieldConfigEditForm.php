@@ -470,6 +470,7 @@ class FieldConfigEditForm extends EntityForm {
    * Add Ajax callback for all inputs.
    *
    * @param array $form
+   *   An associative array containing the structure of the form.
    */
   private function addAjaxCallBacks(array &$form): void {
     /** @var \Drupal\Core\Render\ElementInfoManagerInterface $element_manager */
