@@ -52,6 +52,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'block_content_body_field',
       'd6_custom_block',
       'd6_user_role',
+      'd6_menu',
       'd6_block',
     ]);
     block_rebuild();
@@ -187,10 +188,13 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
 
     // Check menu blocks.
     $settings = [
-      'id' => 'broken',
+      'id' => 'system_menu_block',
       'label' => '',
-      'provider' => 'core',
+      'provider' => 'system',
       'label_display' => '0',
+      'level' => 1,
+      'depth' => 0,
+      'expand_all_items' => FALSE,
     ];
     $this->assertEntity('menu', [], 'header', 'olivero', -5, $settings);
 
