@@ -4,6 +4,8 @@ namespace Drupal\database_test\EventSubscriber;
 
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -33,6 +35,8 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
     return [
       StatementExecutionStartEvent::class => 'onStatementExecutionStart',
       StatementExecutionEndEvent::class => 'onStatementExecutionEnd',
+      TransactionBeginEvent::class => 'onTransactionBegin',
+      TransactionSavepointEvent::class => 'onTransactionSavepoint',
     ];
   }
 
@@ -56,6 +60,26 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   public function onStatementExecutionEnd(StatementExecutionEndEvent $event): void {
     unset($this->statementIdsInExecution[$event->statementObjectId]);
     $this->countStatementEnds++;
+  }
+
+  /**
+   * Subscribes to a TransactionBeginEvent
+   *
+   * @param \Drupal\Core\Database\Event\TransactionBeginEvent $event
+   *   The transaction event.
+   */
+  public function onTransactionBegin(TransactionBeginEvent $event): void {
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->name);
+  }
+
+  /**
+   * Subscribes to a TransactionSavepointEvent
+   *
+   * @param \Drupal\Core\Database\Event\TransactionSavepointEvent $event
+   *   The transaction event.
+   */
+  public function onTransactionSavepoint(TransactionSavepointEvent $event): void {
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->name . ' ' . $event->parentName);
   }
 
 }

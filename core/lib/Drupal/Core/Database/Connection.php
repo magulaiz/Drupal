@@ -2085,6 +2085,7 @@ abstract class Connection {
   public function enableEvents(array $eventNames): static {
     foreach ($eventNames as $eventName) {
       assert(class_exists($eventName), "Event class {$eventName} does not exist");
+      assert(is_a($eventName, DatabaseEvent::class, true), "Event class {$eventName} is not a valid database event class");
       $this->enabledEvents[$eventName] = TRUE;
     }
     return $this;
@@ -2101,6 +2102,7 @@ abstract class Connection {
   public function disableEvents(array $eventNames): static {
     foreach ($eventNames as $eventName) {
       assert(class_exists($eventName), "Event class {$eventName} does not exist");
+      assert(is_a($eventName, DatabaseEvent::class, true), "Event class {$eventName} is not a valid database event class");
       $this->enabledEvents[$eventName] = FALSE;
     }
     return $this;

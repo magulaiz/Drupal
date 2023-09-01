@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Transaction;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
@@ -58,6 +60,14 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * state on the database server could be different.
    */
   private ClientConnectionTransactionState $connectionTransactionState;
+
+  /**
+   * The list of transaction related events.
+   */
+  private array $transactionEvents = [
+    TransactionBeginEvent::class,
+    TransactionSavepointEvent::class,
+  ];
 
   /**
    * Constructor.
@@ -137,6 +147,36 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
+   * Enables transaction events dispatching.
+   *
+   * @param string[] $eventNames
+   *   (Optional) A list of transaction events to be enabled. If left blank,
+   *   all transaction events will be enabled.
+   */
+  public function enableEvents(array $eventNames = []): void {
+    $events = $this->transactionEvents;
+    if (!empty($eventNames)) {
+      $events = array_intersect($events, $eventNames);
+    }
+    $this->connection->enableEvents($events);
+  }
+
+  /**
+   * Disables transaction events dispatching.
+   *
+   * @param string[] $eventNames
+   *   (Optional) A list of transaction events to be disabled. If left blank,
+   *   all transaction events will be disabled.
+   */
+  public function disableEvents(array $eventNames = []): void {
+    $events = $this->transactionEvents;
+    if (!empty($eventNames)) {
+      $events = array_intersect($events, $eventNames);
+    }
+    $this->connection->disableEvents($events);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function inTransaction(): bool {
@@ -164,6 +204,13 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
 
     // Do the client-level processing.
     if ($this->stackDepth() === 0) {
+      if ($this->connection->isEventEnabled(TransactionBeginEvent::class)) {
+        $this->connection->dispatchEvent(new TransactionBeginEvent(
+          $this->connection->getKey(),
+          $this->connection->getTarget(),
+          $name,
+        ));
+      }
       $this->beginClientTransaction();
       $type = StackItemType::Root;
       $this->setConnectionTransactionState(ClientConnectionTransactionState::Active);
@@ -172,6 +219,14 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       // If we're already in a Drupal transaction then we want to create a
       // database savepoint, rather than try to begin another database
       // transaction.
+      if ($this->connection->isEventEnabled(TransactionSavepointEvent::class)) {
+        $this->connection->dispatchEvent(new TransactionSavepointEvent(
+          $this->connection->getKey(),
+          $this->connection->getTarget(),
+          $name,
+          array_keys($this->stack())[$this->stackDepth() - 1],
+        ));
+      }
       $this->addClientSavepoint($name);
       $type = StackItemType::Savepoint;
     }
