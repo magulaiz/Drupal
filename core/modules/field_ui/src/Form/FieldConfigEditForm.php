@@ -18,9 +18,7 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Core\Url;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldConfigInterface;
-use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -190,7 +188,7 @@ class FieldConfigEditForm extends EntityForm {
     $item = $items->first() ?: $items->appendItem();
 
     unset($form['field_storage']['subform']['actions']);
-//    $this->addAjaxCallBacks($form['field_storage']['subform']);
+    // $this->addAjaxCallBacks($form['field_storage']['subform']);
 
     if (isset($form['field_storage']['subform']['cardinality_container'])) {
       $form['field_storage']['subform']['cardinality_container']['#parents'] = [
@@ -272,7 +270,7 @@ class FieldConfigEditForm extends EntityForm {
     }
   }
 
-    /**
+  /**
    * Callback for relaoding the form.
    */
   public function showUpdated($form, FormStateInterface &$form_state) {
@@ -355,7 +353,7 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage_form->validateForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {

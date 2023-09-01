@@ -450,6 +450,17 @@ function field_field_config_presave(FieldConfigInterface $field) {
 }
 
 /**
+ * Entity form builder for field config edit form.
+ *
+ * @param string $entity_type_id
+ *   The entity type identifier.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity updated with the submitted values.
+ * @param array $form
+ *   The complete form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
  * @see \Drupal\field_ui\Form\FieldConfigEditForm::form
  * @see \Drupal\field_ui\Form\FieldConfigEditForm::copyFormValuesToEntity
  */
@@ -477,4 +488,4 @@ function field_form_field_config_edit_form_entity_builder($entity_type_id, $enti
     // @see field_field_config_presave().
     field_field_config_create($entity);
   }
-};
+}
