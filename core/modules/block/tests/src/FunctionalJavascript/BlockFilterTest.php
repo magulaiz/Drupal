@@ -4,6 +4,7 @@ namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
  * Tests the JavaScript functionality of the block add filter.
@@ -11,6 +12,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group block
  */
 class BlockFilterTest extends WebDriverTestBase {
+
+  use BlockCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -23,11 +26,33 @@ class BlockFilterTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Blocks to be installed on filter block layout  test.
+   *
+   * @var array[]
+   */
+  protected $blocks = [
+    'left_sidebar' => [
+      'page_title',
+      'system_branding_block',
+    ],
+    'right_sidebar' => [
+      'search_form_block',
+    ],
+    'content' => [
+      'system_messages_block',
+      'system_main_block',
+    ],
+    'footer' => [
+      'help_block',
+      'system_powered_by_block',
+    ],
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
     $admin_user = $this->drupalCreateUser([
       'administer blocks',
     ]);
@@ -78,6 +103,90 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertCount(0, $visible_rows);
     $expected_message = '0 blocks are available in the modified list.';
     $this->assertAnnounceContains($expected_message);
+  }
+
+  /**
+   * Test block filter on block layout page.
+   */
+  public function testRegionsBlockFilter() {
+    $defaultTheme = $this->config('system.theme')->get('default');
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
+    // Empty message displayed when the type doesn't match with blocks.
+    $emptyMessage = 'There are no blocks matching the filter conditions.';
+
+    $blockConfig = [];
+
+    foreach ($this->blocks as $region => $blocks) {
+      foreach ($blocks as $blockId) {
+        $blockEntity = $this->placeBlock($blockId, ['region' => $region]);
+        $humanRegion = ucwords(str_replace('_', ' ', $region));
+        $blockConfig[$blockId] = [
+          'region' => $humanRegion,
+          'label' => $blockEntity->label(),
+        ];
+      }
+    }
+
+    // Add more three blocks with friendly labels containing same word to check if all will be displayed.
+    $this->placeBlock(
+      'system_messages_block',
+      ['region' => 'content', 'label' => 'a common block label to be displayed']
+    );
+    $this->placeBlock(
+      'system_messages_block',
+      ['region' => 'content', 'label' => 'label to be displayed']
+    );
+    $this->placeBlock(
+      'system_messages_block',
+      ['region' => 'content', 'label' => 'label display']
+    );
+    $this->drupalGet('admin/structure/block');
+
+    // Start the tests
+    $assertSession = $this->assertSession();
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    $inputFilter = $page->find('css', '[data-drupal-selector="edit-search-blocks"]');
+    $allBlocks = $page->findAll('css', '#blocks tbody tr.draggable');
+    $inputFilter->setValue('this text cant be found');
+    $this->assertSession()->waitForElement('css', '#block-filter-region-empty-message');
+
+    // Text if any block was displayed
+    $visibleBlocks = $this->filterVisibleElements($allBlocks);
+    $assertSession->assert(count($visibleBlocks) === 0, "Some blocks has been displayed but should not");
+    $assertSession->pageTextContains($emptyMessage);
+
+    // Change filter value to found one block specific.
+    $inputFilter->setValue($blockConfig['page_title']['label']);
+    $this->assertSession()->waitForElementRemoved('css', '#block-filter-region-empty-message');
+
+    // Test if the message disappear.
+    $assertSession->pageTextNotContains($emptyMessage);
+    $assertSession->assert(
+      count($this->filterVisibleElements($allBlocks)) === 1,
+      "Only the block {$blockConfig['page_title']['label']} should appear, but more them one appeared"
+    );
+    $assertSession->pageTextContains($blockConfig['page_title']['label']);
+    $assertSession->pageTextContains($blockConfig['page_title']['region']);
+
+    // Search by another word that doesn't exist.
+    // And check if the empty appear once.
+    $inputFilter->setValue('string test');
+    $this->assertSession()->waitForElement('css', '#block-filter-region-empty-message');
+    $assertSession->pageTextContainsOnce($emptyMessage);
+
+    // Test each block validating if the regions will be displayed.
+    foreach ($blockConfig as $blockTest) {
+      $inputFilter->setValue($blockTest['label']);
+      $this->assertSession()
+        ->waitForElementVisible('xpath', "//td[contains(text(), '" . $blockTest['label'] . "')]", 300);
+      $assertSession->pageTextContains($blockTest['label']);
+      $assertSession->pageTextContains($blockTest['region']);
+    }
+    // Back to the previous theme default to avoid failing other tests.
+    $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
 
   /**

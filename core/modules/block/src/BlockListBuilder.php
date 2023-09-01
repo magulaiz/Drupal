@@ -130,6 +130,23 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $form['#attached']['library'][] = 'block/drupal.block.admin';
     $form['#attributes']['class'][] = 'clearfix';
 
+    $form['filters'] = [
+      '#type' => 'fieldset',
+      '#attributes' => [
+        'class' => ['js-show'],
+      ],
+    ];
+
+    $form['filters']['search_blocks'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Filter'),
+      '#placeholder' => $this->t('Filter by block name or block category'),
+      '#attributes' => [
+        'class' => ['block-filter-region-text'],
+        'title' => $this->t('Enter a part of the block name to filter by.'),
+      ],
+    ];
+
     // Build the form tree.
     $form['blocks'] = $this->buildBlocksForm();
 
@@ -217,6 +234,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         '#attributes' => [
           'class' => ['region-title', 'region-title-' . $region],
           'no_striping' => TRUE,
+          'data-region' => $region,
         ],
       ];
       $form['region-' . $region]['title'] = [
@@ -248,6 +266,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
             'region-' . $region . '-message',
             empty($blocks[$region]) ? 'region-empty' : 'region-populated',
           ],
+          'data-region-message' => $region,
         ],
       ];
       $form['region-' . $region . '-message']['message'] = [
@@ -264,6 +283,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           $form[$entity_id] = [
             '#attributes' => [
               'class' => ['draggable'],
+              'data-parent-region' => $region,
             ],
           ];
           $form[$entity_id]['#attributes']['class'][] = $info['status'] ? 'block-enabled' : 'block-disabled';

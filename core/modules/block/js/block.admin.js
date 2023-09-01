@@ -106,4 +106,76 @@
       }
     },
   };
+
+  /**
+   * Filter the block list on block layout page by a text input search string.
+   *
+   * The target elements to search are block label and block region name.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the block filtering on block layout page.
+   */
+  Drupal.behaviors.blockFilterRegionText = {
+    attach() {
+      const $inputFilter = $(
+        once(
+          'block-filter-region-text',
+          '[data-drupal-selector="edit-search-blocks"]',
+        ),
+      );
+      const $table = $('#blocks');
+      const $listItems = $table.find('tbody tr.draggable');
+
+      if ($listItems.length === 0) {
+        return;
+      }
+
+      const filterCallback = (e) => {
+        const query = e.target.value.toLowerCase();
+        // Clear the empty message when typing starts.
+        $table.find('#block-filter-region-empty-message').remove();
+
+        $listItems.each((index, tr) => {
+          const $tr = $(tr);
+          try {
+            // Query the block label and region name.
+            const textToBeQueried = `${tr.children[0].textContent} ${tr.children[1].textContent}`;
+            $tr.toggle(textToBeQueried.toLowerCase().includes(query));
+          } catch (error) {
+            // If a problem occurs, default to showing the row.
+            $tr.show();
+          }
+          const regionName = $tr.data('parentRegion');
+          const regionElement = $(`tr[data-region="${regionName}"]`);
+          const hasBlockVisible = $(
+            `tr[data-parent-region="${regionName}"]:visible`,
+          ).length;
+          regionElement.toggle(hasBlockVisible > 0);
+        });
+
+        // Hidden regions that don't have any blocks displayed.
+        $table.find('tr.region-message:visible').each((i, el) => {
+          $(el).hide();
+          const regionSelector = $(el).data('regionMessage')
+          $(`[data-region="${regionSelector}"]`).hide();
+        });
+        // If there are no blocks, display empty message.
+        if ($listItems.find(':visible').length === 0) {
+          $table.append(Drupal.theme('blockFilterEmptyMessage'));
+        }
+      };
+
+      function preventEnter(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+
+      $inputFilter.on('keyup', debounce(filterCallback, 200));
+      $inputFilter.on('keydown', preventEnter);
+    },
+  };
 })(jQuery, Drupal, Drupal.debounce, once);
