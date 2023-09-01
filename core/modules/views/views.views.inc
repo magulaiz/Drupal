@@ -6,8 +6,8 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Render\Markup;
 use Drupal\field\Entity\FieldConfig;
@@ -794,7 +794,7 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
     $target_base_table = $target_entity_type->getDataTable() ?: $target_entity_type->getBaseTable();
     $field_name = $field_storage->getName();
 
-    if ($target_entity_type instanceof ContentEntityTypeInterface) {
+    if ($target_entity_type instanceof EntityTypeInterface) {
       foreach ($table_data as $table_field_name => $table_field_data) {
         if (isset($table_field_data['filter']) && $table_field_name != 'delta') {
           // Create separate views data to allow use of the entity_reference
