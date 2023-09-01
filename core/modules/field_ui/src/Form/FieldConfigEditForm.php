@@ -17,7 +17,9 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -111,6 +113,7 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
+    $form['#parents'] = [];
 
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
@@ -184,13 +187,16 @@ class FieldConfigEditForm extends EntityForm {
       '#weight' => -15,
       '#tree' => TRUE,
     ];
-    $form['field_storage']['subform'] = [];
+    $form['field_storage']['subform'] = [
+      '#parents' => ['field_storage', 'subform'],
+    ];
     $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
     $field_storage_form->setEntity($field_storage);
     $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity->id());
+    $current_field_storage = $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state);
     unset($form['field_storage']['subform']['actions']);
-    $this->addAjaxCallBacks($form['field_storage']['subform']);
+//    $this->addAjaxCallBacks($form['field_storage']['subform']);
 
     if (isset($form['field_storage']['subform']['cardinality_container'])) {
       $form['field_storage']['subform']['cardinality_container']['#parents'] = [
@@ -223,7 +229,11 @@ class FieldConfigEditForm extends EntityForm {
 
     // Create a new instance of typed data for the field to ensure that default
     // value widget is always rendered from a clean state.
-    $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
+    $current_field_config = $this->buildEntity($form, $form_state);
+    $reflector = new \ReflectionObject($current_field_config);
+    $property = $reflector->getProperty('fieldStorage');
+    $property->setValue($current_field_config, clone $current_field_storage);
+    $items = $this->getTypedData($current_field_config, $form['#entity']);
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
@@ -344,7 +354,7 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage_form->validateForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
   }
 
-  /**
+    /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
@@ -472,18 +482,6 @@ class FieldConfigEditForm extends EntityForm {
         $this->entity->setSetting('handler_settings', []);
       }
     }
-    else {
-      $parents = array_slice($form_state->getTriggeringElement()['#parents'], 0, -1);
-      $parents[] = 'settings';
-      // @todo Do we still need to do this?
-      if ($form_state->getValue($parents) !== NULL) {
-        $field_storage->setSettings($form_state->getValue($parents));
-      }
-    }
-    // @todo Do we still need to do this?
-    // Can we call build entity on the subform?
-    $field_storage->set('cardinality', $form_state->getValue(['field_storage', 'subform', 'cardinality_number']));
-
 
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();

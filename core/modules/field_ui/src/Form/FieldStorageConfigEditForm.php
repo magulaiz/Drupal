@@ -99,6 +99,8 @@ class FieldStorageConfigEditForm extends EntityForm {
         $form_state->set('bundle', $field->getTargetBundle());
       }
       else {
+        // @todo We might be able to retrieve field config from somewhere now
+        //   that it should exist at this point.
         $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
 
         $form_state->set('entity_type_id', $temp_storage['field_config_values']['entity_type']);
@@ -143,7 +145,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       // definition.
       $field_config = $this->entityTypeManager->getStorage('field_config')->create([
         ...$temp_storage['field_config_values'],
-        'field_storage' => $temp_storage['field_storage'],
+        'field_storage' => $this->buildEntity($form, $form_state),
       ]);
       $items = $this->typedDataManager->create($field_config, name: $this->entity->getName(), parent: EntityAdapter::createFromEntity($entity));
     }
