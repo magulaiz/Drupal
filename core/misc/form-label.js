@@ -3,7 +3,7 @@
  * Defines form element theme functions.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Theme function for a label element.
    *
@@ -26,7 +26,7 @@
     const attributes = [
       className ? `class="${className}"` : '',
       labelFor ? `for="${labelFor}"` : '',
-    ].filter(attribute => attribute !== '');
+    ].filter((attribute) => attribute !== '');
 
     return `<label ${attributes.join(' ')}>${label}</label>`;
   };
