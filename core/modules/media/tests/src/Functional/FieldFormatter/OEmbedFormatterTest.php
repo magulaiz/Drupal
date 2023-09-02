@@ -278,9 +278,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
     $assert->statusCodeEquals(200);
     // Check that the width and height attributes are not empty.
     $element = $assert->elementExists('css', 'iframe');
-    // Assert that the width and height attributes are 0.
-    $this->assertEquals('0', $element->getAttribute('width'));
-    $this->assertEquals('0', $element->getAttribute('height'));
+
+    // Assert that the iframe src attributes contains "max_width=0" and "max_height=0".
+    $this->assertStringContainsString('max_width=0', $element->getAttribute('src'));
+    $this->assertStringContainsString('max_height=0', $element->getAttribute('src'));
   }
 
 }
