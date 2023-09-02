@@ -185,6 +185,10 @@ class FieldConfigEditForm extends EntityForm {
 
     $form['#entity'] = _field_create_entity_from_ids($ids);
     $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
+    // @todo On switching the type of an entity reference field $item that is
+    //   returned from $items->appendItem() still has the previous type set
+    //   so it does not bring back the correct selection plugin.
+    // @see \Drupal\Tests\field\FunctionalJavascript\EntityReference\EntityReferenceAdminTest::testFieldAdminHandler
     $item = $items->first() ?: $items->appendItem();
 
     unset($form['field_storage']['subform']['actions']);

@@ -274,11 +274,10 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Switch the target type to 'user' and check that the settings specific to
     // its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
-    $edit = [
-      'field_storage[subform][settings][target_type]' => 'user',
-    ];
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
-    $this->submitForm($edit, 'Update settings');
+    $target_type_input = $assert_session->fieldExists('field_storage[subform][settings][target_type]');
+    $target_type_input->setValue('user');
+    $assert_session->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldValueEquals('settings[handler_settings][filter][type]', '_none');
     $this->assertSession()->fieldValueEquals('settings[handler_settings][sort][field]', '_none');
     $assert_session->optionNotExists('settings[handler_settings][sort][field]', 'nid');
