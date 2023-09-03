@@ -410,4 +410,17 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    */
   abstract protected function commitClientTransaction(): bool;
 
+  /**
+   * Voids the client connection.
+   *
+   * This method is called by Connection::executeDdlStatement when a
+   * transaction is active and the database driver does not support
+   * transactional DDL, to prevent transaction self-committing.
+   */
+  public function voidClientTransaction(): void {
+    $this->processRootCommit();
+    $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
+    $this->resetStack();
+  }
+
 }
