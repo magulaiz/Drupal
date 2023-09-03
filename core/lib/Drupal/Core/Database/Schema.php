@@ -614,7 +614,7 @@ abstract class Schema implements PlaceholderInterface {
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->connection->executeDdlStatement($statement);
     }
   }
 

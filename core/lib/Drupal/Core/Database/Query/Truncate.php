@@ -48,13 +48,23 @@ class Truncate extends Query {
    * @see https://learnsql.com/blog/difference-between-truncate-delete-and-drop-table-in-sql
    */
   public function execute() {
-    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
-    try {
-      $stmt->execute([], $this->queryOptions);
-      return $stmt->rowCount();
+    // In most cases, TRUNCATE is not a transaction safe statement as it is a
+    // DDL statement which results in an implicit COMMIT. When we are in a
+    // transaction, fallback to the slower, but transactional, DELETE.
+    // PostgreSQL also locks the entire table for a TRUNCATE strongly reducing
+    // the concurrency with other transactions.
+    if ($this->connection->inTransaction()) {
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
+      try {
+        $stmt->execute([], $this->queryOptions);
+        return $stmt->rowCount();
+      }
+      catch (\Exception $e) {
+        $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
+      }
     }
-    catch (\Exception $e) {
-      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
+    else {
+      $this->connection->executeDdlStatement((string) $this, [], $this->queryOptions);
     }
 
     return NULL;
@@ -70,11 +80,6 @@ class Truncate extends Query {
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 
-    // In most cases, TRUNCATE is not a transaction safe statement as it is a
-    // DDL statement which results in an implicit COMMIT. When we are in a
-    // transaction, fallback to the slower, but transactional, DELETE.
-    // PostgreSQL also locks the entire table for a TRUNCATE strongly reducing
-    // the concurrency with other transactions.
     if ($this->connection->inTransaction()) {
       return $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '}';
     }

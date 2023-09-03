@@ -860,6 +860,29 @@ abstract class Connection {
   }
 
   /**
+   * Executes a data definition language (DDL) statement.
+   *
+   * This method allows to void an active transaction when the driver does
+   * not support transactional DDL.
+   *
+   * @param string $sql
+   *   The DDL statement to execute. This is a SQL string that may contain
+   *   placeholders.
+   * @param array $arguments
+   *   (Optional) The associative array of arguments for the prepared
+   *   statement.
+   * @param array $options
+   *   (Optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with self::defaultOptions().
+   */
+  public function executeDdlStatement(string $sql, array $arguments = [], array $options = []): void {
+    if (!$this->transactionalDDLSupport && $this->inTransaction()) {
+      $this->transactionManager()->voidClientTransaction();
+    }
+    $this->query($sql, $arguments, $options);
+  }
+
+  /**
    * Expands out shorthand placeholders.
    *
    * Drupal supports an alternate syntax for doing arrays of values. We
