@@ -189,7 +189,7 @@ function update_cron() {
   if (($request_time - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.
-    \Drupal::service('mailer')->mail('update.status_notify');
+    \Drupal::Mailer('update')->cronNotify();
   }
 
   // Clear garbage from disk.

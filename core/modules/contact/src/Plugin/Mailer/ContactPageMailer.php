@@ -1,21 +1,24 @@
 <?php
 
-namespace Drupal\contact\Plugin\EmailBuilder;
+namespace Drupal\contact\Plugin\Mailer;
 
-use Drupal\Core\Url;
+use Drupal\contact\Entity\ContactForm;
+use Drupal\contact\MessageInterface;
 use Drupal\Core\Mailer\EmailInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 
 /**
- * Defines the Email Builder plug-in for contact module page forms.
+ * Defines the Mailer plug-in for contact module page forms.
  *
- * There are separate email builders for personal and page forms, as they have
+ * There are separate mailers for personal and page forms, as they have
  * differences in the ID, parameters and variables.
  *
  * Emails for page forms are associated with a contact_form entity. The
  * contact form entity is added as the 3rd part of the email ID, so that
  * different contact forms can have different configuration.
  *
- * @EmailBuilder(
+ * @Mailer(
  *   id = "contact__page",
  *   label = @Translation("Contact page"),
  *   sub_types = {
@@ -27,7 +30,29 @@ use Drupal\Core\Mailer\EmailInterface;
  *   config = {"subject", "body", "to"},
  * )
  */
-class ContactPageEmailBuilder extends ContactEmailBuilderBase {
+class ContactPageMailer extends ContactMailerBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function sendMailMessages(MessageInterface $message, AccountInterface $sender) {
+    $params = [
+      'contact_message' => $message,
+      'sender' => $sender,
+      'contact_form' => $message->getContactForm(),
+    ];
+    $this->sendCommon($params);
+
+    // Send auto-reply email. This email will skip sending if there is no
+    // configured reply.
+    $this->doSend('autoreply', $params);
+
+    $this->logger->notice('%sender-name (@sender-from) sent an email regarding %contact_form.', [
+      '%sender-name' => $params['sender']->getAccountName(),
+      '@sender-from' => $params['sender']->getEmail() ?? '',
+      '%contact_form' => $contact_form->label(),
+    ]);
+  }
 
   /**
    * {@inheritdoc}
@@ -37,12 +62,7 @@ class ContactPageEmailBuilder extends ContactEmailBuilderBase {
       /** @var Drupal\contact\ContactFormInterface $contact_form */
       $contact_form = $email->getEntity();
 
-      // Send an extra auto-reply email using the same type/params and a
-      // different sub-type. This email will skip sending if there is no
-      // configured reply.
-      $email->clone('autoreply');
-
-      if ($this->doConfig()) {
+      if ($this->getConfig()) {
         // This part will be replaced by a generic configurable email
         // mechanism. automatically sends a separate email to each recipient
         // using the correct language.
@@ -62,7 +82,7 @@ class ContactPageEmailBuilder extends ContactEmailBuilderBase {
     $email->setVariable('form', $contact_form->label())
       ->setVariable('form_url', Url::fromRoute('<current>')->toString());
 
-    if ($this->doConfig()) {
+    if ($this->getConfig()) {
       // This part will be replaced by a generic configurable email mechanism.
       $email->setSubject('[{{ form }}] {{ subject }}');
 

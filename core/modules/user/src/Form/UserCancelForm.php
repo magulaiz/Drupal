@@ -148,7 +148,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->entity->user_cancel_method = $form_state->getValue('user_cancel_method');
       $this->entity->user_cancel_notify = $form_state->getValue('user_cancel_notify');
       $this->entity->save();
-      \Drupal::service('mailer')->mail("user.cancel_confirm", ['account' => $this->entity]);
+      \Drupal::Mailer('user')->notify('cancel_confirm', $this->entity);
       $this->messenger()->addStatus($this->t('A confirmation request to cancel your account has been sent to your email address.'));
       $this->logger('user')->info('Sent account cancellation request to %name %email.', ['%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>']);
 

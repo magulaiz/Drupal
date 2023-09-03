@@ -1,33 +1,41 @@
 <?php
 
-namespace Drupal\update\Plugin\EmailBuilder;
+namespace Drupal\update\Plugin\Mailer;
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Mailer\EmailInterface;
-use Drupal\Core\Mailer\EmailBuilderBase;
+use Drupal\Core\Mailer\MailerBase;
 use Drupal\Core\Url;
+use Drupal\update\UpdateMailerInterface;
 use Drupal\update\UpdateManagerInterface;
 
 /**
- * Defines the Email Builder plug-in for update module.
+ * Defines the Mailer plug-in for update module.
  *
- * @EmailBuilder(
+ * @Mailer(
  *   id = "update",
  *   sub_types = { "status_notify" = @Translation("Available updates") },
  *   config = {"subject", "body", "to"},
  * )
  */
-class UpdateEmailBuilder extends EmailBuilderBase {
+class UpdateMailer extends MailerBase implements UpdateMailerInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cronNotify() {
+    $this->doSend('status_notify');
+  }
 
   /**
    * {@inheritdoc}
    */
   public function prepare(EmailInterface $email) {
-    if ($this->doConfig()) {
+    if ($config = $this->getConfig()) {
       // This part will be replaced by a generic configurable email mechanism.
       // It automatically sends a separate email to each recipient using the
       // correct language.
-      $email->setTo($this->config->get('update.settings')->get('notification.emails'));
+      $email->setTo($config->get('update.settings')->get('notification.emails'));
     }
   }
 
@@ -35,7 +43,7 @@ class UpdateEmailBuilder extends EmailBuilderBase {
    * {@inheritdoc}
    */
   public function build(EmailInterface $email) {
-    $site_name = $this->config->get('system.site')->get('name');
+    $site_name = $this->getConfig(TRUE)->get('system.site')->get('name');
     $notification_threshold = $config->get('update.settings')->get('notification.threshold');
     $messages = $this->getMessages();
     if (!$messages) {
@@ -52,7 +60,7 @@ class UpdateEmailBuilder extends EmailBuilderBase {
       $email->setVariable('update_manager', Url::fromRoute('update.report_update')->toString());
     }
 
-    if ($this->doConfig()) {
+    if ($this->getConfig()) {
       // This part will be replaced by a generic configurable email mechanism.
       $email->setSubject('New release(s) available for {{ site_name }}');
       // The email body is defined by template file
@@ -89,7 +97,7 @@ class UpdateEmailBuilder extends EmailBuilderBase {
    *   key equals the report type and value equals the status reason code.
    */
   protected function getMessages(bool $legacy = FALSE) {
-    $update_config = $this->config->get('update.settings');
+    $update_config = $this->getConfig(TRUE)->get('update.settings');
     $this->moduleHandler->loadInclude('update', 'install');
     $requirements = update_requirements('runtime');
     $messages = $params = [];

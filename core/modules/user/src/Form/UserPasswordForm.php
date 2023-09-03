@@ -200,7 +200,7 @@ class UserPasswordForm extends FormBase {
     $account = $form_state->getValue('account');
     if ($account) {
       // Mail one time login URL and instructions using current language.
-      if (\Drupal::service('mailer')->mail('user.password_reset', ['account' => $account])) {
+      if (\Drupal::Mailer('user')->notify('password_reset', $account)) {
         $this->logger('user')
           ->info('Password reset instructions mailed to %name at %email.', [
             '%name' => $account->getAccountName(),

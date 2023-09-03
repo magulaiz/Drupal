@@ -7,7 +7,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Provides an interface for assembly and dispatch of contact mail messages.
  */
-interface MailHandlerInterface {
+interface ContactMailerInterface {
 
   /**
    * Sends mail messages as appropriate for a given Message form submission.

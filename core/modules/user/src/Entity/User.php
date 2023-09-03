@@ -149,7 +149,7 @@ class User extends ContentEntityBase implements UserInterface {
       if ($this->status->value != $this->original->status->value) {
         // The user's status is changing; conditionally send notification email.
         $op = $this->status->value == 1 ? 'status_activated' : 'status_blocked';
-        \Drupal::service('mailer')->mail("user.op", ['account' => $this]);
+        \Drupal::Mailer('user')->notify($op, $this);
       }
     }
   }

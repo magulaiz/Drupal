@@ -668,7 +668,7 @@ function _user_cancel($edit, $account, $method) {
     default:
       // Send account blocked notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        \Drupal::service('mailer')->mail('user.status_blocked', ['account' => $account]);
+        \Drupal::Mailer('user')->notify('status_blocked', $account);
       }
       $account->block();
       $account->save();
@@ -680,7 +680,7 @@ function _user_cancel($edit, $account, $method) {
     case 'user_cancel_delete':
       // Send account canceled notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        \Drupal::service('mailer')->mail('user.status_canceled', ['account' => $account]);
+        \Drupal::Mailer('user')->notify('status_canceled', $account);
       }
       $account->delete();
       \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));

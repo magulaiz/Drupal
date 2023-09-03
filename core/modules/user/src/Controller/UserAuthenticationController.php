@@ -261,7 +261,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       }
 
       // Send the password reset email.
-      if (!\Drupal::service('mailer')->mail('user.password_reset', ['account' => $account])) {
+      if (!\Drupal::Mailer('user')->notify('password_reset', $account)) {
         throw new BadRequestHttpException('Unable to send email. Contact the site administrator if the problem persists.');
       }
       else {

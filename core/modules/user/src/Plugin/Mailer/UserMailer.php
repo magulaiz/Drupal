@@ -1,14 +1,16 @@
 <?php
 
-namespace Drupal\user\Plugin\EmailBuilder;
+namespace Drupal\user\Plugin\Mailer;
 
 use Drupal\Core\Mailer\EmailInterface;
-use Drupal\Core\Mailer\EmailBuilderBase;
+use Drupal\Core\Mailer\MailerBase;
+use Drupal\user\UserInterface;
+use Drupal\user\UserMailerInterface;
 
 /**
- * Defines the Email Builder plug-in for user module.
+ * Defines the Mailer plug-in for user module.
  *
- * @EmailBuilder(
+ * @Mailer(
  *   id = "user",
  *   sub_types = {
  *     "cancel_confirm" = @Translation("Account cancellation confirmation"),
@@ -24,7 +26,23 @@ use Drupal\Core\Mailer\EmailBuilderBase;
  *   config = {"subject", "body", "skip_sending"},
  * )
  */
-class UserEmailBuilder extends EmailBuilderBase {
+class UserMailer extends MailerBase implements UserMailerInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function notify(string $op, UserInterface $user) {
+    $params = ['user' => $user];
+    $ok = $this->doSend($op, $params);
+
+    if ($op == 'register_pending_approval') {
+      // Send an extra email to the admin using the same type/params and a
+      // different sub-type.
+      $this->doSend('register_pending_approval_admin', $params);
+    }
+
+    return $ok;
+  }
 
   /**
    * {@inheritdoc}
@@ -32,20 +50,14 @@ class UserEmailBuilder extends EmailBuilderBase {
   public function prepare(EmailInterface $email) {
     $op = $email->getSubType();
 
-    if ($op == 'register_pending_approval') {
-      // Send an extra email to the admin using the same type/params and a
-      // different sub-type.
-      $email->clone('register_pending_approval_admin');
-    }
-
     if ($op != 'register_pending_approval_admin') {
       // Send to the user. This automatically sets the correct language.
       $email->setTo($email->getParam('user'));
     }
 
-    if ($this->doConfig()) {
+    if ($config = $this->getConfig()) {
       // This part will be replaced by a generic configurable email mechanism.
-      $site_settings = $this->config->get('system.site');
+      $site_settings = $config->get('system.site');
       $site_mail = $site_settings->get('mail_notification') ?: $site_settings->get('mail') ?: ini_get('sendmail_from');
 
       if ($op == 'register_pending_approval_admin') {
@@ -64,13 +76,13 @@ class UserEmailBuilder extends EmailBuilderBase {
   public function build(EmailInterface $email) {
     $email->replaceTokens(['callback' => 'user_mail_tokens', 'clear' => TRUE]);
 
-    if ($this->doConfig()) {
+    if ($config = $this->getConfig()) {
       // This part will be replaced by a generic configurable email mechanism.
       $op = $email->getSubType();
-      if (!$this->config->get('user.settings')->get("notify.$op")) {
+      if (!$config->get('user.settings')->get("notify.$op")) {
         throw new SkipMailException('Notification disabled in settings.');
       }
-      $mail_config = $this->config->get('user.mail');
+      $mail_config = $config->get('user.mail');
       $email->setSubject($mail_config->get("$op.subject"));
       // Format an HTML body based on the configured unformatted text. This
       // uses the default text format however module code can override.
