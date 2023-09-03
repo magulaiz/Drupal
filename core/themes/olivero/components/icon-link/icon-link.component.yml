@@ -1,0 +1,14 @@
+name: Icon Link
+props:
+  type: object
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+    icon:
+      type: string
+      enum:
+        - rss
+    title:
+      type: string
+    url:
+      type: string
