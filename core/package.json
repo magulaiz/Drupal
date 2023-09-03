@@ -4,8 +4,8 @@
   "license": "GPL-2.0",
   "private": true,
   "engines": {
-    "yarn": ">= 1.6",
-    "node": ">= 18.0"
+    "yarn": ">= 4.0.0-rc.50",
+    "node": ">= 18.12"
   },
   "scripts": {
     "build": "yarn build:css & yarn build:ckeditor5 & yarn vendor-update",
@@ -118,5 +118,6 @@
     "last 1 ChromeAndroid version",
     "last 1 Samsung version",
     "Firefox ESR"
-  ]
+  ],
+  "packageManager": "yarn@4.0.0-rc.50"
 }
