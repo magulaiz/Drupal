@@ -185,17 +185,11 @@ class FieldConfigEditForm extends EntityForm {
 
     $form['#entity'] = _field_create_entity_from_ids($ids);
     $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
+    // @todo On switching the type of an entity reference field $item that is
+    //   returned from $items->appendItem() still has the previous type set
+    //   so it does not bring back the correct selection plugin.
+    // @see \Drupal\Tests\field\FunctionalJavascript\EntityReference\EntityReferenceAdminTest::testFieldAdminHandler
     $item = $items->first() ?: $items->appendItem();
-    if ($form_state->get('field_storage_changed')) {
-      if (!$this->entity->isNew()) {
-        $this->entity = $this->buildEntity($form, $form_state);
-        $item->getFieldDefinition()->setSettings($this->entity->getSettings());
-      }
-      else {
-        $this->entity = $item->getFieldDefinition();
-      }
-      $form_state->set('field_storage_changed', FALSE);
-    }
 
     unset($form['field_storage']['subform']['actions']);
     $this->addAjaxCallBacks($form['field_storage']['subform']);
@@ -470,12 +464,9 @@ class FieldConfigEditForm extends EntityForm {
    *   The current state of the form.
    */
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
-    // A flag to keep track of changes in the field storage.
-    $form_state->set('field_storage_changed', TRUE);
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();
     unset($form_storage['default_value_widget']);
-    $this->typedDataManager->clearCachedDefinitions();
     $form_state->setRebuild();
   }
 

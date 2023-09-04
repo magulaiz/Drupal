@@ -482,7 +482,7 @@ function field_form_field_config_edit_form_entity_builder($entity_type_id, $enti
   }
 
   // Update handler settings when target_type is changed.
-  if ($form_state->get('field_storage_changed')) {
+  if ($entity->getFieldStorageDefinition()->getSetting('target_type') !== $previous_field_storage->getSetting('target_type')) {
     // @see field_field_storage_config_update().
     $entity->setSetting('handler_settings', []);
     // @see field_field_config_presave().
