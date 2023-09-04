@@ -136,8 +136,9 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
 
     // Aggregate CSS/JS if necessary, but only during normal site operation.
-    $optimize_css = !$maintenance_mode && \Drupal::state()->get('css.preprocess');
-    $optimize_js = $maintenance_mode && \Drupal::state()->get('js.preprocess');
+    $development_settings = \Drupal::state()->get('system.development_settings', []);
+    $optimize_css = !$maintenance_mode && $development_settings["css.preprocess"];
+    $optimize_js = $maintenance_mode && $development_settings["js.preprocess"];
 
     $attachments = $response->getAttachments();
 

@@ -33,14 +33,14 @@ class UnversionedAssetTest extends BrowserTestBase {
     $this->fileAssetsPath = $this->publicFilesDirectory;
     file_put_contents('public://test.css', '.original-content{display:none;}');
     // Test aggregation with a custom file_assets_path.
-    $this->config('system.performance')->set('css', [
-      'preprocess' => TRUE,
+    \Drupal::state()->set('system.development_settings', [
+      'js.preprocess' => TRUE,
       'gzip' => TRUE,
-    ])->save();
-    $this->config('system.performance')->set('js', [
-      'preprocess' => TRUE,
+    ]);
+    \Drupal::state()->set('system.development_settings', [
+      'css.preprocess' => TRUE,
       'gzip' => TRUE,
-    ])->save();
+    ]);
 
     // Ensure that the library discovery cache is empty before the page is
     // requested and that updated asset URLs are rendered.
