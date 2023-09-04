@@ -9,7 +9,7 @@ use Drupal\Core\Render\Element;
 /**
  *
  */
-class EntityFormDisplayElement extends ListElement {
+class EntityViewDisplayElement extends ListElement {
 
   /**
    *
@@ -35,8 +35,8 @@ class EntityFormDisplayElement extends ListElement {
 
     /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-    /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
-    $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+    /** @var \Drupal\Core\Field\WidgetPluginManager $field_widget_manager */
+    $field_widget_manager = \Drupal::service('plugin.manager.field.widget');
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
     $field_manager = \Drupal::service('entity_field.manager');
     /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
@@ -67,11 +67,11 @@ class EntityFormDisplayElement extends ListElement {
           $item['settings']['#open'] = TRUE;
         }
 
-        /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $entity */
-        // Set formatter type name if available.
-        $formatter_options = $field_formatter_manager->getOptions($definition->getType());
-        if (isset($formatter_options[$component_type]) && isset($item['settings'])) {
-          $item['settings']['#title'] = t("%label format settings", ['%label' => $formatter_options[$component_type]]);
+        /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity */
+        // Set widget name if available.
+        $widget_options = $field_widget_manager->getOptions($definition->getType());
+        if (isset($widget_options[$component_type]) && isset($item['settings'])) {
+          $item['settings']['#title'] = t("%label widget settings", ['%label' => $widget_options[$component_type]]);
         }
 
         $parent_build['content'][$component_name] = $item;
