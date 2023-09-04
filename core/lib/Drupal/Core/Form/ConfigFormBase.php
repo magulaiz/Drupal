@@ -81,7 +81,6 @@ abstract class ConfigFormBase extends FormBase {
         // Nothing to do: this config form does not yet use validation
         // constraints. Continue trying the other editable config, to allow
         // partial adoption.
-        $config_objects_updated = NULL;
         continue;
       }
       $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
@@ -127,7 +126,7 @@ abstract class ConfigFormBase extends FormBase {
     }
 
     // Detect invalid implementations.
-    if ($config_objects_updated !== NULL && empty(array_filter($config_objects_updated))) {
+    if (count($config_objects_updated) < count($this->getEditableConfigNames())) {
       if (count($this->getEditableConfigNames()) === 1) {
         throw new \LogicException(sprintf("%s::copyFormValuesToConfig() is invalid because it did not update the edited Config object '%s'.", get_class($this), $this->getEditableConfigNames()[0]));
       }
