@@ -68,10 +68,14 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
+    $config_objects_updated = [];
     foreach ($this->getEditableConfigNames() as $config_name) {
       $config = $this->config($config_name);
       try {
+        $before = $config->getRawData();
         static::copyFormValuesToConfig($config, $form_state);
+        $after = $config->getRawData();
+        $config_objects_updated[$config_name] = $before !== $after;
       }
       catch (\BadMethodCallException $e) {
         // Nothing to do: this config form does not yet use validation
@@ -118,6 +122,16 @@ abstract class ConfigFormBase extends FormBase {
         // However, if multiple exist, that implies it's a single form element
         // containing a `type: sequence`.
         $form_state->setErrorByName($form_element_name, $this->formatMultipleViolationsMessage($form_element_name, $violations));
+      }
+    }
+
+    // Detect invalid implementations.
+    if (empty(array_filter($config_objects_updated))) {
+      if (count($this->getEditableConfigNames()) === 1) {
+        throw new \LogicException(sprintf("%s::copyFormValuesToConfig() is invalid because it did not update the edited Config object '%s'.", get_class($this), $this->getEditableConfigNames()[0]));
+      }
+      else {
+        throw new \LogicException(sprintf("%s::copyFormValuesToConfig() is invalid because it did not update any of the edited Config objects: '%s'.", get_class($this), implode("', '", $this->getEditableConfigNames())));
       }
     }
   }
