@@ -67,4 +67,31 @@ class UserSubAdminTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Cancellation method');
   }
 
+  /**
+   * Cover user cancel configuration.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCancelAccount() {
+    $admin_user = $this->drupalCreateUser(['administer users']);
+
+    $config = $this->config('user.settings');
+    $config->set('cancel_methods.user_cancel_block', TRUE);
+    $config->set('cancel_methods.user_cancel_block_unpublish', TRUE);
+    $config->set('cancel_methods.user_cancel_reassign', FALSE);
+    $config->set('cancel_methods.user_cancel_delete', FALSE);
+    $config->save();
+    $this->drupalLogin($admin_user);
+
+    // Test that the cancel user page do not show the disabled fields.
+    $cancel_user = $this->createUser();
+    $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
+    $this->assertSession()->responseContains('Are you sure you want to cancel the account ' . $cancel_user->getAccountName() . '?');
+    $this->assertSession()->responseContains('Disable the account and keep its content.');
+    $this->assertSession()->responseContains('Disable the account and unpublish its content.');
+    $this->assertSession()->responseNotContains('Delete the account and make its content belong to the');
+    $this->assertSession()->responseNotContains('Delete the account and its content. This action cannot be undone.');
+  }
+
 }
