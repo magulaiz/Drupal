@@ -55,6 +55,8 @@ class PathTranslationTest extends PathTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add language');
+    // Languages are cached on many levels, and we need to clear those caches.
+    $this->container->get('language_manager')->reset();
   }
 
   /**
@@ -85,11 +87,8 @@ class PathTranslationTest extends PathTestBase {
       'path' => '/node/' . $node->id(),
       'alias' => '/' . $alias,
     ];
-    $path = \Drupal::entityTypeManager()->getStorage('path_alias')
-      ->loadByProperties($conditions);
-    $path = current($path);
-    $this->assertEquals($path->language()->getId(),
-      LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $path = $this->loadPathAliasByConditions($conditions);
+    $this->assertEquals(LanguageInterface::LANGCODE_NOT_SPECIFIED, $path->language()->getId());
   }
 
   /**
@@ -131,9 +130,6 @@ class PathTranslationTest extends PathTestBase {
     $this->drupalGet('admin/config/regional/content-language');
     $this->submitForm($edit, 'Save configuration');
 
-    // Clear caches.
-    \Drupal::entityTypeManager()->clearCachedDefinitions();
-
     // Create a node.
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $english_node = $this->drupalCreateNode([
@@ -160,9 +156,6 @@ class PathTranslationTest extends PathTestBase {
     // Clear the path lookup cache.
     $this->container->get('path_alias.manager')->cacheClear();
 
-    // Languages are cached on many levels, and we need to clear those caches.
-    $this->container->get('language_manager')->reset();
-    $this->rebuildContainer();
 
     // Ensure the node was created.
     $node_storage->resetCache([$english_node->id()]);
@@ -181,20 +174,16 @@ class PathTranslationTest extends PathTestBase {
       'path' => '/node/' . $english_node->id(),
       'alias' => $edit_en['path[0][alias]'],
     ];
-    $path_en = \Drupal::entityTypeManager()->getStorage('path_alias')
-      ->loadByProperties($conditions);
-    $path_en = current($path_en);
-    $this->assertEquals($path_en->language()->getId(), $expected_en);
+    $path_en = $this->loadPathAliasByConditions($conditions);
+    $this->assertEquals($expected_en, $path_en->language()->getId());
 
     // Tests that the French alias was saved with the expected langcode.
     $conditions = [
       'path' => '/node/' . $french_translation->id(),
       'alias' => $edit_fr['path[0][alias]'],
     ];
-    $path_fr = \Drupal::entityTypeManager()->getStorage('path_alias')
-      ->loadByProperties($conditions);
-    $path_fr = current($path_fr);
-    $this->assertEquals($path_fr->language()->getId(), $expected_fr);
+    $path_fr = $this->loadPathAliasByConditions($conditions);
+    $this->assertEquals($expected_fr, $path_fr->language()->getId());
   }
 
 }
