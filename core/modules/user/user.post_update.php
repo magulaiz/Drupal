@@ -34,3 +34,15 @@ function user_post_update_sort_permissions_again(&$sandbox = NULL) {
     return $permissions !== $role->getPermissions();
   });
 }
+
+/**
+ * Update user cancel configuration.
+ */
+function user_post_update_configure_cancel_options() {
+  $config = \Drupal::configFactory()->getEditable('user.settings');
+  $config->set('cancel_methods.user_cancel_block', TRUE);
+  $config->set('cancel_methods.user_cancel_block_unpublish', TRUE);
+  $config->set('cancel_methods.user_cancel_reassign', TRUE);
+  $config->set('cancel_methods.user_cancel_delete', TRUE);
+  $config->save();
+}
