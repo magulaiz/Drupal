@@ -90,7 +90,7 @@ class RenderTest extends KernelTestBase {
     $response = $renderer->renderBarePage($build, '', 'maintenance_page');
     $headers = $response->headers->all();
     $count_links = array_count_values($headers['link']);
-    $this->assertFalse(($count_links[$header] > 1), 'Duplicate HTTP link headers were removed.');
+    $this->assertEquals(1, $count_links[$header]);
   }
 
 }
