@@ -122,7 +122,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       '#placeholder' => $this->getSetting('placeholder'),
     ];
 
-    if ($bundle = $this->getAutocreateBundle($form_state)) {
+    if ($bundle = $this->getAutocreateBundle()) {
       $element['#autocreate'] = [
         'bundle' => $bundle,
         'uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : \Drupal::currentUser()->id(),
@@ -158,16 +158,13 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
   /**
    * Returns the name of the bundle which will be used for autocreated entities.
    *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   *
    * @return string
    *   The bundle name. If autocreate is not active, NULL will be returned.
    */
-  protected function getAutocreateBundle(FormStateInterface $form_state) {
+  protected function getAutocreateBundle() {
     $bundle = NULL;
-    if ($this->getSelectionHandlerSetting('auto_create', $form_state)) {
-      $target_bundles = $this->getSelectionHandlerSetting('target_bundles', $form_state);
+    if ($this->getSelectionHandlerSetting('auto_create')) {
+      $target_bundles = $this->getSelectionHandlerSetting('target_bundles');
       // If there's no target bundle at all, use the target_type. It's the
       // default for bundleless entity types.
       if (empty($target_bundles)) {
@@ -179,7 +176,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       }
       // If there's more than one target bundle, use the autocreate bundle
       // stored in selection handler settings.
-      elseif (!$bundle = $this->getSelectionHandlerSetting('auto_create_bundle', $form_state)) {
+      elseif (!$bundle = $this->getSelectionHandlerSetting('auto_create_bundle')) {
         // If no bundle has been set as auto create target means that there is
         // an inconsistency in entity reference field settings.
         trigger_error(sprintf(
@@ -198,14 +195,12 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    *
    * @param string $setting_name
    *   The setting name.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
    *
    * @return mixed
    *   The setting value.
    */
-  protected function getSelectionHandlerSetting($setting_name, FormStateInterface $form_state) {
-    $settings = $form_state->getUserInput()['settings']['handler_settings'] ?? $this->getFieldSetting('handler_settings');
+  protected function getSelectionHandlerSetting($setting_name) {
+    $settings = $this->getFieldSetting('handler_settings');
     return $settings[$setting_name] ?? NULL;
   }
 

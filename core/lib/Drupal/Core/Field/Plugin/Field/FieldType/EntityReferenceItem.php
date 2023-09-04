@@ -512,10 +512,6 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    */
   public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state) {
     $field = $form_state->getFormObject()->getEntity();
-    if ($target_type = $form_state->getValue('field_storage')['subform']['settings']['target_type']) {
-      $field->getFieldStorageDefinition()
-        ->setSetting('target_type', $target_type);
-    }
     $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
     $handler->validateConfigurationForm($form, $form_state);
   }
