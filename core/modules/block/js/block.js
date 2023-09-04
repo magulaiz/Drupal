@@ -133,11 +133,9 @@
       function updateLastPlaced(table, rowObject) {
         // Remove the color-success class from new block if applicable.
         table.find('.color-success').removeClass('color-success');
-
-        const $rowObject = $(rowObject);
-        if (!rowObject.matches('.drag-previous')) {
+        if (!rowObject?.element?.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
-          $rowObject.addClass('drag-previous');
+          rowObject.addClass('drag-previous');
         }
       }
 
@@ -172,7 +170,7 @@
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
-        updateLastPlaced(table, this.element);
+        updateLastPlaced(table, $(this));
       };
 
       // Add a handler so when a row is dropped, update fields dropped into
@@ -244,7 +242,7 @@
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, tableDrag.rowObject);
           // Update last placed block indication.
-          updateLastPlaced(table, row[0]);
+          updateLastPlaced(table, row);
           // Show unsaved changes warning.
           if (!tableDrag.changed) {
             $(Drupal.theme('tableDragChangedWarning'))
