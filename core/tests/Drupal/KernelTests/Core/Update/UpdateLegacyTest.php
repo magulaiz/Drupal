@@ -31,7 +31,7 @@ class UpdateLegacyTest extends KernelTestBase {
   }
 
   /**
-   * Tests update_check_incompatibility() function.
+   * Tests _update_fix_missing_schema() function.
    */
   public function testUpdateCheckIncompatibility() {
     $this->expectDeprecation('_update_fix_missing_schema() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::fixMissingSchema() instead. See https://www.drupal.org/node/3013060');
