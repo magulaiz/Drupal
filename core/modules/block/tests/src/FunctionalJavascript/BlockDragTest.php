@@ -60,7 +60,7 @@ class BlockDragTest extends WebDriverTestBase {
       'Status messages should be positioned on header region'
     );
 
-    // Check if the message that has unsave changed appears.
+    // Check if the message unsaved changed appears.
     $assertSession->pageTextContains('You have unsaved changes.');
 
     // Test if the message for empty regions appear after drag the unique block on the region.
