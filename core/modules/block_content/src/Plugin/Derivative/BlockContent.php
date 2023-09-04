@@ -53,6 +53,9 @@ class BlockContent extends DeriverBase implements ContainerDeriverInterface {
       $this->derivatives[$block_content->uuid()]['config_dependencies']['content'] = [
         $block_content->getConfigDependencyName(),
       ];
+      $this->derivatives[$block_content->uuid()]['category'] = t('Custom @type', [
+        '@type' => $block_content->type->entity->label(),
+      ]);
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }
