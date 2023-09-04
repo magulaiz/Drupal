@@ -118,30 +118,29 @@ class Update {
     $enabled_modules = $this->moduleHandler->getModuleList();
 
     foreach (array_keys($enabled_modules) as $module) {
-      // All modules should have a recorded schema version, but when they
-      // don't, detect and fix the problem.
+      // All modules should have a recorded schema version, but when they don't,
+      // detect and fix the problem.
       if (!isset($versions[$module])) {
         // Ensure the .install file is loaded.
         $this->moduleHandler->loadInclude($module, 'install');
         $all_updates = $this->updateRegistry->getAvailableUpdates($module);
         // If the schema version of a module hasn't been recorded, we cannot
-        // know the actual schema version a module is at, because
-        // no updates will ever have been run on the site and it was not set
-        // correctly when the module was installed, so instead set it to
-        // the same as the last update. This means that updates will proceed
-        // again the next time the module is updated and a new update is
-        // added. Updates added in between the module being installed and the
-        // schema version being fixed here (if any have been added) will never
-        // be run, but we have no way to identify which updates these are.
+        // know the actual schema version a module is at, because no updates
+        // will ever have been run on the site and it was not set correctly when
+        // the module was installed, so instead set it to the same as the last
+        // update. This means that updates will proceed again the next time the
+        // module is updated and a new update is added. Updates added in between
+        // the module being installed and the schema version being fixed here
+        // (if any have been added) will never be run, but we have no way to
+        // identify which updates these are.
         if ($all_updates) {
           $last_update = max($all_updates);
         }
         else {
           $last_update = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
         }
-        // If the module implements hook_update_last_removed() use the
-        // value of that if it's higher than the schema versions found so
-        // far.
+        // If the module implements hook_update_last_removed() use the value of
+        // that if it's higher than the schema versions found so far.
         if ($last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
           $last_update = max($last_update, $last_removed);
         }
@@ -175,14 +174,14 @@ class Update {
    * throw new UpdateException('Description of what went wrong');
    * @endcode
    *
-   * If an exception is thrown, the current update and all updates that depend on
-   * it will be aborted. The schema version will not be updated in this case, and
-   * all the aborted updates will continue to appear on update.php as updates
-   * that have not yet been run.
+   * If an exception is thrown, the current update and all updates that depend
+   * on it will be aborted. The schema version will not be updated in this case,
+   * and all the aborted updates will continue to appear on update.php as
+   * updates that have not yet been run.
    *
    * If an update function needs to be re-run as part of a batch process, it
-   * should accept the $sandbox array by reference as its first parameter
-   * and set the #finished property to the percentage completed that it is, as a
+   * should accept the $sandbox array by reference as its first parameter and
+   * set the #finished property to the percentage completed that it is, as a
    * fraction of 1.
    *
    * @param $module
@@ -214,8 +213,8 @@ class Update {
         $ret['results']['success'] = TRUE;
       }
       // @TODO We may want to do different error handling for different
-      // exception types, but for now we'll just log the exception and
-      // return the message for printing.
+      // exception types, but for now we'll just log the exception and return
+      // the message for printing.
       // @see https://www.drupal.org/node/2564311
       catch (\Exception $e) {
         $variables = Error::decodeException($e);
@@ -263,8 +262,8 @@ class Update {
   public function invokePostUpdate(string $function, array &$context): void {
     $ret = [];
 
-    // If this update was aborted in a previous step, or has a dependency that was
-    // aborted in a previous step, go no further.
+    // If this update was aborted in a previous step, or has a dependency that
+    // was aborted in a previous step, go no further.
     if (!empty($context['results']['#abort'])) {
       return;
     }
@@ -421,14 +420,14 @@ class Update {
    * take responsibility for ensuring that these updates are ultimately not
    * performed.
    *
-   * In addition, the returned array also includes detailed information about the
-   * dependency chain for each update, as provided by the depth-first search
+   * In addition, the returned array also includes detailed information about
+   * the dependency chain for each update, as provided by the depth-first search
    * algorithm in Drupal\Component\Graph\Graph::searchAndSort().
    *
    * @param int[] $starting_updates
    *   An array whose keys contain the names of modules with updates to be run
-   *   and whose values contain the number of the first requested update for that
-   *   module.
+   *   and whose values contain the number of the first requested update for
+   *   that module.
    *
    * @return array
    *   An array whose keys are the names of all update functions within the
@@ -529,10 +528,10 @@ class Update {
   /**
    * Constructs a graph which encodes the dependencies between module updates.
    *
-   * This function returns an associative array which contains a "directed graph"
-   * representation of the dependencies between a provided list of update
-   * functions, as well as any outside update functions that they directly depend
-   * on but that were not in the provided list. The vertices of the graph
+   * This function returns an associative array which contains a "directed
+   * graph" representation of the dependencies between a provided list of update
+   * functions, as well as any outside update functions that they directly
+   * depend on but that were not in the provided list. The vertices of the graph
    * represent the update functions themselves, and each edge represents a
    * requirement that the first update function needs to run before the second.
    * For example, consider this graph:
@@ -542,11 +541,11 @@ class Update {
    * Visually, this indicates that system_update_8001() must run before
    * system_update_8002(), which in turn must run before system_update_8003().
    *
-   * The function takes into account standard dependencies within each module, as
-   * shown above (i.e., the fact that each module's updates must run in numerical
-   * order), but also finds any cross-module dependencies that are defined by
-   * modules which implement hook_update_dependencies(), and builds them into the
-   * graph as well.
+   * The function takes into account standard dependencies within each module,
+   * as shown above (i.e., the fact that each module's updates must run in
+   * numerical order), but also finds any cross-module dependencies that are
+   * defined by modules which implement hook_update_dependencies(), and builds
+   * them into the graph as well.
    *
    * @param string[][] $update_functions
    *   An organized array of update functions, in the format returned by
@@ -554,15 +553,16 @@ class Update {
    *
    * @return array
    *   A multidimensional array representing the dependency graph, suitable for
-   *   passing in to Drupal\Component\Graph\Graph::searchAndSort(), but with extra
-   *   information about each update function also included. Each array key
-   *   contains the name of an update function, including all update functions
-   *   from the provided list as well as any outside update functions which they
-   *   directly depend on. Each value is an associative array containing the
-   *   following keys:
-   *   - 'edges': A representation of any other update functions that immediately
-   *     depend on this one. See Drupal\Component\Graph\Graph::searchAndSort() for
-   *     more details on the format.
+   *   passing in to Drupal\Component\Graph\Graph::searchAndSort(), but with
+   *   extra information about each update function also included. Each array
+   *   key contains the name of an update function, including all update
+   *   functions from the provided list as well as any outside update functions
+   *   which they directly depend on. Each value is an associative array
+   *   containing the following keys:
+   *   - 'edges': A representation of any other update functions that
+   *     immediately depend on this one.
+   *     See Drupal\Component\Graph\Graph::searchAndSort() for more details on
+   *     the format.
    *   - 'module': The name of the module that this update function belongs to.
    *   - 'number': The number of this update function within that module.
    *
@@ -661,16 +661,17 @@ class Update {
    */
   public function retrieveDependencies(): array {
     $return = [];
-    // Get a list of installed modules, arranged so that we invoke their hooks in
-    // the same order that \Drupal::moduleHandler()->invokeAll() does.
+    // Get a list of installed modules, arranged so that we invoke their hooks
+    // in the same order that \Drupal::moduleHandler()->invokeAll() does.
     foreach ($this->updateRegistry->getAllInstalledVersions() as $module => $schema) {
       // Skip modules that are entirely missing from the filesystem here, since
       // loading .install file will call trigger_error() if invoked on a module
-      // that doesn't exist. There's no way to catch() that, so avoid it entirely.
-      // This can happen when there are orphaned entries in the system.schema k/v
-      // store for modules that have been removed from a site without first being
-      // cleanly uninstalled. We don't care here if the module has been installed
-      // or not, since we'll filter those out in update_get_update_list().
+      // that doesn't exist. There's no way to catch() that, so avoid it
+      // entirely. This can happen when there are orphaned entries in the
+      // system.schema k/v store for modules that have been removed from a site
+      // without first being cleanly uninstalled. We don't care here if the
+      // module has been installed or not, since we'll filter those out in
+      // update_get_update_list().
       if ($schema === $this->updateRegistry::SCHEMA_UNINSTALLED || !$this->moduleExtensionList->exists($module)) {
         // Nothing to upgrade.
         continue;
@@ -693,12 +694,12 @@ class Update {
             foreach ($module_data as $update_version => $update_data) {
               foreach ($update_data as $module_dependency => $update_dependency) {
                 // If there are redundant dependencies declared for the same
-                // update function (so that it is declared to depend on more than
-                // one update from a particular module), record the dependency on
-                // the highest numbered update here, since that automatically
-                // implies the previous ones. For example, if one module's
-                // implementation of hook_update_dependencies() required this
-                // ordering:
+                // update function (so that it is declared to depend on more
+                // than one update from a particular module), record the
+                // dependency on the highest numbered update here, since that
+                // automatically implies the previous ones. For example, if one
+                // module's implementation of hook_update_dependencies()
+                // required this ordering:
                 //
                 // system_update_8002 ---> user_update_8001
                 //
@@ -707,10 +708,10 @@ class Update {
                 //
                 // system_update_8003 ---> user_update_8001
                 //
-                // we record the second one, since system_update_8002() is always
-                // guaranteed to run before system_update_8003() anyway (within
-                // an individual module, updates are always run in numerical
-                // order).
+                // we record the second one, since system_update_8002() is
+                // always guaranteed to run before system_update_8003() anyway
+                // (within an individual module, updates are always run in
+                // numerical order).
                 if (!isset($return[$module_name][$update_version][$module_dependency]) || $update_dependency > $return[$module_name][$update_version][$module_dependency]) {
                   $return[$module_name][$update_version][$module_dependency] = $update_dependency;
                 }
