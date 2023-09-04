@@ -133,7 +133,7 @@
       function updateLastPlaced(table, rowObject) {
         // Remove the color-success class from new block if applicable.
         table.find('.color-success').removeClass('color-success');
-        if (!rowObject?.element?.matches('.drag-previous')) {
+        if (rowObject.element !== undefined && !rowObject.element.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           rowObject.addClass('drag-previous');
         }
