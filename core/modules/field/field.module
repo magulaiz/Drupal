@@ -466,10 +466,7 @@ function field_field_config_presave(FieldConfigInterface $field) {
  */
 function field_form_field_config_edit_form_entity_builder($entity_type_id, $entity, &$form, FormStateInterface $form_state) {
   assert($entity instanceof FieldConfigInterface);
-  $previous_field_storage = $form_state->get('previous_field_storage');
-  if (!$previous_field_storage) {
-    return;
-  }
+  $previous_field_storage = $form_state->getFormObject()->getEntity()->getFieldStorageDefinition();
   assert($previous_field_storage instanceof FieldStorageConfigInterface);
 
   // Act on all sub-types of the entity_reference field type.

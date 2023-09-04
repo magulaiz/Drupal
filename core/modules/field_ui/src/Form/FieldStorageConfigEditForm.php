@@ -11,7 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field_ui\FieldUI;
+use Drupal\field\FieldConfigInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -86,26 +86,19 @@ class FieldStorageConfigEditForm extends EntityForm {
    *   A nested array form elements comprising the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param string $field_config
+   * @param \Drupal\field\FieldConfigInterface|string $field_config
    *   The ID of the field config whose field storage config is being edited.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $field_config = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, FieldConfigInterface|string $field_config = NULL) {
     if ($field_config) {
-      if (!$this->entity->isNew()) {
+      $field = $field_config;
+      if (is_string($field)) {
         $field = FieldConfig::load($field_config);
-        $form_state->set('field_config', $field);
-
-        $form_state->set('entity_type_id', $field->getTargetEntityTypeId());
-        $form_state->set('bundle', $field->getTargetBundle());
       }
-      else {
-        // @todo We might be able to retrieve field config from somewhere now
-        //   that it should exist at this point.
-        $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+      $form_state->set('field_config', $field);
 
-        $form_state->set('entity_type_id', $temp_storage['field_config_values']['entity_type']);
-        $form_state->set('bundle', $temp_storage['field_config_values']['bundle']);
-      }
+      $form_state->set('entity_type_id', $field->getTargetEntityTypeId());
+      $form_state->set('bundle', $field->getTargetBundle());
     }
 
     return parent::buildForm($form, $form_state);
@@ -115,10 +108,9 @@ class FieldStorageConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
     $form = parent::form($form, $form_state);
 
-    $field_label = $this->entity->isNew() ? $temp_storage['field_config_values']['label'] : $form_state->get('field_config')->label();
+    $field_label = $form_state->get('field_config')->label();
     $form['#title'] = $field_label;
     $form['#prefix'] = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $field_label]) . '</p>';
 
@@ -141,12 +133,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       $items = $entity->get($this->entity->getName());
     }
     else {
-      // Create a temporary field config so that we can access the field
-      // definition.
-      $field_config = $this->entityTypeManager->getStorage('field_config')->create([
-        ...$temp_storage['field_config_values'],
-        'field_storage' => $this->buildEntity($form, $form_state),
-      ]);
+      $field_config = $form_state->get('field_config');
       $items = $this->typedDataManager->create($field_config, name: $this->entity->getName(), parent: EntityAdapter::createFromEntity($entity));
     }
     $item = $items->first() ?: $items->appendItem();
@@ -290,31 +277,7 @@ class FieldStorageConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // Save field storage entity values in tempstore.
-    if ($this->entity->isNew()) {
-      $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
-      $field_label = $temp_storage['field_config_values']['label'];
-      $temp_storage['field_storage'] = $this->entity;
-      $this->tempStore->set($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName(), $temp_storage);
-    }
-    try {
-      if (!$this->entity->isNew()) {
-        $field_label = $form_state->get('field_config')->label();
-        $this->entity->save();
-        $this->messenger()->addMessage($this->t('Your settings have been saved.'));
-      }
-      $request = $this->getRequest();
-      if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
-        $request->query->remove('destinations');
-        $form_state->setRedirectUrl($next_destination);
-      }
-      else {
-        $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($form_state->get('entity_type_id'), $form_state->get('bundle')));
-      }
-    }
-    catch (\Exception $e) {
-      $this->messenger()->addStatus($this->t('Attempt to update field %label failed: %message.', ['%label' => $field_label, '%message' => $e->getMessage()]));
-    }
+    $this->entity->save();
   }
 
   /**

@@ -5,7 +5,6 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -30,6 +29,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldConfigEditForm extends EntityForm {
 
   use FieldStorageCreationTrait;
+
+  /**
+   * The entity being used by this form.
+   *
+   * @var \Drupal\field\FieldConfigInterface
+   */
+  protected $originalEntity;
 
   /**
    * The entity being used by this form.
@@ -110,6 +116,24 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  public function prepareEntity() {
+    $this->originalEntity = $this->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    if ($form_state->has('current_entity')) {
+      // Replace the entity with the current entity.
+      $this->setEntity($form_state->get('current_entity'));
+    }
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['#parents'] = [];
@@ -175,20 +199,10 @@ class FieldConfigEditForm extends EntityForm {
     $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
     $field_storage_form->setEntity($field_storage);
-    $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity->id());
-    // @todo Is there a better way to pass the previous field storage to
-    //   \field_form_field_config_edit_form_entity_builder. We can use
-    //   $this->entity, because it's not being updated incrementally as changes
-    //   are being made on form.
-    $form_state->set('previous_field_storage', $form_state->get('current_field_storage') ?? NULL);
-    $form_state->set('current_field_storage', $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
+    $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity);
 
     $form['#entity'] = _field_create_entity_from_ids($ids);
-    $items = $this->getTypedData($this->buildEntity($form, $form_state), $form['#entity']);
-    // @todo On switching the type of an entity reference field $item that is
-    //   returned from $items->appendItem() still has the previous type set
-    //   so it does not bring back the correct selection plugin.
-    // @see \Drupal\Tests\field\FunctionalJavascript\EntityReference\EntityReferenceAdminTest::testFieldAdminHandler
+    $items = $this->getTypedData($this->entity, $form['#entity']);
     $item = $items->first() ?: $items->appendItem();
 
     unset($form['field_storage']['subform']['actions']);
@@ -203,9 +217,12 @@ class FieldConfigEditForm extends EntityForm {
     $form['field_storage']['subform']['field_storage_submit'] = [
       '#type' => 'submit',
       '#name' => 'field_storage_submit',
+      '#attributes' => [
+        'class' => ['js-hide'],
+      ],
       '#value' => $this->t('Update settings'),
+      '#process' => [[$this, 'processFieldStorageSubmit']],
       '#limit_validation_errors' => [],
-      '#process' => [[static::class, 'processFieldStorageSubmit']],
       '#submit' => [[$this, 'fieldStorageSubmit']],
       '#ajax' => [
         'callback' => [$this, 'showUpdated'],
@@ -225,8 +242,7 @@ class FieldConfigEditForm extends EntityForm {
 
     // Create a new instance of typed data for the field to ensure that default
     // value widget is always rendered from a clean state.
-    $current_field_config = $this->buildEntity($form, $form_state);
-    $items = $this->getTypedData($current_field_config, $form['#entity']);
+    $items = $this->getTypedData($this->entity, $form['#entity']);
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
@@ -264,14 +280,20 @@ class FieldConfigEditForm extends EntityForm {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     parent::copyFormValuesToEntity($entity, $form, $form_state);
 
-    if ($form_state->has('current_field_storage')) {
-      $reflector = new \ReflectionObject($entity);
-      $property = $reflector->getProperty('fieldStorage');
-      $property->setValue($entity, $form_state->get('current_field_storage'));
-    }
+    // Update the current field storage instance based on subform state.
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
+    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+
+    $reflector = new \ReflectionObject($entity);
+    $property = $reflector->getProperty('fieldStorage');
+    $property->setValue($entity, $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
   }
 
   /**
@@ -343,6 +365,10 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
+    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+    $field_storage_form->validateForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
+
     if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
       // Make sure that the default value form is validated using the field
       // configuration that was just submitted. Do not update $this->entity as
@@ -351,17 +377,25 @@ class FieldConfigEditForm extends EntityForm {
       $items = $this->getTypedData($field_config, $form['#entity']);
       $items->defaultValuesFormValidate($form['default_value'], $form, $form_state);
     }
-
-    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
-    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
-    $field_storage_form->validateForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // @todo find a better way to do this.
+    $this->entity = $this->originalEntity;
     parent::submitForm($form, $form_state);
+
+    // Trick \field_form_field_config_edit_form_entity_builder to not override
+    // the changes.
+    // @todo find a way to not have to do this.
+    $this->entity = $this->buildEntity($form, $form_state);
+
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
+    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+    $field_storage_form->submitForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
+    $field_storage_form->save($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
 
     // Handle the default value.
     $default_value = [];
@@ -370,31 +404,16 @@ class FieldConfigEditForm extends EntityForm {
       $default_value = $items->defaultValuesFormSubmit($form['default_value'], $form, $form_state);
     }
     $this->entity->setDefaultValue($default_value);
-
-    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', 'edit');
-    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
-    $field_storage_form->submitForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
-    $field_storage_form->save($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
   }
 
   /**
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
-    if ($this->entity->isNew()) {
-      try {
-        $temp_storage['field_storage']->save();
-      }
-      catch (EntityStorageException $e) {
-        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
-        $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
-        $this->messenger()->addError($this->t('An error occurred while saving the field: @error', ['@error' => $e->getMessage()]));
-        return;
-      }
-    }
     // Save field config.
     $this->entity->save();
+
+    $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
     if (isset($form_state->getStorage()['default_options'])) {
       $default_options = $form_state->getStorage()['default_options'];
       // Configure the default display modes.
@@ -442,6 +461,11 @@ class FieldConfigEditForm extends EntityForm {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
   private function getTypedData(FieldConfigInterface $field_config, FieldableEntityInterface $parent): TypedDataInterface {
+    // Make sure that typed data manager is re-generating the instance. This
+    // important because we want the returned instance to match the current
+    // state, which could be different from what has been stored in config.
+    $this->typedDataManager->clearCachedDefinitions();
+
     $entity_adapter = EntityAdapter::createFromEntity($parent);
     return $this->typedDataManager->create($field_config, $field_config->getDefaultValue($parent), $field_config->getName(), $entity_adapter);
   }
@@ -450,6 +474,8 @@ class FieldConfigEditForm extends EntityForm {
    * Process handler for subform submit.
    */
   public static function processFieldStorageSubmit(array $element, FormStateInterface $form_state, &$complete_form) {
+    // Limit validation errors to the field storage form while the field storage
+    // form is being edited.
     $element['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
     $complete_form['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
     return $element;
@@ -464,6 +490,22 @@ class FieldConfigEditForm extends EntityForm {
    *   The current state of the form.
    */
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
+    // Rebuild entity based on current form state. This is necessary because
+    // field widgets use the entity for retrieving the current form state. At
+    // this point its safe to assume the config entity will result in a valid
+    // field config because necessary validation handlers have already run.
+    $current_entity = $this->buildEntity($form, $form_state);
+    $current_entity->enforceIsNew(TRUE);
+
+    $current_field_storage = clone $current_entity->getFieldStorageDefinition();
+    $current_field_storage->enforceIsNew(TRUE);
+
+    $reflector = new \ReflectionObject($current_entity);
+    $property = $reflector->getProperty('fieldStorage');
+    $property->setValue($current_entity, $current_field_storage);
+
+    $form_state->set('current_entity', $current_entity);
+
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();
     unset($form_storage['default_value_widget']);
