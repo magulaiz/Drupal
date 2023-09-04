@@ -35,11 +35,6 @@ class ViewPageController implements ContainerInjectionInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The Drupal service container.
-   *
-   * @return static
    */
   public static function create(ContainerInterface $container) {
     return new static(

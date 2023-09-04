@@ -24,12 +24,8 @@ class AddContextualLinks {
   /**
    * Adds contextual links associated with a view display to a renderable array.
    *
-   * This function should be called when a view is being rendered in a particular
-   * location and you want to attach the appropriate contextual links (e.g.,
-   * links for editing the view) to it.
-   *
-   * The function operates by checking the view's display plugin to see if it has
-   * defined any contextual links that are intended to be displayed in the
+   * The function operates by checking the view's display plugin to see if it
+   * has defined any contextual links that are intended to be displayed in the
    * requested location; if so, it attaches them. The contextual links intended
    * for a particular location are defined by the 'contextual links' and
    * 'contextual_links_locations' properties in the plugin annotation; as a
@@ -41,47 +37,47 @@ class AddContextualLinks {
    * additional information via the #views_contextual_links_info property. This
    * stores an array whose keys are the names of each module that provided
    * views-related contextual links (same as the keys of the #contextual_links
-   * array itself) and whose values are themselves arrays whose keys ('location',
-   * 'view_name', and 'view_display_id') store the location, name of the view,
-   * and display ID that were passed in to this function. This allows you to
-   * access information about the contextual links and how they were generated in
-   * a variety of contexts where you might be manipulating the renderable array
-   * later on (for example, alter hooks which run later during the same page
-   * request).
+   * array itself) and whose values are themselves arrays whose keys
+   * ('location', 'view_name', and 'view_display_id') store the location, name
+   * of the view, and display ID that were passed in to this function. This
+   * allows you to access information about the contextual links and how they
+   * were generated in a variety of contexts where you might be manipulating
+   * the renderable array later on (for example, alter hooks which run later
+   * during the same page request).
    *
    * @param $render_element
    *   The renderable array to which contextual links will be added. This array
    *   should be suitable for passing in to
-   *   \Drupal\Core\Render\RendererInterface::render() and will normally contain a
-   *   representation of the view display whose contextual links are being
-   *   requested.
+   *   \Drupal\Core\Render\RendererInterface::render() and will normally
+   *   contain a representation of the view display whose contextual links are
+   *   being requested.
    * @param $location
-   *   The location in which the calling function intends to render the view and
-   *   its contextual links. The core system supports three options for this
-   *   parameter:
-   *   - 'block': Used when rendering a block which contains a view. This
+   *   The location in which the calling function intends to render the view
+   *   and its contextual links. The core system supports three options for
+   *   this parameter:
+   *   - block: Used when rendering a block which contains a view. This
    *     retrieves any contextual links intended to be attached to the block
    *     itself.
-   *   - 'page': Used when rendering the main content of a page which contains a
-   *     view. This retrieves any contextual links intended to be attached to the
-   *     page itself (for example, links which are displayed directly next to the
-   *     page title).
-   *   - 'view': Used when rendering the view itself, in any context. This
+   *   - page: Used when rendering the main content of a page which contains
+   *     a view. This retrieves any contextual links intended to be attached to
+   *     the page itself (for example, links which are displayed directly next
+   *     to the page title).
+   *   - view: Used when rendering the view itself, in any context. This
    *     retrieves any contextual links intended to be attached directly to the
    *     view.
-   *   If you are rendering a view and its contextual links in another location,
-   *   you can pass in a different value for this parameter. However, you will
-   *   also need to set 'contextual_links_locations' in your plugin annotation to
-   *   indicate which view displays support having their contextual links
-   *   rendered in the location you have defined.
+   *   If you are rendering a view and its contextual links in another
+   *   location, you can pass in a different value for this parameter. However,
+   *   you will also need to set 'contextual_links_locations' in your plugin
+   *   annotation to indicate which view displays support having their
+   *   contextual links rendered in the location you have defined.
    * @param string $display_id
    *   The ID of the display within $view whose contextual links will be added.
    * @param array $view_element
    *   The render array of the view. It should contain the following properties:
-   *     - #view_id: The ID of the view.
-   *     - #view_display_show_admin_links: A boolean whether the admin links
-   *       should be shown.
-   *     - #view_display_plugin_id: The plugin ID of the display.
+   *   - #view_id: The ID of the view.
+   *   - #view_display_show_admin_links: A boolean whether the admin links
+   *     should be shown.
+   *   - #view_display_plugin_id: The plugin ID of the display.
    *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
    * @see template_preprocess_views_view()
@@ -103,8 +99,8 @@ class AddContextualLinks {
       // location.
       $plugin = Views::pluginManager('display')->getDefinition($display_plugin_id);
       // If contextual_links_locations are not set, provide a sane default. (To
-      // avoid displaying any contextual links at all, a display plugin can still
-      // set 'contextual_links_locations' to, e.g., {""}.)
+      // avoid displaying any contextual links at all, a display plugin can
+      // still set 'contextual_links_locations' to, e.g., {""}.)
 
       if (!isset($plugin['contextual_links_locations'])) {
         $plugin['contextual_links_locations'] = ['view'];
@@ -141,8 +137,8 @@ class AddContextualLinks {
               }
             }
           }
-          // If the link was valid, attach information about it to the renderable
-          // array.
+          // If the link was valid, attach information about it to the
+          // renderable array.
           if ($valid) {
             $render_element['#views_contextual_links'] = TRUE;
             $render_element['#contextual_links'][$group] = [
@@ -153,9 +149,9 @@ class AddContextualLinks {
                 'display_id' => $display_id,
               ],
             ];
-            // If we're setting contextual links on a page, for a page view, for a
-            // user that may use contextual links, attach Views' contextual links
-            // JavaScript.
+            // If we're setting contextual links on a page, for a page view,
+            // for a user that may use contextual links, attach Views'
+            // contextual links JavaScript.
             $render_element['#cache']['contexts'][] = 'user.permissions';
           }
         }
