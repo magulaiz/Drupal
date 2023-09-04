@@ -67,7 +67,6 @@ class BlockDragTest extends WebDriverTestBase {
     $noBlockMessage = $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-primary-menu-message"] td')->getText();
     $this->assertSession()->assert($noBlockMessage === 'No blocks in this region', 'Region primary menu should be empty.');
 
-
     // Testing drag row to an empty region.
     $pageTitle = $this->getDragRow($page, 'edit-blocks-olivero-page-title');
     $heroRegion = $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-hero-message"]');
@@ -83,7 +82,7 @@ class BlockDragTest extends WebDriverTestBase {
    * Helper function to find block tr element on the page.
    */
   private function getDragRow($page, $blockId) {
-    return $page->find('css','#blocks tbody tr[data-drupal-selector="'. $blockId .'"] a.tabledrag-handle');
+    return $page->find('css', '#blocks tbody tr[data-drupal-selector="' . $blockId . '"] a.tabledrag-handle');
   }
 
 }
