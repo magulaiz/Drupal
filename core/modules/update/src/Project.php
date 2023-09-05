@@ -3,6 +3,7 @@
 namespace Drupal\update;
 
 use Drupal\Core\Extension\ExtensionVersion;
+use Drupal\Core\Utility\Error;
 
 /**
  * Provides a project release value object.
@@ -145,6 +146,7 @@ final class Project {
    *   TRUE if the project release data is valid, otherwise FALSE.
    */
   private function isReleaseValid(array $release_info): bool {
+    $release = NULL;
     try {
       $release = ProjectRelease::createFromArray($release_info);
       // Ensure the version number string validates.
@@ -154,7 +156,7 @@ final class Project {
       // Ignore releases that are in an invalid format. Although this is
       // highly unlikely we should still process releases in the correct
       // format.
-      if (isset($release)) {
+      if ($release) {
         $message = 'Invalid version string : @version';
         $placeholders = ['@version' => $release->getVersion()];
       }
@@ -162,8 +164,8 @@ final class Project {
         $message = 'Invalid project format: @release';
         $placeholders = ['@release' => print_r($release_info, TRUE)];
       }
-      watchdog_exception(
-        'update',
+      Error::logException(
+        \Drupal::logger('update'),
         $exception,
         $message,
         $placeholders

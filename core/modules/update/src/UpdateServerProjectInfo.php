@@ -56,8 +56,8 @@ class UpdateServerProjectInfo {
   public static function createFromArray(array $data): UpdateServerProjectInfo {
     return new UpdateServerProjectInfo(
       $data['project_status'] ?? NULL,
-      $data['supported_branches'] ? explode(',', $data['supported_branches']) : [],
-      $data['releases'] ?? []
+        $data['supported_branches'] ? explode(',', $data['supported_branches']) : [],
+        $data['releases'] ?? []
     );
   }
 

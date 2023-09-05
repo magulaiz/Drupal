@@ -5,8 +5,9 @@
  */
 
 use Drupal\Core\Extension\ExtensionVersion;
-use Drupal\update\ProjectRelease;
 use Drupal\update\Project;
+use Drupal\update\ProjectRelease;
+use Drupal\update\UpdateServerProjectInfo;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\update\ProjectCoreCompatibility;
@@ -358,8 +359,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // If there is an existing release add this to the array of releases to be
     // considered.
     $releases[$existing_release_info['version']] = $existing_release_info;
+
     // First, if this is the existing release, check a few conditions.
     $release = ProjectRelease::createFromArray($existing_release_info);
+
     if ($release->isInsecure()) {
       $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
     }
@@ -391,6 +394,11 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $release = ProjectRelease::createFromArray($release_info);
 
     $release_module_version = ExtensionVersion::createFromVersionString($version);
+    // Ignore dev releases with no date. These are either broken releases or
+    // stub releases to allow them to be selected on drupal.org project issues.
+    if ($release->getDate() === NULL && $release_module_version->getVersionExtra() === 'dev') {
+      continue;
+    }
     $release_major_version = $release_module_version->getMajorVersion();
     // See if this is a higher major version than our target and yet still
     // supported. If so, record it as an "Also available" release.
