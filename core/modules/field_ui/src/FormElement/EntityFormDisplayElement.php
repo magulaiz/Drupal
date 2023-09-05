@@ -42,11 +42,12 @@ class EntityFormDisplayElement extends ListElement {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
 
+    $parent_build['content']['#collapsible'] = FALSE;
     $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
 
     foreach ($element_names as $component_name) {
       // Not considering the layout builder case.
-      $item = $parent_build['content'][$component_name];
+      $item = &$parent_build['content'][$component_name];
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $definition */
       $definition = $field_definitions[$component_name] ?? NULL;
       if ($definition) {
@@ -73,8 +74,6 @@ class EntityFormDisplayElement extends ListElement {
         if (isset($formatter_options[$component_type]) && isset($item['settings'])) {
           $item['settings']['#title'] = t("%label format settings", ['%label' => $formatter_options[$component_type]]);
         }
-
-        $parent_build['content'][$component_name] = $item;
       }
     }
 
