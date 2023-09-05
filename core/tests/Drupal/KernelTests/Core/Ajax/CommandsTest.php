@@ -59,7 +59,7 @@ class CommandsTest extends KernelTestBase {
     $assert('Settings command exists when JS aggregation is disabled.');
 
     \Drupal::state()->set('system.development_settings', [
-      'css.preprocess' => TRUE,
+      'js.preprocess' => TRUE,
     ]);
     $assert('Settings command exists when JS aggregation is enabled.');
   }
