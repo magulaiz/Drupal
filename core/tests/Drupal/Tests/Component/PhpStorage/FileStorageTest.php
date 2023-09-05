@@ -105,8 +105,6 @@ class FileStorageTest extends PhpStorageTestBase {
     ]);
     $code = "<?php\n echo 'here';";
     $this->expectWarning();
-    // The directory path is not disclosed for security reasons.
-    // @see https://www.drupal.org/project/drupal/issues/3032737
     $this->expectWarningMessage('mkdir(): Permission Denied');
     $storage->save('subdirectory/foo.php', $code);
   }
