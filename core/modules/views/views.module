@@ -357,9 +357,9 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
  * @see template_preprocess_views_view()
  */
 function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'views.add_contextual_links\' service instead. See https://www.drupal.org/node/2571679', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'views.contextual_links\' service instead. See https://www.drupal.org/node/2571679', E_USER_DEPRECATED);
 
-  \Drupal::service('views.add_contextual_links')->viewsAddContextualLinks($render_element, $location, $display_id, $view_element);
+  \Drupal::service('views.contextual_links')->addLinks($render_element, $location, $display_id, $view_element);
 }
 
 /**

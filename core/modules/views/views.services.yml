@@ -105,6 +105,6 @@ services:
     tags:
       - { name: backend_overridable }
   views.contextual_links:
-    class: Drupal\views\AddContextualLinks
+    class: Drupal\views\ContextualLinks
     arguments: ['@module_handler', '@entity_type.manager']
-  Drupal\views\AddContextualLinks: '@views.add_contextual_links'
+  Drupal\views\ContextualLinks: '@views.contextual_links'

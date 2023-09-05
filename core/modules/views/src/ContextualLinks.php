@@ -8,7 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Adds contextual links associated with a view display to a renderable array.
  */
-class AddContextualLinks {
+class ContextualLinks {
 
   /**
    * Constructs AddContextualLinks object.
@@ -65,11 +65,6 @@ class AddContextualLinks {
    *   - view: Used when rendering the view itself, in any context. This
    *     retrieves any contextual links intended to be attached directly to the
    *     view.
-   *   If you are rendering a view and its contextual links in another
-   *   location, you can pass in a different value for this parameter. However,
-   *   you will also need to set 'contextual_links_locations' in your plugin
-   *   annotation to indicate which view displays support having their
-   *   contextual links rendered in the location you have defined.
    * @param string $display_id
    *   The ID of the display within $view whose contextual links will be added.
    * @param array $view_element
@@ -79,10 +74,17 @@ class AddContextualLinks {
    *     should be shown.
    *   - #view_display_plugin_id: The plugin ID of the display.
    *
+   * Example:
+   *   If you are rendering a view and its contextual links in another
+   *   location, you can pass in a different value for $location parameter.
+   *   However, you will also need to set 'contextual_links_locations' in your
+   *   plugin annotation to indicate which view displays support having their
+   *   contextual links rendered in the location you have defined.
+   *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
    * @see template_preprocess_views_view()
    */
-  public function viewsAddContextualLinks(&$render_element, $location, $display_id, array $view_element = NULL) {
+  public function addLinks(&$render_element, $location, $display_id, array $view_element = NULL) {
     if (!isset($view_element)) {
       $view_element = $render_element;
     }

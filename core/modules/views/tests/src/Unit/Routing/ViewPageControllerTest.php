@@ -4,7 +4,7 @@ namespace Drupal\Tests\views\Unit\Routing;
 
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\AddContextualLinks;
+use Drupal\views\ContextualLinks;
 use Drupal\views\Routing\ViewPageController;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -41,7 +41,7 @@ class ViewPageControllerTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $contextual_links = $this->createMock(AddContextualLinks::class);
+    $contextual_links = $this->createMock(ContextualLinks::class);
     $this->pageController = new ViewPageController($contextual_links);
   }
 

@@ -85,12 +85,12 @@ class View extends RenderElement {
         }
 
         if (empty($view->display_handler->getPluginDefinition()['returns_response'])) {
-          // viewsAddContextualLinks() needs the following information in
+          // addLinks() needs the following information in
           // order to be attached to the view.
           $element['#view_id'] = $view->storage->id();
           $element['#view_display_show_admin_links'] = $view->getShowAdminLinks();
           $element['#view_display_plugin_id'] = $view->display_handler->getPluginId();
-          \Drupal::service('views.add_contextual_links')->viewsAddContextualLinks($element, 'view', $view->current_display);
+          \Drupal::service('views.contextual_links')->addLinks($element, 'view', $view->current_display);
         }
       }
       if (empty($view->display_handler->getPluginDefinition()['returns_response'])) {

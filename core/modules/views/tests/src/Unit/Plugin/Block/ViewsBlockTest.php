@@ -57,7 +57,7 @@ class ViewsBlockTest extends UnitTestCase {
   /**
    * The add contextual links service.
    *
-   * @var \Drupal\views\AddContextualLinks
+   * @var \Drupal\views\ContextualLinks
    */
   protected $addContextualLinks;
 
@@ -136,7 +136,7 @@ class ViewsBlockTest extends UnitTestCase {
       ->willReturn($this->view);
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
-    $this->addContextualLinks = $this->getMockBuilder('Drupal\views\AddContextualLinks')
+    $this->addContextualLinks = $this->getMockBuilder('Drupal\views\ContextualLinks')
       ->disableOriginalConstructor()
       ->getMock();
   }
