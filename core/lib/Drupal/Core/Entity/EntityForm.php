@@ -138,8 +138,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   public function form(array $form, FormStateInterface $form_state) {
     // Add #process and #after_build callbacks.
-    $form['#process'][] = [$this, 'processForm'];
-    $form['#after_build'][] = [$this, 'afterBuild'];
+    $form['#process'][] = '::processForm';
+    $form['#after_build'][] = '::afterBuild';
 
     return $form;
   }
