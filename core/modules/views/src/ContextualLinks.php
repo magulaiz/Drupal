@@ -68,6 +68,12 @@ class ContextualLinks {
    *   - view: Used when rendering the view itself, in any context. This
    *     retrieves any contextual links intended to be attached directly to the
    *     view.
+   *   Example:
+   *   If you are rendering a view and its contextual links in another
+   *   location, you can pass in a different value for $location parameter.
+   *   However, you will also need to set 'contextual_links_locations' in your
+   *   plugin annotation to indicate which view displays support having their
+   *   contextual links rendered in the location you have defined.
    * @param string $display_id
    *   The ID of the display within $view whose contextual links will be added.
    * @param array $view_element
@@ -76,13 +82,6 @@ class ContextualLinks {
    *   - #view_display_show_admin_links: A boolean whether the admin links
    *     should be shown.
    *   - #view_display_plugin_id: The plugin ID of the display.
-   *
-   * Example:
-   *   If you are rendering a view and its contextual links in another
-   *   location, you can pass in a different value for $location parameter.
-   *   However, you will also need to set 'contextual_links_locations' in your
-   *   plugin annotation to indicate which view displays support having their
-   *   contextual links rendered in the location you have defined.
    *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
    * @see template_preprocess_views_view()
@@ -94,7 +93,7 @@ class ContextualLinks {
     $view_element['#cache_properties'] = [
       'view_id',
       'view_display_show_admin_links',
-      'view_display_plugin_id'
+      'view_display_plugin_id',
     ];
     $view_id = $view_element['#view_id'];
     $show_admin_links = $view_element['#view_display_show_admin_links'];
@@ -110,7 +109,6 @@ class ContextualLinks {
       // If contextual_links_locations are not set, provide a sane default. (To
       // avoid displaying any contextual links at all, a display plugin can
       // still set 'contextual_links_locations' to, e.g., {""}.)
-
       if (!isset($plugin['contextual_links_locations'])) {
         $plugin['contextual_links_locations'] = ['view'];
       }
