@@ -2,6 +2,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
@@ -11,14 +12,16 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class ContextualLinks {
 
   /**
-   * Constructs AddContextualLinks object.
+   * Constructs ContextualLinks object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $displayManager
+   *   The views display plugin manager to use.
    */
-  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected EntityTypeManagerInterface $entityTypeManager, protected PluginManagerInterface $displayManager) {
   }
 
   /**
@@ -88,7 +91,11 @@ class ContextualLinks {
     if (!isset($view_element)) {
       $view_element = $render_element;
     }
-    $view_element['#cache_properties'] = ['view_id', 'view_display_show_admin_links', 'view_display_plugin_id'];
+    $view_element['#cache_properties'] = [
+      'view_id',
+      'view_display_show_admin_links',
+      'view_display_plugin_id'
+    ];
     $view_id = $view_element['#view_id'];
     $show_admin_links = $view_element['#view_display_show_admin_links'];
     $display_plugin_id = $view_element['#view_display_plugin_id'];
@@ -99,7 +106,7 @@ class ContextualLinks {
       // Also do not do anything if the display plugin has not defined any
       // contextual links that are intended to be displayed in the requested
       // location.
-      $plugin = Views::pluginManager('display')->getDefinition($display_plugin_id);
+      $plugin = $this->displayManager->getDefinition($display_plugin_id);
       // If contextual_links_locations are not set, provide a sane default. (To
       // avoid displaying any contextual links at all, a display plugin can
       // still set 'contextual_links_locations' to, e.g., {""}.)
