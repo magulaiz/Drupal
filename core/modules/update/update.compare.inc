@@ -6,8 +6,9 @@
  */
 
 use Drupal\Core\Extension\ExtensionVersion;
-use Drupal\Core\Utility\Error;
+use Drupal\update\Project;
 use Drupal\update\ProjectRelease;
+use Drupal\update\UpdateServerProjectInfo;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\update\ProjectCoreCompatibility;
@@ -290,15 +291,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $supported_branches = explode(',', $available['supported_branches']);
   }
 
-  $is_in_supported_branch = function ($version) use ($supported_branches) {
-    foreach ($supported_branches as $supported_branch) {
-      if (str_starts_with($version, $supported_branch)) {
-        return TRUE;
-      }
-    }
-    return FALSE;
-  };
-  if ($is_in_supported_branch($project_data['existing_version'])) {
+  $server_project_info = UpdateServerProjectInfo::createFromArray($available);
+  $project = Project::createFromProjectData($project_data, $server_project_info);
+
+  if ($project->isInSupportedBranch($project_data['existing_version'])) {
     // Still supported, stay at the current major version.
     $target_major = $existing_major;
   }
@@ -357,66 +353,51 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_version_without_extra = '';
   $recommended_release = NULL;
 
-  foreach ($available['releases'] as $version => $release_info) {
-    try {
-      $release = ProjectRelease::createFromArray($release_info);
-    }
-    catch (UnexpectedValueException $exception) {
-      // Ignore releases that are in an invalid format. Although this is highly
-      // unlikely we should still process releases in the correct format.
-      Error::logException(\Drupal::logger('update'), $exception, 'Invalid project format: @release', ['@release' => print_r($release_info, TRUE)]);
-      continue;
-    }
+  $releases = $project->getInstallableReleases();
+  if ($existing_release_info = $project->getExistingRelease()) {
+    // If there is an existing release add this to the array of releases to be
+    // considered.
+    $releases[$existing_release_info['version']] = $existing_release_info;
 
-    try {
-      $release_module_version = ExtensionVersion::createFromVersionString($release->getVersion());
-    }
-    catch (UnexpectedValueException $exception) {
-      continue;
-    }
     // First, if this is the existing release, check a few conditions.
-    if ($project_data['existing_version'] === $version) {
-      if ($release->isInsecure()) {
-        $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
-      }
-      elseif (!$release->isPublished()) {
-        $project_data['status'] = UpdateManagerInterface::REVOKED;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'class' => ['release-revoked'],
-          'label' => t('Release revoked'),
-          'data' => t('Your currently installed release has been revoked, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
-        ];
-      }
-      elseif ($release->isUnsupported()) {
-        $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'class' => ['release-not-supported'],
-          'label' => t('Release not supported'),
-          'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
-        ];
-      }
+    $release = ProjectRelease::createFromArray($existing_release_info);
+
+    if ($release->isInsecure()) {
+      $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
     }
-    // Other than the currently installed release, ignore unpublished, insecure,
-    // or unsupported updates.
-    elseif (!$release->isPublished() ||
-            !$is_in_supported_branch($release->getVersion()) ||
-            $release->isUnsupported() ||
-            $release->isInsecure()
-    ) {
-      continue;
+    elseif (!$release->isPublished()) {
+      $project_data['status'] = UpdateManagerInterface::REVOKED;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'class' => ['release-revoked'],
+        'label' => t('Release revoked'),
+        'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+      ];
     }
+    elseif ($release->isUnsupported()) {
+      $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'class' => ['release-not-supported'],
+        'label' => t('Release not supported'),
+        'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+      ];
+    }
+  }
+
+  foreach ($releases as $version => $release_info) {
+    $release = ProjectRelease::createFromArray($release_info);
+
+    $release_module_version = ExtensionVersion::createFromVersionString($version);
     // Ignore dev releases with no date. These are either broken releases or
     // stub releases to allow them to be selected on drupal.org project issues.
-    elseif ($release->getDate() === NULL && $release_module_version->getVersionExtra() === 'dev') {
+    if ($release->getDate() === NULL && $release_module_version->getVersionExtra() === 'dev') {
       continue;
     }
-
     $release_major_version = $release_module_version->getMajorVersion();
     // See if this is a higher major version than our target and yet still
     // supported. If so, record it as an "Also available" release.
