@@ -111,7 +111,6 @@ class FieldStorageConfigEditForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
     $field_label = $form_state->get('field_config')->label();
-    $form['#title'] = $field_label;
     $form['#prefix'] = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $field_label]) . '</p>';
 
     // Add settings provided by the field module. The field module is
