@@ -312,7 +312,6 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $variables = [];
 
     $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
-    $development_settings = \Drupal::state()->get('system.performance');
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
