@@ -277,13 +277,15 @@ class FieldConfigEditForm extends EntityForm {
     parent::copyFormValuesToEntity($entity, $form, $form_state);
 
     // Update the current field storage instance based on subform state.
-    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
-    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
-    $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+    if (!empty($form['field_storage']['subform'])) {
+      $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
+      $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
+      $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
 
-    $reflector = new \ReflectionObject($entity);
-    $property = $reflector->getProperty('fieldStorage');
-    $property->setValue($entity, $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
+      $reflector = new \ReflectionObject($entity);
+      $property = $reflector->getProperty('fieldStorage');
+      $property->setValue($entity, $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
+    }
   }
 
   /**
