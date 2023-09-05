@@ -195,6 +195,7 @@ filter:
       constraints:
         PluginExists:
           manager: plugin.manager.filter
+          interface: 'Drupal\filter\Plugin\FilterInterface'
     provider:
       type: string
       label: 'Provider'
