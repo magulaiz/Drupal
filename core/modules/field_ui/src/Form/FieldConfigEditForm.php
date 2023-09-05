@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
@@ -384,7 +385,13 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
     $field_storage_form->submitForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
-    $field_storage_form->save($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
+    try {
+      $field_storage_form->save($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
+    }
+    catch (EntityStorageException $exception) {
+      $this->handleEntityStorageException($form_state, $exception);
+      return;
+    }
 
     // Handle the default value.
     $default_value = [];
@@ -400,7 +407,13 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     // Save field config.
-    $this->entity->save();
+    try {
+      $this->entity->save();
+    }
+    catch (EntityStorageException $exception) {
+      $this->handleEntityStorageException($form_state, $exception);
+      return;
+    }
 
     $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
     if (isset($form_state->getStorage()['default_options'])) {
@@ -512,6 +525,23 @@ class FieldConfigEditForm extends EntityForm {
         $this->addAjaxCallBacks($child);
       }
     }
+  }
+
+  /**
+   * Handles entity storage exceptions and redirects the form.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   * @param \Drupal\Core\Entity\EntityStorageException $exception
+   *   The exception.
+   */
+  protected function handleEntityStorageException(FormStateInterface $form_state, EntityStorageException $exception): void {
+    $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+    $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(),
+      $this->entity->getTargetBundle()));
+    $this->messenger()
+      ->addError($this->t('An error occurred while saving the field: @error',
+        ['@error' => $exception->getMessage()]));
   }
 
 }
