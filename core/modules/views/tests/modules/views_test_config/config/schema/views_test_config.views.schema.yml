@@ -12,4 +12,4 @@ views.area.test_example:
       label: 'Should access to the area be allowed'
 
 views.cache.non_existent:
-  type: views_cache\
+  type: views_cache
