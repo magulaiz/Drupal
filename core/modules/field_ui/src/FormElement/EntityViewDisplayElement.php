@@ -79,7 +79,7 @@ class EntityViewDisplayElement extends ListElement {
           $item['#open'] = TRUE;
         }
 
-        $component_type = $components[$component_name]['type'];
+        $component_type = $layout_builder ? $field_type['id'] : $components[$component_name]['type'];
         if (isset($item['settings']['#open'])) {
           $item['settings']['#open'] = TRUE;
         }
