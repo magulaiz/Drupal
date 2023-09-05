@@ -285,7 +285,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
 
     $this->view->query->setLimit($limit);
-    $this->view->query->setOffset($offset);
+    $this->view->query->setOffset((int) $offset);
   }
 
   /**
