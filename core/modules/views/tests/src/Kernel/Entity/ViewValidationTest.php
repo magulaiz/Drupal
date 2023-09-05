@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Entity;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\views\Entity\View;
 
@@ -31,13 +32,17 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Tests that a view's display plugin ID is validated.
+   * Tests that a various plugin IDs making up a view display are validated.
+   *
+   * @testWith [["display_plugin"]]
+   *   [["display_options", "pager", "type"]]
    */
-  public function testInvalidDisplayPluginId(): void {
+  public function testInvalidPluginId(array $parents): void {
     $display = &$this->entity->getDisplay('default');
-    $display['display_plugin'] = 'non_existent';
+    NestedArray::setValue($display, $parents, 'non_existent');
+    $property_path = 'display.default.' . implode('.', $parents);
     $this->assertValidationErrors([
-      'display.default.display_plugin' => "The 'non_existent' plugin does not exist.",
+      $property_path => "The 'non_existent' plugin does not exist.",
     ]);
   }
 
