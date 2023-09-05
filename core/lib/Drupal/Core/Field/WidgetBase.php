@@ -173,7 +173,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
         break;
 
       default:
-        $max = $cardinality - 1;
+        $max = ((int) $cardinality) - 1;
         break;
     }
 

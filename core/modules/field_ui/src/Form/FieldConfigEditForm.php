@@ -197,7 +197,6 @@ class FieldConfigEditForm extends EntityForm {
       ],
       '#value' => $this->t('Update settings'),
       '#process' => [[$this, 'processFieldStorageSubmit']],
-      '#limit_validation_errors' => [],
       '#submit' => [[$this, 'fieldStorageSubmit']],
       '#ajax' => [
         'callback' => [$this, 'showUpdated'],
@@ -466,7 +465,6 @@ class FieldConfigEditForm extends EntityForm {
   public static function processFieldStorageSubmit(array $element, FormStateInterface $form_state, &$complete_form) {
     // Limit validation errors to the field storage form while the field storage
     // form is being edited.
-    $element['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
     $complete_form['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
     return $element;
   }
