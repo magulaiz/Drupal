@@ -60,7 +60,7 @@ class DevelopmentSettingsForm extends FormBase {
     if (!$is_writable) {
       $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">optimized assets file system path</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
     }
-    $development_settings = $this->state->get('system.development_settings');
+    $development_settings = $this->state->get('system.performance');
     $performance_css_config = isset($development_settings['css.preprocess']) ? (bool) $development_settings['css.preprocess'] : TRUE;
     $performance_js_config = isset($development_settings['js.preprocess']) ? (bool) $development_settings['js.preprocess'] : TRUE;
 
@@ -195,7 +195,7 @@ class DevelopmentSettingsForm extends FormBase {
     $performance_css_config = (bool) $form_state->getValue('preprocess_css');
     $performance_js_config = (bool) $form_state->getValue('preprocess_js');
     // Store the configuration values in a state variable.
-    $this->state->set('system.development_settings', [
+    $this->state->set('system.performance', [
       'css.preprocess' => $performance_css_config,
       'js.preprocess' => $performance_js_config,
     ]);

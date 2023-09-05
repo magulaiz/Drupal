@@ -336,7 +336,7 @@ trait FunctionalTestSetupTrait {
     $config->getEditable('system.logging')
       ->set('error_level', 'verbose')
       ->save();
-    \Drupal::state()->set('system.development_settings', [
+    \Drupal::state()->set('system.performance', [
       'css.preprocess' => FALSE,
       'js.preprocess' => FALSE,
     ]);
