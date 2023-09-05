@@ -272,10 +272,6 @@ class ManageFieldsTest extends BrowserTestBase {
       ])
       ->save();
 
-    $this->drupalGet("$bundle_path/fields/node.{$node_type->id()}.test_field/storage");
-    $this->submitForm([], 'Save');
-    $this->assertSession()->statusMessageContains('Your settings have been saved.', 'status');
-
     $this->drupalGet("$bundle_path/fields/node.{$node_type->id()}.test_field");
     $this->submitForm([], 'Save settings');
     $this->assertSession()->statusMessageContains('Saved test_field configuration.', 'status');
