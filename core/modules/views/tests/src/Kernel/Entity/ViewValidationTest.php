@@ -30,4 +30,15 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that a view's display plugin ID is validated.
+   */
+  public function testInvalidDisplayPluginId(): void {
+    $display = &$this->entity->getDisplay('default');
+    $display['display_plugin'] = 'non_existent';
+    $this->assertValidationErrors([
+      'display.default.display_plugin' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }
