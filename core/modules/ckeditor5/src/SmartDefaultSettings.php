@@ -80,7 +80,13 @@ final class SmartDefaultSettings {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct(
+    CKEditor5PluginManagerInterface $plugin_manager,
+    PluginManagerInterface $upgrade_plugin_manager,
+    LoggerInterface $logger,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $current_user,
+  ) {
     $this->pluginManager = $plugin_manager;
     $this->upgradePluginManager = $upgrade_plugin_manager;
     $this->logger = $logger;

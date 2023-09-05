@@ -15,6 +15,7 @@ use Drupal\jsonapi\JsonApiResource\LabelOnlyResourceObject;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -83,7 +84,13 @@ class EntityAccessChecker {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(ResourceTypeRepositoryInterface $resource_type_repository, RouterInterface $router, AccountInterface $account, EntityRepositoryInterface $entity_repository) {
+  public function __construct(
+    ResourceTypeRepositoryInterface $resource_type_repository,
+    #[Autowire('@router.no_access_checks')]
+    RouterInterface $router,
+    AccountInterface $account,
+    EntityRepositoryInterface $entity_repository,
+  ) {
     $this->resourceTypeRepository = $resource_type_repository;
     $this->router = $router;
     $this->currentUser = $account;
