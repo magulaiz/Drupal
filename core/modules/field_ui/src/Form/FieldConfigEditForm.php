@@ -35,13 +35,6 @@ class FieldConfigEditForm extends EntityForm {
    *
    * @var \Drupal\field\FieldConfigInterface
    */
-  protected $originalEntity;
-
-  /**
-   * The entity being used by this form.
-   *
-   * @var \Drupal\field\FieldConfigInterface
-   */
   protected $entity;
 
   /**
@@ -111,24 +104,6 @@ class FieldConfigEditForm extends EntityForm {
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.entity_reference_selection')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareEntity() {
-    $this->originalEntity = $this->entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    if ($form_state->has('current_entity')) {
-      // Replace the entity with the current entity.
-      $this->setEntity($form_state->get('current_entity'));
-    }
-    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -383,8 +358,6 @@ class FieldConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // @todo find a better way to do this.
-    $this->entity = $this->originalEntity;
     parent::submitForm($form, $form_state);
 
     // Trick \field_form_field_config_edit_form_entity_builder to not override
@@ -490,22 +463,6 @@ class FieldConfigEditForm extends EntityForm {
    *   The current state of the form.
    */
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
-    // Rebuild entity based on current form state. This is necessary because
-    // field widgets use the entity for retrieving the current form state. At
-    // this point its safe to assume the config entity will result in a valid
-    // field config because necessary validation handlers have already run.
-    $current_entity = $this->buildEntity($form, $form_state);
-    $current_entity->enforceIsNew(TRUE);
-
-    $current_field_storage = clone $current_entity->getFieldStorageDefinition();
-    $current_field_storage->enforceIsNew(TRUE);
-
-    $reflector = new \ReflectionObject($current_entity);
-    $property = $reflector->getProperty('fieldStorage');
-    $property->setValue($current_entity, $current_field_storage);
-
-    $form_state->set('current_entity', $current_entity);
-
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();
     unset($form_storage['default_value_widget']);
