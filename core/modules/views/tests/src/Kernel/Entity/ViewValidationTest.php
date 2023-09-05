@@ -41,4 +41,15 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
     ]);
   }
 
+  /**
+   * Tests that a view's display plugin ID is validated.
+   */
+  public function testInvalidPagerPluginId(): void {
+    $display = &$this->entity->getDisplay('default');
+    $display['display_options']['pager']['type'] = 'non_existent';
+    $this->assertValidationErrors([
+      'display.default.display_options.pager.type' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }
