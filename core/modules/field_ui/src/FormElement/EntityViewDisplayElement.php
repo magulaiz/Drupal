@@ -44,17 +44,24 @@ class EntityViewDisplayElement extends ListElement {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
 
-    $layout_builder = FALSE;
+    $element_names = [];
+    $build_element_names = [];
     if (isset($parent_build['third_party_settings']['layout_builder']['sections'])) {
-      $layout_builder = TRUE;
-      $element_names = $this->layoutBuilderGetElementNames($parent_build);
+      $build_element_names = $this->layoutBuilderGetElementNames($parent_build);
+      $build_element_names = array_fill_keys($build_element_names, TRUE);
     }
-    else {
+    if (isset($parent_build['content'])) {
       $parent_build['content']['#collapsible'] = FALSE;
       $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
+      $element_names = array_fill_keys($element_names, FALSE);
+      $element_names = array_merge($build_element_names, $element_names);
     }
 
-    foreach ($element_names as $component_name) {
+    if (empty($element_names)) {
+      return $parent_build;
+    }
+
+    foreach ($element_names as $component_name => $layout_builder) {
       // Not considering the layout builder case.
       if ($layout_builder) {
         [$i, $j, $component_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_name, 3);

@@ -45,6 +45,10 @@ class EntityFormDisplayElement extends ListElement {
     $parent_build['content']['#collapsible'] = FALSE;
     $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
 
+    if (empty($element_names)) {
+      return $parent_build;
+    }
+
     foreach ($element_names as $component_name) {
       // Not considering the layout builder case.
       $item = &$parent_build['content'][$component_name];
