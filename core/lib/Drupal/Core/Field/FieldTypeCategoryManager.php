@@ -19,6 +19,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *     label: STRING
  *     description: STRING
  *     weight: INTEGER
+ *     libraries:
+ *       - STRING
  * @endcode
  * For example:
  * @code
@@ -26,6 +28,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *   label: Text
  *   description: Text fields.
  *   weight: 2
+ *   libraries:
+ *     - module_name/library_name
  * @endcode
  *
  * @see \Drupal\Core\Field\FieldTypeCategoryInterface
@@ -73,6 +77,17 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
         ->addTranslatableProperty('description');
     }
     return $this->discovery;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function alterDefinitions(&$definitions): void {
+    parent::alterDefinitions($definitions);
+
+    if (!isset($definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
+      throw new \LogicException('Missing fallback category.');
+    }
   }
 
   /**
