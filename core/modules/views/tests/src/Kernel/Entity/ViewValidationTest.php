@@ -16,7 +16,7 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['views'];
+  protected static $modules = ['views', 'views_test_config'];
 
   /**
    * {@inheritdoc}
@@ -41,6 +41,7 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
    *   ["display_options", "style", "type"]
    *   ["display_options", "row", "type"]
    *   ["display_options", "query", "type"]
+   *   ["display_options", "cache", "type"]
    */
   public function testInvalidPluginId(...$parents): void {
     $display = &$this->entity->getDisplay('default');
