@@ -5,12 +5,12 @@ namespace Drupal\field_ui\FormElement;
 use Drupal\Component\Plugin\PluginBase;
 
 /**
- *
+ * Provides common functionality for adding or re-using a field.
  */
 trait EntityDisplayElementTrait {
 
   /**
-   *
+   * Adds labels to the components.
    */
   protected function addLabels(&$parent_build, $element_names, $components, $target_type_id, $bundle_name) {
 
