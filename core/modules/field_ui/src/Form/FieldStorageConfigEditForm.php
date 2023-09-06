@@ -3,7 +3,6 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -36,21 +35,14 @@ class FieldStorageConfigEditForm extends EntityForm {
    *   The typed data manager.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
    *   The private tempstore.
-   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface|null $selectionManager
-   *   The entity reference selection plugin manager.
    */
   public function __construct(
     protected TypedDataManagerInterface $typedDataManager,
-    protected ?PrivateTempStore $tempStore = NULL,
-    protected ?SelectionPluginManagerInterface $selectionManager = NULL
+    protected ?PrivateTempStore $tempStore = NULL
   ) {
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldStorageConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383720', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
-    if ($this->selectionManager === NULL) {
-      @trigger_error('Calling FieldStorageConfigEditForm::__construct() without the $selectionManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
-      $this->selectionManager = \Drupal::service('plugin.manager.entity_reference_selection');
     }
   }
 
@@ -61,7 +53,6 @@ class FieldStorageConfigEditForm extends EntityForm {
     return new static(
       $container->get('typed_data_manager'),
       $container->get('tempstore.private')->get('field_ui'),
-      $container->get('plugin.manager.entity_reference_selection'),
     );
   }
 
