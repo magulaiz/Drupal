@@ -13,8 +13,10 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
  * Provides a class which generates a request.
+ *
+ * @internal
  */
-class RequestGenerator {
+final class RequestGenerator {
 
   /**
    * Constructs a RequestGenerator object.
