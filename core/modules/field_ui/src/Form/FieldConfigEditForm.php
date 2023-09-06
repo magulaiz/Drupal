@@ -409,34 +409,48 @@ class FieldConfigEditForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     // Save field config.
     try {
-      $this->entity->save();
-    }
-    catch (EntityStorageException $exception) {
-      $this->handleEntityStorageException($form_state, $exception);
-      return;
-    }
+      try {
+        $this->entity->save();
+      }
+      catch (EntityStorageException $exception) {
+        $this->handleEntityStorageException($form_state, $exception);
+        return;
+      }
 
-    $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
-    if (isset($form_state->getStorage()['default_options'])) {
-      $default_options = $form_state->getStorage()['default_options'];
-      // Configure the default display modes.
-      $this->entityTypeId = $temp_storage['field_config_values']['entity_type'];
-      $this->bundle = $temp_storage['field_config_values']['bundle'];
-      $this->configureEntityFormDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_form_display'] ?? []);
-      $this->configureEntityViewDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_view_display'] ?? []);
-      // Delete the temp store entry.
-      $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
-    }
+      $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+      if (isset($form_state->getStorage()['default_options'])) {
+        $default_options = $form_state->getStorage()['default_options'];
+        // Configure the default display modes.
+        $this->entityTypeId = $temp_storage['field_config_values']['entity_type'];
+        $this->bundle = $temp_storage['field_config_values']['bundle'];
+        $this->configureEntityFormDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_form_display'] ?? []);
+        $this->configureEntityViewDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_view_display'] ?? []);
+        // Delete the temp store entry.
+        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+      }
 
-    $this->messenger()->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
+      $this->messenger()
+        ->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
 
-    $request = $this->getRequest();
-    if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
-      $request->query->remove('destinations');
-      $form_state->setRedirectUrl($next_destination);
+      $request = $this->getRequest();
+      if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
+        $request->query->remove('destinations');
+        $form_state->setRedirectUrl($next_destination);
+      }
+      else {
+        $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
+      }
     }
-    else {
-      $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
+    catch (\Exception $e) {
+      $this->messenger()->addStatus(
+        $this->t(
+          'Attempt to update field %label failed: %message.',
+          [
+            '%label' => $this->entity->getLabel(),
+            '%message' => $e->getMessage(),
+          ]
+        )
+      );
     }
   }
 
