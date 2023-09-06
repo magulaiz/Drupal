@@ -110,7 +110,7 @@ class ThemeTest extends BrowserTestBase {
     // file, so it doesn't matter what page we get, as long as it is themed with
     // the test theme. First we test with CSS aggregation disabled.
     \Drupal::state()->set('system.performance', [
-      'css.preprocess' => 0,
+      'css.preprocess' => FALSE,
     ]);
     $this->drupalGet('theme-test/suggestion');
     // We add a "?" to the assertion, because drupalSettings may include
@@ -124,7 +124,7 @@ class ThemeTest extends BrowserTestBase {
     // exist. Then allow remaining tests to continue with aggregation disabled
     // by default.
     \Drupal::state()->set('system.performance', [
-      'css.preprocess' => 1,
+      'css.preprocess' => TRUE,
     ]);
     $this->drupalGet('theme-test/suggestion');
     \Drupal::state()->set('system.performance', [
