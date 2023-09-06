@@ -27,7 +27,7 @@
    * @param {number} wpm
    *  A given "words per minute" number.
    *
-   * @returns {number}
+   * @return {number}
    *  The reading time, in minutes.
    */
   function readingTime(element, wpm) {
