@@ -198,6 +198,7 @@ class FieldConfigEditForm extends EntityForm {
       ],
       '#value' => $this->t('Update settings'),
       '#process' => [[$this, 'processFieldStorageSubmit']],
+      '#limit_validation_errors' => [$form['field_storage']['subform']['#parents']],
       '#submit' => [[$this, 'fieldStorageSubmit']],
       '#ajax' => [
         'callback' => [$this, 'showUpdated'],
