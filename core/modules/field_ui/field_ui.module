@@ -86,7 +86,6 @@ function field_ui_theme() {
 function field_ui_config_schema_info_alter(&$definitions) {
   $map = [
     'core.entity_form_display.*.*.*' => EntityFormDisplayElement::class,
-    'core.entity_view_display.*.*.*' => EntityViewDisplayElement::class,
   ];
 
   // Enhance the text and date type definitions with classes to generate proper
