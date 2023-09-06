@@ -128,7 +128,7 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
    *   Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo().
    *
    * @return array
-   *   An array of bundle labels keyed be the bundle name.
+   *   An array of bundle labels keyed by the bundle name.
    */
   protected function getBundleOptions(array $bundles) {
     $bundle_options = [];
