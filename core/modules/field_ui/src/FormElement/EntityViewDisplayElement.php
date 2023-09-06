@@ -72,28 +72,28 @@ class EntityViewDisplayElement extends ListElement {
     $element_name = $this->element->getName();
     $entity = $entities[str_replace("core.entity_view_display.", "", $element_name)];
     /** @var \Drupal\layout_builder\Section $section */
-    foreach ($entity->getSections() as $i => $section) {
-      $section_components = $section->toArray()['components'];
+    foreach ($entity->getSections() as $section_index => $section) {
+      $section_components = $section->getComponents();
       if (empty($section_components)) {
         continue;
       }
-      foreach ($section_components as $j => $component) {
-        if (!str_starts_with($component['configuration']['id'], 'field_block:')) {
+      foreach ($section_components as $component) {
+        if (!str_starts_with($component->getPluginId(), 'field_block:') && !str_starts_with($component->getPluginId(), 'extra_field_block:')) {
           continue;
         }
-        if (!isset($component['configuration']['formatter']['settings']) || empty($component['configuration']['formatter']['settings'])) {
+        if (!isset($component->get('configuration')['formatter']['settings']) || empty($component->get('configuration')['formatter']['settings'])) {
           continue;
         }
-        if (!isset($parent_build['third_party_settings']['layout_builder']['sections'][$i]['components'][$j]['configuration']['formatter']['settings'])) {
+        if (!isset($parent_build['third_party_settings']['layout_builder']['sections'][$section_index]['components'][$component->getUuid()]['configuration']['formatter']['settings'])) {
           continue;
         }
         try {
-          [,,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component['configuration']['id'], 4);
+          [,,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component->getPluginId(), 4);
         }
         catch (\Exception) {
           continue;
         }
-        $element_names[] = $i . PluginBase::DERIVATIVE_SEPARATOR . $j . PluginBase::DERIVATIVE_SEPARATOR . $field_name;
+        $element_names[] = $section_index . PluginBase::DERIVATIVE_SEPARATOR . $component->getUuid() . PluginBase::DERIVATIVE_SEPARATOR . $field_name;
       }
     }
     return $element_names;
