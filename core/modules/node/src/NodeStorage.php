@@ -3,8 +3,8 @@
 namespace Drupal\node;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines the storage handler class for nodes.
@@ -30,6 +30,16 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
   public function userRevisionIds(AccountInterface $account) {
     return $this->database->query(
       'SELECT [vid] FROM {' . $this->getRevisionDataTable() . '} WHERE [uid] = :uid ORDER BY [vid]',
+      [':uid' => $account->id()]
+    )->fetchCol();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function userRevisionAuthorRevisionIds(AccountInterface $account) {
+    return $this->database->query(
+      'SELECT vid FROM {' . $this->getRevisionTable() . '} WHERE [revision_uid] = :uid ORDER BY [vid]',
       [':uid' => $account->id()]
     )->fetchCol();
   }
