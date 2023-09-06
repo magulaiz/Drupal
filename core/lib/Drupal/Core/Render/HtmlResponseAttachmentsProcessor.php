@@ -316,14 +316,14 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
-      $optimize_css = !($maintenance_mode ?? FALSE) && ($development_settings['css.preprocess'] ?? FALSE);
+      $optimize_css = !$maintenance_mode && ($development_settings['css.preprocess'] ?? FALSE);
       $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css, $this->languageManager->getCurrentLanguage()));
     }
 
     // Print scripts - if any are present.
     if (isset($placeholders['scripts']) || isset($placeholders['scripts_bottom'])) {
       // Optimize JS if necessary, but only during normal site operation.
-      $optimize_js = ($maintenance_mode ?? FALSE) && ($development_settings['js.preprocess'] ?? FALSE);
+      $optimize_js = $maintenance_mode && ($development_settings['js.preprocess'] ?? FALSE);
       [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($assets, $optimize_js, $this->languageManager->getCurrentLanguage());
       $variables['scripts'] = $this->jsCollectionRenderer->render($js_assets_header);
       $variables['scripts_bottom'] = $this->jsCollectionRenderer->render($js_assets_footer);
