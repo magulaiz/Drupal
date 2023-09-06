@@ -168,26 +168,43 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Enable the settings "Provide menu link by default" to content type
     // and verify that the "Menu Settings" enables automatically while creating
-    // a new node.
+    // a new node. Also verify that menu link is created when node is created.
     $edit = [
       'menu_link_by_default' => 1,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
+    $node_title = $this->randomMachineName();
+    $edit = [
+      'title[0][value]' => $node_title,
+      'body[0][value]' => $this->randomString(),
+    ];
     $this->drupalGet('node/add/page');
     $this->assertSession()->checkboxChecked('edit-menu-enabled');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/main');
+    $this->assertSession()->linkExists($node_title);
 
     // Disable the settings "Provide menu link by default" and verify that the
     // "Menu Settings" does not enable automatically while creating a new node.
+    // Also verify that menu link is created when node is created.
     $edit = [
       'menu_link_by_default' => 0,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
+    $node_title = $this->randomMachineName();
+    $edit = [
+      'title[0][value]' => $node_title,
+      'body[0][value]' => $this->randomString(),
+    ];
     $this->drupalGet('node/add/page');
     $this->assertSession()->checkboxNotChecked('edit-menu-enabled');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/main');
+    $this->assertSession()->linkNotExists($node_title);
 
     // Make sure the menu links only appear when the node is published.
     // These buttons just appear for 'administer nodes' users.
