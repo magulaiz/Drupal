@@ -17,7 +17,6 @@ use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\field_ui\Form\FieldStorageConfigEditForm;
 use Drupal\field_ui\FormElement\EntityFormDisplayElement;
-use Drupal\field_ui\FormElement\EntityViewDisplayElement;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 use Drupal\field_ui\ConfigTranslation\EntityDisplayMapper;
 
