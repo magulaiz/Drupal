@@ -6,7 +6,6 @@ use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\TitleBlockPluginInterface;
-use Drupal\Core\Controller\BaseRouteTitleResolver;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -124,7 +123,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       '#title' => $this->t('Title to be displayed'),
       '#options' => [
         0 => $this->t('Current page title'),
-        1 => $this->t('Section page title')
+        1 => $this->t('Section page title'),
       ],
       '#default_value' => (int) $this->configuration['base_route_title'],
       '#description' => $this->t('Choose whether to display the title of the current page or the current section. Displaying the section title is often preferred in admin interfaces.'),
@@ -180,7 +179,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    */
   private function titleToString(array|string|null|\Stringable $title): string|\Stringable {
     if (is_array($title)) {
-       $title = \Drupal::service('renderer')->render($title);
+      $title = \Drupal::service('renderer')->render($title);
     }
 
     return $title ?? '';
