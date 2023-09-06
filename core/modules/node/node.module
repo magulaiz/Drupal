@@ -690,7 +690,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
 
       // Reassign revision authors.
       $revision_id_author = $nodeStorage->userRevisionAuthorRevisionIds($account);
-      if (!empty($revision_id)) {
+      if (!empty($revision_id_author)) {
         node_mass_update($revision_id_author, ['revision_uid' => 0], NULL, TRUE, TRUE);
       }
       break;
