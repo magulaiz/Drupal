@@ -128,7 +128,7 @@ class ThemeTest extends BrowserTestBase {
     ]);
     $this->drupalGet('theme-test/suggestion');
     \Drupal::state()->set('system.performance', [
-      'css.preprocess' => 1,
+      'css.preprocess' => FALSE,
     ]);
   }
 

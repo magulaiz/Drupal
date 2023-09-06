@@ -27,7 +27,8 @@ class DevelopmentSettingsForm extends FormBase {
   public function __construct(
     protected StateInterface $state,
     protected DrupalKernelInterface $kernel,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
@@ -35,7 +36,7 @@ class DevelopmentSettingsForm extends FormBase {
   public static function create(ContainerInterface $container) {
     $instance = new static(
       $container->get('state'),
-      $container->get('kernel'),
+      $container->get('kernel')
     );
     $instance->setMessenger($container->get('messenger'));
     return $instance;
