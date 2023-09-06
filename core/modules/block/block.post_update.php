@@ -30,10 +30,10 @@ function block_post_update_add_contextualize_page_title() {
 
     $settings = $block->get('settings');
     if (str_contains($block->getName(), 'claro')) {
-      $settings['contextualize_title'] = TRUE;
+      $settings['base_route_title'] = TRUE;
     }
     else {
-      $settings['contextualize_title'] = FALSE;
+      $settings['base_route_title'] = FALSE;
     }
     $block->set('settings', $settings);
 
