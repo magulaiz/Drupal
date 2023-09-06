@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Returns an array to test nested merge in invoke all.
+ */
+function hooks_test_all1_testhook(string $arg) {
+  return __FUNCTION__ . '(' . $arg . ')';
+}
+
+function hooks_test_all1_byref(array &$arg): string {
+  $arg[] = __FUNCTION__;
+  return __FUNCTION__;
+}

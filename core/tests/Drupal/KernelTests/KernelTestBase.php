@@ -22,6 +22,7 @@ use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\ClassHierarchyHelper;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
@@ -179,7 +180,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @see \Drupal\Tests\KernelTestBase::enableModules()
    * @see \Drupal\Tests\KernelTestBase::bootKernel()
    *
-   * @var array
+   * @var list<string>
    */
   protected static $modules = [];
 
@@ -362,7 +363,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Add this test class as a service provider.
     $GLOBALS['conf']['container_service_providers']['test'] = $this;
 
-    $modules = self::getModulesToEnable(static::class);
+    $modules = $this->getModulesToEnable();
 
     // When a module is providing the database driver, then enable that module.
     $connection_info = Database::getConnectionInfo();
@@ -528,10 +529,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @see \Drupal\Core\Extension\ModuleHandler::add()
    */
   private function getExtensionsForModules(array $modules) {
+    $list = $this->getAvailableExtensions('module');
     $extensions = [];
-    $discovery = new ExtensionDiscovery($this->root);
-    $discovery->setProfileDirectories([]);
-    $list = $discovery->scan('module');
     foreach ($modules as $name) {
       if (!isset($list[$name])) {
         throw new Exception("Unavailable module: '$name'. If this module needs to be downloaded separately, annotate the test class with '@requires module $name'.");
@@ -539,6 +538,21 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $extensions[$name] = $list[$name];
     }
     return $extensions;
+  }
+
+  /**
+   * Discovers extensions of a given type.
+   *
+   * @param string $type
+   *   Extension type, e.g. 'module'.
+   *
+   * @return array<string, \Drupal\Core\Extension\Extension>
+   *   Extension objects by name.
+   */
+  protected function getAvailableExtensions(string $type): array {
+    $discovery = new ExtensionDiscovery($this->root);
+    $discovery->setProfileDirectories([]);
+    return $discovery->scan($type);
   }
 
   /**
@@ -983,28 +997,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Returns the modules to enable for this test.
    *
-   * @param string $class
-   *   The fully-qualified class name of this test.
-   *
-   * @return array
+   * @return list<string>
+   *   Module names.
    */
-  private static function getModulesToEnable($class) {
-    $modules = [];
-    while ($class) {
-      if (property_exists($class, 'modules')) {
-        // Only add the modules, if the $modules property was not inherited.
-        $rp = new \ReflectionProperty($class, 'modules');
-        if ($rp->class == $class) {
-          $modules[$class] = $class::$modules;
-        }
-      }
-      $class = get_parent_class($class);
-    }
-    // Modules have been collected in reverse class hierarchy order; modules
-    // defined by base classes should be sorted first. Then, merge the results
-    // together.
-    $modules = array_values(array_reverse($modules));
-    return call_user_func_array('array_merge_recursive', $modules);
+  protected function getModulesToEnable(): array {
+    /* @see static::$modules */
+    /** @var list<list<string>> $modules_grouped */
+    $modules_grouped = ClassHierarchyHelper::collectPropertyValues(static::class, 'modules');
+    return array_unique(array_merge(...$modules_grouped));
   }
 
   /**

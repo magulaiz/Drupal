@@ -1161,6 +1161,7 @@ testfunc
 testfunction
 testget
 testgroups
+testhook
 testid
 testitem
 testk

@@ -14,6 +14,15 @@ namespace Drupal\Core\Extension;
 class Extension {
 
   /**
+   * Whether to skip the assertion in the constructor.
+   *
+   * This is useful for tests that want to use "fake" modules.
+   *
+   * @var bool
+   */
+  public static bool $skipAssertFileExists = FALSE;
+
+  /**
    * The type of the extension (e.g., 'module').
    *
    * @var string
@@ -70,7 +79,7 @@ class Extension {
    */
   public function __construct($root, $type, $pathname, $filename = NULL) {
     // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()
-    assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
+    assert(self::$skipAssertFileExists || $pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
     $this->root = $root;
     $this->type = $type;
     $this->pathname = $pathname;

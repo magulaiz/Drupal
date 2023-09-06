@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Implements hook_hook_info().
+ */
+function hooks_test_hook_info() {
+  return [
+    'testhook' => ['group' => 'hook'],
+  ];
+}
+
+/**
+ * Implements hook_testhook().
+ */
+function hooks_test_testhook(string|int $arg): string {
+  return __FUNCTION__ . '(' . $arg . ')';
+}
+
+/**
+ * Implements hook_byref().
+ */
+function hooks_test_byref(array &$values): string {
+  $values[] = __FUNCTION__;
+  return __FUNCTION__;
+}

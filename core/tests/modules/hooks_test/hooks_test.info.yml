@@ -1,0 +1,5 @@
+name: 'Hooks test'
+type: module
+description: 'Support module to test hook dispatching.'
+package: Testing
+version: VERSION
