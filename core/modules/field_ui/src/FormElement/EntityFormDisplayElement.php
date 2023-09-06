@@ -13,7 +13,7 @@ class EntityFormDisplayElement extends ListElement {
   use EntityDisplayElementTrait;
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getTranslationBuild(
     LanguageInterface $source_language,

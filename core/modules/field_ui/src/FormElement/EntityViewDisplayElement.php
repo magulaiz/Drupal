@@ -15,7 +15,7 @@ class EntityViewDisplayElement extends ListElement {
   use EntityDisplayElementTrait;
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getTranslationBuild(
     LanguageInterface $source_language,
@@ -68,6 +68,7 @@ class EntityViewDisplayElement extends ListElement {
    */
   public function layoutBuilderGetElementNames($parent_build): array {
     // Configuration name will be also used as element name.
+    $element_names = [];
     $entities = LayoutBuilderEntityViewDisplay::loadMultiple();
     $element_name = $this->element->getName();
     $entity = $entities[str_replace("core.entity_view_display.", "", $element_name)];
