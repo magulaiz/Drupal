@@ -683,7 +683,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
       node_mass_update($vids, [
         'uid' => 0,
         'revision_uid' => 0,
-      ], NULL, TRUE, TRUE);
+      ], NULL, TRUE, TRUE, TRUE);
       break;
   }
 }

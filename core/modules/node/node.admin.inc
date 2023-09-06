@@ -30,8 +30,11 @@ use Drupal\node\NodeInterface;
  * @param bool $revisions
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
+ * @param bool $syncing
+ *   (optional) TRUE if the update is happening as part of a content synchronization process
+ *   and there should be no content updates during an editorial process. The default value is FALSE.
  */
-function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE) {
+function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE, $syncing = FALSE) {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
@@ -39,7 +42,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
       ->setFile(\Drupal::service('extension.list.module')->getPath('node') . '/node.admin.inc')
-      ->addOperation('_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions])
+      ->addOperation('_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions, $syncing])
       ->setFinishCallback('_node_mass_update_batch_finished')
       ->setTitle(t('Processing'))
       ->setErrorMessage(t('The update has encountered an error.'))
@@ -57,7 +60,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
       if ($load && $revisions) {
         $node = $storage->loadRevision($node);
       }
-      _node_mass_update_helper($node, $updates, $langcode);
+      _node_mass_update_helper($node, $updates, $langcode, $syncing);
     }
     \Drupal::messenger()->addStatus(t('The update has been performed.'));
   }
@@ -73,13 +76,16 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
  * @param string $langcode
  *   (optional) The language updates should be applied to. If none is specified
  *   all available languages are processed.
+ * @param bool $syncing
+ *    (optional) TRUE if the update is happening as part of a content synchronization process
+ *    and there should be no content updates during an editorial process. The default value is FALSE.
  *
  * @return \Drupal\node\NodeInterface
  *   An updated node object.
  *
  * @see node_mass_update()
  */
-function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL) {
+function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL, $syncing = FALSE) {
   $langcodes = isset($langcode) ? [$langcode] : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.
   $node->original = clone $node;
@@ -88,6 +94,7 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
       $node->getTranslation($langcode)->$name = $value;
     }
   }
+  $node->setSyncing($syncing);
   $node->save();
   return $node;
 }
@@ -110,10 +117,13 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  * @param bool $revisions
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
+ * @param bool $syncing
+ *   (optional) TRUE if the update is happening as part of a content synchronization process
+ *    and there should be no content updates during an editorial process. The default value is FALSE.
  * @param array|\ArrayAccess $context
  *   An array of contextual key/values.
  */
-function _node_mass_update_batch_process(array $nodes, array $updates, $langcode, $load, $revisions, &$context) {
+function _node_mass_update_batch_process(array $nodes, array $updates, $langcode, $load, $revisions, $syncing, &$context) {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($nodes);
@@ -130,7 +140,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $langcode
       $node = $revisions ?
         $storage->loadRevision($node) : $storage->load($node);
     }
-    $node = _node_mass_update_helper($node, $updates, $langcode);
+    $node = _node_mass_update_helper($node, $updates, $langcode, $syncing);
 
     // Store result for post-processing in the finished callback.
     $context['results'][] = Link::fromTextAndUrl($node->label(), $node->toUrl())->toString();
