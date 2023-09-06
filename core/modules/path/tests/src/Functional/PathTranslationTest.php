@@ -156,7 +156,6 @@ class PathTranslationTest extends PathTestBase {
     // Clear the path lookup cache.
     $this->container->get('path_alias.manager')->cacheClear();
 
-
     // Ensure the node was created.
     $node_storage->resetCache([$english_node->id()]);
     $english_node = $node_storage->load($english_node->id());
