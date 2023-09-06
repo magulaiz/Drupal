@@ -77,8 +77,8 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
  *   (optional) The language updates should be applied to. If none is specified
  *   all available languages are processed.
  * @param bool $syncing
- *    (optional) TRUE if the update is happening as part of a content synchronization process
- *    and there should be no content updates during an editorial process. The default value is FALSE.
+ *   (optional) TRUE if the update is happening as part of a content synchronization process
+ *   and there should be no content updates during an editorial process. The default value is FALSE.
  *
  * @return \Drupal\node\NodeInterface
  *   An updated node object.
@@ -119,7 +119,7 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  * @param bool $syncing
  *   (optional) TRUE if the update is happening as part of a content synchronization process
- *    and there should be no content updates during an editorial process. The default value is FALSE.
+ *   and there should be no content updates during an editorial process. The default value is FALSE.
  * @param array|\ArrayAccess $context
  *   An array of contextual key/values.
  */
