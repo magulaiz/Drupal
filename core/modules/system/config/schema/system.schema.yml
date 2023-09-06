@@ -384,9 +384,9 @@ block.settings.page_title_block:
   type: block_settings
   label: 'Page title block'
   mapping:
-    contextualize_title:
+    base_route_title:
       type: boolean
-      label: 'Contextualize title'
+      label: 'Display base route title instead of current title'
 
 block.settings.system_branding_block:
   type: block_settings

@@ -78,10 +78,10 @@ class BlockTitleUpdateTest extends UpdatePathTestBase {
     $this->drupalGet('admin/structure/block/manage/' . $theme . '_page_title');
 
     if ($contextual_title_enabled) {
-      $this->assertSession()->checkboxChecked('settings[contextualize_title]');
+      $this->assertSession()->checkboxChecked('settings[base_route_title]');
     }
     else {
-      $this->assertSession()->checkboxNotChecked('settings[contextualize_title]');
+      $this->assertSession()->checkboxNotChecked('settings[base_route_title]');
     }
   }
 

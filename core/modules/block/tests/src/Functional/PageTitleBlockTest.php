@@ -66,7 +66,7 @@ class PageTitleBlockTest extends BrowserTestBase {
         'Update',
         'Extend: Update',
       ],
-      // For Claro theme the contextualize_title settings is enabled by default
+      // For Claro theme the base_route_title settings is enabled by default
       // hence the title will always be contextualized.
       'Claro theme' => [
         'claro',
@@ -88,7 +88,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    *
    * @dataProvider providerTestContextualizeTitle
    */
-  public function testContextualizeTitle(string $theme, bool $contextualize_title_enabled, string $non_contextualized_title, string $contextualized_title): void {
+  public function testContextualizeTitle(string $theme, bool $base_route_title_enabled, string $non_contextualized_title, string $contextualized_title): void {
     if ($theme !== $this->defaultTheme) {
       $system_theme_config = $this->container->get('config.factory')
         ->getEditable('system.theme');
@@ -108,12 +108,12 @@ class PageTitleBlockTest extends BrowserTestBase {
     // Checking if the title block is configured for showing contextualized
     // title and if it's not then configure it.
     $this->drupalGet('admin/structure/block/manage/' . $theme . '_page_title');
-    if ($contextualize_title_enabled) {
-      $this->assertSession()->checkboxChecked('settings[contextualize_title]');
+    if ($base_route_title_enabled) {
+      $this->assertSession()->checkboxChecked('settings[base_route_title]');
     }
     else {
-      $this->assertSession()->checkboxNotChecked('settings[contextualize_title]');
-      $this->submitForm(['settings[contextualize_title]' => TRUE], 'Save block');
+      $this->assertSession()->checkboxNotChecked('settings[base_route_title]');
+      $this->submitForm(['settings[base_route_title]' => TRUE], 'Save block');
     }
 
     // Make sure the title shown is contextualized.
@@ -140,8 +140,8 @@ class PageTitleBlockTest extends BrowserTestBase {
 
     // Configure title block to show contextualized title.
     $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
-    $this->assertSession()->checkboxNotChecked('settings[contextualize_title]');
-    $this->submitForm(['settings[contextualize_title]' => TRUE], 'Save block');
+    $this->assertSession()->checkboxNotChecked('settings[base_route_title]');
+    $this->submitForm(['settings[base_route_title]' => TRUE], 'Save block');
 
     // Make sure the title shown is non-contextualized because the base route is
     // not accessible.
@@ -191,7 +191,7 @@ class PageTitleBlockTest extends BrowserTestBase {
 
     // Configure title block to show contextualized title and.
     $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
-    $this->submitForm(['settings[contextualize_title]' => TRUE], 'Save block');
+    $this->submitForm(['settings[base_route_title]' => TRUE], 'Save block');
 
     // Make sure the contextualized title is shown on all node operation pages.
     $this->drupalGet('node/' . $node->id());

@@ -18,9 +18,9 @@ function block_removed_post_updates() {
 }
 
 /**
- * Add 'contextualize_title' setting for page title blocks.
+ * Add 'base_route_title' setting for page title blocks.
  */
-function block_post_update_add_contextualize_page_title() {
+function block_post_update_add_base_route_title_page_title() {
   $config_factory = \Drupal::configFactory();
   foreach ($config_factory->listAll('block.block.') as $block_config_name) {
     if (!str_contains($block_config_name, 'page_title')) {
