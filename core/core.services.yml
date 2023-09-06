@@ -1077,10 +1077,10 @@ services:
     class: Drupal\Core\Utility\RequestGenerator
     arguments: ['@path_processor_manager', '@path.current', '@router']
   Drupal\Core\Utility\RequestGenerator: '@request_generator'
-  base_route_title:
-    class: Drupal\Core\Utility\BaseRouteTitle
-    arguments: [ '@url_generator', '@title_resolver', '@current_route_match', '@plugin.manager.menu.local_task', '@router.route_provider', '@request_stack', '@request_generator' ]
-  Drupal\Core\Utility\BaseRouteTitle: '@base_route_title'
+  base_route_title_resolver:
+    class: Drupal\Core\Controller\BaseRouteTitleResolver
+    arguments: ['@url_generator', '@title_resolver', '@plugin.manager.menu.local_task', '@router.route_provider', '@request_generator']
+  Drupal\Core\Utility\BaseRouteTitleResolver: '@base_route_title_resolver'
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']

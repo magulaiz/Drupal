@@ -1,20 +1,21 @@
 <?php
 
-namespace Drupal\Core\Utility;
+namespace Drupal\Core\Controller;
 
-use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Menu\LocalTaskManager;
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Utility\RequestGenerator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Route;
 
 /**
  * Provides a class which gets title based on base route.
  */
-class BaseRouteTitle {
+class BaseRouteTitleResolver implements TitleResolverInterface {
 
   /**
    * Constructs a RequestGenerator object.
@@ -23,42 +24,33 @@ class BaseRouteTitle {
    *   The url generator.
    * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
-   *   The route match.
    * @param \Drupal\Core\Menu\LocalTaskManager $localTaskManager
    *   The local task manager.
    * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
    * @param \Drupal\Core\Utility\RequestGenerator $requestGenerator
    *   The request generator.
    */
   public function __construct(
     protected UrlGeneratorInterface $urlGenerator,
     protected TitleResolverInterface $titleResolver,
-    protected RouteMatchInterface $routeMatch,
     protected LocalTaskManager $localTaskManager,
     protected RouteProviderInterface $routeProvider,
-    protected RequestStack $requestStack,
     protected RequestGenerator $requestGenerator,
   ) {
   }
 
   /**
-   * Gets base route title.
-   *
-   * @return array|string|\Stringable|null
-   *   The title based on base route.
+   * {@inheritdoc}
    */
-  public function getBaseRouteTitle(): array|string|null|\Stringable {
-    $route_name = $this->routeMatch->getRouteName();
-    $base_route_name = $this->localTaskManager->getBaseRouteName($route_name);
+  public function getTitle(Request $request, Route $route) {
+    $route_match = RouteMatch::createFromRequest($request);
+    $base_route_name = $this->localTaskManager->getBaseRouteName($route_match->getRouteName());
     $title = NULL;
     if ($base_route_name) {
-      if ($base_route_name !== $route_name) {
+      if ($base_route_name !== $route_match->getRouteName()) {
         try {
-          $path = $this->urlGenerator->getPathFromRoute($base_route_name, $this->routeMatch->getRawParameters()->all());
+          $path = $this->urlGenerator->getPathFromRoute($base_route_name, $route_match->getRawParameters()->all());
         }
         catch (RouteNotFoundException | InvalidParameterException) {
           return NULL;

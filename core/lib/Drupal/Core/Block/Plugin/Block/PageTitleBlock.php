@@ -6,13 +6,12 @@ use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\TitleBlockPluginInterface;
+use Drupal\Core\Controller\BaseRouteTitleResolver;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Utility\BaseRouteTitle;
-use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Utility\RequestGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -51,7 +50,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The route match.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Utility\BaseRouteTitle $baseRouteTitle
+   * @param \Drupal\Core\Controller\BaseRouteTitleResolver $baseRouteTitleResolver
    *   The base route title.
    */
   public function __construct(
@@ -61,7 +60,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
     protected TitleResolverInterface $titleResolver,
     protected RouteMatchInterface $routeMatch,
     protected RequestStack $requestStack,
-    protected BaseRouteTitle $baseRouteTitle,
+    protected BaseRouteTitleResolver $baseRouteTitleResolver,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -77,7 +76,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       $container->get('title_resolver'),
       $container->get('current_route_match'),
       $container->get('request_stack'),
-      $container->get('base_route_title'),
+      $container->get('base_route_title_resolver'),
     );
   }
 
@@ -143,7 +142,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The title based on base route.
    */
   private function getTitleBasedOnBaseRoute(): array|string|null|\Stringable {
-    $base_route_title = $this->baseRouteTitle->getBaseRouteTitle();
+    $base_route_title = $this->baseRouteTitleResolver->getTitle(\Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch()->getRouteObject());
     if (!is_null($base_route_title)) {
       if (is_array($base_route_title)) {
         $base_route_title = \Drupal::service('renderer')->render($base_route_title);
