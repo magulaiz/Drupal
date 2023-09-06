@@ -5,7 +5,6 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -70,15 +69,12 @@ class FieldConfigEditForm extends EntityForm {
    *   The entity display repository.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
    *   The private tempstore.
-   * @param Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface|null $selectionManager
-   *   The entity reference selection plugin manager.
    */
   public function __construct(
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     protected TypedDataManagerInterface $typedDataManager,
     protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
-    protected ?PrivateTempStore $tempStore = NULL,
-    protected ?SelectionPluginManagerInterface $selectionManager = NULL) {
+    protected ?PrivateTempStore $tempStore = NULL) {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     if ($this->entityDisplayRepository === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
@@ -87,10 +83,6 @@ class FieldConfigEditForm extends EntityForm {
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
-    if ($this->selectionManager === NULL) {
-      @trigger_error('Calling FieldConfigEditForm::__construct() without the $selectionManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
-      $this->selectionManager = \Drupal::service('plugin.manager.entity_reference_selection');
     }
   }
 
@@ -103,7 +95,6 @@ class FieldConfigEditForm extends EntityForm {
       $container->get('typed_data_manager'),
       $container->get('entity_display.repository'),
       $container->get('tempstore.private')->get('field_ui'),
-      $container->get('plugin.manager.entity_reference_selection')
     );
   }
 
