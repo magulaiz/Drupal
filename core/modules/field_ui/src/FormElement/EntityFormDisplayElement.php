@@ -7,13 +7,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 
 /**
- *
+ * Adds translatable labels to entity_form_display elements.
  */
 class EntityFormDisplayElement extends ListElement {
   use EntityDisplayElementTrait;
 
   /**
-   *
+   * {@inheritDoc}
    */
   public function getTranslationBuild(
     LanguageInterface $source_language,

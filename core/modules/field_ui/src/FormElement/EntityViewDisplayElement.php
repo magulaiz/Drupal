@@ -9,13 +9,13 @@ use Drupal\Core\Render\Element;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
- *
+ * Adds translatable labels to entity_view_display elements.
  */
 class EntityViewDisplayElement extends ListElement {
   use EntityDisplayElementTrait;
 
   /**
-   *
+   * {@inheritDoc}
    */
   public function getTranslationBuild(
     LanguageInterface $source_language,
