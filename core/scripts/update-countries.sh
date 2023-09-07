@@ -38,7 +38,7 @@ USAGE;
 // Drupal bootstrap of core/includes/bootstrap.inc (where t() is declared).
 if (!function_exists('t')) {
 
-  function t($string) {
+  function t($string, $string2 = null) {
     return $string;
   }
 
