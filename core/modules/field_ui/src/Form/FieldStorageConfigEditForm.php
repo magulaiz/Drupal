@@ -7,7 +7,6 @@ use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
@@ -33,27 +32,17 @@ class FieldStorageConfigEditForm extends EntityForm {
    *
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The typed data manager.
-   * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
-   *   The private tempstore.
    */
   public function __construct(
     protected TypedDataManagerInterface $typedDataManager,
-    protected ?PrivateTempStore $tempStore = NULL
   ) {
-    if ($this->tempStore === NULL) {
-      @trigger_error('Calling FieldStorageConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383720', E_USER_DEPRECATED);
-      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('typed_data_manager'),
-      $container->get('tempstore.private')->get('field_ui'),
-    );
+    return new static($container->get('typed_data_manager'));
   }
 
   /**

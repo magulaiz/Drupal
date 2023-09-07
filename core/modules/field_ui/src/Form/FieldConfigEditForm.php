@@ -103,7 +103,6 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    $form['#parents'] = [];
     $form['#entity_builders'][] = 'field_form_field_config_edit_form_entity_builder';
 
     $field_storage = $this->entity->getFieldStorageDefinition();
@@ -408,14 +407,16 @@ class FieldConfigEditForm extends EntityForm {
         return;
       }
 
-      $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
       if (isset($form_state->getStorage()['default_options'])) {
         $default_options = $form_state->getStorage()['default_options'];
         // Configure the default display modes.
-        $this->entityTypeId = $temp_storage['field_config_values']['entity_type'];
-        $this->bundle = $temp_storage['field_config_values']['bundle'];
-        $this->configureEntityFormDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_form_display'] ?? []);
-        $this->configureEntityViewDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_view_display'] ?? []);
+        $this->entityTypeId = $this->entity->getTargetEntityTypeId();
+        $this->bundle = $this->entity->getTargetBundle();
+        $this->configureEntityFormDisplay($this->entity->getName(), $default_options['entity_form_display'] ?? []);
+        $this->configureEntityViewDisplay($this->entity->getName(), $default_options['entity_view_display'] ?? []);
+      }
+
+      if ($this->entity->isNew()) {
         // Delete the temp store entry.
         $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
       }
