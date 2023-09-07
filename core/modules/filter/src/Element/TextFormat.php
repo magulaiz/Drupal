@@ -192,7 +192,7 @@ class TextFormat extends RenderElement {
       '#type' => 'select',
       '#title' => t('Text format'),
       '#options' => $options,
-      '#default_value' => $element['#format'],
+      '#default_value' => $element['#format'] ?? '',
       '#access' => count($formats) > 1,
       '#weight' => 10,
       '#attributes' => ['class' => ['js-filter-list']],
@@ -214,9 +214,9 @@ class TextFormat extends RenderElement {
     ];
 
     $all_formats = filter_formats();
-    $format_exists = isset($all_formats[$element['#format']]);
-    $format_allowed = !isset($element['#allowed_formats']) || in_array($element['#format'], $element['#allowed_formats']);
-    $user_has_access = isset($formats[$element['#format']]);
+    $format_exists = isset($all_formats[$element['#format'] ?? '']);
+    $format_allowed = !isset($element['#allowed_formats']) || in_array($element['#format'] ?? '', $element['#allowed_formats']);
+    $user_has_access = isset($formats[$element['#format'] ?? '']);
     $user_is_admin = $user->hasPermission('administer filters');
 
     // If the stored format does not exist or if it is not among the allowed
