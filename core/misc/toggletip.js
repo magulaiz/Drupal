@@ -11,7 +11,7 @@
   { computePosition, flip, shift, offset, autoUpdate, arrow },
 ) => {
   // Keeps track of generated ids to ensure no duplicates are created.
-  const toggleTipIds = new Set();
+  const toggletipIds = new Set();
   Drupal.toggletip = {
     defaultConfig: {
       atDescription: '',
@@ -134,7 +134,7 @@
   };
 
   /**
-   * Toggle tip.
+   * Constructs a toggletip element.
    *
    * @see https://codepen.io/aardrian/pen/NWpoVQd
    *
@@ -143,14 +143,14 @@
    * @prop {Drupal~behaviorAttach} attach
    * Attaches the autocomplete behaviors.
    */
-  Drupal.behaviors.toggleTip = {
+  Drupal.behaviors.toggletip = {
     attach(context) {
       const generateId = () => {
         const id = Math.random().toString(36).substring(2, 15);
-        if (toggleTipIds.has(id)) {
+        if (toggletipIds.has(id)) {
           return generateId();
         }
-        toggleTipIds.add(id);
+        toggletipIds.add(id);
         return id;
       };
 
@@ -182,7 +182,7 @@
           }
 
           // Create the toggle button.
-          const button = Drupal.theme.button(
+          const button = Drupal.theme.toggletipButton(
             descriptionId,
             tipId,
             toggleId,
@@ -190,10 +190,14 @@
           );
 
           // Create the toggletip content container.
-          const tip = Drupal.theme.tip(descriptionId, tipId, toggletipConfig);
+          const tip = Drupal.theme.toggletipTip(
+            descriptionId,
+            tipId,
+            toggletipConfig,
+          );
 
           // Create the arrow that points to the tip's disclosure button.
-          const tipArrow = Drupal.theme.tipArrow(tip);
+          const tipArrow = Drupal.theme.toggletipArrow(tip);
 
           // When a toggletip option is directly added to a details element, the
           // button is appended to its summary. To add a toggletip inside a
@@ -352,7 +356,7 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.button = (descriptionId, tipId, toggleId, config) => {
+  Drupal.theme.toggletipButton = (descriptionId, tipId, toggleId, config) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.setAttribute('data-drupal-toggletip-toggle-button', true);
@@ -379,7 +383,7 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.tip = (descriptionId, tipId, toggletipConfig) => {
+  Drupal.theme.toggletipTip = (descriptionId, tipId, toggletipConfig) => {
     const tip = document.createElement('div');
     tip.classList.add('toggletip__tip');
     tip.setAttribute('tabindex', '0');
@@ -400,7 +404,7 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.tipArrow = (tip) => {
+  Drupal.theme.toggletipArrow = (tip) => {
     const tipArrow = document.createElement('div');
     tipArrow.classList.add('toggletip__arrow');
     tip.append(tipArrow);
