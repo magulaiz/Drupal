@@ -14,14 +14,15 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore autocompleteclose
+
 /**
  * Defines a generic block type.
  *
  * @Block(
  *  id = "block_content",
- *  admin_label = @Translation("Content block"),
- *  category = @Translation("Content block"),
- *  deriver = "Drupal\block_content\Plugin\Derivative\BlockContent"
+ *  admin_label = @Translation("Block Content Library"),
+ *  category = @Translation("Content block")
  * )
  */
 class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInterface {
@@ -130,6 +131,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   public function defaultConfiguration() {
     return [
+      'block_content_uuid' => '',
       'status' => TRUE,
       'info' => '',
       'view_mode' => 'full',
@@ -142,21 +144,50 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    * Adds body and description fields to the block configuration form.
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $block = $this->getEntity();
-    if (!$block) {
-      return $form;
-    }
-    $options = $this->entityDisplayRepository->getViewModeOptionsByBundle('block_content', $block->bundle());
+    $block = '';
 
-    $form['view_mode'] = [
-      '#type' => 'select',
-      '#options' => $options,
-      '#title' => $this->t('View mode'),
-      '#description' => $this->t('Output the block in this view mode.'),
-      '#default_value' => $this->configuration['view_mode'],
-      '#access' => (count($options) > 1),
+    if (isset($this->configuration['block_content_uuid'])) {
+      $block = $this->getEntity();
+    }
+
+    // Adding an entity_autocomplete element to select the block content.
+    $form['block_content_selection'] = [
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'block_content',
+      '#tags' => TRUE,
+      '#required' => TRUE,
+      '#default_value' => $this->blockContent ?: '',
+      '#selection_handler' => 'default',
+      '#title' => $this->t('Block content'),
+      '#description' => $this->t('Search by Block Content title.'),
+      '#ajax' => [
+        'callback' => [$this, 'loadBlockContent'],
+        'wrapper' => 'view-mode-container',
+        'event' => 'autocompleteclose',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => $this->t('Processing'),
+        ],
+      ],
     ];
-    $form['title']['#description'] = $this->t('The title of the block as shown to the user.');
+
+    $form['view_mode_container'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'view-mode-container'],
+    ];
+
+    if ($block) {
+      $options = $this->entityDisplayRepository->getViewModeOptionsByBundle('block_content', $block->bundle());
+
+      $form['view_mode_container']['view_mode'] = [
+        '#type' => 'select',
+        '#options' => $options,
+        '#title' => $this->t('View mode'),
+        '#description' => $this->t('Output the block in this view mode.'),
+        '#default_value' => $this->configuration['view_mode'],
+        '#access' => (count($options) > 1),
+      ];
+    }
     return $form;
   }
 
@@ -166,6 +197,17 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   public function blockSubmit($form, FormStateInterface $form_state) {
     // Invalidate the block cache to update content block-based derivatives.
     $this->configuration['view_mode'] = $form_state->getValue('view_mode');
+    if (!isset($this->blockContent)) {
+      $id = $form_state->getValue('block_content_selection');
+      if ($id) {
+        $id = $id[0]['target_id'];
+        $block = $this->entityTypeManager->getStorage('block_content')->load($id);
+        $this->configuration['block_content_uuid'] = 'block_content:' . $block->uuid();
+      }
+    }
+    else {
+      $this->configuration['block_content_uuid'] = 'block_content:' . $this->blockContent->uuid();
+    }
     $this->blockManager->clearCachedDefinitions();
   }
 
@@ -205,12 +247,27 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   protected function getEntity() {
     if (!isset($this->blockContent)) {
-      $uuid = $this->getDerivativeId();
-      if ($id = $this->uuidLookup->get($uuid)) {
-        $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
+      if (!empty($this->configuration['block_content_uuid'])) {
+        $uuid = explode(':', $this->configuration['block_content_uuid']);
+        $blocks = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $uuid[1]]);
+
+        if (is_array($blocks)) {
+          $this->blockContent = reset($blocks);
+        }
       }
     }
     return $this->blockContent;
+  }
+
+  /**
+   * Ajax callback for the block content entity_autocomplete.
+   */
+  public function loadBlockContent(array $form, FormStateInterface $form_state) {
+    $id = $form_state->getValue(['settings', 'block_content_selection']);
+    if ($id) {
+      $id = $id[0]['target_id'];
+      $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
+    }
   }
 
 }
