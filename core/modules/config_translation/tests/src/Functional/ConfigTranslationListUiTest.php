@@ -521,16 +521,28 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'name' => $this->randomMachineName(),
     ]);
 
+    // Add a field that will be visible under
+    // config-translation/node_view_display.
+    $id = $content_type->id();
+    $this->drupalGet("admin/structure/types/manage/$id/fields/add-field");
+    $this->submitForm([
+      'new_storage_type' => 'boolean',
+      'label' => 'custom_label',
+      'field_name' => 'boolean',
+    ], 'Continue');
+    $this->getSession()->getPage()->pressButton('Continue');
+    $this->getSession()->getPage()->pressButton('Save settings');
+
     $this->drupalGet('admin/config/regional/config-translation');
     $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/node_view_display');
 
     $this->drupalGet('admin/config/regional/config-translation/node_view_display');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/' . $content_type->id() . '/display/default/translate');
-
-    // There are no translatable fields so 403 will be thrown.
-    $this->drupalGet('admin/structure/types/manage/' . $content_type->id() . '/display/default/translate');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalGet('admin/structure/types/manage/' . $content_type->id() . '/display/default/translate/de/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Field formatters');
+    $this->assertSession()->pageTextContains('custom_label');
   }
 
   /**
