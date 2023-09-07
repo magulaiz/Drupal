@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  * @group Entity
  * @group Validation
  *
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
+ * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
+ * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
  */
 class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
