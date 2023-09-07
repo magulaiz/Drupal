@@ -59,26 +59,32 @@ class PageTitleBlockTest extends BrowserTestBase {
    *   The test cases.
    */
   public function providerTestContextualizeTitle() {
+    $non_contextualized_title = 'Update';
+    $contextualized_title = 'Extend: Update';
+    $contextualized_title_visually_hidden_part = ': Update';
     return [
       'Stark theme' => [
         $this->defaultTheme,
         FALSE,
-        'Update',
-        'Extend: Update',
+        $non_contextualized_title,
+        $contextualized_title,
+        $contextualized_title_visually_hidden_part,
       ],
       // For Claro theme the base_route_title settings is enabled by default
       // hence the title will always be contextualized.
       'Claro theme' => [
         'claro',
         TRUE,
-        'Extend: Update',
-        'Extend: Update',
+        $contextualized_title,
+        $contextualized_title,
+        $contextualized_title_visually_hidden_part,
       ],
       'Olivero theme' => [
         'olivero',
         FALSE,
-        'Update',
-        'Extend: Update',
+        $non_contextualized_title,
+        $contextualized_title,
+        $contextualized_title_visually_hidden_part,
       ],
     ];
   }
@@ -88,7 +94,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    *
    * @dataProvider providerTestContextualizeTitle
    */
-  public function testContextualizeTitle(string $theme, bool $base_route_title_enabled, string $non_contextualized_title, string $contextualized_title): void {
+  public function testContextualizeTitle(string $theme, bool $base_route_title_enabled, string $non_contextualized_title, string $contextualized_title, string $contextualized_title_visually_hidden_part): void {
     if ($theme !== $this->defaultTheme) {
       $system_theme_config = $this->container->get('config.factory')
         ->getEditable('system.theme');
@@ -108,17 +114,24 @@ class PageTitleBlockTest extends BrowserTestBase {
     // Checking if the title block is configured for showing contextualized
     // title and if it's not then configure it.
     $this->drupalGet('admin/structure/block/manage/' . $theme . '_page_title');
+    // If it's configured to show contextualized title then the value of the
+    // configuration will be 1 otherwise 0.
+    // @see \Drupal\Core\Block\Plugin\Block\PageTitleBlock::blockForm()
     if ($base_route_title_enabled) {
-      $this->assertSession()->checkboxChecked('settings[base_route_title]');
+      $this->assertSession()->fieldValueEquals('settings[base_route_title]', 1);
     }
     else {
-      $this->assertSession()->checkboxNotChecked('settings[base_route_title]');
-      $this->submitForm(['settings[base_route_title]' => TRUE], 'Save block');
+      $this->assertSession()->fieldValueEquals('settings[base_route_title]', 0);
+      $this->submitForm(['settings[base_route_title]' => 1], 'Save block');
     }
 
     // Make sure the title shown is contextualized.
     $this->drupalGet('admin/modules/update');
     $this->assertSession()->elementTextEquals('css', 'h1', $contextualized_title);
+    $title = $this->assertSession()->elementExists('xpath', '//h1');
+    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
+    $this->assertSession()->elementTextEquals('xpath', '//h1/span', $contextualized_title_visually_hidden_part);
+
   }
 
   /**
@@ -140,8 +153,8 @@ class PageTitleBlockTest extends BrowserTestBase {
 
     // Configure title block to show contextualized title.
     $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
-    $this->assertSession()->checkboxNotChecked('settings[base_route_title]');
-    $this->submitForm(['settings[base_route_title]' => TRUE], 'Save block');
+    $this->assertSession()->fieldValueEquals('settings[base_route_title]', 0);
+    $this->submitForm(['settings[base_route_title]' => 1], 'Save block');
 
     // Make sure the title shown is non-contextualized because the base route is
     // not accessible.
@@ -189,32 +202,24 @@ class PageTitleBlockTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/revisions');
     $this->assertSession()->elementTextEquals('xpath', '//h1', "Revisions for $node_title");
 
-    // Configure title block to show contextualized title and.
+    // Configure title block to show contextualized title.
     $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
-    $this->submitForm(['settings[base_route_title]' => TRUE], 'Save block');
+    $this->submitForm(['settings[base_route_title]' => 1], 'Save block');
 
-    // Make sure the contextualized title is shown on all node operation pages.
+    // Make sure the contextualized title is shown on all node operation pages. On all pages the title is same as before
+    // because we don't change the title if it's already overridden.
+    // @see \Drupal\Core\Block\Plugin\Block\PageTitleBlock::getTitleBasedOnBaseRoute()
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->elementTextEquals('xpath', '//h1', $node_title);
 
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertSession()->elementTextEquals('xpath', '//h1', "$node_title: Edit Article $node_title");
-    $title = $this->assertSession()->elementExists('xpath', '//h1');
-    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
-    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ": Edit Article $node_title");
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "Edit Article $node_title");
 
     $this->drupalGet('node/' . $node->id() . '/delete');
-    $this->assertSession()->elementTextEquals('xpath', '//h1', "$node_title: Are you sure you want to delete the content item $node_title?");
-    $title = $this->assertSession()->elementExists('xpath', '//h1');
-    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
-    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ": Are you sure you want to delete the content item $node_title?");
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "Are you sure you want to delete the content item $node_title?");
 
     $this->drupalGet('node/' . $node->id() . '/revisions');
-    $this->assertSession()->elementTextEquals('xpath', '//h1', "$node_title: Revisions for $node_title");
-    $title = $this->assertSession()->elementExists('xpath', '//h1');
-    $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
-    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ": Revisions for $node_title");
-
+    $this->assertSession()->elementTextEquals('xpath', '//h1', "Revisions for $node_title");
   }
 
 }

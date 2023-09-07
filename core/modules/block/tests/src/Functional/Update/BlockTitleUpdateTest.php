@@ -54,6 +54,7 @@ class BlockTitleUpdateTest extends UpdatePathTestBase {
       'Stark theme' => ['stark', FALSE],
       // For claro the 'contextual_title' configuration is enabled by default.
       'Claro theme' => ['claro', TRUE],
+      'Olivero theme' => ['olivero', FALSE],
     ];
   }
 
@@ -77,11 +78,14 @@ class BlockTitleUpdateTest extends UpdatePathTestBase {
     $this->drupalGet('admin/structure/block');
     $this->drupalGet('admin/structure/block/manage/' . $theme . '_page_title');
 
+    // If the title block is configured to show contextualized title then the value of the
+    // configuration will be 1 otherwise 0.
+    // @see \Drupal\Core\Block\Plugin\Block\PageTitleBlock::blockForm()
     if ($contextual_title_enabled) {
-      $this->assertSession()->checkboxChecked('settings[base_route_title]');
+      $this->assertSession()->fieldValueEquals('settings[base_route_title]', 1);
     }
     else {
-      $this->assertSession()->checkboxNotChecked('settings[base_route_title]');
+      $this->assertSession()->fieldValueEquals('settings[base_route_title]', 0);
     }
   }
 
