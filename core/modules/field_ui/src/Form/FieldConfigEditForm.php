@@ -516,7 +516,7 @@ class FieldConfigEditForm extends EntityForm {
     foreach ($children as $key) {
       $child_is_input = FALSE;
       $child = &$form[$key];
-      if (isset($child['#type'])) {
+      if (isset($child['#type']) && $child['#type'] !== 'table') {
         $element_info = $element_manager->getInfo($child['#type']);
         if (!empty($element_info['#input'])) {
           $child_is_input = TRUE;
