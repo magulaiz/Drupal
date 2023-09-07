@@ -7,7 +7,6 @@ namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
