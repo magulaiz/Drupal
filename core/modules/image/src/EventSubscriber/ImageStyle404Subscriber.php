@@ -40,7 +40,7 @@ class ImageStyle404Subscriber implements EventSubscriberInterface {
         isset($parameters['image_style'])
       ) {
 
-        $event->setResponse(new Response($this->t('Error generating image, image style "@image_style" is invalid.', ['@image_style' => $parameters['image_style']]), 404));
+        $event->setResponse(new Response($this->t('Error generating image, invalid image style "@image_style".', ['@image_style' => $parameters['image_style']]), Response::HTTP_NOT_FOUND));
       }
     }
   }

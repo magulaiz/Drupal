@@ -98,8 +98,6 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
    *   The transferred file as response or some error response.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   *   Thrown when the file request is invalid.
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the user does not have access to the file.
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
@@ -116,7 +114,7 @@ class ImageStyleDownloadController extends FileDownloadController {
         if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
           $parts = explode('/', $normalized_target);
           if (array_intersect($parts, ['.', '..'])) {
-            return new Response($this->t('Error generating image, stream wrapper scheme is invalid.'), 404);
+            return new Response($this->t('Error generating image, invalid stream wrapper scheme "@scheme".', ['@scheme' => $scheme]), Response::HTTP_BAD_REQUEST);
           }
         }
       }
@@ -143,24 +141,29 @@ class ImageStyleDownloadController extends FileDownloadController {
     }
 
     if (!$valid) {
-      // Return a 404 (Page Not Found) rather than a 403 (Access Denied) as the
-      // image token is for DDoS protection rather than access checking. 404s
-      // are more likely to be cached (e.g. at a proxy) which enhances
-      // protection from DDoS.
+      // Return a minimal 404 (Page Not Found) for missing images or a 400 (Bad
+      // Request) for invalid and abusive usage of the Image API URLs. 404 and
+      // 400 responses are more likely to be cached (e.g. at a proxy) which
+      // enhances DDoS protection.
       $message = $this->t('Error generating image.');
-      if (empty($image_style)) {
-        $message = $this->t('Error generating image, image style name is invalid.');
+      $status_code = Response::HTTP_BAD_REQUEST;
+      if (!$this->sourceImageExists($image_uri, TRUE)) {
+        $message = $this->t('Error generating image, missing source file "@uri".', ['@uri' => $image_uri]);
+        $status_code = Response::HTTP_NOT_FOUND;
       }
-      elseif (!$this->sourceImageExists($image_uri, TRUE)) {
-        $message = $this->t('Error generating image, missing source file.');
+      elseif (empty($image_style)) {
+        $message = $this->t('Error generating image, missing image style.');
+        $status_code = Response::HTTP_BAD_REQUEST;
       }
       elseif (empty($token)) {
         $message = $this->t('Error generating image, missing image token.');
+        $status_code = Response::HTTP_BAD_REQUEST;
       }
       elseif (!$token_is_valid) {
-        $message = $this->t('Error generating image, invalid image token.');
+        $message = $this->t('Error generating image, invalid image token "@token".', ['@token'=> $token]);
+        $status_code = Response::HTTP_BAD_REQUEST;
       }
-      return new Response($message, 400);
+      return new Response($message, $status_code);
     }
 
     $derivative_uri = $image_style->buildUri($image_uri);
@@ -197,7 +200,7 @@ class ImageStyleDownloadController extends FileDownloadController {
       $converted_image_uri = sprintf('%s://%s%s%s', $this->streamWrapperManager->getScheme($derivative_uri), $path_info['dirname'], DIRECTORY_SEPARATOR, $path_info['filename']);
       if (!$this->sourceImageExists($converted_image_uri, $token_is_valid)) {
         $this->logger->notice('Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.', ['%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri]);
-        return new Response($this->t('Error generating image, missing source file.'), 404);
+        return new Response($this->t('Error generating image, missing source file "@uri".', ['@uri' => $image_uri]), Response::HTTP_NOT_FOUND);
       }
       else {
         // The converted file does exist, use it as the source.
@@ -236,11 +239,11 @@ class ImageStyleDownloadController extends FileDownloadController {
       // sets response as not cacheable if the Cache-Control header is not
       // already modified. When $is_public is TRUE, the following sets the
       // Cache-Control header to "public".
-      return new BinaryFileResponse($uri, 200, $headers, $is_public);
+      return new BinaryFileResponse($uri, Response::HTTP_OK, $headers, $is_public);
     }
     else {
       $this->logger->notice('Unable to generate the derived image located at %path.', ['%path' => $derivative_uri]);
-      return new Response($this->t('Error generating image.'), 500);
+      return new Response($this->t('Error generating image.'), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
   }
 
