@@ -318,6 +318,9 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
   $user_input = $form_state->getUserInput();
   $storage_comparer = $form_state->get('storage_comparer');
   if ($storage_comparer && empty($user_input)) {
+    // Method getFieldStoragesToPurge expects first array parameter to have
+    // 'module' key.
+    $core_extension = $storage_comparer->getSourceStorage()->read('core.extension') ?: ['module' => []];
     $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge(
       $storage_comparer->getSourceStorage()->read('core.extension'),
       $storage_comparer->getChangelist('delete')
