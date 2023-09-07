@@ -506,25 +506,25 @@ class FieldConfigEditForm extends EntityForm {
    *   An associative array containing the structure of the form.
    */
   private function addAjaxCallBacks(array &$form): void {
-    /** @var \Drupal\Core\Render\ElementInfoManagerInterface $element_manager */
-    $element_manager = \Drupal::service('plugin.manager.element_info');
-    $children = Element::children($form);
-    foreach ($children as $key) {
-      $child_is_input = FALSE;
-      $child = &$form[$key];
-      if (isset($child['#type']) && $child['#type'] !== 'table') {
-        $element_info = $element_manager->getInfo($child['#type']);
-        if (!empty($element_info['#input'])) {
-          $child_is_input = TRUE;
-          $child['#ajax'] = [
-            'trigger_as' => ['name' => 'field_storage_submit'],
-            'wrapper' => 'field-combined',
-            'event' => 'change',
-          ];
-        }
-      }
-      if (!$child_is_input) {
-        $this->addAjaxCallBacks($child);
+    $field_types = [
+      'checkbox',
+      'select',
+      'radios',
+      'textarea',
+      'number',
+      'textfield',
+    ];
+    if (isset($form['#type']) && in_array($form['#type'], $field_types) && !isset($form['#ajax'])) {
+      $form['#ajax'] = [
+        'trigger_as' => ['name' => 'field_storage_submit'],
+        'wrapper' => 'field-combined',
+        'event' => 'change',
+      ];
+    }
+
+    foreach ($form as $key => &$value) {
+      if (is_array($value) && !str_contains((string) $key, '#')) {
+        $this->addAjaxCallBacks($value);
       }
     }
   }
