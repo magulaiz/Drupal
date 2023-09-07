@@ -120,6 +120,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
 
     if ($input) {
       $plugin_config = $editor->getSettings()['plugins']['ckeditor5_link_entity_suggestions'];
+      print_r($plugin_config);
       $allowed_entity_type_ids = is_array($plugin_config['suggestions'])
         // When configured to an array: suggestions for listed entity types.
         ? array_column($plugin_config['suggestions'], 'entity_type_id')
