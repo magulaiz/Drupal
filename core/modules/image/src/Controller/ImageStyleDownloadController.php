@@ -121,7 +121,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     }
 
     // Check that the style is defined and the scheme is valid.
-    $valid = $this->streamWrapperManager->isValidScheme($scheme);
+    $valid = !empty($image_style) && $this->streamWrapperManager->isValidScheme($scheme);
 
     // Also validate the derivative token. Sites which require image
     // derivatives to be generated without a token can set the
