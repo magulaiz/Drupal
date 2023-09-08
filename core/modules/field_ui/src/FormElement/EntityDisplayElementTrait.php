@@ -5,14 +5,27 @@ namespace Drupal\field_ui\FormElement;
 use Drupal\Component\Plugin\PluginBase;
 
 /**
- * Provides common functionality for adding or re-using a field.
+ * Provides common functionality for entity display elements.
  */
 trait EntityDisplayElementTrait {
 
   /**
    * Adds labels to the components.
+   *
+   * @param array $parent_build
+   *   Parent translation build data.
+   * @param array $element_names
+   *   Associative array of element names and layout builder flag.
+   * @param array $components
+   *   The components.
+   * @param string $target_type_id
+   *   The target type id.
+   * @param string $bundle_name
+   *   The bundle name.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function addLabels(&$parent_build, $element_names, $components, $target_type_id, $bundle_name) {
+  protected function addLabels(array &$parent_build, array $element_names, array $components, string $target_type_id, string $bundle_name): void {
 
     /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');

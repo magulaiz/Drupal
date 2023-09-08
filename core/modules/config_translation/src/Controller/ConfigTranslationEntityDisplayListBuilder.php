@@ -43,11 +43,10 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, AccountInterface $current_user) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, protected readonly AccountInterface $current_user) {
     parent::__construct($entity_type, $storage, $entity_type_manager, $entity_type_bundle_info);
     // @todo There must be a better way to get this information?
     $this->displayContext = preg_replace('/^entity_(.+)_display$/', '\1', $this->entityType->id());
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -57,7 +56,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
     // It is not possible to use the standard load method, because this needs
     // all display entities only for the given baseEntityType.
     $ids = \Drupal::entityQuery($this->entityType->id())
-      ->accessCheck(TRUE)
+      ->accessCheck()
       ->condition('id', $this->baseEntityType . '.', 'STARTS_WITH')
       ->execute();
     return $this->storage->loadMultiple($ids);

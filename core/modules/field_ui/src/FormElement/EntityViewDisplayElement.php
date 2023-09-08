@@ -25,9 +25,6 @@ class EntityViewDisplayElement extends ListElement {
     array $parents,
     $base_key = NULL
   ) {
-    // @todo Would this be a way we could get rid of
-    //   field_ui_form_config_translation_form_alter() or at least make it
-    //   simpler?
     $parent_build = parent::getTranslationBuild($source_language, $translation_language,
       $source_config, $translation_config, $parents,
       $base_key);
@@ -65,6 +62,11 @@ class EntityViewDisplayElement extends ListElement {
 
   /**
    * Returns the layout builder form element names.
+   *
+   * @param array $parent_build
+   *   Parent translation build data.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function layoutBuilderGetElementNames($parent_build): array {
     // Configuration name will be also used as element name.
