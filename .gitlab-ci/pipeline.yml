@@ -5,9 +5,9 @@ stages:
   # In the Build stage we are assembling our test environment:
   #   * Selecting the core version to test against
   #   * Selecting php version
-  #   * Selectig the database, and configuring it
+  #   * Selecting the database, and configuring it
   #   * Plus any additional build steps, like composer runs, etc
-  # Wherever possible, we use variables defined in: include.druaplci.variables.yml so that the configuration can stay up to date with current Drupal Core development.
+  # Wherever possible, we use variables defined in: include.drupalci.variables.yml so that the configuration can stay up to date with current Drupal Core development.
   #
   # Documentation: https://docs.gitlab.com/ee/ci/yaml/#stages
   ################
