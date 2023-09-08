@@ -94,9 +94,10 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $expected_rows = 1;
     $this->assertAllowValuesRowCount(1);
     foreach ($options as $option_key => $option_label) {
-      $enter_element_name = $label_element_name = "settings[allowed_values][table][$i][item][label]";
+      $enter_element_name = $label_element_name = "field_storage[subform][settings][allowed_values][table][$i][item][label]";
       $page->fillField($label_element_name, $option_label);
-      $key_element_name = "settings[allowed_values][table][$i][item][key]";
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $key_element_name = "field_storage[subform][settings][allowed_values][table][$i][item][key]";
 
       // Add keys if not string option list.
       if (!$is_string_option) {
@@ -107,6 +108,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
         $enter_element_name = $key_element_name;
         $this->assertHasFocusByAttribute('name', $key_element_name);
         $page->fillField($key_element_name, $option_key);
+        $this->assertSession()->assertWaitOnAjaxRequest();
       }
       else {
         $this->assertFalse($assert->fieldExists($key_element_name)->isVisible());
@@ -149,8 +151,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
 
       $i++;
       $expected_rows++;
-      $this->assertSession()->waitForElementVisible('css', "[name='settings[allowed_values][table][$i][item][label]']");
-      $this->assertHasFocusByAttribute('name', "settings[allowed_values][table][$i][item][label]");
+      $this->assertSession()->waitForElementVisible('css', "[name='field_storage[subform][settings][allowed_values][table][$i][item][label]']");
+      $this->assertHasFocusByAttribute('name', "field_storage[subform][settings][allowed_values][table][$i][item][label]");
       $this->assertAllowValuesRowCount($expected_rows);
 
       if ($is_string_option) {
@@ -174,8 +176,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Test the order of the option list on admin path.
     $this->drupalGet($this->adminPath);
     $this->assertOrder(['First', 'Second', 'Third', ''], $is_string_option);
-    $drag_handle = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-0"] .tabledrag-handle');
-    $target = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-2"]');
+    $drag_handle = $page->find('css', '[data-drupal-selector="edit-field-storage-subform-settings-allowed-values-table-0"] .tabledrag-handle');
+    $target = $page->find('css', '[data-drupal-selector="edit-field-storage-subform-settings-allowed-values-table-2"]');
 
     // Change the order the items appear.
     $drag_handle->dragTo($target);
@@ -289,7 +291,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
       ->setComponent($this->fieldName)
       ->save();
 
-    $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
+    $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName;
   }
 
   /**
@@ -391,7 +393,7 @@ JS;
     $index = $row - 1;
     $rows = $this->getSession()->getPage()->findAll('css', '#allowed-values-order tr.draggable');
     $this->assertSession()->buttonExists('Edit', $rows[$index])->click();
-    $this->assertSession()->waitForElementVisible('css', "[name='settings[allowed_values][table][$index][item][key]']");
+    $this->assertSession()->waitForElementVisible('css', "[name='field_storage[subform][settings][allowed_values][table][$index][item][key]']");
   }
 
 }
