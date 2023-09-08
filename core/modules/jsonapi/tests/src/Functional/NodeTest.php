@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
@@ -173,7 +174,7 @@ class NodeTest extends ResourceTestBase {
           'path' => [
             'alias' => '/llama',
             'pid' => 1,
-            'langcode' => 'en',
+            'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
           ],
           'promote' => TRUE,
           'revision_log' => NULL,
