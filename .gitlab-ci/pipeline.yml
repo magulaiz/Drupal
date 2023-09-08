@@ -184,7 +184,7 @@ stages:
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # We need to pass this along directly even though it's set in the environment parameters.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --directory "$TESTSDIRECTORY" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --ci-parallel-split $CI_PARALLEL_SPLIT --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-split $CI_PARALLEL_SPLIT --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 ################
 # Jobs
