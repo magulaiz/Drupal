@@ -109,6 +109,12 @@ stages:
     - '🧹 CSS linting (stylelint)'
   <<: *pull-composer-cache
 
+.with-composer: &with-composer
+  needs:
+    - '📦️ Composer'
+  <<: *pull-composer-cache
+
+
 .with-unit-tests: &with-unit-tests
   needs:
     - '⚡️ PHPUnit Unit'
@@ -290,10 +296,8 @@ stages:
 ################
 
 '⚡️ PHPUnit Unit':
-  <<: [ *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
-  # Artificially added to the 'lint' stage so that it runs parallel to linting
-  # jobs.
-  stage: 🪄 Lint
+  <<: [ *with-composer, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  stage: 🗜️ Test
   services:
     # There are some unit tests that need a database.
     - <<: *with-database
