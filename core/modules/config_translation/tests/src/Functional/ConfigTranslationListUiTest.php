@@ -564,6 +564,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Field formatters');
     // We expect the custom_label and field info to show up twice as once under
     // layout_builder and once as just a field under the custom content type.
+    $this->assertSession()->pageTextMatchesCount(1, '/Block settings/');
     $this->assertSession()->pageTextMatchesCount(2, '/custom_label/');
     $this->assertSession()->pageTextMatchesCount(2, '/Field: field_boolean, type: Boolean/');
     $this->assertSession()->pageTextMatchesCount(2, '/Label/');
