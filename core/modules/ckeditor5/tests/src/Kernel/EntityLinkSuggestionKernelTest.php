@@ -13,7 +13,6 @@ use Drupal\editor\Entity\Editor;
 use Drupal\node\Entity\NodeType;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -25,8 +24,6 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @internal
  */
 class EntityLinkSuggestionKernelTest extends KernelTestBase {
-
-  use CKEditor5TestTrait;
 
   /**
    * {@inheritdoc}
@@ -122,8 +119,7 @@ class EntityLinkSuggestionKernelTest extends KernelTestBase {
   /**
    * Test the entity link suggestions.
    */
-  public function testEntityLinkSuggestions(): void
-  {
+  public function testEntityLinkSuggestions(): void {
 
     // Load the test node entity.
     $node = Node::create([
@@ -153,4 +149,5 @@ class EntityLinkSuggestionKernelTest extends KernelTestBase {
     $this->assertIsArray($data['suggestions']);
 
   }
+
 }
