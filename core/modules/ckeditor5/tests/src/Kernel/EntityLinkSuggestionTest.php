@@ -23,7 +23,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
-class EntityLinkSuggestionKernelTest extends KernelTestBase {
+class EntityLinkSuggestionTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
