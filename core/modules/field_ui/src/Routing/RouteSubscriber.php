@@ -73,14 +73,6 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("entity.field_config.{$entity_type_id}_field_edit_form", $route);
 
         $route = new Route(
-          "$path/fields/{field_config}/storage",
-          ['_entity_form' => 'field_storage_config.edit'] + $defaults,
-          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
-          $options
-        );
-        $collection->add("entity.field_config.{$entity_type_id}_storage_edit_form", $route);
-
-        $route = new Route(
           "$path/fields/{field_config}/delete",
           ['_entity_form' => 'field_config.delete'] + $defaults,
           ['_entity_access' => 'field_config.delete'],
