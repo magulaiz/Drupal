@@ -3,7 +3,6 @@
 namespace Drupal\Tests\file\Functional\Views;
 
 use Drupal\file\Entity\File;
-use Drupal\file\FileInterface;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 
@@ -41,7 +40,7 @@ class FileUsageViewTest extends ViewTestBase {
       'filemime' => 'image/jpeg',
       'created' => 1,
       'changed' => 1,
-      'status' => FileInterface::STATUS_PERMANENT,
+      'status' => FILE_STATUS_PERMANENT,
     ]);
     $file->save();
     $account = $this->drupalCreateUser();
