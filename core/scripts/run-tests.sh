@@ -404,6 +404,9 @@ function simpletest_script_parse_args() {
     'execute-test' => '',
     'xml' => '',
     'non-html' => FALSE,
+    'ci-parallel-split' => 0,
+    'ci-parallel-node-index' => 1,
+    'ci-parallel-node-total' => 1,
   ];
 
   // Override with set values.
@@ -1024,6 +1027,12 @@ function simpletest_script_get_test_list() {
     simpletest_script_print_error('No valid tests were specified.');
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
+
+  if ($args['ci-parallel-split']) {
+    $tests_per_job = ceil(count($test_list) / $args['ci-parallel-node-total']);
+    $test_list = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
+  }
+
   return $test_list;
 }
 
