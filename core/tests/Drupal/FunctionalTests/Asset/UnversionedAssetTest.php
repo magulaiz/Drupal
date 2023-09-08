@@ -35,11 +35,9 @@ class UnversionedAssetTest extends BrowserTestBase {
     // Test aggregation with a custom file_assets_path.
     \Drupal::state()->set('system.performance', [
       'js.preprocess' => TRUE,
-      'gzip' => TRUE,
     ]);
     \Drupal::state()->set('system.performance', [
       'css.preprocess' => TRUE,
-      'gzip' => TRUE,
     ]);
 
     // Ensure that the library discovery cache is empty before the page is

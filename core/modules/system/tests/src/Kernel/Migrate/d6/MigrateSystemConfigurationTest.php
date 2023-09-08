@@ -70,11 +70,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
           'max_age' => 0,
         ],
       ],
-      'css' => [
-        'preprocess' => FALSE,
-        // gzip is not handled by the migration.
-        'gzip' => TRUE,
-      ],
+
       // fast_404 is not handled by the migration.
       'fast_404' => [
         'enabled' => TRUE,
@@ -82,11 +78,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
         'exclude_paths' => '/\/(?:styles|imagecache)\//',
         'html' => '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>',
       ],
-      'js' => [
-        'preprocess' => FALSE,
-        // gzip is not handled by the migration.
-        'gzip' => TRUE,
-      ],
+
     ],
     'system.rss' => [
       'items' => [
