@@ -121,6 +121,7 @@ class UserPasswordForm extends FormBase {
         'spellcheck' => 'false',
         'autofocus' => 'autofocus',
       ],
+      '#error_field_only' => TRUE,
     ];
     // Allow logged in users to request this also.
     $user = $this->currentUser();

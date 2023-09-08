@@ -116,6 +116,7 @@ class UserLoginForm extends FormBase {
         'spellcheck' => 'false',
         'autofocus' => 'autofocus',
       ],
+      '#error_field_only' => TRUE,
     ];
 
     $form['pass'] = [
