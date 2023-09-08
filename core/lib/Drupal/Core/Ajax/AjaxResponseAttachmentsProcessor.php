@@ -5,7 +5,6 @@ namespace Drupal\Core\Ajax;
 use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssets;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
@@ -28,13 +27,6 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    * @var \Drupal\Core\Asset\AssetResolverInterface
    */
   protected $assetResolver;
-
-  /**
-   * A config object for the system performance configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
 
   /**
    * The CSS asset collection renderer service.
@@ -76,8 +68,6 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *
    * @param \Drupal\Core\Asset\AssetResolverInterface $asset_resolver
    *   An asset resolver.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   A config factory for retrieving required config objects.
    * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $css_collection_renderer
    *   The CSS asset collection renderer.
    * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $js_collection_renderer
@@ -91,9 +81,8 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    * @param \Drupal\Core\Language\LanguageManagerInterface|null $languageManager
    *   The language manager.
    */
-  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
+  public function __construct(AssetResolverInterface $asset_resolver, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
     $this->assetResolver = $asset_resolver;
-    $this->config = $config_factory->get('system.performance');
     $this->cssCollectionRenderer = $css_collection_renderer;
     $this->jsCollectionRenderer = $js_collection_renderer;
     $this->requestStack = $request_stack;
