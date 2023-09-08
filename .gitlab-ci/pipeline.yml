@@ -291,7 +291,6 @@ stages:
   # Artificially added to the 'lint' stage so that it runs parallel to linting
   # jobs.
   stage: 🪄 Lint
-  script:
   services:
     # There are some unit tests that need a database.
     - <<: *with-database
