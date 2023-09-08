@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
+// cspell:ignore Sofie
+
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Datetime\Entity\DateFormat;
@@ -102,7 +104,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // Create an account with "f" in the username.
     $user = User::create([
-      'name' => 'so',
+      'name' => 'sofie',
     ]);
     $user->addRole('create page content');
     $user->addRole('use text format test_format');
@@ -136,10 +138,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $request = Request::create("/", 'GET', ['q' => 'foo']);
 
     $request->query->set('q', 'f');
-    // Testing the suggestions function.
     $response = $controller->suggestions($request, $editor, 'node', 'en');
-    // Testing the getSuggestions function.
-    $a = $controller->getSuggestions('node', ['node'], 'f');
     $this->assertInstanceOf(JsonResponse::class, $response);
 
     $data = json_decode($response->getContent(), TRUE);
@@ -147,7 +146,37 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     // Perform assertions on the response data.
     $this->assertArrayHasKey('suggestions', $data);
     $this->assertIsArray($data['suggestions']);
+    // Assert that there are 2 suggestions.
+    $this->assertEquals(2, count($data['suggestions']));
 
+    // The first suggestion's label should be foo.
+    $this->assertEquals('foo', $data['suggestions'][0]['label']);
+    // Assert the remaining fields.
+    $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
+    $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
+
+    // The second suggestion's label should be sofie.
+    $this->assertEquals('sofie', $data['suggestions'][1]['label']);
+    // Assert the remaining fields.
+    $this->assertEquals('user', $data['suggestions'][1]['entity_type_id']);
+    $this->assertEquals('entity:user/1', $data['suggestions'][1]['path']);
+
+    $request->query->set('q', 'fo');
+    $response = $controller->suggestions($request, $editor, 'node', 'en');
+    $this->assertInstanceOf(JsonResponse::class, $response);
+
+    $data = json_decode($response->getContent(), TRUE);
+    // Perform assertions on the response data.
+    $this->assertArrayHasKey('suggestions', $data);
+    $this->assertIsArray($data['suggestions']);
+    // Assert that there is only 1 suggestion.
+    $this->assertEquals(1, count($data['suggestions']));
+
+    // The suggestion's label should be foo.
+    $this->assertEquals('foo', $data['suggestions'][0]['label']);
+    // Assert the remaining fields for foo.
+    $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
+    $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
   }
 
 }
