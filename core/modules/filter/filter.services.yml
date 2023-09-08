@@ -9,3 +9,6 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
     lazy: true
+  logger.channel.filter:
+    parent: logger.channel_base
+    arguments: [ 'filter' ]
