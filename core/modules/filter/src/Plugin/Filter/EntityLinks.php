@@ -10,8 +10,10 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\Core\Utility\Error;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,12 +39,15 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
+   * @param \Psr\Log\LoggerInterface $logger
+   *  The filter logger.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
     protected readonly EntityRepositoryInterface $entityRepository,
+    protected readonly LoggerInterface $logger
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -55,7 +60,8 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('logger.channel.filter')
     );
   }
 
@@ -110,7 +116,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
           }
         }
         catch (\Exception $e) {
-          watchdog_exception('filter', $e);
+          Error::logException('filter', $e);
         }
       }
 
