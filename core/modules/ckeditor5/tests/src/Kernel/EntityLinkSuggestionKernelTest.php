@@ -6,6 +6,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\editor\Entity\Editor;
@@ -13,6 +14,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -109,6 +111,12 @@ class EntityLinkSuggestionKernelTest extends KernelTestBase {
     $user->addRole('use text format test_format');
     $user->save();
     $this->container->get('current_user')->setAccount($user);
+
+    DateFormat::create([
+      'id' => 'fallback',
+      'label' => 'Fallback',
+      'pattern' => 'Y-m-d',
+    ])->save();
   }
 
   /**
@@ -136,13 +144,12 @@ class EntityLinkSuggestionKernelTest extends KernelTestBase {
     $response = $controller->suggestions($request, $editor, 'node', 'en');
     // Testing the getSuggestions function.
     $a = $controller->getSuggestions('node', ['node'], 'f');
-    $this->assertInstanceOf(\Symfony\Component\HttpFoundation\JsonResponse::class, $response);
+    $this->assertInstanceOf(JsonResponse::class, $response);
 
     $data = json_decode($response->getContent(), TRUE);
 
     // Perform assertions on the response data.
     $this->assertArrayHasKey('suggestions', $data);
-    print_r($response);
     $this->assertIsArray($data['suggestions']);
 
   }
