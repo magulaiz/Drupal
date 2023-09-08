@@ -322,7 +322,7 @@ distro
 ditka
 divs
 dnumber
-DOCKERHUB
+dockerhub
 docroot
 docroots
 dolore
