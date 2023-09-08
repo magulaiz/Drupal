@@ -95,7 +95,6 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    * The Symfony filesystem class.
    *
    * @var \Symfony\Component\Filesystem\Filesystem
-   * @phpstan-ignore-next-line
    */
   private readonly Filesystem $fileSystem;
 
@@ -105,7 +104,6 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    * @var \ColinODell\PsrTestLogger\TestLogger
    *
    * @see ::tearDown()
-   * @phpstan-ignore-next-line
    */
   protected readonly TestLogger $failureLogger;
 
