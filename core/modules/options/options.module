@@ -155,3 +155,10 @@ function options_form_field_storage_config_edit_form_alter(&$form, FormStateInte
   $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
   $table['#attributes']['class'][] = 'allowed-values-table';
 }
+
+/**
+ * Implements hook_options_list_alter().
+ */
+function options_options_list_alter(array &$options, array $context) {
+  drupal_static_reset('options_allowed_values');
+}
