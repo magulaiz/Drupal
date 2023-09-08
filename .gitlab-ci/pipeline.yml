@@ -302,21 +302,11 @@ stages:
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$DEFAULT_CONCURRENCY"
 
-'⚙️️ PHPUnit Kernel':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
-  stage: 🗜️ Test
-  variables:
-    <<: *test-variables
-    TESTSUITE: PHPUnit-Kernel
-    CONCURRENCY: "$DEFAULT_CONCURRENCY"
-  services:
-    - <<: *with-database
-
 '🌐️️ PHPUnit Functional':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   timeout: 2 hours
-  parallel: 6
+  parallel: 8
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
@@ -351,6 +341,17 @@ stages:
   services:
     - <<: *with-database
     - <<: *with-chrome
+
+'⚙️️ PHPUnit Kernel':
+  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  stage: 🗜️ Test
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Kernel
+    CONCURRENCY: "$DEFAULT_CONCURRENCY"
+  services:
+    - <<: *with-database
+
 
 '🦉️️️ Nightwatch':
   <<: [ *with-linting, *with-composer-and-yarn, *interruptible, *setup-webserver, *default_php_image, *default_rules ]
