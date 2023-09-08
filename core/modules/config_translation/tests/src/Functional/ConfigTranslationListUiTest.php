@@ -39,6 +39,8 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     'image',
     'responsive_image',
     'toolbar',
+    'layout_builder',
+    'block',
   ];
 
   /**
@@ -80,6 +82,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'administer image styles',
       'administer responsive images',
       'translate configuration',
+      'configure any layout',
+      'administer node display',
+      'administer display modes',
     ];
 
     // Create and log in user.
@@ -533,16 +538,35 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->getSession()->getPage()->pressButton('Continue');
     $this->getSession()->getPage()->pressButton('Save settings');
 
+    // Setup layout builder.
+    $field_ui_prefix = "admin/structure/types/manage/$id/display";
+    $page = $this->getSession()->getPage();
+    // Enable Layout Builder for the default view modes, and overrides.
+    $this->drupalGet("$field_ui_prefix/default");
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+    $page->checkField('layout[allow_custom]');
+    $page->pressButton('Save');
+
+    $this->drupalGet("$field_ui_prefix/default/layout");
+    $this->clickLink('Add block');
+    $this->clickLink('custom_label');
+    $this->getSession()->getPage()->pressButton('Add block');
+
     $this->drupalGet('admin/config/regional/config-translation');
     $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/node_view_display');
 
     $this->drupalGet('admin/config/regional/config-translation/node_view_display');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/' . $content_type->id() . '/display/default/translate');
-    $this->drupalGet('admin/structure/types/manage/' . $content_type->id() . '/display/default/translate/de/edit');
+    $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/' . $id . '/display/default/translate');
+    $this->drupalGet('admin/structure/types/manage/' . $id . '/display/default/translate/de/edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Field formatters');
-    $this->assertSession()->pageTextContains('custom_label');
+    // We expect the custom_label and field info to show up twice as once under
+    // layout_builder and once as just a field under the custom content type.
+    $this->assertSession()->pageTextMatchesCount(2, '/custom_label/');
+    $this->assertSession()->pageTextMatchesCount(2, '/Field: field_boolean, type: Boolean/');
+    $this->assertSession()->pageTextMatchesCount(2, '/Label/');
   }
 
   /**
