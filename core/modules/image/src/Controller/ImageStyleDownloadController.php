@@ -121,7 +121,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     }
 
     // Check that the style is defined and the scheme is valid.
-    $valid = !empty($image_style) && $this->streamWrapperManager->isValidScheme($scheme);
+    $valid = $this->streamWrapperManager->isValidScheme($scheme);
 
     // Also validate the derivative token. Sites which require image
     // derivatives to be generated without a token can set the
@@ -150,10 +150,6 @@ class ImageStyleDownloadController extends FileDownloadController {
       if (!$this->sourceImageExists($image_uri, TRUE)) {
         $message = $this->t('Error generating image, missing source file "@uri".', ['@uri' => $image_uri]);
         $status_code = Response::HTTP_NOT_FOUND;
-      }
-      elseif (empty($image_style)) {
-        $message = $this->t('Error generating image, missing image style.');
-        $status_code = Response::HTTP_BAD_REQUEST;
       }
       elseif (empty($token)) {
         $message = $this->t('Error generating image, missing image token.');
