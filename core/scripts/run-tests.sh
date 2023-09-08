@@ -1028,7 +1028,7 @@ function simpletest_script_get_test_list() {
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
-  if ($args['ci-parallel-split']) {
+  if ((int) $args['ci-parallel-split'] === 1 && (int) $args['ci-parallel-node-total'] !== 1) {
     $tests_per_job = ceil(count($test_list) / $args['ci-parallel-node-total']);
     $test_list = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
   }
