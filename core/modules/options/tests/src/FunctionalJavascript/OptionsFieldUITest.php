@@ -5,6 +5,7 @@ namespace Drupal\Tests\options\FunctionalJavascript;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 
 /**
  * Tests the Options field UI functionality.
@@ -12,6 +13,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group options
  */
 class OptionsFieldUITest extends WebDriverTestBase {
+
+  use FieldUiJSTestTrait;
 
   /**
    * {@inheritdoc}
@@ -200,6 +203,29 @@ class OptionsFieldUITest extends WebDriverTestBase {
 
     // Confirm the item removal was saved.
     $this->assertOrder(['Second', 'First', ''], $is_string_option);
+  }
+
+  /**
+   * Tests that the allowed options are available to the default value widget.
+   */
+  public function testDefaultValueOptions() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+    $this->fieldUIAddNewFieldJS($bundle_path, 'test_list', 'Test list', 'list_string', FALSE);
+    $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->findField('set_default_value')->setValue(TRUE);
+    // Assert that the option added in the subform is available to the default
+    // value field.
+    $this->assertSession()->optionExists('default_value_input[field_test_list]', 'first');
+    $page->pressButton('Add another item');
+    $assert_session->waitForElement('css', "[name='settings[allowed_values][table][0][item][label]']");
+    $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
+    $assert_session->optionExists('default_value_input[field_test_list]', 'second');
+    $page->selectFieldOption('default_value_input[field_test_list]', 'second');
+    $page->pressButton('Save settings');
+    $assert_session->pageTextContains('Saved Test list configuration.');
   }
 
   /**
