@@ -287,7 +287,7 @@ stages:
 ################
 
 '⚡️ PHPUnit Unit':
-  <<: [ *with-linting, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   services:
     # There are some unit tests that need a database.
@@ -298,7 +298,7 @@ stages:
     CONCURRENCY: "$DEFAULT_CONCURRENCY"
 
 '⚙️️ PHPUnit Kernel':
-  <<: [ *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -308,7 +308,7 @@ stages:
     - <<: *with-database
 
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   timeout: 2 hours
   variables:
@@ -319,7 +319,7 @@ stages:
     - <<: *with-database
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -329,7 +329,7 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -340,7 +340,7 @@ stages:
     - <<: *with-chrome
 
 '🦉️️️ Nightwatch':
-  <<: [ *with-composer-and-yarn, *interruptible, *setup-webserver, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-composer-and-yarn, *interruptible, *setup-webserver, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
