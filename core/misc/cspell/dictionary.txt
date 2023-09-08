@@ -322,9 +322,11 @@ distro
 ditka
 divs
 dnumber
+dockerhub
 docroot
 docroots
 dolore
+dotenv
 downcasting
 doxygen
 dragtable
@@ -359,6 +361,8 @@ drupalmediaediting
 drupalmediatoolbar
 drupalorg
 drupaltest
+drupaltestbot
+drupaltestbotpw
 druplicon
 drush
 drépal
@@ -540,6 +544,7 @@ insidekeyword
 instaclick
 instantiator
 interactable
+interruptible
 introspectable
 invalidators
 invalididentifier
