@@ -96,7 +96,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @var \Symfony\Component\Filesystem\Filesystem
    */
-  private readonly Filesystem $fileSystem;
+  private Filesystem $fileSystem;
 
   /**
    * A logger that will fail the test if Package Manager logs any errors.
@@ -105,16 +105,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @see ::tearDown()
    */
-  protected readonly TestLogger $failureLogger;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(?string $name = NULL, array $data = [], $dataName = '') {
-    $this->failureLogger = new TestLogger();
-    $this->fileSystem = new Filesystem();
-    parent::__construct($name, $data, $dataName);
-  }
+  protected TestLogger $failureLogger;
 
   /**
    * {@inheritdoc}
@@ -123,6 +114,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
     parent::setUp();
     $this->installConfig('package_manager');
 
+    $this->fileSystem = new Filesystem();
     $this->createTestProject();
 
     // The Update module's default configuration must be installed for our
@@ -137,6 +129,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
     // Ensure we can fail the test if any warnings, or worse, are logged by
     // Package Manager.
     // @see ::tearDown()
+    $this->failureLogger = new TestLogger();
     $this->container->get('logger.channel.package_manager')
       ->addLogger($this->failureLogger);
   }
