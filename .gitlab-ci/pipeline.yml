@@ -288,7 +288,9 @@ stages:
 
 '⚡️ PHPUnit Unit':
   <<: [ *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
-  stage: 🗜️ Test
+  # Artificially added to the 'lint' stage so that it runs parallel to linting
+  # jobs.
+  stage: 🗜️ Lint
   services:
     # There are some unit tests that need a database.
     - <<: *with-database
