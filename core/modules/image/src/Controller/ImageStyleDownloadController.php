@@ -156,7 +156,7 @@ class ImageStyleDownloadController extends FileDownloadController {
         $status_code = Response::HTTP_BAD_REQUEST;
       }
       elseif (!$token_is_valid) {
-        $message = $this->t('Error generating image, invalid image token "@token".', ['@token'=> $token]);
+        $message = $this->t('Error generating image, invalid image token "@token".', ['@token' => $token]);
         $status_code = Response::HTTP_BAD_REQUEST;
       }
       return new Response($message, $status_code);

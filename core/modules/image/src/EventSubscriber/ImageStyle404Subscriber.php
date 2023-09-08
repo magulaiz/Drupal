@@ -2,7 +2,6 @@
 
 namespace Drupal\image\EventSubscriber;
 
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,6 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class ImageStyle404Subscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
+
   /**
    * Handles errors for this subscriber.
    *
