@@ -220,8 +220,9 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // value field.
     $this->assertSession()->optionExists('default_value_input[field_test_list]', 'first');
     $page->pressButton('Add another item');
-    $assert_session->waitForElement('css', "[name='settings[allowed_values][table][0][item][label]']");
+    $this->assertNotNull($assert_session->waitForElement('css', "[name='field_storage[subform][settings][allowed_values][table][1][item][label]']"));
     $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->optionExists('default_value_input[field_test_list]', 'second');
     $page->selectFieldOption('default_value_input[field_test_list]', 'second');
     $page->pressButton('Save settings');

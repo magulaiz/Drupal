@@ -271,7 +271,7 @@ class FieldConfigEditForm extends EntityForm {
     if (!empty($form['field_storage']['subform'])) {
       $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
       $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
-      $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
+      $field_storage_form->setEntity($entity->getFieldStorageDefinition());
 
       $reflector = new \ReflectionObject($entity);
       $property = $reflector->getProperty('fieldStorage');
@@ -350,16 +350,21 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
-    $field_storage_form->validateForm($form['field_storage']['subform'], SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state));
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
+    $field_storage_form->validateForm($form['field_storage']['subform'], $subform_state);
 
+    // Make sure that the default value form is validated using the field
+    // configuration that was just submitted.
+    $field_config = $this->buildEntity($form, $form_state);
     if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
-      // Make sure that the default value form is validated using the field
-      // configuration that was just submitted. Do not update $this->entity as
-      // the field configuration may contain invalid values at this point.
-      $field_config = $this->buildEntity($form, $form_state);
       $items = $this->getTypedData($field_config, $form['#entity']);
       $items->defaultValuesFormValidate($form['default_value'], $form, $form_state);
     }
+
+    // The form is rendered based on the entity property, meaning that it must
+    // be updated based on the latest form state even though it might be invalid
+    // at this point.
+    $this->entity = $this->buildEntity($form, $form_state);
   }
 
   /**
