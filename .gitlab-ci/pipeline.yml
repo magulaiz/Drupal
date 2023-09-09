@@ -109,9 +109,10 @@ stages:
     - '🧹 CSS linting (stylelint)'
   <<: *pull-composer-cache
 
-.with-unit-tests: &with-unit-tests
+.with-kernel-tests: &with-kernel-tests
   needs:
     - '⚡️ PHPUnit Unit'
+    - '⚙️️ PHPUnit Kernel'
     - '📦️ Composer'
   <<: *pull-composer-cache
 
@@ -314,7 +315,7 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-kernel-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -325,7 +326,7 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-kernel-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   parallel: 2
   variables:
@@ -336,7 +337,7 @@ stages:
     - <<: *with-database
 
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-linting, *with-kernel-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   timeout: 2 hours
   parallel: 8
