@@ -300,19 +300,8 @@ stages:
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$DEFAULT_CONCURRENCY"
 
-'🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
-  stage: 🗜️ Test
-  variables:
-    <<: *test-variables
-    TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
-  services:
-    - <<: *with-database
-    - <<: *with-chrome
-
 '⚙️️ PHPUnit Kernel':
-  <<: [ *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *with-composer-cache, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   parallel: 3
   variables:
@@ -324,6 +313,17 @@ stages:
     CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
   services:
     - <<: *with-database
+
+'🖱️️️ PHPUnit Functional Javascript':
+  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  stage: 🗜️ Test
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 15
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
