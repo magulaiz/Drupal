@@ -302,7 +302,7 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer-cache, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  parallel: 4
+  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
