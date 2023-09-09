@@ -306,6 +306,16 @@ stages:
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$DEFAULT_CONCURRENCY"
 
+'⚙️️ PHPUnit Kernel':
+  <<: [ *with-composer, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  stage: 🗜️ Test
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Kernel
+    CONCURRENCY: "$DEFAULT_CONCURRENCY"
+  services:
+    - <<: *with-database
+
 '🌐️️ PHPUnit Functional':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
@@ -332,16 +342,6 @@ stages:
     CI_PARALLEL_SPLIT: 1
     CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
     CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
-  services:
-    - <<: *with-database
-
-'⚙️️ PHPUnit Kernel':
-  <<: [ *with-composer, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
-  stage: 🗜️ Test
-  variables:
-    <<: *test-variables
-    TESTSUITE: PHPUnit-Kernel
-    CONCURRENCY: "$DEFAULT_CONCURRENCY"
   services:
     - <<: *with-database
 
