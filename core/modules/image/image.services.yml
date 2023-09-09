@@ -14,7 +14,7 @@ services:
     tags:
       - { name: page_cache_response_policy }
 
-  image.event_subscriber:
-    class: Drupal\image\EventSubscriber\ImageStyle404Subscriber
+  image.image_exception_response_handler:
+    class: Drupal\image\EventSubscriber\ImageExceptionResponseHandler
     tags:
       - { name: event_subscriber }

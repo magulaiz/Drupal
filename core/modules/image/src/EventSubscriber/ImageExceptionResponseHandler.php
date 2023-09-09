@@ -11,13 +11,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Image style 404 subscriber.
+ * Error handler for image style generation.
  */
-class ImageStyle404Subscriber implements EventSubscriberInterface {
+class ImageExceptionResponseHandler implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * Handles errors for this subscriber.
+   * Handles exceptions while generating invalid image style derivatives.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
@@ -30,6 +30,10 @@ class ImageStyle404Subscriber implements EventSubscriberInterface {
       return;
     }
 
+    // Intercept 404 exceptions thrown by image style routes when an image
+    // style is invalid/unknown. This subscriber prevents the standard Drupal
+    // 404 error page or a generic fast_404 error message, and instead returns
+    // a minimal 404 error with a relevant message for troubleshooting.
     $previous_exception = $exception->getPrevious();
     if ($previous_exception instanceof ParamNotConvertedException) {
       $route_name = $previous_exception->getRouteName();
