@@ -312,9 +312,9 @@ stages:
     - <<: *with-chrome
 
 '⚙️️ PHPUnit Kernel':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
+  <<: [ *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  parallel: 2
+  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
