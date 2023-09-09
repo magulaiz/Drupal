@@ -314,10 +314,14 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
     CONCURRENCY: "$DEFAULT_CONCURRENCY"
+    CI_PARALLEL_SPLIT: 1
+    CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
+    CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
   services:
     - <<: *with-database
 
