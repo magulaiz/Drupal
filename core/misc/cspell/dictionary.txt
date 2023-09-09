@@ -450,6 +450,7 @@ exampleurl
 exitcode
 exoshbm
 expirable
+extendee
 extlink
 extraday
 extrasmall
