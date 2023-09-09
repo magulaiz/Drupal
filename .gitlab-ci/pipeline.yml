@@ -336,7 +336,7 @@ stages:
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   timeout: 2 hours
-  parallel: 10
+  parallel: 8
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
