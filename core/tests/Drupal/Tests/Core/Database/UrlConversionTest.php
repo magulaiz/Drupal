@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests for database URL to/from database connection array conversions.
@@ -21,8 +20,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * @group Database
  */
 class UrlConversionTest extends UnitTestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
