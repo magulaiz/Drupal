@@ -47,7 +47,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     $settings['driver'] = $testDriverNamespace;
     $settings[$testDriverNamespace] = $settings[$driverNamespace];
-    unset($settings[$driverNamespace]);
+    unset($settings[$driverNamespace], $settings[$testDriverNamespace]['module']);
     $edit = $this->translatePostValues($settings);
     $this->submitForm($edit, $this->translations['Save and continue']);
   }
