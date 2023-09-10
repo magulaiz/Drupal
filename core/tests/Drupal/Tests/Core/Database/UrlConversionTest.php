@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests for database URL to/from database connection array conversions.
@@ -20,6 +21,8 @@ use Drupal\Tests\UnitTestCase;
  * @group Database
  */
 class UrlConversionTest extends UnitTestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
@@ -267,7 +270,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * Tests ::convertDbUrlToConnectionInfo() deprecation for missing module.
    *
-   * group legacy
+   * @group legacy
    */
   public function testMissingModuleInUrlConversion(): void {
     $this->expectDeprecation('Not passing a ?module=db_driver_module part in the $url argument of Drupal\Core\Database\Database::convertDbUrlToConnectionInfo() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492');
