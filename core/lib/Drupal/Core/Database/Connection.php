@@ -1924,7 +1924,7 @@ abstract class Connection {
     }
 
     if (!isset($url_components['query'])) {
-      @trigger_error('Not passing a ?module=db_driver_module part in the $url argument of ' __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+      @trigger_error('Not passing a ?module=db_driver_module part in the $url argument of ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
     }
     else {
       parse_str($url_components['query'], $query);
@@ -2015,7 +2015,7 @@ abstract class Connection {
       $db_url .= '?module=' . $connection_options['module'];
     }
     else {
-      @trigger_error('Not passing a \'module\' option to ' __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connections must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+      @trigger_error('Not passing a \'module\' option to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connections must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
     }
 
     if (isset($connection_options['prefix']) && $connection_options['prefix'] !== '') {

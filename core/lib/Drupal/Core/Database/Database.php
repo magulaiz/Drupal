@@ -560,7 +560,7 @@ abstract class Database {
     // Add the module key for core database drivers when the module key is not
     // set.
     if (!isset($query['module']) && in_array($driverName, ['mysql', 'pgsql', 'sqlite'], TRUE)) {
-      @trigger_error('Not passing a ?module=db_driver_module part in the $url argument of ' __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+      @trigger_error('Not passing a ?module=db_driver_module part in the $url argument of ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
       $query['module'] = $driverName;
     }
     // End of BC layer.
