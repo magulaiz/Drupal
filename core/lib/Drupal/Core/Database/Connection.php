@@ -1923,6 +1923,13 @@ abstract class Connection {
       throw new \InvalidArgumentException('Minimum requirement: driver://host/database');
     }
 
+    if (!isset($url_components['query'])) {
+      @trigger_error('Not passing a ?module=db_driver_module part in the $url argument of ' __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+    }
+    else {
+      parse_str($url_components['query'], $query);
+    }
+
     $url_components += [
       'user' => '',
       'pass' => '',
@@ -1938,6 +1945,7 @@ abstract class Connection {
     $reflector = new \ReflectionClass(static::class);
 
     $database = [
+      'module' => $query['module'] ?? explode('\\', $reflector->getNamespaceName())[1],
       'driver' => $url_components['scheme'],
       'username' => $url_components['user'],
       'password' => $url_components['pass'],
@@ -2005,6 +2013,9 @@ abstract class Connection {
     // Add the module when the driver is provided by a module.
     if (isset($connection_options['module'])) {
       $db_url .= '?module=' . $connection_options['module'];
+    }
+    else {
+      @trigger_error('Not passing a \'module\' option to ' __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connections must have the module specified. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
     }
 
     if (isset($connection_options['prefix']) && $connection_options['prefix'] !== '') {
