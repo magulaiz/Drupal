@@ -324,7 +324,6 @@ stages:
 '👷️️️ PHPUnit Build':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  parallel: 1
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
