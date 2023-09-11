@@ -457,6 +457,9 @@ views_argument:
       constraints:
         PluginExists:
           manager: plugin.manager.views.argument
+          # @todo Remove this line and fix all views in core which use invalid
+          # argument plugins.
+          allowFallback: true
 
 views_exposed_form:
   type: mapping
