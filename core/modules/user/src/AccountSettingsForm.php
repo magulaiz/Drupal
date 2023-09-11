@@ -149,23 +149,23 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
 
     $default_value_methods = [];
-    foreach ($config->get('cancel_methods') as $method => $access) {
+    foreach ($config->get('cancel_methods_access_disabled') as $method => $access) {
       if ($access) {
         $default_value_methods[] = $method;
       }
     }
-    $form['registration_cancellation']['user_cancel_methods'] = [
+    $form['registration_cancellation']['user_cancel_methods_access_disabled'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Available cancel methods'),
+      '#title' => $this->t('Disabled user cancel methods'),
       '#default_value' => $default_value_methods,
-      '#description' => $this->t('Choose the method that will be available for the user when canceling the account'),
+      '#description' => $this->t('Choose the methods that will be hidden for the user when canceling the account'),
     ];
-    $form['registration_cancellation']['user_cancel_methods'] += user_cancel_methods();
+    $form['registration_cancellation']['user_cancel_methods_access_disabled'] += user_cancel_methods();
 
     // Do not hide options on user cancel methods.
-    foreach (array_keys($form['registration_cancellation']['user_cancel_methods']['#options']) as $method_name) {
-      if (isset($form['registration_cancellation']['user_cancel_methods'][$method_name]['#access'])) {
-        unset($form['registration_cancellation']['user_cancel_methods'][$method_name]['#access']);
+    foreach (array_keys($form['registration_cancellation']['user_cancel_methods_access_disabled']['#options']) as $method_name) {
+      if (isset($form['registration_cancellation']['user_cancel_methods_access_disabled'][$method_name]['#access'])) {
+        unset($form['registration_cancellation']['user_cancel_methods_access_disabled'][$method_name]['#access']);
       }
     }
 
@@ -428,6 +428,18 @@ class AccountSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $default_cancel_method = $form_state->getValue('user_cancel_method');
+    $disabled_cancel_methods = $form_state->getValue('user_cancel_methods_access_disabled');
+    if (in_array($default_cancel_method, $disabled_cancel_methods)) {
+      $form_state->setErrorByName('user_cancel_method', $this->t('The default user cancel method can not be a disabled method.'));
+    }
+    parent::validateForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -437,7 +449,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('password_strength', $form_state->getValue('user_password_strength'))
       ->set('verify_mail', $form_state->getValue('user_email_verification'))
       ->set('cancel_method', $form_state->getValue('user_cancel_method'))
-      ->set('cancel_methods', $form_state->getValue('user_cancel_methods'))
+      ->set('cancel_methods_access_disabled', $form_state->getValue('user_cancel_methods_access_disabled'))
       ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
       ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
       ->set('notify.status_canceled', $form_state->getValue('user_mail_status_canceled_notify'))

@@ -40,9 +40,9 @@ function user_post_update_sort_permissions_again(&$sandbox = NULL) {
  */
 function user_post_update_configure_cancel_options() {
   $config = \Drupal::configFactory()->getEditable('user.settings');
-  $config->set('cancel_methods.user_cancel_block', TRUE);
-  $config->set('cancel_methods.user_cancel_block_unpublish', TRUE);
-  $config->set('cancel_methods.user_cancel_reassign', TRUE);
-  $config->set('cancel_methods.user_cancel_delete', TRUE);
+  $config->set('cancel_methods_access_disabled.user_cancel_block', FALSE);
+  $config->set('cancel_methods_access_disabled.user_cancel_block_unpublish', FALSE);
+  $config->set('cancel_methods_access_disabled.user_cancel_reassign', FALSE);
+  $config->set('cancel_methods_access_disabled.user_cancel_delete', FALSE);
   $config->save();
 }

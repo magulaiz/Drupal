@@ -77,10 +77,10 @@ class UserSubAdminTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer users']);
 
     $config = $this->config('user.settings');
-    $config->set('cancel_methods.user_cancel_block', TRUE);
-    $config->set('cancel_methods.user_cancel_block_unpublish', TRUE);
-    $config->set('cancel_methods.user_cancel_reassign', FALSE);
-    $config->set('cancel_methods.user_cancel_delete', FALSE);
+    $config->set('cancel_methods_access_disabled.user_cancel_block', FALSE);
+    $config->set('cancel_methods_access_disabled.user_cancel_block_unpublish', FALSE);
+    $config->set('cancel_methods_access_disabled.user_cancel_reassign', TRUE);
+    $config->set('cancel_methods_access_disabled.user_cancel_delete', TRUE);
     $config->save();
     $this->drupalLogin($admin_user);
 

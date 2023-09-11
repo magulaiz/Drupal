@@ -44,7 +44,7 @@ user.settings:
     cancel_method:
       type: string
       label: 'When cancelling a user account'
-    cancel_methods:
+    cancel_methods_access_disabled:
       type: mapping
       label: 'Cancel methods config'
       mapping:
