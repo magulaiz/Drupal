@@ -307,7 +307,6 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer-cache, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
@@ -339,7 +338,7 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  parallel: 7
+  parallel: 6
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
