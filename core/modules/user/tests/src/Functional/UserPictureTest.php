@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -122,8 +123,10 @@ class UserPictureTest extends BrowserTestBase {
     $this->config('system.theme.global')->set('features.node_user_picture', TRUE)->save();
 
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
-    $style = ImageStyle::load($image_style_id);
-    $image_url = \Drupal::service('file_url_generator')->transformRelative($style->buildUrl($file->getFileUri()));
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load($image_style_id))
+      ->setSourceImageUri($file->getFileUri());
+    $image_url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
     // Verify that the image is displayed on the node page.

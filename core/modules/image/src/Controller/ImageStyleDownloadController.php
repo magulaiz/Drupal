@@ -9,6 +9,7 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\image\ImageProcessor;
 use Drupal\image\ImageStyleInterface;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,6 +40,13 @@ class ImageStyleDownloadController extends FileDownloadController {
   protected $imageFactory;
 
   /**
+   * The image processor service.
+   *
+   * @var \Drupal\image\ImageProcessor
+   */
+  protected $imageProcessor;
+
+  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -63,11 +71,14 @@ class ImageStyleDownloadController extends FileDownloadController {
    *   The stream wrapper manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The system service.
+   * @param \Drupal\image\ImageProcessor $image_processor
+   *   The image processor service.
    */
-  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system) {
+  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system, ImageProcessor $image_processor = NULL) {
     parent::__construct($stream_wrapper_manager);
     $this->lock = $lock;
     $this->imageFactory = $image_factory;
+    $this->imageProcessor = $image_processor;
     $this->logger = $this->getLogger('image');
     $this->fileSystem = $file_system;
   }
@@ -80,7 +91,8 @@ class ImageStyleDownloadController extends FileDownloadController {
       $container->get('lock'),
       $container->get('image.factory'),
       $container->get('stream_wrapper_manager'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get(ImageProcessor::class)
     );
   }
 
@@ -107,6 +119,22 @@ class ImageStyleDownloadController extends FileDownloadController {
    *   Thrown when the file is still being generated.
    */
   public function deliver(Request $request, $scheme, ImageStyleInterface $image_style) {
+    // Check that the style is defined, return a 404 (Page Not Found) if
+    // missing.
+    if (empty($image_style)) {
+      throw new NotFoundHttpException();
+    }
+
+    // Check that the URI scheme is valid, return a 404 (Page Not Found) if
+    // invalid.
+    if (!$this->streamWrapperManager->isValidScheme($scheme)) {
+      throw new NotFoundHttpException();
+    }
+
+    // Check that the source image file exists. If the image style converts
+    // the image format, the new format extension has been added to the original
+    // filename, resulting in filenames like image.png.jpeg. So to find the real
+    // source image, we remove the extension and check if that image exists.
     $target = $request->query->get('file');
     $image_uri = $scheme . '://' . $target;
     $image_uri = $this->streamWrapperManager->normalizeUri($image_uri);
@@ -123,8 +151,11 @@ class ImageStyleDownloadController extends FileDownloadController {
       }
     }
 
-    // Check that the style is defined and the scheme is valid.
-    $valid = !empty($image_style) && $this->streamWrapperManager->isValidScheme($scheme);
+    // Create an image process pipeline.
+    $pipeline = $this->imageProcessor
+      ->createInstance('derivative')
+      ->setImageStyle($image_style)
+      ->setSourceImageUri($image_uri);
 
     // Also validate the derivative token. Sites which require image
     // derivatives to be generated without a token can set the
@@ -136,9 +167,9 @@ class ImageStyleDownloadController extends FileDownloadController {
     // The $target variable for a derivative of a style has
     // styles/<style_name>/... as structure, so we check if the $target variable
     // starts with styles/.
+    $valid = TRUE;
     $token = $request->query->get(IMAGE_DERIVATIVE_TOKEN, '');
-    $token_is_valid = hash_equals($image_style->getPathToken($image_uri), $token)
-      || hash_equals($image_style->getPathToken($scheme . '://' . $target), $token);
+    $token_is_valid = hash_equals($pipeline->getDerivativeImageUrlSecurityToken() ?? '', $token);
     if (!$this->config('image.settings')->get('allow_insecure_derivatives') || str_starts_with(ltrim($target, '\/'), 'styles/')) {
       $valid = $valid && $token_is_valid;
     }
@@ -151,7 +182,7 @@ class ImageStyleDownloadController extends FileDownloadController {
       throw new NotFoundHttpException();
     }
 
-    $derivative_uri = $image_style->buildUri($image_uri);
+    $derivative_uri = $pipeline->getDerivativeImageUri();
     $derivative_scheme = $this->streamWrapperManager->getScheme($derivative_uri);
 
     if ($token_is_valid) {
@@ -190,6 +221,11 @@ class ImageStyleDownloadController extends FileDownloadController {
       else {
         // The converted file does exist, use it as the source.
         $image_uri = $converted_image_uri;
+        // Re-create the image process pipeline as the source has changed.
+        $pipeline = $this->imageProcessor
+          ->createInstance('derivative')
+          ->setImageStyle($image_style)
+          ->setSourceImageUri($image_uri);
       }
     }
 
@@ -207,7 +243,7 @@ class ImageStyleDownloadController extends FileDownloadController {
 
     // Try to generate the image, unless another thread just did it while we
     // were acquiring the lock.
-    $success = file_exists($derivative_uri) || $image_style->createDerivative($image_uri, $derivative_uri);
+    $success = file_exists($derivative_uri) || $pipeline->buildDerivativeImage();
 
     if (!empty($lock_acquired)) {
       $this->lock->release($lock_name);

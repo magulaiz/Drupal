@@ -10,6 +10,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Cache\Cache;
@@ -49,6 +50,13 @@ class ImageFormatter extends ImageFormatterBase {
   protected $fileUrlGenerator;
 
   /**
+   * The image processor service.
+   *
+   * @var \Drupal\image\ImageProcessor
+   */
+  protected $imageProcessor;
+
+  /**
    * Constructs an ImageFormatter object.
    *
    * @param string $plugin_id
@@ -71,12 +79,15 @@ class ImageFormatter extends ImageFormatterBase {
    *   The image style storage.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
+   * @param \Drupal\image\ImageProcessor $image_processor
+   *   The image processor service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator, ImageProcessor $image_processor = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
     $this->imageStyleStorage = $image_style_storage;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->imageProcessor = $image_processor;
   }
 
   /**
@@ -93,7 +104,8 @@ class ImageFormatter extends ImageFormatterBase {
       $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('entity_type.manager')->getStorage('image_style'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get(ImageProcessor::class)
     );
   }
 

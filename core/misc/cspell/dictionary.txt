@@ -372,6 +372,7 @@ elbonia
 elems
 embeddable
 encapsed
+encryptable
 endapply
 endautoescape
 endcode

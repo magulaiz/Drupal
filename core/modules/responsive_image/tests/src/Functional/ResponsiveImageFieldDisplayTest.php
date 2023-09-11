@@ -6,6 +6,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\image\ImageProcessor;
 use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
@@ -293,8 +294,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
 
     // Create a derivative so at least one MIME type will be known.
-    $large_style = ImageStyle::load('large');
-    $large_style->createDerivative($image_uri, $large_style->buildUri($image_uri));
+    $large_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('large'))
+      ->setSourceImageUri($image_uri);
+    $large_style_pipeline->buildDerivativeImage();
 
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);
@@ -302,9 +305,11 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertSession()->responseContains('/styles/medium/');
       // Assert the empty image is present.
       $this->assertSession()->responseContains('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-      $thumbnail_style = ImageStyle::load('thumbnail');
+      $thumbnail_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+        ->setImageStyle(ImageStyle::load('thumbnail'))
+        ->setSourceImageUri($image_uri);
       // Assert the output of the 'srcset' attribute (small multipliers first).
-      $this->assertSession()->responseContains('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . $this->fileUrlGenerator->transformRelative($thumbnail_style->buildUrl($image_uri)) . ' 1.5x');
+      $this->assertSession()->responseContains('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . $this->fileUrlGenerator->transformRelative($thumbnail_style_pipeline->getDerivativeImageUrl()->toString()) . ' 1.5x');
       $this->assertSession()->responseContains('/styles/medium/');
       // Assert the output of the original image.
       $this->assertSession()->responseContains($this->fileUrlGenerator->generateString($image_uri) . ' 3x');
@@ -315,8 +320,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertSession()->responseContains('sizes="(min-width: 700px) 700px, 100vw"');
       $this->assertSession()->responseMatches('/media="\(min-width: 560px\)".+?sizes="\(min-width: 700px\) 700px, 100vw"/');
       // Assert the output of the 'srcset' attribute (small images first).
-      $medium_style = ImageStyle::load('medium');
-      $this->assertSession()->responseContains($this->fileUrlGenerator->transformRelative($medium_style->buildUrl($image_uri)) . ' 220w, ' . $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri)) . ' 360w');
+      $medium_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+        ->setImageStyle(ImageStyle::load('medium'))
+        ->setSourceImageUri($image_uri);
+      $this->assertSession()->responseContains($this->fileUrlGenerator->transformRelative($medium_style_pipeline->getDerivativeImageUrl()->toString()) . ' 220w, ' . $this->fileUrlGenerator->transformRelative($large_style_pipeline->getDerivativeImageUrl()->toString()) . ' 360w');
       $this->assertSession()->responseContains('media="(min-width: 851px)"');
       // Assert the output of the 'width' attribute.
       $this->assertSession()->responseContains('width="360"');
@@ -336,7 +343,11 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Test the fallback image style. Copy the source image:
     $fallback_image = $image;
     // Set the fallback image style uri:
-    $fallback_image['#uri'] = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
+    $large_style_pipeline = \Drupal::service(ImageProcessor::class)
+      ->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('large'))
+      ->setSourceImageUri($image_uri);
+    $fallback_image['#uri'] = $this->fileUrlGenerator->transformRelative($large_style_pipeline->getDerivativeImageUrl()->toString());
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
@@ -346,7 +357,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
-      $this->drupalGet($large_style->buildUrl($image_uri));
+      $large_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+        ->setImageStyle(ImageStyle::load('large'))
+        ->setSourceImageUri($image_uri);
+      $this->drupalGet($large_style_pipeline->getDerivativeImageUrl()->toString());
       $this->assertSession()->statusCodeEquals(403);
       $this->assertSession()->responseHeaderNotMatches('X-Drupal-Cache-Tags', '/ image_style\:/');
     }
@@ -412,10 +426,12 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseNotMatches('@srcset="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x".+?media=".+?/><source@');
 
     // Assert the media attribute is present if it has a value.
-    $thumbnail_style = ImageStyle::load('thumbnail');
     $node = $node_storage->load($nid);
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
-    $this->assertSession()->responseMatches('/srcset="' . preg_quote($this->fileUrlGenerator->transformRelative($thumbnail_style->buildUrl($image_uri)), '/') . ' 1x".+?media="\(min-width: 0px\)"/');
+    $thumbnail_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('thumbnail'))
+      ->setSourceImageUri($image_uri);
+    $this->assertSession()->responseMatches('/srcset="' . preg_quote($this->fileUrlGenerator->transformRelative($thumbnail_style_pipeline->getDerivativeImageUrl()->toString()), '/') . ' 1x".+?media="\(min-width: 0px\)"/');
   }
 
   /**
@@ -491,8 +507,14 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // from the large image style are used.
     $node = $node_storage->load($nid);
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
-    $medium_transform_url = $this->fileUrlGenerator->transformRelative($medium_style->buildUrl($image_uri));
-    $large_transform_url = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
+    $large_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('large'))
+      ->setSourceImageUri($image_uri);
+    $large_transform_url = $this->fileUrlGenerator->transformRelative($large_style_pipeline->getDerivativeImageUrl()->toString());
+    $medium_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('medium'))
+      ->setSourceImageUri($image_uri);
+    $medium_transform_url = $this->fileUrlGenerator->transformRelative($medium_style_pipeline->getDerivativeImageUrl()->toString());
     $this->assertSession()->responseMatches('/<img loading="eager" srcset="' . \preg_quote($medium_transform_url, '/') . ' 1x, ' . \preg_quote($large_transform_url, '/') . ' 1.5x, ' . \preg_quote($large_transform_url, '/') . ' 2x" width="220" height="220" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>/');
 
     $this->responsiveImgStyle
@@ -558,9 +580,11 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
 
     // Create a derivative so at least one MIME type will be known.
-    $large_style = ImageStyle::load('large');
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
-    $large_style->createDerivative($image_uri, $large_style->buildUri($image_uri));
+    \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('large'))
+      ->setSourceImageUri($image_uri)
+      ->buildDerivativeImage();
 
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);

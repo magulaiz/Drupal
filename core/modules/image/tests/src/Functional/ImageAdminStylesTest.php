@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
@@ -42,7 +43,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $file_path = \Drupal::service('file_system')->copy($file->uri, 'public://');
     }
 
-    return $style->buildUrl($file_path) ? $file_path : FALSE;
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($file_path);
+    return $pipeline->getDerivativeImageUrl() ? $file_path : FALSE;
   }
 
   /**
@@ -348,7 +352,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $file_url_generator = \Drupal::service('file_url_generator');
 
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->responseContains($file_url_generator->transformRelative($style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = $this->randomMachineName(10);
@@ -364,7 +371,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Reload the image style using the new name.
     $style = ImageStyle::load($new_style_name);
-    $this->assertSession()->responseContains($file_url_generator->transformRelative($style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Delete the style and choose a replacement style.
     $edit = [
@@ -376,7 +386,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->responseContains($file_url_generator->transformRelative($replacement_style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle($replacement_style)
+      ->setSourceImageUri($original_uri);
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
   }
 
   /**
@@ -448,8 +461,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create an image to make sure it gets flushed.
     $files = $this->drupalGetTestFiles('image');
     $image_uri = $files[0]->uri;
-    $derivative_uri = $style->buildUri($image_uri);
-    $this->assertTrue($style->createDerivative($image_uri, $derivative_uri));
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($image_uri);
+    $this->assertTrue($pipeline->buildDerivativeImage());
     $this->assertEquals(1, $this->getImageCount($style));
 
     // Go to image styles list page and check if the flush operation link
@@ -498,7 +513,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->responseContains(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $this->assertSession()->responseContains(\Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');
