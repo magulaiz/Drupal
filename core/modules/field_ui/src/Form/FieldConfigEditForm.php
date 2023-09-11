@@ -101,6 +101,13 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  public function getFormId() {
+    return 'field_config_edit_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $form['#entity_builders'][] = 'field_form_field_config_edit_form_entity_builder';
