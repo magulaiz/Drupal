@@ -246,7 +246,7 @@ class FieldStorageConfigEditForm extends EntityForm {
   public function buildEntity(array $form, FormStateInterface $form_state) {
     // Save field cardinality.
     if (!$this->getEnforcedCardinality() && $form_state->getValue('cardinality') === 'number' && $form_state->getValue('cardinality_number')) {
-      $form_state->setValue('cardinality', $form_state->getValue('cardinality_number'));
+      $form_state->setValue('cardinality', (int) $form_state->getValue('cardinality_number'));
     }
 
     return parent::buildEntity($form, $form_state);
