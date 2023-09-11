@@ -7,7 +7,10 @@ stages:
   #   * Selecting php version
   #   * Selecting the database, and configuring it
   #   * Plus any additional build steps, like composer runs, etc
-  # Wherever possible, we use variables defined in: include.drupalci.variables.yml so that the configuration can stay up to date with current Drupal Core development.
+  #
+  # Wherever possible, use variables defined in: include.drupalci.variables.yml
+  # so that the configuration can stay up to date with current Drupal Core
+  # development.
   #
   # Documentation: https://docs.gitlab.com/ee/ci/yaml/#stages
   ################
@@ -16,14 +19,16 @@ stages:
   ################
   # Validate
   #
-  # The validate stage includes any codebase validation that we want to perform before running functional tests. These are items we may want to fail-fast on, before doing a full test-run.
+  # The validate stage includes any codebase validation before running
+  # functional tests.
   ################
   - 🪄 Lint # Code quality checks
 
   ################
   # Test
   #
-  # The test phase actually executes the tests, as well as gathering results and artifacts.
+  # The test phase actually executes the tests, as well as gathering results
+  # and artifacts.
   ################
   - 🗜️ Test
 
@@ -182,7 +187,7 @@ stages:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    # We need to pass this along directly even though it's set in the environment parameters.
+    # Need to pass this along directly.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 ################
@@ -199,7 +204,7 @@ stages:
 # Build Jobs
 ################
 
-'ℹ️ Output build parameters':       # This job runs in the build stage, which runs first.
+'ℹ️ Output build parameters':
   <<: *default_php_image
   stage: 🏗️ Build
   interruptible: true
