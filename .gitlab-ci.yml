@@ -89,7 +89,6 @@ variables:
 'PHP 8.2 MySQL 5.7':
   <<: [ *default_stage, *run_manually ]
   variables:
-    _TARGET_PHP: $_TARGET_PHP
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
@@ -97,7 +96,6 @@ variables:
 'PHP 8.2 MySQL 8':
   <<: [ *default_stage, *run_automatically ]
   variables:
-    _TARGET_PHP: $_TARGET_PHP
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
@@ -107,7 +105,6 @@ variables:
 'PHP 8.2 PostgreSQL 13.5':
   <<: [ *default_stage, *run_manually ]
   variables:
-    _TARGET_PHP: $_TARGET_PHP
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "13.5"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
@@ -115,7 +112,6 @@ variables:
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default_stage, *run_manually ]
   variables:
-    _TARGET_PHP: $_TARGET_PHP
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "14.1"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
@@ -123,7 +119,6 @@ variables:
 # 'PHP 8.2 SQLite 3.26.0':
 #   <<: [ *default_stage, *run_manually ]
 #   variables:
-#     _TARGET_PHP: $_TARGET_PHP
 #     _TARGET_DB_TYPE: "sqlite"
 #     _TARGET_DB_VERSION: "3.26.0"
 #     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
@@ -131,7 +126,6 @@ variables:
 # 'PHP 8.2 MariaDB 10.3.22':
 #   <<: [ *default_stage, *run_manually ]
 #   variables:
-#     _TARGET_PHP: $_TARGET_PHP
 #     _TARGET_DB_TYPE: "mariadb"
 #     _TARGET_DB_VERSION: "10.3.22"
 #     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
