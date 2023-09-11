@@ -298,6 +298,9 @@ views_sort:
       constraints:
         PluginExists:
           manager: plugin.manager.views.sort
+          # @todo Remove this line and fix all views in core which use invalid
+          # sort plugins.
+          allowFallback: true
 
 views_sort_expose:
   type: mapping
