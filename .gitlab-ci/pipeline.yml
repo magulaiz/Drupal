@@ -36,7 +36,7 @@ stages:
 # Templates #
 #############
 
-#Set default php image
+# Set default PHP image
 .default_php_image: &default_php_image
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
