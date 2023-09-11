@@ -34,7 +34,7 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
   /**
    * Tests that a various plugin IDs making up a view display are validated.
    *
-   * @_testWith ["display_plugin"]
+   * @testWith ["display_plugin"]
    *   ["display_options", "pager", "type"]
    *   ["display_options", "exposed_form", "type"]
    *   ["display_options", "access", "type"]
@@ -44,7 +44,6 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
    *   ["display_options", "cache", "type"]
    */
   public function testInvalidPluginId(...$parents): void {
-    $parents = ['display_options', 'header', 'non_existent', 'plugin_id'];
     $display = &$this->entity->getDisplay('default');
     NestedArray::setValue($display, $parents, 'non_existent');
     $property_path = 'display.default.' . implode('.', $parents);
