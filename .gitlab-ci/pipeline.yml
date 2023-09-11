@@ -255,7 +255,7 @@ stages:
   stage: 🪄 Lint
   script:
     # Turn off apc to avoid corrupt composer cache.
-    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
+    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
 
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn-cache, *interruptible, *junit-artifacts, *default_php_image, *default_rules ]
@@ -354,10 +354,10 @@ stages:
   script:
     #  Determine DB driver.
     - |
-      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB_TYPE == "mysql" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - export
     - cp ./core/.env.example ./core/.env
     # dotenv-safe/config does not support environment variables
