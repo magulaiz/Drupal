@@ -328,6 +328,9 @@ views_area:
       constraints:
         PluginExists:
           manager: plugin.manager.views.area
+          # @todo Remove this line and fix all views in core which use invalid
+          # area plugins.
+          allowFallback: true
 
 views_handler:
   type: mapping
