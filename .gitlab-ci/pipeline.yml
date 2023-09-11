@@ -339,7 +339,7 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  parallel: 8
+  parallel: 7
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
