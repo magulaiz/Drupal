@@ -277,8 +277,6 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('edit-default-value-input-comment-und-0-status-0');
     // Test that field to change cardinality is not available.
-    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment/storage');
-    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('cardinality_number');
     $this->assertSession()->fieldNotExists('cardinality');
 

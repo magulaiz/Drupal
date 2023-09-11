@@ -297,8 +297,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $user_input = $form_state->getUserInput();
     // The user input is directly modified to preserve the rest of the data on
     // the page as it cannot be rebuilt from a fresh form state.
-    unset($user_input['settings']['allowed_values']['table'][$delta]);
-    $user_input['settings']['allowed_values']['table'] = array_values($user_input['settings']['allowed_values']['table']);
+    unset($user_input['field_storage']['subform']['settings']['allowed_values']['table'][$delta]);
+    $user_input['field_storage']['subform']['settings']['allowed_values']['table'] = array_values($user_input['field_storage']['subform']['settings']['allowed_values']['table']);
     $form_state->setUserInput($user_input);
     $form_state->set('items_count', $form_state->get('items_count') - 1);
 
