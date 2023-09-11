@@ -37,7 +37,6 @@ trait EntityOwnerTrait {
       $entity_type->getKey('owner') => BaseFieldDefinition::create('entity_reference')
         ->setLabel(new TranslatableMarkup('User ID'))
         ->setSetting('target_type', 'user')
-        ->setSetting('handler', 'default:user')
         ->setTranslatable($entity_type->isTranslatable())
         ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner'),
     ];
