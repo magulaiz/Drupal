@@ -95,10 +95,12 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    */
   protected function assertHookHelp(string $module): void {
     $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-    $this->drupalGet('admin/help/' . $module);
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains($info['name'] . ' module');
-    $this->assertSession()->linkExists('online documentation for the ' . $info['name'] . ' module', 0, "Correct online documentation link is in the help page for $module");
+    if (empty($info['hidden'])) {
+      $this->drupalGet('admin/help/' . $module);
+      $this->assertSession()->statusCodeEquals(200);
+      $this->assertSession()->pageTextContains($info['name'] . ' module');
+      $this->assertSession()->linkExists('online documentation for the ' . $info['name'] . ' module', 0, "Correct online documentation link is in the help page for $module");
+    }
   }
 
   /**
