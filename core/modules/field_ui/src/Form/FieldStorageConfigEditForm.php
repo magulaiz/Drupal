@@ -176,10 +176,10 @@ class FieldStorageConfigEditForm extends EntityForm {
         '#size' => 2,
         '#states' => [
           'visible' => [
-            ':input[id="edit-field-storage-subform-cardinality"]' => ['value' => 'number'],
+            ':input[name="field_storage[subform][cardinality]"]' => ['value' => 'number'],
           ],
           'disabled' => [
-            ':input[id="edit-field-storage-subform-cardinality"]' => ['value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+            ':input[id="field_storage[subform][cardinality]"]' => ['value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
           ],
         ],
       ];
