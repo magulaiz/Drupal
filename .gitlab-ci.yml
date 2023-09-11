@@ -81,7 +81,7 @@ variables:
       when: manual
 
 'PHP 8.1 MySQL 5.7':
-  <<: default_stage
+  <<: *default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "mysql"
@@ -91,7 +91,7 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 'PHP 8.1 MySQL 8':
-  <<: default_stage
+  <<: *default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "mysql"
@@ -99,7 +99,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 PostgreSQL 13.5':
-  <<: default_stage
+  <<: *default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "pgsql"
@@ -107,7 +107,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 PostgreSQL 14.1':
-  <<: default_stage
+  <<: *default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "pgsql"
@@ -115,7 +115,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 # 'PHP 8.1 SQLite 3.26.0':
-#   <<: default_stage
+#   <<: *default_stage
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB_TYPE: "sqlite"
@@ -123,7 +123,7 @@ variables:
 #     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
 # 'PHP 8.1 MariaDB 10.3.22':
-#   <<: default_stage
+#   <<: *default_stage
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB_TYPE: "mariadb"
