@@ -167,5 +167,8 @@ function options_options_list_alter(array &$options, array $context) {
  * Implements hook_form_FORM_ID_alter().
  */
 function options_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
-  $form['field_storage']['subform']['field_storage_submit']['#limit_validation_errors'] = [];
+  $entity = $form_state->getFormObject()->getEntity();
+  if ($entity->getFieldStorageDefinition()->getTypeProvider() === 'options') {
+    $form['field_storage']['subform']['field_storage_submit']['#limit_validation_errors'] = [];
+  }
 }
