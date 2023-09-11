@@ -48,15 +48,21 @@
 
   &:hover {
     text-decoration: none;
+    border: 1px solid transparent;
     background-color: var(--button--hover-bg-color);
+    font-weight: 700;
   }
 
   &:focus {
     text-decoration: none;
+    border: 1px solid transparent;
+    font-weight: 700;
   }
 
   &:active {
+    border: 1px solid transparent;
     background-color: var(--button--active-bg-color);
+    font-weight: 700;
   }
 }
 

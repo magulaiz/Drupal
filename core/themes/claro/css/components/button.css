@@ -60,16 +60,22 @@
 .button:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
+  border: 1px solid transparent;
   background-color: var(--button--hover-bg-color);
+  font-weight: 700;
 }
 
 .button:focus {
   -webkit-text-decoration: none;
   text-decoration: none;
+  border: 1px solid transparent;
+  font-weight: 700;
 }
 
 .button:active {
+  border: 1px solid transparent;
   background-color: var(--button--active-bg-color);
+  font-weight: 700;
 }
 
 /* Common styles for small buttons. */
