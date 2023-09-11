@@ -76,15 +76,11 @@ variables:
     strategy: depend
     include:
       - local: .gitlab-ci/pipeline.yml
-
-.run_automatically: &run_automatically
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 .run_manually: &run_manually
   when: manual
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 'PHP 8.2 MySQL 5.7':
   <<: [ *default_stage, *run_manually ]
@@ -94,7 +90,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.2 MySQL 8':
-  <<: [ *default_stage, *run_automatically ]
+  <<: *default_stage
   variables:
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
