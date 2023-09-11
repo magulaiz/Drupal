@@ -111,14 +111,19 @@ class PathTranslationTest extends PathTestBase {
 
   /**
    * Helper method to test aliases' langcode.
+   *
+   * @param bool $translate_path
+   *   Whether the path should be translated.
+   * @param string $english_alias
+   *   The English alias.
+   * @param string $french_alias
+   *   The French alias.
+   * @param string $expected_en
+   *   The expected langcode for English.
+   * @param string $expected_fr
+   *   The expected langcode for Spanish.
    */
-  protected function doTestAliasLangcode(
-    $translate_path,
-    $english_alias,
-    $french_alias,
-    $expected_en,
-    $expected_fr
-  ) {
+  protected function doTestAliasLangcode(bool $translate_path, string $english_alias, string $french_alias, string $expected_en, $expected_fr): void {
     // Enable translation for page nodes.
     $edit = [
       'entity_types[node]' => 1,
