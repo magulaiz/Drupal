@@ -352,7 +352,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
     $typed_data = $this->container->get('typed_data_manager');
     $definition = $typed_data->createDataDefinition('entity:' . $this->entity->getEntityTypeId());
-    $violations = $typed_data->create($definition, $this->entity)->validate();
+    $violations = $typed_data->create($definition, $this->entity, $this->entity->getConfigDependencyName())->validate();
 
     $actual_messages = [];
     foreach ($violations as $violation) {
