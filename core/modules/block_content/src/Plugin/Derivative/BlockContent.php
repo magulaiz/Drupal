@@ -5,12 +5,15 @@ namespace Drupal\block_content\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Retrieves block plugin definitions for all content blocks.
  */
 class BlockContent extends DeriverBase implements ContainerDeriverInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The content block storage.
@@ -53,7 +56,7 @@ class BlockContent extends DeriverBase implements ContainerDeriverInterface {
       $this->derivatives[$block_content->uuid()]['config_dependencies']['content'] = [
         $block_content->getConfigDependencyName(),
       ];
-      $this->derivatives[$block_content->uuid()]['category'] = t('Custom @type', [
+      $this->derivatives[$block_content->uuid()]['category'] = $this->t('Custom @type', [
         '@type' => $block_content->type->entity->label(),
       ]);
     }
