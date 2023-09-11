@@ -350,7 +350,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     }, Element::children($element['table'])), function ($item) {
       return $item;
     });
-    if ($reordered_items = $form_state->getValue(['field_storage', 'subform', 'settings', 'allowed_values', 'table'])) {
+    if ($reordered_items = $form_state->getValue([...$element['#parents'], 'table'])) {
       uksort($items, function ($a, $b) use ($reordered_items) {
         $a_weight = $reordered_items[$a]['weight'] ?? 0;
         $b_weight = $reordered_items[$b]['weight'] ?? 0;
