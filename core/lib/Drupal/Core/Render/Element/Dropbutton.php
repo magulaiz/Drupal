@@ -79,6 +79,13 @@ class Dropbutton extends RenderElement {
       $element['#theme'] .= '__' . $element['#subtype'];
     }
 
+    // Remove links that the user does not have access to.
+    foreach ($element['#links'] as $key => $link) {
+      if (isset($link['url']) && !$link['url']->access()) {
+        unset($element['#links'][$key]);
+      }
+    }
+
     return $element;
   }
 
