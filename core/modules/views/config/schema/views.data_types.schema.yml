@@ -613,6 +613,9 @@ views_field:
       constraints:
         PluginExists:
           manager: plugin.manager.views.field
+          # @todo Remove this line and fix all views in core which use invalid
+          # field plugins.
+          allowFallback: true
 
 views_pager:
   type: mapping
