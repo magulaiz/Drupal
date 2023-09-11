@@ -82,9 +82,9 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 .run_manually: &run_manually
+  when: manual
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
 
 'PHP 8.2 MySQL 5.7':
   <<: [ *default_stage, *run_manually ]
