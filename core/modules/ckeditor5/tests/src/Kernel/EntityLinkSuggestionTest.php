@@ -9,6 +9,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\editor\Entity\Editor;
@@ -40,6 +41,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     'datetime',
     'datetime_range',
     'language',
+    'content_translation',
   ];
 
   /**
@@ -101,6 +103,8 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('date_format');
+    $this->installSchema('node', ['node_access']);
+    $this->container->get('content_translation.manager')->setEnabled('node', $node_type->id(), TRUE);
 
     // Create an account with "f" in the username.
     $user = User::create([
@@ -122,6 +126,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    * Test the entity link suggestions.
    */
   public function testEntityLinkSuggestions(): void {
+    // Create the translation language.
+    $this->installConfig(['language']);
+    ConfigurableLanguage::createFromLangcode('de')->save();
 
     // Load the test node entity.
     $node = Node::create([
@@ -130,6 +137,10 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ]);
     $node->setCreatedTime(time());
     $node->save();
+    $translation = $node->addTranslation('de', [
+      'title' => 'foo_translated_de',
+    ])->setCreatedTime(time());
+    $translation->save();
 
     // Create a sample editor.
     $editor = Editor::load('test_format');
@@ -174,6 +185,25 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // The suggestion's label should be foo.
     $this->assertEquals('foo', $data['suggestions'][0]['label']);
+    // Assert the remaining fields for foo.
+    $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
+    $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
+
+    // Change language to de as default so that translation shows up.
+    $this->config('system.site')->set('default_langcode', 'de')->save();
+    $request->query->set('q', 'fo');
+    $response = $controller->suggestions($request, $editor, 'node', 'en');
+    $this->assertInstanceOf(JsonResponse::class, $response);
+
+    $data = json_decode($response->getContent(), TRUE);
+    // Perform assertions on the response data.
+    $this->assertArrayHasKey('suggestions', $data);
+    $this->assertIsArray($data['suggestions']);
+    // Assert that there is only 1 suggestion.
+    $this->assertEquals(1, count($data['suggestions']));
+
+    // The suggestion's label should be foo.
+    $this->assertEquals('foo_translated_de', $data['suggestions'][0]['label']);
     // Assert the remaining fields for foo.
     $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
     $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
