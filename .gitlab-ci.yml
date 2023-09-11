@@ -1,7 +1,5 @@
 ################
-# DrupalCI GitLabCI template
-#
-# Gitlab-ci.yml to replicate DrupalCI testing for Core
+# Drupal GitLabCI template.
 #
 # Based off GitlabCI templates project: https://git.drupalcode.org/project/gitlab_templates
 # Guide: https://www.drupal.org/docs/develop/git/using-gitlab-to-contribute-to-drupal/gitlab-ci
@@ -12,20 +10,14 @@
 ################
 
 ################
-# Guidelines
-#
-# * Fail fast
-# * Provide helpful user feedback
-################
-
-
-################
 # Includes
 #
 # Additional configuration can be provided through includes.
-# One advantage of include files is that if they are updated upstream, the changes affect all pipelines using that include.
+# One advantage of include files is that if they are updated upstream, the
+# changes affect all pipelines using that include.
 #
-# Includes can be overridden by re-declaring anything provided in an include, here in gitlab-ci.yml
+# Includes can be overridden by re-declaring anything provided in an include,
+# here in gitlab-ci.yml.
 # https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
 ################
 
@@ -33,18 +25,12 @@ include:
   - project: $_GITLAB_TEMPLATES_REPO
     ref: $_GITLAB_TEMPLATES_REF
     file:
-      # The stages for core are different than those of contrib.
-      # - '/includes/include.drupalci.main.yml'
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
 
 ################
 # Variables
-#
-# The include file include.drupalci.main.yml in this template includes a include.drupalci.variables.yml
-#   - These variables provide 'Semantic Labels' to help you automatically track the current supported and development versions of Drupal, as well as the current min/max system requirements for PHP, database, etc.
-#   - If this file is updated, your testing configuration will automatically follow these changes.
 #
 # Overriding variables
 #   - To override one or more of these variables, simply declare your own variables keyword.
@@ -55,9 +41,8 @@ include:
 ################
 variables:
   _TARGET_PHP:
-    value: "8.1"
+    value: "8.2"
   COMPOSER:
-    # We don't want to use spoons here, just our default composer.json.
     value: composer.json
   COMPOSER_ROOT_VERSION:
     # Let composer know what self.version means.
@@ -66,10 +51,6 @@ variables:
 
 ################
 # Workflow
-#
-# The include file include.drupalci.main.yml in this template includes a include.drupalci.workflows.yml
-#   - This will test on commit, on merge request, and on any scheduled defined in the GitLab UI for your project.
-#   - If this file is updated, your testing configuration will automatically follow these changes.
 #
 # Overriding workflows
 #   - To override these workflows, simply declare your own workflow keyword.
@@ -88,97 +69,63 @@ variables:
 # If any job in the stage fails, the pipeline will exit early.
 ################
 
-'PHP 8.1 MySQL 5.7':
+.default_stage: &default_stage
   stage: test
+  trigger:
+    # Rely on the status of the child pipeline.
+    strategy: depend
+    include:
+      - local: .gitlab-ci/pipeline.yml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+
+'PHP 8.1 MySQL 5.7':
+  <<: default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-  trigger:
-    # Rely on the status of the child pipeline.
-    strategy: depend
-    include:
-      - local: .gitlab-ci/pipeline.yml
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 'PHP 8.1 MySQL 8':
-  stage: test
+  <<: default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-  trigger:
-    # Rely on the status of the child pipeline.
-    strategy: depend
-    include:
-      - local: .gitlab-ci/pipeline.yml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
 
 'PHP 8.1 PostgreSQL 13.5':
-  stage: test
+  <<: default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "13.5"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-  trigger:
-    # Rely on the status of the child pipeline.
-    strategy: depend
-    include:
-      - local: .gitlab-ci/pipeline.yml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
 
 'PHP 8.1 PostgreSQL 14.1':
-  stage: test
+  <<: default_stage
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "14.1"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-  trigger:
-    # Rely on the status of the child pipeline.
-    strategy: depend
-    include:
-      - local: .gitlab-ci/pipeline.yml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
 
 # 'PHP 8.1 SQLite 3.26.0':
-#   stage: test
+#   <<: default_stage
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB_TYPE: "sqlite"
 #     _TARGET_DB_VERSION: "3.26.0"
 #     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
-#   trigger:
-#     # Rely on the status of the child pipeline.
-#     strategy: depend
-#     include:
-#       - local: .gitlab-ci/pipeline.yml
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-#       when: manual
 
 # 'PHP 8.1 MariaDB 10.3.22':
-#   stage: test
+#   <<: default_stage
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB_TYPE: "mariadb"
 #     _TARGET_DB_VERSION: "10.3.22"
 #     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-#   trigger:
-#     # Rely on the status of the child pipeline.
-#     strategy: depend
-#     include:
-#       - local: .gitlab-ci/pipeline.yml
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-#       when: manual
