@@ -4,8 +4,8 @@ stages:
   #
   # In the Build stage, assemble the test environment:
   #   * Select the core version to test against
-  #   * Selecting php version
-  #   * Selecting the database, and configuring it
+  #   * Select the PHP version
+  #   * Select the database, and configuring it
   #   * Plus any additional build steps, like composer runs, etc
   #
   # Wherever possible, use variables defined in: include.drupalci.variables.yml
@@ -243,7 +243,7 @@ stages:
       - core/node_modules/
   script:
     # Installs all core javascript dependencies and adds junit formatter.
-    - yarn --cwd ./core add stylelint-junit-formatter dotenv-safe
+    - yarn --cwd ./core add stylelint-junit-formatter dotenv-safest
 
 ################
 # Lint Jobs
@@ -339,7 +339,6 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
   stage: 🗜️ Test
-  timeout: 2 hours
   parallel: 8
   variables:
     <<: *test-variables
