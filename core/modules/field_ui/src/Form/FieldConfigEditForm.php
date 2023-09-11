@@ -194,12 +194,9 @@ class FieldConfigEditForm extends EntityForm {
         'class' => ['js-hide'],
       ],
       '#value' => $this->t('Update settings'),
-      '#process' => [[$this, 'processFieldStorageSubmit']],
+      '#process' => ['::processFieldStorageSubmit'],
       '#limit_validation_errors' => [$form['field_storage']['subform']['#parents']],
-      '#submit' => [[$this, 'fieldStorageSubmit']],
-      '#ajax' => [
-        'callback' => [$this, 'showUpdated'],
-      ],
+      '#submit' => ['::fieldStorageSubmit'],
     ];
     // Add field settings for the field type and a container for third party
     // settings that modules can add to via hook_form_FORM_ID_alter().
@@ -284,13 +281,6 @@ class FieldConfigEditForm extends EntityForm {
       $property = $reflector->getProperty('fieldStorage');
       $property->setValue($entity, $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
     }
-  }
-
-  /**
-   * Callback for reloading the form.
-   */
-  public function showUpdated($form, FormStateInterface &$form_state) {
-    return $form;
   }
 
   /**
@@ -534,10 +524,8 @@ class FieldConfigEditForm extends EntityForm {
       ];
     }
 
-    foreach ($form as $key => &$value) {
-      if (is_array($value) && !str_contains((string) $key, '#')) {
-        $this->addAjaxCallBacks($value);
-      }
+    foreach (Element::children($form) as $child_key) {
+      $this->addAjaxCallBacks($form[$child_key]);
     }
   }
 
