@@ -293,12 +293,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $remaining_allowed_values = array_diff($allowed_values, [$item_to_be_removed]);
     $form_state->set('allowed_values', $remaining_allowed_values);
 
-    $delta = $button['#delta'];
-    $user_input = $form_state->getUserInput();
     // The user input is directly modified to preserve the rest of the data on
     // the page as it cannot be rebuilt from a fresh form state.
-    unset($user_input['field_storage']['subform']['settings']['allowed_values']['table'][$delta]);
-    $user_input['field_storage']['subform']['settings']['allowed_values']['table'] = array_values($user_input['field_storage']['subform']['settings']['allowed_values']['table']);
+    $user_input = $form_state->getUserInput();
+    NestedArray::unsetValue($user_input, $element['#parents']);
+
+    // Reset the keys in the array.
+    $table_parents = $element['#parents'];
+    array_pop($table_parents);
+    $new_values = array_values(NestedArray::getValue($user_input, $table_parents));
+    NestedArray::setValue($user_input, $table_parents, $new_values);
+
     $form_state->setUserInput($user_input);
     $form_state->set('items_count', $form_state->get('items_count') - 1);
 
