@@ -45,9 +45,10 @@ class BaseRouteTitleResolver implements TitleResolverInterface {
    */
   public function getTitle(Request $request, Route $route) {
     $route_match = RouteMatch::createFromRequest($request);
-    $base_route_name = $this->localTaskManager->getBaseRouteName($route_match->getRouteName());
+    $base_route_names = $this->localTaskManager->getBaseRouteNames($route_match->getRouteName());
     $title = NULL;
-    if ($base_route_name) {
+    if ($base_route_names) {
+      $base_route_name = reset($base_route_names);
       if ($base_route_name !== $route_match->getRouteName()) {
         try {
           $path = $this->urlGenerator->getPathFromRoute($base_route_name, $route_match->getRawParameters()->all());

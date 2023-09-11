@@ -197,7 +197,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   public function getLocalTasksForRoute($route_name) {
     if (!isset($this->instances[$route_name])) {
       $this->instances[$route_name] = [];
-      $data = $this->doGetLocalTasksForRoute($route_name);
+      $data = $this->getLocalTasksDataForRoute($route_name);
       $base_routes = $data['base_routes'];
       $children = $data['children'];
       $parents = $data['parents'];
@@ -365,21 +365,11 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   }
 
   /**
-   * Gets the name of base route for the given route.
-   *
-   * @param string $route_name
-   *   The route name.
-   *
-   * @return string|null
-   *   The base route name if it exists, NULL otherwise.
+   * {@inheritdoc}
    */
-  public function getBaseRouteName(string $route_name): ?string {
-    $data = $this->doGetLocalTasksForRoute($route_name);
-    if (!$data || empty($data['base_routes'])) {
-      return NULL;
-    }
-
-    return reset($data['base_routes']);
+  public function getBaseRouteNames(string $route_name): array {
+    $data = $this->getLocalTasksDataForRoute($route_name);
+    return $data['base_routes'] ?? [];
   }
 
   /**
@@ -395,7 +385,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *     local task ID.
    *   - parents: An array of the route's parent local task definitions.
    */
-  protected function doGetLocalTasksForRoute(string $route_name): array {
+  protected function getLocalTasksDataForRoute(string $route_name): array {
     if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
       $data = $cache->data;
     }
