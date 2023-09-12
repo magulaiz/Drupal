@@ -109,7 +109,7 @@ stages:
     - '📦️ Composer'
   <<: *pull-composer-cache
 
-.with-composer-and-yarn: &with-composer-and-yarn
+.with-composer-yarn-and-unit-tests: &with-composer-yarn-and-unit-tests
   needs:
     - '📦️ Composer'
     - '⚡️ PHPUnit Unit'
@@ -123,7 +123,7 @@ stages:
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
   MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE: drupaltest
+  MYSQL_DATABASE: mysql
   MYSQL_USER: drupaltestbot
   MYSQL_PASSWORD: drupaltestbotpw
   MARIADB_TAG: $_TARGET_DB_VERSION
@@ -169,8 +169,8 @@ stages:
     # Determine DB driver.
     - |
       [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE#drupal?module=mysql
+      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE#drupal?module=mysql
       [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - export
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
@@ -341,7 +341,7 @@ stages:
     - <<: *with-database
 
 '🦉️️️ Nightwatch':
-  <<: [ *with-composer-and-yarn, *interruptible, *setup-webserver, *default_php_image, *default_rules ]
+  <<: [ *with-composer-yarn-and-unit-tests, *interruptible, *setup-webserver, *default_php_image, *default_rules ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -352,8 +352,8 @@ stages:
     # Determine DB driver.
     - |
       [[ $_TARGET_DB_TYPE == "sqlite" ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB_TYPE == "mysql" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE#drupal?module=mysql
+      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE#drupal?module=mysql
       [[ $_TARGET_DB_TYPE == "pgsql" ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - export
     - cp ./core/.env.example ./core/.env
