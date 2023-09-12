@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Form;
 
-use BadMethodCallException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\Element;
@@ -209,7 +208,7 @@ class FormValidator implements FormValidatorInterface {
    */
   protected function finalizeValidation(&$form, FormStateInterface &$form_state, $form_id) {
     if ($form_state->isValidationCanceled()) {
-      throw new BadMethodCallException('finalizeValidation() should not be called if validation has been canceled.');
+      throw new \BadMethodCallException('finalizeValidation() should not be called if validation has been canceled.');
     }
 
     // Delegate handling of form errors to a service.
