@@ -5,6 +5,7 @@ namespace Drupal\Tests\views\Kernel\Entity;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\ViewsHandlerManager;
 
 /**
  * Tests validation of view entities.
@@ -42,8 +43,30 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
    *   ["display_options", "row", "type"]
    *   ["display_options", "query", "type"]
    *   ["display_options", "cache", "type"]
+   *   ["display_options", "header", "non_existent", "plugin_id"]
+   *   ["display_options", "footer", "non_existent", "plugin_id"]
    */
   public function testInvalidPluginId(...$parents): void {
+    $handler_types = ['area'];
+    foreach ($handler_types as $handler_type) {
+      $this->container->set("plugin.manager.views.$handler_type", new class (
+        $handler_type,
+        $this->container->get('container.namespaces'),
+        $this->container->get('views.views_data'),
+        $this->container->get('cache.discovery'),
+        $this->container->get('module_handler'),
+      ) extends ViewsHandlerManager {
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getFallbackPluginId($plugin_id, array $configuration = []) {
+          return 'non_existent';
+        }
+
+      });
+    }
+
     $display = &$this->entity->getDisplay('default');
     NestedArray::setValue($display, $parents, 'non_existent');
     $property_path = 'display.default.' . implode('.', $parents);
