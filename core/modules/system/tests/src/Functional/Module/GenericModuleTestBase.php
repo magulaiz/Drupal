@@ -32,9 +32,13 @@ class GenericModuleTestBase extends BrowserTestBase {
   public function testModuleGenericIssues() {
     $this->drupalLogin($this->rootUser);
     \Drupal::service('module_installer')->install([$this->module]);
+    $info = \Drupal::service('extension.list.module')->getExtensionInfo($this->module);
+    if (!empty($info['required']) && !empty($info['hidden'])) {
+      // Currently nothing to assert for hidden, required modules, so skip.
+      $this->markTestSkipped();
+    }
     $this->assertHookHelp($this->module);
 
-    $info = \Drupal::service('extension.list.module')->getExtensionInfo($this->module);
     if (empty($info['required'])) {
       // Check that the module can be uninstalled and then re-installed again.
       \Drupal::service('module_installer')->uninstall([$this->module]);
