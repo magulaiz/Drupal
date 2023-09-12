@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\dblog\Functional\Module;
+namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 
