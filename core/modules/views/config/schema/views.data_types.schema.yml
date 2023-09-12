@@ -858,6 +858,9 @@ views_relationship:
       constraints:
         PluginExists:
           manager: plugin.manager.views.relationship
+          # @todo Remove this line and fix all views in core which use invalid
+          # relationship plugins.
+          allowFallback: true
 
 views_query:
   type: mapping
