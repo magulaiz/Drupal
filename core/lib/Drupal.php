@@ -6,8 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Static Service Container wrapper.
  *
- * Thisisaspellingmistake.
- *
  * Generally, code in Drupal should accept its dependencies via either
  * constructor injection or setter method injection. However, there are cases,
  * particularly in legacy procedural code, where that is infeasible. This

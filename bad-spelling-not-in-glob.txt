@@ -1,1 +1,0 @@
-Thisisabadspelling but should not be caught by spellcheck
