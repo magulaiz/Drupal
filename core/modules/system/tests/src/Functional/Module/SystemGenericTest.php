@@ -3,7 +3,9 @@
 namespace Drupal\Tests\system\Functional\Module;
 
 /**
- * {@inheritdoc}
+ * Generic test for system module.
+ *
+ * @group system
  */
 class SystemGenericTest extends GenericModuleTestBase {
 
