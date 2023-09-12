@@ -40,24 +40,11 @@ include:
 #
 ################
 variables:
-  _TARGET_PHP:
-    value: "8.2"
-  COMPOSER:
-    value: composer.json
-  COMPOSER_ROOT_VERSION:
-    # Let composer know what self.version means.
-    value: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}-dev"
-  DEFAULT_CONCURRENCY: 32
-
-################
-# Workflow
-#
-# Overriding workflows
-#   - To override these workflows, simply declare your own workflow keyword.
-#   - Keywords declared directly in .gitlab-ci.yml take precedence over include files.
-#   - Documentation: https://docs.gitlab.com/ee/ci/yaml/workflow.html
-#
-################
+  _TARGET_PHP: "8.2"
+  COMPOSER: composer.json
+  # Let composer know what self.version means.
+  COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}-dev"
+  CONCURRENCY: 32
 
 ################
 # Stages

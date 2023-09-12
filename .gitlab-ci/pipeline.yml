@@ -1,28 +1,19 @@
+# cspell:ignore drupaltestbot drupaltestbotpw
+
 stages:
   ################
   # Build
   #
-  # In the Build stage, assemble the test environment:
-  #   * Select the core version to test against
-  #   * Select the PHP version
-  #   * Select the database, and configuring it
-  #   * Plus any additional build steps, like composer runs, etc
-  #
-  # Wherever possible, use variables defined in: include.drupalci.variables.yml
-  # so that the configuration can stay up to date with current Drupal Core
-  # development.
-  #
-  # Documentation: https://docs.gitlab.com/ee/ci/yaml/#stages
+  # Assemble the test environment.
   ################
-  - 🏗️ Build # Build third party dependencies etc
+  - 🏗️ Build
 
   ################
-  # Validate
+  # Code quality checks
   #
-  # The validate stage includes any codebase validation before running
-  # functional tests.
+  # This stage includes any codebase validation before running tests.
   ################
-  - 🪄 Lint # Code quality checks
+  - 🪄 Lint
 
   ################
   # Test
@@ -36,12 +27,10 @@ stages:
 # Templates #
 #############
 
-# Set default PHP image
 .default_php_image: &default_php_image
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
-# Default rules.
 .default_rules: &default_rules
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
@@ -302,7 +291,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Unit
-    CONCURRENCY: "$DEFAULT_CONCURRENCY"
+    CONCURRENCY: "$CONCURRENCY"
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer-cache, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default_php_image, *default_rules ]
@@ -335,7 +324,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
-    CONCURRENCY: "$DEFAULT_CONCURRENCY"
+    CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
 
@@ -346,7 +335,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "$DEFAULT_CONCURRENCY"
+    CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
 

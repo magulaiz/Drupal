@@ -361,8 +361,6 @@ drupalmediaediting
 drupalmediatoolbar
 drupalorg
 drupaltest
-drupaltestbot
-drupaltestbotpw
 druplicon
 drush
 drépal
