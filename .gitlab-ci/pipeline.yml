@@ -123,7 +123,7 @@ stages:
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
   MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE: mysql
+  MYSQL_DATABASE: drupal
   MYSQL_USER: drupaltestbot
   MYSQL_PASSWORD: drupaltestbotpw
   MARIADB_TAG: $_TARGET_DB_VERSION
