@@ -17,9 +17,9 @@ trait ResponseDisplayPluginTrait {
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response.
-   * @param $view_id
+   * @param string $view_id
    *   The view id.
-   * @param $display_id
+   * @param string $display_id
    *   The view display id.
    */
   public static function alterResponse(Response $response, $view_id, $display_id) {
