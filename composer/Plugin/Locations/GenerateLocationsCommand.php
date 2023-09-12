@@ -42,7 +42,7 @@ class GenerateLocationsCommand extends BaseCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    GenerateLocationsClass::generate($this->getComposer(), $this->getIO());
+    GenerateLocationsClass::generate($this->requireComposer(), $this->getIO());
 
     return 0;
   }
