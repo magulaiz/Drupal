@@ -196,7 +196,7 @@ stages:
 'ℹ️ Output build parameters':
   <<: *default_php_image
   stage: 🏗️ Build
-  interruptible: true
+  <<: *interruptible
   script:
     - echo "Checking variables"
     - echo $_TARGET_PHP
@@ -222,7 +222,7 @@ stages:
 '📦️ Yarn':
   <<: [ *default_php_image, *default_rules ]
   stage: 🏗️ Build
-  interruptible: true
+  <<: *interruptible
   cache:
     <<: *yarn_cache
   artifacts:
