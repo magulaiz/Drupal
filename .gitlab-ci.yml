@@ -5,8 +5,8 @@
 # Guide: https://www.drupal.org/docs/develop/git/using-gitlab-to-contribute-to-drupal/gitlab-ci
 #
 # With thanks to:
-#   * The GitLab Acceleration Initiative participants
-#   * DrupalSpoons
+# - The GitLab Acceleration Initiative participants
+# - DrupalSpoons
 ################
 
 ################
@@ -28,17 +28,17 @@ include:
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
-
 ################
 # Variables
 #
 # Overriding variables
-#   - To override one or more of these variables, simply declare your own variables keyword.
-#   - Keywords declared directly in .gitlab-ci.yml take precedence over include files.
-#   - Documentation:  https://docs.gitlab.com/ee/ci/variables/
-#     - Predefined variables: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+# - To override one or more of these variables, simply declare your own variables keyword.
+# - Keywords declared directly in .gitlab-ci.yml take precedence over include files.
+# - Documentation:  https://docs.gitlab.com/ee/ci/variables/
+# - Predefined variables: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
 #
 ################
+
 variables:
   _TARGET_PHP: "8.2"
   COMPOSER: composer.json

@@ -123,7 +123,7 @@ stages:
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
   MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE: drupal
+  MYSQL_DATABASE: drupaltest
   MYSQL_USER: drupaltestbot
   MYSQL_PASSWORD: drupaltestbotpw
   MARIADB_TAG: $_TARGET_DB_VERSION
@@ -166,7 +166,7 @@ stages:
 
 .run-tests: &run-tests
   script:
-    #  Determine DB driver.
+    # Determine DB driver.
     - |
       [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
       [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
@@ -287,7 +287,7 @@ stages:
   stage: 🗜️ Test
   services:
     # There are some unit tests that need a database.
-    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217 
+    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
     - <<: *with-database
   variables:
     <<: *test-variables
@@ -349,7 +349,7 @@ stages:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    #  Determine DB driver.
+    # Determine DB driver.
     - |
       [[ $_TARGET_DB_TYPE == "sqlite" ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
       [[ $_TARGET_DB_TYPE == "mysql" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
