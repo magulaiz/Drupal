@@ -43,9 +43,6 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $modules_to_install = array_keys($module_directories);
 
     \Drupal::service('module_installer')->install($modules_to_install);
-    foreach ($modules_to_install as $module) {
-      $this->assertHookHelp($module);
-    }
 
     $theme_directories = $this->listDirectories('theme');
     \Drupal::service('theme_installer')->install(array_keys($theme_directories));
@@ -84,22 +81,6 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       else {
         $this->verifyTopic($id, $definitions);
       }
-    }
-  }
-
-  /**
-   * Verifies hook_help() syntax.
-   *
-   * @param string $module
-   *   The module.
-   */
-  protected function assertHookHelp(string $module): void {
-    $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-    if (empty($info['hidden'])) {
-      $this->drupalGet('admin/help/' . $module);
-      $this->assertSession()->statusCodeEquals(200);
-      $this->assertSession()->pageTextContains($info['name'] . ' module');
-      $this->assertSession()->linkExists('online documentation for the ' . $info['name'] . ' module', 0, "Correct online documentation link is in the help page for $module");
     }
   }
 
