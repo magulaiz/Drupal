@@ -7,15 +7,14 @@ location within the project at runtime.
 This is necessary because Drupal core is installed in a Composer project in a
 custom location, unlike normal Composer packages. The location of the Drupal
 core package is defined in the project's composer.json, and is '/web' when using
-the drupal/recommended-project.
+the drupal/recommended-project Composer project template.
 
-This custom location means that web requests to Drupal core PHP files must guess
-how to reach the Composer autoloader in the project root, and script files in
-normal Composer packages must guess how to reach Drupal core.
-
-Using the `__DIR__` constant and other filepath manipulation is not always
-reliable, for example, in a development project where Drupal core is installed
-with a symlink from a local path repository.
+Without this plugin, Drupal core's custom location means that web requests to
+Drupal core PHP files must guess how to reach the Composer autoloader in the
+project root, and script files in normal Composer packages must guess how to
+reach Drupal core. Using the `__DIR__` constant and other filepath manipulation
+is not always reliable, for example, in a development project where Drupal core
+is installed with a symlink from a local path repository.
 
 This Composer plugin writes a PHP class file automatically, which holds the
 location of the Drupal app root (that is, the location of Drupal's index.php
