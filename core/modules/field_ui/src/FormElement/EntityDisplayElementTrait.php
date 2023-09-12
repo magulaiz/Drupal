@@ -3,6 +3,7 @@
 namespace Drupal\field_ui\FormElement;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 
 /**
  * Provides common functionality for entity display elements.
@@ -41,9 +42,8 @@ trait EntityDisplayElementTrait {
     foreach ($element_names as $component_name => $layout_builder) {
       // Not considering the layout builder case.
       if ($layout_builder) {
-        [$i, $j, $component_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_name, 3);
-        // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
-        $item = &$parent_build['third_party_settings']['layout_builder']['sections'][$i]['components'][$j]['configuration']['formatter'];
+        [$section_index, $component_id, $component_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_name, 3);
+        $item = &$parent_build['third_party_settings']['layout_builder']['sections'][$section_index]['components'][$component_id]['configuration']['formatter'];
       }
       else {
         $item = &$parent_build['content'][$component_name];

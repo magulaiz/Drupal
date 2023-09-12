@@ -7,6 +7,7 @@ use Drupal\config_translation\FormElement\ListElement;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 
 /**
  * Adds translatable labels to entity_view_display elements.
@@ -40,7 +41,7 @@ class EntityViewDisplayElement extends ListElement {
 
     $element_names = [];
     $build_element_names = [];
-    if (isset($parent_build['third_party_settings']['layout_builder']['sections'])) {
+    if (!empty(LayoutBuilderEntityViewDisplayStorage::getSections($parent_build))) {
       $build_element_names = $this->layoutBuilderGetElementNames($parent_build);
       $build_element_names = array_fill_keys($build_element_names, TRUE);
     }
@@ -87,7 +88,7 @@ class EntityViewDisplayElement extends ListElement {
         if (!isset($component->get('configuration')['formatter']['settings']) || empty($component->get('configuration')['formatter']['settings'])) {
           continue;
         }
-        if (!isset($parent_build['third_party_settings']['layout_builder']['sections'][$section_index]['components'][$component->getUuid()]['configuration']['formatter']['settings'])) {
+        if (!isset(LayoutBuilderEntityViewDisplayStorage::getSections($parent_build)[$section_index]['components'][$component->getUuid()]['configuration']['formatter']['settings'])) {
           continue;
         }
         try {

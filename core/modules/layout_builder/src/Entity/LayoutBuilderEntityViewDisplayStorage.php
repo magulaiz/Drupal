@@ -15,15 +15,31 @@ use Drupal\layout_builder\Section;
 class LayoutBuilderEntityViewDisplayStorage extends ConfigEntityStorage {
 
   /**
+   * Returns the sections array.
+   *
+   * @param array $record
+   *   The record.
+   *
+   * @return array
+   *   Returns the sections.
+   */
+  public static function getSections(array $record) {
+    if (!empty($record['third_party_settings']['layout_builder']['sections'])) {
+      return $record['third_party_settings']['layout_builder']['sections'];
+    }
+    return [];
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function mapToStorageRecord(EntityInterface $entity) {
     $record = parent::mapToStorageRecord($entity);
 
-    if (!empty($record['third_party_settings']['layout_builder']['sections'])) {
+    if (!empty(self::getSections($record))) {
       $record['third_party_settings']['layout_builder']['sections'] = array_map(function (Section $section) {
         return $section->toArray();
-      }, $record['third_party_settings']['layout_builder']['sections']);
+      }, self::getSections($record));
     }
     return $record;
   }
@@ -33,7 +49,7 @@ class LayoutBuilderEntityViewDisplayStorage extends ConfigEntityStorage {
    */
   protected function mapFromStorageRecords(array $records) {
     foreach ($records as &$record) {
-      if (!empty($record['third_party_settings']['layout_builder']['sections'])) {
+      if (!empty(self::getSections($record))) {
         $sections = &$record['third_party_settings']['layout_builder']['sections'];
         $sections = array_map([Section::class, 'fromArray'], $sections);
       }
