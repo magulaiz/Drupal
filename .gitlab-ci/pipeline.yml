@@ -301,10 +301,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
-    CONCURRENCY: "$DEFAULT_CONCURRENCY"
-    CI_PARALLEL_SPLIT: 1
-    CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
-    CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
+    CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
 
