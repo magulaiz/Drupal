@@ -5,7 +5,9 @@ namespace Drupal\Tests\dblog\Functional\Module;
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 
 /**
- * {@inheritdoc}
+ * Generic module test for DbLog.
+ *
+ * @group dblog
  */
 class DbLogGenericTest extends GenericModuleTestBase {
 

@@ -41,9 +41,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // will be defined.
     $module_directories = $this->listDirectories('module');
     $modules_to_install = array_keys($module_directories);
-
     \Drupal::service('module_installer')->install($modules_to_install);
-
     $theme_directories = $this->listDirectories('theme');
     \Drupal::service('theme_installer')->install(array_keys($theme_directories));
 
