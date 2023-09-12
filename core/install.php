@@ -47,4 +47,4 @@ if (OpCodeCache::isEnabled() && !ini_get('opcache.save_comments')) {
 
 // Start the installer.
 require_once $root_path . '/core/includes/install.core.inc';
-install_drupal($class_loader, [], NULL, $root_path);
+install_drupal($class_loader, [], NULL);
