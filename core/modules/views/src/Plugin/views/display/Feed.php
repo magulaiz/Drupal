@@ -29,6 +29,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
 
+  use ResponseDisplayPluginTrait;
+
   /**
    * Whether the display allows the use of AJAX or not.
    *
@@ -115,6 +117,9 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     $response->setContent($output);
     $cache_metadata = CacheableMetadata::createFromRenderArray($build);
     $response->addCacheableDependency($cache_metadata);
+
+    // Allow the style plugins to alter the response.
+    static::alterResponse($response, $view_id, $display_id);
 
     return $response;
   }
