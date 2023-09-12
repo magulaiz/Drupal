@@ -828,6 +828,9 @@ views_filter:
       constraints:
         PluginExists:
           manager: plugin.manager.views.filter
+          # @todo Remove this line and fix all views in core which use invalid
+          # filter plugins.
+          allowFallback: true
 
 views_filter_group_item:
   type: mapping
