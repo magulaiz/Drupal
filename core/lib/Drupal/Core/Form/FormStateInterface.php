@@ -1112,7 +1112,11 @@ interface FormStateInterface {
   /**
    * Sets that validation has been canceled.
    *
-   * If canceled no further validation should run.
+   * Cancels a form's validation process if it is preferred that further
+   * validation functions are prevented from executing, e.g.: you might set
+   * setValidationCanceled(TRUE) if a CSRF token is not valid, because it
+   * doesn't make sense to perform any further validation (and it might be a
+   * security risk to do so).
    *
    * @param bool $cancel_validation
    *   TRUE if validation is canceled, FALSE otherwise.
@@ -1124,7 +1128,8 @@ interface FormStateInterface {
   /**
    * Determines if validation has been canceled.
    *
-   * If canceled no further validation should run.
+   * A form's validation is only canceled if it doesn't make sense to run any
+   * further validation functions, e.g.: if a CSRF token is not valid.
    *
    * @return bool
    *   TRUE if validation is canceled, FALSE otherwise.
