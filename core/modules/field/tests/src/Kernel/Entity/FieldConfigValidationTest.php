@@ -100,4 +100,20 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ]);
   }
 
+  /**
+   * Tests that entity reference selection handler plugin IDs are validated.
+   */
+  public function testEntityReferenceSelectionHandlerIsValidated(): void {
+    $this->container->get('state')
+      ->set('field_test_disable_broken_entity_reference_handler', TRUE);
+    $this->enableModules(['field_test']);
+
+    $this->entity->set('field_type', 'entity_reference')
+      ->set('settings', ['handler' => 'non_existent']);
+
+    $this->assertValidationErrors([
+      'settings.handler' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }
