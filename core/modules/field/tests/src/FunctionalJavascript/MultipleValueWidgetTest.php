@@ -271,7 +271,7 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
       ->findAll('css', '[id^="field-unlimited-values"] tbody tr td input[value="Remove"]');
     $this->assertGreaterThan(1, count($removeButtons), 'More than one remove button should exists.');
 
-    for ($i=0; $i<count($removeButtons); $i++) {
+    for ($i = 0; $i < count($removeButtons); $i++) {
       $this->clickRemoveItemButton('field_unlimited_0_remove_button');
     }
 
@@ -292,7 +292,7 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
     $this->assertSession()->elementExists('css', 'input[name="field_unlimited[1][value]"]');
     $this->assertSession()->elementExists('css', 'input[name="field_unlimited[2][value]"]');
 
-    $values = [3,1,2];
+    $values = [3, 1, 2];
     foreach ($values as $i => $value) {
       $page->findField("field_unlimited[{$i}][value]")->setValue($value);
     }
@@ -303,22 +303,9 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
     $this->dragItem('tbody tr:nth-child(3) a', 'tbody tr:nth-child(2) a');
 
     $table = $this->getSession()->getPage()->find('css', '#field-unlimited-values tbody');
-
-    $this->assertEquals(
-      1,
-      $table->find('css','tr:nth-child(1) td:nth-child(2) input')->getValue()
-    );
-
-    $this->assertEquals(
-      2,
-      $table->find('css','tr:nth-child(2) td:nth-child(2) input')->getValue()
-    );
-
-    $this->assertEquals(
-      3,
-      $table->find('css','tr:nth-child(3) td:nth-child(2) input')->getValue()
-    );
-
+    $this->assertEquals(1, $table->find('css', 'tr:nth-child(1) td:nth-child(2) input')->getValue());
+    $this->assertEquals(2, $table->find('css', 'tr:nth-child(2) td:nth-child(2) input')->getValue());
+    $this->assertEquals(3, $table->find('css', 'tr:nth-child(3) td:nth-child(2) input')->getValue());
 
     $this->clickAddMore('field_unlimited_add_more');
     $this->assertSession()
@@ -336,7 +323,7 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
 
     // Check if value and their orders was saved.
     $this->assertSession()->waitForElement('css', 'input[name="field_unlimited[0][value]"]');
-    foreach ([1,1,2,3,5] as $i => $value) {
+    foreach ([1, 1, 2, 3, 5] as $i => $value) {
       $this->assertEquals(
         $value,
         $this->getSession()->getPage()->find('css', 'input[name="field_unlimited[' . $i . '][value]"]')->getValue(),
@@ -444,7 +431,7 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => [
-        'handler' =>  'views',
+        'handler' => 'views',
         'handler_settings' => [
           'view' => [
             'view_name' => 'test_entity_reference',
@@ -466,7 +453,7 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
           'match_operator' => 'CONTAINS',
           'size' => 60,
           'placeholder' => '',
-        ]
+        ],
       ])
       ->save();
 
@@ -498,7 +485,7 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
 
     $this->assertCount(3, $result);
 
-    $this->drupalGet( 'entity_test/add');
+    $this->drupalGet('entity_test/add');
     $this->assertSession()->waitForElementVisible('css', '#edit-ref-unlimited-add-more');
     $assertSession = $this->assertSession();
     for ($i = 0; $i < $ref_cardinality_display; $i++) {
@@ -528,7 +515,9 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
    * Helper function to drag and drop items.
    */
   private function dragItem($from, $to) {
-    $currentPage = $this->getSession()->getPage()->find('css', '[id^=field-unlimited-values]');
+    $currentPage = $this->getSession()
+      ->getPage()
+      ->find('css', '[id^=field-unlimited-values]');
     $currentPage->find('css', $from)
       ->dragTo($currentPage->find('css', $to));
   }
@@ -549,7 +538,6 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
       ->findButton($locator);
     $this->assertNotEmpty($button, "The button {$locator} should exists on the page");
     $button->click();
-//    var_dump();
     $this->assertSession()
       ->waitForElementRemoved('css', "input[name=\"$locator\"]");
   }
