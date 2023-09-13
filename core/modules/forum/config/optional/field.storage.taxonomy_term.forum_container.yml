@@ -2,14 +2,13 @@ langcode: en
 status: true
 dependencies:
   module:
-    - layout_builder
-    - node
-id: node.layout_builder__layout
-field_name: layout_builder__layout
-entity_type: node
-type: layout_section
+    - taxonomy
+id: taxonomy_term.forum_container
+field_name: forum_container
+entity_type: taxonomy_term
+type: boolean
 settings: {  }
-module: layout_builder
+module: core
 locked: true
 cardinality: 1
 cardinality_display: 1

@@ -44,6 +44,7 @@ use Drupal\field\FieldStorageConfigInterface;
  *     "module",
  *     "locked",
  *     "cardinality",
+ *     "cardinality_display",
  *     "translatable",
  *     "indexes",
  *     "persist_with_no_fields",
