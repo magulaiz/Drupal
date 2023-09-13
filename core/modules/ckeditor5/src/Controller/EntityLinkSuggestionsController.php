@@ -283,7 +283,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     $entity_type = $entity->getEntityType();
     $owner = $entity_type->hasKey('owner')
       ? $entity->getOwner()->getDisplayName()
-      : NULL;
+      : '';
     $creation_datetime = method_exists($entity, 'getCreatedTime')
       ? $this->dateFormatter->format($entity->getCreatedTime(), 'medium')
       : NULL;
