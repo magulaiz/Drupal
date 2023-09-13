@@ -190,9 +190,8 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
 
     // Change language to de as default so that translation shows up.
-    $this->config('system.site')->set('default_langcode', 'de')->save();
     $request->query->set('q', 'fo');
-    $response = $controller->suggestions($request, $editor, 'node', 'en');
+    $response = $controller->suggestions($request, $editor, 'node', 'de');
     $this->assertInstanceOf(JsonResponse::class, $response);
 
     $data = json_decode($response->getContent(), TRUE);
