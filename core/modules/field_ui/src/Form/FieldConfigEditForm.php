@@ -278,8 +278,14 @@ class FieldConfigEditForm extends EntityForm {
       $field_storage_form->setEntity($entity->getFieldStorageDefinition());
 
       $reflector = new \ReflectionObject($entity);
+
+      // Update the field storage entity based on subform values.
       $property = $reflector->getProperty('fieldStorage');
       $property->setValue($entity, $field_storage_form->buildEntity($form['field_storage']['subform'], $subform_state));
+
+      // Remove the item definition to make sure it's not storing stale data.
+      $property = $reflector->getProperty('itemDefinition');
+      $property->setValue($entity, NULL);
     }
   }
 
