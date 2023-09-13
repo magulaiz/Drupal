@@ -488,5 +488,11 @@ function field_form_field_config_edit_form_entity_builder($entity_type_id, $enti
     // Store updated settings in form state so that the form state can be copied
     // directly to the entity.
     $form_state->setValue('settings', $entity->getSettings());
+
+    // Unset user input for the settings because they are not valid after the
+    // target type has changed.
+    $user_input = $form_state->getUserInput();
+    unset($user_input['settings']);
+    $form_state->setUserInput($user_input);
   }
 }

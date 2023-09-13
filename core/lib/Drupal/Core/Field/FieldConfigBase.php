@@ -475,11 +475,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     // recalculated.
     unset($properties['itemDefinition'], $properties['original']);
 
-    // Field storage can be recalculated if it's not new.
-    if (array_key_exists('fieldStorage', $properties) && $properties['fieldStorage'] instanceof FieldStorageConfig && !$properties['fieldStorage']->isNew()) {
-      unset($properties['fieldStorage']);
-    }
-
     return array_keys($properties);
   }
 
