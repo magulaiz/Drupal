@@ -4,6 +4,8 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -14,6 +16,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field_ui\Controller\FieldConfigAddController;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -177,6 +180,7 @@ class FieldStorageAddForm extends FormBase {
         'class' => 'add-field-container',
       ],
     ];
+
     $field_type_options_radios = [];
     foreach ($field_type_options as $id => $field_type) {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
@@ -345,12 +349,19 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Continue'),
       '#button_type' => 'primary',
+      '#attributes' => [
+        'class' => ['use-ajax'],
+      ],
+      '#ajax' => [
+        'callback' => [$this, 'ajaxSubmitForm'],
+      ],
     ];
 
     $form['#attached']['library'] = [
       'field_ui/drupal.field_ui',
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
+      'core/drupal.dialog.ajax',
     ];
     return $form;
   }
@@ -400,6 +411,25 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
+   * Callback function to open field instance form in a modal.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
+    $field_name = $form_state->getValue('field_name');
+    $field_config_controller = new FieldConfigAddController($this->tempStore);
+    $instance_form = $field_config_controller->fieldConfigAddConfigureForm($this->entityTypeId, $field_name);
+    $response = new AjaxResponse();
+    $response->addCommand(new OpenModalDialogCommand($this->t('Configure field'), $instance_form, [
+      'width' => '85vw',
+    ]));
+    return $response;
+  }
+
+    /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
