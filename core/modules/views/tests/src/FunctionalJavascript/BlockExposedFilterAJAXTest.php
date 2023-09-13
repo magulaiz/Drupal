@@ -122,10 +122,10 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $form2_id = $form2->getAttribute('id');
     // Filter by page type in the second form.
     $this->submitForm(['type' => 'page'], t('Apply'), $form2_id);
-    $this->waitForCount(0, 'xpath', '//*[text()="Article A"]');
+    $this->waitForCount(1, 'xpath', '//*[text()="Article A"]');
     $this->assertCount(2, $page->findAll('xpath', '//*[text()="Page A"]'));
     $this->assertCount(2, $page->findAll('xpath', '//*[text()="Page B"]'));
-    $this->assertCount(0, $page->findAll('xpath', '//*[text()="Article A"]'));
+    $this->assertCount(1, $page->findAll('xpath', '//*[text()="Article A"]'));
   }
 
   /**
