@@ -50,6 +50,7 @@ abstract class FieldStorageConfigResourceTestBase extends ConfigEntityResourceTe
   protected function getExpectedNormalizedEntity() {
     return [
       'cardinality' => 1,
+      'cardinality_display' => 1,
       'custom_storage' => FALSE,
       'dependencies' => [
         'module' => ['node'],
