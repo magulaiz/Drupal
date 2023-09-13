@@ -126,4 +126,42 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->assertSession()->responseContains($default);
   }
 
+  /**
+   * Tests revisions access control.
+   */
+  public function testRevisionAccess() {
+    $customUser = $this->drupalCreateUser([
+      'access content',
+      'edit any page content',
+      'administer content types',
+      'administer node fields',
+      'view all revisions',
+      'revert all revisions',
+      'administer permissions',
+    ]);
+    $this->drupalLogin($customUser);
+    // Create a page node.
+    $node = $this->drupalCreateNode([$this->fieldName => 'custom_test']);
+
+    $node->setNewRevision();
+    $node->setRevisionLogMessage('a new node revision');
+    $node->setTitle('new title');
+    $node->save();
+
+    // Log in as the administrator and confirm that the field value is present.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->pageTextNotContains('Revision information');
+    $this->drupalGet('node/' . $node->id() . '/revisions');
+    $this->assertSession()->linkExists('Revert');
+
+    // Provide additional permissions.
+    $edit = [
+      'authenticated[administer nodes]' => TRUE,
+    ];
+    $this->drupalGet('/admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->pageTextContains('Revision information');
+  }
+
 }
