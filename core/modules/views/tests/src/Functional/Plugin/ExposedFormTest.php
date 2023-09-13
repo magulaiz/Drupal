@@ -294,9 +294,9 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->elementNotExists('xpath', $xpath);
 
     // Test there is only one views exposed form on the page.
-    $xpath = '//form[@id="' . $this->getExpectedExposedFormId($view) . '"]';
-    $this->assertSession()->elementsCount('xpath', $xpath, 1);
-    $element = $this->assertSession()->elementExists('xpath', $xpath);
+    $css_selector = 'form[id^="' . $this->getExpectedExposedFormId($view) . '"]';
+    $this->assertSession()->elementsCount('css', $css_selector, 1);
+    $element = $this->assertSession()->elementExists('css', $css_selector);
 
     // Test that the correct option is selected after form submission.
     $this->assertCacheContext('url');
