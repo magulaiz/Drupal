@@ -7,7 +7,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Runs a series of generic tests for one module.
  */
-class GenericModuleTestBase extends BrowserTestBase {
+abstract class GenericModuleTestBase extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -19,7 +19,7 @@ class GenericModuleTestBase extends BrowserTestBase {
   /**
    * The module to test.
    */
-  protected $module;
+  protected string $module;
 
   /**
    * {@inheritdoc}
