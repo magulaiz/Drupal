@@ -263,7 +263,9 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $field_name = 'node.' . $this->type . '.field_test';
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('field_storage[subform][settings][target_type]')->setValue('taxonomy_term');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldExists('settings[handler_settings][auto_create]');
+    $this->assertSession()->fieldValueEquals('settings[handler]', 'default:taxonomy_term');
 
     // Switch the target type to 'user' and check that the settings specific to
     // its selection handler are displayed.
