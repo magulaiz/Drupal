@@ -56,7 +56,7 @@ variables:
 # If any job in the stage fails, the pipeline will exit early.
 ################
 
-.default_stage: &default_stage
+.default-stage: &default-stage
   stage: test
   trigger:
     # Rely on the status of the child pipeline.
@@ -66,18 +66,18 @@ variables:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-.run_manually: &run_manually
+.run-manually: &run-manually
   when: manual
 
 'PHP 8.2 MySQL 5.7':
-  <<: [ *default_stage, *run_manually ]
+  <<: [ *default-stage, *run-manually ]
   variables:
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.2 MySQL 8':
-  <<: *default_stage
+  <<: *default-stage
   variables:
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
@@ -86,28 +86,28 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 'PHP 8.2 PostgreSQL 13.5':
-  <<: [ *default_stage, *run_manually ]
+  <<: [ *default-stage, *run-manually ]
   variables:
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "13.5"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.2 PostgreSQL 14.1':
-  <<: [ *default_stage, *run_manually ]
+  <<: [ *default-stage, *run-manually ]
   variables:
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "14.1"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 # 'PHP 8.2 SQLite 3.26.0':
-#   <<: [ *default_stage, *run_manually ]
+#   <<: [ *default-stage, *run-manually ]
 #   variables:
 #     _TARGET_DB_TYPE: "sqlite"
 #     _TARGET_DB_VERSION: "3.26.0"
 #     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
 # 'PHP 8.2 MariaDB 10.3.22':
-#   <<: [ *default_stage, *run_manually ]
+#   <<: [ *default-stage, *run-manually ]
 #   variables:
 #     _TARGET_DB_TYPE: "mariadb"
 #     _TARGET_DB_VERSION: "10.3.22"
