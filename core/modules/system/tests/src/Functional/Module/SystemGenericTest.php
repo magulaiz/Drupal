@@ -7,11 +7,4 @@ namespace Drupal\Tests\system\Functional\Module;
  *
  * @group system
  */
-class SystemGenericTest extends GenericModuleTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $module = 'system';
-
-}
+class SystemGenericTest extends GenericModuleTestBase { }

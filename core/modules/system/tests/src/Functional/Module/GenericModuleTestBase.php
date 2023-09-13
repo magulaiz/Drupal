@@ -27,22 +27,33 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Get the module name.
+   *
+   * @return string
+   *   The module to test.
+   */
+  protected function getModule(): string {
+    return $this->module ?? explode('\\', __CLASS__)[2];
+  }
+
+  /**
    * Checks some generic things about a module.
    */
-  public function testModuleGenericIssues() {
+  public function testModuleGenericIssues(): void {
+    $module = $this->getModule();
     $this->drupalLogin($this->rootUser);
-    \Drupal::service('module_installer')->install([$this->module]);
-    $info = \Drupal::service('extension.list.module')->getExtensionInfo($this->module);
+    \Drupal::service('module_installer')->install([$module]);
+    $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
     if (!empty($info['required']) && !empty($info['hidden'])) {
       // Currently nothing to assert for hidden, required modules, so skip.
       $this->markTestSkipped();
     }
-    $this->assertHookHelp($this->module);
+    $this->assertHookHelp($module);
 
     if (empty($info['required'])) {
       // Check that the module can be uninstalled and then re-installed again.
-      \Drupal::service('module_installer')->uninstall([$this->module]);
-      \Drupal::service('module_installer')->install([$this->module]);
+      \Drupal::service('module_installer')->uninstall([$module]);
+      \Drupal::service('module_installer')->install([$module]);
     }
   }
 

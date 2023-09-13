@@ -9,11 +9,5 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  *
  * @group path_alias
  */
-class PathAliasGenericTest extends GenericModuleTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $module = 'path_alias';
-
+class PathAliasGenericTest extends GenericModuleTestBase { }
 }
