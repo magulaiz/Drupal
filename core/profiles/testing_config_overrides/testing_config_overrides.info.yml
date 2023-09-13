@@ -10,4 +10,3 @@ install:
   - action
   - language
   - testing_config_overrides_module
-  - tour

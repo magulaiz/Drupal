@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: config_override_test
+label: 'Overridden custom action'
+type: user
+plugin: user_block_user_action
