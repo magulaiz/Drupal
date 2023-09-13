@@ -218,8 +218,7 @@ stages:
     paths:
       - core/node_modules/
   script:
-    # Installs all core javascript dependencies and adds junit formatter.
-    - yarn --cwd ./core add stylelint-junit-formatter
+    - yarn --cwd ./core install
 
 ################
 # Lint Jobs
@@ -242,7 +241,7 @@ stages:
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings ]
   stage: 🪄 Lint
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
+    - yarn --cwd=./core run -s lint:css --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
 
 '🧹 Compilation check':
   <<: [ *with-yarn-cache, *default-job-settings ]
