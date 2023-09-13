@@ -61,7 +61,7 @@ class ExposedFormTest extends ViewTestBase {
 
     $this->nodes = [];
     // Create some random nodes.
-    for ($i = 0; $i < 5; $i) {
+    for ($i = 0; $i < 5; $i++) {
       $this->nodes[] = $this->drupalCreateNode(['type' => 'article']);
       $this->nodes[] = $this->drupalCreateNode(['type' => 'page']);
     }
@@ -397,7 +397,7 @@ class ExposedFormTest extends ViewTestBase {
    * Tests exposed forms with exposed sort and items per page.
    */
   public function testExposedSortAndItemsPerPage() {
-    for ($i = 0; $i < 50; $i) {
+    for ($i = 0; $i < 50; $i++) {
       $entity = EntityTest::create([]);
       $entity->save();
     }
@@ -518,7 +518,7 @@ class ExposedFormTest extends ViewTestBase {
   public function testExposedFilterPagination() {
     $this->drupalCreateContentType(['type' => 'post']);
     // Create some random nodes.
-    for ($i = 0; $i < 5; $i) {
+    for ($i = 0; $i < 5; $i++) {
       $this->drupalCreateNode(['type' => 'post']);
     }
 
