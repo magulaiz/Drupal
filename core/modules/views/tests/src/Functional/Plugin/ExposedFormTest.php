@@ -301,7 +301,6 @@ class ExposedFormTest extends ViewTestBase {
    * Test placing the same form twice on the same page.
    */
   public function testNoDoubleIdsForSameExposedForm() {
-    $this->drupalCreateContentType(['type' => 'page']);
     $view = Views::getView('test_exposed_block');
     $view->setDisplay('page_1');
     $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-page_1');
