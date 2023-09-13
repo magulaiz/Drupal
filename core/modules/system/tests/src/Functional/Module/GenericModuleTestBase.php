@@ -1,5 +1,4 @@
 <?php
-
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Tests\BrowserTestBase;
@@ -17,7 +16,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
   ];
 
   /**
-   * The module to test.
+   * The module name.
    */
   protected string $module;
 
