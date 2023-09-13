@@ -237,6 +237,18 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       ->accessCheck(FALSE)
       ->execute();
     $this->assertCount(1, $result, 'Taxonomy term was auto created when set as field default.');
+
+    // Test changing target type.
+    $field_name = 'entity_ref_field';
+    $this->fieldUIAddNewField($bundle_path, $field_name, 'Entity Reference Field', 'entity_reference', [], [], FALSE);
+    $this->submitForm(['field_storage[subform][settings][target_type]' => 'user'], 'Update settings');
+    $filter_by = $this->getSession()->getPage()->findField('settings[handler_settings][filter][type]');
+    $this->assertSession()->optionExists('Filter by', 'role');
+    $filter_by->selectOption('role');
+    $this->assertSession()->fieldExists('Restrict to the selected roles');
+    $this->getSession()->getPage()->checkField('settings[handler_settings][filter][role][administrator]');
+    $this->submitForm([], 'Save settings');
+    $this->assertSession()->pageTextContains('Saved Entity Reference Field configuration.');
   }
 
   /**
