@@ -27,35 +27,29 @@ stages:
 # Templates #
 #############
 
-.default-php-image: &default-php-image
+.default-job-settings: &default-job-settings
+  interruptible: true
+  allow_failure: false
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
-
-.default-rules: &default-rules
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-
-.composer-code: &composer-code
-  paths:
-    - ./vendor
 
 .composer-cache: &composer-cache
   key:
     files:
       - ./composer.json
       - ./composer.lock
-  <<: *composer-code
-
-.yarn-code: &yarn-code
   paths:
-    - ./core/node_modules
+    - ./vendor
 
 .yarn-cache: &yarn-cache
   key:
     files:
       - ./core/package.json
       - ./core/yarn.lock
-  <<: *yarn-code
+  paths:
+    - ./core/node_modules
 
 .pull-composer-cache: &pull-composer-cache
   cache:
@@ -68,10 +62,6 @@ stages:
   needs:
     - '📦️ Composer'
   <<: *pull-composer-cache
-
-.interruptible: &interruptible
-  interruptible: true
-  allow_failure: false
 
 .with-yarn-cache: &with-yarn-cache
   dependencies:
@@ -194,9 +184,8 @@ stages:
 ################
 
 'ℹ️ Output build parameters':
-  <<: *default-php-image
+  <<: *default-job-settings
   stage: 🏗️ Build
-  <<: *interruptible
   script:
     - echo "Checking variables"
     - echo $_TARGET_PHP
@@ -204,9 +193,8 @@ stages:
     - echo $_TARGET_DB_VERSION
 
 '📦️ Composer':
-  <<: [ *default-php-image, *default-rules ]
+  <<: *default-job-settings
   stage: 🏗️ Build
-  <<: *interruptible
   cache:
     <<: *composer-cache
   artifacts:
@@ -220,9 +208,8 @@ stages:
       - composer install
 
 '📦️ Yarn':
-  <<: [ *default-php-image, *default-rules ]
+  <<: *default-job-settings
   stage: 🏗️ Build
-  <<: *interruptible
   cache:
     <<: *yarn-cache
   artifacts:
@@ -239,39 +226,39 @@ stages:
 ################
 
 '🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer-cache, *interruptible, *junit-artifacts, *default-php-image, *default-rules ]
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings ]
   stage: 🪄 Lint
   script:
     - composer phpcs -- --report-junit=junit.xml --report-full --report-summary
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer-cache, *interruptible, *junit-artifacts, *default-php-image, *default-rules ]
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings ]
   stage: 🪄 Lint
   script:
     # Turn off apc to avoid corrupt composer cache.
     - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn-cache, *interruptible, *junit-artifacts, *default-php-image, *default-rules ]
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings ]
   stage: 🪄 Lint
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
 
 '🧹 Compilation check':
-  <<: [ *with-yarn-cache, *interruptible, *default-php-image, *default-rules ]
+  <<: [ *with-yarn-cache, *default-job-settings ]
   stage: 🪄 Lint
   script:
     - yarn run --cwd=./core build:css --check
     - cd core && yarn run -s check:ckeditor5
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn-cache, *interruptible, *junit-artifacts, *default-php-image, *default-rules ]
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings ]
   stage: 🪄 Lint
   script:
     - yarn --cwd=./core run -s lint:core-js-passing --format junit > junit.xml
 
 '📔 Spell-checking':
-  <<: [ *with-yarn-cache, *interruptible, *default-php-image, *default-rules ]
+  <<: [ *with-yarn-cache, *default-job-settings ]
   stage: 🪄 Lint
   script:
     - git fetch origin
@@ -283,7 +270,7 @@ stages:
 ################
 
 '⚡️ PHPUnit Unit':
-  <<: [ *with-composer-cache, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default-php-image, *default-rules ]
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   services:
     # There are some unit tests that need a database.
@@ -295,7 +282,7 @@ stages:
     CONCURRENCY: "$CONCURRENCY"
 
 '⚙️️ PHPUnit Kernel':
-  <<: [ *with-composer-cache, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default-php-image, *default-rules ]
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   parallel: 3
   variables:
@@ -306,7 +293,7 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default-php-image, *default-rules ]
+  <<: [ *with-linting, *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -317,7 +304,7 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default-php-image, *default-rules ]
+  <<: [ *with-linting, *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -327,7 +314,7 @@ stages:
     - <<: *with-database
 
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-linting, *with-unit-tests, *interruptible, *phpunit-artifacts, *setup-webserver, *run-tests, *default-php-image, *default-rules ]
+  <<: [ *with-linting, *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   parallel: 8
   variables:
@@ -338,7 +325,7 @@ stages:
     - <<: *with-database
 
 '🦉️️️ Nightwatch':
-  <<: [ *with-composer-yarn-and-unit-tests, *interruptible, *setup-webserver, *default-php-image, *default-rules ]
+  <<: [ *with-composer-yarn-and-unit-tests, *setup-webserver, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
