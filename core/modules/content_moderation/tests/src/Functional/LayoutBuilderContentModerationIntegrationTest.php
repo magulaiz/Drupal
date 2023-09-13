@@ -67,6 +67,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
       ->save();
 
     $this->drupalLogin($this->drupalCreateUser([
+      'administer nodes',
       'configure any layout',
       'edit any bundle_with_section_field content',
       'view bundle_with_section_field revisions',
