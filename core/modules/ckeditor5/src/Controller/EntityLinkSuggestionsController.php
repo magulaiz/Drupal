@@ -214,7 +214,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     end($selection_handler_groups['default']);
     // Select the link_target variant of the default selection plugin for the
     // entity type, if it exists. Otherwise, select the next best match.
-    $link_target_selection_plugin_id = "default:${target_entity_type_id}_link_target";
+    $link_target_selection_plugin_id = "default:{$target_entity_type_id}_link_target";
     $plugin_id = array_key_exists($link_target_selection_plugin_id, $selection_handler_groups['default'])
       ? $link_target_selection_plugin_id
       : key($selection_handler_groups['default']);
