@@ -1033,7 +1033,7 @@
     // Remove the progress element.
     if (this.progress.element) {
       $(
-        `.${$(this.progress.element).attr('class').replace(/\s/g, '.')}`
+        `.${$(this.progress.element).attr('class').replace(/\s/g, '.')}`,
       ).remove();
     }
     if (this.progress.object) {
