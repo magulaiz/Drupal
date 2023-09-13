@@ -67,6 +67,20 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   protected $writeSafeHandler;
 
   /**
+   * The PHP session handler.
+   *
+   * @var string
+   */
+  protected $PHPSessionHandler;
+
+  /**
+   * The PHP session name.
+   *
+   * @var string
+   */
+  protected $PHPSessionName;
+
+  /**
    * Constructs a new session manager instance.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -86,6 +100,11 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     $this->sessionConfiguration = $session_configuration;
     $this->requestStack = $request_stack;
     $this->connection = $connection;
+
+    // Save the PHP session info in case we need to retrieve session data that
+    // PHP stores before Drupal starts.
+    $this->PHPSessionHandler = session_module_name();
+    $this->PHPSessionName = session_name();
 
     parent::__construct($options, $handler, $metadata_bag);
   }
@@ -303,6 +322,24 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     return array_intersect_key($mask, $_SESSION);
+  }
+
+  /**
+   * Returns the built-in PHP session handler.
+   *
+   * @return string
+   */
+  public function getPHPSessionHandler() {
+    return $this->PHPSessionHandler;
+  }
+
+  /**
+   * Returns the built-in PHP session name.
+   *
+   * @return string
+   */
+  public function getPHPSessionName() {
+    return $this->PHPSessionName;
   }
 
 }

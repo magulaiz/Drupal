@@ -68,6 +68,7 @@ function file_requirements($phase) {
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
     $description = NULL;
+    $severity = NULL;
     $implementation = file_progress_implementation();
     // The environment variable might be missing. Fallback to an empty string to
     // prevent passing NULL to preg_match(), a few lines later.
@@ -105,10 +106,53 @@ function file_requirements($phase) {
     elseif ($implementation == 'uploadprogress') {
       $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
     }
+    if ($implementation == 'session') {
+      $value = t('Enabled (<a href="http://php.net/manual/en/session.upload-progress.php">PHP session upload progress</a>)');
+      /** @var Drupal\Core\Session\SessionManager $session_manager */
+      $session_manager = \Drupal::service('session_manager');
+      if (!method_exists($session_manager, 'getPHPSessionName') || $session_manager->getPHPSessionName() != session_name()) {
+        $description = [
+          [
+            '#markup' => t('The <a href=":url">PHP session name</a> must be set to %session_name before Drupal starts in order to store file upload progress. It is currently set to %php_session_name.', [
+              ':url' => 'http://php.net/manual/en/session.configuration.php#ini.session.name',
+              '%session_name' => session_name(),
+              '%php_session_name' => $session_manager->getPHPSessionName(),
+            ]),
+          ],
+        ];
+        // Tell users how to configure the PHP session name, if we can.
+        if (substr(PHP_SAPI, 0, 6) == 'apache') {
+          // Settings can be configured in a .htaccess file if PHP is running as
+          // an Apache module.
+          $description[] = [
+            '#prefix' => ' ',
+            '#markup' => t('Add <code>php_value session.name @session_name</code> to the PHP @php-version settings of the .htaccess file in your Drupal root folder.', [
+              '@session_name' => session_name(),
+              '@php-version' => PHP_MAJOR_VERSION,
+            ]),
+          ];
+        }
+        elseif (substr(PHP_SAPI, 0, 3) == 'cgi') {
+          // PHP running as CGI cannot get settings from .htaccess files, but
+          // since 5.3.0 it supports .user.ini files.
+          $description[] = [
+            '#prefix' => ' ',
+            '#markup' => t('Add <code>session.name=@session_name</code> to a .<a href=":url">user.ini</a> file in your Drupal root folder.', [
+              '@session_name' => session_name(),
+              ':url' => 'http://php.net/manual/en/configuration.file.per-user.php',
+            ]),
+          ];
+        }
+      }
+      if (method_exists($session_manager, 'getPHPSessionName') && $session_manager->getPHPSessionName() != session_name()) {
+        $severity = REQUIREMENT_WARNING;
+      }
+    }
     $requirements['file_progress'] = [
       'title' => t('Upload progress'),
       'value' => $value,
       'description' => $description,
+      'severity' => $severity,
     ];
   }
 

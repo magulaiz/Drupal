@@ -257,13 +257,14 @@
       if ($progressId.length) {
         const originalName = $progressId.attr('name');
 
-        // Replace the name with the required identifier.
-        $progressId.attr(
-          'name',
-          originalName.match(/APC_UPLOAD_PROGRESS|UPLOAD_IDENTIFIER/)[0],
-        );
+        // Replace the name with the required identifier to ensure that this
+        // element sends its upload identifier. The upload identifier is the
+        // last string in the name that does not contain square brackets.
+        $progressId.attr('name', originalName.match(/[^[\]]+(?!.*[^[\]]+)/)[0]);
 
-        // Restore the original name after the upload begins.
+        // Restore the original name after the upload begins to prevent this
+        // element from sending its upload identifier with another element’s
+        // upload.
         setTimeout(() => {
           $progressId.attr('name', originalName);
         }, 1000);

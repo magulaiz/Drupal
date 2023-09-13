@@ -962,21 +962,31 @@
    * Sets the progress bar progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
+    const val = document.getElementsByClassName('file-progress')[0].value;
     const progressBar = new Drupal.ProgressBar(
       `ajax-progress-${this.element.id}`,
       $.noop,
       this.progress.method,
       $.noop,
     );
-    if (this.progress.message) {
-      progressBar.setProgress(-1, this.progress.message);
-    }
-    if (this.progress.url) {
-      progressBar.startMonitoring(
-        this.progress.url,
-        this.progress.interval || 1500,
-      );
-    }
+
+    const timer = setTimeout(function () {
+      $.ajax({
+        type: 'POST',
+        data: { PHP_SESSION_UPLOAD_PROGRESS: val },
+        url: Drupal.url('core/modules/file/session-upload-progress.php'),
+        success: (msg) => {
+          const parsedMsg = JSON.parse(msg);
+          if (parsedMsg.percentage === 100) {
+            clearInterval(timer);
+            progressBar.setProgress(100, parsedMsg.message);
+          } else {
+            progressBar.setProgress(parsedMsg.percentage, parsedMsg.message);
+          }
+        },
+      });
+    }, 500);
+
     this.progress.element = $(
       Drupal.theme('ajaxProgressBar', progressBar.element),
     );
