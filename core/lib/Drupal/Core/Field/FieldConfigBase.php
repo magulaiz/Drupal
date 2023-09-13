@@ -6,7 +6,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
-use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for configurable field definitions.
