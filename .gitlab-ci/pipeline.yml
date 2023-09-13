@@ -1,0 +1,197 @@
+stages:
+  ################
+  # Build
+  #
+  # Assemble the test environment.
+  ################
+  - 🏗️ Build
+
+  ################
+  # Code quality checks
+  #
+  # This stage includes any codebase validation that we want to perform
+  # before running functional tests.
+  ################
+  - 🪄 Lint
+
+  ################
+  # Test
+  #
+  # The test phase actually executes the tests, as well as gathering results
+  # and artifacts.
+  ################
+  - 🗜️ Test
+
+#############
+# Templates #
+#############
+
+.default-job-settings: &default-job-settings
+  interruptible: true
+  allow_failure: false
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+
+.composer-cache: &composer-cache
+  key:
+    files:
+      - ./composer.json
+      - ./composer.lock
+  paths:
+    - ./vendor
+
+.pull-composer-cache: &pull-composer-cache
+  cache:
+    policy: pull
+    <<: *composer-cache
+  dependencies:
+    - '📦️ Composer'
+
+.with-composer-cache: &with-composer-cache
+  needs:
+    - '📦️ Composer'
+  <<: *pull-composer-cache
+
+.junit-artifacts: &junit-artifacts
+  artifacts:
+    expose_as: junit
+    expire_in: 6 mos
+    paths:
+      - junit.xml
+    reports:
+      junit: junit.xml
+
+.with-linting: &with-linting
+  needs:
+    - '📦️ Composer'
+    - '🧹 PHP Coding standards (PHPCS)'
+  <<: *pull-composer-cache
+
+.test-variables: &test-variables
+  FF_NETWORK_PER_BUILD: 1
+  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  DB_DRIVER: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: drupal
+  MYSQL_USER: drupaltestbot
+  MYSQL_PASSWORD: drupaltestbotpw
+  MARIADB_TAG: $_TARGET_DB_VERSION
+  POSTGRES_TAG: $_TARGET_DB_VERSION
+  POSTGRES_DB: drupaltestbot
+  POSTGRES_USER: drupaltestbot
+  POSTGRES_PASSWORD: drupaltestbotpw
+  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://localhost:9515"]'
+
+.with-database: &with-database
+  name: $_DB_IMAGE
+  alias: database
+
+.with-chrome: &with-chrome
+  name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+  alias: chrome
+  entrypoint:
+    - chromedriver
+    - "--no-sandbox"
+    - "--log-path=/tmp/chromedriver.log"
+    - "--verbose"
+    - "--whitelisted-ips="
+
+.phpunit-artifacts: &phpunit-artifacts
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
+      - ./sites/default/files/simpletest/verbose
+
+.setup-webroot: &setup-webserver
+  before_script:
+    - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
+    - cp $CI_PROJECT_DIR/.gitlab-ci/htaccess /var/www/html/.htaccess
+    - sudo service apache2 start
+
+.run-tests: &run-tests
+  script:
+    # Determine DB driver.
+    - |
+      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
+      [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+    - export
+    - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    # Install Drupal.
+    - vendor/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com --xml=./sites/default/files/simpletest
+    - vendor/bin/drush vset simpletest_clear_results '0'
+    - vendor/bin/drush vset simpletest_verbose '0'
+    - vendor/bin/drush en -y simpletest
+    # We need to pass this along directly even though it's set in the environment parameters.
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all
+
+################
+# Jobs
+#
+# Jobs define what scripts are actually executed in each stage.
+################
+
+################
+# Build Jobs
+################
+
+'ℹ️ Output build parameters':
+  <<: *default-job-settings
+  stage: 🏗️ Build
+  script:
+    - echo "Checking variables"
+    - echo $_TARGET_PHP
+    - echo $_TARGET_DB_TYPE
+    - echo $_TARGET_DB_VERSION
+
+'📦️ Composer':
+  <<: *default-job-settings
+  stage: 🏗️ Build
+  cache:
+    <<: *composer-cache
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'web-vendor'
+    paths:
+      - vendor/
+  script:
+      - export
+      - echo "{}" > composer.json
+      - composer config allow-plugins true -n
+      - composer require --dev drush/drush:~8
+      - composer require --dev drupal/coder:^8.2@stable
+
+################
+# Lint Jobs
+################
+
+'🧹 PHP Coding standards (PHPCS)':
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings ]
+  stage: 🪄 Lint
+  script:
+    - git fetch origin
+    - export MODIFIED=`git diff --name-only origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
+    - vendor/bin/phpcs --report-junit=junit.xml --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
+
+################
+# Test Jobs
+################
+
+'⚡️ PHPUnit Unit':
+  <<: [ *with-linting, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  stage: 🗜️ Test
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  variables:
+    <<: *test-variables
+    CONCURRENCY: "$CONCURRENCY"
