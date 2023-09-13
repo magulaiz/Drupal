@@ -9,11 +9,4 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  *
  * @group dblog
  */
-class DbLogGenericTest extends GenericModuleTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $module = 'dblog';
-
-}
+class DbLogGenericTest extends GenericModuleTestBase { }
