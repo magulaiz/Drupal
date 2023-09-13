@@ -525,19 +525,19 @@ class ExposedFormTest extends ViewTestBase {
     $this->drupalGet('test_exposed_form_pager');
     $this->getSession()->getPage()->fillField('type[]', 'post');
     $this->getSession()->getPage()->fillField('created[min]', '-1 month');
-    $this->getSession()->getPage()->fillField('created[max]', '1 month');
+    $this->getSession()->getPage()->fillField('created[max]', '+1 month');
 
     // Ensure the filters can be applied.
     $this->getSession()->getPage()->pressButton('Apply');
     $this->assertTrue($this->assertSession()->optionExists('type[]', 'post')->isSelected());
     $this->assertSession()->fieldValueEquals('created[min]', '-1 month');
-    $this->assertSession()->fieldValueEquals('created[max]', '1 month');
+    $this->assertSession()->fieldValueEquals('created[max]', '+1 month');
 
     // Ensure the filters are still applied after pressing next.
     $this->clickLink('Next ›');
     $this->assertTrue($this->assertSession()->optionExists('type[]', 'post')->isSelected());
     $this->assertSession()->fieldValueEquals('created[min]', '-1 month');
-    $this->assertSession()->fieldValueEquals('created[max]', '1 month');
+    $this->assertSession()->fieldValueEquals('created[max]', '+1 month');
   }
 
   /**
