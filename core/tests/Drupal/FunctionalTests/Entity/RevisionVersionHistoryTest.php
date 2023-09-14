@@ -331,6 +331,7 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('css', 'table tbody tr', VersionHistoryController::REVISIONS_PER_PAGE);
     $this->assertSession()->elementExists('css', '.pager');
 
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $firstRevision = $storage->loadRevision($firstRevisionId);
     $secondRevision = $storage->loadRevision($firstRevisionId + 1);
