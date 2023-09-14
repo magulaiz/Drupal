@@ -16,11 +16,7 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-// Get the Composer autoloader. This needs to use exec('pwd') rather than
-// 'getcwd' in order to get the directory the script is being run from without
-// any symlinks being resolved. This ensures the script can be run from any
-// location in the codebase.
-$classloader = require_once dirname(exec("pwd") . '/' . trim($_SERVER['argv'][0], './'), 3) . '/autoload.php';
+$classloader = require_once 'autoload.php';
 
 $application = new Application('drupal', \Drupal::VERSION);
 

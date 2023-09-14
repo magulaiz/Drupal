@@ -18,7 +18,7 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-$autoloader = require_once dirname(exec("pwd") . '/' . trim($_SERVER['argv'][0], './'), 3) . '/autoload.php';
+$autoloader = require_once 'autoload.php';
 
 $script = basename(array_shift($_SERVER['argv']));
 
