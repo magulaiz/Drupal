@@ -25,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class VersionHistoryController extends ControllerBase {
 
+  const REVISIONS_PER_PAGE = 50;
+
   /**
    * Constructs a new VersionHistoryController.
    *
@@ -213,7 +215,7 @@ class VersionHistoryController extends ControllerBase {
       ->allRevisions()
       ->condition($entityType->getKey('id'), $entity->id())
       ->sort($entityType->getKey('revision'), 'DESC')
-      ->pager(50)
+      ->pager(self::REVISIONS_PER_PAGE)
       ->execute();
 
     $currentLangcode = $this->languageManager
