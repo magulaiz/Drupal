@@ -3,7 +3,6 @@
 namespace Drupal\config_test_overrides\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\config_test\ConfigTestInterface;
 
 /**
  * Defines the ConfigTest configuration entity.
@@ -22,7 +21,7 @@ use Drupal\config_test\ConfigTestInterface;
  *   },
  * )
  */
-class ConfigTestOverrides extends ConfigEntityBase implements ConfigTestInterface {
+class ConfigTestOverrides extends ConfigEntityBase {
 
   /**
    * The machine name for the configuration entity.
