@@ -72,14 +72,16 @@ stages:
       [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
       [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
     - export
-    - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    # Install Drupal.
+    # Install drush.
     - composer -V
     - echo "{}" > composer.json
     - composer config allow-plugins true -n
     - composer require --dev drush/drush
+    # Create folders.
+    - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    # Install Drupal.
     - vendor/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
     - vendor/bin/drush vset simpletest_clear_results '0'
     - vendor/bin/drush vset simpletest_verbose '1'
