@@ -55,6 +55,27 @@ variables:
 # If any job in the stage fails, the pipeline will exit early.
 ################
 
+stages:
+  ################
+  # Code quality checks
+  #
+  # This stage includes any codebase validation that we want to perform
+  # before running functional tests.
+  ################
+  - 🪄 Lint
+
+  ################
+  # Test
+  #
+  # The test phase actually executes the tests, as well as gathering results
+  # and artifacts.
+  ################
+  - 🗜️ Test
+
+#############
+# Templates #
+#############
+
 .run-on-mr: &run-on-mr
   if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
@@ -70,7 +91,7 @@ variables:
   if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
 
 .default-stage: &default-stage
-  stage: test
+  stage: 🗜️ Test
   trigger:
     # Rely on the status of the child pipeline.
     strategy: depend
@@ -80,10 +101,40 @@ variables:
     - <<: *run-on-commit
     - <<: *run-on-mr-manual
 
+################
+# Jobs
+#
+# Jobs define what scripts are actually executed in each stage.
+################
+
+'🧹 PHP Coding standards (PHPCS)':
+  stage: 🪄 Lint
+  interruptible: true
+  allow_failure: false
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  artifacts:
+    expose_as: junit
+    expire_in: 6 mos
+    paths:
+      - junit.xml
+    reports:
+      junit: junit.xml
+  rules:
+    - <<: *run-on-commit
+    - <<: *run-on-mr
+  script:
+    - echo "{}" > composer.json
+    - composer require --dev drupal/coder:^8.2@stable
+    - git fetch origin
+    - export MODIFIED=`git diff --name-only origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
+    - vendor/bin/phpcs --report-junit=junit.xml --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
+
 # Default job.
 'PHP 8.1 MySQL 5.7':
   <<: *default-stage
   variables:
+    _TARGET_PHP: "8.1"
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production

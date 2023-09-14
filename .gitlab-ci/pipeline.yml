@@ -1,20 +1,5 @@
 stages:
   ################
-  # Build
-  #
-  # Assemble the test environment.
-  ################
-  - 🏗️ Build
-
-  ################
-  # Code quality checks
-  #
-  # This stage includes any codebase validation that we want to perform
-  # before running functional tests.
-  ################
-  - 🪄 Lint
-
-  ################
   # Test
   #
   # The test phase actually executes the tests, as well as gathering results
@@ -33,41 +18,6 @@ stages:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-
-.composer-cache: &composer-cache
-  key:
-    files:
-      - ./composer.json
-      - ./composer.lock
-  paths:
-    - ./vendor
-
-.pull-composer-cache: &pull-composer-cache
-  cache:
-    policy: pull
-    <<: *composer-cache
-  dependencies:
-    - '📦️ Composer'
-
-.with-composer-cache: &with-composer-cache
-  needs:
-    - '📦️ Composer'
-  <<: *pull-composer-cache
-
-.junit-artifacts: &junit-artifacts
-  artifacts:
-    expose_as: junit
-    expire_in: 6 mos
-    paths:
-      - junit.xml
-    reports:
-      junit: junit.xml
-
-.with-linting: &with-linting
-  needs:
-    - '📦️ Composer'
-    - '🧹 PHP Coding standards (PHPCS)'
-  <<: *pull-composer-cache
 
 .test-variables: &test-variables
   FF_NETWORK_PER_BUILD: 1
@@ -126,6 +76,9 @@ stages:
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # Install Drupal.
+    - echo "{}" > composer.json
+    - composer config allow-plugins true -n
+    - composer require --dev drush/drush
     - vendor/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
     - vendor/bin/drush vset simpletest_clear_results '0'
     - vendor/bin/drush vset simpletest_verbose '1'
@@ -139,54 +92,8 @@ stages:
 # Jobs define what scripts are actually executed in each stage.
 ################
 
-################
-# Build Jobs
-################
-
-'ℹ️ Output build parameters':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  script:
-    - echo "Checking variables"
-    - echo $_TARGET_PHP
-    - echo $_TARGET_DB_TYPE
-    - echo $_TARGET_DB_VERSION
-
-'📦️ Composer':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  cache:
-    <<: *composer-cache
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'web-vendor'
-    paths:
-      - vendor/
-  script:
-      - export
-      - echo "{}" > composer.json
-      - composer config allow-plugins true -n
-      - composer require --dev drush/drush:~8
-      - composer require --dev drupal/coder:^8.2@stable
-
-################
-# Lint Jobs
-################
-
-'🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    - git fetch origin
-    - export MODIFIED=`git diff --name-only origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
-    - vendor/bin/phpcs --report-junit=junit.xml --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
-
-################
-# Test Jobs
-################
-
 '⚡️ PHPUnit Unit':
-  <<: [ *with-linting, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   services:
     - <<: *with-database
