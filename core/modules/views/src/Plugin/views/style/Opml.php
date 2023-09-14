@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Default style plugin to render an OPML feed.
@@ -17,7 +18,7 @@ use Drupal\Core\Url;
  *   display_types = {"feed"}
  * )
  */
-class Opml extends StylePluginBase {
+class Opml extends StylePluginBase implements ResponseStylePluginInterface {
 
   /**
    * {@inheritdoc}
@@ -70,6 +71,13 @@ class Opml extends StylePluginBase {
     ];
     unset($this->view->row_index);
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function alterResponse(Response $response) {
+    $response->headers->set('Content-Type', 'text/xml; charset=utf-8');
   }
 
 }
