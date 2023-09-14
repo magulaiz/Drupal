@@ -116,8 +116,6 @@ stages:
   MYSQL_DATABASE: mysql
   MYSQL_USER: drupaltestbot
   MYSQL_PASSWORD: drupaltestbotpw
-  MARIADB_TAG: $_TARGET_DB_VERSION
-  POSTGRES_TAG: $_TARGET_DB_VERSION
   POSTGRES_DB: drupaltestbot
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
