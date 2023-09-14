@@ -80,9 +80,7 @@ variables:
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.2"
-    _TARGET_DB_TYPE: "mysql"
-    _TARGET_DB_VERSION: "8"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_DB: "mysql-8"
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -92,53 +90,41 @@ variables:
   <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_PHP: "8.1"
-    _TARGET_DB_TYPE: "mysql"
-    _TARGET_DB_VERSION: "5.7"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_DB: "mysql-5.7"
 
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_PHP: "8.2"
-    _TARGET_DB_TYPE: "pgsql"
-    _TARGET_DB_VERSION: "14.1"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_DB: "pgsql-14.1"
 
 # 'PHP 8.2 SQLite 3.34.0':
 #   <<: [ *default-stage, *run-on-commit ]
 #   variables:
-#     _TARGET_DB_TYPE: "sqlite"
-#     _TARGET_DB_VERSION: "3.34.0"
-#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+#     _TARGET_PHP: "8.2"
+#     _TARGET_DB: "php-$_TARGET_PHP-apache"
 
 # Run daily, or manually.
 # 'PHP 8.1 MariaDB 10.3.22':
 #   <<: [ *default-stage, *run-daily ]
 #   variables:
 #     _TARGET_PHP: "8.1"
-#     _TARGET_DB_TYPE: "mariadb"
-#     _TARGET_DB_VERSION: "10.3.22"
-#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+#     _TARGET_DB: "mariadb-10.3.22"
 
 # 'PHP 8.1 MySQL 5.7 with updated deps':
 #   <<: [ *default-stage, *run-daily ]
 #   variables:
 #     _TARGET_PHP: "8.1"
-#     _TARGET_DB_TYPE: "mysql"
-#     _TARGET_DB_VERSION: "5.7"
-#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+#     _TARGET_DB: "mysql-5.7"
 
 'PHP 8.1 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
   variables:
     _TARGET_PHP: "8.1"
-    _TARGET_DB_TYPE: "pgsql"
-    _TARGET_DB_VERSION: "14.1"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_DB: "pgsql-14.1"
 
 # 'PHP 8.1 SQLite 3.27.0':
 #   <<: [ *default-stage, *run-daily ]
 #   variables:
-#     _TARGET_DB_TYPE: "sqlite"
-#     _TARGET_DB_VERSION: "3.27.0"
-#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+#     _TARGET_PHP: "8.1"
+#     _TARGET_DB: "php-$_TARGET_PHP-apache"
