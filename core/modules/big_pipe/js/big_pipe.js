@@ -87,10 +87,12 @@
    * Checks if node is valid big pipe replacement.
    */
   function checkMutation(node) {
-    return Boolean(node.nodeType === Node.ELEMENT_NODE &&
-      node.nodeName === 'SCRIPT' &&
-      node.dataset &&
-      node.dataset.bigPipeReplacementForPlaceholderWithId);
+    return Boolean(
+      node.nodeType === Node.ELEMENT_NODE &&
+        node.nodeName === 'SCRIPT' &&
+        node.dataset &&
+        node.dataset.bigPipeReplacementForPlaceholderWithId,
+    );
   }
 
   /**
@@ -116,9 +118,11 @@
       addedNodes.forEach(checkMutationAndProcess);
 
       if (
-        type === 'characterData'
-        && checkMutation(target.parentNode)
-        && drupalSettings.bigPipePlaceholderIds[target.parentNode.dataset.bigPipeReplacementForPlaceholderWithId] === true
+        type === 'characterData' &&
+        checkMutation(target.parentNode) &&
+        drupalSettings.bigPipePlaceholderIds[
+          target.parentNode.dataset.bigPipeReplacementForPlaceholderWithId
+        ] === true
       ) {
         processReplacement(target.parentNode);
       }
@@ -135,7 +139,11 @@
   document.querySelectorAll(replacementsSelector).forEach(processReplacement);
 
   // Start observing the body element for new children.
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
 
   // As soon as the document is loaded, no more replacements will be added.
   // Immediately fetch and process all pending mutations and stop the observer.
