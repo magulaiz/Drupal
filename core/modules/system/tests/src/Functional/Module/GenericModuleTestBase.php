@@ -40,8 +40,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
     \Drupal::service('module_installer')->install([$module]);
     $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
     if (!empty($info['required']) && !empty($info['hidden'])) {
-      // Currently nothing to assert for hidden, required modules, so skip.
-      $this->markTestSkipped();
+      $this->markTestSkipped('Currently nothing to assert for hidden, required modules.');
     }
     $this->assertHookHelp($module);
 
