@@ -62,11 +62,19 @@ variables:
     strategy: depend
     include:
       - local: .gitlab-ci/pipeline.yml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-.run-manually: &run-manually
-  when: manual
+.run-on-commit: &run-on-commit
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+
+.run-daily: &run-daily
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+
 
 'PHP 8.1 MySQL 5.7':
   <<: *default-stage
@@ -75,41 +83,39 @@ variables:
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "web" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 'PHP 8.1 MySQL 8':
-  <<: [ *default-stage, *run-manually ]
+  <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 PostgreSQL 13.5':
-  <<: [ *default-stage, *run-manually ]
+  <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "13.5"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 PostgreSQL 14.1':
-  <<: [ *default-stage, *run-manually ]
+  <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "14.1"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 SQLite 3.26.0':
-  <<: [ *default-stage, *run-manually ]
+  <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_DB_TYPE: "sqlite"
     _TARGET_DB_VERSION: "3.26.0"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
 # 'PHP 8.1 MariaDB 10.3.22':
-#   <<: [ *default-stage, *run-manually ]
+#   <<: [ *default-stage, *run-on-commit ]
 #   variables:
 #     _TARGET_DB_TYPE: "mariadb"
 #     _TARGET_DB_VERSION: "10.3.22"
