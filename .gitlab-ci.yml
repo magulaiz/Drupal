@@ -55,6 +55,20 @@ variables:
 # If any job in the stage fails, the pipeline will exit early.
 ################
 
+.run-on-mr:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+.run-on-mr-manual:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    when: manual
+    allow_failure: true
+
+.run-on-commit: &run-on-commit
+  - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+
+.run-daily: &run-daily
+  - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+
 .default-stage: &default-stage
   stage: test
   trigger:
@@ -62,18 +76,9 @@ variables:
     strategy: depend
     include:
       - local: .gitlab-ci/pipeline.yml
-
-.run-on-commit: &run-on-commit
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
-
-.run-daily: &run-daily
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
+    <<: .run-on-commit
+    <<: .run-on-mr-manual
 
 # Default job.
 'PHP 8.1 MySQL 5.7':
@@ -83,11 +88,11 @@ variables:
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    <<: .run-on-commit
+    <<: .run-on-mr
 
 'PHP 5.6 MySQL 5.5':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "5.6"
     _TARGET_DB_TYPE: "mysql"
@@ -95,7 +100,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 7.2 MySQL 5.6':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "7.2"
     _TARGET_DB_TYPE: "mysql"
@@ -103,7 +108,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 7.4 MySQL 5.7':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "7.4"
     _TARGET_DB_TYPE: "mysql"
@@ -111,7 +116,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.0 MySQL 5.7':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "8.0"
     _TARGET_DB_TYPE: "mysql"
@@ -119,7 +124,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.2 MySQL 8':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB_TYPE: "mysql"
@@ -127,7 +132,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 7.4 PostgreSQL 9.5':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "7.4"
     _TARGET_DB_TYPE: "pgsql"
@@ -135,7 +140,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 PostgreSQL 13.5':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB_TYPE: "pgsql"
@@ -143,7 +148,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 7.4 SQLite 3.27.0':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: *default-stage
   variables:
     _TARGET_PHP: "7.4"
     _TARGET_DB_TYPE: "sqlite"
@@ -151,7 +156,7 @@ variables:
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
 # 'PHP 8.1 MariaDB 10.3.22':
-#   <<: [ *default-stage, *run-on-commit ]
+#   <<: *default-stage
 #   variables:
 #     _TARGET_DB_TYPE: "mariadb"
 #     _TARGET_DB_VERSION: "10.3.22"
