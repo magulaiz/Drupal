@@ -68,12 +68,14 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
+      allow_failure: true
 
 .run-daily: &run-daily
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
+      allow_failure: true
 
 # Default configuration.
 'PHP 8.2 MySQL 8':
