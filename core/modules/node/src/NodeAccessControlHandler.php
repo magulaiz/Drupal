@@ -216,6 +216,9 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // Users have access to the revision_log field either if they have
     // administrative permissions or if the new revision option is enabled.
     if ($operation == 'edit' && $field_definition->getName() == 'revision_log') {
+      if ($account->hasPermission('administer nodes')) {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
       return AccessResult::allowedIf($items->getEntity()->type->entity->shouldCreateNewRevision())->cachePerPermissions();
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
