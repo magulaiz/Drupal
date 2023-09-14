@@ -299,7 +299,7 @@ views_sort:
         PluginExists:
           manager: plugin.manager.views.sort
           # @todo Remove this line and fix all views in core which use invalid
-          # sort plugins.
+          # sort plugins in https://drupal.org/i/3387325.
           allowFallback: true
 
 views_sort_expose:
@@ -329,7 +329,7 @@ views_area:
         PluginExists:
           manager: plugin.manager.views.area
           # @todo Remove this line and fix all views in core which use invalid
-          # area plugins.
+          # area plugins in https://drupal.org/i/3387325.
           allowFallback: true
 
 views_handler:
@@ -458,7 +458,7 @@ views_argument:
         PluginExists:
           manager: plugin.manager.views.argument
           # @todo Remove this line and fix all views in core which use invalid
-          # argument plugins.
+          # argument plugins in https://drupal.org/i/3387325.
           allowFallback: true
 
 views_exposed_form:
@@ -623,7 +623,7 @@ views_field:
         PluginExists:
           manager: plugin.manager.views.field
           # @todo Remove this line and fix all views in core which use invalid
-          # field plugins.
+          # field plugins in https://drupal.org/i/3387325.
           allowFallback: true
 
 views_pager:
@@ -829,7 +829,7 @@ views_filter:
         PluginExists:
           manager: plugin.manager.views.filter
           # @todo Remove this line and fix all views in core which use invalid
-          # filter plugins.
+          # filter plugins in https://drupal.org/i/3387325.
           allowFallback: true
 
 views_filter_group_item:
@@ -862,7 +862,7 @@ views_relationship:
         PluginExists:
           manager: plugin.manager.views.relationship
           # @todo Remove this line and fix all views in core which use invalid
-          # relationship plugins.
+          # relationship plugins in https://drupal.org/i/3387325.
           allowFallback: true
 
 views_query:
