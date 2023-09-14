@@ -76,7 +76,8 @@ stages:
     - composer -V
     - echo "{}" > composer.json
     - composer config allow-plugins true -n
-    - composer require --dev drush/drush
+    - composer require --dev drush/drush:~8
+    - vendor/bin/drush --version
     # Create folders.
     - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
