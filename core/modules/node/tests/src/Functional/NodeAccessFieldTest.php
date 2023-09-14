@@ -150,7 +150,8 @@ class NodeAccessFieldTest extends NodeTestBase {
 
     // Log in as the administrator and confirm that the field value is present.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertSession()->pageTextNotContains('Revision information');
+    $this->assertSession()->pageTextContains('Revision log message');
+    $this->assertFalse(str_contains($this->getSession()->getPage()->find('css', '#edit-revision-information')->getText(), 'Create new revision'));
     $this->drupalGet('node/' . $node->id() . '/revisions');
     $this->assertSession()->linkExists('Revert');
 
@@ -161,6 +162,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->drupalGet('/admin/people/permissions');
     $this->submitForm($edit, 'Save permissions');
     $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertTrue(str_contains($this->getSession()->getPage()->find('css', '#edit-revision-information')->getText(), 'Create new revision'));
     $this->assertSession()->pageTextContains('Revision information');
   }
 

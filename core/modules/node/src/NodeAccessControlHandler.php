@@ -202,7 +202,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
     // Only users with the administer nodes permission can edit administrative
     // fields.
-    $administrative_fields = ['uid', 'status', 'created', 'promote', 'sticky', 'vid'];
+    $administrative_fields = ['uid', 'status', 'created', 'promote', 'sticky'];
     if ($operation == 'edit' && in_array($field_definition->getName(), $administrative_fields, TRUE)) {
       return AccessResult::allowedIfHasPermission($account, 'administer nodes');
     }
@@ -216,9 +216,6 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // Users have access to the revision_log field either if they have
     // administrative permissions or if the new revision option is enabled.
     if ($operation == 'edit' && $field_definition->getName() == 'revision_log') {
-      if ($account->hasPermission('administer nodes')) {
-        return AccessResult::allowed()->cachePerPermissions();
-      }
       return AccessResult::allowedIf($items->getEntity()->type->entity->shouldCreateNewRevision())->cachePerPermissions();
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
