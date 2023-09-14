@@ -55,10 +55,10 @@ variables:
 # If any job in the stage fails, the pipeline will exit early.
 ################
 
-.run-on-mr:
+.run-on-mr: &run-on-mr
   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-.run-on-mr-manual:
+.run-on-mr-manual: &run-on-mr-manual
   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     when: manual
     allow_failure: true
@@ -77,8 +77,8 @@ variables:
     include:
       - local: .gitlab-ci/pipeline.yml
   rules:
-    <<: *.run-on-commit
-    <<: *.run-on-mr-manual
+    <<: *run-on-commit
+    <<: *run-on-mr-manual
 
 # Default job.
 'PHP 8.1 MySQL 5.7':
@@ -88,8 +88,8 @@ variables:
     _TARGET_DB_VERSION: "5.7"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
   rules:
-    <<: *.run-on-commit
-    <<: *.run-on-mr
+    <<: *run-on-commit
+    <<: *run-on-mr
 
 'PHP 5.6 MySQL 5.5':
   <<: *default-stage
