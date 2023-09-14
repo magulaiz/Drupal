@@ -83,6 +83,9 @@ variables:
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':
