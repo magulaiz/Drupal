@@ -5,8 +5,8 @@ namespace Drupal\Tests\path_alias\Functional;
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 
 /**
- * Generic module test for Path Alias.
+ * Generic module test for path_alias.
  *
  * @group path_alias
  */
-class PathAliasGenericTest extends GenericModuleTestBase {}
+class GenericTest extends GenericModuleTestBase {}

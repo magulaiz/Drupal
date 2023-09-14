@@ -5,8 +5,8 @@ namespace Drupal\Tests\dblog\Functional;
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 
 /**
- * Generic module test for DbLog.
+ * Generic module test for dblog.
  *
  * @group dblog
  */
-class DbLogGenericTest extends GenericModuleTestBase {}
+class GenericTest extends GenericModuleTestBase {}
