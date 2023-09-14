@@ -1,5 +1,4 @@
 <?php
-
 namespace Drupal\Core;
 
 use Drupal\Core\Cache\Context\CacheContextsPass;
@@ -30,18 +29,6 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * ServiceProvider class for mandatory core services.
- *
- * This is where Drupal core registers all of its compiler passes.
- * The service definitions themselves are in core/core.services.yml with a
- * few, documented exceptions (typically, install requirements).
- *
- * Modules wishing to register services to the container should use
- * modulename.services.yml in their respective directories.
- *
- * @ingroup container
- */
 class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
 
   /**
