@@ -17,11 +17,6 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
   ];
 
   /**
-   * The module name.
-   */
-  protected string $module;
-
-  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
@@ -33,7 +28,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    *   The module to test.
    */
   protected function getModule(): string {
-    return $this->module ?? explode('\\', __CLASS__)[2];
+    return explode('\\', __CLASS__)[2];
   }
 
   /**
