@@ -3,10 +3,12 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldFilteredMarkup;
@@ -18,6 +20,7 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -60,6 +63,20 @@ class FieldConfigEditForm extends EntityForm {
   protected string $bundle;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new FieldConfigDeleteForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
@@ -76,11 +93,15 @@ class FieldConfigEditForm extends EntityForm {
   public function __construct(
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     protected TypedDataManagerInterface $typedDataManager,
+    protected EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeManagerInterface $entity_type_manager,
     protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
     protected ?PrivateTempStore $tempStore = NULL,
     protected ?ElementInfoManagerInterface $elementInfo = NULL,
   ) {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeManager = $entity_type_manager;
     if ($this->entityDisplayRepository === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
       $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
@@ -102,6 +123,8 @@ class FieldConfigEditForm extends EntityForm {
     return new static(
       $container->get('entity_type.bundle.info'),
       $container->get('typed_data_manager'),
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.manager'),
       $container->get('entity_display.repository'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.element_info'),
@@ -129,28 +152,68 @@ class FieldConfigEditForm extends EntityForm {
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
     $form_title = $this->t('%field settings for %bundle', [
-      '%field' => $this->entity->getLabel(),
+    // '%field' => $this->entity->getLabel(),
+      '%field' => 'FOO',
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
     $form['#title'] = $form_title;
 
     if ($field_storage->isLocked()) {
       $form['locked'] = [
-        '#markup' => $this->t('The field %field is locked and cannot be edited.', ['%field' => $this->entity->getLabel()]),
+        '#markup' => $this->t('The field %field is locked and cannot be edited.',
+      // ['%field' => $this->entity->getLabel()]),
+          ['%field' => 'FOO']),
       ];
       return $form;
     }
 
-    // Build the configurable field values.
-    $form['label'] = [
+    // Field label and field_name.
+    $form['new_storage_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['field-ui-new-storage-wrapper'],
+      ],
+      '#states' => [
+        '!visible' => [
+          ':input[name="new_storage_type"]' => ['value' => ''],
+        ],
+      ],
+      '#weight' => -20,
+    ];
+    $form['new_storage_wrapper']['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
+      '#size' => 30,
       '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
 
+    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
+    $form['new_storage_wrapper']['field_name'] = [
+      '#type' => 'machine_name',
+      '#field_prefix' => $field_prefix,
+      '#size' => 15,
+      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
+      // Calculate characters depending on the length of the field prefix
+      // setting. Maximum length is 32.
+      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+      '#machine_name' => [
+        'source' => ['new_storage_wrapper', 'label'],
+        'exists' => [$this, 'fieldNameExists'],
+      ],
+      '#required' => FALSE,
+    ];
+
+    // Build the configurable field values.
+    //    $form['label'] = [
+    //      '#type' => 'textfield',
+    //      '#title' => $this->t('Label'),
+    //      '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
+    //      '#required' => TRUE,
+    //      '#maxlength' => 255,
+    //      '#weight' => -20,
+    //    ];.
     $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),
@@ -220,6 +283,14 @@ class FieldConfigEditForm extends EntityForm {
     $form['third_party_settings'] = [
       '#tree' => TRUE,
       '#weight' => 11,
+    ];
+    // Place the 'translatable' property as an explicit value so that contrib
+    // modules can form_alter() the value for newly created fields. By default
+    // we create field storage as translatable so it will be possible to enable
+    // translation at field level.
+    $form['translatable'] = [
+      '#type' => 'value',
+      '#value' => TRUE,
     ];
 
     // Create a new instance of typed data for the field to ensure that default
@@ -363,8 +434,41 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+    $values = $form_state->getValues();
+    $field_name = $values['field_name'];
+    $field_values = [
+      ...$default_options['field_config'] ?? [],
+      'field_name' => $field_name,
+      'label' => $values['label'],
+      // Field translatability should be explicitly enabled by the users.
+      'translatable' => FALSE,
+      'entity_type' =>  $this->entity->getTargetEntityTypeId(),
+      'bundle' => $this->entity->getTargetBundle(),
+    ];
+    $field_storage_values = [
+      ...$default_options['field_storage_config'] ?? [],
+      'field_name' => $field_name,
+      'type' => $this->entity->get('field_type'),
+      'entity_type' => $this->entity->getTargetEntityTypeId(),
+      'translatable' => $values['translatable'],
+    ];
+    try {
+      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
+    }
+    catch (\Exception $e) {
+      $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
+      return;
+    }
+    /** @var \Drupal\Core\Field\FieldConfigInterface $entity */
+    $entity = $this->entityTypeManager->getStorage('field_config')->create([
+      ...$field_values,
+      'field_storage' => $field_storage_entity,
+    ]);
+    // Set new entity.
+    $this->entity = $entity;
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
+    // Pass in new entity here.
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
     $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
     $field_storage_form->validateForm($form['field_storage']['subform'], $subform_state);
@@ -388,7 +492,6 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
     $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
@@ -452,13 +555,13 @@ class FieldConfigEditForm extends EntityForm {
     }
     catch (\Exception $e) {
       $this->messenger()->addStatus(
-        $this->t(
-          'Attempt to update field %label failed: %message.',
-          [
-            '%label' => $this->entity->getLabel(),
-            '%message' => $e->getMessage(),
-          ]
-        )
+      $this->t(
+        'Attempt to update field %label failed: %message.',
+        [
+          '%label' => $this->entity->getLabel(),
+          '%message' => $e->getMessage(),
+        ]
+      )
       );
     }
   }
@@ -558,6 +661,29 @@ class FieldConfigEditForm extends EntityForm {
     $this->messenger()
       ->addError($this->t('An error occurred while saving the field: @error',
         ['@error' => $exception->getMessage()]));
+  }
+
+  /**
+   * Checks if a field machine name is taken.
+   *
+   * @param string $value
+   *   The machine name, not prefixed.
+   * @param array $element
+   *   An array containing the structure of the 'field_name' element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return bool
+   *   Whether or not the field machine name is taken.
+   */
+  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
+
+    // Add the field prefix.
+    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
+    $entity_type_id = $this->entity->getTargetEntityTypeId();
+
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
+    return isset($field_storage_definitions[$field_name]);
   }
 
 }
