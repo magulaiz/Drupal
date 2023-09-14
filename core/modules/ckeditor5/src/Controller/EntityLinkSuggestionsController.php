@@ -135,7 +135,8 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
         $suggestions = $this->getSuggestions(
           $host_entity_type_id,
           EntityLinkSuggestions::getAllowedBundlesForEntityType($plugin_config, $host_entity_type_id),
-          $input
+          $input,
+          $host_entity_langcode
         );
       }
 
@@ -148,7 +149,8 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
           $suggestions = array_merge($suggestions, $this->getSuggestions(
             $entity_type_id,
             EntityLinkSuggestions::getAllowedBundlesForEntityType($plugin_config, $entity_type_id),
-            $input
+            $input,
+            $host_entity_langcode
           ));
         }
       }
@@ -192,14 +194,18 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   bundles.
    * @param string $string
    *   The string to search.
+   * @param string $host_entity_langcode
+   *   The langcode of the host entity.
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
    */
-  public function getSuggestions(string $target_entity_type_id, ?array $target_bundles, string $string) {
+  public function getSuggestions(string $target_entity_type_id, ?array $target_bundles, string $string, string $host_entity_langcode) {
     // If the user input is a current entity URL, don't get more suggestions.
     if ($entity_id = static::findEntityIdByUrl($target_entity_type_id, $string)) {
       $entity = $this->entityTypeManager->getStorage($target_entity_type_id)->load($entity_id);
-      return [$this->createSuggestion($entity)];
+      if ($entity->language()->getId() === $host_entity_langcode) {
+        return [$this->createSuggestion($entity)];
+      }
     }
 
     // Do not call ::getPluginId() or ::getInstance() because this favors a
@@ -235,8 +241,10 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
 
     $suggestions = [];
     foreach ($entities as $entity) {
-      $entity = $this->entityRepository->getTranslationFromContext($entity);
-      $suggestions[] = $this->createSuggestion($entity);
+      $entity_translation = $entity->hasTranslation($host_entity_langcode) ? $entity->getTranslation($host_entity_langcode) : $entity;
+      if ($entity_translation->language()->getId() === $host_entity_langcode) {
+        $suggestions[] = $this->createSuggestion($entity_translation);
+      }
     }
 
     return $suggestions;
