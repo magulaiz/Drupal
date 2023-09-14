@@ -181,14 +181,6 @@ stages:
 # Build Jobs
 ################
 
-'ℹ️ Output build parameters':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  script:
-    - echo "Checking variables"
-    - echo $_TARGET_PHP
-    - echo $_TARGET_DB
-
 '📦️ Composer':
   <<: *default-job-settings
   stage: 🏗️ Build
