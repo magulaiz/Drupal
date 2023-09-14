@@ -74,7 +74,7 @@ stages:
     - export
     # Create folders.
     - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # Install Drupal.
     - /usr/local/bin/drush --version
