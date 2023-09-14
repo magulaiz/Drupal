@@ -75,7 +75,7 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
 
-
+# Default job.
 'PHP 8.1 MySQL 5.7':
   <<: *default-stage
   variables:
@@ -86,32 +86,68 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-'PHP 8.1 MySQL 8':
+'PHP 5.6 MySQL 5.5':
   <<: [ *default-stage, *run-on-commit ]
   variables:
+    _TARGET_PHP: "5.6"
+    _TARGET_DB_TYPE: "mysql"
+    _TARGET_DB_VERSION: "5.5"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 7.2 MySQL 5.6':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "7.2"
+    _TARGET_DB_TYPE: "mysql"
+    _TARGET_DB_VERSION: "5.6"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 7.4 MySQL 5.7':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "7.4"
+    _TARGET_DB_TYPE: "mysql"
+    _TARGET_DB_VERSION: "5.7"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 8.0 MySQL 5.7':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.0"
+    _TARGET_DB_TYPE: "mysql"
+    _TARGET_DB_VERSION: "5.7"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 8.2 MySQL 8':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.2"
     _TARGET_DB_TYPE: "mysql"
     _TARGET_DB_VERSION: "8"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 7.4 PostgreSQL 9.5':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "7.4"
+    _TARGET_DB_TYPE: "pgsql"
+    _TARGET_DB_VERSION: "9.5"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
 'PHP 8.1 PostgreSQL 13.5':
   <<: [ *default-stage, *run-on-commit ]
   variables:
+    _TARGET_PHP: "8.2"
     _TARGET_DB_TYPE: "pgsql"
     _TARGET_DB_VERSION: "13.5"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
 
-'PHP 8.1 PostgreSQL 14.1':
+'PHP 7.4 SQLite 3.27.0':
   <<: [ *default-stage, *run-on-commit ]
   variables:
-    _TARGET_DB_TYPE: "pgsql"
-    _TARGET_DB_VERSION: "14.1"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-
-'PHP 8.1 SQLite 3.26.0':
-  <<: [ *default-stage, *run-on-commit ]
-  variables:
+    _TARGET_PHP: "7.4"
     _TARGET_DB_TYPE: "sqlite"
-    _TARGET_DB_VERSION: "3.26.0"
+    _TARGET_DB_VERSION: "3.27.0"
     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
 # 'PHP 8.1 MariaDB 10.3.22':
