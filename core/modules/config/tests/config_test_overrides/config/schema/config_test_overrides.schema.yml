@@ -1,0 +1,11 @@
+# Schema for the configuration files of the Configuration Test Overrides module.
+
+config_test_overrides.dynamic.*:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'

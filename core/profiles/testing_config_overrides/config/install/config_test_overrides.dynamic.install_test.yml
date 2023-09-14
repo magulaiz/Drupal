@@ -1,0 +1,9 @@
+id: install_test
+label: Overridden Default Install Config 1
+weight: 0
+protected_property: Default
+status: true
+dependencies:
+  enforced:
+    config:
+      - config_test_overrides.dynamic.testing_config_overrides

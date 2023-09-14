@@ -1,0 +1,4 @@
+name: 'Config Test Overrides'
+type: module
+package: Testing
+version: VERSION
