@@ -7,4 +7,4 @@ namespace Drupal\Tests\system\Functional\Module;
  *
  * @group system
  */
-class SystemGenericTest extends GenericModuleTestBase {}
+class GenericTest extends GenericModuleTestBase {}
