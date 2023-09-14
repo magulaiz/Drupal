@@ -78,7 +78,7 @@ stages:
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # Install Drupal.
     - /usr/local/bin/drush --version
-    - /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com --db-su=root
+    - /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
     - /usr/local/bin/drush vset simpletest_clear_results '0'
     - /usr/local/bin/drush vset simpletest_verbose '1'
     - /usr/local/bin/drush en -y simpletest
