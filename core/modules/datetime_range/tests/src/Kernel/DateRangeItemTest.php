@@ -115,7 +115,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
     ])
       ->save();
 
-    $value = [
+    $start_date_without_end_date_value = [
       'value' => '2016-09-21',
       'end_value' => NULL,
     ];
@@ -128,7 +128,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
     // Verify entity without optional_end_date enabled.
     $entity = EntityTest::create([
       'name' => $this->randomString(),
-      $field_name => $value,
+      $field_name => $start_date_without_end_date_value,
     ]);
     $this->assertNotEquals(count($entity->validate()), 0);
 
@@ -137,12 +137,12 @@ class DateRangeItemTest extends FieldKernelTestBase {
       ->save();
     $entity = EntityTest::create([
       'name' => $this->randomString(),
-      $field_name => $value,
+      $field_name => $start_date_without_end_date_value,
     ]);
     $this->entityValidateAndSave($entity);
 
     // Verify changing the date value.
-    $this->assertEquals($entity->{$field_name}->end_value, $value['end_value']);
+    $this->assertEquals($entity->{$field_name}->end_value, $start_date_without_end_date_value['end_value']);
 
     // Verify entity with the optional_end_date enabled when setting an
     // end_date but no start date.
@@ -155,8 +155,8 @@ class DateRangeItemTest extends FieldKernelTestBase {
     $this->entityValidateAndSave($entity);
 
     // Verify changing the date and end_date value.
-    $this->assertEquals($entity->{$field_name}->end_value, $value['end_value']);
-    $this->assertEquals($entity->{$field_name}->value, $value['value']);
+    $this->assertEquals($entity->{$field_name}->end_value, $end_date_without_start_date_value['end_value']);
+    $this->assertEquals($entity->{$field_name}->value, $end_date_without_start_date_value['value']);
   }
 
 }
