@@ -76,6 +76,7 @@ stages:
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # Install Drupal.
+    - composer -V
     - echo "{}" > composer.json
     - composer config allow-plugins true -n
     - composer require --dev drush/drush

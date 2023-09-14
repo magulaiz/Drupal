@@ -124,6 +124,7 @@ stages:
     - <<: *run-on-commit
     - <<: *run-on-mr
   script:
+    - composer -V
     - echo "{}" > composer.json
     - composer config allow-plugins true -n
     - composer require --dev drupal/coder:^8.2@stable
