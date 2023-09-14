@@ -12,20 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 class LayoutBuilderDecorationTestHtmlEntityFormController extends FormController {
 
   /**
-   * The entity form controller being decorated.
-   *
-   * @var \Drupal\Core\Controller\FormController
-   */
-  protected $entityFormController;
-
-  /**
    * Constructs a LayoutBuilderDecorationTestHtmlEntityFormController object.
    *
-   * @param \Drupal\Core\Controller\FormController $entity_form_controller
+   * @param \Drupal\Core\Controller\FormController $entityFormController
    *   The entity form controller being decorated.
    */
-  public function __construct(FormController $entity_form_controller) {
-    $this->entityFormController = $entity_form_controller;
+  public function __construct(protected FormController $entityFormController)
+  {
   }
 
   /**

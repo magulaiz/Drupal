@@ -25,20 +25,13 @@ use Symfony\Component\HttpFoundation\Request;
 class CsrfAccessCheck implements RoutingAccessInterface {
 
   /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
    * Constructs a CsrfAccessCheck object.
    *
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
    */
-  public function __construct(CsrfTokenGenerator $csrf_token) {
-    $this->csrfToken = $csrf_token;
+  public function __construct(protected CsrfTokenGenerator $csrfToken)
+  {
   }
 
   /**

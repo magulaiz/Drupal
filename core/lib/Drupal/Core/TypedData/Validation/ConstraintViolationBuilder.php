@@ -21,71 +21,10 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface {
 
   /**
-   * The list of violations.
-   *
-   * @var \Symfony\Component\Validator\ConstraintViolationList
-   */
-  protected $violations;
-
-  /**
-   * The violation message.
-   *
-   * @var string
-   */
-  protected $message;
-
-  /**
-   * The message parameters.
-   *
-   * @var array
-   */
-  protected $parameters;
-
-  /**
-   * The root path.
-   *
-   * @var mixed
-   */
-  protected $root;
-
-  /**
-   * The invalid value caused the violation.
-   *
-   * @var mixed
-   */
-  protected $invalidValue;
-
-  /**
-   * The property path.
-   *
-   * @var string
-   */
-  protected $propertyPath;
-
-  /**
-   * The translator.
-   *
-   * @var \Drupal\Core\Validation\TranslatorInterface
-   */
-  protected $translator;
-
-  /**
-   * The translation domain.
-   *
-   * @var string|false|null
-   */
-  protected $translationDomain;
-
-  /**
    * The number used
    * @var int|null
    */
   protected $plural;
-
-  /**
-   * @var Constraint
-   */
-  protected $constraint;
 
   /**
    * @var mixed
@@ -119,17 +58,8 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
    * @param null $translationDomain
    *   (optional) The translation domain.
    */
-  public function __construct(ConstraintViolationList $violations, Constraint $constraint, $message, array $parameters, $root, $propertyPath, $invalidValue, TranslatorInterface $translator, $translationDomain = null)
+  public function __construct(protected ConstraintViolationList $violations, protected Constraint $constraint, protected $message, protected array $parameters, protected $root, protected $propertyPath, protected $invalidValue, protected TranslatorInterface $translator, protected ?string|bool $translationDomain = null)
     {
-      $this->violations = $violations;
-      $this->message = $message;
-      $this->parameters = $parameters;
-      $this->root = $root;
-      $this->propertyPath = $propertyPath;
-      $this->invalidValue = $invalidValue;
-      $this->translator = $translator;
-      $this->translationDomain = $translationDomain;
-      $this->constraint = $constraint;
     }
 
     /**

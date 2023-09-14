@@ -22,13 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HelpTopicTwig extends HelpTopicPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The Twig environment.
-   *
-   * @var \Drupal\Core\Template\TwigEnvironment
-   */
-  protected $twig;
-
-  /**
    * HelpTopicPluginBase constructor.
    *
    * @param array $configuration
@@ -40,9 +33,8 @@ class HelpTopicTwig extends HelpTopicPluginBase implements ContainerFactoryPlugi
    * @param \Drupal\Core\Template\TwigEnvironment $twig
    *   The Twig environment.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TwigEnvironment $twig) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected TwigEnvironment $twig) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->twig = $twig;
   }
 
   /**

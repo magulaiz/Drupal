@@ -46,41 +46,6 @@ class ForumManager implements ForumManagerInterface {
   const LEAST_POPULAR_FIRST = 4;
 
   /**
-   * Forum settings config object.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * Entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * Entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The comment manager service.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
    * Array of last post information keyed by forum (term) id.
    *
    * @var array
@@ -118,26 +83,21 @@ class ForumManager implements ForumManagerInterface {
   /**
    * Constructs the forum manager service.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $connection
    *   The current database connection.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager service.
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $commentManager
    *   The comment manager service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager) {
-    $this->configFactory = $config_factory;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->connection = $connection;
+  public function __construct(protected ConfigFactoryInterface $configFactory, protected EntityTypeManagerInterface $entityTypeManager, protected Connection $connection, TranslationInterface $string_translation, protected CommentManagerInterface $commentManager, protected EntityFieldManagerInterface $entityFieldManager) {
     $this->stringTranslation = $string_translation;
-    $this->commentManager = $comment_manager;
-    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**

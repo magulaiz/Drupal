@@ -58,13 +58,6 @@ class Merge extends Query implements ConditionInterface {
   const STATUS_UPDATE = 2;
 
   /**
-   * The table to be used for INSERT and UPDATE.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * The table or subquery to be used for the condition.
    *
    * @var string
@@ -133,12 +126,11 @@ class Merge extends Query implements ConditionInterface {
    * @param array $options
    *   Array of database options.
    */
-  public function __construct(Connection $connection, $table, array $options = []) {
+  public function __construct(Connection $connection, protected $table, array $options = []) {
     // @todo Remove $options['return'] in Drupal 11.
     // @see https://www.drupal.org/project/drupal/issues/3256524
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
-    $this->table = $table;
     $this->conditionTable = $table;
     $this->condition = $this->connection->condition('AND');
   }

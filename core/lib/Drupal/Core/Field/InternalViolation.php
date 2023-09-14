@@ -20,13 +20,6 @@ final class InternalViolation implements ConstraintViolationInterface {
   private $arrayPropertyPath;
 
   /**
-   * The violation being wrapped.
-   *
-   * @var \Symfony\Component\Validator\ConstraintViolationInterface
-   */
-  private $violation;
-
-  /**
    * An array of dynamic properties.
    *
    * @var array
@@ -39,8 +32,8 @@ final class InternalViolation implements ConstraintViolationInterface {
    * @param \Symfony\Component\Validator\ConstraintViolationInterface $violation
    *   The violation to wrap.
    */
-  public function __construct(ConstraintViolationInterface $violation) {
-    $this->violation = $violation;
+  public function __construct(private ConstraintViolationInterface $violation)
+  {
   }
 
   /**

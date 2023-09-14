@@ -15,20 +15,6 @@ class UpdateHookRegistry {
   public const SCHEMA_UNINSTALLED = -1;
 
   /**
-   * A list of enabled modules.
-   *
-   * @var string[]
-   */
-  protected $enabledModules;
-
-  /**
-   * The key value storage.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $keyValue;
-
-  /**
    * A static cache of schema currentVersions per module.
    *
    * Stores schema versions of the modules based on their defined hook_update_N
@@ -52,14 +38,19 @@ class UpdateHookRegistry {
   /**
    * Constructs a new UpdateRegistry.
    *
-   * @param string[] $enabled_modules
+   * @param string[] $enabledModules
    *   A list of enabled modules.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue
    *   The key value store.
    */
-  public function __construct(array $enabled_modules, KeyValueStoreInterface $key_value) {
-    $this->enabledModules = $enabled_modules;
-    $this->keyValue = $key_value;
+  public function __construct(
+      /**
+       * A list of enabled modules.
+       */
+      protected array $enabledModules,
+      protected KeyValueStoreInterface $keyValue
+  )
+  {
   }
 
   /**

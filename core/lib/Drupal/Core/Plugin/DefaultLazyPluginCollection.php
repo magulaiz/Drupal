@@ -20,22 +20,6 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
   use DependencySerializationTrait;
 
   /**
-   * The manager used to instantiate the plugins.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The initial configuration for each plugin in the collection.
-   *
-   * @var array
-   *   An associative array containing the initial configuration for each plugin
-   *   in the collection, keyed by plugin instance ID.
-   */
-  protected $configurations = [];
-
-  /**
    * The key within the plugin configuration that contains the plugin ID.
    *
    * @var string
@@ -58,10 +42,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    *   (optional) An associative array containing the initial configuration for
    *   each plugin in the collection, keyed by plugin instance ID.
    */
-  public function __construct(PluginManagerInterface $manager, array $configurations = []) {
-    $this->manager = $manager;
-    $this->configurations = $configurations;
-
+  public function __construct(protected PluginManagerInterface $manager, protected array $configurations = []) {
     if (!empty($configurations)) {
       $instance_ids = array_keys($configurations);
       $this->instanceIds = array_combine($instance_ids, $instance_ids);

@@ -23,13 +23,6 @@ class SyndicateBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a SyndicateBlock object.
    *
    * @param array $configuration
@@ -41,9 +34,8 @@ class SyndicateBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected ConfigFactoryInterface $configFactory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->configFactory = $configFactory;
   }
 
   /**

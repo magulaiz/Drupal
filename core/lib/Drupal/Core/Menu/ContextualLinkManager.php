@@ -45,34 +45,6 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   ];
 
   /**
-   * A controller resolver object.
-   *
-   * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * A static cache of all the contextual link plugins by group name.
    *
    * @var array
@@ -82,7 +54,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   /**
    * Constructs a new ContextualLinkManager instance.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
@@ -90,20 +62,16 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
    *   The cache backend.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, RequestStack $request_stack) {
+  public function __construct(protected ControllerResolverInterface $controllerResolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, protected AccessManagerInterface $accessManager, protected AccountInterface $account, protected RequestStack $requestStack) {
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\ContextualLinkInterface');
-    $this->controllerResolver = $controller_resolver;
-    $this->accessManager = $access_manager;
-    $this->account = $account;
     $this->moduleHandler = $module_handler;
-    $this->requestStack = $request_stack;
     $this->alterInfo('contextual_links_plugins');
     $this->setCacheBackend($cache_backend, 'contextual_links_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['contextual_links_plugins']);
   }

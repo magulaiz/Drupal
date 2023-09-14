@@ -24,41 +24,6 @@ class Renderer implements RendererInterface {
   use DoTrustedCallbackTrait;
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $theme;
-
-  /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
-   * The element info.
-   *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface
-   */
-  protected $elementInfo;
-
-  /**
-   * The placeholder generator.
-   *
-   * @var \Drupal\Core\Render\PlaceholderGeneratorInterface
-   */
-  protected $placeholderGenerator;
-
-  /**
-   * The render cache service.
-   *
-   * @var \Drupal\Core\Render\RenderCacheInterface
-   */
-  protected $renderCache;
-
-  /**
    * The renderer configuration array.
    *
    * @var array
@@ -71,13 +36,6 @@ class Renderer implements RendererInterface {
    * @var bool
    */
   protected $isRenderingRoot = FALSE;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
 
   /**
    * The render context collection.
@@ -99,32 +57,26 @@ class Renderer implements RendererInterface {
   /**
    * Constructs a new Renderer.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme
    *   The theme manager.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfo
    *   The element info.
-   * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholder_generator
+   * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholderGenerator
    *   The placeholder generator.
-   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
+   * @param \Drupal\Core\Render\RenderCacheInterface $renderCache
    *   The render cache service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, PlaceholderGeneratorInterface $placeholder_generator, RenderCacheInterface $render_cache, RequestStack $request_stack, array $renderer_config) {
-    $this->controllerResolver = $controller_resolver;
-    $this->theme = $theme;
-    $this->elementInfo = $element_info;
-    $this->placeholderGenerator = $placeholder_generator;
-    $this->renderCache = $render_cache;
+  public function __construct(protected ControllerResolverInterface $controllerResolver, protected ThemeManagerInterface $theme, protected ElementInfoManagerInterface $elementInfo, protected PlaceholderGeneratorInterface $placeholderGenerator, protected RenderCacheInterface $renderCache, protected RequestStack $requestStack, array $renderer_config) {
     if (!isset($renderer_config['debug'])) {
       $renderer_config['debug'] = FALSE;
     }
     $this->rendererConfig = $renderer_config;
-    $this->requestStack = $request_stack;
 
     // Initialize the context collection if needed.
     if (!isset(static::$contextCollection)) {

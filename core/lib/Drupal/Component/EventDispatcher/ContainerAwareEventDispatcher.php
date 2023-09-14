@@ -34,29 +34,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ContainerAwareEventDispatcher implements EventDispatcherInterface {
 
   /**
-   * The service container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
-   * Listener definitions.
-   *
-   * A nested array of listener definitions keyed by event name and priority.
-   * A listener definition is an associative array with one of the following key
-   * value pairs:
-   * - callable: A callable listener
-   * - service: An array of the form [service id, method]
-   *
-   * A service entry will be resolved to a callable only just before its
-   * invocation.
-   *
-   * @var array
-   */
-  protected $listeners;
-
-  /**
    * Whether listeners need to be sorted prior to dispatch, keyed by event name.
    *
    * @var TRUE[]
@@ -77,9 +54,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
    *   A service entry will be resolved to a callable only just before its
    *   invocation.
    */
-  public function __construct(ContainerInterface $container, array $listeners = []) {
-    $this->container = $container;
-    $this->listeners = $listeners;
+  public function __construct(protected ContainerInterface $container, protected array $listeners = []) {
     $this->unsorted = [];
   }
 

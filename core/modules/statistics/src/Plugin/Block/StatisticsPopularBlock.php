@@ -24,32 +24,6 @@ use Drupal\statistics\StatisticsStorageInterface;
 class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The storage for statistics.
-   *
-   * @var \Drupal\statistics\StatisticsStorageInterface
-   */
-  protected $statisticsStorage;
-
-  /**
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a StatisticsPopularBlock object.
    *
    * @param array $configuration
@@ -58,21 +32,17 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service
-   * @param \Drupal\statistics\StatisticsStorageInterface $statistics_storage
+   * @param \Drupal\statistics\StatisticsStorageInterface $statisticsStorage
    *   The storage for statistics.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer configuration array.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository, StatisticsStorageInterface $statistics_storage, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityTypeManagerInterface $entityTypeManager, protected EntityRepositoryInterface $entityRepository, protected StatisticsStorageInterface $statisticsStorage, protected RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityRepository = $entity_repository;
-    $this->statisticsStorage = $statistics_storage;
-    $this->renderer = $renderer;
   }
 
   /**

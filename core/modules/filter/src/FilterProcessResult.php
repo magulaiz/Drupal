@@ -64,22 +64,13 @@ use Drupal\Core\Render\BubbleableMetadata;
 class FilterProcessResult extends BubbleableMetadata {
 
   /**
-   * The processed text.
-   *
-   * @see \Drupal\filter\Plugin\FilterInterface::process()
-   *
-   * @var string
-   */
-  protected $processedText;
-
-  /**
    * Constructs a FilterProcessResult object.
    *
-   * @param string $processed_text
+   * @param string $processedText
    *   The text as processed by a text filter.
    */
-  public function __construct($processed_text = '') {
-    $this->processedText = $processed_text;
+  public function __construct(protected $processedText = '')
+  {
   }
 
   /**

@@ -22,103 +22,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ForumController extends ControllerBase {
 
   /**
-   * Forum manager service.
-   *
-   * @var \Drupal\forum\ForumManagerInterface
-   */
-  protected $forumManager;
-
-  /**
-   * Vocabulary storage.
-   *
-   * @var \Drupal\taxonomy\VocabularyStorageInterface
-   */
-  protected $vocabularyStorage;
-
-  /**
-   * Term storage.
-   *
-   * @var \Drupal\taxonomy\TermStorageInterface
-   */
-  protected $termStorage;
-
-  /**
-   * Node access control handler.
-   *
-   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
-   */
-  protected $nodeAccess;
-
-  /**
-   * Field map of existing fields on the site.
-   *
-   * @var array
-   */
-  protected $fieldMap;
-
-  /**
-   * Node type storage handler.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeTypeStorage;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * Node entity type, we need to get cache tags from here.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $nodeEntityTypeDefinition;
-
-  /**
-   * Comment entity type, we need to get cache tags from here.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $commentEntityTypeDefinition;
-
-  /**
    * Constructs a ForumController object.
    *
-   * @param \Drupal\forum\ForumManagerInterface $forum_manager
+   * @param \Drupal\forum\ForumManagerInterface $forumManager
    *   The forum manager service.
-   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabulary_storage
+   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabularyStorage
    *   Vocabulary storage.
-   * @param \Drupal\taxonomy\TermStorageInterface $term_storage
+   * @param \Drupal\taxonomy\TermStorageInterface $termStorage
    *   Term storage.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current logged in user.
-   * @param \Drupal\Core\Entity\EntityAccessControlHandlerInterface $node_access
+   * @param \Drupal\Core\Entity\EntityAccessControlHandlerInterface $nodeAccess
    *   Node access control handler.
-   * @param array $field_map
+   * @param array $fieldMap
    *   Array of active fields on the site.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $nodeTypeStorage
    *   Node type storage handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Entity\EntityTypeInterface $node_entity_type_definition
+   * @param \Drupal\Core\Entity\EntityTypeInterface $nodeEntityTypeDefinition
    *   Node entity type definition object
-   * @param \Drupal\Core\Entity\EntityTypeInterface $comment_entity_type_definition
+   * @param \Drupal\Core\Entity\EntityTypeInterface $commentEntityTypeDefinition
    *   Comment entity type definition object
    */
-  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage, RendererInterface $renderer, EntityTypeInterface $node_entity_type_definition, EntityTypeInterface $comment_entity_type_definition) {
-    $this->forumManager = $forum_manager;
-    $this->vocabularyStorage = $vocabulary_storage;
-    $this->termStorage = $term_storage;
+  public function __construct(protected ForumManagerInterface $forumManager, protected VocabularyStorageInterface $vocabularyStorage, protected TermStorageInterface $termStorage, AccountInterface $current_user, protected EntityAccessControlHandlerInterface $nodeAccess, protected array $fieldMap, protected EntityStorageInterface $nodeTypeStorage, protected RendererInterface $renderer, protected EntityTypeInterface $nodeEntityTypeDefinition, protected EntityTypeInterface $commentEntityTypeDefinition) {
     $this->currentUser = $current_user;
-    $this->nodeAccess = $node_access;
-    $this->fieldMap = $field_map;
-    $this->nodeTypeStorage = $node_type_storage;
-    $this->renderer = $renderer;
-    $this->nodeEntityTypeDefinition = $node_entity_type_definition;
-    $this->commentEntityTypeDefinition = $comment_entity_type_definition;
   }
 
   /**

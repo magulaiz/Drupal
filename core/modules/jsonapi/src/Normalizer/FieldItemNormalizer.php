@@ -30,20 +30,20 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   use SerializedColumnNormalizerTrait;
 
   /**
-   * The entity type manager.
+   * The interface or class that this Normalizer supports.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var string
    */
-  protected $entityTypeManager;
+  protected $supportedInterfaceOrClass = FieldItemInterface::class;
 
   /**
    * FieldItemNormalizer constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager)
+  {
   }
 
   /**

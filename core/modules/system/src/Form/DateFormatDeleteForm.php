@@ -14,20 +14,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DateFormatDeleteForm extends EntityDeleteForm {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Constructs a DateFormatDeleteForm object.
    *
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    */
-  public function __construct(DateFormatterInterface $date_formatter) {
-    $this->dateFormatter = $date_formatter;
+  public function __construct(protected DateFormatterInterface $dateFormatter)
+  {
   }
 
   /**

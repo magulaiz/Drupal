@@ -40,13 +40,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   const SOURCE_IDS_HASH = 'source_ids_hash';
 
   /**
-   * An event dispatcher instance to use for map events.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * The migration map table name.
    *
    * @var string
@@ -80,13 +73,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $query;
-
-  /**
-   * The migration being done.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
 
   /**
    * The source ID fields.
@@ -164,15 +150,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The configuration for the plugin.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to do.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
    *   The migration plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher, MigrationPluginManagerInterface $migration_plugin_manager = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected MigrationInterface $migration, protected EventDispatcherInterface $eventDispatcher, MigrationPluginManagerInterface $migration_plugin_manager = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->migration = $migration;
-    $this->eventDispatcher = $event_dispatcher;
     $this->message = new MigrateMessage();
 
     if (!isset($this->database)) {

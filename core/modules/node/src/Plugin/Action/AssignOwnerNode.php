@@ -22,13 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new AssignOwnerNode action.
    *
    * @param array $configuration
@@ -40,10 +33,8 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $connection) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->connection = $connection;
   }
 
   /**

@@ -31,69 +31,6 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   ];
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity memory cache service.
-   *
-   * @var \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
-   */
-  protected $entityMemoryCache;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
-   * The workspace negotiator service IDs.
-   *
-   * @var array
-   */
-  protected $negotiatorIds;
-
-  /**
    * The current active workspace or FALSE if there is no active workspace.
    *
    * @var \Drupal\workspaces\WorkspaceInterface|false
@@ -103,35 +40,27 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   /**
    * Constructs a new WorkspaceManager.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $entity_memory_cache
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $entityMemoryCache
    *   The entity memory cache service.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspaceAssociation
    *   The workspace association service.
-   * @param array $negotiator_ids
+   * @param array $negotiatorIds
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, array $negotiator_ids) {
-    $this->requestStack = $request_stack;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityMemoryCache = $entity_memory_cache;
-    $this->currentUser = $current_user;
-    $this->state = $state;
-    $this->logger = $logger;
-    $this->classResolver = $class_resolver;
-    $this->workspaceAssociation = $workspace_association;
-    $this->negotiatorIds = $negotiator_ids;
+  public function __construct(protected RequestStack $requestStack, protected EntityTypeManagerInterface $entityTypeManager, protected MemoryCacheInterface $entityMemoryCache, protected AccountProxyInterface $currentUser, protected StateInterface $state, protected LoggerInterface $logger, protected ClassResolverInterface $classResolver, protected WorkspaceAssociationInterface $workspaceAssociation, protected array $negotiatorIds)
+  {
   }
 
   /**

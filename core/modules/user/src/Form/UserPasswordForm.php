@@ -25,63 +25,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserPasswordForm extends FormBase {
 
   /**
-   * The user storage.
-   *
-   * @var \Drupal\user\UserStorageInterface
-   */
-  protected $userStorage;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The flood service.
-   *
-   * @var \Drupal\Core\Flood\FloodInterface
-   */
-  protected $flood;
-
-  /**
-   * The typed data manager.
-   *
-   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
-   */
-  protected $typedDataManager;
-
-  /**
-   * The email validator service.
-   *
-   * @var \Drupal\Component\Utility\EmailValidatorInterface
-   */
-  protected $emailValidator;
-
-  /**
    * Constructs a UserPasswordForm object.
    *
-   * @param \Drupal\user\UserStorageInterface $user_storage
+   * @param \Drupal\user\UserStorageInterface $userStorage
    *   The user storage.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The typed data manager.
-   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
+   * @param \Drupal\Component\Utility\EmailValidatorInterface $emailValidator
    *   The email validator service.
    */
-  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory, FloodInterface $flood, TypedDataManagerInterface $typed_data_manager, EmailValidatorInterface $email_validator) {
-    $this->userStorage = $user_storage;
-    $this->languageManager = $language_manager;
+  public function __construct(protected UserStorageInterface $userStorage, protected LanguageManagerInterface $languageManager, ConfigFactory $config_factory, protected FloodInterface $flood, protected TypedDataManagerInterface $typedDataManager, protected EmailValidatorInterface $emailValidator) {
     $this->configFactory = $config_factory;
-    $this->flood = $flood;
-    $this->typedDataManager = $typed_data_manager;
-    $this->emailValidator = $email_validator;
   }
 
   /**

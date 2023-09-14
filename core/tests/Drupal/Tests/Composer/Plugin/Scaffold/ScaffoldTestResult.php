@@ -7,9 +7,6 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold;
  */
 class ScaffoldTestResult {
 
-  protected $docroot;
-  protected $scaffoldOutput;
-
   /**
    * Holds the location of the scaffold fixture and the stdout from the test.
    *
@@ -18,9 +15,8 @@ class ScaffoldTestResult {
    * @param string $scaffoldOutput
    *   The stdout from the test.
    */
-  public function __construct($docroot, $scaffoldOutput) {
-    $this->docroot = $docroot;
-    $this->scaffoldOutput = $scaffoldOutput;
+  public function __construct(protected $docroot, protected $scaffoldOutput)
+  {
   }
 
   /**

@@ -21,13 +21,6 @@ class SysLog implements LoggerInterface {
   protected $config;
 
   /**
-   * The message's placeholders parser.
-   *
-   * @var \Drupal\Core\Logger\LogMessageParserInterface
-   */
-  protected $parser;
-
-  /**
    * Stores whether there is a system logger connection opened or not.
    *
    * @var bool
@@ -42,9 +35,8 @@ class SysLog implements LoggerInterface {
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected LogMessageParserInterface $parser) {
     $this->config = $config_factory->get('syslog.settings');
-    $this->parser = $parser;
   }
 
   /**

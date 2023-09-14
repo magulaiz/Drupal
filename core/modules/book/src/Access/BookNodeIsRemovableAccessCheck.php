@@ -13,20 +13,13 @@ use Drupal\node\NodeInterface;
 class BookNodeIsRemovableAccessCheck implements AccessInterface {
 
   /**
-   * Book Manager Service.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
    * Constructs a BookNodeIsRemovableAccessCheck object.
    *
-   * @param \Drupal\book\BookManagerInterface $book_manager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   Book Manager Service.
    */
-  public function __construct(BookManagerInterface $book_manager) {
-    $this->bookManager = $book_manager;
+  public function __construct(protected BookManagerInterface $bookManager)
+  {
   }
 
   /**

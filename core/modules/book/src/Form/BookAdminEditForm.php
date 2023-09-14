@@ -22,40 +22,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BookAdminEditForm extends FormBase {
 
   /**
-   * The node storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * Constructs a new BookAdminEditForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $nodeStorage
    *   The content block storage.
-   * @param \Drupal\book\BookManagerInterface $book_manager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   The book manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
    */
-  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository) {
-    $this->nodeStorage = $node_storage;
-    $this->bookManager = $book_manager;
-    $this->entityRepository = $entity_repository;
+  public function __construct(protected EntityStorageInterface $nodeStorage, protected BookManagerInterface $bookManager, protected EntityRepositoryInterface $entityRepository)
+  {
   }
 
   /**

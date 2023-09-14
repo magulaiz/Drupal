@@ -34,20 +34,19 @@ class Log {
   protected $queryLog = [];
 
   /**
-   * The connection key for which this object is logging.
-   *
-   * @var string
-   */
-  protected $connectionKey = 'default';
-
-  /**
    * Constructor.
    *
    * @param $key
    *   The database connection key for which to enable logging.
+   * @param string $key
    */
-  public function __construct($key = 'default') {
-    $this->connectionKey = $key;
+  public function __construct(
+      /**
+       * The connection key for which this object is logging.
+       */
+      protected $connectionKey = 'default'
+  )
+  {
   }
 
   /**

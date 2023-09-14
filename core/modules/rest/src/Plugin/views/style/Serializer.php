@@ -34,27 +34,6 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
   protected $usesGrouping = FALSE;
 
   /**
-   * The serializer which serializes the views result.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $serializer;
-
-  /**
-   * The available serialization formats.
-   *
-   * @var array
-   */
-  protected $formats = [];
-
-  /**
-   * The serialization format providers, keyed by format.
-   *
-   * @var string[]
-   */
-  protected $formatProviders;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -70,14 +49,21 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
 
   /**
    * Constructs a Plugin object.
+   * @param string[] $formatProviders
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, array $serializer_formats, array $serializer_format_providers) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, /**
+   * The serializer which serializes the views result.
+   */
+  protected SerializerInterface $serializer, /**
+   * The available serialization formats.
+   */
+  protected array $formats, /**
+   * The serialization format providers, keyed by format.
+   */
+  protected array $formatProviders) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->definition = $plugin_definition + $configuration;
-    $this->serializer = $serializer;
-    $this->formats = $serializer_formats;
-    $this->formatProviders = $serializer_format_providers;
   }
 
   /**

@@ -10,20 +10,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FormUploadedFile implements UploadedFileInterface {
 
   /**
-   * The wrapped uploaded file.
-   *
-   * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-   */
-  protected $uploadedFile;
-
-  /**
    * Creates a new FormUploadedFile.
    *
    * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile
    *   The wrapped Symfony uploaded file.
    */
-  public function __construct(UploadedFile $uploadedFile) {
-    $this->uploadedFile = $uploadedFile;
+  public function __construct(protected UploadedFile $uploadedFile)
+  {
   }
 
   /**

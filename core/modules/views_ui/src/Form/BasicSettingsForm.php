@@ -16,24 +16,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BasicSettingsForm extends ConfigFormBase {
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Constructs a \Drupal\views_ui\Form\BasicSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected ThemeHandlerInterface $themeHandler) {
     parent::__construct($config_factory);
-
-    $this->themeHandler = $theme_handler;
   }
 
   /**

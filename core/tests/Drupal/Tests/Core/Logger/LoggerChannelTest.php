@@ -184,12 +184,10 @@ class LoggerChannelTest extends UnitTestCase {
 
 class NaughtyRecursiveLogger implements LoggerInterface {
   use LoggerTrait;
-
-  protected $channel;
   protected $message;
 
-  public function __construct(LoggerChannel $channel) {
-    $this->channel = $channel;
+  public function __construct(protected LoggerChannel $channel)
+  {
   }
 
   public function log($level, string|\Stringable $message, array $context = []): void {

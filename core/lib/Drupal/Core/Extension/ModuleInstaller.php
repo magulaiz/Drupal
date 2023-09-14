@@ -29,41 +29,6 @@ use Psr\Log\LoggerInterface;
 class ModuleInstaller implements ModuleInstallerInterface {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The drupal kernel.
-   *
-   * @var \Drupal\Core\DrupalKernelInterface
-   */
-  protected $kernel;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The update registry service.
-   *
-   * @var \Drupal\Core\Update\UpdateHookRegistry
-   */
-  protected $updateRegistry;
-
-  /**
    * The uninstall validators.
    *
    * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
@@ -75,13 +40,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The drupal kernel.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\Update\UpdateHookRegistry $update_registry
+   * @param \Drupal\Core\Update\UpdateHookRegistry $updateRegistry
    *   The update registry service.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
@@ -89,12 +54,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry, protected ?LoggerInterface $logger = NULL) {
-    $this->root = $root;
-    $this->moduleHandler = $module_handler;
-    $this->kernel = $kernel;
-    $this->connection = $connection;
-    $this->updateRegistry = $update_registry;
+  public function __construct(protected $root, protected ModuleHandlerInterface $moduleHandler, protected DrupalKernelInterface $kernel, protected Connection $connection, protected UpdateHookRegistry $updateRegistry, protected ?LoggerInterface $logger = NULL) {
     if ($this->logger === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.system');

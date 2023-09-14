@@ -16,13 +16,6 @@ use Drupal\views\Plugin\views\HandlerBase;
 class ViewsHandlerManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 
   /**
-   * The views data cache.
-   *
-   * @var \Drupal\views\ViewsData
-   */
-  protected $viewsData;
-
-  /**
    * The handler type.
    *
    * @var string
@@ -39,14 +32,14 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations,
-   * @param \Drupal\views\ViewsData $views_data
+   * @param \Drupal\views\ViewsData $viewsData
    *   The views data cache.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct($handler_type, \Traversable $namespaces, protected ViewsData $viewsData, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
     $plugin_interface = 'Drupal\views\Plugin\views\ViewsHandlerInterface';
     if ($handler_type == 'join') {
@@ -56,8 +49,6 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
 
     $this->setCacheBackend($cache_backend, "views:$handler_type");
     $this->alterInfo('views_plugins_' . $handler_type);
-
-    $this->viewsData = $views_data;
     $this->handlerType = $handler_type;
     $this->defaults = [
       'plugin_type' => $handler_type,

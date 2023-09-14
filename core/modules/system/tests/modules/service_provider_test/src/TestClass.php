@@ -16,20 +16,13 @@ class TestClass implements EventSubscriberInterface, DestructableInterface, Cont
   use ContainerAwareTrait;
 
   /**
-   * The state keyvalue collection.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructor.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(protected StateInterface $state)
+  {
   }
 
   /**

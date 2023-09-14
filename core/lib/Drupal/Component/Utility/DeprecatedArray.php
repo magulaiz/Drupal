@@ -8,22 +8,18 @@ namespace Drupal\Component\Utility;
 class DeprecatedArray extends \ArrayObject {
 
   /**
-   * The deprecation message.
-   *
-   * @var string
-   */
-  protected $message;
-
-  /**
    * DeprecatedArray constructor.
    *
    * @param array $values
    *   The array values.
    * @param $message
    *   The deprecation message.
+   * @param string $message
    */
-  public function __construct(array $values, $message) {
-    $this->message = $message;
+  public function __construct(array $values, /**
+   * The deprecation message.
+   */
+  protected $message) {
     parent::__construct($values);
   }
 

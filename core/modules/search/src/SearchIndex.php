@@ -13,60 +13,21 @@ use Drupal\search\Exception\SearchIndexException;
 class SearchIndex implements SearchIndexInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The database replica connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $replica;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * The text processor.
-   *
-   * @var \Drupal\search\SearchTextProcessorInterface
-   */
-  protected $textProcessor;
-
-  /**
    * SearchIndex constructor.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Drupal\Core\Database\Connection $replica
    *   The database replica connection.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
-   * @param \Drupal\search\SearchTextProcessorInterface $text_processor
+   * @param \Drupal\search\SearchTextProcessorInterface $textProcessor
    *   The text processor.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Connection $connection, Connection $replica, CacheTagsInvalidatorInterface $cache_tags_invalidator, SearchTextProcessorInterface $text_processor) {
-    $this->configFactory = $config_factory;
-    $this->connection = $connection;
-    $this->replica = $replica;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    $this->textProcessor = $text_processor;
+  public function __construct(protected ConfigFactoryInterface $configFactory, protected Connection $connection, protected Connection $replica, protected CacheTagsInvalidatorInterface $cacheTagsInvalidator, protected SearchTextProcessorInterface $textProcessor)
+  {
   }
 
   /**

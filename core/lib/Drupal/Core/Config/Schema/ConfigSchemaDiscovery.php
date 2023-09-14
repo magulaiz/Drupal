@@ -14,20 +14,18 @@ class ConfigSchemaDiscovery implements DiscoveryInterface {
   use DiscoveryTrait;
 
   /**
-   * A storage instance for reading configuration schema data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $schemaStorage;
-
-  /**
    * Constructs a ConfigSchemaDiscovery object.
    *
    * @param $schema_storage
    *   The storage object to use for reading schema data.
    */
-  public function __construct(StorageInterface $schema_storage) {
-    $this->schemaStorage = $schema_storage;
+  public function __construct(
+      /**
+       * A storage instance for reading configuration schema data.
+       */
+      protected StorageInterface $schemaStorage
+  )
+  {
   }
 
   /**

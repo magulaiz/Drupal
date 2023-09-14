@@ -18,39 +18,11 @@ use Drupal\Core\Database\Connection;
 class MatcherDumper implements MatcherDumperInterface {
 
   /**
-   * The database connection to which to dump route information.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The routes to be dumped.
    *
    * @var \Symfony\Component\Routing\RouteCollection
    */
   protected $routes;
-
-  /**
-   * The state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The name of the SQL table to which to dump the routes.
-   *
-   * @var string
-   */
-  protected $tableName;
-
-  /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected LoggerInterface $logger;
 
   /**
    * Construct the MatcherDumper.
@@ -62,12 +34,10 @@ class MatcherDumper implements MatcherDumperInterface {
    *   The state.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
-   * @param string $table
+   * @param string $tableName
    *   (optional) The table to store the route info in. Defaults to 'router'.
    */
-  public function __construct(Connection $connection, StateInterface $state, LoggerInterface|string|null $logger = NULL, $table = 'router') {
-    $this->connection = $connection;
-    $this->state = $state;
+  public function __construct(protected Connection $connection, protected StateInterface $state, LoggerInterface|string|null $logger = NULL, protected $tableName = 'router') {
     if (is_string($logger) || is_null($logger)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.router');

@@ -17,13 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Roles extends ManyToOne {
 
   /**
-   * The role storage.
-   *
-   * @var \Drupal\user\RoleStorageInterface
-   */
-  protected $roleStorage;
-
-  /**
    * Constructs a Roles object.
    *
    * @param array $configuration
@@ -32,12 +25,11 @@ class Roles extends ManyToOne {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\user\RoleStorageInterface $role_storage
+   * @param \Drupal\user\RoleStorageInterface $roleStorage
    *   The role storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RoleStorageInterface $role_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected RoleStorageInterface $roleStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->roleStorage = $role_storage;
   }
 
   /**

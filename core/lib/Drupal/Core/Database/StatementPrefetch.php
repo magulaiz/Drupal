@@ -22,34 +22,6 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 class StatementPrefetch implements \Iterator, StatementInterface {
 
   /**
-   * The query string.
-   *
-   * @var string
-   */
-  protected $queryString;
-
-  /**
-   * Driver-specific options. Can be used by child classes.
-   *
-   * @var array
-   */
-  protected $driverOptions;
-
-  /**
-   * The Drupal database connection object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * Reference to the PDO connection object for this statement.
-   *
-   * @var \PDO
-   */
-  protected $pdoConnection;
-
-  /**
    * Main data store.
    *
    * @var array
@@ -131,32 +103,21 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   ];
 
   /**
-   * Is rowCount() execution allowed.
-   *
-   * @var bool
-   */
-  protected $rowCountEnabled = FALSE;
-
-  /**
    * Constructs a StatementPrefetch object.
    *
-   * @param \PDO $pdo_connection
+   * @param \PDO $pdoConnection
    *   An object of the PDO class representing a database connection.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param string $query
+   * @param string $queryString
    *   The query string.
-   * @param array $driver_options
+   * @param array $driverOptions
    *   Driver-specific options.
-   * @param bool $row_count_enabled
+   * @param bool $rowCountEnabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
-  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = FALSE) {
-    $this->pdoConnection = $pdo_connection;
-    $this->connection = $connection;
-    $this->queryString = $query;
-    $this->driverOptions = $driver_options;
-    $this->rowCountEnabled = $row_count_enabled;
+  public function __construct(protected \PDO $pdoConnection, protected Connection $connection, protected $queryString, protected array $driverOptions = [], protected bool $rowCountEnabled = FALSE)
+  {
   }
 
   /**

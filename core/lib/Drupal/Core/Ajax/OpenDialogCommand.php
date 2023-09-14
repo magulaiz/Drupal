@@ -14,13 +14,6 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
   use CommandWithAttachedAssetsTrait;
 
   /**
-   * The selector of the dialog.
-   *
-   * @var string
-   */
-  protected $selector;
-
-  /**
    * The title of the dialog.
    *
    * @var string
@@ -48,13 +41,6 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
   protected $dialogOptions;
 
   /**
-   * Custom settings passed to Drupal behaviors on the content of the dialog.
-   *
-   * @var array
-   */
-  protected $settings;
-
-  /**
    * Constructs an OpenDialogCommand object.
    *
    * @param string $selector
@@ -72,13 +58,11 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    */
-  public function __construct($selector, $title, $content, array $dialog_options = [], $settings = NULL) {
+  public function __construct(protected $selector, $title, $content, array $dialog_options = [], protected $settings = NULL) {
     $title = PlainTextOutput::renderFromHtml($title);
     $dialog_options += ['title' => $title];
-    $this->selector = $selector;
     $this->content = $content;
     $this->dialogOptions = $dialog_options;
-    $this->settings = $settings;
   }
 
   /**

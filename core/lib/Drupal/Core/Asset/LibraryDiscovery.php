@@ -10,13 +10,6 @@ use Drupal\Core\Cache\CacheCollectorInterface;
 class LibraryDiscovery implements LibraryDiscoveryInterface {
 
   /**
-   * The library discovery cache collector.
-   *
-   * @var \Drupal\Core\Cache\CacheCollectorInterface
-   */
-  protected $collector;
-
-  /**
    * The final library definitions, statically cached.
    *
    * Hooks hook_library_info_alter() and hook_js_settings_alter() allow modules
@@ -29,11 +22,11 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
   /**
    * Constructs a new LibraryDiscovery instance.
    *
-   * @param \Drupal\Core\Cache\CacheCollectorInterface $library_discovery_collector
+   * @param \Drupal\Core\Cache\CacheCollectorInterface $collector
    *   The library discovery cache collector.
    */
-  public function __construct(CacheCollectorInterface $library_discovery_collector) {
-    $this->collector = $library_discovery_collector;
+  public function __construct(protected CacheCollectorInterface $collector)
+  {
   }
 
   /**

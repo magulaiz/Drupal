@@ -14,13 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserTrackerTab extends LocalTaskDefault implements ContainerFactoryPluginInterface {
 
   /**
-   * Current user object.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Construct the UserTrackerTab object.
    *
    * @param array $configuration
@@ -29,12 +22,11 @@ class UserTrackerTab extends LocalTaskDefault implements ContainerFactoryPluginI
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, AccountInterface $current_user) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, protected AccountInterface $currentUser) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->currentUser = $current_user;
   }
 
   /**

@@ -58,13 +58,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $hookInfo;
 
   /**
-   * Cache backend for storing module hook implementation information.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Whether the cache needs to be written.
    *
    * @var bool
@@ -77,13 +70,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @var array
    */
   protected $alterFunctions;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
 
   /**
    * A list of module include file keys.
@@ -101,19 +87,17 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   Cache backend for storing module hook implementation information.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend) {
-    $this->root = $root;
+  public function __construct(protected $root, array $module_list, protected CacheBackendInterface $cacheBackend) {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
     }
-    $this->cacheBackend = $cache_backend;
   }
 
   /**

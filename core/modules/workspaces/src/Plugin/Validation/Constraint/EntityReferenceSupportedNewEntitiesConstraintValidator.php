@@ -15,25 +15,19 @@ use Symfony\Component\Validator\ConstraintValidator;
 class EntityReferenceSupportedNewEntitiesConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Creates a new EntityReferenceSupportedNewEntitiesConstraintValidator instance.
    */
-  public function __construct(WorkspaceManagerInterface $workspaceManager, EntityTypeManagerInterface $entityTypeManager) {
-    $this->workspaceManager = $workspaceManager;
-    $this->entityTypeManager = $entityTypeManager;
+  public function __construct(
+      /**
+       * The workspace manager.
+       */
+      protected WorkspaceManagerInterface $workspaceManager,
+      /**
+       * The entity type manager.
+       */
+      protected EntityTypeManagerInterface $entityTypeManager
+  )
+  {
   }
 
   /**

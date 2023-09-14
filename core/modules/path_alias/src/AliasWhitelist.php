@@ -13,20 +13,6 @@ use Drupal\Core\State\StateInterface;
 class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
 
   /**
-   * The Key/Value Store to use for state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The path alias repository.
-   *
-   * @var \Drupal\path_alias\AliasRepositoryInterface
-   */
-  protected $pathAliasRepository;
-
-  /**
    * Constructs an AliasWhitelist object.
    *
    * @param string $cid
@@ -37,13 +23,11 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    *   The lock backend.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state keyvalue store.
-   * @param \Drupal\path_alias\AliasRepositoryInterface $alias_repository
+   * @param \Drupal\path_alias\AliasRepositoryInterface $pathAliasRepository
    *   The path alias repository.
    */
-  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, StateInterface $state, AliasRepositoryInterface $alias_repository) {
+  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, protected StateInterface $state, protected AliasRepositoryInterface $pathAliasRepository) {
     parent::__construct($cid, $cache, $lock);
-    $this->state = $state;
-    $this->pathAliasRepository = $alias_repository;
   }
 
   /**

@@ -19,76 +19,29 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class WorkspaceOperationFactory {
 
   /**
-   * The entity type manager.
+   * Constructs a new WorkspacePublisher.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * An event dispatcher instance to use for configuration events.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * Constructs a new WorkspaceOperationFactory.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspaceAssociation
    *   The workspace association service.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, CacheTagsInvalidatorInterface $cache_tags_invalidator, EventDispatcherInterface $event_dispatcher = NULL, protected ?LoggerInterface $logger = NULL) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->database = $database;
-    $this->workspaceManager = $workspace_manager;
-    $this->workspaceAssociation = $workspace_association;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    if (!$event_dispatcher) {
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected Connection $database, protected WorkspaceManagerInterface $workspaceManager, protected WorkspaceAssociationInterface $workspaceAssociation, protected CacheTagsInvalidatorInterface $cacheTagsInvalidator, protected EventDispatcherInterface $eventDispatcher = NULL, protected ?LoggerInterface $logger = NULL) {
+    if (!$eventDispatcher) {
       @trigger_error('The event dispatcher service should be passed to WorkspaceOperationFactory::__construct() since 10.1.0. This will be required in Drupal 11.0.0.', E_USER_DEPRECATED);
-      $event_dispatcher = \Drupal::service('event_dispatcher');
+      $eventDispatcher = \Drupal::service('eventDispatcher');
     }
-    $this->eventDispatcher = $event_dispatcher;
+    $this->eventDispatcher = $eventDispatcher;
     if ($this->logger === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.workspaces');

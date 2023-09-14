@@ -20,13 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 class WideModalRenderer extends ModalRenderer {
 
   /**
-   * The mode, either 'wide' or 'extra_wide'.
-   *
-   * @var string
-   */
-  protected $mode;
-
-  /**
    * Constructs a new WideModalRenderer.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
@@ -36,9 +29,8 @@ class WideModalRenderer extends ModalRenderer {
    * @param string $mode
    *   The mode, either 'wide' or 'extra_wide'.
    */
-  public function __construct(TitleResolverInterface $title_resolver, RendererInterface $renderer, $mode = 'wide') {
+  public function __construct(TitleResolverInterface $title_resolver, RendererInterface $renderer, protected $mode = 'wide') {
     parent::__construct($title_resolver, $renderer);
-    $this->mode = $mode;
   }
 
   /**

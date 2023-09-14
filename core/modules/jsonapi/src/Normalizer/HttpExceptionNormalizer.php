@@ -22,20 +22,20 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class HttpExceptionNormalizer extends NormalizerBase {
 
   /**
-   * The current user making the request.
+   * The interface or class that this Normalizer supports.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var string
    */
-  protected $currentUser;
+  protected $supportedInterfaceOrClass = HttpException::class;
 
   /**
    * HttpExceptionNormalizer constructor.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(protected AccountInterface $currentUser)
+  {
   }
 
   /**

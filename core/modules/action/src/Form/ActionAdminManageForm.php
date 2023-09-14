@@ -15,20 +15,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ActionAdminManageForm extends FormBase {
 
   /**
-   * The action plugin manager.
-   *
-   * @var \Drupal\Core\Action\ActionManager
-   */
-  protected $manager;
-
-  /**
    * Constructs a new ActionAdminManageForm.
    *
    * @param \Drupal\Core\Action\ActionManager $manager
    *   The action plugin manager.
    */
-  public function __construct(ActionManager $manager) {
-    $this->manager = $manager;
+  public function __construct(protected ActionManager $manager)
+  {
   }
 
   /**

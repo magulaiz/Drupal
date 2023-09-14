@@ -11,20 +11,6 @@ use Drupal\Core\FileTransfer\FileTransfer;
 abstract class Updater {
 
   /**
-   * Directory to install from.
-   *
-   * @var string
-   */
-  public $source;
-
-  /**
-   * The root directory under which new projects will be copied.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The name of the project directory (basename).
    */
   protected string $name;
@@ -44,9 +30,7 @@ abstract class Updater {
    *   new project. Usually this is the app root (the directory in which the
    *   Drupal site is installed).
    */
-  public function __construct($source, $root) {
-    $this->source = $source;
-    $this->root = $root;
+  public function __construct(public $source, protected $root) {
     $this->name = self::getProjectName($source);
     $this->title = self::getProjectTitle($source);
   }

@@ -28,34 +28,18 @@ class BookExport {
   protected $viewBuilder;
 
   /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * Constructs a BookExport object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\book\BookManagerInterface $book_manager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   The book manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, protected BookManagerInterface $bookManager, protected EntityRepositoryInterface $entityRepository) {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
     $this->viewBuilder = $entity_type_manager->getViewBuilder('node');
-    $this->bookManager = $book_manager;
-    $this->entityRepository = $entity_repository;
   }
 
   /**

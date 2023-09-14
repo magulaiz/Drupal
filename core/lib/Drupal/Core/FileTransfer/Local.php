@@ -13,18 +13,13 @@ class Local extends FileTransfer implements ChmodInterface {
   use DependencySerializationTrait;
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct($jail, FileSystemInterface $file_system) {
+  public function __construct($jail, /**
+   * The file system service.
+   */
+  protected FileSystemInterface $fileSystem) {
     parent::__construct($jail);
-    $this->fileSystem = $file_system;
   }
 
   /**

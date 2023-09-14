@@ -41,10 +41,8 @@ class InstallTasksTest extends UnitTestCase {
 
     return new class($connection) extends Tasks {
 
-      private $connection;
-
-      public function __construct(Connection $connection) {
-        $this->connection = $connection;
+      public function __construct(private Connection $connection)
+      {
       }
 
       protected function isConnectionActive() {

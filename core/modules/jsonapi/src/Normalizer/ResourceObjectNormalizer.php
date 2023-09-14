@@ -23,11 +23,9 @@ use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
 class ResourceObjectNormalizer extends NormalizerBase {
 
   /**
-   * The entity normalization cacher.
-   *
-   * @var \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
+   * {@inheritdoc}
    */
-  protected $cacher;
+  protected $supportedInterfaceOrClass = ResourceObject::class;
 
   /**
    * Constructs a ResourceObjectNormalizer object.
@@ -35,8 +33,8 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * @param \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher $cacher
    *   The entity normalization cacher.
    */
-  public function __construct(ResourceObjectNormalizationCacher $cacher) {
-    $this->cacher = $cacher;
+  public function __construct(protected ResourceObjectNormalizationCacher $cacher)
+  {
   }
 
   /**

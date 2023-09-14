@@ -27,21 +27,13 @@ use Drupal\Core\Entity\EntityStorageInterface;
 class EditorImageDialog extends FormBase {
 
   /**
-   * The file storage service.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $fileStorage;
-
-  /**
    * Constructs a form object for image dialog.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $file_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $fileStorage
    *   The file storage service.
    */
-  public function __construct(EntityStorageInterface $file_storage) {
+  public function __construct(protected EntityStorageInterface $file_storage) {
     @trigger_error(__NAMESPACE__ . '\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493', E_USER_DEPRECATED);
-    $this->fileStorage = $file_storage;
   }
 
   /**

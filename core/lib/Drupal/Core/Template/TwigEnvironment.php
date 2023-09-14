@@ -29,13 +29,6 @@ class TwigEnvironment extends Environment {
   const CACHE_PREFIX_METADATA_KEY = 'twig_extension_hash_prefix';
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Static cache of template classes.
    *
    * @var array
@@ -65,9 +58,7 @@ class TwigEnvironment extends Environment {
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, LoaderInterface $loader, array $options = []) {
-    $this->state = $state;
-
+  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, protected StateInterface $state, LoaderInterface $loader, array $options = []) {
     $this->templateClasses = [];
 
     $options += [

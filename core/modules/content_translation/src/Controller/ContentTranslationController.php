@@ -20,30 +20,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentTranslationController extends ControllerBase {
 
   /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Initializes a content translation controller.
    *
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   A content translation manager instance.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager service.
    */
-  public function __construct(ContentTranslationManagerInterface $manager, EntityFieldManagerInterface $entity_field_manager) {
-    $this->manager = $manager;
-    $this->entityFieldManager = $entity_field_manager;
+  public function __construct(protected ContentTranslationManagerInterface $manager, protected EntityFieldManagerInterface $entityFieldManager)
+  {
   }
 
   /**

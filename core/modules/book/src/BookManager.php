@@ -31,32 +31,11 @@ class BookManager implements BookManagerInterface {
   const BOOK_MAX_DEPTH = 9;
 
   /**
-   * Entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Config Factory Service Object.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Books Array.
    *
    * @var array
    */
   protected $books;
-
-  /**
-   * Book outline storage.
-   *
-   * @var \Drupal\book\BookOutlineStorageInterface
-   */
-  protected $bookOutlineStorage;
 
   /**
    * Stores flattened book trees.
@@ -66,72 +45,29 @@ class BookManager implements BookManagerInterface {
   protected $bookTreeFlattened;
 
   /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|mixed|null
-   */
-  protected $languageManager;
-
-  /**
-   * The book chained backend cache service.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $backendChainedCache;
-
-  /**
-   * The book memory cache service.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $memoryCache;
-
-  /**
    * Constructs a BookManager object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The string translation service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\book\BookOutlineStorageInterface $book_outline_storage
+   * @param \Drupal\book\BookOutlineStorageInterface $bookOutlineStorage
    *   The book outline storage.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $backend_chained_cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $backendChainedCache
    *   The book chained backend cache service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $memory_cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $memoryCache
    *   The book memory cache service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer, LanguageManagerInterface $language_manager, EntityRepositoryInterface $entity_repository, CacheBackendInterface $backend_chained_cache, CacheBackendInterface $memory_cache) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, TranslationInterface $translation, protected ConfigFactoryInterface $configFactory, protected BookOutlineStorageInterface $bookOutlineStorage, protected RendererInterface $renderer, protected LanguageManagerInterface $languageManager, protected EntityRepositoryInterface $entityRepository, protected CacheBackendInterface $backendChainedCache, protected CacheBackendInterface $memoryCache) {
     $this->stringTranslation = $translation;
-    $this->configFactory = $config_factory;
-    $this->bookOutlineStorage = $book_outline_storage;
-    $this->renderer = $renderer;
-    $this->languageManager = $language_manager;
-    $this->entityRepository = $entity_repository;
-    $this->backendChainedCache = $backend_chained_cache;
-    $this->memoryCache = $memory_cache;
   }
 
   /**

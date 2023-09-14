@@ -19,28 +19,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RedirectResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The unrouted URL assembler service.
-   *
-   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
-   */
-  protected $unroutedUrlAssembler;
-
-  /**
-   * The request context.
-   */
-  protected RequestContext $requestContext;
-
-  /**
    * Constructs a RedirectResponseSubscriber object.
    *
-   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $unroutedUrlAssembler
    *   The unrouted URL assembler service.
-   * @param \Drupal\Core\Routing\RequestContext $request_context
+   * @param \Drupal\Core\Routing\RequestContext $requestContext
    *   The request context.
    */
-  public function __construct(UnroutedUrlAssemblerInterface $url_assembler, RequestContext $request_context) {
-    $this->unroutedUrlAssembler = $url_assembler;
-    $this->requestContext = $request_context;
+  public function __construct(
+      protected UnroutedUrlAssemblerInterface $unroutedUrlAssembler,
+      /**
+       * The request context.
+       */
+      protected RequestContext $requestContext
+  )
+  {
   }
 
   /**

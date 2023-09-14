@@ -31,22 +31,15 @@ class FieldConfigEditForm extends EntityForm {
   protected $entity;
 
   /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * Constructs a new FieldConfigDeleteForm object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info service.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The type data manger.
    */
-  public function __construct(EntityTypeBundleInfoInterface $entity_type_bundle_info, protected TypedDataManagerInterface $typedDataManager) {
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, protected TypedDataManagerInterface $typedDataManager)
+  {
   }
 
   /**

@@ -14,20 +14,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface {
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\Session
-   */
-  protected $session;
-
-  /**
    * The workspace storage handler.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -37,16 +23,14 @@ class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface {
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Symfony\Component\HttpFoundation\Session\Session $session
    *   The session.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(AccountInterface $current_user, Session $session, EntityTypeManagerInterface $entity_type_manager) {
-    $this->currentUser = $current_user;
-    $this->session = $session;
+  public function __construct(protected AccountInterface $currentUser, protected Session $session, EntityTypeManagerInterface $entity_type_manager) {
     $this->workspaceStorage = $entity_type_manager->getStorage('workspace');
   }
 

@@ -26,13 +26,6 @@ class OverridesEntityForm extends ContentEntityForm {
   use PreviewToggleTrait;
 
   /**
-   * Layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
    * The section storage.
    *
    * @var \Drupal\layout_builder\SectionStorageInterface
@@ -48,12 +41,11 @@ class OverridesEntityForm extends ContentEntityForm {
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The layout tempstore repository.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
   }
 
   /**

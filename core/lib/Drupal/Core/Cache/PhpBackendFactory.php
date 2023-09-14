@@ -5,20 +5,13 @@ namespace Drupal\Core\Cache;
 class PhpBackendFactory implements CacheFactoryInterface {
 
   /**
-   * The cache tags checksum provider.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
-   */
-  protected $checksumProvider;
-
-  /**
    * Constructs a PhpBackendFactory object.
    *
-   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksumProvider
    *   The cache tags checksum provider.
    */
-  public function __construct(CacheTagsChecksumInterface $checksum_provider) {
-    $this->checksumProvider = $checksum_provider;
+  public function __construct(protected CacheTagsChecksumInterface $checksumProvider)
+  {
   }
 
   /**

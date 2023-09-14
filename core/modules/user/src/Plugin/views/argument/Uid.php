@@ -16,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Uid extends NumericArgument {
 
   /**
-   * The user storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * Constructs a \Drupal\user\Plugin\views\argument\Uid object.
    *
    * @param array $configuration
@@ -34,9 +27,8 @@ class Uid extends NumericArgument {
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The user storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityStorageInterface $storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->storage = $storage;
   }
 
   /**

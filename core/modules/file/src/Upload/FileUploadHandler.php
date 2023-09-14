@@ -36,62 +36,6 @@ class FileUploadHandler {
   const DEFAULT_EXTENSIONS = 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp';
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The MIME type guesser.
-   *
-   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The file Repository.
-   *
-   * @var \Drupal\file\FileRepositoryInterface
-   */
-  protected $fileRepository;
-
-  /**
    * Constructs a FileUploadHandler object.
    *
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
@@ -111,19 +55,11 @@ class FileUploadHandler {
    * @param \Drupal\file\FileRepositoryInterface $fileRepository
    *   The file repository.
    */
-  public function __construct(FileSystemInterface $fileSystem, EntityTypeManagerInterface $entityTypeManager, StreamWrapperManagerInterface $streamWrapperManager, EventDispatcherInterface $eventDispatcher, MimeTypeGuesserInterface $mimeTypeGuesser, AccountInterface $currentUser, RequestStack $requestStack, FileRepositoryInterface $fileRepository = NULL) {
-    $this->fileSystem = $fileSystem;
-    $this->entityTypeManager = $entityTypeManager;
-    $this->streamWrapperManager = $streamWrapperManager;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->mimeTypeGuesser = $mimeTypeGuesser;
-    $this->currentUser = $currentUser;
-    $this->requestStack = $requestStack;
+  public function __construct(protected FileSystemInterface $fileSystem, protected EntityTypeManagerInterface $entityTypeManager, protected StreamWrapperManagerInterface $streamWrapperManager, protected EventDispatcherInterface $eventDispatcher, protected MimeTypeGuesserInterface $mimeTypeGuesser, protected AccountInterface $currentUser, protected RequestStack $requestStack, FileRepositoryInterface $fileRepository = NULL) {
     if ($fileRepository === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $fileRepository argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3346839', E_USER_DEPRECATED);
       $fileRepository = \Drupal::service('file.repository');
     }
-    $this->fileRepository = $fileRepository;
   }
 
   /**

@@ -37,48 +37,24 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   protected $configFactory;
 
   /**
-   * The search manager.
-   *
-   * @var \Drupal\search\SearchPluginManager
-   */
-  protected $searchManager;
-
-  /**
-   * The search index.
-   *
-   * @var \Drupal\search\SearchIndexInterface
-   */
-  protected $searchIndex;
-
-  /**
-   * The messenger.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a new SearchPageListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\search\SearchPluginManager $search_manager
+   * @param \Drupal\search\SearchPluginManager $searchManager
    *   The search plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
-   * @param \Drupal\search\SearchIndexInterface $search_index
+   * @param \Drupal\search\SearchIndexInterface $searchIndex
    *   The search index.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SearchPluginManager $search_manager, ConfigFactoryInterface $config_factory, MessengerInterface $messenger, SearchIndexInterface $search_index) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, protected SearchPluginManager $searchManager, ConfigFactoryInterface $config_factory, protected MessengerInterface $messenger, protected SearchIndexInterface $searchIndex) {
     parent::__construct($entity_type, $storage);
     $this->configFactory = $config_factory;
-    $this->searchManager = $search_manager;
-    $this->messenger = $messenger;
-    $this->searchIndex = $search_index;
   }
 
   /**

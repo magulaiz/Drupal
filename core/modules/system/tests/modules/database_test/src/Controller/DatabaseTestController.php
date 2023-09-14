@@ -15,20 +15,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DatabaseTestController extends ControllerBase {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a DatabaseTestController object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(protected Connection $connection)
+  {
   }
 
   /**

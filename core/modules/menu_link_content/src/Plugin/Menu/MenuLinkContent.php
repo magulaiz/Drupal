@@ -49,34 +49,6 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
   protected $entity;
 
   /**
-   * An array of entity operations links.
-   *
-   * @var array
-   */
-  protected $listBuilderOperations;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a new MenuLinkContent.
    *
    * @param array $configuration
@@ -85,14 +57,14 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, EntityRepositoryInterface $entity_repository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityTypeManagerInterface $entityTypeManager, protected LanguageManagerInterface $languageManager, protected EntityRepositoryInterface $entityRepository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     if (!empty($this->pluginDefinition['metadata']['entity_id'])) {
@@ -101,10 +73,6 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
       // EntityStorageInterface::loadMultiple() in getEntity() at render time.
       static::$entityIdsToLoad[$entity_id] = $entity_id;
     }
-
-    $this->entityTypeManager = $entity_type_manager;
-    $this->languageManager = $language_manager;
-    $this->entityRepository = $entity_repository;
   }
 
   /**

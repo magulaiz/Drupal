@@ -14,13 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentEntityDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new ContentEntityDeriver.
    *
    * @param string $base_plugin_id
@@ -28,8 +21,8 @@ class ContentEntityDeriver extends DeriverBase implements ContainerDeriverInterf
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entityTypeManager) {
-    $this->entityTypeManager = $entityTypeManager;
+  public function __construct($base_plugin_id, protected EntityTypeManagerInterface $entityTypeManager)
+  {
   }
 
   /**

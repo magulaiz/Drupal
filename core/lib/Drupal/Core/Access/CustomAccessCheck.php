@@ -21,30 +21,15 @@ use Symfony\Component\Routing\Route;
 class CustomAccessCheck implements RoutingAccessInterface {
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
-   * The arguments resolver.
-   *
-   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface
-   */
-  protected $argumentsResolverFactory;
-
-  /**
    * Constructs a CustomAccessCheck instance.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
-   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $arguments_resolver_factory
+   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $argumentsResolverFactory
    *   The arguments resolver factory.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory) {
-    $this->controllerResolver = $controller_resolver;
-    $this->argumentsResolverFactory = $arguments_resolver_factory;
+  public function __construct(protected ControllerResolverInterface $controllerResolver, protected AccessArgumentsResolverFactoryInterface $argumentsResolverFactory)
+  {
   }
 
   /**

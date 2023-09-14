@@ -16,20 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 class FileTransferAuthorizeForm extends FormBase {
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new FileTransferAuthorizeForm object.
    *
    * @param string $root
    *   The app root.
    */
-  public function __construct($root) {
-    $this->root = $root;
+  public function __construct(protected $root)
+  {
   }
 
   /**

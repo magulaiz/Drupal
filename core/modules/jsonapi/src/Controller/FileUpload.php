@@ -42,50 +42,19 @@ class FileUpload {
   use EntityValidationTrait;
 
   /**
-   * The current user making the request.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $fieldManager;
-
-  /**
-   * The file uploader.
-   *
-   * @var \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
-   */
-  protected $fileUploader;
-
-  /**
-   * An HTTP kernel for making subrequests.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
    * Creates a new FileUpload instance.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $fieldManager
    *   The entity field manager.
-   * @param \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader $file_uploader
+   * @param \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader $fileUploader
    *   The file uploader.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   An HTTP kernel for making subrequests.
    */
-  public function __construct(AccountInterface $current_user, EntityFieldManagerInterface $field_manager, TemporaryJsonapiFileFieldUploader $file_uploader, HttpKernelInterface $http_kernel) {
-    $this->currentUser = $current_user;
-    $this->fieldManager = $field_manager;
-    $this->fileUploader = $file_uploader;
-    $this->httpKernel = $http_kernel;
+  public function __construct(protected AccountInterface $currentUser, protected EntityFieldManagerInterface $fieldManager, protected TemporaryJsonapiFileFieldUploader $fileUploader, protected HttpKernelInterface $httpKernel)
+  {
   }
 
   /**

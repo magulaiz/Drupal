@@ -67,13 +67,6 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
   ];
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Static cache of breakpoints keyed by group.
    *
    * @var array
@@ -92,17 +85,16 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
+  public function __construct(ModuleHandlerInterface $module_handler, protected ThemeHandlerInterface $themeHandler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
     $this->factory = new ContainerFactory($this);
     $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
     $this->setStringTranslation($string_translation);
     $this->alterInfo('breakpoints');
     $this->setCacheBackend($cache_backend, 'breakpoints', ['breakpoints']);

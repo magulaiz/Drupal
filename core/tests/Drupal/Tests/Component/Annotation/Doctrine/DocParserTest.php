@@ -1293,11 +1293,8 @@ DOCBLOCK;
 /** @Annotation */
 class SettingsAnnotation
 {
-    public $settings;
-
-    public function __construct($settings)
+    public function __construct(public $settings)
     {
-        $this->settings = $settings;
     }
 }
 

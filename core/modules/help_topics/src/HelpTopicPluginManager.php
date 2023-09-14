@@ -89,13 +89,6 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
   ];
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * The app root.
    *
    * @var string
@@ -107,18 +100,17 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param string $root
    *   The app root.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, $root) {
+  public function __construct(ModuleHandlerInterface $module_handler, protected ThemeHandlerInterface $themeHandler, CacheBackendInterface $cache_backend, $root) {
     // Note that the parent construct is not called because this not use
     // annotated class discovery.
     $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
     $this->alterInfo('help_topics_info');
     // Use the 'config:core.extension' cache tag so the plugin cache is
     // invalidated on theme install and uninstall.

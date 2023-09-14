@@ -23,28 +23,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ExecutionContext implements ExecutionContextInterface {
 
   /**
-   * @var \Symfony\Component\Validator\Validator\ValidatorInterface
-   */
-  protected $validator;
-
-  /**
-   * The root value of the validated object graph.
-   *
-   * @var mixed
-   */
-  protected $root;
-
-  /**
-   * @var \Drupal\Core\Validation\TranslatorInterface
-   */
-  protected $translator;
-
-  /**
-   * @var string
-   */
-  protected $translationDomain;
-
-  /**
    * The violations generated in the current context.
    *
    * @var \Symfony\Component\Validator\ConstraintViolationList
@@ -122,11 +100,7 @@ class ExecutionContext implements ExecutionContextInterface {
    * @internal Called by \Drupal\Core\TypedData\Validation\ExecutionContextFactory.
    *    Should not be used in user code.
    */
-  public function __construct(ValidatorInterface $validator, $root, TranslatorInterface $translator, $translationDomain = NULL) {
-    $this->validator = $validator;
-    $this->root = $root;
-    $this->translator = $translator;
-    $this->translationDomain = $translationDomain;
+  public function __construct(protected ValidatorInterface $validator, protected $root, protected TranslatorInterface $translator, protected $translationDomain = NULL) {
     $this->violations = new ConstraintViolationList();
   }
 

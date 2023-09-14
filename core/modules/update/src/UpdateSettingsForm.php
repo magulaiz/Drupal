@@ -18,23 +18,15 @@ use Drupal\Component\Utility\EmailValidatorInterface;
 class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInterface {
 
   /**
-   * The email validator.
-   *
-   * @var \Drupal\Component\Utility\EmailValidatorInterface
-   */
-  protected $emailValidator;
-
-  /**
    * Constructs an UpdateSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
+   * @param \Drupal\Component\Utility\EmailValidatorInterface $emailValidator
    *   The email validator.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EmailValidatorInterface $email_validator) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected EmailValidatorInterface $emailValidator) {
     parent::__construct($config_factory);
-    $this->emailValidator = $email_validator;
   }
 
   /**

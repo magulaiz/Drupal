@@ -12,40 +12,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
 
   /**
-   * The database connection used.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Constructs the statistics storage.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection for the node view storage.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
-    $this->connection = $connection;
-    $this->state = $state;
-    $this->requestStack = $request_stack;
+  public function __construct(protected Connection $connection, protected StateInterface $state, protected RequestStack $requestStack)
+  {
   }
 
   /**

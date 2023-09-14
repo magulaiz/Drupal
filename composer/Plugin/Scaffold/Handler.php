@@ -33,20 +33,6 @@ class Handler {
   const POST_DRUPAL_SCAFFOLD_CMD = 'post-drupal-scaffold-cmd';
 
   /**
-   * The Composer service.
-   *
-   * @var \Composer\Composer
-   */
-  protected $composer;
-
-  /**
-   * Composer's I/O service.
-   *
-   * @var \Composer\IO\IOInterface
-   */
-  protected $io;
-
-  /**
    * The scaffold options in the top-level composer.json's 'extra' section.
    *
    * @var \Drupal\Composer\Plugin\Scaffold\ManageOptions
@@ -75,9 +61,7 @@ class Handler {
    * @param \Composer\IO\IOInterface $io
    *   The Composer I/O service.
    */
-  public function __construct(Composer $composer, IOInterface $io) {
-    $this->composer = $composer;
-    $this->io = $io;
+  public function __construct(protected Composer $composer, protected IOInterface $io) {
     $this->manageOptions = new ManageOptions($composer);
     $this->manageAllowedPackages = new AllowedPackages($composer, $io, $this->manageOptions);
   }

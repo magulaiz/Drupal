@@ -8,13 +8,6 @@ namespace Drupal\Core\FileTransfer;
 class FileTransferException extends \RuntimeException {
 
   /**
-   * Arguments to be used in this exception.
-   *
-   * @var array
-   */
-  public $arguments;
-
-  /**
    * Constructs a FileTransferException object.
    *
    * @param string $message
@@ -24,9 +17,8 @@ class FileTransferException extends \RuntimeException {
    * @param array $arguments
    *   Arguments to be used in this exception.
    */
-  public function __construct($message, $code = 0, $arguments = []) {
+  public function __construct($message, $code = 0, public $arguments = []) {
     parent::__construct($message, $code);
-    $this->arguments = $arguments;
   }
 
 }

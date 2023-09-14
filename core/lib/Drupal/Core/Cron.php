@@ -28,55 +28,6 @@ use Psr\Log\NullLogger;
 class Cron implements CronInterface {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The queue service.
-   *
-   * @var \Drupal\Core\Queue\QueueFactory
-   */
-  protected $queueFactory;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The account switcher service.
-   *
-   * @var \Drupal\Core\Session\AccountSwitcherInterface
-   */
-  protected $accountSwitcher;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The queue plugin manager.
-   *
-   * @var \Drupal\Core\Queue\QueueWorkerManagerInterface
-   */
-  protected $queueManager;
-
-  /**
    * The time service.
    *
    * @var \Drupal\Component\Datetime\TimeInterface
@@ -93,33 +44,26 @@ class Cron implements CronInterface {
   /**
    * Constructs a cron object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   * @param \Drupal\Core\Queue\QueueFactory $queueFactory
    *   The queue service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Drupal\Core\Session\AccountSwitcherInterface $account_switcher
+   * @param \Drupal\Core\Session\AccountSwitcherInterface $accountSwitcher
    *   The account switching service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queue_manager
+   * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queueManager
    *   The queue plugin manager.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    * @param mixed[]|null $queue_config
    *   Queue configuration from the service container.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL, ?array $queue_config = NULL) {
-    $this->moduleHandler = $module_handler;
-    $this->lock = $lock;
-    $this->queueFactory = $queue_factory;
-    $this->state = $state;
-    $this->accountSwitcher = $account_switcher;
-    $this->logger = $logger;
-    $this->queueManager = $queue_manager;
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected LockBackendInterface $lock, protected QueueFactory $queueFactory, protected StateInterface $state, protected AccountSwitcherInterface $accountSwitcher, protected LoggerInterface $logger, protected QueueWorkerManagerInterface $queueManager, TimeInterface $time = NULL, ?array $queue_config = NULL) {
     if (!isset($time)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3343743', E_USER_DEPRECATED);
       $time = \Drupal::service('datetime.time');

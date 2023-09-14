@@ -18,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TopLevelBook extends Node {
 
   /**
-   * The node storage controller.
-   *
-   * @var \Drupal\node\NodeStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
    * Constructs a Drupal\book\Plugin\views\argument_default\TopLevelBook object.
    *
    * @param array $configuration
@@ -35,12 +28,11 @@ class TopLevelBook extends Node {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
-   * @param \Drupal\node\NodeStorageInterface $node_storage
+   * @param \Drupal\node\NodeStorageInterface $nodeStorage
    *   The node storage controller.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteMatchInterface $route_match, NodeStorageInterface $node_storage) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteMatchInterface $route_match, protected NodeStorageInterface $nodeStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_match);
-    $this->nodeStorage = $node_storage;
   }
 
   /**

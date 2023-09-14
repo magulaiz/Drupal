@@ -23,20 +23,6 @@ use Symfony\Component\Routing\RouteCollection;
 class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperManagerInterface {
 
   /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * {@inheritdoc}
    */
   protected $defaults = [
@@ -55,19 +41,16 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
    *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    */
-  public function __construct(CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedConfigManagerInterface $typed_config_manager, ThemeHandlerInterface $theme_handler) {
-    $this->typedConfigManager = $typed_config_manager;
-
+  public function __construct(CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, protected TypedConfigManagerInterface $typedConfigManager, protected ThemeHandlerInterface $themeHandler) {
     $this->factory = new ContainerFactory($this, '\Drupal\config_translation\ConfigMapperInterface');
 
     // Let others alter definitions with hook_config_translation_info_alter().
     $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
 
     $this->alterInfo('config_translation_info');
     // Config translation only uses an info hook discovery, cache by language.

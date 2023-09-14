@@ -12,20 +12,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 class AliasManager implements AliasManagerInterface {
 
   /**
-   * The path alias repository.
-   *
-   * @var \Drupal\path_alias\AliasRepositoryInterface
-   */
-  protected $pathAliasRepository;
-
-  /**
-   * Cache backend service.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * The cache key to use when caching paths.
    *
    * @var string
@@ -40,13 +26,6 @@ class AliasManager implements AliasManagerInterface {
   protected $cacheNeedsWriting = FALSE;
 
   /**
-   * Language manager for retrieving the default langcode when none is specified.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Holds the map of path lookups per language.
    *
    * @var array
@@ -59,13 +38,6 @@ class AliasManager implements AliasManagerInterface {
    * @var array
    */
   protected $noPath = [];
-
-  /**
-   * Holds the array of whitelisted path aliases.
-   *
-   * @var \Drupal\path_alias\AliasWhitelistInterface
-   */
-  protected $whitelist;
 
   /**
    * Holds an array of paths that have no alias.
@@ -94,20 +66,17 @@ class AliasManager implements AliasManagerInterface {
   /**
    * Constructs an AliasManager.
    *
-   * @param \Drupal\path_alias\AliasRepositoryInterface $alias_repository
+   * @param \Drupal\path_alias\AliasRepositoryInterface $pathAliasRepository
    *   The path alias repository.
    * @param \Drupal\path_alias\AliasWhitelistInterface $whitelist
    *   The whitelist implementation to use.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache backend.
    */
-  public function __construct(AliasRepositoryInterface $alias_repository, AliasWhitelistInterface $whitelist, LanguageManagerInterface $language_manager, CacheBackendInterface $cache) {
-    $this->pathAliasRepository = $alias_repository;
-    $this->languageManager = $language_manager;
-    $this->whitelist = $whitelist;
-    $this->cache = $cache;
+  public function __construct(protected AliasRepositoryInterface $pathAliasRepository, protected AliasWhitelistInterface $whitelist, protected LanguageManagerInterface $languageManager, protected CacheBackendInterface $cache)
+  {
   }
 
   /**

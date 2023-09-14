@@ -68,13 +68,6 @@ class FormattableMarkup implements MarkupInterface, \Countable {
   protected $string;
 
   /**
-   * The arguments to replace placeholders with.
-   *
-   * @var array
-   */
-  protected $arguments = [];
-
-  /**
    * Constructs a new class instance.
    *
    * @param string $string
@@ -87,9 +80,8 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    *
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
-  public function __construct($string, array $arguments) {
+  public function __construct($string, protected array $arguments) {
     $this->string = (string) $string;
-    $this->arguments = $arguments;
   }
 
   /**

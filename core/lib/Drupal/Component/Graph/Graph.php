@@ -8,11 +8,6 @@ namespace Drupal\Component\Graph;
 class Graph {
 
   /**
-   * Holds the directed acyclic graph.
-   */
-  protected $graph;
-
-  /**
    * Instantiates the depth first search object.
    *
    * @param $graph
@@ -37,8 +32,13 @@ class Graph {
    *     $graph[3]['reverse_paths'][1] = 1;
    *   @endcode
    */
-  public function __construct($graph) {
-    $this->graph = $graph;
+  public function __construct(
+      /**
+       * Holds the directed acyclic graph.
+       */
+      protected $graph
+  )
+  {
   }
 
   /**

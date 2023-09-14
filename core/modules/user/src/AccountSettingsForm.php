@@ -18,33 +18,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AccountSettingsForm extends ConfigFormBase {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The role storage used when changing the admin role.
-   *
-   * @var \Drupal\user\RoleStorageInterface
-   */
-  protected $roleStorage;
-
-  /**
    * Constructs a \Drupal\user\AccountSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\user\RoleStorageInterface $role_storage
+   * @param \Drupal\user\RoleStorageInterface $roleStorage
    *   The role storage.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, RoleStorageInterface $role_storage) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected ModuleHandlerInterface $moduleHandler, protected RoleStorageInterface $roleStorage) {
     parent::__construct($config_factory);
-    $this->moduleHandler = $module_handler;
-    $this->roleStorage = $role_storage;
   }
 
   /**

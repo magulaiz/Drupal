@@ -26,20 +26,6 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   protected $themeData;
 
   /**
-   * Module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * The uninstall validators.
    *
    * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
@@ -49,14 +35,13 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   /**
    * Constructs the ConfigImportSubscriber.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module) {
-    $this->themeHandler = $theme_handler;
-    $this->moduleExtensionList = $extension_list_module;
+  public function __construct(protected ThemeHandlerInterface $themeHandler, protected ModuleExtensionList $moduleExtensionList)
+  {
   }
 
   /**

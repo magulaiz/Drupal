@@ -23,30 +23,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UpdateManagerUpdate extends FormBase {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The Drupal state storage service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a new UpdateManagerUpdate object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state) {
-    $this->moduleHandler = $module_handler;
-    $this->state = $state;
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected StateInterface $state)
+  {
   }
 
   /**

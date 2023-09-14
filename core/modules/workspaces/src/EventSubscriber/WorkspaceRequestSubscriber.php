@@ -18,50 +18,19 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class WorkspaceRequestSubscriber implements EventSubscriberInterface {
 
   /**
-   * The alias manager that caches alias lookups based on the request.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
-   * The current path.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack
-   */
-  protected $currentPath;
-
-  /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * Constructs a new WorkspaceRequestSubscriber instance.
    *
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
    *   The alias manager.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   * @param \Drupal\Core\Path\CurrentPathStack $currentPath
    *   The current path.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    */
-  public function __construct(AliasManagerInterface $alias_manager, CurrentPathStack $current_path, RouteProviderInterface $route_provider, WorkspaceManagerInterface $workspace_manager) {
-    $this->aliasManager = $alias_manager;
-    $this->currentPath = $current_path;
-    $this->routeProvider = $route_provider;
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(protected AliasManagerInterface $aliasManager, protected CurrentPathStack $currentPath, protected RouteProviderInterface $routeProvider, protected WorkspaceManagerInterface $workspaceManager)
+  {
   }
 
   /**

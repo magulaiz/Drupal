@@ -54,13 +54,6 @@ class PermissionHandler implements PermissionHandlerInterface {
   use StringTranslationTrait;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The YAML discovery class to find all .permissions.yml files.
    *
    * @var \Drupal\Core\Discovery\YamlDiscovery
@@ -68,28 +61,17 @@ class PermissionHandler implements PermissionHandlerInterface {
   protected $yamlDiscovery;
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
    * Constructs a new PermissionHandler.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface $controller_resolver) {
-    // @todo It would be nice if you could pull all module directories from the
-    //   container.
-    $this->moduleHandler = $module_handler;
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, TranslationInterface $string_translation, protected ControllerResolverInterface $controllerResolver) {
     $this->stringTranslation = $string_translation;
-    $this->controllerResolver = $controller_resolver;
   }
 
   /**

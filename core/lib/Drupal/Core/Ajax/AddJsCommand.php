@@ -16,35 +16,23 @@ namespace Drupal\Core\Ajax;
 class AddJsCommand implements CommandInterface {
 
   /**
-   * An array containing attributes of the scripts to be added to the page.
-   *
-   * @var string[]
-   */
-  protected $scripts;
-
-  /**
-   * A CSS selector string.
-   *
-   * If the command is a response to a request from an #ajax form element then
-   * this value will default to 'body'.
-   *
-   * @var string
-   */
-  protected $selector;
-
-  /**
    * Constructs an AddJsCommand.
    *
-   * @param array $scripts
+   * @param string[] $scripts
    *   An array containing the attributes of the 'script' tags to be added to
    *   the page. i.e. `['src' => 'someURL', 'defer' => TRUE]` becomes
    *   `<script src="someURL" defer>`.
    * @param string $selector
    *   A CSS selector of the element where the script tags will be appended.
    */
-  public function __construct(array $scripts, string $selector = 'body') {
-    $this->scripts = $scripts;
-    $this->selector = $selector;
+  public function __construct(
+      /**
+       * An array containing attributes of the scripts to be added to the page.
+       */
+      protected array $scripts,
+      protected string $selector = 'body'
+  )
+  {
   }
 
   /**

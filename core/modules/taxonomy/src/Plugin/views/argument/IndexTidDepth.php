@@ -23,17 +23,10 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   use TaxonomyIndexDepthQueryTrait;
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $termStorage;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $termStorage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityStorageInterface $termStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->termStorage = $termStorage;
   }
 
   /**

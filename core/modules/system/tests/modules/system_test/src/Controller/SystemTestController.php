@@ -23,60 +23,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SystemTestController extends ControllerBase implements TrustedCallbackInterface {
 
   /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The persistent lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $persistentLock;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs the SystemTestController.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
+   * @param \Drupal\Core\Lock\LockBackendInterface $persistentLock
    *   The persistent lock service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock, AccountInterface $current_user, RendererInterface $renderer, MessengerInterface $messenger) {
-    $this->lock = $lock;
-    $this->persistentLock = $persistent_lock;
-    $this->currentUser = $current_user;
-    $this->renderer = $renderer;
-    $this->messenger = $messenger;
+  public function __construct(protected LockBackendInterface $lock, protected LockBackendInterface $persistentLock, protected AccountInterface $currentUser, protected RendererInterface $renderer, protected MessengerInterface $messenger)
+  {
   }
 
   /**

@@ -23,42 +23,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   const TABLE = 'workspace_association';
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The workspace repository service.
-   *
-   * @var \Drupal\workspaces\WorkspaceRepositoryInterface
-   */
-  protected $workspaceRepository;
-
-  /**
    * Constructs a WorkspaceAssociation object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection for reading and writing path aliases.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager for querying revisions.
-   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
+   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspaceRepository
    *   The Workspace repository service.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, WorkspaceRepositoryInterface $workspace_repository, protected ?LoggerInterface $logger = NULL) {
-    $this->database = $connection;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->workspaceRepository = $workspace_repository;
+  public function __construct(protected Connection $connection, proteceted EntityTypeManagerInterface $entityTypeManager, protected WorkspaceRepositoryInterface $workspaceRepository, protected ?LoggerInterface $logger = NULL) {
     if ($this->logger === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.workspaces');
@@ -81,11 +57,11 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     }
 
     try {
-      $transaction = $this->database->startTransaction();
+      $transaction = $this->connection->startTransaction();
       // Update all affected workspaces that were tracking the current revision.
       // This means they are inheriting content and should be updated.
       if ($tracked_revision_id) {
-        $this->database->update(static::TABLE)
+        $this->connection->update(static::TABLE)
           ->fields([
             'target_entity_revision_id' => $entity->getRevisionId(),
           ])
@@ -102,7 +78,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       // entity yet.
       $missing_workspaces = array_diff($affected_workspaces, $this->getEntityTrackingWorkspaceIds($entity));
       if ($missing_workspaces) {
-        $insert_query = $this->database->insert(static::TABLE)
+        $insert_query = $this->connection->insert(static::TABLE)
           ->fields([
             'workspace',
             'target_entity_revision_id',
@@ -144,7 +120,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL) {
-    $query = $this->database->select(static::TABLE);
+    $query = $this->connection->select(static::TABLE);
     $query
       ->fields(static::TABLE, ['target_entity_type_id', 'target_entity_id', 'target_entity_revision_id'])
       ->orderBy('target_entity_revision_id', 'ASC')
@@ -194,7 +170,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $workspace_candidates = [$workspace_id];
     }
 
-    $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
+    $query = $this->connection->select($entity_type->getRevisionTable(), 'revision');
     $query->leftJoin($entity_type->getBaseTable(), 'base', "[revision].[$id_field] = [base].[$id_field]");
 
     $query
@@ -231,7 +207,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
     $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
 
-    $query = $this->database->select($entity_type->getBaseTable(), 'base');
+    $query = $this->connection->select($entity_type->getBaseTable(), 'base');
     $query->leftJoin($entity_type->getRevisionTable(), 'revision', "[base].[$revision_id_field] = [revision].[$revision_id_field]");
 
     $query
@@ -251,7 +227,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity) {
-    $query = $this->database->select(static::TABLE)
+    $query = $this->connection->select(static::TABLE)
       ->fields(static::TABLE, ['workspace'])
       ->condition('target_entity_type_id', $entity->getEntityTypeId())
       ->condition('target_entity_id', $entity->id());
@@ -275,7 +251,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       throw new \InvalidArgumentException('A workspace ID or an entity type ID must be provided.');
     }
 
-    $query = $this->database->delete(static::TABLE);
+    $query = $this->connection->delete(static::TABLE);
 
     if ($workspace_id) {
       $query->condition('workspace', $workspace_id);
@@ -305,7 +281,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   public function initializeWorkspace(WorkspaceInterface $workspace) {
     if ($parent_id = $workspace->parent->target_id) {
-      $indexed_rows = $this->database->select(static::TABLE);
+      $indexed_rows = $this->connection->select(static::TABLE);
       $indexed_rows->addExpression(':new_id', 'workspace', [
         ':new_id' => $workspace->id(),
       ]);
@@ -315,7 +291,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         'target_entity_revision_id',
       ]);
       $indexed_rows->condition('workspace', $parent_id);
-      $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
+      $this->connection->insert(static::TABLE)->from($indexed_rows)->execute();
     }
   }
 

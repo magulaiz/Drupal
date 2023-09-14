@@ -24,30 +24,15 @@ use Symfony\Component\HttpFoundation\Request;
 class ControllerResolver implements ControllerResolverInterface {
 
   /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
-   * The PSR-7 converter.
-   *
-   * @var \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface
-   */
-  protected $httpMessageFactory;
-
-  /**
    * Constructs a new ControllerResolver.
    *
-   * @param \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface $http_message_factory
+   * @param \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface $httpMessageFactory
    *   The PSR-7 converter.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
    */
-  public function __construct(HttpMessageFactoryInterface $http_message_factory, ClassResolverInterface $class_resolver) {
-    $this->httpMessageFactory = $http_message_factory;
-    $this->classResolver = $class_resolver;
+  public function __construct(protected HttpMessageFactoryInterface $httpMessageFactory, protected ClassResolverInterface $classResolver)
+  {
   }
 
   /**

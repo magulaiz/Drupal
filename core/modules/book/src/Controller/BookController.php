@@ -20,27 +20,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BookController extends ControllerBase {
 
   /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
-   * The book export service.
-   *
-   * @var \Drupal\book\BookExport
-   */
-  protected $bookExport;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a BookController object.
    *
    * @param \Drupal\book\BookManagerInterface $bookManager
@@ -50,10 +29,8 @@ class BookController extends ControllerBase {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(BookManagerInterface $bookManager, BookExport $bookExport, RendererInterface $renderer) {
-    $this->bookManager = $bookManager;
-    $this->bookExport = $bookExport;
-    $this->renderer = $renderer;
+  public function __construct(protected BookManagerInterface $bookManager, protected BookExport $bookExport, protected RendererInterface $renderer)
+  {
   }
 
   /**

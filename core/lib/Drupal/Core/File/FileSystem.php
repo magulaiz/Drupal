@@ -33,40 +33,17 @@ class FileSystem implements FileSystemInterface {
   const CHMOD_FILE = 0664;
 
   /**
-   * The site settings.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
-   * The file logger channel.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
    * Constructs a new FileSystem.
    *
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
    *   The stream wrapper manager.
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
    * @param \Psr\Log\LoggerInterface $logger
    *   The file logger channel.
    */
-  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger) {
-    $this->streamWrapperManager = $stream_wrapper_manager;
-    $this->settings = $settings;
-    $this->logger = $logger;
+  public function __construct(protected StreamWrapperManagerInterface $streamWrapperManager, protected Settings $settings, protected LoggerInterface $logger)
+  {
   }
 
   /**

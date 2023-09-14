@@ -125,18 +125,6 @@ abstract class QueryBase implements QueryInterface {
   protected $pager = [];
 
   /**
-   * List of potential namespaces of the classes belonging to this query.
-   *
-   * @var array
-   */
-  protected $namespaces = [];
-
-  /**
-   * Defines how the conditions on the query need to match.
-   */
-  protected string $conjunction;
-
-  /**
    * Constructs this object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -147,11 +135,12 @@ abstract class QueryBase implements QueryInterface {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  public function __construct(EntityTypeInterface $entity_type, $conjunction, array $namespaces) {
+  public function __construct(EntityTypeInterface $entity_type, /**
+   * Defines how the conditions on the query need to match.
+   */
+  protected $conjunction, protected array $namespaces) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
-    $this->conjunction = $conjunction;
-    $this->namespaces = $namespaces;
     $this->condition = $this->conditionGroupFactory($conjunction);
     if ($this instanceof QueryAggregateInterface) {
       $this->conditionAggregate = $this->conditionAggregateGroupFactory($conjunction);

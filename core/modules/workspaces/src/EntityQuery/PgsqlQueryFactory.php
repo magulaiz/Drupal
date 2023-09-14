@@ -14,23 +14,15 @@ use Drupal\workspaces\WorkspaceManagerInterface;
 class PgsqlQueryFactory extends BaseQueryFactory {
 
   /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * Constructs a PgsqlQueryFactory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection used by the entity query.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    */
-  public function __construct(Connection $connection, WorkspaceManagerInterface $workspace_manager) {
+  public function __construct(Connection $connection, protected WorkspaceManagerInterface $workspaceManager) {
     $this->connection = $connection;
-    $this->workspaceManager = $workspace_manager;
     $this->namespaces = QueryBase::getNamespaces($this);
   }
 

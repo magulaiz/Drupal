@@ -20,13 +20,6 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 class StatementWrapper implements \IteratorAggregate, StatementInterface {
 
   /**
-   * The Drupal database connection object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The client database Statement object.
    *
    * For a \PDO client connection, this will be a \PDOStatement object.
@@ -34,13 +27,6 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * @var object
    */
   protected $clientStatement;
-
-  /**
-   * Is rowCount() execution allowed.
-   *
-   * @var bool
-   */
-  protected $rowCountEnabled = FALSE;
 
   /**
    * Constructs a StatementWrapper object.
@@ -53,13 +39,11 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    *   The SQL query string.
    * @param array $options
    *   Array of query options.
-   * @param bool $row_count_enabled
+   * @param bool $rowCountEnabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
-  public function __construct(Connection $connection, $client_connection, string $query, array $options, bool $row_count_enabled = FALSE) {
-    $this->connection = $connection;
+  public function __construct(protected Connection $connection, $client_connection, string $query, array $options, protected bool $rowCountEnabled = FALSE) {
     $this->clientStatement = $client_connection->prepare($query, $options);
-    $this->rowCountEnabled = $row_count_enabled;
     $this->setFetchMode(\PDO::FETCH_OBJ);
   }
 

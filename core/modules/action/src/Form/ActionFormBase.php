@@ -14,13 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ActionFormBase extends EntityForm {
 
   /**
-   * The action storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * The action entity.
    *
    * @var \Drupal\system\ActionConfigEntityInterface
@@ -33,8 +26,8 @@ abstract class ActionFormBase extends EntityForm {
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The action storage.
    */
-  public function __construct(EntityStorageInterface $storage) {
-    $this->storage = $storage;
+  public function __construct(protected EntityStorageInterface $storage)
+  {
   }
 
   /**

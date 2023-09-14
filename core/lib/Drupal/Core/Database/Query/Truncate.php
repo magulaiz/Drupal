@@ -11,13 +11,6 @@ use Drupal\Core\Database\Connection;
 class Truncate extends Query {
 
   /**
-   * The table to truncate.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * Constructs a Truncate query object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -27,12 +20,11 @@ class Truncate extends Query {
    * @param array $options
    *   Array of database options.
    */
-  public function __construct(Connection $connection, $table, array $options = []) {
+  public function __construct(Connection $connection, protected $table, array $options = []) {
     // @todo Remove $options['return'] in Drupal 11.
     // @see https://www.drupal.org/project/drupal/issues/3256524
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
-    $this->table = $table;
   }
 
   /**

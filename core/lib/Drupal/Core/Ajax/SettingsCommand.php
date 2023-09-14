@@ -17,26 +17,6 @@ namespace Drupal\Core\Ajax;
 class SettingsCommand implements CommandInterface {
 
   /**
-   * An array of key/value pairs of JavaScript settings.
-   *
-   * This will be used for all commands after this if they do not include their
-   * own settings array.
-   *
-   * @var array
-   */
-  protected $settings;
-
-  /**
-   * Whether the settings should be merged into the global drupalSettings.
-   *
-   * By default (FALSE), the settings that are passed to Drupal.attachBehaviors
-   * will not include the global drupalSettings.
-   *
-   * @var bool
-   */
-  protected $merge;
-
-  /**
    * Constructs a SettingsCommand object.
    *
    * @param array $settings
@@ -44,9 +24,8 @@ class SettingsCommand implements CommandInterface {
    * @param bool $merge
    *   Whether the settings should be merged into the global drupalSettings.
    */
-  public function __construct(array $settings, $merge = FALSE) {
-    $this->settings = $settings;
-    $this->merge = $merge;
+  public function __construct(protected array $settings, protected $merge = FALSE)
+  {
   }
 
   /**

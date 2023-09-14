@@ -20,20 +20,6 @@ use Symfony\Component\Routing\Route;
 class RoutePreloader implements EventSubscriberInterface {
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\Drupal\Core\Routing\PreloadableRouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Contains the non-admin routes while rebuilding the routes.
    *
    * @var array
@@ -41,26 +27,17 @@ class RoutePreloader implements EventSubscriberInterface {
   protected $nonAdminRoutesOnRebuild = [];
 
   /**
-   * The cache backend used to skip the state loading.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * Constructs a new RoutePreloader.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    */
-  public function __construct(RouteProviderInterface $route_provider, StateInterface $state, CacheBackendInterface $cache) {
-    $this->routeProvider = $route_provider;
-    $this->state = $state;
-    $this->cache = $cache;
+  public function __construct(protected RouteProviderInterface $routeProvider, protected StateInterface $state, protected CacheBackendInterface $cache)
+  {
   }
 
   /**

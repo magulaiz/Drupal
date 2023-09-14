@@ -36,30 +36,20 @@ use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements DenormalizerInterface, NormalizerInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityTypeManager;
-
-  /**
-   * The JSON:API resource type repository.
-   *
-   * @var \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface
-   */
-  protected $resourceTypeRepository;
+  protected $supportedInterfaceOrClass = JsonApiDocumentTopLevel::class;
 
   /**
    * Constructs a JsonApiDocumentTopLevelNormalizer object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resourceTypeRepository
    *   The JSON:API resource type repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ResourceTypeRepositoryInterface $resource_type_repository) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->resourceTypeRepository = $resource_type_repository;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected ResourceTypeRepositoryInterface $resourceTypeRepository)
+  {
   }
 
   /**

@@ -8,30 +8,15 @@ namespace Drupal\session_test\Session;
 class TestSessionHandlerProxy implements \SessionHandlerInterface {
 
   /**
-   * The decorated session handler.
-   *
-   * @var \SessionHandlerInterface
-   */
-  protected $sessionHandler;
-
-  /**
-   * An optional argument.
-   *
-   * @var mixed
-   */
-  protected $optionalArgument;
-
-  /**
    * Constructs a new TestSessionHandlerProxy object.
    *
-   * @param \SessionHandlerInterface $session_handler
+   * @param \SessionHandlerInterface $sessionHandler
    *   The decorated session handler.
-   * @param mixed $optional_argument
+   * @param mixed $optionalArgument
    *   (optional) An optional argument.
    */
-  public function __construct(\SessionHandlerInterface $session_handler, $optional_argument = NULL) {
-    $this->sessionHandler = $session_handler;
-    $this->optionalArgument = $optional_argument;
+  public function __construct(protected \SessionHandlerInterface $sessionHandler, protected $optionalArgument = NULL)
+  {
   }
 
   /**

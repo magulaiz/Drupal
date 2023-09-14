@@ -35,13 +35,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactoryPluginInterface, SearchableHelpInterface {
 
   /**
-   * The plugin manager.
-   *
-   * @var \Drupal\help_topics\HelpTopicPluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
    * The top level help topic plugins.
    *
    * @var \Drupal\help_topics\HelpTopicPluginInterface[]
@@ -56,32 +49,6 @@ class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactory
   protected $cacheableMetadata;
 
   /**
-   * The Renderer service to format the username and node.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The default language object.
-   *
-   * @var \Drupal\Core\Language\LanguageDefault
-   */
-  protected $defaultLanguage;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The string translation service.
-   */
-  protected TranslationManager $translationManager;
-
-  /**
    * Constructs a HelpTopicSection object.
    *
    * @param array $configuration
@@ -90,25 +57,23 @@ class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactory
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\help_topics\HelpTopicPluginManagerInterface $plugin_manager
+   * @param \Drupal\help_topics\HelpTopicPluginManagerInterface $pluginManager
    *   The help topic plugin manager service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Language\LanguageDefault $default_language
+   * @param \Drupal\Core\Language\LanguageDefault $defaultLanguage
    *   The default language object.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\StringTranslation\TranslationManager $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationManager $translationManager
    *   The translation manager. We are using a method that doesn't exist on an
    *   interface, so require this class.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, HelpTopicPluginManagerInterface $plugin_manager, RendererInterface $renderer, LanguageDefault $default_language, LanguageManagerInterface $language_manager, TranslationManager $translation_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected HelpTopicPluginManagerInterface $pluginManager, protected RendererInterface $renderer, protected LanguageDefault $defaultLanguage, protected LanguageManagerInterface $languageManager, /**
+   * The string translation service.
+   */
+  protected TranslationManager $translationManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->pluginManager = $plugin_manager;
-    $this->renderer = $renderer;
-    $this->defaultLanguage = $default_language;
-    $this->languageManager = $language_manager;
-    $this->translationManager = $translation_manager;
   }
 
   /**
