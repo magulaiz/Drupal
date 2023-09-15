@@ -32,8 +32,9 @@
    *   During `unload` remove all {@link Drupal.Ajax} objects related to
    *   the removed content.
    */
-  Drupal.behaviors.AJAX = {attach(context, settings) {
-      function loadAjaxBehavior (base){
+  Drupal.behaviors.AJAX = {
+    attach(context, settings) {
+      function loadAjaxBehavior(base) {
         const elementSettings = settings.ajax[base];
         if (typeof elementSettings.selector === 'undefined') {
           elementSettings.selector = `#${base}`;
