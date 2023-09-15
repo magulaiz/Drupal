@@ -151,18 +151,14 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
-    $form_title = $this->t('%field settings for %bundle', [
-    // '%field' => $this->entity->getLabel(),
-      '%field' => 'FOO',
+    $form_title = $this->t('Field settings for %bundle', [
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
     $form['#title'] = $form_title;
 
     if ($field_storage->isLocked()) {
       $form['locked'] = [
-        '#markup' => $this->t('The field %field is locked and cannot be edited.',
-      // ['%field' => $this->entity->getLabel()]),
-          ['%field' => 'FOO']),
+        '#markup' => $this->t('The field is locked and cannot be edited.')
       ];
       return $form;
     }
@@ -434,6 +430,8 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
+    $this->validateAddNew($form, $form_state);
     $values = $form_state->getValues();
     $field_name = $values['field_name'];
     $field_values = [
@@ -684,6 +682,39 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
     return isset($field_storage_definitions[$field_name]);
+  }
+
+  /**
+   * Validates the 'add new field' case.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @see \Drupal\field_ui\Form\FieldStorageAddForm::validateForm()
+   */
+  protected function validateAddNew(array $form, FormStateInterface $form_state) {
+    // Validate if any information was provided in the 'add new field' case.
+    if ($form_state->getValue('new_storage_type')) {
+      // Missing label.
+      if (!$form_state->getValue('label')) {
+        $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
+      }
+
+      // Missing field name.
+      if (!$form_state->getValue('field_name')) {
+        $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
+      }
+      // Field name validation.
+      else {
+        $field_name = $form_state->getValue('field_name');
+
+        // Add the field prefix.
+        $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
+        $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
+      }
+    }
   }
 
 }

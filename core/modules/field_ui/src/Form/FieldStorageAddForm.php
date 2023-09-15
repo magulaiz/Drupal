@@ -13,7 +13,6 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -132,23 +131,22 @@ class FieldStorageAddForm extends FormBase {
     $this->bundle = $form_state->get('bundle');
 
     // Field label and field_name.
-    $form['new_storage_wrapper'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['field-ui-new-storage-wrapper'],
-      ],
-      '#states' => [
-        '!visible' => [
-          ':input[name="new_storage_type"]' => ['value' => ''],
-        ],
-      ],
-    ];
-    $form['new_storage_wrapper']['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#size' => 30,
-    ];
-
+    //    $form['new_storage_wrapper'] = [
+    //      '#type' => 'container',
+    //      '#attributes' => [
+    //        'class' => ['field-ui-new-storage-wrapper'],
+    //      ],
+    //      '#states' => [
+    //        '!visible' => [
+    //          ':input[name="new_storage_type"]' => ['value' => ''],
+    //        ],
+    //      ],
+    //    ];
+    //    $form['new_storage_wrapper']['label'] = [
+    //      '#type' => 'textfield',
+    //      '#title' => $this->t('Label'),
+    //      '#size' => 30,
+    //    ];.
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
@@ -317,21 +315,6 @@ class FieldStorageAddForm extends FormBase {
         $form['group_field_options_wrapper']['fields'] += $group_field_options;
       }
     }
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['new_storage_wrapper']['field_name'] = [
-      '#type' => 'machine_name',
-      '#field_prefix' => $field_prefix,
-      '#size' => 15,
-      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-      // Calculate characters depending on the length of the field prefix
-      // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
-      '#machine_name' => [
-        'source' => ['new_storage_wrapper', 'label'],
-        'exists' => [$this, 'fieldNameExists'],
-      ],
-      '#required' => FALSE,
-    ];
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
     // we create field storage as translatable so it will be possible to enable
@@ -340,7 +323,6 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'value',
       '#value' => TRUE,
     ];
-
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -370,38 +352,6 @@ class FieldStorageAddForm extends FormBase {
     elseif (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper')) {
       $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to select a field type.'));
     }
-
-    $this->validateAddNew($form, $form_state);
-  }
-
-  /**
-   * Validates the 'add new field' case.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @see \Drupal\field_ui\Form\FieldStorageAddForm::validateForm()
-   */
-  protected function validateAddNew(array $form, FormStateInterface $form_state) {
-    // Validate if any information was provided in the 'add new field' case.
-    // Missing label.
-    if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
-    }
-    // Missing field name.
-    if (!$form_state->getValue('field_name')) {
-      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-    }
-    // Field name validation.
-    else {
-      $field_name = $form_state->getValue('field_name');
-
-      // Add the field prefix.
-      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
-      $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
-    }
   }
 
   /**
@@ -412,7 +362,12 @@ class FieldStorageAddForm extends FormBase {
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
-    $field_name = $values['field_name'];
+    // Create a random string as the field name, so we can create a dummy entity
+    // in order to create the field storage settings. Inside the edit form,
+    // a new entity with the user inputted field name will get created
+    // that is saved.
+    // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
+    $field_name = '_' . substr(str_shuffle(md5(time())), 0, 10);
     $field_values = [
       'entity_type' => $this->entityTypeId,
       'bundle' => $this->bundle,
@@ -430,7 +385,6 @@ class FieldStorageAddForm extends FormBase {
     $field_values += [
       ...$default_options['field_config'] ?? [],
       'field_name' => $field_name,
-      'label' => $values['label'],
       // Field translatability should be explicitly enabled by the users.
       'translatable' => FALSE,
     ];
