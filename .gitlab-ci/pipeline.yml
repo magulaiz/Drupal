@@ -9,6 +9,13 @@ stages:
   - 🏗️ Build
 
   ################
+  # Lint 
+  #
+  # Code quality checks.
+  ################
+  - 🪄 Lint
+
+  ################
   # Test
   #
   # The test phase actually executes the tests, as well as gathering results
