@@ -101,24 +101,21 @@ stages:
       echo "ℹ️ Changes from ${TARGET_BRANCH}"
       git diff origin/${TARGET_BRANCH} --name-only
       echo "1️⃣ Reverting non test changes"
-      if [ git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh ]
-      then
-        git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+      if [ "$(git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) -eq 0 ]; then
+        git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
           echo "↩️ Reverting $file"
           git checkout origin/${TARGET_BRANCH} -- $file
         done
       fi
       echo "2️⃣ Deleting new files"
-      if [ git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh ]
-      then
-        git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+      if [ "$(git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) -eq 0 ]; then
+        git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
           echo "🗑️️ Deleting $file"
           # git rm $file
         done
       fi
       echo "3️⃣ Running test changes for this branch"
-      if [ git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$" ]
-      then
+      if [ "$(git diff origin/${TARGET_BRANCH} --name-only|grep -E '.test$'") -eq 0 ]; then
         git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"|while read file;do
           sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$file"
         done
