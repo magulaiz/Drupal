@@ -62,33 +62,30 @@ stages:
     - sudo service apache2 start
 
 .get-simpletest-db: &get-simpletest-db
-  # Determine DB driver.
-  |
-  [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
-  [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-  [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-  [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+  - |
+    [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
+    [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+    [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+    [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
 
 .prepare-dirs: &prepare-dirs
-  |
-  mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
-  chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
-  sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+  - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
+  - chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
+  - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
 
 .install-drupal: &install-drupal
-  |
-  /usr/local/bin/drush --version
-  /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
-  /usr/local/bin/drush vset simpletest_clear_results '0'
-  /usr/local/bin/drush vset simpletest_verbose '1'
-  /usr/local/bin/drush en -y simpletest
+  - /usr/local/bin/drush --version
+  - /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+  - /usr/local/bin/drush vset simpletest_clear_results '0'
+  - /usr/local/bin/drush vset simpletest_verbose '1'
+  - /usr/local/bin/drush en -y simpletest
 
 .run-tests: &run-tests
   script:
-    - <<: *get-simpletest-db
+    - *get-simpletest-db
     - export
-    - <<: *prepare-dirs
-    - <<: *install-drupal
+    - *prepare-dirs
+    - *install-drupal
     # We need to pass this along directly even though it's set in the environment parameters.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest"
 
@@ -120,10 +117,10 @@ stages:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - <<: *get-simpletest-db
+    - *get-simpletest-db
     - export
-    - <<: *prepare-dirs
-    - <<: *install-drupal
+    - *prepare-dirs
+    - *install-drupal
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - |
