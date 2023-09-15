@@ -103,13 +103,14 @@ stages:
       echo "1️⃣ Reverting non test changes"
       git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
         echo "↩️ Reverting $file";
-        git checkout origin/${TARGET_BRANCH} -- $file;
+        git -v checkout origin/${TARGET_BRANCH} -- $file;
       done
+      echo "2️⃣ Deleting new files"
       git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
         echo "🗑️️ Deleting $file";
         git rm $file;
       done
-      echo "2️⃣ Running test changes for this branch"
+      echo "3️⃣ Running test changes for this branch"
       git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"|while read file;do
         sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$file"
       done
@@ -133,7 +134,7 @@ stages:
 '🩹 Test-only changes':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
   stage: 🗜️ Test
-  when: manual
+  # when: manual
   interruptible: true
   allow_failure: true
   variables:
