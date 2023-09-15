@@ -9,7 +9,7 @@ stages:
   - 🏗️ Build
 
   ################
-  # Lint 
+  # Lint
   #
   # Code quality checks.
   ################
