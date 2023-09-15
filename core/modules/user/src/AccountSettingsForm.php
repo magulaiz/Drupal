@@ -161,7 +161,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'email',
       '#title' => $this->t('Notification email address'),
       '#default_value' => $site_config->get('mail_notification'),
-      '#description' => $this->t("The email address to be used as the 'from' address for all account notifications listed below. If <em>'Visitors, but administrator approval is required'</em> is selected above, a notification email will also be sent to this address for any new registrations. Leave empty to use the default system email address <em>(%site-email).</em>", ['%site-email' => $site_config->get('mail')]),
+      '#description' => $this->t("The email address to be used as the 'from' address for all account notifications listed below. If 'Visitors, but administrator approval is required' is selected above, a notification email will also be sent to this address for any new registrations. Leave empty to use the default system email address (%site-email).", ['%site-email' => $site_config->get('mail')]),
       '#maxlength' => 180,
     ];
 
