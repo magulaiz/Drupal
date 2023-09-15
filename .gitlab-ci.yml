@@ -52,7 +52,7 @@ variables:
 stages:
   - 🏗️ Build
   - 🪄 Lint
-  - test
+  - 🗜️ Test
 
 #############
 # Templates #
@@ -127,7 +127,7 @@ stages:
 ################
 
 .default-stage: &default-stage
-  stage: test
+  stage: 🗜️ Test
   trigger:
     # Rely on the status of the child pipeline.
     strategy: depend
