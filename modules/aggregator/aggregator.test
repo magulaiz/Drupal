@@ -13,6 +13,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     parent::setUp('aggregator', 'aggregator_test');
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
+
   }
 
   /**

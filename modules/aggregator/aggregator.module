@@ -14,6 +14,7 @@ define('AGGREGATOR_CLEAR_NEVER', 0);
  * Implements hook_help().
  */
 function aggregator_help($path, $arg) {
+
   switch ($path) {
     case 'admin/help#aggregator':
       $output = '';
