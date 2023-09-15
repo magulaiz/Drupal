@@ -22,6 +22,7 @@
 ################
 
 include:
+  - './gitlab-ci/templates.yml'
   - project: $_GITLAB_TEMPLATES_REPO
     ref: $_GITLAB_TEMPLATES_REF
     file:
@@ -130,3 +131,80 @@ variables:
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB: "php-$_TARGET_PHP-apache"
+
+################
+# Build Jobs
+################
+
+'📦️ Composer':
+  <<: *default-job-settings-parent
+  stage: 🏗️ Build
+  cache:
+    <<: *composer-cache
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'web-vendor'
+    paths:
+      - vendor/
+  script:
+      - export
+      - composer validate
+      - composer install
+
+'📦️ Yarn':
+  <<: *default-job-settings-parent
+  stage: 🏗️ Build
+  cache:
+    <<: *yarn-cache
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+  script:
+    # Installs all core javascript dependencies and adds junit formatter.
+    - yarn --cwd ./core add stylelint-junit-formatter
+
+################
+# Lint Jobs
+################
+
+'🧹 PHP Coding standards (PHPCS)':
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-parent ]
+  stage: validate
+  script:
+    - composer phpcs -- --report-junit=junit.xml --report-full --report-summary
+
+'🧹 PHP Static Analysis (phpstan)':
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-parent ]
+  stage: validate
+  script:
+    # Turn off apc to avoid corrupt composer cache.
+    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
+
+'🧹 CSS linting (stylelint)':
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-parent ]
+  stage: validate
+  script:
+    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
+
+'🧹 Compilation check':
+  <<: [ *with-yarn-cache, *default-job-settings-parent ]
+  stage: validate
+  script:
+    - yarn run --cwd=./core build:css --check
+    - cd core && yarn run -s check:ckeditor5
+
+'🧹 JavaScript linting (eslint)':
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-parent ]
+  stage: validate
+  script:
+    - yarn --cwd=./core run -s lint:core-js-passing --format junit > junit.xml
+
+'📔 Spell-checking':
+  <<: [ *with-yarn-cache, *default-job-settings-parent ]
+  stage: validate
+  script:
+    - git fetch origin
+    - export MODIFIED=`git diff --name-only origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
+    - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
