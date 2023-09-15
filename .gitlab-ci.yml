@@ -22,7 +22,7 @@
 ################
 
 include:
-  - './gitlab-ci/templates.yml'
+  - '/.gitlab-ci/templates.yml'
   - project: $_GITLAB_TEMPLATES_REPO
     ref: $_GITLAB_TEMPLATES_REF
     file:
