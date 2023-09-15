@@ -13,7 +13,6 @@ class AggregatorTestCase extends DrupalWebTestCase {
     parent::setUp('aggregator', 'aggregator_test');
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
-
   }
 
   /**
@@ -39,6 +38,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetch();
     $this->assertTrue(!empty($feed), 'The feed found in database.');
     return $feed;
+
   }
 
   /**
