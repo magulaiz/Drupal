@@ -38,7 +38,6 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetch();
     $this->assertTrue(!empty($feed), 'The feed found in database.');
     return $feed;
-
   }
 
   /**
