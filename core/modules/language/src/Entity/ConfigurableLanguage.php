@@ -3,12 +3,14 @@
 namespace Drupal\language\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\ConfigurableLanguageInterface;
+use Drupal\language\Exception\LanguageException;
 
 /**
  * Defines the ConfigurableLanguage entity.
@@ -173,8 +175,14 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     $default_langcode = static::getDefaultLangcode();
     foreach ($entities as $entity) {
-      if ($entity->id() == $default_langcode && !$entity->isUninstalling()) {
-        throw new DeleteDefaultLanguageException('Can not delete the default language');
+      $langcode = $entity->id();
+      if (!$entity->isUninstalling()) {
+        if ($langcode == $default_langcode) {
+          throw new DeleteDefaultLanguageException('Can not delete the default language');
+        }
+        elseif (static::languageUsedByContent($langcode)) {
+          throw new LanguageException("The {$entity->label()} ({$langcode}) language can not be deleted because it is used by some content.");
+        }
       }
     }
   }
@@ -287,6 +295,36 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
         'direction' => $standard_languages[$langcode][2] ?? static::DIRECTION_LTR,
       ]);
     }
+  }
+
+  /**
+   * Check if there is any content that uses a given langcode.
+   *
+   * Returns TRUE at first content entity found.
+   *
+   * @param string $langcode
+   *   The language code to check against.
+   *
+   * @return bool
+   *   TRUE if the specified langcode is used by content, FALSE otherwise.
+   */
+  public static function languageUsedByContent($langcode) {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
+      if ($entity_type instanceof ContentEntityType && $entity_type->isTranslatable()) {
+        $query = $entity_type_manager->getStorage($entity_type_id)->getQuery()
+          ->condition($entity_type->getKey('langcode'), $langcode)->accessCheck(FALSE);
+        if ($entity_type->isRevisionable()) {
+          $query->allRevisions();
+        }
+        $results = $query->range(0, 1)->execute();
+
+        if ($results) {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }

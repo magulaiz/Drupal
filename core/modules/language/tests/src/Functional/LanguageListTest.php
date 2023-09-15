@@ -7,6 +7,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Adds a new language and tests changing its status and the default language.
@@ -176,6 +177,12 @@ class LanguageListTest extends BrowserTestBase {
     $this->rebuildContainer();
     $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $language]));
+
+    // First, we need to remove the english from content usage.
+    // Change language for all users.
+    foreach (User::loadMultiple() as $account) {
+      $account->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    }
 
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
