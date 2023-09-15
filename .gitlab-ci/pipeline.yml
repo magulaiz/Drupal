@@ -61,25 +61,34 @@ stages:
     - cp $CI_PROJECT_DIR/.gitlab-ci/htaccess /var/www/html/.htaccess
     - sudo service apache2 start
 
+.get-simpletest-db: &get-simpletest-db
+  # Determine DB driver.
+  |
+  [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
+  [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+  [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+  [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+
+.prepare-dirs: &prepare-dirs
+  |
+  mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
+  chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
+  sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+
+.install-drupal: &install-drupal
+  |
+  /usr/local/bin/drush --version
+  /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+  /usr/local/bin/drush vset simpletest_clear_results '0'
+  /usr/local/bin/drush vset simpletest_verbose '1'
+  /usr/local/bin/drush en -y simpletest
+
 .run-tests: &run-tests
   script:
-    # Determine DB driver.
-    - |
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+    - <<: *get-simpletest-db
     - export
-    # Create folders.
-    - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
-    - chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
-    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    # Install Drupal.
-    - /usr/local/bin/drush --version
-    - /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
-    - /usr/local/bin/drush vset simpletest_clear_results '0'
-    - /usr/local/bin/drush vset simpletest_verbose '1'
-    - /usr/local/bin/drush en -y simpletest
+    - <<: *prepare-dirs
+    - <<: *install-drupal
     # We need to pass this along directly even though it's set in the environment parameters.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest"
 
@@ -98,3 +107,38 @@ stages:
   variables:
     <<: *test-variables
     CONCURRENCY: "$CONCURRENCY"
+
+'🩹 Test-only changes':
+  <<: [ *phpunit-artifacts, *setup-webserver, *default-job-settings ]
+  stage: 🗜️ Test
+  when: manual
+  interruptible: true
+  allow_failure: true
+  variables:
+    <<: *test-variables
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  script:
+    - <<: *get-simpletest-db
+    - export
+    - <<: *prepare-dirs
+    - <<: *install-drupal
+    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
+    - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+    - |
+      echo "ℹ️ Changes from ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
+      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only
+      echo "1️⃣ Reverting non test changes"
+      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+        echo "↩️ Reverting $file";
+        git checkout origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} -- $file;
+      done
+      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+        echo "🗑️️ Deleting $file";
+        git rm $file;
+      done
+      echo "2️⃣ Running test changes for this branch"
+      for test in `git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only|grep -E "Test.php$"`; do
+        sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
+      done;
