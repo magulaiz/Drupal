@@ -15,7 +15,7 @@
       element.getAttribute('type') === 'password' ? 'false' : 'true',
     );
     trigger.textContent =
-      element.getAttribute('type') === 'password' ? hidePass : showPass;
+      element.getAttribute('type') === 'password' ? showPass : hidePass;
   };
   const unmaskButton = function unmaskButton(element) {
     const trigger = document.createElement('button');
@@ -24,7 +24,7 @@
     trigger.setAttribute('aria-pressed', 'false');
     trigger.textContent = showPass;
     element.insertAdjacentElement('afterend', trigger);
-    trigger.addEventListener('click', function () {
+    trigger.addEventListener('click', () => {
       return unmaskClickHandler(element, trigger);
     });
   };
