@@ -130,15 +130,15 @@ stages:
       echo "ℹ️ Changes from ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
       git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only
       echo "1️⃣ Reverting non test changes"
-      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=DM --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
         echo "↩️ Reverting $file";
         git checkout origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} -- $file;
       done
-      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=A --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
         echo "🗑️️ Deleting $file";
         git rm $file;
       done
       echo "2️⃣ Running test changes for this branch"
-      for test in `git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only|grep -E "Test.php$"`; do
-        sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
+      for test in `git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only|grep -E ".test$"`; do
+        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$test"
       done;
