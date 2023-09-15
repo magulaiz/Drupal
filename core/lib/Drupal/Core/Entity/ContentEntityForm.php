@@ -422,7 +422,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       '#open' => $new_revision_default,
       '#group' => 'advanced',
       '#weight' => 20,
-      '#access' => $this->entity->get('revision_log')->access('edit') || $this->entity->get($entity_type->getKey('revision'))->access('edit'),
+      '#access' => array_key_exists('revision_log', $this->entity->getFields()) ? $this->entity->get('revision_log')->access('edit') || $this->entity->get($entity_type->getKey('revision'))->access('edit') : $this->entity->get($entity_type->getKey('revision'))->access('edit'),
       '#optional' => TRUE,
       '#attributes' => [
         'class' => ['entity-content-form-revision-information'],
