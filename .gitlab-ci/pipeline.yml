@@ -101,16 +101,19 @@ stages:
       echo "ℹ️ Changes from ${TARGET_BRANCH}"
       git diff origin/${TARGET_BRANCH} --name-only
       echo "1️⃣ Reverting non test changes"
+      git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh
       git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
         echo "↩️ Reverting $file"
         git checkout origin/${TARGET_BRANCH} -- $file
       done
       echo "2️⃣ Deleting new files"
+      git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh
       git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev ".test$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
         echo "🗑️️ Deleting $file"
-        git rm $file
+        # git rm $file
       done
       echo "3️⃣ Running test changes for this branch"
+      git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"
       git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"|while read file;do
         sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$file"
       done
@@ -124,6 +127,7 @@ stages:
 '⚡️ PHPUnit Unit':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
+  # TODO: remove below
   when: manual
   services:
     - <<: *with-database
@@ -135,6 +139,7 @@ stages:
 '🩹 Test-only changes':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
   stage: 🗜️ Test
+  # TODO: uncomment below
   # when: manual
   interruptible: true
   allow_failure: true
