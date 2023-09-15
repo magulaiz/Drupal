@@ -130,8 +130,7 @@ stages:
     - composer require --dev drupal/coder:^8.2@stable
     - git fetch origin
     - export MODIFIED=`git diff --name-only origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
-    # TODO: uncomment below
-    # - vendor/bin/phpcs --report-junit=junit.xml --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
+    - vendor/bin/phpcs --report-junit=junit.xml --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
 
 # Default job.
 'PHP 8.1 MySQL 5.7':

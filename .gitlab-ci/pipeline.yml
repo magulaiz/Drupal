@@ -130,8 +130,6 @@ stages:
 '⚡️ PHPUnit Unit':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  # TODO: remove below
-  when: manual
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -142,8 +140,7 @@ stages:
 '🩹 Test-only changes':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
   stage: 🗜️ Test
-  # TODO: uncomment below
-  # when: manual
+  when: manual
   interruptible: true
   allow_failure: true
   variables:
