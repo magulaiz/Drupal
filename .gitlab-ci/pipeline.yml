@@ -27,15 +27,13 @@ stages:
   MYSQL_DATABASE: drupal
   MYSQL_USER: drupaltestbot
   MYSQL_PASSWORD: drupaltestbotpw
-  MARIADB_TAG: $_TARGET_DB_VERSION
-  POSTGRES_TAG: $_TARGET_DB_VERSION
   POSTGRES_DB: drupaltestbot
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://localhost:9515"]'
 
 .with-database: &with-database
-  name: $_DB_IMAGE
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
   alias: database
 
 .with-chrome: &with-chrome
@@ -67,17 +65,17 @@ stages:
   script:
     # Determine DB driver.
     - |
-      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
-      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+      [[ $_TARGET_DB == "sqlite*" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
+      [[ $_TARGET_DB == "mysql*" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+      [[ $_TARGET_DB == "mariadb*" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+      [[ $_TARGET_DB == "pgsql*" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
     - export
     # Create folders.
     - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
     - chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # Install Drupal.
-    - curl -O https://github.com/drush-ops/drush/releases/download/8.4.12/drush.phar
+    - curl -L -O https://github.com/drush-ops/drush/releases/download/8.4.12/drush.phar
     - php drush.phar --version
     - php drush.phar si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
     - php drush.phar vset simpletest_clear_results '0'
