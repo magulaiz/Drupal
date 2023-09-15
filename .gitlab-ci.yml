@@ -188,10 +188,10 @@ stages:
   <<: *default-stage
   variables:
     _TARGET_PHP: "7.4"
-    _TARGET_DB: "sqlite-3.27.0"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+    _TARGET_DB: "php-7.4"
 
 # 'PHP 8.1 MariaDB 10.3.22':
 #   <<: *default-stage
 #   variables:
-#     _TARGET_DB: "mariadb-  _TARGET_DB_VERSION: "10.3.22"
+#    _TARGET_PHP: "8.1"
+#    _TARGET_DB: "mariadb-10.3.22"
