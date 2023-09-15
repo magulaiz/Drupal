@@ -75,12 +75,12 @@ stages:
     - chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     # Install Drupal.
-    - curl -L -O https://github.com/drush-ops/drush/releases/download/8.4.12/drush.phar
-    - php drush.phar --version
-    - php drush.phar si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
-    - php drush.phar vset simpletest_clear_results '0'
-    - php drush.phar vset simpletest_verbose '1'
-    - php drush.phar en -y simpletest
+    - composer require --dev drush/drush:8.4.12
+    - vendor/bin/drush --version
+    - vendor/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+    - vendor/bin/drush vset simpletest_clear_results '0'
+    - vendor/bin/drush vset simpletest_verbose '1'
+    - vendor/bin/drush en -y simpletest
     # We need to pass this along directly even though it's set in the environment parameters.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest"
 
