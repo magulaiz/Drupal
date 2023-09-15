@@ -36,12 +36,12 @@
 }
 
 .shortcut-action__message {
-  display: inline-block;
   margin-inline-start: var(--space-s);
   padding: var(--shortcut-padding-size);
   transition: var(--transition);
   transform: translateY(calc(-1 * var(--space-xs)));
   vertical-align: top;
+  display: inline-block;
   opacity: 0;
   color: var(--color-white);
   border-radius: var(--shortcut-border-radius-size);
