@@ -18,8 +18,7 @@ function datetime_range_removed_post_updates() {
 /**
  * Adds optional_end_date config in daterange field storage settings.
  */
-function datetime_range_post_update_add_optional_end_date()
-{
+function datetime_range_post_update_add_optional_end_date() {
   $config_factory = \Drupal::configFactory();
   foreach ($config_factory->listAll('field.storage.node.') as $node_field_storage) {
     $node_field_storage_settings = $config_factory->getEditable($node_field_storage);
