@@ -110,9 +110,9 @@ stages:
         git rm $file;
       done
       echo "2️⃣ Running test changes for this branch"
-      for test in `git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"`; do
-        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$test"
-      done;
+      git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"|while read file;do
+        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$file"
+      done
 
 ################
 # Jobs
