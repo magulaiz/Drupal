@@ -237,7 +237,7 @@ stages:
       - core/node_modules/
   script:
     # Installs all core javascript dependencies and adds formatters for stylelint and eslint.
-    - yarn --cwd ./core add stylelint-junit-formatter stylelint-formatter-gitlab eslint-formatter-gitlab
+    - yarn --cwd ./core add stylelint-formatter-gitlab eslint-formatter-gitlab
 
 ################
 # Lint Jobs
@@ -248,7 +248,7 @@ stages:
   stage: 🪄 Lint
   script:
     - composer require --dev micheh/phpcs-gitlab
-    - composer phpcs -- --report-junit=junit.xml --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     reports:
       codequality: phpcs-quality-report.json
@@ -269,7 +269,7 @@ stages:
   variables:
     STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab > junit.xml
+    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
