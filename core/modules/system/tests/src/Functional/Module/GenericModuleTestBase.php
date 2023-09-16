@@ -36,12 +36,12 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    */
   public function testModuleGenericIssues(): void {
     $module = $this->getModule();
-    $this->drupalLogin($this->rootUser);
     \Drupal::service('module_installer')->install([$module]);
     $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
     if (!empty($info['required']) && !empty($info['hidden'])) {
       $this->markTestSkipped('Currently nothing to assert for hidden, required modules.');
     }
+    $this->drupalLogin($this->rootUser);
     $this->assertHookHelp($module);
 
     if (empty($info['required'])) {
