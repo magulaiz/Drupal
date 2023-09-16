@@ -290,6 +290,7 @@ stages:
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
     reports:
+      codequality: eslint-quality-report.json
 
 '📔 Spell-checking':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
