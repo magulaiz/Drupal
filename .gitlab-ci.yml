@@ -253,6 +253,19 @@ stages:
 ################
 # Lint Jobs
 ################
+#
+
+'⚡️ PHPUnit Unit':
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-       tests, *default-job-settings ]
+  stage: 🗜️  Test
+  services:
+    # There are some unit tests that need a database.
+    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
+    - <<: *with-database
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Unit
+    CONCURRENCY: "$CONCURRENCY"
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]

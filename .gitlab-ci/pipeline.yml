@@ -74,16 +74,9 @@ stages:
     reports:
       junit: junit.xml
 
-.with-unit-tests: &with-unit-tests
-  needs:
-    - '⚡️ PHPUnit Unit'
-    - '📦️ Composer'
-  <<: *pull-composer-cache
-
-.with-composer-yarn-and-unit-tests: &with-composer-yarn-and-unit-tests
+.with-composer-and-yarn: &with-composer-and-yarn
   needs:
     - '📦️ Composer'
-    - '⚡️ PHPUnit Unit'
     - '📦️ Yarn'
   dependencies:
     - '📦️ Yarn'
@@ -206,7 +199,7 @@ stages:
     CONCURRENCY: "$CONCURRENCY"
 
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   parallel: 8
   variables:
@@ -217,7 +210,7 @@ stages:
     - <<: *with-database
 
 '⚙️️ PHPUnit Kernel':
-  <<: [*with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   parallel: 2
   variables:
@@ -228,7 +221,7 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   parallel: 2
   variables:
@@ -240,7 +233,7 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -250,7 +243,7 @@ stages:
     - <<: *with-database
 
 '🦉️️️ Nightwatch':
-  <<: [ *with-composer-yarn-and-unit-tests, *setup-webserver, *default-job-settings ]
+  <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
