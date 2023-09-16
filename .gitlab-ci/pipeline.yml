@@ -208,7 +208,7 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 6
+  parallel: 8
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
@@ -219,6 +219,7 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [*with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
@@ -229,6 +230,7 @@ stages:
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
