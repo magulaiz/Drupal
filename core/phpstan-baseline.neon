@@ -533,15 +533,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
 
 		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Entity/Form/RevisionDeleteForm.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueContentEntityStorage\\:\\:createTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
@@ -555,15 +546,6 @@ parameters:
 			message: "#^Variable \\$selected_bundles might not be defined\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Entity/Plugin/Validation/Constraint/EntityUntranslatableFieldsConstraintValidator.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
@@ -764,14 +746,6 @@ parameters:
 			path: lib/Drupal/Core/Form/FormValidator.php
 
 		-
-			message: """
-				#^Call to deprecated function GuzzleHttp\\\\default_user_agent\\(\\)\\:
-				default_user_agent will be removed in guzzlehttp/guzzle\\:8\\.0\\. Use Utils\\:\\:defaultUserAgent instead\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Http/ClientFactory.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/KeyValueStore/DatabaseStorageExpirable.php
@@ -824,15 +798,6 @@ parameters:
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/ParamConverter/EntityRevisionParamConverter.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Core\\\\Queue\\\\Memory has an unused parameter \\$name\\.$#"
@@ -1150,27 +1115,9 @@ parameters:
 			path: modules/contact/src/MessageForm.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/content_moderation/src/Entity/ContentModerationState.php
-
-		-
 			message: "#^Variable \\$state in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 3
 			path: modules/content_moderation/src/Form/ContentModerationStateForm.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: modules/content_moderation/src/ModerationInformation.php
 
 		-
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
@@ -1181,42 +1128,6 @@ parameters:
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getDefaultRevisionId\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/content_moderation/src/ModerationInformation.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/content_moderation/src/Plugin/Field/FieldWidget/ModerationStateWidget.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 3
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationStateTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationStateTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 3
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationSyncingTest.php
 
 		-
 			message: "#^Variable \\$checkbox_id might not be defined\\.$#"
@@ -1235,7 +1146,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 5
+			count: 3
 			path: modules/content_translation/src/ContentTranslationHandler.php
 
 		-
@@ -1247,24 +1158,6 @@ parameters:
 			message: "#^Variable \\$source_name might not be defined\\.$#"
 			count: 1
 			path: modules/content_translation/src/Controller/ContentTranslationController.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/content_translation/src/FieldTranslationSynchronizer.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/content_translation/src/Plugin/Validation/Constraint/ContentTranslationSynchronizedFieldsConstraintValidator.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1357,68 +1250,14 @@ parameters:
 			path: modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldMultipleFormatter.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/field/tests/src/Functional/FormTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/field/tests/src/Functional/NestedFormTest.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/field/tests/src/Functional/TranslationWebTest.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/field/tests/src/Kernel/FieldAttachStorageTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 4
-			path: modules/field/tests/src/Kernel/FieldAttachStorageTest.php
-
-		-
 			message: "#^Variable \\$values might not be defined\\.$#"
 			count: 1
 			path: modules/field/tests/src/Kernel/FieldAttachStorageTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/field/tests/src/Kernel/FieldDataCountTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/field/tests/src/Kernel/KernelString/StringFormatterTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1631,27 +1470,9 @@ parameters:
 			path: modules/jsonapi/src/Query/Filter.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/jsonapi/src/Revisions/NegotiatorBase.php
-
-		-
 			message: "#^Method Drupal\\\\jsonapi\\\\Revisions\\\\VersionNegotiator\\:\\:getRevision\\(\\) should return Drupal\\\\Core\\\\Entity\\\\EntityInterface but return statement is missing\\.$#"
 			count: 1
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
 
 		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
@@ -1804,15 +1625,6 @@ parameters:
 			path: modules/media/src/OEmbed/UrlResolver.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/media_library/src/MediaLibraryFieldWidgetOpener.php
-
-		-
 			message: "#^Variable \\$jpg_image might not be defined\\.$#"
 			count: 1
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
@@ -1882,24 +1694,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/EntityContentComplete.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/EntityRevision.php
-
-		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\NullDestination\\:\\:import\\(\\) should return array\\|bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/NullDestination.php
@@ -1913,15 +1707,6 @@ parameters:
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 2
 			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapEnsureTablesTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: modules/migrate/tests/src/Unit/destination/EntityRevisionTest.php
 
 		-
 			message: "#^Variable \\$sub_process_plugins might not be defined\\.$#"
@@ -2058,23 +1843,9 @@ parameters:
 			path: modules/node/node.module
 
 		-
-			message: "#^Variable \\$node in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/node/node.module
-
-		-
 			message: "#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/node/src/ConfigTranslation/NodeTypeMapper.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/node/src/Form/NodeRevisionDeleteForm.php
 
 		-
 			message: "#^Method Drupal\\\\node\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2135,42 +1906,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: modules/node/tests/src/Functional/Views/Wizard/NodeRevisionWizardTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: modules/node/tests/src/Kernel/Migrate/d6/MigrateNodeCompleteTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: modules/node/tests/src/Kernel/Migrate/d6/MigrateNodeRevisionTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 3
-			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeCompleteTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 3
-			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeRevisionTest.php
 
 		-
 			message: "#^Variable \\$changed in isset\\(\\) always exists and is not nullable\\.$#"
@@ -2781,15 +2516,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/Broken.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
-
-		-
 			message: "#^Variable \\$entity in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/BulkForm.php
@@ -2888,15 +2614,6 @@ parameters:
 			message: "#^Variable \\$left in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/join/JoinPluginBase.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/views/src/Plugin/views/query/Sql.php
 
 		-
 			message: "#^Variable \\$join in empty\\(\\) always exists and is not falsy\\.$#"
@@ -3129,15 +2846,6 @@ parameters:
 			path: modules/workspaces/src/Plugin/Validation/Constraint/DeletedWorkspaceConstraintValidator.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/workspaces/src/Plugin/Validation/Constraint/EntityWorkspaceConflictConstraintValidator.php
-
-		-
 			message: "#^Variable \\$entity in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/workspaces/src/Plugin/Validation/Constraint/EntityWorkspaceConflictConstraintValidator.php
@@ -3146,15 +2854,6 @@ parameters:
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/workspaces/src/WorkspaceAssociation.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/workspaces/src/WorkspaceManager.php
 
 		-
 			message: "#^Method Drupal\\\\workspaces\\\\WorkspaceMerger\\:\\:checkConflictsOnTarget\\(\\) should return array but return statement is missing\\.$#"
@@ -3233,51 +2932,6 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 6
-			path: tests/Drupal/FunctionalTests/Entity/RevisionDeleteFormTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 4
-			path: tests/Drupal/FunctionalTests/Entity/RevisionRevertFormTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/FunctionalTests/Entity/RevisionRouteProviderTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/FunctionalTests/Entity/RevisionVersionHistoryTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/FunctionalTests/Entity/RevisionViewTest.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
@@ -3338,15 +2992,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityChangedTest.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityHasChangesTest.php
-
-		-
 			message: "#^Variable \\$title might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php
@@ -3362,24 +3007,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
 
 		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/EntityFieldTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRevisionTranslationTest.php
-
-		-
 			message: "#^Variable \\$field might not be defined\\.$#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
@@ -3388,15 +3015,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/EntityTypeConstraintsTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/FieldSqlStorageTest.php
 
 		-
 			message: "#^Variable \\$e might not be defined\\.$#"
@@ -3412,33 +3030,6 @@ parameters:
 			message: "#^Variable \\$new_field_schema_data might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RevisionableContentEntityBaseTest.php
-
-		-
-			message: """
-				#^Call to deprecated method loadRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:loadRevision instead\\.$#
-			"""
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/RevisionableContentEntityBaseTest.php
 
 		-
 			message: "#^Variable \\$x might not be defined\\.$#"
