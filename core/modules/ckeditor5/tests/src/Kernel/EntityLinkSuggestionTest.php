@@ -135,7 +135,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $node->setCreatedTime(1695058272);
     $node->save();
     $translation = $node->addTranslation('de', [
-      'title' => 'foo_translated_de',
+      'title' => 'Deutsch foo',
     ])->setCreatedTime(time());
     $translation->save();
   }
@@ -163,7 +163,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'entity_type_id' => 'node',
       'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
       'group' => 'Content - Basic page',
-      'label' => 'foo_translated_de',
+      'label' => 'Deutsch foo',
       'path' => 'entity:node/1',
       'exposed_attributes' => [
         'download' => FALSE,
@@ -182,6 +182,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
 
+    // "f", multiple results, from node vs user.
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="f"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
@@ -195,7 +196,72 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         $suggestion_user_1,
       ],
     ];
+    yield 'suggestions=default (everything), host entity type=user, host entity langcode=en, search term="f"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
+      'search term' => 'f',
+      'host entity type' => 'user',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        $suggestion_user_1,
+        $suggestion_node_1_en,
+      ],
+    ];
 
+    // "f", single result due to (different) suggestion restrictions.
+    yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => [
+          ['entity_type_id' => 'node', 'bundles' => NULL],
+        ],
+      ],
+      'search term' => 'f',
+      'host entity type' => 'node',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        $suggestion_node_1_en,
+      ],
+    ];
+    yield 'suggestions=users only, host entity type=node, host entity langcode=en, search term="f"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => [
+          ['entity_type_id' => 'user', 'bundles' => NULL],
+        ],
+      ],
+      'search term' => 'f',
+      'host entity type' => 'node',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        $suggestion_user_1,
+      ],
+    ];
+
+    // "f", no result due to even tighter suggestion restrictions.
+    yield 'suggestions=article nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => [
+          ['entity_type_id' => 'node', 'bundles' => ['article']],
+        ],
+      ],
+      'search term' => 'f',
+      'host entity type' => 'node',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        [
+          'description' => 'No content suggestions found. This URL will be used as is.',
+          'group' => 'No results',
+          'label' => 'f',
+          'path' => 'f',
+        ],
+      ],
+    ];
+
+    // "fo", single result, but different labels due to host entity langcode.
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="fo"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
@@ -214,6 +280,33 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         'suggestions' => NULL,
       ],
       'search term' => 'fo',
+      'host entity type' => 'node',
+      'host entity langcode' => 'de',
+      'expected suggestions' => [
+        $suggestion_node_1_de,
+      ],
+    ];
+
+    // "Deutsch" (which appears only on a translation of an entity!), single
+    // result, but different labels due to host entity langcode.
+    yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="Deutsch"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
+      'search term' => 'Deutsch',
+      'host entity type' => 'node',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        $suggestion_node_1_en,
+      ],
+    ];
+    yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="Deutsch"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
+      'search term' => 'Deutsch',
       'host entity type' => 'node',
       'host entity langcode' => 'de',
       'expected suggestions' => [
