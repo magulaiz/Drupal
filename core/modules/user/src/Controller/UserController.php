@@ -409,7 +409,7 @@ class UserController extends ControllerBase {
   public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
     // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
     $timeout = 86400;
-    $current = REQUEST_TIME;
+    $current = \Drupal::time()->getRequestTime();
 
     // Basic validation of arguments.
     $account_data = $this->userData->get('user', $user->id());
