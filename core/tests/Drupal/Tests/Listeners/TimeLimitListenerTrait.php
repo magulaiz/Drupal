@@ -48,7 +48,7 @@ trait TimeLimitListenerTrait {
    * Set how long a test can run before it's failed.
    *
    * @param float $time_threshold
-   *   The time threshhold, in seconds.
+   *   The time threshold, in seconds.
    */
   protected function setTimeThreshold($time_threshold) {
     $this->timeThreshold = $time_threshold;
