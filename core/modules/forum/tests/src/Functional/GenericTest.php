@@ -9,4 +9,19 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  *
  * @group forum
  */
-class GenericTest extends GenericModuleTestBase {}
+class GenericTest extends GenericModuleTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function preUninstallSteps(): void {
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $result = $storage->getQuery()
+      ->condition('vid', 'forums')
+      ->accessCheck(FALSE)
+      ->execute();
+    $terms = $storage->loadMultiple($result);
+    $storage->delete($terms);
+  }
+
+}

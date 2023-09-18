@@ -28,7 +28,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    *   The module to test.
    */
   protected function getModule(): string {
-    return explode('\\', __CLASS__)[2];
+    return explode('\\', get_class($this))[2];
   }
 
   /**
@@ -46,6 +46,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
 
     if (empty($info['required'])) {
       // Check that the module can be uninstalled and then re-installed again.
+      $this->preUnInstallSteps();
       \Drupal::service('module_installer')->uninstall([$module]);
       \Drupal::service('module_installer')->install([$module]);
     }
@@ -66,5 +67,10 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
       $this->assertSession()->linkExists('online documentation for the ' . $info['name'] . ' module', 0, "Correct online documentation link is in the help page for $module");
     }
   }
+
+  /**
+   * Helper to perform any steps required prior to uninstalling a module.
+   */
+  protected function preUnInstallSteps(): void {}
 
 }
