@@ -5,6 +5,7 @@ namespace Drupal\Tests\content_translation\Functional;
 /**
  * Tests the test content translation UI with the test entity.
  *
+ * @group #slow
  * @group content_translation
  */
 class ContentTestTranslationUITest extends ContentTranslationUITestBase {
