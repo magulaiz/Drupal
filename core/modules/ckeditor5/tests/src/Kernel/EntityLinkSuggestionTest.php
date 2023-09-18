@@ -120,12 +120,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'label' => 'Fallback',
       'pattern' => 'Y-m-d',
     ])->save();
-  }
 
-  /**
-   * Test the entity link suggestions.
-   */
-  public function testEntityLinkSuggestions(): void {
     // Create the translation language.
     $this->installConfig(['language']);
     ConfigurableLanguage::createFromLangcode('de')->save();
@@ -141,7 +136,12 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'title' => 'foo_translated_de',
     ])->setCreatedTime(time());
     $translation->save();
+  }
 
+  /**
+   * Test the entity link suggestions.
+   */
+  public function testEntityLinkSuggestions(): void {
     // Create a sample editor.
     $editor = Editor::load('test_format');
     $controller = EntityLinkSuggestionsController::create($this->container);
