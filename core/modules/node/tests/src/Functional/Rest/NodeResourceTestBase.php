@@ -56,7 +56,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
         // when the path field is protected/not accessible, see
         // \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase
         // for a positive test.
-        $this->grantPermissionsToTestedRole(['access content', 'edit any camelids content']);
+        $this->grantPermissionsToTestedRole(['access content', 'edit any camelids content', 'administer nodes']);
         break;
 
       case 'DELETE':
