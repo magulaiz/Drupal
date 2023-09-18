@@ -33,7 +33,7 @@
           if (
             (revisionCheckbox.length && revisionCheckbox[0].checked) ||
             (!revisionCheckbox.length &&
-              $revisionContext.find('.js-form-item-revision-log textarea')
+              $revisionContext.find('.js-form-item-revision-log-0-value')
                 .length)
           ) {
             return Drupal.t('New revision');
