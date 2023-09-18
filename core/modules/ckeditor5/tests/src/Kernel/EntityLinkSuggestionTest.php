@@ -108,6 +108,8 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     // Create an account with "f" in the username.
     $user = User::create([
       'name' => 'sofie',
+      'uuid' => '966e5967-f19c-44b0-87b1-697441385b08',
+      'created' => '694702320',
     ]);
     $user->addRole('create page content');
     $user->addRole('use text format test_format');
@@ -128,8 +130,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $node = Node::create([
       'type' => 'page',
       'title' => 'foo',
+      'uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
     ]);
-    $node->setCreatedTime(time());
+    $node->setCreatedTime(1695058272);
     $node->save();
     $translation = $node->addTranslation('de', [
       'title' => 'foo_translated_de',
@@ -144,10 +147,77 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    *   Test scenarios.
    */
   public function providerEntityLinkSuggestions(): \Generator {
-    yield 'no suggestion configuration' => [
-      [
+    $suggestion_node_1_en = [
+      'description' => 'by sofie on 2023-09-19',
+      'entity_type_id' => 'node',
+      'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
+      'group' => 'Content - Basic page',
+      'label' => 'foo',
+      'path' => 'entity:node/1',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+    $suggestion_node_1_de = [
+      'description' => 'by sofie on 2023-09-19',
+      'entity_type_id' => 'node',
+      'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
+      'group' => 'Content - Basic page',
+      'label' => 'foo_translated_de',
+      'path' => 'entity:node/1',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+
+    $suggestion_user_1 = [
+      'description' => 'on 1992-01-06',
+      'entity_type_id' => 'user',
+      'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b08',
+      'group' => 'User',
+      'label' => 'sofie',
+      'path' => 'entity:user/1',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+
+    yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="f"' => [
+      'configuration' => [
         'allow_download_links' => TRUE,
         'suggestions' => NULL,
+      ],
+      'search term' => 'f',
+      'host entity type' => 'node',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        $suggestion_node_1_en,
+        $suggestion_user_1,
+      ],
+    ];
+
+    yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="fo"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
+      'search term' => 'fo',
+      'host entity type' => 'node',
+      'host entity langcode' => 'en',
+      'expected suggestions' => [
+        $suggestion_node_1_en,
+      ],
+    ];
+    yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="fo"' => [
+      'configuration' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
+      'search term' => 'fo',
+      'host entity type' => 'node',
+      'host entity langcode' => 'de',
+      'expected suggestions' => [
+        $suggestion_node_1_de,
       ],
     ];
   }
@@ -157,12 +227,14 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    *
    * @dataProvider providerEntityLinkSuggestions
    */
-  public function testEntityLinkSuggestions(array $plugin_configuration): void {
+  public function testEntityLinkSuggestions(array $plugin_configuration, string $search, string $host_entity_type_id, string $host_entity_langcode, array $expected): void {
+    // Set the given configuration for the entity link suggestions plugin.
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
     $settings['plugins']['ckeditor5_link_entity_suggestions'] = $plugin_configuration;
-    $editor->setSettings($plugin_configuration);
+    $editor->setSettings($settings);
 
+    // Whatever configuration it is, it must be valid.
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
@@ -173,14 +245,11 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ))
     ));
 
-    // Create a sample editor.
-    $editor = Editor::load('test_format');
     $controller = EntityLinkSuggestionsController::create($this->container);
 
-    $request = Request::create("/", 'GET', ['q' => 'foo']);
-
-    $request->query->set('q', 'f');
-    $response = $controller->suggestions($request, $editor, 'node', 'en');
+    $request = Request::create("/irrelevant-in-kernel-test");
+    $request->query->set('q', $search);
+    $response = $controller->suggestions($request, $editor, $host_entity_type_id, $host_entity_langcode);
     $this->assertInstanceOf(JsonResponse::class, $response);
 
     $data = json_decode($response->getContent(), TRUE);
@@ -188,55 +257,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     // Perform assertions on the response data.
     $this->assertArrayHasKey('suggestions', $data);
     $this->assertIsArray($data['suggestions']);
-    // Assert that there are 2 suggestions.
-    $this->assertEquals(2, count($data['suggestions']));
-
-    // The first suggestion's label should be foo.
-    $this->assertEquals('foo', $data['suggestions'][0]['label']);
-    // Assert the remaining fields.
-    $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
-    $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
-
-    // The second suggestion's label should be sofie.
-    $this->assertEquals('sofie', $data['suggestions'][1]['label']);
-    // Assert the remaining fields.
-    $this->assertEquals('user', $data['suggestions'][1]['entity_type_id']);
-    $this->assertEquals('entity:user/1', $data['suggestions'][1]['path']);
-
-    $request->query->set('q', 'fo');
-    $response = $controller->suggestions($request, $editor, 'node', 'en');
-    $this->assertInstanceOf(JsonResponse::class, $response);
-
-    $data = json_decode($response->getContent(), TRUE);
-    // Perform assertions on the response data.
-    $this->assertArrayHasKey('suggestions', $data);
-    $this->assertIsArray($data['suggestions']);
-    // Assert that there is only 1 suggestion.
-    $this->assertEquals(1, count($data['suggestions']));
-
-    // The suggestion's label should be foo.
-    $this->assertEquals('foo', $data['suggestions'][0]['label']);
-    // Assert the remaining fields for foo.
-    $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
-    $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
-
-    // Change language to de as default so that translation shows up.
-    $request->query->set('q', 'fo');
-    $response = $controller->suggestions($request, $editor, 'node', 'de');
-    $this->assertInstanceOf(JsonResponse::class, $response);
-
-    $data = json_decode($response->getContent(), TRUE);
-    // Perform assertions on the response data.
-    $this->assertArrayHasKey('suggestions', $data);
-    $this->assertIsArray($data['suggestions']);
-    // Assert that there is only 1 suggestion.
-    $this->assertEquals(1, count($data['suggestions']));
-
-    // The suggestion's label should be foo.
-    $this->assertEquals('foo_translated_de', $data['suggestions'][0]['label']);
-    // Assert the remaining fields for foo.
-    $this->assertEquals('node', $data['suggestions'][0]['entity_type_id']);
-    $this->assertEquals('entity:node/1', $data['suggestions'][0]['path']);
+    $this->assertSame($expected, $data['suggestions']);
   }
 
 }
