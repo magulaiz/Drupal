@@ -88,7 +88,7 @@ stages:
     - *prepare-dirs
     - *install-drupal
     # We need to pass this along directly even though it's set in the environment parameters.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest"
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest" --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 .run-test-only-tests: &run-test-only-tests
   script:
@@ -131,6 +131,7 @@ stages:
 '⚡️ PHPUnit Unit':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
+  parallel: 4
   services:
     - <<: *with-database
     - <<: *with-chrome
