@@ -16,11 +16,7 @@ class GenericTest extends GenericModuleTestBase {
    */
   protected function preUninstallSteps(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-    $result = $storage->getQuery()
-      ->condition('vid', 'forums')
-      ->accessCheck(FALSE)
-      ->execute();
-    $terms = $storage->loadMultiple($result);
+    $terms = $storage->loadMultiple();
     $storage->delete($terms);
   }
 

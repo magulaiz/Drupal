@@ -9,4 +9,16 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  *
  * @group filter
  */
-class GenericTest extends GenericModuleTestBase {}
+class GenericTest extends GenericModuleTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function preUninstallSteps(): void {
+    $storage = \Drupal::entityTypeManager()->getStorage('filter_format');
+    $text_formats = $storage->loadMultiple();
+    $storage->delete($text_formats);
+  }
+
+}
+

@@ -16,11 +16,8 @@ class GenericTest extends GenericModuleTestBase {
    */
   protected function preUninstallSteps(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
-    $result = $storage->getQuery()
-      ->accessCheck(FALSE)
-      ->execute();
-    $terms = $storage->loadMultiple($result);
-    $storage->delete($terms);
+    $workspaces = $storage->loadMultiple();
+    $storage->delete($workspaces);
   }
 
 }
