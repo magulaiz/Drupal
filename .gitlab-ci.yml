@@ -235,7 +235,6 @@ stages:
 ################
 # Lint Jobs
 ################
-#
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
