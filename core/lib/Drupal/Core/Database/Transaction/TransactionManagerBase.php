@@ -187,7 +187,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     }
 
     // Define an unique id for the transaction.
-    $id = uniqid();
+    $id = uniqid('', TRUE);
 
     // Add an item on the stack, increasing its depth.
     $this->addStackItem($id, new StackItem($name, $type));
@@ -224,8 +224,8 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       // If we are not releasing the last savepoint but an earlier one, all
       // subsequent savepoints will have been released as well. The stack must
       // be diminished accordingly.
-      while (($i = array_key_last($this->stack())) !== $id) {
-        $this->removeStackItem($i);
+      while (($i = array_key_last($this->stack())) != $id) {
+        $this->removeStackItem((string) $i);
       }
       $this->releaseClientSavepoint($name);
     }
@@ -281,7 +281,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     };
 
     // Rolled back item should match the last one in stack.
-    if ($id !== array_key_last($this->stack())) {
+    if ($id != array_key_last($this->stack())) {
       throw new TransactionOutOfOrderException();
     }
 
