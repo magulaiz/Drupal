@@ -291,24 +291,22 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     $entity_type = $entity->getEntityType();
     $owner = $entity_type->hasKey('owner')
       ? $entity->getOwner()->getDisplayName()
-      : '';
+      : NULL;
     $creation_datetime = method_exists($entity, 'getCreatedTime')
       ? $this->dateFormatter->format($entity->getCreatedTime(), 'medium')
       : NULL;
 
-    $args = [
-      ':owner' => $owner,
-      ':creation-datetime' => $creation_datetime,
-    ];
+    $arg_owner = [':owner' => $owner];
+    $arg_creation_datetime = [':creation-datetime' => $creation_datetime];
 
     if ($owner && $creation_datetime) {
-      return $this->t('by :owner on :creation-datetime', $args);
+      return $this->t('by :owner on :creation-datetime', $arg_owner + $arg_creation_datetime);
     }
     elseif ($owner) {
-      return $this->t('by :owner', $args);
+      return $this->t('by :owner', $arg_owner);
     }
     elseif ($creation_datetime) {
-      return $this->t('on :creation-datetime', $args);
+      return $this->t('on :creation-datetime', $arg_creation_datetime);
     }
     else {
       return NULL;
