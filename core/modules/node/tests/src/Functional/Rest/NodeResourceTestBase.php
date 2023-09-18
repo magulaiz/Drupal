@@ -24,6 +24,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
+    'vid' => "The 'administer nodes' permission is required.",
     'revision_timestamp' => NULL,
     'revision_uid' => NULL,
     'created' => "The 'administer nodes' permission is required.",
@@ -56,7 +57,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
         // when the path field is protected/not accessible, see
         // \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase
         // for a positive test.
-        $this->grantPermissionsToTestedRole(['access content', 'edit any camelids content', 'administer nodes']);
+        $this->grantPermissionsToTestedRole(['access content', 'edit any camelids content']);
         break;
 
       case 'DELETE':
