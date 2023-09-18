@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
 /**
