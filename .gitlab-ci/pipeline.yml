@@ -31,6 +31,8 @@ stages:
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://localhost:9515"]'
+  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
+  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 .with-database: &with-database
   name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
@@ -87,7 +89,7 @@ stages:
     - *prepare-dirs
     - *install-drupal
     # We need to pass this along directly even though it's set in the environment parameters.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest" --ci-parallel-node-index $CI_NODE_INDEX --ci-parallel-node-total $CI_NODE_TOTAL
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest" --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 .run-test-only-tests: &run-test-only-tests
   script:
