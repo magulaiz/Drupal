@@ -223,7 +223,6 @@ stages:
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
