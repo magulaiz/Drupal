@@ -129,7 +129,7 @@ class BlockFilterTest extends WebDriverTestBase {
     }
 
     // Add more three blocks with friendly labels containing same word to check if all will be displayed.
-    $this->placeBlock(
+    $blockPlaced = $this->placeBlock(
       'system_messages_block',
       ['region' => 'content', 'label' => 'a common block label to be displayed']
     );
@@ -185,6 +185,25 @@ class BlockFilterTest extends WebDriverTestBase {
       $assertSession->pageTextContains($blockTest['label']);
       $assertSession->pageTextContains($blockTest['region']);
     }
+
+    // Test drag and drop after any filter applied.
+    $inputFilter->setValue('');
+    $this->assertSession()->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
+    $siderbar_second_region = $this->getSession()
+      ->getPage()
+      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-sidebar-second-message"]');
+
+    $blockToMove = $this->getSession()
+      ->getPage()
+      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
+
+    $blockToMove->dragTo($siderbar_second_region);
+    $this->assertEquals(
+      'sidebar_second',
+      $this->getSession()->getPage()->findField('edit-blocks-' . $blockPlaced->id() . '-region')->getValue(),
+      "Drupal {$blockPlaced->id()} should be positioned on right sidebar"
+    );
+
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
   }

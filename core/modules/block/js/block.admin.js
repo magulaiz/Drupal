@@ -137,51 +137,67 @@
    */
   Drupal.behaviors.blockFilterRegionText = {
     attach() {
-      const $inputFilter = $(
-        once(
-          'block-filter-region-text',
-          '[data-drupal-selector="edit-search-blocks"]',
-        ),
-      );
-      const $table = $('#blocks');
-      const $listItems = $table.find('tbody tr.draggable');
 
-      if ($listItems.length === 0) {
-        return;
+      const hasBlockVisibleOnRegion = (regionName) => {
+        const blocks = document.querySelectorAll(`tr[data-parent-region="${regionName}"]`);
+        return Array.from(blocks).filter(tr => tr.style.display !== 'none').length > 0
       }
 
       const filterCallback = (e) => {
-        const query = e.target.value.toLowerCase();
-        // Clear the empty message when typing starts.
-        $table.find('#block-filter-region-empty-message').remove();
+        let table = document.getElementById('blocks');
+        let listItems = table.querySelectorAll('tbody tr.draggable');
 
-        $listItems.each((index, tr) => {
-          const $tr = $(tr);
+        if (listItems.length === 0) {
+          return;
+        }
+
+        // Clear the empty message when typing starts.
+        let emptyMessage = table.querySelector('#block-filter-region-empty-message');
+        if (emptyMessage) {
+          emptyMessage.remove();
+        }
+
+        const query = e.target.value.toLowerCase();
+
+        listItems.forEach((tr) => {
           try {
             // Query the block label and region name.
             const textToBeQueried = `${tr.children[0].textContent} ${tr.children[1].textContent}`;
-            $tr.toggle(textToBeQueried.toLowerCase().includes(query));
+            tr.style.display = textToBeQueried.toLowerCase().includes(query) ? '' : 'none';
           } catch (error) {
             // If a problem occurs, default to showing the row.
-            $tr.show();
+            tr.style.display = '';
           }
-          const regionName = $tr.data('parentRegion');
-          const regionElement = $(`tr[data-region="${regionName}"]`);
-          const hasBlockVisible = $(
-            `tr[data-parent-region="${regionName}"]:visible`,
-          ).length;
-          regionElement.toggle(hasBlockVisible > 0);
         });
 
-        // Hidden regions that don't have any blocks displayed.
-        $table.find('tr.region-message:visible').each((i, el) => {
-          $(el).hide();
-          const regionSelector = $(el).data('regionMessage');
-          $(`[data-region="${regionSelector}"]`).hide();
+        let regionHeaders = table.querySelectorAll('.region-title');
+        regionHeaders.forEach((el) => {
+          const currentRegionName = el.dataset.region;
+          const hasBlockVisible = hasBlockVisibleOnRegion(currentRegionName);
+          const showRegionHeader = query === '' || hasBlockVisible;
+
+          el.style.display = showRegionHeader ? '' : 'none';
+
+          let regionEmptyMessage = el.nextElementSibling;
+          let showEmptyRegion = false;
+          if (query === '' && table.querySelectorAll(`tr[data-parent-region="${currentRegionName}"]`).length === 0) {
+            showEmptyRegion = true;
+          }
+
+          if (showEmptyRegion) {
+            regionEmptyMessage.classList.remove('region-populated');
+            regionEmptyMessage.classList.add('region-empty');
+          }
+          else {
+            regionEmptyMessage.classList.add('region-populated');
+            regionEmptyMessage.classList.remove('region-empty');
+          }
+
         });
-        // If there are no blocks, display empty message.
-        if ($listItems.find(':visible').length === 0) {
-          $table.append(Drupal.theme('blockFilterEmptyMessage'));
+
+        let visibleItems = Array.from(listItems).filter(tr => tr.style.display !== 'none');
+        if (visibleItems.length === 0) {
+          table.insertAdjacentHTML('beforeend', Drupal.theme('blockFilterEmptyMessage'));
         }
       };
 
@@ -192,8 +208,15 @@
         }
       }
 
-      $inputFilter.on('keyup', debounce(filterCallback, 200));
-      $inputFilter.on('keydown', preventEnter);
+      const $inputFilter = once('block-filter-region-text', '[data-drupal-selector="edit-search-blocks"]');
+      if ($inputFilter) {
+        const inputFilterElement = $inputFilter[0];
+        if (inputFilterElement) { // Check if the element exists
+          inputFilterElement.addEventListener('keyup', debounce(filterCallback, 200));
+          inputFilterElement.addEventListener('keydown', preventEnter);
+        }
+      }
+
     },
   };
 })(jQuery, Drupal, Drupal.debounce, once);

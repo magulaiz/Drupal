@@ -110,8 +110,8 @@
           }
           // This region has become empty.
           if (
-            !$this.next('tr')[0].matches('.draggable') ||
-            $this.next('tr').length === 0
+            $this.next('tr').length === 0 ||
+            !$this.next('tr')[0].matches('.draggable')
           ) {
             $this.removeClass('region-populated').addClass('region-empty');
           }
@@ -123,19 +123,37 @@
       }
 
       /**
+       * Function to update parentRegion attribute of row dropped.
+       *
+       * @param {Drupal.tableDrag.row} rowObject
+       *   Row dropped to be updated.
+       */
+      function updateParentRegionName(rowObject) {
+        try {
+          const $rowObject = $(rowObject.element);
+          const newRegion = $rowObject.prevAll('.region-title').data('region');
+          if (newRegion !== undefined) {
+            rowObject.element.dataset.parentRegion = newRegion;
+          }
+        }
+        catch (e) {
+          // Empty.
+        }
+      }
+
+      /**
        * Function to update the last placed row with the correct classes.
        *
        * @param {jQuery} table
        *   The jQuery object representing the table to inspect.
-       * @param {jQuery} rowObject
-       *   The jQuery object representing the table row.
+       * @param {Drupal.tableDrag.row} rowObject
+       *   Drupal table drag row dropped.
        */
       function updateLastPlaced(table, rowObject) {
         // Remove the color-success class from new block if applicable.
         table.find('.color-success').removeClass('color-success');
-
         const $rowObject = $(rowObject);
-        if (!rowObject.matches('.drag-previous')) {
+        if (!rowObject.element.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           $rowObject.addClass('drag-previous');
         }
@@ -171,6 +189,7 @@
       const tableDrag = Drupal.tableDrag.blocks;
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
+        updateParentRegionName(this);
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
       };
@@ -244,7 +263,7 @@
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, tableDrag.rowObject);
           // Update last placed block indication.
-          updateLastPlaced(table, row);
+          updateLastPlaced(table, tableDrag.rowObject);
           // Show unsaved changes warning.
           if (!tableDrag.changed) {
             $(Drupal.theme('tableDragChangedWarning'))
