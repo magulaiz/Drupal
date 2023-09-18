@@ -17,6 +17,7 @@ class DrupalListener implements TestListener {
 
   use TestListenerDefaultImplementation;
   use DrupalComponentTestListenerTrait;
+  use TimeLimitListenerTrait;
 
   /**
    * The wrapped Symfony test listener.
@@ -27,9 +28,16 @@ class DrupalListener implements TestListener {
 
   /**
    * Constructs the DrupalListener object.
+   * @param float $time_threshold
+   *   Time in seconds before the time limit should fail tests which don't
+   *   belong to the slow group.
+   * @param string $slow_group
+   *   Group name which exempts long execution time failures.
    */
-  public function __construct() {
+  public function __construct($time_threshold = 10.0, $slow_group = '#slow') {
     $this->symfonyListener = new SymfonyTestsListener();
+    $this->setTimeThreshold($time_threshold);
+    $this->setSlowGroup($slow_group);
   }
 
   /**
@@ -64,6 +72,7 @@ class DrupalListener implements TestListener {
   public function endTest(Test $test, float $time): void {
     $this->symfonyListener->endTest($test, $time);
     $this->componentEndTest($test, $time);
+    $this->timeLimitEndTest($test, $time);
   }
 
 }
