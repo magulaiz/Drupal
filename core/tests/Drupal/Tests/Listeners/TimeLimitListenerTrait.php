@@ -67,7 +67,7 @@ trait TimeLimitListenerTrait {
       return;
     }
     // We only want to work with concrete tests.
-    if ($test instanceof \PHPUnit_Framework_TestCase || $test instanceof TestCase) {
+    if ($test instanceof TestCase) {
       $util_test_class = class_exists('PHPUnit_Util_Test') ? 'PHPUnit_Util_Test' : 'PHPUnit\Util\Test';
       $method = $test->getName(FALSE);
       if (in_array($this->slowGroup, $util_test_class::getGroups(get_class($test), $method), TRUE)) {
