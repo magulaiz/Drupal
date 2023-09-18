@@ -21,4 +21,3 @@ class GenericTest extends GenericModuleTestBase {
   }
 
 }
-
