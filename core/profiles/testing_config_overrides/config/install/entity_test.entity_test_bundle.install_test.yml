@@ -1,0 +1,7 @@
+id: install_test
+label: Overridden Default Install Config 1
+description: ''
+dependencies:
+  enforced:
+    config:
+      - entity_test.entity_test_bundle.testing_config_overrides

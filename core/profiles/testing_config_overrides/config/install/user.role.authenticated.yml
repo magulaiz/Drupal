@@ -2,10 +2,10 @@ langcode: en
 status: true
 dependencies:
   module:
-    - config_test_overrides
+    - entity_test
 id: authenticated
 label: 'Authenticated user'
 weight: 1
 is_admin: false
 permissions:
-  - 'access config test overrides'
+  - 'administer entity_test_bundle content'

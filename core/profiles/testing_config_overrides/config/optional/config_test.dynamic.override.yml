@@ -5,4 +5,4 @@ protected_property: Default
 status: true
 dependencies:
   module:
-    - config_test_overrides
+    - entity_test

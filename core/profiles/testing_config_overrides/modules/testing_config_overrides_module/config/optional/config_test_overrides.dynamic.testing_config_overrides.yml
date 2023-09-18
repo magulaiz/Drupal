@@ -1,6 +1,0 @@
-id: testing_config_overrides
-label: Testing Config Overrides optional configuration
-weight: 0
-protected_property: Default
-status: true
-dependencies: {}
