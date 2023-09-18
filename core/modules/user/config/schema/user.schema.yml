@@ -46,7 +46,7 @@ user.settings:
       label: 'When cancelling a user account'
     cancel_methods_access_disabled:
       type: mapping
-      label: 'Cancel methods config'
+      label: 'Cancellation method options'
       mapping:
         user_cancel_block:
           type: boolean
