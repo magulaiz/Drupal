@@ -281,9 +281,6 @@ class BlockContentController extends ControllerBase {
   public function buildView(BlockContentInterface $block_content): array {
     $build = [
       '#theme' => 'block_content',
-      '#cache' => [
-        'tags' => $this->entityTypeManager()->getDefinition('block_content')->getListCacheTags(),
-      ],
     ];
     $build['#content'] = $this->entityTypeManager->getViewBuilder('block_content')->view($block_content);
     CacheableMetadata::createFromObject($block_content)->applyTo($build);
