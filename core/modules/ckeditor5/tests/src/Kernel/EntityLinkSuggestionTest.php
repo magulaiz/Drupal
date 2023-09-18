@@ -21,8 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * For testing the drupalEntityLinkSuggestions plugin.
- *
+ * @coversDefaultClass \Drupal\ckeditor5\Controller\EntityLinkSuggestionsController
  * @group ckeditor5
  * @internal
  */
@@ -139,9 +138,41 @@ class EntityLinkSuggestionTest extends KernelTestBase {
   }
 
   /**
-   * Test the entity link suggestions.
+   * Data provider.
+   *
+   * @return \Generator
+   *   Test scenarios.
    */
-  public function testEntityLinkSuggestions(): void {
+  public function providerEntityLinkSuggestions(): \Generator {
+    yield 'no suggestion configuration' => [
+      [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
+    ];
+  }
+
+  /**
+   * Test the generated entity link suggestions based on editor configuration.
+   *
+   * @dataProvider providerEntityLinkSuggestions
+   */
+  public function testEntityLinkSuggestions(array $plugin_configuration): void {
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+    $settings['plugins']['ckeditor5_link_entity_suggestions'] = $plugin_configuration;
+    $editor->setSettings($plugin_configuration);
+
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
     // Create a sample editor.
     $editor = Editor::load('test_format');
     $controller = EntityLinkSuggestionsController::create($this->container);
