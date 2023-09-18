@@ -84,7 +84,6 @@ stages:
 .run-tests: &run-tests
   script:
     - *get-simpletest-db
-    - export
     - *prepare-dirs
     - *install-drupal
     # We need to pass this along directly even though it's set in the environment parameters.
@@ -93,7 +92,6 @@ stages:
 .run-test-only-tests: &run-test-only-tests
   script:
     - *get-simpletest-db
-    - export
     - *prepare-dirs
     - *install-drupal
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
