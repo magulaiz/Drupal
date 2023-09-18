@@ -260,7 +260,7 @@ abstract class StorableConfigBase extends ConfigBase {
 
       // Only sort maps when we have more than 1 element to sort.
       if ($element instanceof Mapping && count($value) > 1) {
-        $mapping = $element->getDataDefinition()['mapping'];
+        $mapping = $element->getDataDefinition()->toArray()['mapping'];
         if (is_array($mapping)) {
           // Only sort the keys in $value.
           $mapping = array_intersect_key($mapping, $value);

@@ -25,8 +25,9 @@ class Sequence extends ArrayElement {
   protected function getElementDefinition($key) {
     $value = $this->value[$key] ?? NULL;
     $definition = [];
-    if ($this->definition['sequence']) {
-      $definition = $this->definition['sequence'];
+    $data_definition = $this->definition->toArray();
+    if (isset($data_definition['sequence'])) {
+      $definition = $data_definition['sequence'];
     }
     return $this->buildDataDefinition($definition, $value, $key);
   }

@@ -174,7 +174,7 @@ class LocaleConfigManager {
       // Something is only translatable by Locale if there is a string in the
       // first place.
       $value = $element->getValue();
-      $definition = $element->getDataDefinition();
+      $definition = $element->getDataDefinition()->toArray();
       if (!empty($definition['translatable']) && $value !== '' && $value !== NULL) {
         $options = [];
         if (isset($definition['translation context'])) {

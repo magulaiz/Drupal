@@ -23,7 +23,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   public function hasTranslatableElements(): bool {
     foreach ($this as $element) {
       // Early return if found.
-      if ($element->getDataDefinition()['translatable'] === TRUE) {
+      if ($element->getDataDefinition()->toArray()['translatable'] ?? NULL === TRUE) {
         return TRUE;
       }
       if ($element instanceof ArrayElement && $element->hasTranslatableElements()) {
@@ -178,7 +178,8 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   TRUE if NULL is a valid value, FALSE otherwise.
    */
   public function isNullable() {
-    return isset($this->definition['nullable']) && $this->definition['nullable'] == TRUE;
+    $nullable = $this->definition->toArray()['nullable'] ?? NULL;
+    return isset($nullable) && $nullable == TRUE;
   }
 
   /**

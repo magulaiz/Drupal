@@ -204,7 +204,7 @@ trait SchemaCheckTrait {
     $element = $this->schema->get($key);
 
     // Check if this type has been deprecated.
-    $data_definition = $element->getDataDefinition();
+    $data_definition = $element->getDataDefinition()->toArray();
     if (!empty($data_definition['deprecated'])) {
       @trigger_error($data_definition['deprecated'], E_USER_DEPRECATED);
     }

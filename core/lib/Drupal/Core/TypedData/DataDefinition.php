@@ -311,22 +311,28 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    *
-   * This is for BC support only.
-   * @todo Remove in https://www.drupal.org/node/1928868.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
+   *   relevant getter or toArray() instead.
+   *
+   * @see https://www.drupal.org/node/3388070
    */
   public function offsetExists($offset): bool {
     // PHP's array access does not work correctly with isset(), so we have to
     // bake isset() in here. See https://bugs.php.net/bug.php?id=41727.
+    @trigger_error('Using array access method ' . static::class . "::offsetExists($offset)" . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the relevant getter or toArray() instead. See https://www.drupal.org/node/3388070', E_USER_DEPRECATED);
     return array_key_exists($offset, $this->definition) && isset($this->definition[$offset]);
   }
 
   /**
    * {@inheritdoc}
    *
-   * This is for BC support only.
-   * @todo Remove in https://www.drupal.org/node/1928868.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
+   *   relevant getter or toArray() instead.
+   *
+   * @see https://www.drupal.org/node/3388070
    */
   public function &offsetGet($offset): mixed {
+    @trigger_error('Using array access method ' . static::class . "::offsetGet($offset)" . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the relevant getter or toArray() instead. See https://www.drupal.org/node/3388070', E_USER_DEPRECATED);
     if (!isset($this->definition[$offset])) {
       $this->definition[$offset] = NULL;
     }
@@ -336,20 +342,41 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    *
-   * This is for BC support only.
-   * @todo Remove in https://www.drupal.org/node/1928868.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
+   *   relevant getter or setRawDefinition() instead.
+   *
+   * @see https://www.drupal.org/node/3388070
    */
   public function offsetSet($offset, $value): void {
+    @trigger_error('Using array access method ' . static::class . "::offsetSet($offset)" . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the relevant getter or setRawDefinition() instead. See https://www.drupal.org/node/3388070', E_USER_DEPRECATED);
     $this->definition[$offset] = $value;
+  }
+
+  /**
+   * Sets the definition property to new value.
+   *
+   * @param string $property
+   *   A key in definition array.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return $this
+   */
+  public function setRawDefinition(string $property, $value): static {
+    $this->definition[$property] = $value;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    *
-   * This is for BC support only.
-   * @todo Remove in https://www.drupal.org/node/1928868.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. No direct
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3388070
    */
   public function offsetUnset($offset): void {
+    @trigger_error('Using array access method ' . static::class . "::offsetUnset($offset)" . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. No direct replacement. See https://www.drupal.org/node/3388070', E_USER_DEPRECATED);
     unset($this->definition[$offset]);
   }
 

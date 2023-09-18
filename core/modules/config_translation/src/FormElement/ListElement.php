@@ -125,7 +125,7 @@ class ListElement implements ElementInterface {
         }
       }
     }
-    return (!empty($title) ? (strip_tags($title) . ' ') : '') . $this->t($definition['label']);
+    return (!empty($title) ? (strip_tags($title) . ' ') : '') . $this->t($definition->getLabel());
   }
 
 }
