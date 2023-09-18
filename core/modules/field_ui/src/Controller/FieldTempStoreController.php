@@ -10,7 +10,7 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Controller for building the field instance form.
+ * Controller for creating a field storage entity and setting the temp store.
  *
  * @internal
  */
@@ -27,12 +27,18 @@ final class FieldTempStoreController extends ControllerBase {
    *
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
+   *   The field type plugin manager.
    */
   public function __construct(
-    protected readonly PrivateTempStore $tempStore,
+    protected ?PrivateTempStore $tempStore = NULL,
     FieldTypePluginManagerInterface $field_type_plugin_manager,
   ) {
     $this->fieldTypePluginManager = $field_type_plugin_manager;
+    if ($this->tempStore === NULL) {
+      @trigger_error('Calling FieldTempStoreController::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
+      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
+    }
   }
 
   /**
@@ -46,7 +52,7 @@ final class FieldTempStoreController extends ControllerBase {
   }
 
   /**
-   * Builds the field config instance form.
+   * Creates a dummy field to set in temp store in order to build the edit form.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The field instance edit form.
@@ -78,7 +84,6 @@ final class FieldTempStoreController extends ControllerBase {
       'field_name' => $temp_field_name,
       'type' => $field_type,
       'entity_type' => $entity_type,
-    // 'translatable' => $values['translatable'],
     ];
 
     try {

@@ -243,16 +243,16 @@ class FieldStorageAddForm extends FormBase {
       '#attributes' => [
         'class' => ['js-hide'],
       ],
-      '#submit' => [[static::class, 'showFieldsHandler']],
+      '#submit' => [[static::class, 'rebuildForm']],
     ];
     $form['field_submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Update link with field'),
       '#limit_validation_errors' => [],
-    // '#attributes' => [
-    //        'class' => ['js-hide'],
-    //      ],
-      '#submit' => [[static::class, 'updateLink']],
+      '#attributes' => [
+        'class' => ['js-hide'],
+      ],
+      '#submit' => [[static::class, 'rebuildForm']],
     ];
     $form['group_field_options_wrapper'] = [
       '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
@@ -306,6 +306,13 @@ class FieldStorageAddForm extends FormBase {
             '#wrapper_attributes' => [
               'class' => ['js-click-to-select', 'subfield-option'],
             ],
+            '#ajax' => [
+              'callback' => [$this, 'showFieldsCallback'],
+              'event' => 'updateOptions',
+              'wrapper' => 'group-field-options-wrapper',
+              'progress' => 'none',
+              'disable-refocus' => TRUE,
+            ],
             '#variant' => 'field-suboption',
           ];
           $radio_element['#return_value'] = $option['unique_identifier'];
@@ -341,7 +348,7 @@ class FieldStorageAddForm extends FormBase {
         'field_instance_id' => $this->fieldInstanceId,
       ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
 
-      $form['actions']['submit'] = [
+      $form['group_field_options_wrapper']['submit'] = [
         '#type' => 'link',
         '#title' => $this->t('Continue'),
         '#url' => Url::fromRoute("field_ui.field_storage_entity_add_{$this->entityTypeId}", $route_parameters),
@@ -400,16 +407,9 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Submit handler for displaying fields after a group is selected.
+   * Callback to rebuild form.
    */
-  public static function showFieldsHandler($form, FormStateInterface &$form_state) {
-    $form_state->setRebuild();
-  }
-
-  /**
-   * Handler for updating the 'Continue' button with the updated route.
-   */
-  public static function updateLink($form, FormStateInterface &$form_state) {
+  public static function rebuildForm($form, FormStateInterface &$form_state) {
     $form_state->setRebuild();
   }
 
