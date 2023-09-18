@@ -129,15 +129,15 @@ class BlockFilterTest extends WebDriverTestBase {
     }
 
     // Add more three blocks with friendly labels containing same word to check if all will be displayed.
-    $blockPlaced = $this->placeBlock(
+    $fakeBlock1 = $this->placeBlock(
       'system_messages_block',
       ['region' => 'content', 'label' => 'a common block label to be displayed']
     );
-    $this->placeBlock(
+    $fakeBlock2 = $this->placeBlock(
       'system_messages_block',
       ['region' => 'content', 'label' => 'label to be displayed']
     );
-    $this->placeBlock(
+    $fakeBlock3 = $this->placeBlock(
       'system_messages_block',
       ['region' => 'content', 'label' => 'label display']
     );
@@ -181,40 +181,52 @@ class BlockFilterTest extends WebDriverTestBase {
     foreach ($blockConfig as $blockTest) {
       $inputFilter->setValue($blockTest['label']);
       $this->assertSession()
-        ->waitForElementVisible('xpath', "//td[contains(text(), '" . $blockTest['label'] . "')]", 300);
+        ->waitForElementVisible('xpath', "//td[contains(text(), '" . $blockTest['label'] . "')]");
       $assertSession->pageTextContains($blockTest['label']);
       $assertSession->pageTextContains($blockTest['region']);
     }
 
     // Test drag and drop after any filter applied.
     $inputFilter->setValue('');
-    $this->assertSession()->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
+    $this->assertSession()->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
     $sideBarSecondRegion = $this->getSession()
       ->getPage()
       ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-sidebar-second-message"]');
 
     $blockToMove = $this->getSession()
       ->getPage()
-      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
+      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
 
     $blockToMove->dragTo($sideBarSecondRegion);
     $this->assertEquals(
       'sidebar_second',
-      $this->getSession()->getPage()->findField('edit-blocks-' . $blockPlaced->id() . '-region')->getValue(),
-      "Drupal {$blockPlaced->id()} should be positioned on right sidebar"
+      $this->getSession()->getPage()->findField('edit-blocks-' . $fakeBlock1->id() . '-region')->getValue(),
+      "Drupal {$fakeBlock1->id()} should be positioned on right sidebar"
     );
     // Test filter when user changes the region by select element.
     $this->getSession()
       ->getPage()
-      ->findField('edit-blocks-' . $blockPlaced->id() . '-region')
+      ->findField('edit-blocks-' . $fakeBlock1->id() . '-region')
       ->setValue('sidebar_first');
     $this->assertSession()
-      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
+      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
     $this->assertEquals(
       'sidebar_first',
-      $this->getSession()->getPage()->findField('edit-blocks-' . $blockPlaced->id() . '-region')->getValue(),
-      "Drupal {$blockPlaced->id()} should be positioned on right sidebar"
+      $this->getSession()->getPage()->findField('edit-blocks-' . $fakeBlock1->id() . '-region')->getValue(),
+      "Drupal {$fakeBlock1->id()} should be positioned on right sidebar"
     );
+
+    // Test filter applied after drag and drop items.
+    $inputFilter->setValue('label');
+    $this->moveBlock($fakeBlock1->id(), 'sidebar-second');
+    $this->moveBlock($fakeBlock2->id(), 'header', FALSE);
+    $this->moveBlock($fakeBlock3->id(), 'header');
+    // At this point the Region empty message must not exist.
+    $this->assertSession()->pageTextNotContains('No blocks in this region');
+    $this->moveBlock($fakeBlock2->id(), 'sidebar-second', FALSE);
+    $this->moveBlock($fakeBlock3->id(), 'sidebar-second');
+    // As the filter update the region header should not appear.
+    $this->assertSession()->elementNotExists('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-header"]');
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
@@ -245,6 +257,42 @@ class BlockFilterTest extends WebDriverTestBase {
   protected function assertAnnounceContains(string $expected_message): void {
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')"));
+  }
+
+  /**
+   * Move blocks dragging or selecting from the region to the other.
+   *
+   * @param string $blockId
+   *   The block to be moved.
+   * @param string $region
+   *   The destination region.
+   * @param bool $dragging
+   *   The way to move the block, dragging by default. Otherwise, selecting.
+   */
+  protected function moveBlock($blockId, $region, $dragging = TRUE): void {
+    if ($dragging) {
+      $locator = '#blocks tbody tr[data-drupal-selector="edit-blocks-region-' . $region . '"]';
+      $this->assertSession()->waitForElementVisible('css', $locator);
+      $destRegion = $this->getSession()
+        ->getPage()
+        ->find('css', $locator);
+      $this->assertNotEmpty($destRegion, 'Destination region ' . $locator . ' does not exists.');
+      $this->assertSession()->waitForElementVisible('css', '.test', 5 * 10000);
+      $dragRow = '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockId . '"] a.tabledrag-handle';
+      $blockToMove = $this->getSession()
+        ->getPage()
+        ->find('css', $dragRow);
+      $this->assertNotEmpty($blockToMove, 'Block id ' . $dragRow . ' does not exits');
+      $blockToMove->dragTo($destRegion);
+    }
+    else {
+      $fieldId = 'edit-blocks-' . $blockId . '-region';
+      $this->assertSession()->waitForField($fieldId);
+      $this->getSession()
+        ->getPage()
+        ->findField($fieldId)
+        ->setValue(str_replace('-', '_', $region));
+    }
   }
 
 }
