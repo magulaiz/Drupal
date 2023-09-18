@@ -58,7 +58,7 @@ stages:
 .setup-webroot: &setup-webserver
   before_script:
     - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
-    - cp $CI_PROJECT_DIR/.gitlab-ci/htaccess /var/www/html/.htaccess
+    - cp $CI_PROJECT_DIR/.gitlab-ci/.htaccess-parent /var/www/html/.htaccess
     - sudo service apache2 start
 
 .get-simpletest-db: &get-simpletest-db

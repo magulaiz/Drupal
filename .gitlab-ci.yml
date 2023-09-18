@@ -44,6 +44,7 @@ include:
 variables:
   _TARGET_PHP: "8.1"
   CONCURRENCY: 32
+  GIT_DEPTH: "3"
 
 ################
 # Stages
@@ -179,11 +180,11 @@ stages:
     _TARGET_PHP: "7.4"
     _TARGET_DB: "pgsql-9.5"
 
-'PHP 8.1 PostgreSQL 13.5':
+'PHP 8.1 PostgreSQL 14.1':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "pgsql-13.5"
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "pgsql-14.1"
 
 'PHP 7.4 SQLite 3.27.0':
   <<: *default-stage
