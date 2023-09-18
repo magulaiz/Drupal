@@ -237,7 +237,7 @@
         }
       }
 
-      // Do the filter after changing region by select field.
+      // Do the filter after region changed by select field.
       const $selectRegionChange = once(
         'block-region-select-filter',
         'select.block-region-select',

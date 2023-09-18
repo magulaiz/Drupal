@@ -203,6 +203,19 @@ class BlockFilterTest extends WebDriverTestBase {
       $this->getSession()->getPage()->findField('edit-blocks-' . $blockPlaced->id() . '-region')->getValue(),
       "Drupal {$blockPlaced->id()} should be positioned on right sidebar"
     );
+    
+    // Test filter when user changes the region by select element.
+    $this->getSession()
+      ->getPage()
+      ->findField('edit-blocks-' . $blockPlaced->id() . '-region')
+      ->setValue('sidebar_first');
+    $this->assertSession()
+      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
+    $this->assertEquals(
+      'sidebar_first',
+      $this->getSession()->getPage()->findField('edit-blocks-' . $blockPlaced->id() . '-region')->getValue(),
+      "Drupal {$blockPlaced->id()} should be positioned on right sidebar"
+    );
 
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
