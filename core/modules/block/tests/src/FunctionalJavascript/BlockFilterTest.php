@@ -189,7 +189,7 @@ class BlockFilterTest extends WebDriverTestBase {
     // Test drag and drop after any filter applied.
     $inputFilter->setValue('');
     $this->assertSession()->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
-    $siderbar_second_region = $this->getSession()
+    $sideBarSecondRegion = $this->getSession()
       ->getPage()
       ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-sidebar-second-message"]');
 
@@ -197,7 +197,7 @@ class BlockFilterTest extends WebDriverTestBase {
       ->getPage()
       ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockPlaced->id() . '"] a.tabledrag-handle');
 
-    $blockToMove->dragTo($siderbar_second_region);
+    $blockToMove->dragTo($sideBarSecondRegion);
     $this->assertEquals(
       'sidebar_second',
       $this->getSession()->getPage()->findField('edit-blocks-' . $blockPlaced->id() . '-region')->getValue(),

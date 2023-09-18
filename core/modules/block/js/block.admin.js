@@ -137,22 +137,28 @@
    */
   Drupal.behaviors.blockFilterRegionText = {
     attach() {
-
       const hasBlockVisibleOnRegion = (regionName) => {
-        const blocks = document.querySelectorAll(`tr[data-parent-region="${regionName}"]`);
-        return Array.from(blocks).filter(tr => tr.style.display !== 'none').length > 0
-      }
+        const blocks = document.querySelectorAll(
+          `tr[data-parent-region="${regionName}"]`,
+        );
+        return (
+          Array.from(blocks).filter((tr) => tr.style.display !== 'none')
+            .length > 0
+        );
+      };
 
       const filterCallback = (e) => {
-        let table = document.getElementById('blocks');
-        let listItems = table.querySelectorAll('tbody tr.draggable');
+        const table = document.getElementById('blocks');
+        const listItems = table.querySelectorAll('tbody tr.draggable');
 
         if (listItems.length === 0) {
           return;
         }
 
         // Clear the empty message when typing starts.
-        let emptyMessage = table.querySelector('#block-filter-region-empty-message');
+        const emptyMessage = table.querySelector(
+          '#block-filter-region-empty-message',
+        );
         if (emptyMessage) {
           emptyMessage.remove();
         }
@@ -163,14 +169,16 @@
           try {
             // Query the block label and region name.
             const textToBeQueried = `${tr.children[0].textContent} ${tr.children[1].textContent}`;
-            tr.style.display = textToBeQueried.toLowerCase().includes(query) ? '' : 'none';
+            tr.style.display = textToBeQueried.toLowerCase().includes(query)
+              ? ''
+              : 'none';
           } catch (error) {
             // If a problem occurs, default to showing the row.
             tr.style.display = '';
           }
         });
 
-        let regionHeaders = table.querySelectorAll('.region-title');
+        const regionHeaders = table.querySelectorAll('.region-title');
         regionHeaders.forEach((el) => {
           const currentRegionName = el.dataset.region;
           const hasBlockVisible = hasBlockVisibleOnRegion(currentRegionName);
@@ -178,26 +186,34 @@
 
           el.style.display = showRegionHeader ? '' : 'none';
 
-          let regionEmptyMessage = el.nextElementSibling;
+          const regionEmptyMessage = el.nextElementSibling;
           let showEmptyRegion = false;
-          if (query === '' && table.querySelectorAll(`tr[data-parent-region="${currentRegionName}"]`).length === 0) {
+          if (
+            query === '' &&
+            table.querySelectorAll(
+              `tr[data-parent-region="${currentRegionName}"]`,
+            ).length === 0
+          ) {
             showEmptyRegion = true;
           }
 
           if (showEmptyRegion) {
             regionEmptyMessage.classList.remove('region-populated');
             regionEmptyMessage.classList.add('region-empty');
-          }
-          else {
+          } else {
             regionEmptyMessage.classList.add('region-populated');
             regionEmptyMessage.classList.remove('region-empty');
           }
-
         });
 
-        let visibleItems = Array.from(listItems).filter(tr => tr.style.display !== 'none');
+        const visibleItems = Array.from(listItems).filter(
+          (tr) => tr.style.display !== 'none',
+        );
         if (visibleItems.length === 0) {
-          table.insertAdjacentHTML('beforeend', Drupal.theme('blockFilterEmptyMessage'));
+          table.insertAdjacentHTML(
+            'beforeend',
+            Drupal.theme('blockFilterEmptyMessage'),
+          );
         }
       };
 
@@ -208,15 +224,20 @@
         }
       }
 
-      const $inputFilter = once('block-filter-region-text', '[data-drupal-selector="edit-search-blocks"]');
+      const $inputFilter = once(
+        'block-filter-region-text',
+        '[data-drupal-selector="edit-search-blocks"]',
+      );
       if ($inputFilter) {
         const inputFilterElement = $inputFilter[0];
-        if (inputFilterElement) { // Check if the element exists
-          inputFilterElement.addEventListener('keyup', debounce(filterCallback, 200));
+        if (inputFilterElement) {
+          inputFilterElement.addEventListener(
+            'keyup',
+            debounce(filterCallback, 200),
+          );
           inputFilterElement.addEventListener('keydown', preventEnter);
         }
       }
-
     },
   };
 })(jQuery, Drupal, Drupal.debounce, once);
