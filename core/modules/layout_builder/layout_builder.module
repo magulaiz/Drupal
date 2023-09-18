@@ -23,6 +23,7 @@ use Drupal\layout_builder\Form\DefaultsEntityForm;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\layout_builder\Form\OverridesEntityForm;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\layout_builder\FormElement\LayoutBuilderDisplayElement;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
@@ -452,6 +453,24 @@ function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $
           }
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function layout_builder_config_schema_info_alter(&$definitions) {
+  $map = [
+    'core.entity_view_display.*.*.*.third_party.layout_builder' => LayoutBuilderDisplayElement::class,
+  ];
+
+  // Enhance the text and date type definitions with classes to generate proper
+  // form elements in ConfigTranslationFormBase. Other translatable types will
+  // appear as a one line textfield.
+  foreach ($definitions as $type => &$definition) {
+    if (isset($map[$type]) && !isset($definition['form_element_class'])) {
+      $definition['form_element_class'] = $map[$type];
     }
   }
 }
