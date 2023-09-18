@@ -45,10 +45,16 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
     $this->assertHookHelp($module);
 
     if (empty($info['required'])) {
-      // Check that the module can be uninstalled and then re-installed again.
-      $this->preUnInstallSteps();
-      \Drupal::service('module_installer')->uninstall([$module]);
-      \Drupal::service('module_installer')->install([$module]);
+      $this->connection = Database::getConnection();
+
+      // When the database driver is provided by a module, then that module
+      // cannot be uninstalled.
+      if ($module !== $this->connection->getProvider()) {
+        // Check that the module can be uninstalled and then re-installed again.
+        $this->preUnInstallSteps();
+        \Drupal::service('module_installer')->uninstall([$module]);
+        \Drupal::service('module_installer')->install([$module]);
+      }
     }
   }
 
