@@ -306,6 +306,7 @@ desaturate
 desaturated
 desaturates
 desaturating
+descoping
 descripcion
 destructable
 deutsch
@@ -322,9 +323,11 @@ distro
 ditka
 divs
 dnumber
+dockerhub
 docroot
 docroots
 dolore
+dotenv
 downcasting
 doxygen
 dragtable
@@ -540,6 +543,7 @@ insidekeyword
 instaclick
 instantiator
 interactable
+interruptible
 introspectable
 invalidators
 invalididentifier
