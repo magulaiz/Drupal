@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Field;
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
@@ -43,23 +44,44 @@ class MapBaseFieldTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests uninstalling map item base field.
+   * Data provider for testMapItemBaseField().
    */
-  public function testUninstallMapItemBaseField(): void {
+  public function provideMapItemBaseFieldData() {
+    return [
+      'single item cardinality, stored in base table' => [1],
+      'multiple item cardinality, stored in dedicated table' => [FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+    ];
+  }
+
+  /**
+   * Tests uninstalling map item base field.
+   *
+   * @dataProvider provideMapItemBaseFieldData
+   */
+  public function testMapItemBaseField(int $cardinality): void {
     $definitions['data_map'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
+      ->setCardinality($cardinality)
       ->setRequired(TRUE);
 
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
 
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition('data_map', 'entity_test_update', 'entity_test', $definitions['data_map']);
 
+    $dataMapValue = [
+      'key' => 'value',
+      'another' => ['array', 'indexed' => 'value'],
+    ];
+
     $entity = EntityTestUpdate::create([
-      'data_map' => [
-        'key' => 'value',
-      ],
+      'data_map' => $dataMapValue,
     ]);
     $entity->save();
+    $entityId = $entity->id();
+
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+    $entity = $storage->loadUnchanged($entityId);
+    $this->assertSame($dataMapValue, $entity->get('data_map')->first()->getValue());
 
     $this->entityDefinitionUpdateManager->uninstallFieldStorageDefinition($definitions['data_map']);
   }
