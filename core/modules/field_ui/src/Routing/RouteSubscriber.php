@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\field_ui\Controller\FieldConfigAddController;
+use Drupal\field_ui\Controller\FieldTempStoreController;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -112,6 +113,17 @@ class RouteSubscriber extends RouteSubscriberBase {
           $options
         );
         $collection->add("field_ui.field_add_$entity_type_id", $route);
+
+        $route = new Route(
+          "$path/add-field/{entity_type}/{field_instance_id}/{field_storage_type}",
+          [
+            '_controller' => FieldTempStoreController::class . '::setTempStore',
+            '_title' => 'Add field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_storage_entity_add_$entity_type_id", $route);
 
         $route = new Route(
           "$path/fields/reuse",

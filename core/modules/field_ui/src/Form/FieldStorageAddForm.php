@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,6 +66,13 @@ class FieldStorageAddForm extends FormBase {
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
+
+  /**
+   * Form instance id.
+   *
+   * @var string
+   */
+  protected $fieldInstanceId;
 
   /**
    * Constructs a new FieldStorageAddForm object.
@@ -130,23 +139,6 @@ class FieldStorageAddForm extends FormBase {
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
 
-    // Field label and field_name.
-    //    $form['new_storage_wrapper'] = [
-    //      '#type' => 'container',
-    //      '#attributes' => [
-    //        'class' => ['field-ui-new-storage-wrapper'],
-    //      ],
-    //      '#states' => [
-    //        '!visible' => [
-    //          ':input[name="new_storage_type"]' => ['value' => ''],
-    //        ],
-    //      ],
-    //    ];
-    //    $form['new_storage_wrapper']['label'] = [
-    //      '#type' => 'textfield',
-    //      '#title' => $this->t('Label'),
-    //      '#size' => 30,
-    //    ];.
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
@@ -253,14 +245,25 @@ class FieldStorageAddForm extends FormBase {
       ],
       '#submit' => [[static::class, 'showFieldsHandler']],
     ];
+    $form['field_submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Update link with field'),
+      '#limit_validation_errors' => [],
+    // '#attributes' => [
+    //        'class' => ['js-hide'],
+    //      ],
+      '#submit' => [[static::class, 'updateLink']],
+    ];
     $form['group_field_options_wrapper'] = [
       '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
       '#suffix' => '</div>',
     ];
+    $form['actions'] = ['#type' => 'actions'];
 
     // Set the selected field to the form state by checking
     // the checked attribute.
     $selected_field_type = NULL;
+    $selected_field_storage_type = NULL;
     foreach ($field_type_options_radios as $field_type_options_radio) {
       if ($field_type_options_radio['#attributes']['checked']) {
         $selected_field_type = $field_type_options_radio['radio']['#return_value'];
@@ -298,6 +301,7 @@ class FieldStorageAddForm extends FormBase {
             '#attributes' => [
               'class' => ['field-option-radio'],
               'data-once' => 'field-click-to-select',
+              'checked' => $this->getRequest()->request->get('group_field_options_wrapper') !== NULL && $this->getRequest()->request->get('group_field_options_wrapper') == $option_key,
             ],
             '#wrapper_attributes' => [
               'class' => ['js-click-to-select', 'subfield-option'],
@@ -313,7 +317,43 @@ class FieldStorageAddForm extends FormBase {
         }
         uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
         $form['group_field_options_wrapper']['fields'] += $group_field_options;
+
+        // Set the variable as the currently checked option.
+        foreach ($group_field_options as $option) {
+          if ($option['#attributes']['checked']) {
+            $selected_field_storage_type = $option['#return_value'];
+            break;
+          }
+        }
       }
+
+      // Create a random string as the field name, so we can create a dummy
+      // entity in order to create the field storage settings. Inside the edit
+      // form, a new entity with the user inputted field name will get created
+      // that is saved.
+      // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
+      $this->fieldInstanceId = '_' . substr(str_shuffle(md5(time())), 0, 10);
+
+      $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+      $route_parameters = [
+        'entity_type' => $this->entityTypeId,
+        'field_storage_type' => $selected_field_storage_type ?? $selected_field_type,
+        'field_instance_id' => $this->fieldInstanceId,
+      ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
+
+      $form['actions']['submit'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Continue'),
+        '#url' => Url::fromRoute("field_ui.field_storage_entity_add_{$this->entityTypeId}", $route_parameters),
+        '#attributes' => [
+          'class' => ['button', 'button--primary', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '85vw',
+          ]),
+        ],
+      ];
+
     }
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
@@ -323,16 +363,6 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'value',
       '#value' => TRUE,
     ];
-    $form['actions'] = ['#type' => 'actions'];
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Continue'),
-      '#button_type' => 'primary',
-      '#attributes' => [
-        'class' => ['use-ajax'],
-      ],
-    ];
-
     $form['#attached']['library'] = [
       'field_ui/drupal.field_ui',
       'field_ui/drupal.field_ui.manage_fields',
@@ -358,158 +388,8 @@ class FieldStorageAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state->getValues();
-    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-
-    $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
-    // Create a random string as the field name, so we can create a dummy entity
-    // in order to create the field storage settings. Inside the edit form,
-    // a new entity with the user inputted field name will get created
-    // that is saved.
-    // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
-    $field_name = '_' . substr(str_shuffle(md5(time())), 0, 10);
-    $field_values = [
-      'entity_type' => $this->entityTypeId,
-      'bundle' => $this->bundle,
-    ];
-    $default_options = [];
-
-    // Check if we're dealing with a preconfigured field.
-    if (strpos($field_storage_type, 'field_ui:') === 0) {
-      [, $field_type, $preset_key] = explode(':', $field_storage_type, 3);
-      $default_options = $this->getNewFieldDefaults($field_type, $preset_key);
-    }
-    else {
-      $field_type = $field_storage_type;
-    }
-    $field_values += [
-      ...$default_options['field_config'] ?? [],
-      'field_name' => $field_name,
-      // Field translatability should be explicitly enabled by the users.
-      'translatable' => FALSE,
-    ];
-
-    $field_storage_values = [
-      ...$default_options['field_storage_config'] ?? [],
-      'field_name' => $field_name,
-      'type' => $field_type,
-      'entity_type' => $this->entityTypeId,
-      'translatable' => $values['translatable'],
-    ];
-
-    try {
-      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
-    }
-    catch (\Exception $e) {
-      $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
-      return;
-    }
-
-    // Save field and field storage values in tempstore.
-    $this->tempStore->set($this->entityTypeId . ':' . $field_name, [
-      'field_storage' => $field_storage_entity,
-      'field_config_values' => $field_values,
-      'default_options' => $default_options,
-    ]);
-
-    // Configure next steps in the multi-part form.
-    $destinations = [];
-    $route_parameters = [
-      'entity_type' => $this->entityTypeId,
-      'field_name' => $field_name,
-    ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-    $destinations[] = [
-      'route_name' => "field_ui.field_add_{$this->entityTypeId}",
-      'route_parameters' => $route_parameters,
-    ];
-    $destinations[] = [
-      'route_name' => "entity.{$this->entityTypeId}.field_ui_fields",
-      'route_parameters' => $route_parameters,
-    ];
-    $destination = $this->getDestinationArray();
-    $destinations[] = $destination['destination'];
-    $form_state->setRedirectUrl(
-      FieldUI::getNextDestination($destinations)
-    );
-
-    // Store new field information for any additional submit handlers.
-    $form_state->set(['fields_added', '_add_new_field'], $field_name);
-  }
-
-  /**
-   * Get default options from preconfigured options for a new field.
-   *
-   * @param string $field_name
-   *   The machine name of the field.
-   * @param string $preset_key
-   *   A key in the preconfigured options array for the field.
-   *
-   * @return array
-   *   An array of settings with keys 'field_storage_config', 'field_config',
-   *   'entity_form_display', and 'entity_view_display'.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   *
-   * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
-   */
-  protected function getNewFieldDefaults(string $field_name, string $preset_key): array {
-    $field_type_definition = $this->fieldTypePluginManager->getDefinition($field_name);
-    $options = $this->fieldTypePluginManager->getPreconfiguredOptions($field_type_definition['id']);
-    $field_options = $options[$preset_key] ?? [];
-
-    $default_options = [];
-    // Merge in preconfigured field storage options.
-    if (isset($field_options['field_storage_config'])) {
-      foreach (['cardinality', 'settings'] as $key) {
-        if (isset($field_options['field_storage_config'][$key])) {
-          $default_options['field_storage_config'][$key] = $field_options['field_storage_config'][$key];
-        }
-      }
-    }
-
-    // Merge in preconfigured field options.
-    if (isset($field_options['field_config'])) {
-      foreach (['required', 'settings'] as $key) {
-        if (isset($field_options['field_config'][$key])) {
-          $default_options['field_config'][$key] = $field_options['field_config'][$key];
-        }
-      }
-    }
-
-    // Preconfigured options only apply to the default display modes.
-    foreach (['entity_form_display', 'entity_view_display'] as $key) {
-      if (isset($field_options[$key])) {
-        $default_options[$key] = [
-          'default' => array_intersect_key($field_options[$key], ['type' => '', 'settings' => []]),
-        ];
-      }
-      else {
-        $default_options[$key] = ['default' => []];
-      }
-    }
-
-    return $default_options;
-  }
-
-  /**
-   * Checks if a field machine name is taken.
-   *
-   * @param string $value
-   *   The machine name, not prefixed.
-   * @param array $element
-   *   An array containing the structure of the 'field_name' element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return bool
-   *   Whether or not the field machine name is taken.
-   */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
-    // Add the field prefix.
-    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
-
-    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
-    return isset($field_storage_definitions[$field_name]);
+    // No-op since form is routed to the below controller.
+    // @see \Drupal\field_ui\Controller\FieldTempStoreController::setTempStore
   }
 
   /**
@@ -523,6 +403,13 @@ class FieldStorageAddForm extends FormBase {
    * Submit handler for displaying fields after a group is selected.
    */
   public static function showFieldsHandler($form, FormStateInterface &$form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Handler for updating the 'Continue' button with the updated route.
+   */
+  public static function updateLink($form, FormStateInterface &$form_state) {
     $form_state->setRebuild();
   }
 
