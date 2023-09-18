@@ -115,7 +115,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("field_ui.field_add_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/add-field/{entity_type}/{field_instance_id}/{field_storage_type}",
+          "$path/add-field/{entity_type}/{field_storage_type}/{field_instance_id}",
           [
             '_controller' => FieldTempStoreController::class . '::setTempStore',
             '_title' => 'Add field',

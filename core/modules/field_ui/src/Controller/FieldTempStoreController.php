@@ -57,7 +57,7 @@ final class FieldTempStoreController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The field instance edit form.
    */
-  public function setTempStore($entity_type, $field_instance_id, $field_storage_type, $bundle) {
+  public function setTempStore($entity_type, $field_storage_type, $field_instance_id, $bundle) {
     $temp_field_name = $field_instance_id;
     $field_values = [
       'entity_type' => $entity_type,
