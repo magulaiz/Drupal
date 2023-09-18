@@ -20,6 +20,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -589,18 +590,30 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         foreach ($all_fields as $field_name) {
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
-          $definition_columns = $storage_definition->getColumns();
-          $columns = $table_mapping->getColumnNames($field_name);
-          // Do not key single-column fields by property name.
-          if (count($columns) == 1) {
-            $column_name = reset($columns);
-            $column_attributes = $definition_columns[key($columns)];
-            $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+          // Try field item mapping.
+          if ($storage_definition instanceof StorageMapperInterface) {
+            $item_values = $storage_definition->mapColumnsOnLoad(
+              $this->mapColumnNamesOnLoad($field_name, $row)
+            );
+          }
+          if (isset($item_values)) {
+            $values[$id][$field_name][$langcode] = $item_values;
           }
           else {
-            foreach ($columns as $property_name => $column_name) {
-              $column_attributes = $definition_columns[$property_name];
-              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+            // Use fallback mapping.
+            $definition_columns = $storage_definition->getColumns();
+            $columns = $table_mapping->getColumnNames($field_name);
+            // Do not key single-column fields by property name.
+            if (count($columns) == 1) {
+              $column_name = reset($columns);
+              $column_attributes = $definition_columns[key($columns)];
+              $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+            }
+            else {
+              foreach ($columns as $property_name => $column_name) {
+                $column_attributes = $definition_columns[$property_name];
+                $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+              }
             }
           }
         }
@@ -1042,42 +1055,81 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (empty($this->fieldStorageDefinitions[$field_name])) {
         throw new EntityStorageException("Table mapping contains invalid field $field_name.");
       }
-      $definition = $this->fieldStorageDefinitions[$field_name];
-      $columns = $table_mapping->getColumnNames($field_name);
-
-      foreach ($columns as $column_name => $schema_name) {
-        // If there is no main property and only a single column, get all
-        // properties from the first field item and assume that they will be
-        // stored serialized.
-        // @todo Give field types more control over this behavior in
-        //   https://www.drupal.org/node/2232427.
-        if (!$definition->getMainPropertyName() && count($columns) == 1) {
-          $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
-        }
-        else {
-          $value = $entity->$field_name->$column_name ?? NULL;
-        }
-        if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
-          $value = serialize($value);
-        }
-
-        // Do not set serial fields if we do not have a value. This supports all
-        // SQL database drivers.
-        // @see https://www.drupal.org/node/2279395
-        $value = SqlContentEntityStorageSchema::castValue($definition->getSchema()['columns'][$column_name], $value);
-        $empty_serial = empty($value) && $this->isColumnSerial($table_name, $schema_name);
-        // The user entity is a very special case where the ID field is a serial
-        // but we need to insert a row with an ID of 0 to represent the
-        // anonymous user.
-        // @todo https://drupal.org/i/3222123 implement a generic fix for all
-        //   entity types.
-        $user_zero = $this->entityTypeId === 'user' && $value === 0;
-        if (!$empty_serial || $user_zero) {
-          $record->$schema_name = $value;
-        }
-      }
+      $record = $this->applyMapping(
+        $entity,
+        $field_name,
+        $table_mapping,
+        $table_name,
+        $record
+      );
     }
 
+    return $record;
+  }
+
+  /**
+   * Apply field storage mappings to the record to be stored.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   * @param string $field_name
+   *   Field name.
+   * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
+   *   Table mapping.
+   * @param string $table_name
+   *   Table name.
+   * @param object $record
+   *   Current storage record.
+   *
+   * @return object
+   *   Updated storage record. May or may not retain reference.
+   */
+  protected function applyMapping(ContentEntityInterface $entity, string $field_name, TableMappingInterface $table_mapping, string $table_name, \stdClass $record): \stdClass {
+    $definition = $this->fieldStorageDefinitions[$field_name];
+    // First try field item mapping.
+    if ($definition instanceof StorageMapperInterface) {
+      // Ensuring that __get returns a FieldItemList is crucial here.
+      $item_value = $entity->$field_name instanceof FieldItemListInterface
+      && ($item = $entity->$field_name->first()) ? $item->getValue() : [];
+      $maybe_mapped_columns = $this->mapColumnNamesOnSave(
+        $field_name,
+        $definition->mapColumnsOnSave($item_value)
+      );
+    }
+    if (isset($maybe_mapped_columns)) {
+      return (object) ($maybe_mapped_columns + (array) $record);
+    }
+    // Use fallback mapping.
+    $columns = $table_mapping->getColumnNames($field_name);
+    foreach ($columns as $column_name => $schema_name) {
+      // If there is no main property and only a single column, get all
+      // properties from the first field item and assume that they will be
+      // stored serialized.
+      if (!$definition->getMainPropertyName() && count($columns) == 1) {
+        $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
+      }
+      else {
+        $value = $entity->$field_name->$column_name ?? NULL;
+      }
+      if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
+        $value = serialize($value);
+      }
+
+      // Do not set serial fields if we do not have a value. This supports all
+      // SQL database drivers.
+      // @see https://www.drupal.org/node/2279395
+      $value = SqlContentEntityStorageSchema::castValue($definition->getSchema()['columns'][$column_name], $value);
+      $empty_serial = empty($value) && $this->isColumnSerial($table_name, $schema_name);
+      // The user entity is a very special case where the ID field is a serial
+      // but we need to insert a row with an ID of 0 to represent the
+      // anonymous user.
+      // @todo https://drupal.org/i/3222123 implement a generic fix for all
+      //   entity types.
+      $user_zero = $this->entityTypeId === 'user' && $value === 0;
+      if (!$empty_serial || $user_zero) {
+        $record->$schema_name = $value;
+      }
+    }
     return $record;
   }
 
@@ -1255,13 +1307,22 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // languages are skipped.
         if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
           if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
-            $item = [];
-            // For each column declared by the field, populate the item from the
-            // prefixed database column.
-            foreach ($storage_definition->getColumns() as $column => $attributes) {
-              $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
-              // Unserialize the value if specified in the column schema.
-              $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
+            // Try field item mapping.
+            if ($storage_definition instanceof StorageMapperInterface) {
+              $item = $storage_definition->mapColumnsOnLoad(
+                $this->mapColumnNamesOnLoad($field_name, (array) $row)
+              );
+            }
+            // Use fallback mapping.
+            if (!isset($item)) {
+              $item = [];
+              // For each column declared by the field, populate the item from the
+              // prefixed database column.
+              foreach ($storage_definition->getColumns() as $column => $attributes) {
+                $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
+                // Unserialize the value if specified in the column schema.
+                $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
+              }
             }
 
             // Add the item to the field values for the entity.
@@ -1362,14 +1423,28 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             'delta' => $delta,
             'langcode' => $langcode,
           ];
-          foreach ($storage_definition->getColumns() as $column => $attributes) {
-            $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
-            // Serialize the value if specified in the column schema.
-            $value = $item->$column;
-            if (!empty($attributes['serialize'])) {
-              $value = serialize($value);
+          // Try field item mapping.
+          if ($storage_definition instanceof StorageMapperInterface) {
+            $item_value = $item ? $item->getValue() : [];
+            $maybe_mapped_columns = $this->mapColumnNamesOnSave(
+              $field_name,
+              $storage_definition->mapColumnsOnSave($item_value)
+            );
+          }
+          if (isset($maybe_mapped_columns)) {
+            $record += $maybe_mapped_columns;
+          }
+          else {
+            // Use fallback mapping.
+            foreach ($storage_definition->getColumns() as $column => $attributes) {
+              $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
+              // Serialize the value if specified in the column schema.
+              $value = $item->$column;
+              if (!empty($attributes['serialize'])) {
+                $value = serialize($value);
+              }
+              $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
             }
-            $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
           }
           $query->values($record);
           if ($this->entityType->isRevisionable()) {
@@ -1784,6 +1859,53 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $count = $query->execute()->fetchField();
     }
     return $as_bool ? (bool) $count : (int) $count;
+  }
+
+  /**
+   * Map columns to properties on load.
+   *
+   * @param string $field_name
+   *   Field name.
+   * @param array $column_values
+   *   Column values.
+   *
+   * @return array
+   *   Array of values, keyed by property name.
+   */
+  protected function mapColumnNamesOnLoad(string $field_name, array $column_values): array {
+    $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
+    $propertyValues = [];
+    foreach ($column_values as $column => $value) {
+      if ($property = $columns_to_properties[$column] ?? NULL) {
+        $propertyValues[$property] = $value;
+      }
+    }
+    return $propertyValues;
+  }
+
+  /**
+   * Map properties to column values on save.
+   *
+   * @param string $field_name
+   *   Field name.
+   * @param array|null $property_values
+   *   Property values, or NULL.
+   *
+   * @return array|null
+   *   Values keyed by column, or NULL if nothing to save.
+   */
+  protected function mapColumnNamesOnSave(string $field_name, ?array $property_values): ?array {
+    if (!isset($property_values)) {
+      return NULL;
+    }
+    $properties_to_columns = $this->tableMapping->getColumnNames($field_name);
+    $columnValues = [];
+    foreach ($property_values as $property => $value) {
+      if ($column = $properties_to_columns[$property] ?? NULL) {
+        $columnValues[$column] = $value;
+      }
+    }
+    return $columnValues;
   }
 
 }
