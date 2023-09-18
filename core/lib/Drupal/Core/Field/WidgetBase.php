@@ -139,7 +139,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     // Allow modules to alter the field widget form element.
     $context = [
-      'form' => $form,
+      'form' => &$form,
       'widget' => $this,
       'items' => $items,
       'default' => $this->isDefaultValueWidget($form_state),
@@ -342,7 +342,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     if ($element) {
       // Allow modules to alter the field widget form element.
       $context = [
-        'form' => $form,
+        'form' => &$form,
         'widget' => $this,
         'items' => $items,
         'delta' => $delta,
