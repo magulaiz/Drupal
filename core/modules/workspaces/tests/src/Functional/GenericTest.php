@@ -9,4 +9,18 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  *
  * @group workspaces
  */
-class GenericTest extends GenericModuleTestBase {}
+class GenericTest extends GenericModuleTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function preUninstallSteps(): void {
+    $storage = \Drupal::entityTypeManager()->getStorage('workspace');
+    $result = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->execute();
+    $terms = $storage->loadMultiple($result);
+    $storage->delete($terms);
+  }
+
+}
