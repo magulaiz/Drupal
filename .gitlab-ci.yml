@@ -236,8 +236,7 @@ stages:
     paths:
       - core/node_modules/
   script:
-    # Installs all core javascript dependencies and adds formatters for stylelint and eslint.
-    - yarn --cwd ./core add stylelint-formatter-gitlab eslint-formatter-gitlab
+    - yarn --cwd ./core install
 
 ################
 # Lint Jobs
@@ -247,7 +246,6 @@ stages:
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    - composer require --dev micheh/phpcs-gitlab
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     reports:
