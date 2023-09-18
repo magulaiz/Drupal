@@ -135,8 +135,7 @@
           if (newRegion !== undefined) {
             rowObject.element.dataset.parentRegion = newRegion;
           }
-        }
-        catch (e) {
+        } catch (e) {
           // Empty.
         }
       }
@@ -259,6 +258,7 @@
           else {
             regionMessage.after(row);
           }
+          updateParentRegionName(tableDrag.rowObject);
           updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, tableDrag.rowObject);

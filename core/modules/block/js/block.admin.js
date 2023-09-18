@@ -136,7 +136,7 @@
    *   Attaches the behavior for the block filtering on block layout page.
    */
   Drupal.behaviors.blockFilterRegionText = {
-    attach() {
+    attach(context) {
       const hasBlockVisibleOnRegion = (regionName) => {
         const blocks = document.querySelectorAll(
           `tr[data-parent-region="${regionName}"]`,
@@ -147,7 +147,7 @@
         );
       };
 
-      const filterCallback = (e) => {
+      const filterCallback = (query) => {
         const table = document.getElementById('blocks');
         const listItems = table.querySelectorAll('tbody tr.draggable');
 
@@ -162,8 +162,6 @@
         if (emptyMessage) {
           emptyMessage.remove();
         }
-
-        const query = e.target.value.toLowerCase();
 
         listItems.forEach((tr) => {
           try {
@@ -228,15 +226,28 @@
         'block-filter-region-text',
         '[data-drupal-selector="edit-search-blocks"]',
       );
-      if ($inputFilter) {
+      if ($inputFilter.length > 0) {
         const inputFilterElement = $inputFilter[0];
         if (inputFilterElement) {
           inputFilterElement.addEventListener(
             'keyup',
-            debounce(filterCallback, 200),
+            debounce((e) => filterCallback(e.target.value.toLowerCase()), 200),
           );
           inputFilterElement.addEventListener('keydown', preventEnter);
         }
+      }
+
+      // Do the filter after changing region by select field.
+      const $selectRegionChange = once(
+        'block-region-select-filter',
+        'select.block-region-select',
+      );
+      if ($selectRegionChange.length > 0) {
+        $selectRegionChange.forEach((selectElement) => {
+          selectElement.addEventListener('change', () =>
+            filterCallback($inputFilter[0].value),
+          );
+        });
       }
     },
   };
