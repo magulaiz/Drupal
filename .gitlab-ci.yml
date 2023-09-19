@@ -135,7 +135,6 @@ stages:
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
     - echo -e "$MODIFIED" | tr " " "\n"
     - echo "If this list contains more files than what you changed, then you need to rebase your branch."
-    - vendor/bin/phpcs --report-junit=junit.xml --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
     - vendor/bin/phpcs --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
 
 # Default job.
