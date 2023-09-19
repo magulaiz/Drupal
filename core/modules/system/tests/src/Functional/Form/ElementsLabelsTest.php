@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests form element labels, required markers and associated output.
  *
  * @group Form
+ * @group #slow
  */
 class ElementsLabelsTest extends BrowserTestBase {
 
