@@ -200,6 +200,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     $autocomplete_field = $balloon->find('css', '.ck-input-text');
     $autocomplete_field->setValue('fo');
     $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
+    $assert_session->waitForElementVisible('css', '.ck-link-form .linkit-ui-autocomplete');
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
     $results[1]->click();
     $expected_url = 'entity:media/1';
