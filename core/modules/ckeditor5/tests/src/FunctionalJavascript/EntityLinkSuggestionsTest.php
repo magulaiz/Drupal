@@ -216,7 +216,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     $this->assertSame('#', $linkit_link->getAttribute('href'));
     $this->assertSame('media', $linkit_link->getAttribute('data-entity-type'));
     $this->assertSame(Media::load(1)->uuid(), $linkit_link->getAttribute('data-entity-uuid'));
-    $this->assertSame('true', $linkit_link->getAttribute('download'));
+    $this->assertSame('', $linkit_link->getAttribute('download'));
 
     // Open the edit link dialog by moving selection to the link, verifying the
     // "Link" button is off before and on after, and then pressing that button.
