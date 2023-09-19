@@ -1321,7 +1321,11 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
     foreach ($return as $field_name => $data) {
       foreach (array_keys($data) as $entity_type_id) {
         $field_storage_definitions = $entity_field_manager->getFieldStorageDefinitions($entity_type_id);
-        $current_field = $field_storage_definitions[$field_name];
+        $current_field = $field_storage_definitions[$field_name] ?? NULL;
+        if (!$current_field) {
+          // The field could be computed, not having a storage definition.
+          continue;
+        }
         if (($field_type && $current_field->getType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
           unset($return[$field_name][$entity_type_id]);
         }
