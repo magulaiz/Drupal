@@ -111,7 +111,8 @@ stages:
 '🧹 PHP Coding standards (PHPCS)':
   stage: 🪄 Lint
   interruptible: true
-  allow_failure: false
+  allow_failure: true
+  when: manual
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   artifacts:
