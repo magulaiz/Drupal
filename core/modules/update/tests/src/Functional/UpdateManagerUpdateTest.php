@@ -8,6 +8,7 @@ namespace Drupal\Tests\update\Functional;
  * @todo In https://www.drupal.org/project/drupal/issues/3117229 expand this.
  *
  * @group update
+ * @group #slow
  */
 class UpdateManagerUpdateTest extends UpdateTestBase {
   use UpdateTestTrait;
