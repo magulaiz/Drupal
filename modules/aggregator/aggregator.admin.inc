@@ -10,6 +10,8 @@
  */
 function aggregator_admin_overview() {
 
+  // Invalid PHP5.6
+  $a = func_num_args() ?? [];
   return aggregator_view();
 }
 
