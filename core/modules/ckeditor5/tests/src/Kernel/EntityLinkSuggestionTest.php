@@ -136,7 +136,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $node->save();
     $translation = $node->addTranslation('de', [
       'title' => 'Deutsch foo',
-    ])->setCreatedTime(time());
+    ])->setCreatedTime(1695058272);
     $translation->save();
   }
 
