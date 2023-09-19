@@ -121,7 +121,6 @@ stages:
     expire_in: 6 mos
     paths:
       - phpcs-quality-report.json
-      - phpcs-compatibility-report.json
     reports:
       codequality: phpcs-quality-report.json
   rules:
@@ -138,8 +137,7 @@ stages:
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
     - echo -e "$MODIFIED" | tr " " "\n"
     - echo "If this list contains more files than what you changed, then you need to rebase your branch."
-    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-compatibility-report.json --runtime-set testVersion $PHPCS_PHP_VERSION --standard=PHPCompatibility $MODIFIED
-    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
+    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=Drupal,PHPCompatibility --runtime-set testVersion $PHPCS_PHP_VERSION --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
 
 # Default job.
 'PHP 8.1 MySQL 5.7':
