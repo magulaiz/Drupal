@@ -128,7 +128,7 @@ stages:
     - <<: *run-on-mr
   before_script:
     - echo "{}" > composer.json
-    - composer config allow-plugins true -n
+    # - composer config allow-plugins true -n
     - composer require --dev drupal/coder:^8.2@stable micheh/phpcs-gitlab
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
   script:
