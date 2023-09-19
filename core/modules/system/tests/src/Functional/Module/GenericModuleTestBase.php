@@ -53,10 +53,8 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
       if ($module !== $connection->getProvider()) {
         // Check that the module can be uninstalled and then re-installed again.
         $this->preUnInstallSteps();
-        \Drupal::service('module_installer')->uninstall([$module]);
-        $this->assertFalse(\Drupal::moduleHandler()->moduleExists($module));
-        \Drupal::service('module_installer')->install([$module]);
-        $this->assertTrue(\Drupal::moduleHandler()->moduleExists($module));
+        $this->assertTrue(\Drupal::service('module_installer')->uninstall([$module]), "Failed to uninstall '$module' module");
+        $this->assertTrue(\Drupal::service('module_installer')->install([$module]), "Failed to install '$module' module");
       }
     }
   }
