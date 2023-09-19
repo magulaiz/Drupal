@@ -11,6 +11,7 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
  * Ensures that block type functions work correctly.
  *
  * @group block_content
+ * @group #slow
  */
 class BlockContentTypeTest extends BlockContentTestBase {
 
