@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Test the workflow type plugin in the content_moderation module.
  *
  * @group content_moderation
+ * @group #slow
  */
 class ContentModerationWorkflowTypeTest extends BrowserTestBase {
 
