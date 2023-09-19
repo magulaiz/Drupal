@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Tests development settings form items for expected behavior.
  *
  * @group Form
+ * @group #slow
  */
 class DevelopmentSettingsFormTest extends WebDriverTestBase {
 

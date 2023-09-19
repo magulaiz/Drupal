@@ -9,6 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests the UI for entity displays.
  *
  * @group field_ui
+ * @group #slow
  */
 class EntityDisplayTest extends WebDriverTestBase {
 
