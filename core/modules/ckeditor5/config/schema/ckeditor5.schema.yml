@@ -233,9 +233,12 @@ ckeditor5.plugin.ckeditor5_link_entity_suggestions:
             type: sequence
             label: 'Allowed bundles (if this entity type supports bundles)'
             nullable: true
+            constraints:
+              NotBlank:
+                allowNull: true
             sequence:
               type: string
               label: 'Allowed bundle'
               constraints:
-                # @todo validation constraint to verify this is one of the bundles on the entity type
+                # @todo Replace with `EntityBundleExists: '%parent.entity_type_id'` in https://www.drupal.org/project/drupal/issues/3382581
                 Regex: '/^[a-z0-9_]+$/'
