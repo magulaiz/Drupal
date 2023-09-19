@@ -60,7 +60,7 @@
     <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
     <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=''/>
     <!-- To disable the time limit checking for long running test comment the next line -->
-    <env name="DRUPAL_TEST_ENABLE_TIME_LIMIT" value="false"/>
+    <env name="DRUPAL_TEST_ENABLE_TIME_LIMIT" value="true"/>
   </php>
   <testsuites>
     <testsuite name="unit">
