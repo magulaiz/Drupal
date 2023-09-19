@@ -12,6 +12,11 @@ use Drupal\Tests\UnitTestCase;
 class GenericTestExistsTest extends UnitTestCase {
 
   /**
+   * Lists module that do not require a Generic test.
+   */
+  protected $modulesNoTest = ['help_topics'];
+
+  /**
    * Tests that the Generic module test exists for all modules.   */
   public function testGenericTestExists() {
     $base_directory = $this->root . '/core/modules';
@@ -21,9 +26,11 @@ class GenericTestExistsTest extends UnitTestCase {
     $actual = array_map(function ($dir) {
       return explode('/', $dir, 2)[0];
     }, $all_tests);
-    $diff = array_diff($modules, $actual);
+    $actual = array_merge($actual, $this->modulesNoTest);
+    sort($actual);
+    $missing_tests = array_diff($modules, $actual);
     // Use assertSame so the error output includes the diff array.
-    $this->assertSame([], $diff);
+    $this->assertSame([], $missing_tests);
   }
 
 }
