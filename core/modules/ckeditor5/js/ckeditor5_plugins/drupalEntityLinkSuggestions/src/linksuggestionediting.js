@@ -23,9 +23,17 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         view: (value, { writer }) => {
           const linkViewElement = writer.createAttributeElement(
             'a',
-            {
-              [attribute]: value,
-            },
+            // eslint-disable-next-line no-nested-ternary
+            attribute !== 'download'
+              ? {
+                  [attribute]: value,
+                }
+              : // Special case: the "download" attribute.
+              // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
+              // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
+              value === true
+              ? { download: '' }
+              : {},
             { priority: 5 },
           );
 
@@ -47,7 +55,13 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         },
         model: {
           key: attribute,
-          value: (viewElement) => viewElement.getAttribute(attribute),
+          // Special case: the "download" attribute.
+          // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
+          // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
+          value: (viewElement) =>
+            attribute !== 'download'
+              ? viewElement.getAttribute(attribute)
+              : viewElement.hasAttribute(attribute),
         },
       });
     });
