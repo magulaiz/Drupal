@@ -120,7 +120,6 @@ stages:
     paths:
       - junit.xml
     reports:
-      junit: junit.xml
       codequality: phpcs-quality-report.json
   rules:
     - <<: *run-on-commit
