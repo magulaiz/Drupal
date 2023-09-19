@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - entity_test
+    - entity_test_install
 id: authenticated
 label: 'Authenticated user'
 weight: 1
