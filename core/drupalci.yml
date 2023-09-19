@@ -1,11 +1,11 @@
 # This is the DrupalCI testbot build file for Drupal core.
 # Learn to make one for your own drupal.org project:
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
-# cspell:disable
 _phpunit_testgroups_to_execute: &testgroups
   # Default: all of Drupal core's test suite runs.
+  testgroups: '--all'
   # Alternative: run only the tests for one particular module.
-  testgroups: '--module package_manager'
+  # testgroups: '--module ckeditor5'
 build:
   assessment:
     testing:
