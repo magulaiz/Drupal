@@ -13,6 +13,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
  *
  * @group migrate_drupal_7
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 
