@@ -138,7 +138,8 @@ stages:
     - echo -e "$MODIFIED" | tr " " "\n"
     - echo "If this list contains more files than what you changed, then you need to rebase your branch."
     # - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=PHPCompatibility --runtime-set testVersion $PHPCS_PHP_VERSION --extensions=php,module,inc,install,test,profile,theme $MODIFIED
-    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=Drupal,PHPCompatibility --runtime-set testVersion $PHPCS_PHP_VERSION --config-set php_version $PHPCS_PHP_VERSION_ID --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
+    - vendor/bin/phpcs --config-set php_version $PHPCS_PHP_VERSION_ID
+    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=Drupal,PHPCompatibility --runtime-set testVersion $PHPCS_PHP_VERSION --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
 
 # Default job.
 'PHP 8.1 MySQL 5.7':
