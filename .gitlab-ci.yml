@@ -258,7 +258,7 @@ stages:
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    - sudo apt install time
+    - sudo apt update && sudo apt install time
     - /usr/bin/time -v composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     reports:
@@ -269,7 +269,7 @@ stages:
   stage: 🪄 Lint
   script:
     # Turn off apc to avoid corrupt composer cache.
-    - sudo apt install time
+    - sudo apt update && sudo apt install time
     - /usr/bin/time -v php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
   artifacts:
     reports:
@@ -281,7 +281,7 @@ stages:
   variables:
     STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
   script:
-    - sudo apt install time
+    - sudo apt update && sudo apt install time
     - /usr/bin/time -v yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
@@ -291,7 +291,7 @@ stages:
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    - sudo apt install time
+    - sudo apt update && sudo apt install time
     - /usr/bin/time -v yarn run --cwd=./core build:css --check
     - cd core && /usr/bin/time -v yarn run -s check:ckeditor5
 
@@ -301,7 +301,7 @@ stages:
   variables:
     ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
   script:
-    - sudo apt install time
+    - sudo apt update && sudo apt install time
     - /usr/bin/time -v yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
     reports:
