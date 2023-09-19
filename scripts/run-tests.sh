@@ -177,17 +177,11 @@ All arguments are long options.
 
   --ci-parallel-node-index
 
-              To be paired with --ci-parallel-node-total. This represent which
-              of the nodes available is being used to run the job. If there are
-              X nodes available, the index will go from 1 to X.
-              I will then split the total amount of tests between the total
-              number of nodes available to run the tests and it will only run
-              the chunk of tests that are matched to the node index.
+              The index of the job in the job set.
 
   --ci-parallel-node-total
 
-              To be paired with --ci-parallel-node-index. Number of nodes
-              available to run the tests in parallel. Defaults to 1.
+              The total number of instances of this job running in parallel.
 
   <test1>[,<test2>[,<test3> ...]]
 
