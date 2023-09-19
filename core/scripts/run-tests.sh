@@ -907,11 +907,19 @@ function simpletest_script_get_test_list() {
       echo (string) $e;
       exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
     }
+    if ((int) $args['ci-parallel-node-total'] > 1) {
+      if (key($groups) === '#slow') {
+        $slow_tests = array_keys(array_shift($groups));
+      }
+    }
     $all_tests = [];
     foreach ($groups as $group => $tests) {
       $all_tests = array_merge($all_tests, array_keys($tests));
     }
     $test_list = array_unique($all_tests);
+    if (isset($slow_tests)) {
+      $test_list = array_diff($test_list, $slow_tests);
+    }
   }
   else {
     if ($args['class']) {
@@ -1028,8 +1036,9 @@ function simpletest_script_get_test_list() {
   }
 
   if ((int) $args['ci-parallel-node-total'] > 1) {
+    $slow_tests_per_job = ceil(count($slow_tests) / $args['ci-parallel-node-total']);
     $tests_per_job = ceil(count($test_list) / $args['ci-parallel-node-total']);
-    $test_list = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
+    $test_list = array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job) +array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
   }
 
   return $test_list;
