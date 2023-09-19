@@ -92,7 +92,8 @@ trait TimeLimitListenerTrait {
    *   TRUE if the time limit check should be enabled, FALSE otherwise.
    */
   protected function timeLimitEnabled() {
-    return (bool) getenv('DRUPAL_TEST_ENABLE_TIME_LIMIT');
+    $enabled = getenv('DRUPAL_TEST_ENABLE_TIME_LIMIT');
+    return ($enabled === TRUE || $enabled === 1 || \strtolower($enabled) === 'true');
   }
 
 }
