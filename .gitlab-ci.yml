@@ -116,11 +116,12 @@ stages:
   allow_failure: true
   when: manual
   image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$PHPCS_PHP_VERSION-apache:production
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   artifacts:
     expire_in: 6 mos
     paths:
       - phpcs-quality-report.json
+      - phpcs-compatibility-report.json
     reports:
       codequality: phpcs-quality-report.json
   rules:
@@ -128,14 +129,16 @@ stages:
     - <<: *run-on-mr
   before_script:
     - echo "{}" > composer.json
-    # - composer config allow-plugins true -n
-    - composer require --dev drupal/coder:^8.2@stable micheh/phpcs-gitlab
+    - composer config allow-plugins true -n
+    - composer require --dev drupal/coder:^8.2@stable micheh/phpcs-gitlab phpcompatibility/php-compatibility dealerdirect/phpcodesniffer-composer-installer
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
+    - vendor/bin/phpcs -i
   script:
     - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
     - echo -e "$MODIFIED" | tr " " "\n"
     - echo "If this list contains more files than what you changed, then you need to rebase your branch."
+    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-compatibility-report.json --runtime-set testVersion $PHPCS_PHP_VERSION --standard=PHPCompatibility $MODIFIED
     - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml $MODIFIED
 
 # Default job.
