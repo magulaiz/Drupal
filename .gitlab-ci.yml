@@ -116,6 +116,8 @@ stages:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   artifacts:
     expire_in: 6 mos
+    paths:
+      - phpcs-quality-report.json
     reports:
       codequality: phpcs-quality-report.json
   rules:
