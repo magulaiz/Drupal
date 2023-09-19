@@ -15,6 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests for the administrative UI.
  *
  * @group entity_reference
+ * @group #slow
  */
 class EntityReferenceAdminTest extends WebDriverTestBase {
 
