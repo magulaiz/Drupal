@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Installer\InstallerTestBase;
  * Installs the config translation module on a site installed in non english.
  *
  * @group config_translation
+ * @group #slow
  */
 class ConfigTranslationInstallTest extends InstallerTestBase {
 
