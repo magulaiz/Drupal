@@ -138,7 +138,7 @@ stages:
     # Determine DB driver.
     - |
       [[ $_TARGET_DB == php* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
@@ -259,7 +259,7 @@ stages:
     # Determine DB driver.
     - |
       [[ $_TARGET_DB == php* ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
       [[ $_TARGET_DB == mariadb* ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - cp ./core/.env.example ./core/.env
