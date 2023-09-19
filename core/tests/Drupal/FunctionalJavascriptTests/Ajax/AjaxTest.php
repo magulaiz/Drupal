@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests AJAX responses.
  *
  * @group Ajax
+ * @group #slow
  */
 class AjaxTest extends WebDriverTestBase {
 

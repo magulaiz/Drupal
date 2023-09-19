@@ -14,6 +14,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Test access to private files in block fields on the Layout Builder.
  *
  * @group layout_builder
+ * @group #slow
  */
 class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
 

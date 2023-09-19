@@ -12,6 +12,7 @@ use Drupal\comment\Entity\CommentType;
  * Tests fields on comments.
  *
  * @group comment
+ * @group #slow
  */
 class CommentFieldsTest extends CommentTestBase {
 
