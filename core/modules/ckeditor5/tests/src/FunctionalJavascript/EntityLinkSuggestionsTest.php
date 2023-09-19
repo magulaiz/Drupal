@@ -8,9 +8,13 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
+use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
+use Drupal\Tests\TestFileCreationTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -22,12 +26,15 @@ use Symfony\Component\Validator\ConstraintViolation;
 class EntityLinkSuggestionsTest extends WebDriverTestBase {
 
   use CKEditor5TestTrait;
+  use MediaTypeCreationTrait;
+  use TestFileCreationTrait;
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'node',
+    'media',
     'ckeditor5',
   ];
 
@@ -95,6 +102,21 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
       'use text format test_format',
     ], 'Sofie');
 
+    // Create a document media item with "f" in the name.
+    $this->createMediaType('file', ['id' => 'document', 'label' => 'Document']);
+    File::create([
+      'uri' => $this->getTestFiles('text')[0]->uri,
+    ])->save();
+    Media::create([
+      'bundle' => 'document',
+      'name' => 'Information about screaming hairy armadillo',
+      'field_media_file' => [
+        [
+          'target_id' => 1,
+        ],
+      ],
+    ])->save();
+
     $this->drupalLogin($account);
   }
 
@@ -135,9 +157,10 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
-    $this->assertCount(2, $results);
+    $this->assertCount(3, $results);
     $this->assertSame('Foo', $results[0]->find('css', '.linkit-result-line--title')->getText());
-    $this->assertSame('Sofie', $results[1]->find('css', '.linkit-result-line--title')->getText());
+    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.linkit-result-line--title')->getText());
+    $this->assertSame('Sofie', $results[2]->find('css', '.linkit-result-line--title')->getText());
 
     // Make the search term longer to narrow down the results.
     $autocomplete_field->setValue('fo');
@@ -147,8 +170,9 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
-    $this->assertCount(1, $results);
+    $this->assertCount(2, $results);
     $this->assertSame('Foo', $results[0]->find('css', '.linkit-result-line--title')->getText());
+    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.linkit-result-line--title')->getText());
 
     // Find the first result and click it.
     $results[0]->click();
@@ -156,6 +180,8 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     // Make sure the link field is populated with the test entity's URL.
     $expected_url = 'entity:node/1';
     $this->assertSame($expected_url, $autocomplete_field->getValue());
+    // Nodes cannot be downloaded: the "Download link" toggle invisible.
+    $this->assertFalse($balloon->findButton('Download link')->isVisible());
     $balloon->pressButton('Save');
     $this->assertBalloonClosed();
 
@@ -165,6 +191,31 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     $this->assertSame('#', $linkit_link->getAttribute('href'));
     $this->assertSame('node', $linkit_link->getAttribute('data-entity-type'));
     $this->assertSame($entity->uuid(), $linkit_link->getAttribute('data-entity-uuid'));
+    $this->assertFalse($linkit_link->hasAttribute('download'));
+
+    // Let's change our mind: we want to use the second result instead.
+    $linkit_link->click();
+    $this->getBalloonButton('Edit link')->click();
+    $balloon = $this->assertVisibleBalloon('.ck-link-form');
+    $autocomplete_field = $balloon->find('css', '.ck-input-text');
+    $autocomplete_field->setValue('fo');
+    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
+    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $results[1]->click();
+    $expected_url = 'entity:media/1';
+    $this->assertSame($expected_url, $autocomplete_field->getValue());
+    // Media items can be downloaded: the "Download link" toggle is visible.
+    $this->assertTrue($balloon->findButton('Download link')->isVisible());
+    $balloon->pressButton('Save');
+    $this->assertBalloonClosed();
+
+    // Again make sure all attributes are populated.
+    $linkit_link = $assert_session->waitForElementVisible('css', '.ck-content a');
+    $this->assertNotNull($linkit_link);
+    $this->assertSame('#', $linkit_link->getAttribute('href'));
+    $this->assertSame('media', $linkit_link->getAttribute('data-entity-type'));
+    $this->assertSame(Media::load(1)->uuid(), $linkit_link->getAttribute('data-entity-uuid'));
+    $this->assertSame('true', $linkit_link->getAttribute('download'));
 
     // Open the edit link dialog by moving selection to the link, verifying the
     // "Link" button is off before and on after, and then pressing that button.
