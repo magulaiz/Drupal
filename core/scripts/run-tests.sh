@@ -898,6 +898,7 @@ function simpletest_script_get_test_list() {
   );
   $types_processed = empty($args['types']);
   $test_list = [];
+  $slow_tests = [];
   if ($args['all'] || $args['module']) {
     try {
       $groups = $test_discovery->getTestClasses($args['module'], $args['types']);
@@ -917,9 +918,7 @@ function simpletest_script_get_test_list() {
       $all_tests = array_merge($all_tests, array_keys($tests));
     }
     $test_list = array_unique($all_tests);
-    if (isset($slow_tests)) {
-      $test_list = array_diff($test_list, $slow_tests);
-    }
+    $test_list = array_diff($test_list, $slow_tests);
   }
   else {
     if ($args['class']) {
