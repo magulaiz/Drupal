@@ -9,7 +9,6 @@
  * Page callback: Displays the Aggregator module administration page.
  */
 function aggregator_admin_overview() {
-
   return aggregator_view();
 }
 
