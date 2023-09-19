@@ -54,7 +54,9 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
         // Check that the module can be uninstalled and then re-installed again.
         $this->preUnInstallSteps();
         \Drupal::service('module_installer')->uninstall([$module]);
+        $this->assertFalse(\Drupal::moduleHandler()->moduleExists($module));
         \Drupal::service('module_installer')->install([$module]);
+        $this->assertTrue(\Drupal::moduleHandler()->moduleExists($module));
       }
     }
   }
