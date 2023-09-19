@@ -227,21 +227,27 @@ stages:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - |
-      echo "ℹ️ Changes from ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
-      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only
+      echo "ℹ️ Changes from ${TARGET_BRANCH}"
+      git diff origin/${TARGET_BRANCH} --name-only
       echo "1️⃣ Reverting non test changes"
-      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
-        echo "↩️ Reverting $file";
-        git checkout origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} -- $file;
-      done
-      git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
-        echo "🗑️️ Deleting $file";
-        git rm $file;
-      done
+      if [ git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh]; then
+        git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+          echo "↩️ Reverting $file";
+          git checkout origin/${TARGET_BRANCH} -- $file;
+        done
+      fi
+      if [ git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh]; then
+        git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+          echo "🗑️️ Deleting $file";
+          git rm $file;
+        done
+      fi
       echo "2️⃣ Running test changes for this branch"
-      for test in `git diff origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --name-only|grep -E "Test.php$"`; do
-        sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
-      done;
+      if [ test in `git diff origin/${TARGET_BRANCH} --name-only|grep -E "Test.php$"`]; then
+        for test in `git diff origin/${TARGET_BRANCH} --name-only|grep -E "Test.php$"`; do
+          sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
+        done;
+      fi
 
 '⚙️️ PHPUnit Kernel':
   <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
