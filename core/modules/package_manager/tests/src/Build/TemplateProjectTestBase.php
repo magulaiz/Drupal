@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\Tests\package_manager\Build;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Composer\Composer;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager_test_event_logger\EventSubscriber\EventLogSubscriber;
@@ -312,19 +311,6 @@ END;
     // Now that we know the project was created successfully, we can set the
     // web root with confidence.
     $this->webRoot = 'project/' . $this->runComposer('composer config extra.drupal-scaffold.locations.web-root', 'project');
-    // List the info files that need to be made compatible with our fake version
-    // of Drupal core.
-    $info_files = [
-      'core/modules/package_manager/package_manager.info.yml',
-    ];
-    foreach ($info_files as $path) {
-      $path = $this->getWebRoot() . $path;
-      $this->assertFileIsWritable($path);
-      $info = file_get_contents($path);
-      $info = Yaml::decode($info);
-      $info['core_version_requirement'] .= ' || ^9.7';
-      file_put_contents($path, Yaml::encode($info));
-    }
 
     // Install Drupal.
     $this->installQuickStart('standard');
