@@ -82,7 +82,7 @@
   <listeners>
     <listener class="\Drupal\Tests\Listeners\DrupalListener">
       <arguments>
-        <double>60.0</double>
+        <double>45.0</double>
         <string>#slow</string>
       </arguments>
     </listener>
