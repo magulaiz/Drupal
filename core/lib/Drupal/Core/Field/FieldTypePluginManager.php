@@ -18,11 +18,6 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
 
-  /**
-   * Default category for field types.
-   */
-  const DEFAULT_CATEGORY = 'general';
-
   use CategorizingPluginManagerTrait {
     getGroupedDefinitions as protected getGroupedDefinitionsTrait;
   }
@@ -46,12 +41,18 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   The module handler.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
+   * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
+   *   The field type category plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
     $this->typedDataManager = $typed_data_manager;
+    if ($this->fieldTypeCategoryManager === NULL) {
+      @trigger_error('Calling FieldTypePluginManager::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375737', E_USER_DEPRECATED);
+      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
+    }
   }
 
   /**
@@ -101,11 +102,11 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
 
     if ($definition['category'] instanceof TranslatableMarkup) {
       @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3364271', E_USER_DEPRECATED);
-      $definition['category'] = static::DEFAULT_CATEGORY;
+      $definition['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
     }
     elseif (empty($definition['category'])) {
       // Ensure that every field type has a category.
-      $definition['category'] = static::DEFAULT_CATEGORY;
+      $definition['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
     }
   }
 
@@ -158,20 +159,45 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   }
 
   /**
-   * {@inheritdoc}
+   * Gets sorted field type definitions grouped by category.
+   *
+   * In addition to grouping, both categories and its entries are sorted,
+   * whereas plugin definitions are sorted by label.
+   *
+   * @param array[]|null $definitions
+   *   (optional) The plugin definitions to group. If omitted, all plugin
+   *   definitions are used.
+   * @param string $label_key
+   *   (optional) The array key to use as the label of the field type.
+   * @param string $category_label_key
+   *   (optional) The array key to use as the label of the category.
+   *
+   * @return array[]
+   *   Keys are category names, and values are arrays of which the keys are
+   *   plugin IDs and the values are plugin definitions.
    */
-  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
+  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label', $category_label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
-    $category_info = \Drupal::moduleHandler()->invokeAll('field_type_category_info');
+    $category_info = $this->fieldTypeCategoryManager->getDefinitions();
+
+    // Ensure that all the referenced categories exist.
     foreach ($grouped_categories as $group => $definitions) {
-      if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
-        assert(FALSE, "\"$group\" must be defined in hook_field_type_category_info().");
-        $grouped_categories[static::DEFAULT_CATEGORY] += $definitions;
+      if (!isset($category_info[$group])) {
+        assert(FALSE, "\"$group\" must be defined in MODULE_NAME.field_type_categories.yml");
+        if (!isset($grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
+          $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] = [];
+        }
+        $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] += $definitions;
         unset($grouped_categories[$group]);
       }
     }
 
-    return $grouped_categories;
+    $normalized_grouped_categories = [];
+    foreach ($grouped_categories as $group => $definitions) {
+      $normalized_grouped_categories[(string) $category_info[$group][$category_label_key]] = $definitions;
+    }
+
+    return $normalized_grouped_categories;
   }
 
   /**

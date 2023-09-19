@@ -59,7 +59,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
     $instance = $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme], $field_settings);
 
@@ -246,7 +246,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $test_image = current($this->drupalGetTestFiles('image'));
     [, $test_image_extension] = explode('.', $test_image->filename);
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_settings = [
       'alt_field' => 1,
       'file_extensions' => $test_image_extension,
@@ -337,7 +337,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage');
     $this->submitForm([
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ], 'Save field settings');
+    ], 'Save');
     $edit = [
       'files[' . $field_name . '_1][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
@@ -364,7 +364,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
     $instance = $this->createImageField($field_name, 'article', [], $field_settings);
 
@@ -480,7 +480,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Create a new image field.
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'article');
 
     // Create a new node, with no images and verify that no images are
@@ -504,7 +504,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][title]' => $title,
     ];
     $this->drupalGet("admin/structure/types/manage/article/fields/node.article.{$field_name}/storage");
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
@@ -560,7 +560,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Can't use fillField cause Mink can't fill hidden fields.
     $this->drupalGet("admin/structure/types/manage/article/fields/node.article.$field_name/storage");
     $this->getSession()->getPage()->find('css', 'input[name="settings[default_image][uuid][fids]"]')->setValue(0);
-    $this->getSession()->getPage()->pressButton('Save field settings');
+    $this->getSession()->getPage()->pressButton('Save');
 
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -569,7 +569,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertEmpty($default_image['uuid'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
-    $private_field_name = strtolower($this->randomMachineName());
+    $private_field_name = $this->randomMachineName();
     $this->createImageField($private_field_name, 'article', ['uri_scheme' => 'private']);
     // Add a default image to the new field.
     $edit = [
@@ -579,7 +579,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][title]' => $title,
     ];
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 

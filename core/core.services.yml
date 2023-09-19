@@ -468,7 +468,7 @@ services:
   Drupal\Core\Form\FormValidatorInterface: '@form_validator'
   form_submitter:
     class: Drupal\Core\Form\FormSubmitter
-    arguments: ['@request_stack', '@url_generator']
+    arguments: ['@request_stack', '@url_generator', '@redirect_response_subscriber']
   Drupal\Core\Form\FormSubmitterInterface: '@form_submitter'
   form_error_handler:
     class: Drupal\Core\Form\FormErrorHandler
@@ -779,8 +779,12 @@ services:
   Drupal\Core\Block\BlockManagerInterface: '@plugin.manager.block'
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager']
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager', '@plugin.manager.field.field_type_category']
   Drupal\Core\Field\FieldTypePluginManagerInterface: '@plugin.manager.field.field_type'
+  plugin.manager.field.field_type_category:
+    class: \Drupal\Core\Field\FieldTypeCategoryManager
+    arguments: [ '%app.root%', '@module_handler', '@cache.discovery' ]
+  Drupal\Core\Field\FieldTypeCategoryManagerInterface: '@plugin.manager.field.field_type_category'
   plugin.manager.field.widget:
     class: Drupal\Core\Field\WidgetPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@plugin.manager.field.field_type']
@@ -1656,6 +1660,7 @@ services:
       - { name: cache_clearer, priority: 80 }
   asset.js.optimizer:
     class: Drupal\Core\Asset\JsOptimizer
+    arguments: ['@logger.channel.default']
   asset.js.collection_grouper:
     class: Drupal\Core\Asset\JsCollectionGrouper
   asset.js.dumper:

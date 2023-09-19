@@ -15,6 +15,8 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 /**
  * Tests the content translation settings UI.
  *
+ * @covers \Drupal\language\Form\ContentLanguageSettingsForm
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationSettingsTest extends BrowserTestBase {
@@ -258,8 +260,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Make sure account settings can be saved.
     $this->drupalGet('admin/config/people/accounts');
-    $this->submitForm(['anonymous' => 'Save me please!'], 'Save configuration');
-    $this->assertSession()->fieldValueEquals('anonymous', 'Save me please!');
+    $this->submitForm(['anonymous' => 'Save me!'], 'Save configuration');
+    $this->assertSession()->fieldValueEquals('anonymous', 'Save me!');
     $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
   }
 
