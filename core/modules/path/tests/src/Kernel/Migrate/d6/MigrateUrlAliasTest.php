@@ -12,6 +12,7 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
  * URL alias migration.
  *
  * @group migrate_drupal_6
+ * @group #slow
  */
 class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
 

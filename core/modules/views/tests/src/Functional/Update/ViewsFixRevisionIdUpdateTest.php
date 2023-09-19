@@ -12,6 +12,7 @@ use Drupal\views\Entity\View;
  *
  * @group Update
  * @group legacy
+ * @group #slow
  */
 class ViewsFixRevisionIdUpdateTest extends UpdatePathTestBase {
 

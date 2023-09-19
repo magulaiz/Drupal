@@ -12,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 /**
  * Tests the Node Translation UI.
  *
+ * @group #slow
  * @group node
  */
 class NodeTranslationUITest extends ContentTranslationUITestBase {

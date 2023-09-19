@@ -20,6 +20,7 @@ use PHPUnit\Framework\AssertionFailedError;
  * https://www.drupal.org/project/drupal/issues/3074040
  *
  * @group help
+ * @group #slow
  */
 class HelpTopicsSyntaxTest extends BrowserTestBase {
 

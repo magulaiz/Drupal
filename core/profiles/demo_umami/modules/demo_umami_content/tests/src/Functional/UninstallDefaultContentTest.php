@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests that uninstalling default content removes created content.
  *
+ * @group #slow
  * @group demo_umami_content
  */
 class UninstallDefaultContentTest extends BrowserTestBase {

@@ -13,6 +13,7 @@ use Drupal\user\Entity\User;
  *
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
+ * @group #slow
  * @group migrate_drupal_ui
  */
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {

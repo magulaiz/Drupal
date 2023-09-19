@@ -13,6 +13,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
 class StyleTest extends CKEditor5TestBase {

@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\TableDrag\TableDragTest;
  * Tests draggable tables with Claro theme.
  *
  * @group claro
+ * @group #slow
  *
  * @see \Drupal\FunctionalJavascriptTests\TableDrag\TableDragTest
  */

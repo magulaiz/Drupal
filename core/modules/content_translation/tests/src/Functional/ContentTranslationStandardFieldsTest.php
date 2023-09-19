@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the Content translation settings using the standard profile.
  *
  * @group content_translation
+ * @group #slow
  */
 class ContentTranslationStandardFieldsTest extends BrowserTestBase {
 

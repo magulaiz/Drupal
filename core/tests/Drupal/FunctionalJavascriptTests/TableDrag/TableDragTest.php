@@ -10,6 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests draggable table.
  *
  * @group javascript
+ * @group #slow
  */
 class TableDragTest extends WebDriverTestBase {
 

@@ -15,6 +15,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests media library integration with content moderation.
  *
  * @group media_library
+ * @group #slow
  */
 class ContentModerationTest extends WebDriverTestBase {
 
