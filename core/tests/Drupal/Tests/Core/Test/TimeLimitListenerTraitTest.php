@@ -16,11 +16,12 @@ class TimeLimitListenerTraitTest extends UnitTestCase {
     return [
       [TRUE, 'TRUE'],
       [TRUE, 'true'],
+      [TRUE, 1],
+      [TRUE, "1"],
       [FALSE, 'false'],
       [FALSE, 'anything_other_than_true'],
       [FALSE, ''],
       [FALSE, 0],
-      [FALSE, 1],
       [FALSE, NULL],
     ];
   }
