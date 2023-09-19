@@ -241,7 +241,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
 
     $suggestions = [];
     foreach ($entities as $entity) {
-      $entity_translation = $entity->hasTranslation($host_entity_langcode) ? $entity->getTranslation($host_entity_langcode) : $entity;
+      $entity_translation = $entity->getEntityType()->isTranslatable() && $entity->hasTranslation($host_entity_langcode) ? $entity->getTranslation($host_entity_langcode) : $entity;
       if ($entity_translation->language()->getId() === $host_entity_langcode) {
         $suggestions[] = $this->createSuggestion($entity_translation);
       }
