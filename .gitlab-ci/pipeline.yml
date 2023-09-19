@@ -103,6 +103,7 @@ stages:
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://localhost:9515"]'
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
+  DRUPAL_TEST_ENABLE_TIME_LIMIT: "true"
 
 .with-database: &with-database
   name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
