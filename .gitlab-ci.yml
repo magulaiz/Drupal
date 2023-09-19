@@ -280,6 +280,10 @@ stages:
   stage: 🪄 Lint
   variables:
     STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_LIMIT: "2"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
+    KUBERNETES_MEMORY_LIMIT: "256Mi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
