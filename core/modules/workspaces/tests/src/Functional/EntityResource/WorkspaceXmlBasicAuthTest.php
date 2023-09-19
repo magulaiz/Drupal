@@ -9,6 +9,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
  * Test workspace entities for XML requests with cookie authentication.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceXmlBasicAuthTest extends WorkspaceResourceTestBase {
 

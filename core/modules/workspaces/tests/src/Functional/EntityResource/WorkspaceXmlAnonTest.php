@@ -9,6 +9,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
  * Test workspace entities for unauthenticated XML requests.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceXmlAnonTest extends WorkspaceResourceTestBase {
 

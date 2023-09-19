@@ -8,6 +8,7 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
  * Test workspace entities for unauthenticated JSON requests.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceJsonAnonTest extends WorkspaceResourceTestBase {
 
