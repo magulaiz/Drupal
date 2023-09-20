@@ -2,12 +2,9 @@
 
 namespace Drupal\field_ui\FormElement;
 
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\config_translation\FormElement\ListElement;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 
 /**
  * Adds translatable labels to entity_view_display elements.

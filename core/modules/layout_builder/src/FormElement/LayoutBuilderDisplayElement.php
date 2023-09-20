@@ -8,7 +8,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
- *
+ * Adds translatable labels to layout_builder elements.
  */
 class LayoutBuilderDisplayElement extends ListElement {
 
@@ -37,9 +37,7 @@ class LayoutBuilderDisplayElement extends ListElement {
     return $parent_build;
   }
 
-
-
-    /**
+  /**
    * Returns the layout builder form element names.
    *
    * @param array $parent_build
@@ -81,8 +79,7 @@ class LayoutBuilderDisplayElement extends ListElement {
     return $element_names;
   }
 
-
- /**
+  /**
    * Adds labels to the components.
    *
    * @param array $parent_build

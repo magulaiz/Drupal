@@ -2,8 +2,6 @@
 
 namespace Drupal\field_ui\FormElement;
 
-use Drupal\Component\Plugin\PluginBase;
-
 /**
  * Provides common functionality for entity display elements.
  */
