@@ -40,16 +40,10 @@ class EntityViewDisplayElement extends ListElement {
     $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
 
     $element_names = [];
-    $build_element_names = [];
-    if (!empty(LayoutBuilderEntityViewDisplayStorage::getSections($parent_build))) {
-      $build_element_names = $this->layoutBuilderGetElementNames($parent_build);
-      $build_element_names = array_fill_keys($build_element_names, TRUE);
-    }
     if (isset($parent_build['content'])) {
       $parent_build['content']['#collapsible'] = FALSE;
       $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
       $element_names = array_fill_keys($element_names, FALSE);
-      $element_names = array_merge($build_element_names, $element_names);
     }
 
     if (empty($element_names)) {
@@ -59,48 +53,6 @@ class EntityViewDisplayElement extends ListElement {
     $this->addLabels($parent_build, $element_names, $components, $target_type_id, $bundle_name);
 
     return $parent_build;
-  }
-
-  /**
-   * Returns the layout builder form element names.
-   *
-   * @param array $parent_build
-   *   Parent translation build data.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
-   */
-  public function layoutBuilderGetElementNames($parent_build): array {
-    // Configuration name will be also used as element name.
-    $element_names = [];
-    $entities = LayoutBuilderEntityViewDisplay::loadMultiple();
-    $element_name = $this->element->getName();
-    $entity = $entities[str_replace("core.entity_view_display.", "", $element_name)];
-    /** @var \Drupal\layout_builder\Section $section */
-    foreach ($entity->getSections() as $section_index => $section) {
-      $section_components = $section->getComponents();
-      if (empty($section_components)) {
-        continue;
-      }
-      foreach ($section_components as $component) {
-        if (!str_starts_with($component->getPluginId(), 'field_block:') && !str_starts_with($component->getPluginId(), 'extra_field_block:')) {
-          continue;
-        }
-        if (!isset($component->get('configuration')['formatter']['settings']) || empty($component->get('configuration')['formatter']['settings'])) {
-          continue;
-        }
-        if (!isset(LayoutBuilderEntityViewDisplayStorage::getSections($parent_build)[$section_index]['components'][$component->getUuid()]['configuration']['formatter']['settings'])) {
-          continue;
-        }
-        try {
-          [,,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component->getPluginId(), 4);
-        }
-        catch (\Exception) {
-          continue;
-        }
-        $element_names[] = $section_index . PluginBase::DERIVATIVE_SEPARATOR . $component->getUuid() . PluginBase::DERIVATIVE_SEPARATOR . $field_name;
-      }
-    }
-    return $element_names;
   }
 
 }

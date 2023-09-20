@@ -26,7 +26,6 @@ class LayoutBuilderDisplayElement extends ListElement {
     $parent_build = parent::getTranslationBuild($source_language, $translation_language,
       $source_config, $translation_config, $parents,
       $base_key);
-    $var = 1;
     if (!empty($parent_build['sections'])) {
       $build_element_names = $this->layoutBuilderGetElementNames($parent_build);
     }

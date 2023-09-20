@@ -40,14 +40,7 @@ trait EntityDisplayElementTrait {
 
     foreach ($element_names as $component_name => $layout_builder) {
       // Not considering the layout builder case.
-      if ($layout_builder) {
-        [$section_index, $component_id, $component_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_name, 3);
-        // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
-        $item = &$parent_build['third_party_settings']['layout_builder']['sections'][$section_index]['components'][$component_id]['configuration']['formatter'];
-      }
-      else {
-        $item = &$parent_build['content'][$component_name];
-      }
+      $item = &$parent_build['content'][$component_name];
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $definition */
       $definition = $field_definitions[$component_name] ?? NULL;
       if ($definition) {
@@ -63,7 +56,7 @@ trait EntityDisplayElementTrait {
           $item['#open'] = TRUE;
         }
 
-        $component_type = $layout_builder ? $field_type['id'] : $components[$component_name]['type'];
+        $component_type = $components[$component_name]['type'];
         if (isset($item['settings']['#open'])) {
           $item['settings']['#open'] = TRUE;
         }
