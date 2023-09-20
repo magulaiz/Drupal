@@ -33,12 +33,10 @@ class UpdateSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('update.settings');
-
     $form['update_check_frequency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
-      '#default_value' => $config->get('check.interval_days'),
+      '#config_target' => 'update.settings:check.interval_days',
       '#options' => [
         '1' => $this->t('Daily'),
         '7' => $this->t('Weekly'),
@@ -49,7 +47,7 @@ class UpdateSettingsForm extends ConfigFormBase {
     $form['update_check_disabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Check for updates of uninstalled modules and themes'),
-      '#default_value' => $config->get('check.disabled_extensions'),
+      '#config_target' => 'update.settings:check.disabled_extensions',
     ];
 
     $form['update_notify_emails'] = [
@@ -63,7 +61,7 @@ class UpdateSettingsForm extends ConfigFormBase {
     $form['update_notification_threshold'] = [
       '#type' => 'radios',
       '#title' => $this->t('Email notification threshold'),
-      '#default_value' => $config->get('notification.threshold'),
+      '#config_target' => 'update.settings:notification.threshold',
       '#options' => [
         'all' => $this->t('All newer versions'),
         'security' => $this->t('Only security updates'),
