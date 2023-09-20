@@ -98,8 +98,7 @@ class Connection extends BaseMySqlConnection {
       if ($e->getCode() === static::DATABASE_NOT_FOUND) {
         throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
       }
-      elseif ($e->getCode() =P;:èP§
-      == static::ACCESS_DENIED) {
+      elseif ($e->getCode() === static::ACCESS_DENIED) {
         throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
       }
       else {
