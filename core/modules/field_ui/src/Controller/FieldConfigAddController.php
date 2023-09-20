@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,6 +20,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 final class FieldConfigAddController extends ControllerBase {
   use AjaxHelperTrait;
+  /**
+   * The field type plugin manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected FieldTypePluginManagerInterface $fieldTypePluginManager;
 
   /**
    * FieldConfigAddController constructor.
@@ -28,7 +35,10 @@ final class FieldConfigAddController extends ControllerBase {
    */
   public function __construct(
     protected readonly PrivateTempStore $tempStore,
+    FieldTypePluginManagerInterface $field_type_plugin_manager,
+
   ) {
+    $this->fieldTypePluginManager = $field_type_plugin_manager;
   }
 
   /**
@@ -37,6 +47,7 @@ final class FieldConfigAddController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('tempstore.private')->get('field_ui'),
+      $container->get('plugin.manager.field.field_type'),
     );
   }
 
@@ -67,9 +78,12 @@ final class FieldConfigAddController extends ControllerBase {
       'default_options' => $temp_storage['default_options'],
     ]);
 
+    $field_type = $entity->getFieldStorageDefinition()->getType();
+    $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field_type]['label'];
+
     if ($this->isAjax()) {
       $response = new AjaxResponse();
-      $response->addCommand(new OpenModalDialogCommand('Field settings', $edit_form));
+      $response->addCommand(new OpenModalDialogCommand("New ${field_type_label} field settings", $edit_form));
     }
     else {
       $response = $edit_form;
