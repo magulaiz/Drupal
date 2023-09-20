@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests for the machine name field.
  *
  * @group field
+ * @group #slow
  */
 class MachineNameTest extends WebDriverTestBase {
 
