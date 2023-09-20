@@ -129,6 +129,6 @@ function user_update_last_removed() {
 /**
  * Add the configuration setting for password_type_reveal.
  */
-function user_update_9302() {
-  \Drupal::configFactory()->getEditable('user.settings')->set('password_type_reveal', FALSE)->save(TRUE);
+function user_update_10001() {
+  \Drupal::configFactory()->getEditable('user.settings')->set('password_type_reveal', TRUE)->save(TRUE);
 }
