@@ -2,17 +2,18 @@
 
 namespace Drupal\Core\Session;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
 /**
  * Default session handler.
  */
-class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
+class SessionHandler extends AbstractSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface {
 
   use DependencySerializationTrait;
 
@@ -30,6 +31,8 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    */
   protected $connection;
 
+  private TimeInterface $time;
+
   /**
    * Constructs a new SessionHandler instance.
    *
@@ -41,36 +44,41 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   public function __construct(RequestStack $request_stack, Connection $connection) {
     $this->requestStack = $request_stack;
     $this->connection = $connection;
+    $this->time = \Drupal::time();
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function open($save_path, $name) {
+  public function open(string $save_path, string $name): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function read($sid) {
-    $data = '';
-    if (!empty($sid)) {
-      // Read the session data from the database.
-      $query = $this->connection
-        ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
-      $data = (string) $query->fetchField();
+  public function close(): bool {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function doRead(string $sessionId): string {
+    if (empty($sessionId)) {
+      return '';
     }
-    return $data;
+    $query = $this->connection
+      ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [
+        ':sid' => Crypt::hashBase64($sessionId),
+      ]);
+    return (string) $query->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function write($sid, $value) {
+  protected function doWrite(string $sessionId, string $data): bool {
     // The exception handler is not active at this point, so we need to do it
     // manually.
     try {
@@ -78,11 +86,11 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       $fields = [
         'uid' => $request->getSession()->get('uid', 0),
         'hostname' => $request->getClientIP(),
-        'session' => $value,
-        'timestamp' => REQUEST_TIME,
+        'session' => $data,
+        'timestamp' => $this->time->getRequestTime(),
       ];
       $this->connection->merge('sessions')
-        ->keys(['sid' => Crypt::hashBase64($sid)])
+        ->keys(['sid' => Crypt::hashBase64($sessionId)])
         ->fields($fields)
         ->execute();
       return TRUE;
@@ -102,19 +110,17 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function close() {
-    return TRUE;
+  public function destroy(string $sessionId): bool {
+    return $this->doDestroy($sessionId);
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function destroy($sid) {
+  protected function doDestroy(string $sessionId): bool {
     // Delete session data.
     $this->connection->delete('sessions')
-      ->condition('sid', Crypt::hashBase64($sid))
+      ->condition('sid', Crypt::hashBase64($sessionId))
       ->execute();
 
     return TRUE;
@@ -131,8 +137,17 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // to '1814400'. At that value, only after a user doesn't log in after
     // three weeks (1814400 seconds) will their session be removed.
     $this->connection->delete('sessions')
-      ->condition('timestamp', REQUEST_TIME - $lifetime, '<')
+      ->condition('timestamp', $this->time->getRequestTime() - $lifetime, '<')
       ->execute();
+    return TRUE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function updateTimestamp($id, $data): bool {
+    // This seems to be correct per the documentation, but I'm not sure.
+    $this->write($id, $data);
     return TRUE;
   }
 
