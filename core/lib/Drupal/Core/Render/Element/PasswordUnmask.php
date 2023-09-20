@@ -53,6 +53,7 @@ class PasswordUnmask extends Password {
    */
   public static function processUnmask(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $element['#attached']['library'][] = 'core/drupal.password-unmask';
+    $element['#attached']['library'][] = 'user/drupal.user.css';
     $element['#attributes']['class'][] = 'password-field';
     $element['#attributes']['class'][] = 'js-password-field';
     $element['#attributes']['data-drupal-password-unmask'] = TRUE;
