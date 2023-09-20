@@ -24,6 +24,8 @@ class HtmlSerializerRules extends OutputRules {
    * {@inheritdoc}
    */
   protected function escape($text, $attribute = FALSE) {
+    $text = parent::escape($text, $attribute);
+
     if ($attribute) {
       $text = strtr($text, [
         '<' => '&lt;',
@@ -31,7 +33,7 @@ class HtmlSerializerRules extends OutputRules {
       ]);
     }
 
-    return parent::escape($text, $attribute);
+    return $text;
   }
 
 }
