@@ -195,7 +195,7 @@ class BlockFilterTest extends WebDriverTestBase {
 
     $blockToMove = $this->getSession()
       ->getPage()
-      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
+      ->find('css', 'tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
 
     $blockToMove->dragTo($sideBarSecondRegion);
     $this->assertEquals(
@@ -213,20 +213,41 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertEquals(
       'sidebar_first',
       $this->getSession()->getPage()->findField('edit-blocks-' . $fakeBlock1->id() . '-region')->getValue(),
-      "Drupal {$fakeBlock1->id()} should be positioned on right sidebar"
+      "Drupal {$fakeBlock1->id()} should be positioned on left sidebar"
     );
 
-    // Test filter applied after drag and drop items.
+    $this->moveBlock($fakeBlock1->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]');
+    $this->moveBlock($fakeBlock2->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted"]');
+    $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
     $inputFilter->setValue('label');
-    $this->moveBlock($fakeBlock1->id(), 'sidebar-second');
-    $this->moveBlock($fakeBlock2->id(), 'header', FALSE);
-    $this->moveBlock($fakeBlock3->id(), 'header');
-    // At this point the Region empty message must not exist.
-    $this->assertSession()->pageTextNotContains('No blocks in this region');
-    $this->moveBlock($fakeBlock2->id(), 'sidebar-second', FALSE);
-    $this->moveBlock($fakeBlock3->id(), 'sidebar-second');
-    // As the filter update the region header should not appear.
-    $this->assertSession()->elementNotExists('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-header"]');
+
+    $this->assertEquals(
+      'highlighted',
+      $this->getSession()
+        ->getPage()
+        ->findField('edit-blocks-' . $fakeBlock1->id() . '-region')
+        ->getValue()
+    );
+
+    $this->assertEquals(
+      'highlighted',
+      $this->getSession()
+        ->getPage()
+        ->findField('edit-blocks-' . $fakeBlock2->id() . '-region')
+        ->getValue()
+    );
+
+    $this->assertEquals(
+      'help',
+      $this->getSession()
+        ->getPage()
+        ->findField('edit-blocks-' . $fakeBlock3->id() . '-region')
+        ->getValue()
+    );
+
+    $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]');
+    $this->assertSession()->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
+    $this->assertFalse($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]')->isVisible());
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
@@ -264,35 +285,24 @@ class BlockFilterTest extends WebDriverTestBase {
    *
    * @param string $blockId
    *   The block to be moved.
-   * @param string $region
+   * @param string $dest
    *   The destination region.
-   * @param bool $dragging
-   *   The way to move the block, dragging by default. Otherwise, selecting.
    */
-  protected function moveBlock($blockId, $region, $dragging = TRUE): void {
-    if ($dragging) {
-      $locator = '#blocks tbody tr[data-drupal-selector="edit-blocks-region-' . $region . '"]';
-      $this->assertSession()->waitForElementVisible('css', $locator);
-      $destRegion = $this->getSession()
-        ->getPage()
-        ->find('css', $locator);
-      $this->assertNotEmpty($destRegion, 'Destination region ' . $locator . ' does not exists.');
-      $this->assertSession()->waitForElementVisible('css', '.test', 5 * 10000);
-      $dragRow = '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockId . '"] a.tabledrag-handle';
-      $blockToMove = $this->getSession()
-        ->getPage()
-        ->find('css', $dragRow);
-      $this->assertNotEmpty($blockToMove, 'Block id ' . $dragRow . ' does not exits');
-      $blockToMove->dragTo($destRegion);
-    }
-    else {
-      $fieldId = 'edit-blocks-' . $blockId . '-region';
-      $this->assertSession()->waitForField($fieldId);
-      $this->getSession()
-        ->getPage()
-        ->findField($fieldId)
-        ->setValue(str_replace('-', '_', $region));
-    }
+  protected function moveBlock(string $blockId, string $dest): void {
+    $this->assertSession()->waitForElementVisible('css', $dest);
+    $destRegion = $this->getSession()
+      ->getPage()
+      ->find('css', $dest);
+    $this->assertNotEmpty($destRegion, 'Destination region ' . $dest . ' does not exists.');
+
+    $dragRow = '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockId . '"] a.tabledrag-handle';
+    $blockToMove = $this->getSession()
+      ->getPage()
+      ->find('css', $dragRow);
+    $this->assertNotEmpty($blockToMove, 'Block id ' . $dragRow . ' does not exits');
+    $blockToMove->dragTo($destRegion);
+    $this->assertSession()
+      ->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-' . $blockId . '"][class~="drag-previous"]');
   }
 
 }

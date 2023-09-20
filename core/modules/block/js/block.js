@@ -127,16 +127,15 @@
        *
        * @param {Drupal.tableDrag.row} rowObject
        *   Row dropped to be updated.
+       * @param boolean onlyVisible
+       *   Flag to prevAll only visible regions.
        */
-      function updateParentRegionName(rowObject) {
-        try {
-          const $rowObject = $(rowObject.element);
-          const newRegion = $rowObject.prevAll('.region-title').data('region');
-          if (newRegion !== undefined) {
-            rowObject.element.dataset.parentRegion = newRegion;
-          }
-        } catch (e) {
-          // Empty.
+      function updateParentRegionName(rowObject, onlyVisible = true) {
+        const $rowObject = $(rowObject.element);
+        const regionSelector = `.region-title${onlyVisible ? ':visible' : ''}`;
+        const newRegion = $rowObject.prevAll(regionSelector).data('region');
+        if (newRegion !== undefined) {
+          rowObject.element.dataset.parentRegion = newRegion;
         }
       }
 
@@ -258,7 +257,7 @@
           else {
             regionMessage.after(row);
           }
-          updateParentRegionName(tableDrag.rowObject);
+          updateParentRegionName(tableDrag.rowObject, false);
           updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, tableDrag.rowObject);

@@ -147,7 +147,13 @@
         );
       };
 
-      const filterCallback = (query) => {
+      const filterCallback = (query = null) => {
+        if (query === null) {
+          query = document
+            .querySelector('[data-drupal-selector="edit-search-blocks"]')
+            .value.toLowerCase();
+        }
+
         const table = document.getElementById('blocks');
         const listItems = table.querySelectorAll('tbody tr.draggable');
 
@@ -194,14 +200,7 @@
           ) {
             showEmptyRegion = true;
           }
-
-          if (showEmptyRegion) {
-            regionEmptyMessage.classList.remove('region-populated');
-            regionEmptyMessage.classList.add('region-empty');
-          } else {
-            regionEmptyMessage.classList.add('region-populated');
-            regionEmptyMessage.classList.remove('region-empty');
-          }
+          regionEmptyMessage.style.display = showEmptyRegion ? '' : 'none';
         });
 
         const visibleItems = Array.from(listItems).filter(
@@ -248,6 +247,18 @@
             filterCallback($inputFilter[0].value),
           );
         });
+      }
+
+      // Extend block table drag event adding the filter callback.
+      if (
+        typeof Drupal.tableDrag !== 'undefined' &&
+        typeof Drupal.tableDrag.blocks !== 'undefined'
+      ) {
+        const tableDrag = { ...Drupal.tableDrag.blocks };
+        Drupal.tableDrag.blocks.onDrop = function () {
+          filterCallback();
+          tableDrag.onDrop();
+        };
       }
     },
   };
