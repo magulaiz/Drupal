@@ -7,7 +7,7 @@ drupal.user:
     - core/jquery
     - core/drupal
     - core/once
-    - user/drupal.user.css
+    - user/drupal.user-css
 
 drupal.user.admin:
   version: VERSION
@@ -35,7 +35,7 @@ drupal.user.icons:
     theme:
       css/user.icons.admin.css: {}
 
-drupal.user.css:
+drupal.user-css:
   css:
     component:
       css/user.module.css: {}
