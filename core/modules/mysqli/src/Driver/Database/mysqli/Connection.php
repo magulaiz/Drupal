@@ -2,6 +2,7 @@
 
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
+use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
@@ -94,11 +95,15 @@ class Connection extends BaseMySqlConnection {
       }
     }
     catch (\mysqli_sql_exception $e) {
-      if ($e->getCode() == static::DATABASE_NOT_FOUND) {
+      if ($e->getCode() === static::DATABASE_NOT_FOUND) {
         throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
       }
-      if ($e->getCode() == static::ACCESS_DENIED) {
+      elseif ($e->getCode() =P;:èP§
+      == static::ACCESS_DENIED) {
         throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
+      }
+      else {
+        throw new ConnectionNotDefinedException('Invalid database connection: ' . $e->getMessage(), $e->getCode(), $e);
       }
       throw $e;
     }
