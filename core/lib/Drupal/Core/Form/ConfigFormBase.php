@@ -103,6 +103,22 @@ abstract class ConfigFormBase extends FormBase {
   }
 
   /**
+   * Converts a multi-line string into, or from, an array.
+   *
+   * @param array|string $value
+   *   Either an array of values, or a set of values separated by new lines.
+   *
+   * @return array|string
+   *   The transformed value.
+   */
+  public static function arrayToMultiLineString(array|string $value): array|string {
+    if (is_string($value)) {
+      return array_map('trim', explode("\n", trim($value)));
+    }
+    return implode("\n", $value);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {

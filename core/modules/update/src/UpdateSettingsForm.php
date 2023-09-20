@@ -52,12 +52,11 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('check.disabled_extensions'),
     ];
 
-    $notification_emails = $config->get('notification.emails');
     $form['update_notify_emails'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
       '#rows' => 4,
-      '#default_value' => implode("\n", $notification_emails),
+      '#config_target' => ['update.settings:notification.emails', '::arrayToMultiLineString'],
       '#description' => $this->t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
 
@@ -91,7 +90,7 @@ class UpdateSettingsForm extends ConfigFormBase {
         $config
           ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
           ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
-          ->set('notification.emails', array_map('trim', explode("\n", trim($form_state->getValue('update_notify_emails', '')))))
+          ->set('notification.emails', static::arrayToMultiLineString($form_state->getValue('update_notify_emails', '')))
           ->set('notification.threshold', $form_state->getValue('update_notification_threshold'));
         break;
     }
