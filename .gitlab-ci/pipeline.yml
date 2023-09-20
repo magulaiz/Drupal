@@ -147,6 +147,8 @@ stages:
     # Need to pass this along directly.
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
+
   artifacts:
     paths:
        - ./statistics-$CI_JOB_NAME_SLUG.txt
@@ -194,6 +196,7 @@ stages:
     # Installs all core javascript dependencies and adds junit formatter.
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn --cwd ./core add stylelint-junit-formatter
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
 
 ################
 # Test Jobs
@@ -284,6 +287,7 @@ stages:
     - chown -R www-data:www-data ./sites/simpletest ./sites/default/files /var/www/.cache/yarn /var/www/.yarn ./nightwatch_output ./core/.env
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt sudo BABEL_DISABLE_CACHE=1 -u www-data yarn --cwd ./core test:nightwatch
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
   artifacts:
     when: always
     expire_in: 6 mos
