@@ -1015,6 +1015,12 @@ function user_form_process_password_unmask($element) {
 
   $element['#attached']['library'][] = 'user/drupal.user';
   $element['#attached']['drupalSettings']['password'] = $password_settings;
+  if(\Drupal::configFactory()->getEditable('user.settings')->get('password_type_reveal')) {
+    $element['#attached']['drupalSettings']['show_password_enabled'] = \Drupal::configFactory()
+      ->getEditable('user.settings')
+      ->get('password_type_reveal');
+  }
+
 
   return $element;
 }

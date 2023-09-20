@@ -3,7 +3,7 @@
  * User behaviors.
  */
 
-(($, Drupal) => {
+(($, Drupal, drupalSettings) => {
   /**
    * An object containing CSS classes used for password widget.
    *
@@ -72,6 +72,7 @@
           '.js-form-type-password-confirm',
         );
         const $confirmInput = $passwordWidget.find('input.js-password-confirm');
+        const showPasswordEnabled = drupalSettings.show_password_enabled;
         const $passwordConfirmMessage = $(
           Drupal.theme('passwordConfirmMessage', settings.password),
         );
@@ -142,17 +143,18 @@
          * Adds classes to the widget indicating if the elements are filled.
          */
         const addWidgetClasses = () => {
-          $passwordWidget
-            .addClass(
-              $mainInput[0].value
-                ? cssClasses.passwordFilled
-                : cssClasses.passwordEmpty,
-            )
-            .addClass(
+          $passwordWidget.addClass(
+            $mainInput[0].value
+              ? cssClasses.passwordFilled
+              : cssClasses.passwordEmpty,
+          );
+          if (!showPasswordEnabled) {
+            $passwordWidget.addClass(
               $confirmInput[0].value
                 ? cssClasses.confirmFilled
                 : cssClasses.confirmEmpty,
             );
+          }
         };
 
         /**
@@ -228,12 +230,14 @@
             password.$strengthTextWrapper.html(result.indicatorText);
           }
 
-          // Check the value in the confirm input and show results.
-          if ($confirmInput[0].value) {
-            passwordCheckMatch($confirmInput[0].value);
-            $passwordConfirmMessage[0].style.visibility = 'visible';
-          } else {
-            $passwordConfirmMessage[0].style.visibility = 'hidden';
+          if (!showPasswordEnabled) {
+            // Check the value in the confirm input and show results.
+            if ($confirmInput[0].value) {
+              passwordCheckMatch($confirmInput[0].value);
+              $passwordConfirmMessage[0].style.visibility = 'visible';
+            } else {
+              $passwordConfirmMessage[0].style.visibility = 'hidden';
+            }
           }
 
           if (widgetClassesToRemove) {
@@ -366,4 +370,4 @@
       messageTips,
     };
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, drupalSettings);
