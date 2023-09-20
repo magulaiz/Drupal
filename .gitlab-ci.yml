@@ -259,10 +259,10 @@ stages:
   stage: 🪄 Lint
   script:
     - sudo apt update && sudo apt install time
-    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-.txt composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     paths:
-       - ./statistics-$CI_JOB_NAME_SLUG-.txt
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: phpcs-quality-report.json
 
@@ -272,10 +272,10 @@ stages:
   script:
     # Turn off apc to avoid corrupt composer cache.
     - sudo apt update && sudo apt install time
-    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-.txt php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
   artifacts:
     paths:
-       - ./statistics-$CI_JOB_NAME_SLUG-.txt
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: phpstan-quality-report.json
 
@@ -290,10 +290,10 @@ stages:
     KUBERNETES_MEMORY_LIMIT: "256Mi"
   script:
     - sudo apt update && sudo apt install time
-    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-.txt yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     paths:
-       - ./statistics-$CI_JOB_NAME_SLUG-.txt
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: stylelint-quality-report.json
 
@@ -302,11 +302,11 @@ stages:
   stage: 🪄 Lint
   script:
     - sudo apt update && sudo apt install time
-    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-.txt yarn run --cwd=./core build:css --check
-    - cd core && /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-.txt yarn run -s check:ckeditor5
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn run --cwd=./core build:css --check
+    - cd core && /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn run -s check:ckeditor5
   artifacts:
     paths:
-       - ./statistics-$CI_JOB_NAME_SLUG-.txt
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
 
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
@@ -315,10 +315,10 @@ stages:
     ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
   script:
     - sudo apt update && sudo apt install time
-    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-.txt yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
     paths:
-       - ./statistics-$CI_JOB_NAME_SLUG-.txt
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: eslint-quality-report.json
 
