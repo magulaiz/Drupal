@@ -73,22 +73,31 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @param array $element
    *   The form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
    *
    * @return array
    *   The form element, with its default value populated.
    */
-  public function loadDefaultValuesFromConfig(array $element): array {
+  public function loadDefaultValuesFromConfig(array $element, FormStateInterface $form_state): array {
     if (!empty($element['#config_target']) && !array_key_exists('#default_value', $element)) {
-      $config_target = $element['#config_target'];
-      if (is_array($config_target)) {
-        $config_target = $config_target[0];
+      if (is_array($element['#config_target'])) {
+        [$config_target, $transformation] = $element['#config_target'];
+      }
+      else {
+        $config_target = $element['#config_target'];
       }
       [$config_name, $property] = explode(':', $config_target, 2);
-      $element['#default_value'] = $this->config($config_name)->get($property);
+      $value = $this->config($config_name)->get($property);
+      if (isset($transformation)) {
+        $transformation = $form_state->prepareCallback($transformation);
+        $value = $transformation($value);
+      }
+      $element['#default_value'] = $value;
     }
 
     foreach (Element::children($element) as $key) {
-      $element[$key] = $this->loadDefaultValuesFromConfig($element[$key]);
+      $element[$key] = $this->loadDefaultValuesFromConfig($element[$key], $form_state);
     }
     return $element;
   }
