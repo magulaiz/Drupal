@@ -103,7 +103,7 @@ class MediaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('iFrame domain'),
       '#size' => 40,
       '#maxlength' => 255,
-      '#default_value' => $domain,
+      '#config_target' => 'media.settings:iframe_domain',
       '#description' => $this->t('Enter a different domain from which to serve oEmbed content, including the <em>http://</em> or <em>https://</em> prefix. This domain needs to point back to this site, or existing oEmbed content may not display correctly, or at all.'),
     ];
 
@@ -111,7 +111,7 @@ class MediaSettingsForm extends ConfigFormBase {
       '#prefix' => '<hr>',
       '#type' => 'checkbox',
       '#title' => $this->t('Standalone media URL'),
-      '#default_value' => $this->config('media.settings')->get('standalone_url'),
+      '#config_target' => 'media.settings:standalone_url',
       '#description' => $this->t("Allow users to access @media-entities at /media/{id}.", ['@media-entities' => $this->entityTypeManager->getDefinition('media')->getPluralLabel()]),
     ];
     return parent::buildForm($form, $form_state);
