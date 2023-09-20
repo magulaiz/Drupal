@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\field_ui\Controller;
 
+use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @internal
  */
 final class FieldConfigAddController extends ControllerBase {
+  use AjaxHelperTrait;
 
   /**
    * FieldConfigAddController constructor.
@@ -24,7 +28,8 @@ final class FieldConfigAddController extends ControllerBase {
    */
   public function __construct(
     protected readonly PrivateTempStore $tempStore,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
@@ -43,7 +48,7 @@ final class FieldConfigAddController extends ControllerBase {
    * @param string $field_name
    *   The name of the field to create.
    *
-   * @return array
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   The field instance edit form.
    */
   public function fieldConfigAddConfigureForm(string $entity_type, string $field_name) {
@@ -58,10 +63,19 @@ final class FieldConfigAddController extends ControllerBase {
       'field_storage' => $temp_storage['field_storage'],
     ]);
 
-    $test = $this->entityFormBuilder()->getForm($entity, 'default', [
+    $edit_form = $this->entityFormBuilder()->getForm($entity, 'default', [
       'default_options' => $temp_storage['default_options'],
     ]);
-    return $test;
+
+    if ($this->isAjax()) {
+      $dialog_options['modal'] = TRUE;
+      $response = new AjaxResponse();
+      $response->addCommand(new OpenModalDialogCommand('Field settings', $edit_form, $dialog_options));
+    }
+    else {
+      $response = $edit_form;
+    }
+    return $response;
   }
 
 }

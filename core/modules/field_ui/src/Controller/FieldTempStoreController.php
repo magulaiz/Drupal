@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\field_ui\Controller;
 
+use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 final class FieldTempStoreController extends ControllerBase {
+  use AjaxHelperTrait;
   /**
    * The field type plugin manager.
    *
@@ -31,7 +33,7 @@ final class FieldTempStoreController extends ControllerBase {
    *   The field type plugin manager.
    */
   public function __construct(
-    protected ?PrivateTempStore $tempStore = NULL,
+    protected PrivateTempStore $tempStore,
     FieldTypePluginManagerInterface $field_type_plugin_manager,
   ) {
     $this->fieldTypePluginManager = $field_type_plugin_manager;
@@ -103,6 +105,9 @@ final class FieldTempStoreController extends ControllerBase {
       'field_name' => $temp_field_name,
       'node_type' => $bundle,
     ];
+    if ($this->isAjax()) {
+      return $this->redirectAsAjax("field_ui.field_add_{$entity_type}", $route_parameters);
+    }
     return $this->redirect("field_ui.field_add_{$entity_type}", $route_parameters);
   }
 
