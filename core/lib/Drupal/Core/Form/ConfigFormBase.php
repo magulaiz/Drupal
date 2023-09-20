@@ -5,6 +5,7 @@ namespace Drupal\Core\Form;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -60,7 +61,36 @@ abstract class ConfigFormBase extends FormBase {
     // By default, render the form using system-config-form.html.twig.
     $form['#theme'] = 'system_config_form';
 
+    // Load default values from config into any element with a #config_target
+    // property.
+    $form['#process'][] = '::loadDefaultValuesFromConfig';
+
     return $form;
+  }
+
+  /**
+   * Process callback to recursively load default values from #config_target.
+   *
+   * @param array $element
+   *   The form element.
+   *
+   * @return array
+   *   The form element, with its default value populated.
+   */
+  public function loadDefaultValuesFromConfig(array $element): array {
+    if (!empty($element['#config_target']) && !array_key_exists('#default_value', $element)) {
+      $config_target = $element['#config_target'];
+      if (is_array($config_target)) {
+        $config_target = $config_target[0];
+      }
+      [$config_name, $property] = explode(':', $config_target, 2);
+      $element['#default_value'] = $this->config($config_name)->get($property);
+    }
+
+    foreach (Element::children($element) as $key) {
+      $element[$key] = $this->loadDefaultValuesFromConfig($element[$key]);
+    }
+    return $element;
   }
 
   /**
