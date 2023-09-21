@@ -119,6 +119,19 @@ abstract class ConfigFormBase extends FormBase {
   }
 
   /**
+   * Converts an empty string to NULL.
+   *
+   * @param string|null $value
+   *   The value to transform.
+   *
+   * @return string|null
+   *   The given string, or NULL if it was empty.
+   */
+  public static function nullIfEmptyString(?string $value): ?string {
+    return $value ?: NULL;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
