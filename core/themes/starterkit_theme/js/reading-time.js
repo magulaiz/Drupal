@@ -16,6 +16,12 @@
   // @see starterkit_theme_attachments() in starterkit_theme.theme.
   const wordsPerMinute = drupalSettings.starterkit_theme.wordsPerMinute || 300;
 
+  // Instanciate Drupal message command.
+  // Note that it is possible because we required the `core/drupal.message` library.
+  // @see core/themes/starterkit_theme/starterkit_theme.libraries.yml
+  // @see https://www.drupal.org/docs/drupal-apis/javascript-api/messages-api
+  const messages = new Drupal.Message();
+
   /**
    * Calculate how many minutes it will take to read the piece of content.
    *
@@ -62,7 +68,7 @@
       // We use `once()` from core to avoid processing the content multiple time.
       once(onceName, elementSelector, context).forEach((element) => {
         const time = readingTime(element, wordsPerMinute);
-        console.log(
+        messages.add(
           Drupal.t('This page will take you @minutes to read', {
             '@minutes': Drupal.formatPlural(time, '1·minute', '@count·minutes'),
           }),

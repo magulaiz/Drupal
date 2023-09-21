@@ -110,5 +110,6 @@ reading-time:
     js/reading-time.js: {}
   dependencies:
     - core/drupal
+    - core/drupal.message
     - core/drupalSettings
     - core/once
