@@ -21,7 +21,7 @@ class GenericTestExistsTest extends UnitTestCase {
 
   /**
    * Tests that the Generic module test exists for all modules.
-   * 
+   *
    * @dataProvider coreModuleListDataProvider
    */
   public function testGenericTestExists(string $module_name): void {
