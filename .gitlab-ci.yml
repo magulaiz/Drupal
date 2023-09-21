@@ -278,7 +278,6 @@ stages:
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    - export STYLELINT_CODE_QUALITY_REPORT=../stylelint-quality-report.json
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
@@ -295,7 +294,6 @@ stages:
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    - export ESLINT_CODE_QUALITY_REPORT=../eslint-quality-report.json
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
     reports:
