@@ -94,4 +94,53 @@ class UserSubAdminTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('Delete the account and its content. This action cannot be undone.');
   }
 
+  /**
+   * Cover user cancellation validations.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCancelAccountValidations() {
+    $admin_user = $this->drupalCreateUser([
+      'administer users',
+      'administer account settings',
+    ]);
+
+    // Check validation user cancellation method cannot be a disabled option.
+    $config = $this->config('user.settings');
+    $config->set('cancel_method_options.user_cancel_block', TRUE);
+    $config->set('cancel_method_options.user_cancel_block_unpublish', TRUE);
+    $config->set('cancel_method_options.user_cancel_reassign', FALSE);
+    $config->set('cancel_method_options.user_cancel_delete', FALSE);
+    $config->set('cancel_method', 'user_cancel_block');
+    $config->save();
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('admin/config/people/accounts');
+    $container = current($this->getSession()->getDriver()->find('.//fieldset[@id="edit-user-cancel-method-options--wrapper"]'));
+    $this->getSession()->getDriver()->uncheck('.//input[@name="user_cancel_method_options[user_cancel_block]"]');
+    $this->assertSession()->checkboxNotChecked('Disable the account and keep its content.', $container);
+    $this->assertSession()->checkboxChecked('Disable the account and unpublish its content.', $container);
+    $this->assertSession()->checkboxNotChecked('Delete the account and make its content belong to the', $container);
+    $this->assertSession()->checkboxNotChecked('Delete the account and its content. This action cannot be undone.', $container);
+    $this->submitForm([], 'Save configuration');
+    $this->assertSession()->responseContains('The default user cancellation method cannot be a disabled option.');
+
+    // Check validation:
+    // At least one user cancellation option should be enabled.
+    $container = current($this->getSession()->getDriver()->find('.//fieldset[@id="edit-user-cancel-method-options--wrapper"]'));
+    $this->getSession()->getDriver()->uncheck('.//input[@name="user_cancel_method_options[user_cancel_block_unpublish]"]');
+    $this->assertSession()->checkboxNotChecked('Disable the account and keep its content.', $container);
+    $this->assertSession()->checkboxNotChecked('Disable the account and unpublish its content.', $container);
+    $this->assertSession()->checkboxNotChecked('Delete the account and make its content belong to the', $container);
+    $this->assertSession()->checkboxNotChecked('Delete the account and its content. This action cannot be undone.', $container);
+    $this->submitForm([], 'Save configuration');
+    $this->assertSession()->responseContains('At least one user cancellation option should be enabled.');
+
+    $this->getSession()->getDriver()->check('.//input[@name="user_cancel_method_options[user_cancel_block]"]');
+    $this->getSession()->getDriver()->check('.//input[@name="user_cancel_method_options[user_cancel_block_unpublish]"]');
+    $this->submitForm([], 'Save configuration');
+    $this->assertSession()->responseContains('The configuration options have been saved.');
+  }
+
 }
