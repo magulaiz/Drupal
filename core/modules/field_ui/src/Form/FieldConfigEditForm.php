@@ -151,6 +151,7 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
+    // @todo Change this.
     $form_title = $this->t('Field settings for %bundle', [
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
@@ -158,7 +159,7 @@ class FieldConfigEditForm extends EntityForm {
 
     if ($field_storage->isLocked()) {
       $form['locked'] = [
-        '#markup' => $this->t('The field is locked and cannot be edited.')
+        '#markup' => $this->t('The field is locked and cannot be edited.'),
       ];
       return $form;
     }
@@ -431,7 +432,7 @@ class FieldConfigEditForm extends EntityForm {
       'label' => $values['label'],
       // Field translatability should be explicitly enabled by the users.
       'translatable' => FALSE,
-      'entity_type' =>  $this->entity->getTargetEntityTypeId(),
+      'entity_type' => $this->entity->getTargetEntityTypeId(),
       'bundle' => $this->entity->getTargetBundle(),
     ];
     $field_storage_values = [
