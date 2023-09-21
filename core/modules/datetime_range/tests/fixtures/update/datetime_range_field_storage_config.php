@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains database additions to drupal-9.4.0.bare.standard.php.gz for testing the
- * upgrade path datetime_range_post_update_add_optional_end_date().
+ * Contains database additions for testing the upgrade path datetime_range_post_update_add_optional_end_date().
  */
 
 use Drupal\Core\Database\Database;

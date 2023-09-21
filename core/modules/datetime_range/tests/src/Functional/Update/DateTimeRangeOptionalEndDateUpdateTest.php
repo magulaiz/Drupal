@@ -11,7 +11,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group legacy
  * @covers \datetime_range_post_update_add_optional_end_date
  */
-class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase{
+class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
