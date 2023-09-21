@@ -17,6 +17,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field_ui\FieldUI;
 
@@ -221,31 +222,38 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $form['fields'] = $table;
 
     // Custom display settings.
-    if ($this->entity->getMode() == 'default') {
-      // Only show the settings if there is at least one custom display mode.
-      $display_mode_options = $this->getDisplayModeOptions();
-      // Unset default option.
-      unset($display_mode_options['default']);
-      if ($display_mode_options) {
-        $form['modes'] = [
-          '#type' => 'details',
-          '#title' => $this->t('Custom display settings'),
-        ];
-        // Prepare default values for the 'Custom display settings' checkboxes.
-        $default = [];
-        if ($enabled_displays = array_filter($this->getDisplayStatuses())) {
-          $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
-        }
-        natcasesort($display_mode_options);
-        $form['modes']['display_modes_custom'] = [
-          '#type' => 'checkboxes',
-          '#title' => $this->t('Use custom display settings for the following @display_context modes', ['@display_context' => $this->displayContext]),
-          '#options' => $display_mode_options,
-          '#default_value' => $default,
-        ];
-        // Provide link to manage display modes.
-        $form['modes']['display_modes_link'] = $this->getDisplayModesLink();
+    $display_mode_options = $this->getDisplayModeOptions();
+    // Unset default option.
+    unset($display_mode_options['default']);
+
+    if ($this->entity->getEntityTypeId() == 'entity_form_display' || $this->entity->getEntityTypeId() == 'entity_view_display') {
+      $form['modes'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Enable more display modes'),
+      ];
+      // Prepare default values for the 'Custom display settings' checkboxes.
+      $default = [];
+      if ($enabled_displays = array_filter($this->getDisplayStatuses())) {
+        $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
       }
+      natcasesort($display_mode_options);
+      $form['modes']['display_modes_custom'] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Use custom display settings for the following modes'),
+        '#options' => $display_mode_options,
+        '#default_value' => $default,
+      ];
+      // Add a link to create a new display mode.
+      if ($this->entity->getEntityTypeId() == 'entity_form_display') {
+        $route_label = $this->t('Add new form mode');
+        $route_name = 'entity.entity_form_mode.collection';
+      } else if ($this->entity->getEntityTypeId() == 'entity_view_display') {
+        $route_name = 'entity.entity_view_mode.collection';
+        $route_label = $this->t('Add new view mode');
+      }
+
+      $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
+      $form['modes']['add_new_display_mode'] = Link::createFromRoute($route_label, $route_name, $route_arguments)->toRenderable();
     }
 
     // In overviews involving nested rows from contributed modules (i.e
