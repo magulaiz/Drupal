@@ -470,8 +470,7 @@ class MediaTest extends WebDriverTestBase {
       ->save();
 
     // Allow the test user to view the admin theme.
-    $this->adminUser->addRole($this->drupalCreateRole(['view the administration theme']));
-    $this->adminUser->save();
+    $this->adminUser->addRole($this->drupalCreateRole(['view the administration theme']))->save();
 
     // Configure a different default and admin theme, like on most Drupal sites.
     $this->config('system.theme')

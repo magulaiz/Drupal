@@ -38,9 +38,7 @@ class HandlerFieldRoleTest extends UserTestBase {
 
     // Add roles to user 1.
     $user = User::load(1);
-    $user->addRole($rolename_a);
-    $user->addRole($rolename_b);
-    $user->save();
+    $user->addRole($rolename_a)->addRole($rolename_b)->save();
 
     $this->drupalLogin($this->createUser(['access user profiles']));
     $this->drupalGet('/test-views-handler-field-role');
