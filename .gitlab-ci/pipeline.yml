@@ -213,6 +213,8 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
@@ -222,6 +224,8 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
   services:
     - <<: *with-database
 
@@ -232,6 +236,8 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "12"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
   services:
     - <<: *with-database
 
@@ -242,6 +248,8 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
+    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -253,6 +261,8 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
   services:
     - <<: *with-database
 
@@ -261,6 +271,8 @@ stages:
   stage: 🗜️ Test
   variables:
     <<: *test-variables
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
   services:
     - <<: *with-database
     - <<: *with-chrome

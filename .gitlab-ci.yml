@@ -260,6 +260,10 @@ stages:
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-job-variables-lint
+    KUBERNETES_CPU_REQUEST: "4"
+    KUBERNETES_MEMORY_REQUEST: "128Mi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
@@ -273,6 +277,10 @@ stages:
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-job-variables-lint
+    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
   script:
     # Turn off apc to avoid corrupt composer cache.
     - sudo apt update && sudo apt install time
@@ -305,6 +313,10 @@ stages:
 '🧹 Compilation check':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-job-variables-lint
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-css.txt yarn run --cwd=./core build:css --check
@@ -321,6 +333,8 @@ stages:
   variables:
     <<: *default-job-variables-lint
     ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
+    KUBERNETES_CPU_REQUEST: "1500m"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn --cwd=./core run -s lint:core-js-passing --format gitlab
