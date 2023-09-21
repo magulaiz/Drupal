@@ -248,7 +248,7 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "12"
     KUBERNETES_MEMORY_REQUEST: "512Mi"
   services:
     - <<: *with-database
