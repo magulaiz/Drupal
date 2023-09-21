@@ -204,7 +204,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
+    CONCURRENCY: 12
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -212,7 +212,7 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 3
+  parallel: 4
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
