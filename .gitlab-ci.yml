@@ -46,7 +46,7 @@ variables:
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   KUBERNETES_CPU_REQUEST: "30"
-  CONCURRENCY: 24
+  CONCURRENCY: 16
   GIT_DEPTH: "3"
 
 
