@@ -247,7 +247,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
       if ($this->entity->getEntityTypeId() == 'entity_form_display') {
         $route_label = $this->t('Add new form mode');
         $route_name = 'entity.entity_form_mode.collection';
-      } else if ($this->entity->getEntityTypeId() == 'entity_view_display') {
+      }
+      elseif ($this->entity->getEntityTypeId() == 'entity_view_display') {
         $route_name = 'entity.entity_view_mode.collection';
         $route_label = $this->t('Add new view mode');
       }
