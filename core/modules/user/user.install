@@ -108,7 +108,7 @@ function user_requirements($phase) {
   if (empty($cancel_methods_options)) {
 
     // If the user cancellation options are not configured
-    // it will show all of them, so its not critical.
+    // it will show all of them, so it's not critical.
     $requirements['user_cancel_methods'] = [
       'title' => t('User cancellation methods'),
       'severity' => REQUIREMENT_WARNING,
