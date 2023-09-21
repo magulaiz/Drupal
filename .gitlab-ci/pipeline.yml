@@ -189,7 +189,7 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 8
+  parallel: 9
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
@@ -212,7 +212,7 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 2
+  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
