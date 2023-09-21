@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -394,6 +395,27 @@ class FieldConfigEditForm extends EntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save settings');
+    $entity_type = $this->entity->getTargetEntityTypeId();
+    $temp_field_name = $this->entity->get('field_name');
+    $route_parameters = [
+      'entity_type' => $entity_type,
+      'field_name' => $temp_field_name,
+      'node_type' => $this->entity->getTargetBundle(),
+    ];
+    $actions['back'] = [
+      '#type' => 'link',
+      '#weight' => 1,
+      '#title' => $this->t('Back'),
+      '#limit_validation_errors' => [],
+      '#attributes' => [
+        'class' => ['button', 'use-ajax'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode([
+          'width' => '85vw',
+        ]),
+      ],
+      '#url' => Url::fromRoute("field_ui.field_reset_$entity_type", $route_parameters),
+    ];
 
     if (!$this->entity->isNew()) {
       $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
@@ -429,6 +451,8 @@ class FieldConfigEditForm extends EntityForm {
     $entity_type = $this->entity->getTargetEntityTypeId();
     $temp_field_name = $this->entity->get('field_name');
     $temp_store = $this->tempStore->get($entity_type . ':' . $temp_field_name);
+    // @todo: Move default options function here.
+    // @todo: Move field creation out to another function.
     $default_options = $temp_store['default_options'];
 
     $this->validateAddNew($form, $form_state);
@@ -553,14 +577,14 @@ class FieldConfigEditForm extends EntityForm {
     }
     catch (\Exception $e) {
       $this->messenger()->addStatus(
-      $this->t(
-        'Attempt to update field %label failed: %message.',
-        [
-          '%label' => $this->entity->getLabel(),
-          '%message' => $e->getMessage(),
-        ]
-      )
-      );
+        $this->t(
+          'Attempt to update field %label failed: %message.',
+          [
+            '%label' => $this->entity->getLabel(),
+            '%message' => $e->getMessage(),
+          ]
+        )
+          );
     }
   }
 

@@ -7,6 +7,7 @@ use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\field_ui\Controller\FieldConfigAddController;
 use Drupal\field_ui\Controller\FieldTempStoreController;
+use Drupal\field_ui\Controller\FieldTempStoreDeleteController;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -102,6 +103,17 @@ class RouteSubscriber extends RouteSubscriberBase {
           $options
         );
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
+
+        $route = new Route(
+          "$path/reset/{entity_type}/{field_name}",
+          [
+            '_controller' => FieldTempStoreDeleteController::class . '::deleteTempStore',
+            '_title' => 'Add field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_reset_$entity_type_id", $route);
 
         $route = new Route(
           "$path/add-field/{entity_type}/{field_name}",

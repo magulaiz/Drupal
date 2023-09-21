@@ -254,6 +254,7 @@ class FieldStorageAddForm extends FormBase {
       ],
       '#submit' => [[static::class, 'rebuildForm']],
     ];
+    // @todo: Maybe rename this since the 'Continue' button lives here now.
     $form['group_field_options_wrapper'] = [
       '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
       '#suffix' => '</div>',
