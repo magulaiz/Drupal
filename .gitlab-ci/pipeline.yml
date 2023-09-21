@@ -230,20 +230,20 @@ stages:
       echo "ℹ️ Changes from ${TARGET_BRANCH}"
       git diff refs/heads/${TARGET_BRANCH} --name-only
       echo "1️⃣ Reverting non test changes"
-      if [ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]; then
+      if [[ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
         git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
           echo "↩️ Reverting $file";
           git checkout refs/heads/${TARGET_BRANCH} -- $file;
         done
       fi
-      if [ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]; then
+      if [[ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
         git diff refs/heads/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
           echo "🗑️️ Deleting $file";
           git rm $file;
         done
       fi
       echo "2️⃣ Running test changes for this branch"
-      if [ $(git diff refs/heads/${TARGET_BRANCH} --name-only|grep -E "Test.php$") ]; then
+      if [[ $(git diff refs/heads/${TARGET_BRANCH} --name-only|grep -E "Test.php$") ]]; then
         for test in `git diff refs/heads/${TARGET_BRANCH} --name-only|grep -E "Test.php$"`; do
           sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
         done;
