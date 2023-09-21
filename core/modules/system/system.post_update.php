@@ -72,7 +72,7 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
 
       $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
       // Check also potential plugins extending TimestampFormatter.
-      if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+      if (!is_a($plugin_definition['class'], TimestampFormatter::class, FALSE)) {
         continue;
       }
 
