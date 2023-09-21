@@ -113,7 +113,7 @@ function user_requirements($phase) {
       'title' => t('User cancellation methods'),
       'severity' => REQUIREMENT_WARNING,
       'value' => t('Missing cancellation methods'),
-      'description' => t('Missing cancellation methods, please review your user configuration on <a href="/admin/config/people/accounts">Account settings</a> and choose at least a user cancellation method.'),
+      'description' => t('Review your user configuration on <a href="/admin/config/people/accounts">Account settings</a> and choose at least a user cancellation method.'),
     ];
   }
   return $requirements;
