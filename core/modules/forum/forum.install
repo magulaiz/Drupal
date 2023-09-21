@@ -5,7 +5,10 @@
  * Install, update, and uninstall functions for the Forum module.
  */
 
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -212,8 +215,64 @@ function forum_update_10100(&$sandbox = NULL) {
 function forum_update_10101(&$sandbox = NULL) {
   $connection = \Drupal::database();
   if ($connection->schema()->tableExists('forum_index')) {
+    // Data in this table could have duplicates. The data can be re-constructed
+    // from other data in the site. To avoid duplicate key errors we truncate
+    // the table and then recreate it from data in the site.
+    $connection->truncate('forum_index')->execute();
     $connection->schema()->addPrimaryKey('forum_index', ['nid', 'tid']);
     return \t('Added primary key to the forum_index table.');
   }
   return \t('Index already exists');
+}
+
+/**
+ * Repopulate the forum index table.
+ */
+function forum_update_10102(&$sandbox = NULL): PluralTranslatableMarkup {
+  $entityStorage = \Drupal::entityTypeManager()->getStorage('node');
+  if (!isset($sandbox['progress'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['ids'] = $entityStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'forum')
+      ->exists('taxonomy_forums')
+      ->execute();
+    $sandbox['max'] = count($sandbox['ids']);
+  }
+
+  $ids = array_splice($sandbox['ids'], 0, (int) Settings::get('entity_update_batch_size', 50));
+  $insert = \Drupal::database()->insert('forum_index')->fields([
+    'nid',
+    'title',
+    'tid',
+    'sticky',
+    'created',
+    'last_comment_timestamp',
+    'comment_count',
+  ]);
+  $do_insert = FALSE;
+  foreach ($entityStorage->loadMultiple($ids) as $entity) {
+    $do_insert = TRUE;
+    assert($entity instanceof NodeInterface);
+    $insert->values([
+      $entity->id(),
+      $entity->label(),
+      $entity->taxonomy_forums->target_id,
+      (int) $entity->isSticky(),
+      $entity->getCreatedTime(),
+      $entity->comment_forum->last_comment_timestamp,
+      $entity->comment_forum->comment_count,
+    ]);
+    $sandbox['progress']++;
+  }
+  if ($do_insert) {
+    $insert->execute();
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : $sandbox['progress'] / $sandbox['max'];
+  return new PluralTranslatableMarkup($sandbox['progress'],
+    'Processed @count entry of @total.',
+    'Processed @count entries of @total.',
+    ['@total' => $sandbox['max']],
+  );
 }
