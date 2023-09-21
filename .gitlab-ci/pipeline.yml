@@ -189,22 +189,22 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 10
+  parallel: 9
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: 8
+    CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 6
+  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 8
+    CONCURRENCY: 15
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -212,11 +212,11 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 8
+  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
-    CONCURRENCY: 8
+    CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
 
@@ -226,7 +226,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
-    CONCURRENCY: 8
+    CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
 
