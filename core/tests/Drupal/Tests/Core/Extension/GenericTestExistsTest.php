@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 
 /**
  * Tests that the Generic module test exists for all modules.
@@ -11,26 +12,23 @@ use Drupal\Tests\UnitTestCase;
  */
 class GenericTestExistsTest extends UnitTestCase {
 
+  use FileSystemModuleDiscoveryDataProviderTrait;
+
   /**
    * Lists module that do not require a Generic test.
    */
   protected $modulesNoTest = ['help_topics'];
 
   /**
-   * Tests that the Generic module test exists for all modules.   */
-  public function testGenericTestExists() {
-    $base_directory = $this->root . '/core/modules';
-    chdir($base_directory);
-    $modules = array_diff(scandir($base_directory), ['.', '..']);
-    $all_tests = glob("*/tests/src/Functional/GenericTest.php");
-    $actual = array_map(function ($dir) {
-      return explode('/', $dir, 2)[0];
-    }, $all_tests);
-    $actual = array_merge($actual, $this->modulesNoTest);
-    sort($actual);
-    $missing_tests = array_diff($modules, $actual);
-    // Use assertSame so the error output includes the diff array.
-    $this->assertSame([], $missing_tests);
+   * Tests that the Generic module test exists for all modules.
+   * 
+   * @dataProvider coreModuleListDataProvider
+   */
+  public function testGenericTestExists(string $module_name): void {
+    if (in_array($module_name, $this->modulesNoTest, TRUE)) {
+      $this->markTestSkipped();
+    }
+    $this->assertFileExists("{$this->root}/core/modules/{$module_name}/tests/src/Functional/GenericTest.php");
   }
 
 }
