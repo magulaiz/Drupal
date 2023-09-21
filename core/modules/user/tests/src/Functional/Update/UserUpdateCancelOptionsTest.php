@@ -24,22 +24,22 @@ class UserUpdateCancelOptionsTest extends UpdatePathTestBase {
    */
   public function testRolePermissions() {
 
-    $cancel_methods = $this->config('user.settings')->get('cancel_methods_access_disabled');
+    $cancel_methods = $this->config('user.settings')->get('cancel_method_options');
     $this->assertNull($cancel_methods);
 
     // Run updates.
     $this->runUpdates();
 
     $config = $this->config('user.settings');
-    $cancel_methods = $config->get('cancel_methods_access_disabled');
+    $cancel_methods = $config->get('cancel_method_options');
     $this->assertArrayHasKey('user_cancel_block', $cancel_methods);
-    $this->assertEquals($cancel_methods['user_cancel_block'], FALSE);
+    $this->assertEquals($cancel_methods['user_cancel_block'], TRUE);
     $this->assertArrayHasKey('user_cancel_block_unpublish', $cancel_methods);
-    $this->assertEquals($cancel_methods['user_cancel_block_unpublish'], FALSE);
+    $this->assertEquals($cancel_methods['user_cancel_block_unpublish'], TRUE);
     $this->assertArrayHasKey('user_cancel_reassign', $cancel_methods);
-    $this->assertEquals($cancel_methods['user_cancel_reassign'], FALSE);
+    $this->assertEquals($cancel_methods['user_cancel_reassign'], TRUE);
     $this->assertArrayHasKey('user_cancel_delete', $cancel_methods);
-    $this->assertEquals($cancel_methods['user_cancel_delete'], FALSE);
+    $this->assertEquals($cancel_methods['user_cancel_delete'], TRUE);
 
     // Check valid Schema after update.
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'user.settings', $config->get());
