@@ -670,15 +670,4 @@ END;
     return json_decode($file_contents, TRUE, flags: JSON_THROW_ON_ERROR);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function copyCodebase(\Iterator $iterator = NULL, $working_dir = NULL) {
-    parent::copyCodebase($iterator, $working_dir);
-
-    // Ensure that we will install Drupal 9.8.0 (a fake version that should
-    // never exist in real life) initially.
-    $this->setUpstreamCoreVersion('9.8.0');
-  }
-
 }
