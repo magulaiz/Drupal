@@ -189,7 +189,7 @@ stages:
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 14
+  parallel: 12
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
@@ -204,7 +204,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 4
+    CONCURRENCY: 8
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -278,5 +278,5 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Unit
-    CONCURRENCY: "$CONCURRENCY"
+    CONCURRENCY: 16
 
