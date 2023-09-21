@@ -80,7 +80,7 @@ class UserSubAdminTest extends BrowserTestBase {
     $config->set('cancel_method_options.user_cancel_block', TRUE);
     $config->set('cancel_method_options.user_cancel_block_unpublish', TRUE);
     $config->set('cancel_method_options.user_cancel_reassign', FALSE);
-    $config->set('cancel_method_options.user_cancel_delete', TRUE);
+    $config->set('cancel_method_options.user_cancel_delete', FALSE);
     $config->save();
     $this->drupalLogin($admin_user);
 
