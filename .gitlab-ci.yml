@@ -262,7 +262,7 @@ stages:
   stage: 🪄 Lint
   variables:
     <<: *default-job-variables-lint
-    KUBERNETES_CPU_REQUEST: "4"
+    KUBERNETES_CPU_REQUEST: "8"
     KUBERNETES_MEMORY_REQUEST: "128Mi"
   script:
     - sudo apt update && sudo apt install time
@@ -298,7 +298,7 @@ stages:
   variables:
     <<: *default-job-variables-lint
     STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
-    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_REQUEST: "2"
     KUBERNETES_MEMORY_REQUEST: "256Mi"
   script:
     - sudo apt update && sudo apt install time
@@ -315,7 +315,7 @@ stages:
   stage: 🪄 Lint
   variables:
     <<: *default-job-variables-lint
-    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_REQUEST: "2"
     KUBERNETES_MEMORY_REQUEST: "256Mi"
   script:
     - sudo apt update && sudo apt install time
