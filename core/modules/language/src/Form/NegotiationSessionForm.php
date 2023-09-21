@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -41,6 +42,15 @@ class NegotiationSessionForm extends ConfigFormBase {
     $form_state->setRedirect('language.negotiation');
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $element = NULL): void {
+    // This form does not yet support config validation, and implicitly enabling
+    // it (i.e., by letting the parent method run) will break a test.
+    throw new \BadMethodCallException();
   }
 
   /**
