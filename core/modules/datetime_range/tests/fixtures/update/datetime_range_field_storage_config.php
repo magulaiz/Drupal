@@ -1,4 +1,11 @@
 <?php
+// phpcs:ignoreFile
+
+/**
+ * @file
+ * Contains database additions to drupal-9.4.0.bare.standard.php.gz for testing the
+ * upgrade path datetime_range_post_update_add_optional_end_date().
+ */
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Serialization\Yaml;
@@ -29,16 +36,16 @@ $connection->update('key_value')
 $field_storage_datetime_range = Yaml::decode(file_get_contents(__DIR__ . '/field.storage.node.field_range.yml'));
 
 $connection->insert('config')
-  ->fields(array(
+  ->fields([
     'collection',
     'name',
     'data',
-  ))
-  ->values(array(
+  ])
+  ->values([
     'collection' => '',
     'name' => 'field.storage.' . $field_storage_datetime_range['id'],
     'data' => serialize($field_storage_datetime_range),
-  ))
+  ])
   ->execute();
 
 // Update core.extension.
@@ -59,16 +66,16 @@ $connection->update('config')
   ->execute();
 
 $connection->insert('key_value')
-  ->fields(array(
+  ->fields([
     'collection',
     'name',
     'value',
-  ))
-  ->values(array(
+  ])
+  ->values([
     'collection' => 'config.entity.key_store.field_storage_config',
     'name' => 'uuid:f031bf58-0599-4e82-8380-5d304cb279ec',
     'value' => 'a:1:{i:0;s:30:"field.storage.' . $field_storage_datetime_range['id'] . '";}',
-  ))
+  ])
   ->values([
     'collection' => 'entity.storage_schema.sql',
     'name' => 'node.field_schema_data.field_daterange',

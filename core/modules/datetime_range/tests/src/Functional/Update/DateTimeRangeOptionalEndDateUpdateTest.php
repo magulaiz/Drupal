@@ -11,8 +11,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group legacy
  * @covers \datetime_range_post_update_add_optional_end_date
  */
-class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase
-{
+class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase{
   /**
    * {@inheritdoc}
    */
@@ -29,7 +28,7 @@ class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../../fixtures/update/datetime_range_field_storage_config.php'
+      __DIR__ . '/../../../fixtures/update/datetime_range_field_storage_config.php',
 
     ];
   }
@@ -49,4 +48,5 @@ class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase
     $this->assertArrayHasKey('optional_end_date', $field_storage_settings);
     $this->assertFalse($field_storage_settings['optional_end_date']);
   }
+
 }
