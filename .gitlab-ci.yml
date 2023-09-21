@@ -42,6 +42,7 @@ include:
 ################
 
 variables:
+  KUBERNETES_CPU_REQUEST: "20"
   COMPOSER: composer.json
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
