@@ -153,24 +153,23 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
 
     $default_value_methods = [];
-    foreach ($config->get('cancel_methods_access_disabled') as $method => $access) {
+    foreach ($config->get('cancel_method_options') as $method => $access) {
       if ($access) {
         $default_value_methods[] = $method;
       }
     }
-    $form['registration_cancellation']['user_cancel_methods_access_disabled'] = [
+    $form['registration_cancellation']['user_cancel_method_options'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Disabled user cancel methods'),
+      '#title' => $this->t('Available user cancellation options'),
       '#default_value' => $default_value_methods,
-      '#description' => $this->t('Choose the methods that will be hidden for the user when canceling the account'),
+      '#description' => $this->t('Choose the methods that will be available for the user when cancelling the account'),
     ];
-    $form['registration_cancellation']['user_cancel_methods_access_disabled'] += user_cancel_methods();
+    $form['registration_cancellation']['user_cancel_method_options'] += user_cancel_methods();
 
-    // Do not hide options on user cancel methods.
-    foreach (array_keys($form['registration_cancellation']['user_cancel_methods_access_disabled']['#options']) as $method_name) {
-      if (isset($form['registration_cancellation']['user_cancel_methods_access_disabled'][$method_name]['#access'])) {
-        unset($form['registration_cancellation']['user_cancel_methods_access_disabled'][$method_name]['#access']);
-      }
+    // We need to display all methods regardless of the method access
+    // to allow selecting the user cancellation options available.
+    foreach (array_keys($form['registration_cancellation']['user_cancel_method_options']['#options']) as $method_name) {
+      unset($form['registration_cancellation']['user_cancel_method_options'][$method_name]['#access']);
     }
 
     foreach (Element::children($form['registration_cancellation']['user_cancel_method']) as $key) {
@@ -434,9 +433,14 @@ class AccountSettingsForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $default_cancel_method = $form_state->getValue('user_cancel_method');
-    $disabled_cancel_methods = $form_state->getValue('user_cancel_methods_access_disabled');
-    if (in_array($default_cancel_method, $disabled_cancel_methods)) {
-      $form_state->setErrorByName('user_cancel_method', $this->t('The default user cancellation method cannot be a disabled method.'));
+    $cancel_methods_options = $form_state->getValue('user_cancel_method_options');
+    // Remove disabled cancel options.
+    $cancel_methods_options = array_filter($cancel_methods_options);
+    if (empty($cancel_methods_options)) {
+      $form_state->setErrorByName('user_cancel_method_options', $this->t('At least one user cancellation option should be enabled.'));
+    }
+    elseif (!(in_array($default_cancel_method, $cancel_methods_options))) {
+      $form_state->setErrorByName('user_cancel_method', $this->t('The default user cancellation method cannot be a disabled option.'));
     }
     parent::validateForm($form, $form_state);
   }
@@ -453,7 +457,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('password_strength', $form_state->getValue('user_password_strength'))
       ->set('verify_mail', $form_state->getValue('user_email_verification'))
       ->set('cancel_method', $form_state->getValue('user_cancel_method'))
-      ->set('cancel_methods_access_disabled', $form_state->getValue('user_cancel_methods_access_disabled'))
+      ->set('cancel_method_options', $form_state->getValue('user_cancel_method_options'))
       ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
       ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
       ->set('notify.status_canceled', $form_state->getValue('user_mail_status_canceled_notify'))

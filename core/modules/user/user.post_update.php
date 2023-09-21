@@ -36,13 +36,13 @@ function user_post_update_sort_permissions_again(&$sandbox = NULL) {
 }
 
 /**
- * Update user cancel configuration.
+ * Creates the new user cancellation methods configuration.
  */
 function user_post_update_configure_cancel_options() {
   $config = \Drupal::configFactory()->getEditable('user.settings');
-  $config->set('cancel_methods_access_disabled.user_cancel_block', FALSE);
-  $config->set('cancel_methods_access_disabled.user_cancel_block_unpublish', FALSE);
-  $config->set('cancel_methods_access_disabled.user_cancel_reassign', FALSE);
-  $config->set('cancel_methods_access_disabled.user_cancel_delete', FALSE);
+  $methods = user_cancel_methods();
+  foreach (array_keys($methods['#options']) as $method_name) {
+    $config->set('cancel_method_options.' . $method_name, TRUE);
+  }
   $config->save();
 }
