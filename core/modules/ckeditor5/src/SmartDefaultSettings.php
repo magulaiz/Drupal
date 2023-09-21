@@ -307,14 +307,14 @@ final class SmartDefaultSettings {
         }
 
         $end = $can_access_dblog ?
-          $this->t('Additional details are available <a target="_blank" href=":dblog_url">in your logs</a>.',
+          $this->t('Additional details are available in the <a target="_blank" href=":dblog_url">site logs</a>.',
             [
               ':dblog_url' => Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
                 ->toString(),
             ]
           ) :
-          $this->t('Additional details are available in your logs.');
+          $this->t('Additional details are available in the site logs.');
 
         $messages[MessengerInterface::TYPE_STATUS][] = new FormattableMarkup('@beginning @plugin_info @source_editing_info. @end', [
           '@beginning' => $beginning,
@@ -372,15 +372,16 @@ final class SmartDefaultSettings {
             }, ''), " ,"),
           ]
         ) : '';
+        $can_access_dblog = ($this->currentUser->hasPermission('access site reports') && $this->moduleHandler->moduleExists('dblog'));
         $end = $can_access_dblog ?
-          $this->t('Additional details are available <a target="_blank" href=":dblog_url">in your logs</a>.',
+          $this->t('Additional details are available in the <a target="_blank" href=":dblog_url">site logs</a>.',
             [
               ':dblog_url' => Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
                 ->toString(),
             ]
           ) :
-          $this->t('Additional details are available in your logs.');
+          $this->t('Additional details are available in the site logs.');
 
         $messages[MessengerInterface::TYPE_WARNING][] = new FormattableMarkup('@beginning @added_elements_begin @fundamental_tags @added_elements_tags @added_elements_attributes @end',
           [
