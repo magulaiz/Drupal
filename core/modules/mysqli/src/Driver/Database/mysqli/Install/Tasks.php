@@ -2,10 +2,7 @@
 
 namespace Drupal\mysqli\Driver\Database\mysqli\Install;
 
-use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks as BaseInstallTasks;
-use Drupal\mysqli\Driver\Database\mysqli\Connection;
 
 /**
  * Specifies installation tasks for MySQLi.
