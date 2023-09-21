@@ -61,12 +61,15 @@ stages:
 # Templates #
 #############
 
+.default-job-variables: &default-job-variables-lint
+  _TARGET_PHP: "8.2"
+  _TARGET_DB: "mysql-8"
+
 .default-job-settings: &default-job-settings-lint
   interruptible: true
   allow_failure: false
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "mysql-8"
+    <<: *default-job-variables-lint
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
@@ -285,11 +288,10 @@ stages:
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-job-variables-lint
     STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
     KUBERNETES_CPU_REQUEST: "1"
-    KUBERNETES_CPU_LIMIT: "2"
     KUBERNETES_MEMORY_REQUEST: "256Mi"
-    KUBERNETES_MEMORY_LIMIT: "256Mi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
@@ -317,6 +319,7 @@ stages:
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-job-variables-lint
     ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
   script:
     - sudo apt update && sudo apt install time
