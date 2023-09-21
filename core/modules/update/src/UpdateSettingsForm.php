@@ -82,21 +82,6 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    switch ($config->getName()) {
-      case 'update.settings':
-        $config
-          ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
-          ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
-          ->set('notification.emails', static::arrayToMultiLineString($form_state->getValue('update_notify_emails', '')))
-          ->set('notification.threshold', $form_state->getValue('update_notification_threshold'));
-        break;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected static function mapConfigKeyToFormElementName(string $config_name, string $key): string {
     switch ($config_name) {
       case 'update.settings':

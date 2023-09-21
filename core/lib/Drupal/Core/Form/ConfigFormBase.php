@@ -243,13 +243,34 @@ abstract class ConfigFormBase extends FormBase {
    *   The configuration being edited.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
+   * @param array $element
+   *   (optional) Internal use only.
    *
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    // This allows ::submitForm() and ::validateForm() to know that this config
-    // form is not yet using constraint-based validation.
-    throw new \BadMethodCallException();
+  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $element = NULL): void {
+    $element ??= $form_state->getCompleteForm();
+
+    if (!empty($element['#config_target'])) {
+      if (is_array($element['#config_target'])) {
+        [$config_target, $transformation] = $element['#config_target'];
+      }
+      else {
+        $config_target = $element['#config_target'];
+      }
+      [$config_name, $property] = explode(':', $config_target, 2);
+      if ($config_name === $config->getName()) {
+        $value = $form_state->getValue($element['#parents']);
+        if (isset($transformation)) {
+          $transformation = $form_state->prepareCallback($transformation);
+          $value = $transformation($value);
+        }
+        $config->set($property, $value);
+      }
+    }
+    foreach (Element::children($element) as $key) {
+      static::copyFormValuesToConfig($config, $form_state, $element[$key]);
+    }
   }
 
   /**
