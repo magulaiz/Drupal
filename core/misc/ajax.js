@@ -1690,7 +1690,7 @@
       }
 
       const allUniqueBundleIds = response.data.map(function (style) {
-        const uniqueBundleId = style.href + ajax.instanceIndex;
+        const uniqueBundleId = JSON.stringify(style) + ajax.instanceIndex;
         loadjs(style.href, uniqueBundleId, {
           before(path, styleEl) {
             // This allows all attributes to be added, like media.
