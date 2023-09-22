@@ -100,11 +100,19 @@ class LayoutBuilderDisplayElement extends ListElement {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $field_manager->getFieldDefinitions($this->element->getParent()->getParent()->getValue()['targetEntityType'], $this->element->getParent()->getParent()->getValue()['bundle']);
 
+    // Let the layouts be named too.
+    foreach ($parent_build['sections'] as $section_index => $value) {
+      if (is_array($value) && !str_contains($parent_build['sections'][$section_index]['layout_settings']['#title'], '(Empty) Layout settings')) {
+        $parent_build['sections'][$section_index]['#title'] = str_replace('Layout settings', '', $parent_build['sections'][$section_index]['layout_settings']['#title']);
+      }
+    }
+
     foreach ($element_names as $component_name) {
       // Not considering the layout builder case.
       [$section_index, $component_id, $component_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_name, 3);
       // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $item = &$parent_build['sections'][$section_index]['components'][$component_id]['configuration']['formatter'];
+      $component = &$parent_build['sections'][$section_index]['components'][$component_id];
 
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $definition */
       $definition = $field_definitions[$component_name] ?? NULL;
@@ -112,6 +120,7 @@ class LayoutBuilderDisplayElement extends ListElement {
         $field_type = $field_type_manager->getDefinition($definition->getType());
 
         $item['#title'] = $definition->getLabel();
+        $component['#title'] = $definition->getLabel();
         $item['#description'] = t("Field: %name, type: @type", [
           '%name' => $component_name,
           '@type' => $field_type['label'],

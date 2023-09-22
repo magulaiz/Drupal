@@ -7,9 +7,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 
 /**
- * Adds translatable labels to entity_form_display elements.
+ * Adds translatable labels to entity_display elements.
  */
-class EntityFormDisplayElement extends ListElement {
+class EntityDisplayElement extends ListElement {
   use EntityDisplayElementTrait;
 
   /**
@@ -36,9 +36,11 @@ class EntityFormDisplayElement extends ListElement {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
 
-    $parent_build['content']['#collapsible'] = FALSE;
-    $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
-    $element_names = array_fill_keys($element_names, FALSE);
+    $element_names = [];
+    if (isset($parent_build['content'])) {
+      $parent_build['content']['#collapsible'] = FALSE;
+      $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
+    }
 
     if (empty($element_names)) {
       return $parent_build;

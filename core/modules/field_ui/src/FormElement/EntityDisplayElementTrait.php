@@ -36,7 +36,7 @@ trait EntityDisplayElementTrait {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
 
-    foreach ($element_names as $component_name => $layout_builder) {
+    foreach ($element_names as $component_name) {
       // Not considering the layout builder case.
       $item = &$parent_build['content'][$component_name];
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $definition */

@@ -40,7 +40,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     'responsive_image',
     'toolbar',
     'layout_builder',
-    'block',
   ];
 
   /**
@@ -562,10 +561,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/' . $id . '/display/default/translate/de/edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Field formatters');
-    // We expect the custom_label and field info to show up twice as once under
-    // layout_builder and once as just a field under the custom content type.
+    // We expect the custom_label and field info to show up thrice as twice
+    // under layout_builder and once as just a field under the custom content
+    // type.
     $this->assertSession()->pageTextMatchesCount(1, '/Block settings/');
-    $this->assertSession()->pageTextMatchesCount(2, '/custom_label/');
+    $this->assertSession()->pageTextMatchesCount(3, '/custom_label/');
     $this->assertSession()->pageTextMatchesCount(2, '/Field: field_boolean, type: Boolean/');
     $this->assertSession()->pageTextMatchesCount(2, '/Label/');
   }
