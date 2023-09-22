@@ -84,13 +84,13 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     // Verify that test display mode is selected for article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Custom display settings');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test"]');
     $this->assertTrue($checkbox->isChecked());
 
     // Verify that test display mode is not selected for page content type.
     $this->drupalGet("/admin/structure/types/manage/page/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Custom display settings');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test"]');
     $this->assertFalse($checkbox->isChecked());
 
@@ -109,19 +109,19 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     // Verify that test2 display mode is selected for article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Custom display settings');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test2"]');
     $this->assertTrue($checkbox->isChecked());
 
     // Verify that test2 display mode is not selected for page content type.
     $this->drupalGet("/admin/structure/types/manage/page/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Custom display settings');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test2"]');
     $this->assertFalse($checkbox->isChecked());
 
     // Verify that display mode is not selected on article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Custom display settings');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
     $checkbox = $page->find('css', "[data-drupal-selector='edit-display-modes-custom-$custom_mode']");
     $this->assertFalse($checkbox->isChecked());
 
@@ -135,7 +135,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     // Verify that display mode is selected on article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Custom display settings');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
     $checkbox = $page->find('css', "[data-drupal-selector='edit-display-modes-custom-$custom_mode']");
     $this->assertTrue($checkbox->isChecked());
   }
