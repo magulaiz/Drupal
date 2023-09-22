@@ -197,7 +197,9 @@
       tableDrag.onDrop = function () {
         const dragObject = this;
         const $rowElement = $(dragObject.rowObject.element);
-        let regionName = $rowElement.prevAll('tr.region-title:visible').data('region');
+        let regionName = $rowElement
+          .prevAll('tr.region-title:visible')
+          .data('region');
         if (regionName === undefined) {
           // If there is no region attribute on the row.
           // Use "region-message" row instead of "region" row because
