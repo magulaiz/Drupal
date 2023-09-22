@@ -197,13 +197,17 @@
       tableDrag.onDrop = function () {
         const dragObject = this;
         const $rowElement = $(dragObject.rowObject.element);
-        // Use "region-message" row instead of "region" row because
-        // "region-{region_name}-message" is less prone to regexp match errors.
-        const regionRow = $rowElement.prevAll('tr.region-message').get(0);
-        const regionName = regionRow.className.replace(
-          /([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/,
-          '$2',
-        );
+        let regionName = $rowElement.prevAll('tr.region-title:visible').data('region');
+        if (regionName === undefined) {
+          // If there is no region attribute on the row.
+          // Use "region-message" row instead of "region" row because
+          // "region-{region_name}-message" is less prone to regexp match errors.
+          const regionRow = $rowElement.prevAll('tr.region-message').get(0);
+          regionName = regionRow.className.replace(
+            /([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/,
+            '$2',
+          );
+        }
         const regionField = $rowElement.find('select.block-region-select');
         // Check whether the newly picked region is available for this block.
         if (regionField.find(`option[value=${regionName}]`).length === 0) {

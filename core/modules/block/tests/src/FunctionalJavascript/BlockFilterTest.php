@@ -284,12 +284,16 @@ class BlockFilterTest extends WebDriverTestBase {
   }
 
   /**
-   * @param $blockId
-   * @param $regionExpected
+   * Check if the block is in the correct region.
    *
-   * @return void
+   * @param string $blockId
+   *   The block to used to find the element.
+   * @param string $regionExpected
+   *   Region expected by the block.
+   *
+   * @interal
    */
-  protected function assertBlockOnRegion($blockId, $regionExpected) {
+  protected function assertBlockOnRegion(string $blockId, string $regionExpected): void {
     $selectElement = $this->getSession()
       ->getPage()
       ->findField('edit-blocks-' . $blockId . '-region');
