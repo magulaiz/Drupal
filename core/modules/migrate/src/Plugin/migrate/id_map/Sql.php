@@ -428,14 +428,11 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
           // @todo NEED TO MAKE THIS PDO ABSTRACT.
           $pdo_exception = $e->getPrevious();
           $mysql_index_error = $pdo_exception instanceof \PDOException && $pdo_exception->getCode() === '42000' && $pdo_exception->errorInfo[1] === 1071;
-          $mysqli_index_error = $pdo_exception instanceof \mysqli_sql_exception;
-          if ($mysqli_index_error) {
-            dump($pdo_exception);
-          }
+          $mysqli_index_error = $pdo_exception instanceof \mysqli_sql_exception  && $pdo_exception->getSqlState() === '42000' && $pdo_exception->getCode() === 1071;
           $chunk_size--;
           // Rethrow the exception if the source IDs can not be in smaller
           // groups.
-          if (!$mysql_index_error || $chunk_size <= 0) {
+          if (!($mysql_index_error || $mysqli_index_error) || $chunk_size <= 0) {
             throw $e;
           }
         }
