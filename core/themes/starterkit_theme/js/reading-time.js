@@ -16,7 +16,7 @@
   // @see starterkit_theme_attachments() in starterkit_theme.theme.
   const wordsPerMinute = drupalSettings.starterkit_theme.wordsPerMinute || 300;
 
-  // Instanciate Drupal message command.
+  // Instantiate Drupal message command.
   // Note that it is possible because we required the `core/drupal.message` library.
   // @see core/themes/starterkit_theme/starterkit_theme.libraries.yml
   // @see https://www.drupal.org/docs/drupal-apis/javascript-api/messages-api
