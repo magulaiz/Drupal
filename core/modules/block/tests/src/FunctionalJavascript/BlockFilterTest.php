@@ -291,7 +291,7 @@ class BlockFilterTest extends WebDriverTestBase {
    * @param string $regionExpected
    *   Region expected by the block.
    *
-   * @interal
+   * @internal
    */
   protected function assertBlockOnRegion(string $blockId, string $regionExpected): void {
     $selectElement = $this->getSession()
