@@ -177,7 +177,7 @@ function update_cron() {
   $day_of_week = $update_config->get('check.update_day');
   $day = DateHelper::dayOfWeek(date('Y-m-d', $request_time));
   if (($request_time - $last_check) > $interval) {
-    if ($frequency == 7 && $day_of_week == $day || $frequency == 1) {
+    if (($frequency === 7 && $day_of_week === $day) || $frequency == 1) {
       // If the configured update interval has elapsed, we want to invalidate
       // the data for all projects, attempt to re-fetch, and trigger any
       // configured notifications about the new status.
@@ -192,7 +192,7 @@ function update_cron() {
   }
   $last_email_notice = \Drupal::state()->get('update.last_email_notification', 0);
   if (($request_time - $last_email_notice) > $interval) {
-    if ($frequency === 7 && $day_of_week === $day || $frequency == 1) {
+    if (($frequency === 7 && $day_of_week === $day) || $frequency == 1) {
       // If configured time between notifications elapsed, send email about
       // updates possibly available.
       \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
