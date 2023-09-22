@@ -62,12 +62,15 @@ stages:
 # Templates #
 #############
 
+.default-job-variables: &default-job-variables-lint
+  _TARGET_PHP: "8.2"
+  _TARGET_DB: "mysql-8"
+
 .default-job-settings: &default-job-settings-lint
   interruptible: true
   allow_failure: false
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "mysql-8"
+    <<: *default-job-variables-lint
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
@@ -259,19 +262,35 @@ stages:
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-job-variables-lint
+    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_MEMORY_REQUEST: "128Mi"
   script:
-    - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - sudo apt update && sudo apt install time
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
   artifacts:
+    paths:
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: phpcs-quality-report.json
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-job-variables-lint
+    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
   script:
     # Turn off apc to avoid corrupt composer cache.
-    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    - sudo apt update && sudo apt install time
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
   artifacts:
+    paths:
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: phpstan-quality-report.json
 
@@ -279,28 +298,52 @@ stages:
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-job-variables-lint
     STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - sudo apt update && sudo apt install time
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
   artifacts:
+    paths:
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: stylelint-quality-report.json
 
 '🧹 Compilation check':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-job-variables-lint
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "256Mi"
   script:
-    - yarn run --cwd=./core build:css --check
-    - cd core && yarn run -s check:ckeditor5
+    - sudo apt update && sudo apt install time
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-css.txt yarn run --cwd=./core build:css --check
+    - cd core && /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-ckeditor5.txt yarn run -s check:ckeditor5
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG-*.txt && echo "===================="
+  artifacts:
+    paths:
+       - ./statistics-$CI_JOB_NAME_SLUG-css.txt
+       - ./statistics-$CI_JOB_NAME_SLUG-ckeditor5.txt
 
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-job-variables-lint
     ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
+    KUBERNETES_CPU_REQUEST: "1500m"
+    KUBERNETES_MEMORY_REQUEST: "512Mi"
   script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+    - sudo apt update && sudo apt install time
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+    - echo "====================\nStatistics for $CI_JOB_NAME_SLUG\n" &&  cat statistics-$CI_JOB_NAME_SLUG.txt && echo "===================="
   artifacts:
+    paths:
+       - ./statistics-$CI_JOB_NAME_SLUG.txt
     reports:
       codequality: eslint-quality-report.json
 
