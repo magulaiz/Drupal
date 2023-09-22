@@ -257,6 +257,32 @@
         const tableDrag = { ...Drupal.tableDrag.blocks };
         Drupal.tableDrag.blocks.onDrop = function () {
           filterCallback();
+          if (tableDrag.rowObject !== undefined) {
+            const rowDropped = tableDrag.rowObject.element;
+            const rowDroppedRegion = rowDropped.dataset.parentRegion;
+            let prevRow = rowDropped.previousElementSibling;
+            let newRow = null;
+            const possibleRegionValues = [
+              prevRow.dataset.parentRegion,
+              prevRow.dataset.regionMessage,
+              prevRow.dataset.region,
+            ];
+            if (possibleRegionValues.indexOf(rowDroppedRegion) === -1) {
+              while (prevRow && prevRow.nodeName === 'TR') {
+                if (
+                  prevRow.classList.contains('draggable') &&
+                  rowDroppedRegion === prevRow.dataset.parentRegion
+                ) {
+                  newRow = prevRow;
+                  break;
+                }
+                prevRow = prevRow.previousElementSibling;
+              }
+              if (newRow) {
+                tableDrag.rowObject.swap('after', newRow);
+              }
+            }
+          }
           tableDrag.onDrop();
         };
       }
