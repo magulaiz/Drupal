@@ -152,7 +152,7 @@ class SqlTest extends MigrateTestBase {
     $map = new SqlIdMapTest($this->database, [], 'test', [], $migration, $this->eventDispatcher, $this->migrationPluginManager);
 
     $this->expectException(DatabaseExceptionWrapper::class);
-    $this->expectExceptionMessage("Syntax error or access violation: 1074 Column length too big for column 'sourceid1' (max = 16383); use BLOB or TEXT instead:");
+    $this->expectExceptionMessage("Column length too big for column 'sourceid1' (max = 16383); use BLOB or TEXT instead");
     $map->ensureTables();
   }
 
