@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\ConstraintManager;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -216,9 +217,10 @@ class FileWidget extends WidgetBase {
     // widget is a base class for other widgets (e.g., ImageWidget) that may act
     // on field types without these expected settings.
     $field_settings += [
-      'display_default' => NULL,
-      'display_field' => NULL,
-      'description_field' => NULL,
+      'display_default' => FALSE,
+      'display_field' => FALSE,
+      'description_field' => FALSE,
+      'description_field_required' => FALSE,
     ];
 
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
@@ -246,6 +248,7 @@ class FileWidget extends WidgetBase {
       '#display_field' => (bool) $field_settings['display_field'],
       '#display_default' => $field_settings['display_default'],
       '#description_field' => $field_settings['description_field'],
+      '#description_field_required' => $field_settings['description_field_required'],
       '#cardinality' => $cardinality,
     ];
 
@@ -339,6 +342,32 @@ class FileWidget extends WidgetBase {
   }
 
   /**
+   * #element_validate callback to check if a required description is filled in.
+   *
+   * @param array $element
+   *   An associative array containing the properties and children of the
+   *   generic form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   */
+  public static function validateRequiredDescription(array &$element, FormStateInterface $form_state, array &$complete_form) {
+    // Skip validation if a file is being uploaded or deleted.
+    $parent = array_slice($element['#parents'], 0, -1);
+    $trigger_parents = $form_state->getTriggeringElement()['#parents'];
+    if (!array_diff($parent, array_intersect($parent, $trigger_parents))) {
+      if (in_array(array_pop($trigger_parents), ['upload_button', 'remove_button'], TRUE)) {
+        return;
+      }
+    }
+    // Throw a validation error when the file is present but has no description.
+    if (!empty($element['fids']['#value']) && empty($element['description']['#value'])) {
+      $form_state->setError($element, t('@name field is required.', ['@name' => $element['description']['#title']]));
+    }
+  }
+
+  /**
    * Validates the number of uploaded files.
    *
    * This validator is used only when cardinality not set to 1 or unlimited.
@@ -417,6 +446,7 @@ class FileWidget extends WidgetBase {
         '#value' => $item['description'] ?? '',
         '#maxlength' => $config->get('description.length'),
         '#description' => new TranslatableMarkup('The description may be used as the label of the link to the file.'),
+        '#required' => !empty($element['#description_field_required']),
       ];
     }
 
@@ -593,11 +623,44 @@ class FileWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
-    // Never flag validation errors for the remove button.
     $clicked_button = end($form_state->getTriggeringElement()['#parents']);
+
+    // Don't account potential 'FileDescriptionRequired' constraint violations
+    // when the form is posted via 'Upload' button and the file description is
+    // enforced in field settings.
+    // @see \Drupal\file\Plugin\Validation\Constraint\FileDescriptionRequired
+    if ($clicked_button === 'upload_button' && $this->getFieldSetting('description_field_required')) {
+      $required_description_definition = $this->getConstraintManager()->getDefinition('FileDescriptionRequired');
+      /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+      foreach ($violations as $offset => $violation) {
+        // Constraint plugins are Symfony classes so they don't implement the
+        // \Drupal\Component\Plugin\PluginInspectionInterface interface, thus we
+        // cannot rely on plugin ID.
+        if (get_class($violation->getConstraint()) === $required_description_definition['class']) {
+          $violations->remove($offset);
+        }
+      }
+    }
+
+    // Never flag validation errors for the remove button.
     if ($clicked_button !== 'remove_button') {
       parent::flagErrors($items, $violations, $form, $form_state);
     }
+  }
+
+  /**
+   * Returns the constraint plugin manager service.
+   *
+   * Cannot inject this service as this plugin is extended by other plugins,
+   * such as \Drupal\image\Plugin\Field\FieldWidget\ImageWidget.
+   *
+   * @return \Drupal\Core\Validation\ConstraintManager
+   *   The constraint plugin manager service.
+   *
+   * @see \Drupal\image\Plugin\Field\FieldWidget\ImageWidget
+   */
+  private function getConstraintManager(): ConstraintManager {
+    return \Drupal::service('validation.constraint');
   }
 
 }
