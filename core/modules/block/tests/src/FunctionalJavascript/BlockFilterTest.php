@@ -188,7 +188,8 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // Test drag and drop after any filter applied.
     $inputFilter->setValue('');
-    $this->assertSession()->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
+    $this->assertSession()
+      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
     $sideBarSecondRegion = $this->getSession()
       ->getPage()
       ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-sidebar-second-message"]');
@@ -221,33 +222,35 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
     $inputFilter->setValue('label');
 
-    $this->assertEquals(
-      'highlighted',
-      $this->getSession()
-        ->getPage()
-        ->findField('edit-blocks-' . $fakeBlock1->id() . '-region')
-        ->getValue()
-    );
-
-    $this->assertEquals(
-      'highlighted',
-      $this->getSession()
-        ->getPage()
-        ->findField('edit-blocks-' . $fakeBlock2->id() . '-region')
-        ->getValue()
-    );
-
-    $this->assertEquals(
-      'help',
-      $this->getSession()
-        ->getPage()
-        ->findField('edit-blocks-' . $fakeBlock3->id() . '-region')
-        ->getValue()
-    );
+    $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
+    $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
+    $this->assertBlockOnRegion($fakeBlock3->id(), 'help');
 
     $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]');
     $this->assertSession()->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
     $this->assertFalse($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]')->isVisible());
+
+    // Save blocks and test if was saved in the correction region.
+    $this->submitForm([], 'Save blocks');
+    $page = $this->getSession()
+      ->getPage();
+    $this->assertSession()->pageTextContains('The block settings have been updated.');
+    $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
+    $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
+    $this->assertBlockOnRegion($fakeBlock3->id(), 'help');
+
+    // Test move up with filter.
+    $page->find('css', '[data-drupal-selector="edit-search-blocks"]')
+      ->setValue('label');
+    $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-header-message"]');
+    $this->moveBlock($fakeBlock2->id(), 'tr.region-title-highlighted');
+    $page->find('css', '[data-drupal-selector="edit-search-blocks"]')
+      ->setValue('');
+    // Wait debounce time to make sure that filter was cleaned.
+    $this->getSession()
+      ->wait(210);
+    $this->assertBlockOnRegion($fakeBlock3->id(), 'header');
+    $this->assertBlockOnRegion($fakeBlock2->id(), 'header');
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
@@ -281,6 +284,44 @@ class BlockFilterTest extends WebDriverTestBase {
   }
 
   /**
+   * @param $blockId
+   * @param $regionExpected
+   *
+   * @return void
+   */
+  protected function assertBlockOnRegion($blockId, $regionExpected) {
+    $selectElement = $this->getSession()
+      ->getPage()
+      ->findField('edit-blocks-' . $blockId . '-region');
+
+    $trFromSelect = $selectElement->getParent()
+      ->getParent()
+      ->getParent();
+
+    // Test if the select element was updated.
+    $this->assertEquals(
+      $regionExpected,
+      $selectElement->getValue(),
+      'Select value should be ' . $regionExpected . ' but ' . $selectElement->getValue() . ' found.'
+    );
+
+    // Test data parent element was updated.
+    $this->assertEquals(
+      $regionExpected,
+      $trFromSelect->getAttribute('data-parent-region'),
+      'Data parent-region should be ' . $regionExpected . ' but ' . $trFromSelect->getAttribute('data-parent-region') . ' found.'
+    );
+
+    // To make sure that element was positioned in the correct place.
+    $previousRegionElement = $trFromSelect->find('xpath', 'preceding-sibling::tr[contains(@class, "region-title")][1]');
+    $this->assertEquals(
+      $regionExpected,
+      $previousRegionElement->getAttribute('data-region'),
+      'The previous tr region of the element should be ' . $regionExpected . '. ' . $previousRegionElement->getAttribute('region') . ' found.'
+    );
+  }
+
+  /**
    * Move blocks dragging or selecting from the region to the other.
    *
    * @param string $blockId
@@ -302,7 +343,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertNotEmpty($blockToMove, 'Block id ' . $dragRow . ' does not exits');
     $blockToMove->dragTo($destRegion);
     $this->assertSession()
-      ->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-' . $blockId . '"][class~="drag-previous"]');
+      ->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-' . $blockId . '"].drag-previous');
   }
 
 }
