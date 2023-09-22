@@ -14,6 +14,9 @@ update.settings:
         interval_days:
           type: integer
           label: 'Days since last check'
+        update_day:
+          type: integer
+          label: 'Day of week to check update'
     fetch:
       type: mapping
       label: 'Fetch settings'

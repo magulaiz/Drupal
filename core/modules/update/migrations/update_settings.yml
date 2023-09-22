@@ -12,6 +12,7 @@ source:
     - update_notification_threshold
     - update_notify_emails
     - update_check_frequency
+    - update_day_of_week
   source_module: update
 process:
   'fetch/max_attempts': update_max_fetch_attempts
@@ -19,6 +20,7 @@ process:
   'notification/threshold': update_notification_threshold
   'notification/emails': update_notify_emails
   'check/interval_days': update_check_frequency
+  'check/update_day': update_day_of_week
 destination:
   plugin: config
   config_name: update.settings

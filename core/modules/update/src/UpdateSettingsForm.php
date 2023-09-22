@@ -45,6 +45,26 @@ class UpdateSettingsForm extends ConfigFormBase {
       ],
       '#description' => $this->t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
     ];
+    $form['update_day_of_week'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Day of update check'),
+      '#default_value' => $config->get('check.update_day'),
+      '#options' => [
+        '0' => $this->t('Sunday'),
+        '1' => $this->t('Monday'),
+        '2' => $this->t('Tuesday'),
+        '3' => $this->t('Wednesday'),
+        '4' => $this->t('Thursday'),
+        '5' => $this->t('Friday'),
+        '6' => $this->t('Saturday'),
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="update_check_frequency"]' => ['value' => 7],
+        ],
+      ],
+      '#description' => $this->t('Select the day you want to automatically check for new releases of your currently installed modules and themes.'),
+    ];
 
     $form['update_check_disabled'] = [
       '#type' => 'checkbox',
@@ -91,6 +111,7 @@ class UpdateSettingsForm extends ConfigFormBase {
         $config
           ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
           ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
+          ->set('check.update_day', $form_state->getValue('update_day_of_week'))
           ->set('notification.emails', array_map('trim', explode("\n", trim($form_state->getValue('update_notify_emails', '')))))
           ->set('notification.threshold', $form_state->getValue('update_notification_threshold'));
         break;
@@ -112,6 +133,7 @@ class UpdateSettingsForm extends ConfigFormBase {
         return match ($key) {
         'check.disabled_extensions' => 'update_check_disabled',
           'check.interval_days' => 'update_check_frequency',
+          'check.update_day' => 'update_day_of_week',
           'notification.emails' => 'update_notify_emails',
           'notification.threshold' => 'update_notification_threshold',
           default => self::defaultMapConfigKeyToFormElementName($config_name, $key),

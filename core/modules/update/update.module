@@ -11,6 +11,8 @@
  * ability to install contributed modules and themes via a user interface.
  */
 
+use Drupal\Core\Datetime\DateHelper;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -173,12 +175,16 @@ function update_cron() {
   $interval = 60 * 60 * 24 * $frequency;
   $last_check = \Drupal::state()->get('update.last_check', 0);
   $request_time = \Drupal::time()->getRequestTime();
+  $day_of_week = $update_config->get('check.update_day');
+  $day = DateHelper::dayOfWeek(date('Y-m-d', $request_time));
   if (($request_time - $last_check) > $interval) {
-    // If the configured update interval has elapsed, we want to invalidate
-    // the data for all projects, attempt to re-fetch, and trigger any
-    // configured notifications about the new status.
-    update_refresh();
-    update_fetch_data();
+    if ($frequency == 7 && $day_of_week == $day || $frequency == 1) {
+      // If the configured update interval has elapsed, we want to invalidate
+      // the data for all projects, attempt to re-fetch, and trigger any
+      // configured notifications about the new status.
+      update_refresh();
+      update_fetch_data();
+    }
   }
   else {
     // Otherwise, see if any individual projects are now stale or still
@@ -187,10 +193,12 @@ function update_cron() {
   }
   $last_email_notice = \Drupal::state()->get('update.last_email_notification', 0);
   if (($request_time - $last_email_notice) > $interval) {
-    // If configured time between notifications elapsed, send email about
-    // updates possibly available.
-    \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
-    _update_cron_notify();
+    if ($frequency === 7 && $day_of_week === $day || $frequency == 1) {
+      // If configured time between notifications elapsed, send email about
+      // updates possibly available.
+      \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
+      _update_cron_notify();
+    }
   }
 
   // Clear garbage from disk.
