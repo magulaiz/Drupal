@@ -59,21 +59,20 @@ final class FieldTempStoreDeleteController extends ControllerBase {
   /**
    * Creates a dummy field to set in temp store in order to build the edit form.
    *
-   * @return AjaxResponse
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   The field instance edit form.
    */
   public function deleteTempStore($entity_type, $field_name, $bundle) {
-    // Delete field storage.
-    // FieldStorageConfig::loadByName($entity_type, $field_instance_id)->delete();
-    // delete field
-    //    FieldConfig::loadByName($entity_type, 'article', $field_instance_id)->delete();
-    // delete temp store.
     $form = $this->formBuilder()->getForm(FieldStorageAddForm::class, $entity_type, $bundle);
     // Delete stored field data in case user changes field type.
     $this->tempStore->delete($entity_type . ":" . $field_name);
-    //    if ($this->isAjax()) {.
-    $response = new AjaxResponse();
-    $response->addCommand(new OpenModalDialogCommand('Create a new field', $form));
+    if ($this->isAjax()) {
+      $response = new AjaxResponse();
+      $response->addCommand(new OpenModalDialogCommand('Create a new field', $form, ['width' => '85vw']));
+    }
+    else {
+      $response = $form;
+    }
     return $response;
   }
 
