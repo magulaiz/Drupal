@@ -12,7 +12,6 @@
  */
 
 use Drupal\Core\Datetime\DateHelper;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
