@@ -100,6 +100,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     $all_modules = \Drupal::service('extension.list.module')->getList();
     $database_module = \Drupal::service('database')->getProvider();
     $expected_modules = ['path_alias', 'system', 'user', 'standard', $database_module];
+    dump([$database_module, $expected_modules]);
 
     // Ensure that only core required modules and the install profile can not be uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
@@ -119,6 +120,7 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Can not uninstall the database module.
     unset($modules_to_uninstall[$database_module]);
+    dump($modules_to_uninstall);
 
     $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
     $this->assertTrue(isset($modules_to_uninstall['file']), 'The File module will be disabled');
