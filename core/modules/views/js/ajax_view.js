@@ -81,7 +81,7 @@
         .slice(1)
         .replace(/q=[^&]+&?|&?render=[^&]+/, '');
       if (queryString !== '') {
-        // If there is a '?' in ajaxPath, clean url are on and & should be
+        // If there is a '?' in ajaxPath, clean URL are on and & should be
         // used to add parameters.
         queryString = (/\?/.test(ajaxPath) ? '&' : '?') + queryString;
       }
@@ -90,6 +90,7 @@
     this.element_settings = {
       url: ajaxPath + queryString,
       submit: settings,
+      httpMethod: 'GET',
       setClick: true,
       event: 'click',
       selector,
@@ -127,6 +128,7 @@
     const selfSettings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,
+      httpMethod: 'GET',
       element: this.$view.get(0),
     });
     this.refreshViewAjax = Drupal.ajax(selfSettings);
@@ -201,6 +203,7 @@
       submit: viewData,
       base: false,
       element: link,
+      httpMethod: 'GET',
     });
     this.pagerAjax = Drupal.ajax(selfSettings);
   };

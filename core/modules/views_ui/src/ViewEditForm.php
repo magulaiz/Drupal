@@ -324,7 +324,7 @@ class ViewEditForm extends ViewFormBase {
     $destination = $query->get('destination');
 
     if (!empty($destination)) {
-      // Find out the first display which has a changed path and redirect to this url.
+      // Find out the first display which has a changed path and redirect to this URL.
       $old_view = Views::getView($view->id());
       $old_view->initDisplay();
       foreach ($old_view->displayHandlers as $id => $display) {
@@ -616,6 +616,11 @@ class ViewEditForm extends ViewFormBase {
     $build['columns']['third']['relationships'] = $this->getFormBucket($view, 'relationship', $display);
     $build['columns']['third']['arguments'] = $this->getFormBucket($view, 'argument', $display);
 
+    // If there is a contextual filter or a relationship set, expand the
+    // Advanced column to display these values to the user.
+    if (!empty($build['columns']['third']['relationships']['fields']) || !empty($build['columns']['third']['arguments']['fields'])) {
+      $build['columns']['third']['#open'] = TRUE;
+    }
     return $build;
   }
 

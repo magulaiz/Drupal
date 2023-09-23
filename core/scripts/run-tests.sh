@@ -338,8 +338,8 @@ All arguments are long options.
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
-              as the names of test groups as shown at
-              admin/config/development/testing.
+              as the names of test groups which are derived from test class
+              @group annotations.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "Database".
               If --class is specified then these are interpreted as the names of
@@ -404,6 +404,8 @@ function simpletest_script_parse_args() {
     'execute-test' => '',
     'xml' => '',
     'non-html' => FALSE,
+    'ci-parallel-node-index' => 1,
+    'ci-parallel-node-total' => 1,
   ];
 
   // Override with set values.
@@ -1024,6 +1026,12 @@ function simpletest_script_get_test_list() {
     simpletest_script_print_error('No valid tests were specified.');
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
+
+  if ((int) $args['ci-parallel-node-total'] > 1) {
+    $tests_per_job = ceil(count($test_list) / $args['ci-parallel-node-total']);
+    $test_list = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
+  }
+
   return $test_list;
 }
 

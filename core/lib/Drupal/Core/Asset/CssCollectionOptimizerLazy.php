@@ -122,8 +122,8 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
       if (!empty($css_asset['preprocessed'])) {
         $query = ['delta' => "$order"] + $query_args;
         $filename = 'css_' . $this->generateHash($css_asset) . '.css';
-        $uri = 'public://css/' . $filename;
-        $css_assets[$order]['data'] = $this->fileUrlGenerator->generateAbsoluteString($uri) . '?' . UrlHelper::buildQuery($query);
+        $uri = 'assets://css/' . $filename;
+        $css_assets[$order]['data'] = $this->fileUrlGenerator->generateString($uri) . '?' . UrlHelper::buildQuery($query);
       }
       unset($css_assets[$order]['items']);
     }
@@ -143,19 +143,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
    */
   public function deleteAll() {
     $this->state->delete('drupal_css_cache_files');
-
-    $delete_stale = function ($uri) {
-      $threshold = $this->configFactory
-        ->get('system.performance')
-        ->get('stale_file_threshold');
-      // Default stale file threshold is 30 days.
-      if ($this->time->getRequestTime() - filemtime($uri) > $threshold) {
-        $this->fileSystem->delete($uri);
-      }
-    };
-    if (is_dir('public://css')) {
-      $this->fileSystem->scanDirectory('public://css', '/.*/', ['callback' => $delete_stale]);
-    }
+    $this->fileSystem->deleteRecursive('assets://css');
   }
 
   /**

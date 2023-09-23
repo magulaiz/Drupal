@@ -25,6 +25,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\Error;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -1053,7 +1054,8 @@ function system_requirements($phase) {
         // Check for an incompatible version.
         $required_file = $files[$required_module];
         $required_name = $required_file->info['name'];
-        $version = str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $required_file->info['version'] ?? '');
+        // Remove CORE_COMPATIBILITY- only from the start of the string.
+        $version = preg_replace('/^(' . \Drupal::CORE_COMPATIBILITY . '\-)/', '', $required_file->info['version'] ?? '');
         if (!$requirement->isCompatible($version)) {
           $requirements["$extension_name-$required_module"] = [
             'title' => t('Unresolved dependency'),
@@ -1530,6 +1532,37 @@ function system_requirements($phase) {
     }
   }
 
+  // Add warning when twig debug option is enabled.
+  if ($phase === 'runtime') {
+    $twig_debug = \Drupal::state()->get('twig_debug', FALSE);
+    $twig_cache_disable = \Drupal::state()->get('twig_cache_disable', FALSE);
+    if ($twig_debug || $twig_cache_disable) {
+      $requirements['twig_debug_enabled'] = [
+        'title' => t('Twig development mode'),
+        'value' => t('Twig development mode settings are turned on. Go to @link to disable them.', [
+          '@link' => Link::createFromRoute(
+            'development settings page',
+            'system.development_settings',
+          )->toString(),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    $render_cache_disabled = \Drupal::state()->get('disable_rendered_output_cache_bins', FALSE);
+    if ($render_cache_disabled) {
+      $requirements['render_cache_disabled'] = [
+        'title' => t('Markup caching disabled'),
+        'value' => t('Render cache, dynamic page cache, and page cache are bypassed. Go to @link to enable them.', [
+          '@link' => Link::createFromRoute(
+            'development settings page',
+            'system.development_settings',
+          )->toString(),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+  }
+
   return $requirements;
 }
 
@@ -1651,7 +1684,7 @@ function _system_advisories_requirements(array &$requirements): void {
     $requirements['system_advisories']['title'] = t('Critical security announcements');
     $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
     $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
-    watchdog_exception('system', $exception, 'Failed to retrieve security advisory data.');
+    Error::logException(\Drupal::logger('system'), $exception, 'Failed to retrieve security advisory data.');
     return;
   }
 
