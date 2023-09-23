@@ -5,6 +5,7 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\ExtensionLifecycle;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Module\ModuleTestBase;
 
@@ -98,9 +99,15 @@ class ConfigImportAllTest extends ModuleTestBase {
     field_purge_batch(1000);
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
+
     $database_module = \Drupal::service('database')->getProvider();
+    // If the database module has dependencies, they cannot be uninstalled
+    // either.
+    $database_module_dependencies = [];
+    $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($database_module);
+
     $expected_modules = ['path_alias', 'system', 'user', 'standard', $database_module];
-    dump([$database_module, $expected_modules]);
+    dump([$database_module, $database_module_dependencies, $database_module_extension]);
 
     // Ensure that only core required modules and the install profile can not be uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
@@ -119,7 +126,6 @@ class ConfigImportAllTest extends ModuleTestBase {
     unset($modules_to_uninstall['config']);
 
     // Can not uninstall the database module.
-    unset($modules_to_uninstall[$database_module]);
     dump($modules_to_uninstall);
 
     $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
