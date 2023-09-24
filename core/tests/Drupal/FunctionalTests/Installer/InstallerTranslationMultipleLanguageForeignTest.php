@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\Installer;
  * Tests translation files for multiple languages get imported during install.
  *
  * @group Installer
+ * @group #slow
  */
 class InstallerTranslationMultipleLanguageForeignTest extends InstallerTranslationMultipleLanguageTest {
 

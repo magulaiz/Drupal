@@ -13,6 +13,7 @@ use Drupal\Tests\system\Traits\OffCanvasTestTrait;
  * Tests the Layout Builder UI.
  *
  * @group layout_builder
+ * @group #slow
  */
 class LayoutBuilderTest extends WebDriverTestBase {
 

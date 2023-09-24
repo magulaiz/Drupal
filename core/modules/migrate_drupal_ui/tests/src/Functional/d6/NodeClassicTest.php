@@ -13,6 +13,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * when there is a pre-existing classic node migrate map table.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
 

@@ -14,6 +14,7 @@ use Drupal\node\Entity\NodeType;
  * Basic display tests for Media.
  *
  * @group media
+ * @group #slow
  */
 class MediaDisplayTest extends MediaJavascriptTestBase {
 

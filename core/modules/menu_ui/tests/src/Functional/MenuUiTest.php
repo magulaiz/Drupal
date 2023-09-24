@@ -20,6 +20,7 @@ use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
  * This test adds a custom menu, adds menu links to the custom menu and the
  * Tools menu, checks their data, and deletes them using the UI.
  *
+ * @group #slow
  * @group menu_ui
  */
 class MenuUiTest extends BrowserTestBase {

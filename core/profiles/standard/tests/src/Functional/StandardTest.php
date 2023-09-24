@@ -21,6 +21,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Tests Standard installation profile expectations.
  *
  * @group standard
+ * @group #slow
  */
 class StandardTest extends BrowserTestBase {
 

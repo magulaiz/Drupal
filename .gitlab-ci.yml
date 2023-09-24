@@ -48,7 +48,6 @@ variables:
   CONCURRENCY: 32
   GIT_DEPTH: "3"
 
-
 #############
 # Stages    #
 #############

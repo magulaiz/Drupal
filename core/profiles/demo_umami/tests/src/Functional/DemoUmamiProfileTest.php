@@ -17,6 +17,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 /**
  * Tests demo_umami profile.
  *
+ * @group #slow
  * @group demo_umami
  */
 class DemoUmamiProfileTest extends BrowserTestBase {

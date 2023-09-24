@@ -14,6 +14,7 @@ use Drupal\Tests\media\Traits\OEmbedTestTrait;
  * Basic tests for Media configuration in the standard profile.
  *
  * @group media
+ * @group #slow
  */
 class MediaStandardProfileTest extends MediaJavascriptTestBase {
 

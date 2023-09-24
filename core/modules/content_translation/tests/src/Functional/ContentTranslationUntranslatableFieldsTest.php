@@ -10,6 +10,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 /**
  * Tests the untranslatable fields behaviors.
  *
+ * @group #slow
  * @group content_translation
  */
 class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendingRevisionTestBase {
