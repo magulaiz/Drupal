@@ -132,6 +132,7 @@ class Connection extends BaseMySqlConnection {
 
     $connection_options['init_commands'] += [
       'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
+      'collation_connection' => => "SET collation_connection = 'utf8mb4_0900_ai_ci'",
     ];
 
     // Execute initial commands.
