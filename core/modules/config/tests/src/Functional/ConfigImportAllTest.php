@@ -99,15 +99,11 @@ class ConfigImportAllTest extends ModuleTestBase {
     field_purge_batch(1000);
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
-
     $database_module = \Drupal::service('database')->getProvider();
-    // If the database module has dependencies, they cannot be uninstalled
-    // either.
-    $database_module_dependencies = [];
-    $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($database_module);
-
     $expected_modules = ['path_alias', 'system', 'user', 'standard', $database_module];
-    dump([$database_module, $database_module_dependencies, $database_module_extension]);
+    // If the database module has dependencies, they are expected too.
+    $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($database_module);
+    $database_module_dependencies = $database_module_extension->requires ? array_keys($database_module_extension->requires) : [];
 
     // Ensure that only core required modules and the install profile can not be uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
@@ -125,8 +121,11 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Can not uninstall config and use admin/config/development/configuration!
     unset($modules_to_uninstall['config']);
 
-    // Can not uninstall the database module.
-    dump($modules_to_uninstall);
+    // Can not uninstall the database module and its dependencies.
+    unset($modules_to_uninstall[$database_module]);
+    foreach ($database_module_dependencies as $dependency) {
+      unset($modules_to_uninstall[$dependency]);
+    }
 
     $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
     $this->assertTrue(isset($modules_to_uninstall['file']), 'The File module will be disabled');
