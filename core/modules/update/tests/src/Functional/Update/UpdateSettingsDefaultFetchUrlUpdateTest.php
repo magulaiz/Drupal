@@ -107,4 +107,17 @@ class UpdateSettingsDefaultFetchUrlUpdateTest extends UpdatePathTestBase {
     $this->assertNull($fetch_url_after);
   }
 
+  /**
+   * Tests update of update.settings:fetch.url.
+   */
+  public function testUpdate2() {
+    $update_day_before = $this->config('update.settings')->get('check.update_day');
+    $this->assertNull($update_day_before);
+
+    $this->runUpdates();
+
+    $update_day_after = $this->config('update.settings')->get('check.update_day');
+    $this->assertSame(4, $update_day_after);
+  }
+
 }
