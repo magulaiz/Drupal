@@ -84,7 +84,7 @@ final class FieldConfigAddController extends ControllerBase {
 
     if ($this->isAjax()) {
       $response = new AjaxResponse();
-      $response->addCommand(new OpenModalDialogCommand("New ${field_type_label} field settings", $edit_form, ['width' => '85vw']));
+      $response->addCommand(new OpenModalDialogCommand("New {$field_type_label} field settings", $edit_form, ['width' => '85vw']));
     }
     else {
       $response = $edit_form;
