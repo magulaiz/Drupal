@@ -31,5 +31,7 @@ function update_post_update_set_blank_fetch_url_to_null() {
  */
 function update_day_of_week() {
   $update_settings = \Drupal::configFactory()->getEditable('update.settings');
-  $update_settings->set('check.update_day', 4);
+  $update_settings
+    ->set('check.update_day', 4)
+    ->save(TRUE);
 }
