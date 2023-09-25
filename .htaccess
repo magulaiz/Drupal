@@ -60,13 +60,6 @@ AddEncoding gzip svgz
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  # Set "protossl" to "s" if we were accessed via https://.  This is used later
-  # if you enable "www." stripping or enforcement, in order to ensure that
-  # you don't bounce between http and https.
-  RewriteRule ^ - [E=protossl]
-  RewriteCond %{HTTPS} on
-  RewriteRule ^ - [E=protossl:s]
-
   # Make sure Authorization HTTP header is available to PHP
   # even when running as CGI or FastCGI.
   RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -86,22 +79,33 @@ AddEncoding gzip svgz
   # downloaded.
   RewriteRule "/\.|^\.(?!well-known/)" - [F]
 
+  # Define environment (ENV) variables. These are used later.
+  RewriteRule ^ - [E=protossl]
+  RewriteRule ^ - [E=redirectssl]
+  RewriteRule ^ - [E=forcessl]
+  RewriteRule ^ - [E=redirectsubdomain]
+  # Set "protossl" to "s" if we were accessed via https://.  This is used later
+  # if you enable "www." stripping or enforcement, in order to ensure that
+  # you don't bounce between http and https.
+  RewriteCond %{HTTPS} on
+  RewriteRule ^ - [E=protossl:s]
+
   # If your site can be accessed both with and without the 'www.' prefix, you
   # can use one of the following settings to redirect users to your preferred
-  # URL, either WITH or WITHOUT the 'www.' prefix. Choose ONLY one option:
-  #
+  # URL, either WITH or WITHOUT the 'www.' prefix.
   # To redirect all users to access the site WITH the 'www.' prefix,
   # (http://example.com/foo will be redirected to http://www.example.com/foo)
   # uncomment the following:
   # RewriteCond %{HTTP_HOST} .
   # RewriteCond %{HTTP_HOST} !^www\. [NC]
-  # RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-  #
-  # To redirect all users to access the site WITHOUT the 'www.' prefix,
-  # (http://www.example.com/foo will be redirected to http://example.com/foo)
+  RewriteRule ^ - [E=redirectsubdomain:www\.]
+  # To redirect all users to access the site WITH the 'www.' prefix,
+  # (http://example.com/foo will be redirected to http://www.example.com/foo)
   # uncomment the following:
-  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-  # RewriteRule ^ http%{ENV:protossl}://%1%{REQUEST_URI} [L,R=301]
+  # RewriteRule ^ - [E=redirectsubdomain]
+
+  # Redirect to the destination (with(out) SSL / www.) in one redirect:
+  RewriteRule ^ http%{ENV:protossl}://%{ENV:redirectwww}%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory or in a
   # VirtualDocumentRoot and the rewrite rules are not working properly.
