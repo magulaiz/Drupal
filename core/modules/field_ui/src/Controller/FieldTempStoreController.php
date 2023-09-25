@@ -59,8 +59,7 @@ final class FieldTempStoreController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The field instance edit form.
    */
-  public function setTempStore($entity_type, $field_storage_type, $field_instance_id, $bundle) {
-    $temp_field_name = $field_instance_id;
+  public function setTempStore($entity_type, $field_storage_type, $field_temp_store_key, $bundle) {
     $field_values = [
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -76,14 +75,14 @@ final class FieldTempStoreController extends ControllerBase {
     }
     $field_values += [
       ...$default_options['field_config'] ?? [],
-      'field_name' => $temp_field_name,
+      'field_name' => $field_temp_store_key,
       // Field translatability should be explicitly enabled by the users.
       'translatable' => FALSE,
     ];
 
     $field_storage_values = [
       ...$default_options['field_storage_config'] ?? [],
-      'field_name' => $temp_field_name,
+      'field_name' => $field_temp_store_key,
       'type' => $field_type,
       'entity_type' => $entity_type,
     ];
@@ -97,14 +96,14 @@ final class FieldTempStoreController extends ControllerBase {
     }
 
     // Save field and field storage values in tempstore.
-    $this->tempStore->set($entity_type . ':' . $temp_field_name, [
+    $this->tempStore->set($entity_type . ':' . $field_temp_store_key, [
       'field_storage' => $field_storage_entity,
       'field_config_values' => $field_values,
       'default_options' => $default_options,
     ]);
     $route_parameters = [
       'entity_type' => $entity_type,
-      'field_name' => $temp_field_name,
+      'field_name' => $field_temp_store_key,
       'node_type' => $bundle,
     ];
     if ($this->isAjax()) {

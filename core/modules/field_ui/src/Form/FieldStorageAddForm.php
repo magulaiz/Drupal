@@ -68,11 +68,11 @@ class FieldStorageAddForm extends FormBase {
   protected $configFactory;
 
   /**
-   * Form instance id.
+   * ID for the field stored in temp store.
    *
    * @var string
    */
-  protected $fieldInstanceId;
+  protected $fieldTempStoreKey;
 
   /**
    * Constructs a new FieldStorageAddForm object.
@@ -340,13 +340,13 @@ class FieldStorageAddForm extends FormBase {
       // form, a new entity with the user inputted field name will get created
       // that is saved.
       // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
-      $this->fieldInstanceId = '_' . substr(str_shuffle(md5(time())), 0, 10);
+      $this->fieldTempStoreKey = '_' . substr(str_shuffle(md5(time())), 0, 10);
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
       $route_parameters = [
         'entity_type' => $this->entityTypeId,
         'field_storage_type' => $selected_field_storage_type ?? $selected_field_type,
-        'field_instance_id' => $this->fieldInstanceId,
+        'field_temp_store_key' => $this->fieldTempStoreKey,
       ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
 
       $form['group_field_options_wrapper']['submit'] = [

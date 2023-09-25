@@ -78,11 +78,11 @@ class FieldConfigEditForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
-   * The field instance name used to access the temp store.
+   * ID for the field stored in temp store.
    *
    * @var string
    */
-  protected $tempStoreKey;
+  protected $fieldTempStoreKey;
 
   /**
    * Constructs a new FieldConfigDeleteForm object.
