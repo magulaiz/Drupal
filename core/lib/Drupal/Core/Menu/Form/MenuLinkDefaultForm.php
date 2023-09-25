@@ -90,6 +90,14 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
+  public static function updateParentLinks(array $form, FormStateInterface $form_state) {
+    $selectedMenu = $form_state->getValue('menu_parent_menu');
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->t('Edit menu link %title', ['%title' => $this->menuLink->getTitle()]);
 
@@ -119,6 +127,9 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#description' => $this->t('Menu links that are not enabled will not be listed in any menu.'),
       '#default_value' => $this->menuLink->isEnabled(),
     ];
+    $form['#attached']['library'] = [
+      'core/drupal.ajax',
+    ];
 
     $form['expanded'] = [
       '#type' => 'checkbox',
@@ -128,10 +139,54 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     ];
 
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
-    $form['menu_parent']['#title'] = $this->t('Parent link');
-    $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-    $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+    $allMenuLinks = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
+
+    $parentMenuLinks = [];
+    foreach ($allMenuLinks as $menuLink) {
+      if (strpos($menuLink, '<') === 0){
+        $parentMenuLinks[$menuLink] = $menuLink;
+      }
+    }
+
+    $form['menu_parent_menu'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Menu'),
+      '#description' => $this->t('Select the menu'),
+      '#options' => $parentMenuLinks,
+      // this ajax callback is not getting executed.
+      '#ajax' => [
+        'callback' => [static::class, 'updateParentLinks'],
+        'wrapper' => 'ajax-updated-section',
+      ],
+    ];
+    foreach($allMenuLinks as $key => $value) {
+      if (strpos($value, '<') === 0) {
+        $selectedMenuItem[$value] = $key;
+      }
+    }
+
+    foreach($allMenuLinks as $key => $value) {
+      if (strpos($key, 'account:') === 0) {
+        $menuOfSelectedType[$key] = $value;
+      }
+    }
+    $form['menu_parent'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Parent link'),
+      '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
+      '#options' => $menuOfSelectedType,
+      '#prefix' => '<div class="ajax-updated-section">',
+      '#suffix' => '</div>',
+
+    ];
+
+
+//    //  Add form elements for selecting the parent menu link.
+//    $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
+//    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
+//    $form['menu_parent']['#title'] = $this->t('Parent link');
+//    $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
+//    $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [
