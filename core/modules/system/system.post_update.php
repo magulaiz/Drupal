@@ -158,3 +158,10 @@ function system_post_update_set_blank_log_url_to_null() {
       ->save(TRUE);
   }
 }
+
+/**
+ * Enable the remove diacritics module.
+ */
+function system_post_update_enable_remove_diacritics() {
+  \Drupal::service('module_installer')->install(['remove_diacritics']);
+}

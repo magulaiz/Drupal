@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Remove diacritics rules for backwards compatibility.
+ */
+
+/**
+ * Implements hook_remove_diacritics_map_alter().
+ */
+function remove_diacritics_remove_diacritics_map_alter(&$map) {
+  // phpcs:disable
+  $map += ['Ø'=>'O','ø'=>'o','Đ'=>'D','đ'=>'d','Ħ'=>'H','ħ'=>'h','ı'=>'i','Ŀ'=>'L','ŀ'=>'l','Ł'=>'L','ł'=>'l','Ŧ'=>'T','ŧ'=>'t','Ǥ'=>'G','ǥ'=>'g','Ȥ'=>'Z','ȥ'=>'z','ȴ'=>'l','ȵ'=>'n','ȶ'=>'t','ȷ'=>'j','Ⱥ'=>'A','Ȼ'=>'C','ȼ'=>'c','Ƚ'=>'L','Ⱦ'=>'T','ȿ'=>'s','ɀ'=>'z','Ƀ'=>'B','Ʉ'=>'U','Ɇ'=>'E','ɇ'=>'e','Ɉ'=>'J','ɉ'=>'j','Ɋ'=>'Q','ɋ'=>'q','Ɍ'=>'R','ɍ'=>'r','Ɏ'=>'Y','ɏ'=>'y'];
+}

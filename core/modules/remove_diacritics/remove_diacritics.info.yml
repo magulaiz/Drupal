@@ -1,0 +1,7 @@
+name: Remove diacritics
+type: module
+description: 'Legacy remove diacritics rules.'
+hidden: true
+#lifecycle: deprecated
+#lifecycle_link: https://www.drupal.org/node/3375524
+version: VERSION
