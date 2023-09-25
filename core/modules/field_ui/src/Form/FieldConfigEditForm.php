@@ -78,6 +78,13 @@ class FieldConfigEditForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
+   * The field instance name used to access the temp store.
+   *
+   * @var string
+   */
+  protected $tempStoreKey;
+
+  /**
    * Constructs a new FieldConfigDeleteForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
@@ -155,6 +162,10 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
+
+    if (!isset($this->tempStoreKey)) {
+      $this->tempStoreKey = $this->entity->get('field_name');
+    }
 
     // @todo Change this.
     $form_title = $this->t('Field settings for %bundle', [
@@ -449,10 +460,7 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     $entity_type = $this->entity->getTargetEntityTypeId();
-    $temp_field_name = $this->entity->get('field_name');
-    $temp_store = $this->tempStore->get($entity_type . ':' . $temp_field_name);
-    // @todo: Move default options function here.
-    // @todo: Move field creation out to another function.
+    $temp_store = $this->tempStore->get($entity_type . ':' . $this->tempStoreKey);
     $default_options = $temp_store['default_options'];
 
     $this->validateAddNew($form, $form_state);
@@ -560,7 +568,7 @@ class FieldConfigEditForm extends EntityForm {
 
       if ($this->entity->isNew()) {
         // Delete the temp store entry.
-        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->tempStoreKey);
       }
 
       $this->messenger()
