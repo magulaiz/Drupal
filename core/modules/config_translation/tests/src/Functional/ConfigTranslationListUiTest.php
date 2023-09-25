@@ -548,6 +548,12 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $page->pressButton('Save');
 
     $this->drupalGet("$field_ui_prefix/default/layout");
+    $this->clickLink('Configure Section 1');
+    $this->submitForm([
+      'layout_settings[label]' => 'Custom section',
+    ], 'Update');
+    $this->getSession()->getPage()->pressButton('Save layout');
+    $this->drupalGet("$field_ui_prefix/default/layout");
     $this->clickLink('Add block');
     $this->clickLink('custom_label');
     $this->getSession()->getPage()->pressButton('Add block');
@@ -566,6 +572,8 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // type.
     $this->assertSession()->pageTextMatchesCount(1, '/Block settings/');
     $this->assertSession()->pageTextMatchesCount(3, '/custom_label/');
+    // When a section is named.
+    $this->assertSession()->pageTextMatchesCount(3, '/Custom section/');
     $this->assertSession()->pageTextMatchesCount(2, '/Field: field_boolean, type: Boolean/');
     $this->assertSession()->pageTextMatchesCount(2, '/Label/');
   }
