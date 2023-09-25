@@ -211,15 +211,30 @@ class ModulesListForm extends FormBase {
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#attributes' => ['class' => ['package-listing']],
-        // Ensure that the "Core" package comes first.
-        '#weight' => $package == 'Core' ? -10 : NULL,
       ];
+      // Ensure that the "Installed modules" and "Core" packages come first.
+      $weight = NULL;
+      switch ($package) {
+        case 'Core':
+          $weight = -10;
+          break;
+
+        case 'Installed modules':
+          $weight = -11;
+          break;
+      }
+      $form['modules'][$package]['#weight'] = $weight;
     }
 
-    // If testing modules are shown, collapse the corresponding package by
-    // default.
+    // If enabled or testing modules are shown, collapse the corresponding
+    //  packages by default.
     if (isset($form['modules']['Testing'])) {
       $form['modules']['Testing']['#open'] = FALSE;
+    }
+    // Collapse the installed module list and add help text.
+    if (isset($form['modules']['Installed modules'])) {
+      $form['modules']['Installed modules']['#open'] = FALSE;
+      $form['modules']['Installed modules']['#description'] = t('Some modules may be uninstalled on the <a href=":url">Uninstall page</a>.', [':url' => \Drupal::url('system.modules_uninstall')]);
     }
 
     // Lastly, sort all packages by title.
@@ -315,17 +330,16 @@ class ModulesListForm extends FormBase {
     }
 
     // Present a checkbox for installing and indicating the status of a module.
-    $row['enable'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Install'),
-      '#default_value' => (bool) $module->status,
-      '#disabled' => (bool) $module->status,
-    ];
+    if (!$module->status && empty($module->info['required'])) {
+      $row['enable'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Install'),
+      ];
+    }
 
     // Disable the checkbox for required modules.
     if (!empty($module->info['required'])) {
       // Used when displaying modules that are required by the installation profile
-      $row['enable']['#disabled'] = TRUE;
       $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : '');
     }
 
@@ -361,7 +375,9 @@ class ModulesListForm extends FormBase {
     // If this module is not compatible, disable the checkbox.
     if (!$compatible) {
       $status = implode(' ', $reasons);
-      $row['enable']['#disabled'] = TRUE;
+      if (!empty($row['enable'])) {
+        $row['enable']['#disabled'] = TRUE;
+      }
       $row['description']['#markup'] = $status;
       $row['#attributes']['class'][] = 'incompatible';
     }
@@ -387,7 +403,9 @@ class ModulesListForm extends FormBase {
       if (isset($modules[$dependent]) && empty($modules[$dependent]->info['hidden'])) {
         if ($modules[$dependent]->status == 1 && $module->status == 1) {
           $row['#required_by'][$dependent] = $this->t('@module', ['@module' => $modules[$dependent]->info['name']]);
-          $row['enable']['#disabled'] = TRUE;
+          if (!empty($row['enable'])) {
+            $row['enable']['#disabled'] = TRUE;
+          }
         }
         else {
           $row['#required_by'][$dependent] = $this->t('@module (<span class="admin-disabled">disabled</span>)', ['@module' => $modules[$dependent]->info['name']]);
