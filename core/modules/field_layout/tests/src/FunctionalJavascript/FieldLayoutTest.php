@@ -9,6 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests using field layout for entity displays.
  *
  * @group field_layout
+ * @group #slow
  */
 class FieldLayoutTest extends WebDriverTestBase {
 

@@ -17,6 +17,7 @@ use Drupal\Core\Template\Attribute;
  * Tests the block display plugin.
  *
  * @group block
+ * @group #slow
  * @see \Drupal\views\Plugin\views\display\Block
  */
 class DisplayBlockTest extends ViewTestBase {

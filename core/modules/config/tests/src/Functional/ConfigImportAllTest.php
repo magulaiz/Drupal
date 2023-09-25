@@ -14,6 +14,7 @@ use Drupal\Tests\system\Functional\Module\ModuleTestBase;
  * Note that the use of SchemaCheckTestTrait means that the schema conformance
  * of all default configuration is also tested.
  *
+ * @group #slow
  * @group config
  */
 class ConfigImportAllTest extends ModuleTestBase {

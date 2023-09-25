@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * @covers \Drupal\language\Form\ContentLanguageSettingsForm
  * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
+ * @group #slow
  */
 class ContentTranslationEnableTest extends BrowserTestBase {
 

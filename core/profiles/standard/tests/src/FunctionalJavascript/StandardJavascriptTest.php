@@ -9,6 +9,7 @@ use Drupal\node\Entity\Node;
  * Tests Standard installation profile JavaScript expectations.
  *
  * @group standard
+ * @group #slow
  */
 class StandardJavascriptTest extends WebDriverTestBase {
 

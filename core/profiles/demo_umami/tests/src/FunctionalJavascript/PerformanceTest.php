@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  * Tests demo_umami profile performance.
  *
  * @group performance
+ * @group #slow
  */
 class PerformanceTest extends PerformanceTestBase {
 

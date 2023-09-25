@@ -6,6 +6,7 @@ namespace Drupal\Tests\content_moderation\Functional;
  * Tests setting a custom default moderation state.
  *
  * @group content_moderation
+ * @group #slow
  */
 class DefaultModerationStateTest extends ModerationStateTestBase {
 

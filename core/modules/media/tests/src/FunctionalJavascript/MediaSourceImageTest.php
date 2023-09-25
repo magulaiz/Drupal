@@ -15,6 +15,7 @@ use Drupal\user\RoleInterface;
  * Tests the image media source.
  *
  * @group media
+ * @group #slow
  */
 class MediaSourceImageTest extends MediaSourceTestBase {
 

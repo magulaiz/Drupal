@@ -10,6 +10,7 @@ use Drupal\user\Entity\Role;
  * Tests the UI for correct contextual links.
  *
  * @group contextual
+ * @group #slow
  */
 class ContextualLinksTest extends WebDriverTestBase {
 

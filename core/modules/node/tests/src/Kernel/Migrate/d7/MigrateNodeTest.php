@@ -13,6 +13,7 @@ use Drupal\node\NodeInterface;
  * Tests node migration.
  *
  * @group node
+ * @group #slow
  */
 class MigrateNodeTest extends MigrateDrupal7TestBase {
 

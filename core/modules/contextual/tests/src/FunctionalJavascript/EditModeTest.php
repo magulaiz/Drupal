@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests edit mode.
  *
  * @group contextual
+ * @group #slow
  */
 class EditModeTest extends WebDriverTestBase {
 

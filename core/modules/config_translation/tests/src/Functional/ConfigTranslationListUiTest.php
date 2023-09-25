@@ -16,6 +16,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  * Visit all lists.
  *
  * @group config_translation
+ * @group #slow
  * @see \Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
  */
 class ConfigTranslationListUiTest extends BrowserTestBase {

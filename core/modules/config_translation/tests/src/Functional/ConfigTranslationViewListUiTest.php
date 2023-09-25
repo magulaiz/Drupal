@@ -12,6 +12,7 @@ use Drupal\views\Views;
  * Visit view list and test if translate is available.
  *
  * @group config_translation
+ * @group #slow
  */
 class ConfigTranslationViewListUiTest extends UITestBase {
 

@@ -13,6 +13,7 @@ use Symfony\Component\Yaml\Yaml;
  * Tests for CKEditor 5.
  *
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
 class CKEditor5AllowedTagsTest extends CKEditor5TestBase {

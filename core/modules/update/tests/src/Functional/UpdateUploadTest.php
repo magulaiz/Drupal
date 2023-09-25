@@ -11,6 +11,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the Update Manager module's upload and extraction functionality.
  *
  * @group update
+ * @group #slow
  */
 class UpdateUploadTest extends UpdateUploaderTestBase {
 

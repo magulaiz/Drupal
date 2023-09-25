@@ -7,6 +7,7 @@ use Drupal\node\NodeInterface;
 /**
  * Test content_moderation functionality with localization and translation.
  *
+ * @group #slow
  * @group content_moderation
  */
 class ModerationLocaleTest extends ModerationStateTestBase {

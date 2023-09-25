@@ -8,6 +8,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * Tests Drupal 6 Id Conflict page.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class IdConflictTest extends MigrateUpgradeExecuteTestBase {
 

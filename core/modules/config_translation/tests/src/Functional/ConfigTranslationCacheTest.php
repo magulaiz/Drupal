@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * Translate settings and entities to various languages.
  *
  * @group config_translation
+ * @group #slow
  */
 class ConfigTranslationCacheTest extends BrowserTestBase {
 

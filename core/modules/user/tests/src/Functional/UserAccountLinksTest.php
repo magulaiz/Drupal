@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests user-account links.
  *
  * @group user
+ * @group #slow
  */
 class UserAccountLinksTest extends BrowserTestBase {
 

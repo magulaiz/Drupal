@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Installer\InstallerTestBase;
  * Tests the multilingual installer installing the Umami profile.
  *
  * @group Installer
+ * @group #slow
  */
 class UmamiMultilingualInstallTest extends InstallerTestBase {
 

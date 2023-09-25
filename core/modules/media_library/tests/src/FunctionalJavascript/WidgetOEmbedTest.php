@@ -10,6 +10,7 @@ use Drupal\Tests\media\Traits\OEmbedTestTrait;
  * Tests that oEmbed media can be added in the Media library's widget.
  *
  * @group media_library
+ * @group #slow
  */
 class WidgetOEmbedTest extends MediaLibraryTestBase {
 

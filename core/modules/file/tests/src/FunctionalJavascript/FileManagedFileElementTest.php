@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests the 'managed_file' element type.
  *
  * @group file
+ * @group #slow
  */
 class FileManagedFileElementTest extends WebDriverTestBase {
 

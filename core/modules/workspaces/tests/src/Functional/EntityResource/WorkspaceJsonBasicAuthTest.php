@@ -8,6 +8,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
  * Test workspace entities for JSON requests via basic auth.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceJsonBasicAuthTest extends WorkspaceResourceTestBase {
 
