@@ -197,6 +197,15 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
+   * Get the formula for this argument.
+   *
+   * This method should be implemented in extending classes.
+   */
+  private function getFormula() {
+    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function sanitizeValue($value, $type = NULL) {

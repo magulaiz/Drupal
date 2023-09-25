@@ -5,6 +5,7 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
@@ -178,6 +179,24 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
       $entity->enforceIsNew();
     }
     return $entity;
+  }
+
+  /**
+   * Updates the entity with the contents of a row.
+   *
+   * This method should be implemented in extending classes.
+   */
+  protected function updateEntity(EntityInterface $entity, Row $row) {
+    throw new \RuntimeException(get_class() . '::updateEntity() not implemented.');
+  }
+
+  /**
+   * Populates as much of the stub row as possible.
+   *
+   * This method should be implemented in extending classes.
+   */
+  protected function processStubRow(Row $row) {
+    throw new \RuntimeException(get_class() . '::processStubRow() not implemented.');
   }
 
   /**

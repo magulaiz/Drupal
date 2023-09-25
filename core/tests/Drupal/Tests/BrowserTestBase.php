@@ -7,8 +7,10 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Url;
@@ -23,6 +25,7 @@ use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\VarDumper\VarDumper;
 
 /**
@@ -557,6 +560,42 @@ abstract class BrowserTestBase extends TestCase {
     //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
     //   appears to be calling a different container.
     $this->container->get('stream_wrapper_manager')->register();
+  }
+
+  /**
+   * Install modules defined by `static::$modules`.
+   *
+   * To install test modules outside of the testing environment, add
+   * @code
+   * $settings['extension_discovery_scan_tests'] = TRUE;
+   * @endcode
+   * to your settings.php.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
+   */
+  protected function installModulesFromClassProperty(ContainerInterface $container) {
+    $class = static::class;
+    $modules = [];
+    while ($class) {
+      if (property_exists($class, 'modules')) {
+        $modules = array_merge($modules, $class::$modules);
+      }
+      $class = get_parent_class($class);
+    }
+    if ($modules) {
+      $modules = array_unique($modules);
+      try {
+        $success = $container->get('module_installer')->install($modules, TRUE);
+        $this->assertTrue($success, new FormattableMarkup('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
+      }
+      catch (MissingDependencyException $e) {
+        // The exception message has all the details.
+        $this->fail($e->getMessage());
+      }
+      // The container was already rebuilt by the ModuleInstaller.
+      $this->container = \Drupal::getContainer();
+    }
   }
 
   /**

@@ -3,7 +3,6 @@
 namespace Drupal\Core\Test;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Config\FileStorage;
@@ -11,7 +10,6 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\UserSession;
@@ -444,42 +442,6 @@ trait FunctionalTestSetupTrait {
       $system_theme_config
         ->set('default', $this->defaultTheme)
         ->save();
-    }
-  }
-
-  /**
-   * Install modules defined by `static::$modules`.
-   *
-   * To install test modules outside of the testing environment, add
-   * @code
-   * $settings['extension_discovery_scan_tests'] = TRUE;
-   * @endcode
-   * to your settings.php.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The container.
-   */
-  protected function installModulesFromClassProperty(ContainerInterface $container) {
-    $class = static::class;
-    $modules = [];
-    while ($class) {
-      if (property_exists($class, 'modules')) {
-        $modules = array_merge($modules, $class::$modules);
-      }
-      $class = get_parent_class($class);
-    }
-    if ($modules) {
-      $modules = array_unique($modules);
-      try {
-        $success = $container->get('module_installer')->install($modules, TRUE);
-        $this->assertTrue($success, new FormattableMarkup('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
-      }
-      catch (MissingDependencyException $e) {
-        // The exception message has all the details.
-        $this->fail($e->getMessage());
-      }
-      // The container was already rebuilt by the ModuleInstaller.
-      $this->container = \Drupal::getContainer();
     }
   }
 

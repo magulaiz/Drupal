@@ -744,6 +744,15 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Returns an array of operator information.
+   *
+   * This method should be implemented in extending classes.
+   */
+  protected function operators() {
+    throw new \RuntimeException(get_class() . '::operators() not implemented.');
+  }
+
+  /**
    * Validates a filter identifier.
    *
    * Sets the form error if $form_state is passed or an error string if
