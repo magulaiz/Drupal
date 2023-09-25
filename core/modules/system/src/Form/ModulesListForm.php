@@ -227,14 +227,14 @@ class ModulesListForm extends FormBase {
     }
 
     // If enabled or testing modules are shown, collapse the corresponding
-    //  packages by default.
+    // packages by default.
     if (isset($form['modules']['Testing'])) {
       $form['modules']['Testing']['#open'] = FALSE;
     }
     // Collapse the installed module list and add help text.
     if (isset($form['modules']['Installed modules'])) {
       $form['modules']['Installed modules']['#open'] = FALSE;
-      $form['modules']['Installed modules']['#description'] = t('Some modules may be uninstalled on the <a href=":url">Uninstall page</a>.', [':url' => \Drupal::url('system.modules_uninstall')]);
+      $form['modules']['Installed modules']['#description'] = t('Some modules may be uninstalled on the <a href=":url">Uninstall page</a>.', [':url' => Url::fromRoute('system.modules_uninstall')->toString()]);
     }
 
     // Lastly, sort all packages by title.
