@@ -29,9 +29,9 @@ function update_post_update_set_blank_fetch_url_to_null() {
 /**
  * Sets the default day for update.
  */
-function update_day_of_week() {
+function update_post_update_day_of_week() {
   $update_settings = \Drupal::configFactory()->getEditable('update.settings');
-  if ($update_settings->get('check.update_day') === 0) {
+  if ($update_settings->get('check.update_day') === NULL) {
     $update_settings
       ->set('check.update_day', 4)
       ->save(TRUE);
