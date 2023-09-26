@@ -30,8 +30,6 @@ class JsonApiSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $jsonapi_config = $this->config('jsonapi.settings');
-
     $form['read_only'] = [
       '#type' => 'radios',
       '#title' => $this->t('Allowed operations'),
@@ -39,11 +37,27 @@ class JsonApiSettingsForm extends ConfigFormBase {
         'r' => $this->t('Accept only JSON:API read operations.'),
         'rw' => $this->t('Accept all JSON:API create, read, update, and delete operations.'),
       ],
-      '#default_value' => $jsonapi_config->get('read_only') === TRUE ? 'r' : 'rw',
+      '#config_target' => ['jsonapi.settings:read_only', '::transformReadOnly'],
       '#description' => $this->t('Warning: Only enable all operations if the site requires it. <a href=":docs">Learn more about securing your site with JSON:API.</a>', [':docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/security-considerations']),
     ];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Transformation callback for the read_only config value.
+   *
+   * @param bool|string $read_only
+   *   The value to transform.
+   *
+   * @return bool|string
+   *   The transformed value.
+   */
+  public function transformReadOnly(bool|string $read_only) {
+    if (is_bool($read_only)) {
+      return $read_only ? 'r' : 'rw';
+    }
+    return $read_only === 'r';
   }
 
   /**
