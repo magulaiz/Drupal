@@ -706,7 +706,7 @@ class UrlHelperTest extends TestCase {
       ['http://', 'http://example.com/foo'],
     ];
   }
-  
+
   /**
    * Tests the parseQueryString method.
    */
