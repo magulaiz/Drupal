@@ -49,23 +49,29 @@ trait FieldUiJSTestTrait {
       $field_card = $this->getFieldFromGroupJS($field_type);
     }
     $field_card?->click();
-    $field_label = $page->findField('edit-label');
-    $this->assertTrue($field_label->isVisible());
-    $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
-    $field_label->setValue($label);
-    $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
-    $this->assertNotEmpty($machine_name);
-    $page->findButton('Edit')->press();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->linkExists('Continue');
+    $page->clickLink('Continue');
+    $this->assertSession()->waitForElementVisible('css', '#drupal-modal');
 
-    $field_field_name = $page->findField('field_name');
-    $this->assertTrue($field_field_name->isVisible());
-    $field_field_name->setValue($field_name);
-
-    $page->findButton('Continue')->click();
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
+      $page = $session->getPage();
+      // Enter field label.
+      $field_label = $page->findField('edit-label');
+      $this->assertTrue($field_label->isVisible());
+      $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
+      $field_label->setValue($label);
+      $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
+      $this->assertNotEmpty($machine_name);
+      $page->findButton('Edit')->press();
+
+      $field_field_name = $page->findField('field_name');
+      $this->assertTrue($field_field_name->isVisible());
+      $field_field_name->setValue($field_name);
       // Second step: Save field settings.
-      $page->findButton('Save settings')->click();
+      $save_button = $page->find('css', '.ui-dialog-buttonpane')->findButton('Save settings');
+      $save_button->click();
       $assert_session->pageTextContains("Saved $label configuration.");
 
       // Check that the field appears in the overview form.
