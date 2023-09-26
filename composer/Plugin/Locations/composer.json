@@ -1,6 +1,6 @@
 {
   "name": "drupal/core-drupal-locations",
-  "description": "Writes a class definining Drupal's install location.",
+  "description": "Writes a class defining Drupal's install location.",
   "type": "composer-plugin",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
