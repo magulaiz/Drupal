@@ -90,8 +90,22 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public static function updateParentLinks(array $form, FormStateInterface $form_state) {
+  public function updateParentLinks(array $form, FormStateInterface $form_state) {
     $selectedMenu = $form_state->getValue('menu_parent_menu');
+    $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
+    $allMenuLinks = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
+    foreach($allMenuLinks as $key => $value) {
+      if ($value === $selectedMenu) {
+        $selectedParentMenu = $key;
+      }
+    }
+    foreach($allMenuLinks as $key => $value) {
+      if (strpos($key, $selectedParentMenu) === 0) {
+        $menuOfSelectedType[$key] = $value;
+      }
+    }
+    $form['menu_parent']['#options'] = $menuOfSelectedType;
+    $form_state->setRebuild();
     return $form;
   }
 
@@ -147,17 +161,16 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
         $parentMenuLinks[$menuLink] = $menuLink;
       }
     }
-
     $form['menu_parent_menu'] = [
       '#type' => 'select',
       '#title' => $this->t('Menu'),
       '#description' => $this->t('Select the menu'),
       '#options' => $parentMenuLinks,
       // this ajax callback is not getting executed.
-      '#ajax' => [
-        'callback' => [static::class, 'updateParentLinks'],
-        'wrapper' => 'ajax-updated-section',
-      ],
+//      '#ajax' => [
+//        'callback' => 'updateParentLinks',
+//        'wrapper' => 'ajax-updated-section',
+//      ],
     ];
     foreach($allMenuLinks as $key => $value) {
       if (strpos($value, '<') === 0) {
@@ -174,10 +187,9 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#type' => 'select',
       '#title' => $this->t('Parent link'),
       '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
-      '#options' => $menuOfSelectedType,
-      '#prefix' => '<div class="ajax-updated-section">',
+      '#options' => $allMenuLinks,
+      '#prefix' => '<div id="ajax-updated-section">',
       '#suffix' => '</div>',
-
     ];
 
 
