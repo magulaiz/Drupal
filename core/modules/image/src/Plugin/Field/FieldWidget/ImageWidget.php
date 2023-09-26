@@ -4,13 +4,14 @@ namespace Drupal\image\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageValidatorSettingsTrait;
 
 /**
  * Plugin implementation of the 'image_image' widget.
@@ -24,6 +25,8 @@ use Drupal\image\Entity\ImageStyle;
  * )
  */
 class ImageWidget extends FileWidget {
+
+  use ImageValidatorSettingsTrait;
 
   /**
    * The image factory service.
@@ -146,24 +149,7 @@ class ImageWidget extends FileWidget {
     $field_settings = $this->getFieldSettings();
 
     // Add image validation.
-    $element['#upload_validators']['FileIsImage'] = [];
-
-    // Add upload resolution validation.
-    if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
-      $element['#upload_validators']['FileImageDimensions'] = [
-        'maxDimensions' => $field_settings['max_resolution'],
-        'minDimensions' => $field_settings['min_resolution'],
-      ];
-    }
-
-    $extensions = $field_settings['file_extensions'];
-    $supported_extensions = $this->imageFactory->getSupportedExtensions();
-
-    // If using custom extension validation, ensure that the extensions are
-    // supported by the current image toolkit. Otherwise, validate against all
-    // toolkit supported extensions.
-    $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
-    $element['#upload_validators']['FileExtension']['extensions'] = implode(' ', $extensions);
+    $element['#upload_validators'] = $this->getImageUploadValidators($field_settings);
 
     // Add mobile device image capture acceptance.
     $element['#accept'] = 'image/*';
