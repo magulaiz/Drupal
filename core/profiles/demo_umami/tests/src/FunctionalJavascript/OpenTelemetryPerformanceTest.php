@@ -27,7 +27,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     // @see https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->logTelemetry('umamiFrontPageColdCache', function() {
+    $this->logTelemetry('umamiFrontPageColdCache', function () {
       $this->drupalGet('<front>');
     });
     $this->assertSession()->pageTextContains('Umami');
@@ -45,7 +45,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     // in the browser cache.
     $this->drupalGet('<front>');
     $this->drupalGet('<front>');
-    $this->logTelemetry('umamiFrontPageWarmCache', function() {
+    $this->logTelemetry('umamiFrontPageWarmCache', function () {
       $this->drupalGet('<front>');
     });
   }
@@ -126,7 +126,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $this->rebuildAll();
     // Now visit a different node page to warm non-path-specific caches.
     $this->drupalGet('/node/2');
-    $this->logTelemetry('umamiNodePageTepidCache', function() {
+    $this->logTelemetry('umamiNodePageTepidCache', function () {
       $this->drupalGet('/node/1');
     });
     $this->assertSession()->pageTextContains('quiche');
