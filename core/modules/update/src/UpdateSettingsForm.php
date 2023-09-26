@@ -81,31 +81,6 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected static function mapConfigKeyToFormElementName(string $config_name, string $key): string {
-    switch ($config_name) {
-      case 'update.settings':
-        // A `type: sequence` of emails is mapped to a single textarea. Property
-        // paths are `notification.emails.0`, `notification.emails.1`, etc.
-        if (str_starts_with($key, 'notification.emails.')) {
-          return 'update_notify_emails';
-        }
-
-        return match ($key) {
-        'check.disabled_extensions' => 'update_check_disabled',
-          'check.interval_days' => 'update_check_frequency',
-          'notification.emails' => 'update_notify_emails',
-          'notification.threshold' => 'update_notification_threshold',
-          default => self::defaultMapConfigKeyToFormElementName($config_name, $key),
-        };
-
-        default:
-          throw new \InvalidArgumentException();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function formatMultipleViolationsMessage(string $form_element_name, array $violations): TranslatableMarkup {
     if ($form_element_name !== 'update_notify_emails') {
       return parent::formatMultipleViolationsMessage($form_element_name, $violations);

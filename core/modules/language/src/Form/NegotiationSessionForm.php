@@ -47,7 +47,7 @@ class NegotiationSessionForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $element = NULL): void {
+  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
     // This form does not yet support config validation, and implicitly enabling
     // it (i.e., by letting the parent method run) will break a test.
     throw new \BadMethodCallException();

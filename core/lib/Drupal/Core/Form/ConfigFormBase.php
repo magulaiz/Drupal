@@ -64,6 +64,7 @@ abstract class ConfigFormBase extends FormBase {
     // Load default values from config into any element with a #config_target
     // property.
     $form['#process'][] = '::loadDefaultValuesFromConfig';
+    $form['#after_build'][] = '::storeConfigKeyToFormElementMap';
 
     return $form;
   }
@@ -80,13 +81,12 @@ abstract class ConfigFormBase extends FormBase {
    *   The form element, with its default value populated.
    */
   public function loadDefaultValuesFromConfig(array $element, FormStateInterface $form_state): array {
-    if (!empty($element['#config_target']) && !array_key_exists('#default_value', $element)) {
-      if (is_array($element['#config_target'])) {
-        [$config_target, $transformation] = $element['#config_target'];
+    if (array_key_exists('#config_target', $element) && !array_key_exists('#default_value', $element)) {
+      $config_target = $element['#config_target'];
+      if (is_array($config_target)) {
+        [$config_target, $transformation] = $config_target;
       }
-      else {
-        $config_target = $element['#config_target'];
-      }
+
       [$config_name, $property] = explode(':', $config_target, 2);
       $value = $this->config($config_name)->get($property);
       if (isset($transformation)) {
@@ -98,6 +98,48 @@ abstract class ConfigFormBase extends FormBase {
 
     foreach (Element::children($element) as $key) {
       $element[$key] = $this->loadDefaultValuesFromConfig($element[$key], $form_state);
+    }
+    return $element;
+  }
+
+  /**
+   * After-build callback which stores a map of element names to config keys.
+   *
+   * This will store an array in the form state whose keys are strings in the
+   * form of `CONFIG_NAME:PROPERTY_PATH`, and whose values are arrays containing
+   * three elements, in order:
+   * - The #name of the element which maps to that config value.
+   * - The #parents of the element which maps to that config value,
+   * - A transformation callback to apply to the submitted or loaded value, or
+   *   NULL if no transformation is needed.
+   *
+   * @param array $element
+   *   The element being processed.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @return array
+   *   The processed element.
+   */
+  public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
+    if (array_key_exists('#config_target', $element)) {
+      $map = $form_state->get('config_key_to_form_element_map') ?? [];
+
+      $config_target = $element['#config_target'];
+      $transformation = NULL;
+
+      if (is_array($config_target)) {
+        [$config_target, $transformation] = $config_target;
+      }
+      $map[$config_target] = [
+        $element['#name'],
+        $element['#parents'],
+        $transformation,
+      ];
+      $form_state->set('config_key_to_form_element_map', $map);
+    }
+    foreach (Element::children($element) as $key) {
+      $element[$key] = $this->storeConfigKeyToFormElementMap($element[$key], $form_state);
     }
     return $element;
   }
@@ -136,6 +178,9 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
+
+    $map = $form_state->get('config_key_to_form_element_map') ?? [];
+
     foreach ($this->getEditableConfigNames() as $config_name) {
       $config = $this->config($config_name);
       try {
@@ -158,9 +203,9 @@ abstract class ConfigFormBase extends FormBase {
       // @see \Drupal\Core\Config\Schema\Sequence
       // @see \Drupal\Core\Config\Schema\SequenceDataDefinition
       $violations_per_form_element = [];
+      /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
       foreach ($violations as $violation) {
         $property_path = $violation->getPropertyPath();
-        $form_element_name = static::mapConfigKeyToFormElementName($config_name, $property_path);
         // Default to index 0.
         $index = 0;
         // Detect if this is a sequence property path, and if so, determine the
@@ -168,7 +213,11 @@ abstract class ConfigFormBase extends FormBase {
         $matches = [];
         if (preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
           $index = intval($matches[1]);
+          // The property path as known in the config key-to-form element map
+          // will not have the sequence index in it.
+          $property_path = rtrim($property_path, '0123456789.');
         }
+        $form_element_name = $map["$config_name:$property_path"][0];
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
@@ -256,69 +305,24 @@ abstract class ConfigFormBase extends FormBase {
    *   The configuration being edited.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param array $element
-   *   (optional) Internal use only.
    *
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $element = NULL): void {
-    $element ??= $form_state->getCompleteForm();
+  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
+    $map = $form_state->get('config_key_to_form_element_map') ?? [];
 
-    if (!empty($element['#config_target'])) {
-      if (is_array($element['#config_target'])) {
-        [$config_target, $transformation] = $element['#config_target'];
-      }
-      else {
-        $config_target = $element['#config_target'];
-      }
-      [$config_name, $property] = explode(':', $config_target, 2);
-      if ($config_name === $config->getName()) {
-        $value = $form_state->getValue($element['#parents']);
-        if (isset($transformation)) {
+    foreach ($map as $config_target => [$name, $parents, $transformation]) {
+      if (str_starts_with($config_target, $config->getName() . ':')) {
+        $value = $form_state->getValue($parents);
+        if ($transformation) {
           $transformation = $form_state->prepareCallback($transformation);
           $value = $transformation($value);
         }
-        $config->set($property, $value);
+
+        [, $property_path] = explode(':', $config_target, 2);
+        $config->set($property_path, $value);
       }
     }
-    foreach (Element::children($element) as $key) {
-      static::copyFormValuesToConfig($config, $form_state, $element[$key]);
-    }
-  }
-
-  /**
-   * Maps the given Config key to a form element name.
-   *
-   * @param string $config_name
-   *   The name of the Config whose value triggered a validation error.
-   * @param string $key
-   *   The Config key that triggered a validation error (which corresponds to a
-   *   property path on the validation constraint violation).
-   *
-   * @return string
-   *   The corresponding form element name.
-   */
-  protected static function mapConfigKeyToFormElementName(string $config_name, string $key) : string {
-    return self::defaultMapConfigKeyToFormElementName($config_name, $key);
-  }
-
-  /**
-   * Default implementation for ::mapConfigKeyToFormElementName().
-   *
-   * Suitable when the configuration is mapped 1:1 to form elements: when the
-   * keys in the Config match the form element names exactly.
-   *
-   * @param string $config_name
-   *   The name of the Config whose value triggered a validation error.
-   * @param string $key
-   *   The Config key that triggered a validation error (which corresponds to a
-   *   property path on the validation constraint violation).
-   *
-   * @return string
-   *   The corresponding form element name.
-   */
-  final protected static function defaultMapConfigKeyToFormElementName(string $config_name, string $key) : string {
-    return str_replace('.', '][', $key);
   }
 
 }
