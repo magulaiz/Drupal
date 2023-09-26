@@ -326,7 +326,7 @@ class PerformanceTestBase extends WebDriverTestBase {
       }
     }
     finally {
-      // The scope must be deteached before the span is ended, because it's
+      // The scope must be detached before the span is ended, because it's
       // created from the span.
       if (isset($scope)) {
         $scope->detach();
