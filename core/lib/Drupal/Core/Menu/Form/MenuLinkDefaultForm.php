@@ -96,12 +96,14 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $selectedMenu = $form_state->getValue('menu_parent_menu');
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $allMenuLinks = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
-    foreach($allMenuLinks as $key => $value) {
+    $selectedParentMenu = '';
+    foreach ($allMenuLinks as $key => $value) {
       if ($value === $selectedMenu) {
         $selectedParentMenu = $key;
       }
     }
-    foreach($allMenuLinks as $key => $value) {
+    $menuOfSelectedType = [];
+    foreach ($allMenuLinks as $key => $value) {
       if (strpos($key, $selectedParentMenu) === 0) {
         $menuOfSelectedType[$key] = $value;
       }
@@ -158,7 +160,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
 
     $parentMenuLinks = [];
     foreach ($allMenuLinks as $menuLink) {
-      if (strpos($menuLink, '<') === 0){
+      if (strpos($menuLink, '<') === 0) {
         $parentMenuLinks[$menuLink] = $menuLink;
       }
     }
@@ -181,14 +183,6 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#prefix' => '<div id="ajax-updated-section">',
       '#suffix' => '</div>',
     ];
-
-
-//    //  Add form elements for selecting the parent menu link.
-//    $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-//    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
-//    $form['menu_parent']['#title'] = $this->t('Parent link');
-//    $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-//    $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [
