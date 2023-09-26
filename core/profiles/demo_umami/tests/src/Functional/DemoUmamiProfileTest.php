@@ -43,7 +43,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    * Tests some features specific to being a demonstration profile.
    */
   public function testDemoSpecificFeatures() {
-    // This test coverage is organised into separate protected methods rather
+    // This test coverage is organized into separate protected methods rather
     // than individual test methods to avoid having to reinstall Umami for
     // a handful of assertions each.
     $this->testUser();
