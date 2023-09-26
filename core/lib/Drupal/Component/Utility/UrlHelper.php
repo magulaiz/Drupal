@@ -260,10 +260,8 @@ class UrlHelper {
       $keys = self::extractKeys($name);
 
       // Initialize a temporary variable which will be used to drill down into the $parsed array
-      // Linter not be able to detect the indirect changes made to $parsed via $temp. The code does actually use $temp, and you can see its effects reflected in the $parsed array.
-      // phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+      // Linter not be able to detect the indirect & changes made to $parsed via $temp. The code does actually use $temp in the $parsed array.
       $temp = &$parsed;
-      // phpcs:enable
 
       // Drill down into the $parsed array based on the nested keys (if any)
       foreach ($keys as $key) {
