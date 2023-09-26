@@ -117,4 +117,17 @@ class MediaSettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
+  /**
+   * Converts an empty string to NULL.
+   *
+   * @param string|null $value
+   *   The value to transform.
+   *
+   * @return string|null
+   *   The given string, or NULL if it was empty.
+   */
+  public function nullIfEmptyString(?string $value): ?string {
+    return $value ?: NULL;
+  }
+
 }
