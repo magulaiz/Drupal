@@ -100,7 +100,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['anonymous_settings']['anonymous'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
-      '#default_value' => $config->get('anonymous'),
+      '#config_target' => 'user.settings:anonymous',
       '#description' => $this->t('The name used to indicate anonymous users.'),
       '#required' => TRUE,
     ];
@@ -126,7 +126,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation']['user_register'] = [
       '#type' => 'radios',
       '#title' => $this->t('Who can register accounts?'),
-      '#default_value' => $config->get('register'),
+      '#config_target' => 'user.settings:register',
       '#options' => [
         UserInterface::REGISTER_ADMINISTRATORS_ONLY => $this->t('Administrators only'),
         UserInterface::REGISTER_VISITORS => $this->t('Visitors'),
@@ -136,18 +136,18 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation']['user_email_verification'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email verification when a visitor creates an account'),
-      '#default_value' => $config->get('verify_mail'),
+      '#config_target' => 'user.settings:verify_mail',
       '#description' => $this->t('New users will be required to validate their email address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.'),
     ];
     $form['registration_cancellation']['user_password_strength'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable password strength indicator'),
-      '#default_value' => $config->get('password_strength'),
+      '#config_target' => 'user.settings:password_strength',
     ];
     $form['registration_cancellation']['user_cancel_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('When cancelling a user account'),
-      '#default_value' => $config->get('cancel_method'),
+      '#config_target' => 'user.settings:cancel_method',
       '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString()]),
     ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
@@ -414,11 +414,6 @@ class AccountSettingsForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
 
     $this->config('user.settings')
-      ->set('anonymous', $form_state->getValue('anonymous'))
-      ->set('register', $form_state->getValue('user_register'))
-      ->set('password_strength', $form_state->getValue('user_password_strength'))
-      ->set('verify_mail', $form_state->getValue('user_email_verification'))
-      ->set('cancel_method', $form_state->getValue('user_cancel_method'))
       ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
       ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
       ->set('notify.status_canceled', $form_state->getValue('user_mail_status_canceled_notify'))
