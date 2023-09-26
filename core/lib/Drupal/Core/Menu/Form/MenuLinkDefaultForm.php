@@ -167,22 +167,11 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#description' => $this->t('Select the menu'),
       '#options' => $parentMenuLinks,
       // this ajax callback is not getting executed.
-//      '#ajax' => [
-//        'callback' => 'updateParentLinks',
-//        'wrapper' => 'ajax-updated-section',
-//      ],
+      '#ajax' => [
+        'callback' => [$this, 'updateParentLinks'],
+        'wrapper' => 'ajax-updated-section',
+      ],
     ];
-    foreach($allMenuLinks as $key => $value) {
-      if (strpos($value, '<') === 0) {
-        $selectedMenuItem[$value] = $key;
-      }
-    }
-
-    foreach($allMenuLinks as $key => $value) {
-      if (strpos($key, 'account:') === 0) {
-        $menuOfSelectedType[$key] = $value;
-      }
-    }
     $form['menu_parent'] = [
       '#type' => 'select',
       '#title' => $this->t('Parent link'),
