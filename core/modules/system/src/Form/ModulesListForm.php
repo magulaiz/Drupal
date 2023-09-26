@@ -190,7 +190,7 @@ class ModulesListForm extends FormBase {
     $incompatible_installed = FALSE;
     foreach ($modules as $filename => $module) {
       if (empty($module->info['hidden'])) {
-        $package = $module->info['package'];
+        $package = $module->status ? 'Installed modules' : $module->info['package'];
         $form['modules'][$package][$filename] = $this->buildRow($modules, $module, $distribution);
         $form['modules'][$package][$filename]['#parents'] = ['modules', $filename];
       }
@@ -389,7 +389,9 @@ class ModulesListForm extends FormBase {
       //   https://drupal.org/node/3117829.
       if ($incompatible = $this->checkDependencyMessage($modules, $dependency, $dependency_object)) {
         $row['#requires'][$dependency] = $incompatible;
-        $row['enable']['#disabled'] = TRUE;
+        if (!empty($row['enable'])) {
+          $row['enable']['#disabled'] = TRUE;
+        }
         continue;
       }
 
