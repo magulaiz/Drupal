@@ -126,6 +126,15 @@ class PerformanceTestBase extends WebDriverTestBase {
   }
 
   /**
+   * Logs telemetry data to an Open Telemetry endpoint (when configured).
+   */
+  public function logTelemetry(string $service_name, callable $callable) {
+    $this->telemetryServiceName = $service_name;
+    $callable();
+    $this->telemetryServiceName = FALSE;
+  }
+
+  /**
    * Gets the chromedriver performance log and extracts metrics from it.
    */
   protected function getChromeDriverPerformanceMetrics(string|Url $path): void {
@@ -197,6 +206,8 @@ class PerformanceTestBase extends WebDriverTestBase {
    *   The path as passed to static::drupalGet().
    * @param array $messages
    *   The ChromeDriver performance log messages.
+   *
+   * @see https://opentelemetry.io/docs/instrumentation/php/manual/
    */
   protected function openTelemetryTracing($path, array $messages): void {
     // Open telemetry timestamps are always in nanoseconds.
@@ -315,6 +326,8 @@ class PerformanceTestBase extends WebDriverTestBase {
       }
     }
     finally {
+      // The scope must be deteached before the span is ended, because it's
+      // created from the span.
       if (isset($scope)) {
         $scope->detach();
       }
