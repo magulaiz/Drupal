@@ -243,7 +243,8 @@ class UrlHelper {
    *   The result of parse_str() with original parameter names restored.
    */
   public static function parseQueryString($query) {
-    $parsed = []; // This will hold our final parsed data
+    // This will hold our final parsed data
+    $parsed = [];
 
     // Iterate over each key=value pair in the query string
     foreach (explode('&', $query) as $param) {
@@ -259,7 +260,10 @@ class UrlHelper {
       $keys = self::extractKeys($name);
 
       // Initialize a temporary variable which will be used to drill down into the $parsed array
+      // Linter not be able to detect the indirect changes made to $parsed via $temp. The code does actually use $temp, and you can see its effects reflected in the $parsed array.
+      // phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       $temp = &$parsed;
+      // phpcs:enable
 
       // Drill down into the $parsed array based on the nested keys (if any)
       foreach ($keys as $key) {
@@ -274,7 +278,8 @@ class UrlHelper {
           $temp = [$temp];
         }
         $temp[] = $value;
-      } else {
+      }
+      else {
         // If the key doesn't have a value yet, simply assign the value to it
         $temp = $value;
       }
@@ -301,20 +306,19 @@ class UrlHelper {
    *   Input:  'key[subkey1][subkey2]'
    *   Output: ['key', 'subkey1', 'subkey2']
    */
-  private static function extractKeys($str)
-  {
+  private static function extractKeys($str) {
     preg_match_all('/\[([^\]]*)\]|[^[\]]+/', $str, $matches);
     $keys = [];
     foreach ($matches[0] as $match) {
       if (strpos($match, '[') === 0) {
         $keys[] = trim($match, '[]');
-      } else {
+      }
+      else {
         $keys[] = $match;
       }
     }
     return $keys;
   }
-
 
   /**
    * Encodes a Drupal path for use in a URL.
