@@ -131,8 +131,13 @@ class PerformanceTestBase extends WebDriverTestBase {
   protected function getChromeDriverPerformanceMetrics(string|Url $path): void {
     // The performance log is cumulative, and is emptied each time it is
     // collected. If the log grows to the point it will overflow, it may also be
-    // emptied resulting in lost messages. To ensure we get a realistic picture
-    // of the page, collect log entries every second for up to 30 seconds.
+    // emptied resulting in lost messages. There is no specific
+    // LargestContentfulPaint event, instead there are
+    // largestContentfulPaint::Candidate events which may be superseded by later
+    // events. From manual testing none of the core pages result in more than
+    // two largestContentfulPaint::Candidate events, so we keep looking until
+    // either two have been sent, or until 30 seconds has passed.
+    // @todo https://www.drupal.org/project/drupal/issues/3379757
     $attempts = 0;
     $lcp_count = 0;
     $messages = [];
@@ -149,11 +154,8 @@ class PerformanceTestBase extends WebDriverTestBase {
         }
         $messages[] = $message;
       }
-      // From manual testing, the maximum number of largestContentfulPaint
-      // candidates is 2, so if we get that many, stop looking for any more.
-      // Also only check once if $this->telemetryServiceName is false, since
+      // Only check once if $this->telemetryServiceName is false, since
       // largestContentfulPaint is not currently asserted on.
-      // @todo https://www.drupal.org/project/drupal/issues/3379757
       if ($lcp_count === 2 || !$this->telemetryServiceName) {
         break;
       }
