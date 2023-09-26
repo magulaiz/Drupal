@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Provides an edit form for static menu links.
@@ -20,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionInterface {
 
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The edited menu link.
@@ -105,8 +107,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       }
     }
     $form['menu_parent']['#options'] = $menuOfSelectedType;
-    $form_state->setRebuild();
-    return $form;
+    return $form['menu_parent'];
   }
 
   /**
