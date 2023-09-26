@@ -243,25 +243,78 @@ class UrlHelper {
    *   The result of parse_str() with original parameter names restored.
    */
   public static function parseQueryString($query) {
-    // Create an array to map parsed parameters to original names.
-    $parsed = [];
+    $parsed = []; // This will hold our final parsed data
+
+    // Iterate over each key=value pair in the query string
     foreach (explode('&', $query) as $param) {
-      list($name) = explode('=', $param, 2);
+
+      // Split the key=value pair into separate variables
+      list($name, $value) = explode('=', $param, 2);
+
+      // Decode the URL-encoded string for the parameter name and value
       $name = rawurldecode($name);
-      // Extract the first item of a potentially nested parameter name.
-      $name = strstr($name, '[', TRUE) ?: $name;
-      // Parse the query parameter.
-      parse_str($param, $param);
-      // Merge the parameter into the parsed array.
-      if (isset($parsed[$name]) && is_array($parsed[$name])) {
-        $parsed[$name] = NestedArray::mergeDeepArray([$parsed[$name], reset($param)], TRUE);
+      $value = rawurldecode($value);
+
+      // Get the potential nested keys from the parameter name
+      $keys = self::extractKeys($name);
+
+      // Initialize a temporary variable which will be used to drill down into the $parsed array
+      $temp = &$parsed;
+
+      // Drill down into the $parsed array based on the nested keys (if any)
+      foreach ($keys as $key) {
+        $key = rawurldecode($key);
+        $temp = &$temp[$key];
       }
-      else {
-        $parsed[$name] = reset($param);
+
+      // If the current key in $parsed already has a value, convert it to an array and append the new value
+      // This handles multiple values for a single key, like: key[]=value1&key[]=value2
+      if (isset($temp)) {
+        if (!is_array($temp)) {
+          $temp = [$temp];
+        }
+        $temp[] = $value;
+      } else {
+        // If the key doesn't have a value yet, simply assign the value to it
+        $temp = $value;
       }
     }
+
+    // Return the fully parsed array
     return $parsed;
   }
+
+  /**
+   * Extracts the nested keys from a query parameter string.
+   *
+   * Given a string in the form of 'key[subkey1][subkey2]', this function
+   * will return an array containing 'key', 'subkey1', and 'subkey2'.
+   * It handles both square-bracketed and non-bracketed parts of the string.
+   *
+   * @param string $str
+   *   The query parameter string containing potential nested keys.
+   *
+   * @return array
+   *   An array of keys extracted from the input string.
+   *
+   * @example
+   *   Input:  'key[subkey1][subkey2]'
+   *   Output: ['key', 'subkey1', 'subkey2']
+   */
+  private static function extractKeys($str)
+  {
+    preg_match_all('/\[([^\]]*)\]|[^[\]]+/', $str, $matches);
+    $keys = [];
+    foreach ($matches[0] as $match) {
+      if (strpos($match, '[') === 0) {
+        $keys[] = trim($match, '[]');
+      } else {
+        $keys[] = $match;
+      }
+    }
+    return $keys;
+  }
+
 
   /**
    * Encodes a Drupal path for use in a URL.

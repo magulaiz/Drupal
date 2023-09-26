@@ -706,5 +706,35 @@ class UrlHelperTest extends TestCase {
       ['http://', 'http://example.com/foo'],
     ];
   }
+  
+  /**
+   * Tests the parseQueryString method.
+   */
+  public function testParseQueryString() {
+    // Test simple query string parsing.
+    $query = 'name=john&age=25';
+    $expected = [
+      'name' => 'john',
+      'age' => '25',
+    ];
+    $this->assertEquals($expected, UrlHelper::parseQueryString($query));
+
+    // Test with periods in parameter names.
+    $query = 'first.name=Aaron&last.name=Wolfe';
+    $expected = [
+      'first.name' => 'Aaron',
+      'last.name' => 'Wolfe',
+    ];
+    $this->assertEquals($expected, UrlHelper::parseQueryString($query));
+
+    // Test with multiple identical keys.
+    $query = 'module=AR&type=CAMPS&age=6&age=7&age=8&age=9&age=10';
+    $expected = [
+      'module' => 'AR',
+      'type' => 'CAMPS',
+      'age' => [6, 7, 8, 9, 10],
+    ];
+    $this->assertEquals($expected, UrlHelper::parseQueryString($query));
+  }
 
 }
