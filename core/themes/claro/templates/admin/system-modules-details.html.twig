@@ -35,11 +35,17 @@
   <tbody>
     {% for module in modules %}
       <tr{{ module.attributes.addClass('module-list__module') }}>
+        {% if module.checkbox %}
         <td class="module-list__checkbox">
           {{ module.checkbox }}
         </td>
+        {% endif %}
         <td class="module-list__module">
+          {% if module.checkbox %}
           <label id="{{ module.id }}" for="{{ module.enable_id }}" class="module-list__module-name table-filter-text-source">{{ module.name }}</label>
+          {% else %}
+          <label class="module-list__module-name table-filter-text-source">{{ module.name }}</label>
+          {% endif %}
         </td>
         <td class="expand priority-low module-list__description">
           <details class="js-form-wrapper form-wrapper module-list__module-details claro-details" id="{{ module.enable_id }}-description">
