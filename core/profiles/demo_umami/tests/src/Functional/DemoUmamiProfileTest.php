@@ -38,7 +38,6 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    */
   protected $profile = 'demo_umami';
 
-
   /**
    * Tests some features specific to being a demonstration profile.
    */
