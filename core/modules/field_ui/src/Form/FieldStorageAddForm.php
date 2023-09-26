@@ -341,8 +341,7 @@ class FieldStorageAddForm extends FormBase {
       // form, a new entity with the user inputted field name will get created
       // that is saved.
       // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
-      // @todo Generate the random string the correct way.
-      $this->fieldTempStoreKey = '_' . substr(str_shuffle(md5(time())), 0, 10);
+      $this->fieldTempStoreKey = '_' . uniqid();
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
       $route_parameters = [
