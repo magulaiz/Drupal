@@ -254,7 +254,7 @@ class FieldStorageAddForm extends FormBase {
       ],
       '#submit' => [[static::class, 'rebuildForm']],
     ];
-    // @todo: Maybe rename this since the 'Continue' button lives here now.
+    // @todo Maybe rename this since the 'Continue' button lives here now.
     $form['group_field_options_wrapper'] = [
       '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
       '#suffix' => '</div>',
@@ -296,7 +296,8 @@ class FieldStorageAddForm extends FormBase {
               '#theme' => 'item_list',
               '#items' => $unique_definitions[$selected_field_type][$option_key]['description'],
             ],
-            '#id' => $option['unique_identifier'],
+            // @todo Try removing id.
+            '#id' => Html::getClass($option['unique_identifier']),
             '#weight' => $option['weight'],
             '#parents' => ['group_field_options_wrapper'],
             '#attributes' => [
@@ -340,6 +341,7 @@ class FieldStorageAddForm extends FormBase {
       // form, a new entity with the user inputted field name will get created
       // that is saved.
       // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
+      // @todo Generate the random string the correct way.
       $this->fieldTempStoreKey = '_' . substr(str_shuffle(md5(time())), 0, 10);
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
@@ -376,7 +378,7 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
       'core/drupal.dialog.ajax',
-      // @todo: Remove below workarounds needed for modal functionality.
+      // @todo Remove below workarounds needed for modal functionality.
       'core/drupal.machine-name',
       'core/drupal.states',
     ];
