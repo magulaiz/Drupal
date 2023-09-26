@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Composer\Plugin\Locations\DrupalLocation;
+use Drupal\Locations\DrupalLocation;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -41,8 +41,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 /**
  * Defines the root directory of the Drupal installation.
  *
- * This uses the constant written in
- * \Drupal\Composer\Plugin\Locations\DrupalLocation by the
+ * This uses the constant written in \Drupal\Locations\DrupalLocation by the
  * drupal-composer/drupal-scaffold Composer plugin.
  *
  * For backwards compatibility with installations that do not use Composer,
