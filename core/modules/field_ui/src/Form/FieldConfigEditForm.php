@@ -163,8 +163,8 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
-    if (!isset($this->tempStoreKey)) {
-      $this->tempStoreKey = $this->entity->get('field_name');
+    if (!isset($this->fieldTempStoreKey)) {
+      $this->fieldTempStoreKey = $this->entity->get('field_name');
     }
 
     // @todo Change this.
@@ -460,7 +460,7 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     $entity_type = $this->entity->getTargetEntityTypeId();
-    $temp_store = $this->tempStore->get($entity_type . ':' . $this->tempStoreKey);
+    $temp_store = $this->tempStore->get($entity_type . ':' . $this->fieldTempStoreKey);
     $default_options = $temp_store['default_options'];
 
     $this->validateAddNew($form, $form_state);
@@ -568,7 +568,7 @@ class FieldConfigEditForm extends EntityForm {
 
       if ($this->entity->isNew()) {
         // Delete the temp store entry.
-        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->tempStoreKey);
+        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->fieldTempStoreKey);
       }
 
       $this->messenger()
