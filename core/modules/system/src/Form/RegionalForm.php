@@ -84,7 +84,7 @@ class RegionalForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Default country'),
       '#empty_value' => '',
-      '#default_value' => $system_date->get('country.default'),
+      '#config_target' => 'system.date:country.default',
       '#options' => $countries,
       '#attributes' => ['class' => ['country-detect']],
     ];
@@ -92,7 +92,7 @@ class RegionalForm extends ConfigFormBase {
     $form['locale']['date_first_day'] = [
       '#type' => 'select',
       '#title' => $this->t('First day of week'),
-      '#default_value' => $system_date->get('first_day'),
+      '#config_target' => 'system.date:first_day',
       '#options' => [0 => $this->t('Sunday'), 1 => $this->t('Monday'), 2 => $this->t('Tuesday'), 3 => $this->t('Wednesday'), 4 => $this->t('Thursday'), 5 => $this->t('Friday'), 6 => $this->t('Saturday')],
     ];
 
@@ -117,8 +117,6 @@ class RegionalForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.date')
-      ->set('country.default', $form_state->getValue('site_default_country'))
-      ->set('first_day', $form_state->getValue('date_first_day'))
       ->set('timezone.default', $form_state->getValue('date_default_timezone'))
       ->save();
 
