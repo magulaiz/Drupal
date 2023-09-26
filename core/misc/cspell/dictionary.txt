@@ -185,6 +185,7 @@ dburl
 dealerdirect
 defaultable
 defgroup
+definining
 delayable
 deletedline
 delsp
