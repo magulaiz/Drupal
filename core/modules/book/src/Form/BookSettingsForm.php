@@ -31,11 +31,10 @@ class BookSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $types = node_type_get_names();
-    $config = $this->config('book.settings');
     $form['book_allowed_types'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Content types allowed in book outlines'),
-      '#default_value' => $config->get('allowed_types'),
+      '#config_target' => 'book.settings:allowed_types',
       '#options' => $types,
       '#description' => $this->t('Users with the %outline-perm permission can add all content types.', ['%outline-perm' => $this->t('Administer book outlines')]),
       '#required' => TRUE,
@@ -43,7 +42,7 @@ class BookSettingsForm extends ConfigFormBase {
     $form['book_child_type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Content type for the <em>Add child page</em> link'),
-      '#default_value' => $config->get('child_type'),
+      '#config_target' => 'book.settings:child_type',
       '#options' => $types,
       '#required' => TRUE,
     ];
