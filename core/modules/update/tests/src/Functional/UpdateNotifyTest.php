@@ -9,7 +9,19 @@ use Drupal\Core\Datetime\DateHelper;
  *
  * @group update
  */
-class UpdateNotifyTest extends UpdateSemverTestBase {
+class UpdateNotifyTest extends UpdateTestBase {
+
+  use UpdateTestTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['update_test', 'update'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Sets the version to x.x.x when no project-specific mapping is defined.
@@ -24,7 +36,7 @@ class UpdateNotifyTest extends UpdateSemverTestBase {
   /**
    * Checks that the update notification is sent on configured day.
    */
-  public function testModulePageRegularUpdate() {
+  public function testUpdateNotificationSent() {
     $this->setProjectInstalledVersion('8.0.0');
     $this->mockReleaseHistory(['drupal' => '0.1']);
 
