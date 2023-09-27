@@ -242,6 +242,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager
  */
 function hook_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
+  // Add a link decorator to the link plugin.
   assert($plugin_definitions['ckeditor5_link'] instanceof CKEditor5PluginDefinition);
   $link_plugin_definition = $plugin_definitions['ckeditor5_link']->toArray();
   $link_plugin_definition['ckeditor5']['config']['link']['decorators'][] = [
@@ -252,6 +253,15 @@ function hook_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
     ],
   ];
   $plugin_definitions['ckeditor5_link'] = new CKEditor5PluginDefinition($link_plugin_definition);
+
+  // Add a custom file type to the image upload plugin. Note that 'tiff' below
+  // should be an IANA image media type Name.
+  // @see https://www.iana.org/assignments/media-types/media-types.xhtml#image
+  // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_image_imageconfig-ImageUploadConfig.html#member-types
+  assert($plugin_definitions['ckeditor5_imageUpload'] instanceof CKEditor5PluginDefinition);
+  $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray();
+  $imageUploadPlugin['ckeditor5']['config']['image']['upload']['types'][] = 'tiff';
+  $plugin_definitions['ckeditor5_imageUpload'] = new CKEditor5PluginDefinition($imageUploadPlugin);
 }
 
 /**
@@ -270,6 +280,19 @@ function hook_ckeditor4to5upgrade_plugin_info_alter(array &$plugin_definitions):
   // equivalent). This allows a different CKEditor4To5Upgrade plugin to define
   // this upgrade path instead.
   unset($plugin_definitions['core']['cke4_buttons']['Maximize']);
+}
+
+/**
+ * Modifies the list of allowed extensions for the image upload plugin.
+ *
+ * @param array &$extensions
+ *   A list of file name extensions.
+ */
+function hook_ckeditor5_image_controller_extensions_alter(array &$extensions): void {
+  // The following array values should be the file name extensions to be
+  // validated by the image upload controller.
+  // @see https://www.drupal.org/node/3363700
+  $extensions[] = 'tiff';
 }
 
 /**

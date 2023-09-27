@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
@@ -72,6 +73,13 @@ class CKEditor5ImageController extends ControllerBase {
   protected $eventDispatcher;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new CKEditor5ImageController.
    *
    * @param \Drupal\Core\File\FileSystemInterface $file_system
@@ -84,13 +92,16 @@ class CKEditor5ImageController extends ControllerBase {
    *   The lock service.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler) {
     $this->fileSystem = $file_system;
     $this->currentUser = $current_user;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->lock = $lock;
     $this->eventDispatcher = $event_dispatcher;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -103,6 +114,7 @@ class CKEditor5ImageController extends ControllerBase {
       $container->get('file.mime_type.guesser'),
       $container->get('lock'),
       $container->get('event_dispatcher'),
+      $container->get('module_handler'),
     );
   }
 
@@ -144,8 +156,12 @@ class CKEditor5ImageController extends ControllerBase {
       $max_dimensions = 0;
     }
 
+    $extensions = ['gif', 'png', 'jpg', 'jpeg'];
+    $this->moduleHandler
+      ->alter('ckeditor5_image_controller_extensions', $extensions);
+
     $validators = [
-      'file_validate_extensions' => ['gif png jpg jpeg'],
+      'file_validate_extensions' => [implode(' ', $extensions)],
       'file_validate_size' => [$max_filesize],
       'file_validate_image_resolution' => [$max_dimensions],
     ];
