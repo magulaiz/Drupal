@@ -25,7 +25,6 @@ use Drupal\rest\RequestHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -52,6 +51,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *     "create" = "/file/upload/{entity_type_id}/{bundle}/{field_name}"
  *   }
  * )
+ *
+ * @see \Drupal\file\Event\RouteAlterSubscriber
  */
 class FileUploadResource extends ResourceBase {
 
@@ -452,22 +453,7 @@ class FileUploadResource extends ResourceBase {
     if (!isset($field_definitions[$field_name])) {
       throw new NotFoundHttpException(sprintf('Field "%s" does not exist', $field_name));
     }
-
-    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
-    $field_definition = $field_definitions[$field_name];
-    if ($field_definition->getSetting('target_type') !== 'file') {
-      throw new AccessDeniedHttpException(sprintf('"%s" is not a file field', $field_name));
-    }
-
-    $entity_access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type_id);
-    $bundle = $this->entityTypeManager->getDefinition($entity_type_id)->hasKey('bundle') ? $bundle : NULL;
-    $access_result = $entity_access_control_handler->createAccess($bundle, NULL, [], TRUE)
-      ->andIf($entity_access_control_handler->fieldAccess('edit', $field_definition, NULL, NULL, TRUE));
-    if (!$access_result->isAllowed()) {
-      throw new AccessDeniedHttpException($access_result->getReason());
-    }
-
-    return $field_definition;
+    return $field_definitions[$field_name];
   }
 
   /**

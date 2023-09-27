@@ -28,3 +28,15 @@ services:
     class: Drupal\file\Validation\FileValidator
     arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
+  file.upload_access_check:
+    class: Drupal\file\Upload\FileUploadAccessCheck
+    arguments: ['@entity_field.manager', '@entity_type.manager']
+    tags:
+      - {name: access_check, applies_to: _file_upload_access}
+  Drupal\file\Upload\FileUploadAccessCheck: '@file.upload_access_check'
+  file.upload_route_alter_subscriber:
+    class: Drupal\file\EventSubscriber\FileUploadRouteAlterSubscriber
+    arguments: ['@entity_type.manager', '@module_handler']
+    tags:
+      - {name: event_subscriber}
+  Drupal\file\EventSubscriber\FileUploadRouteAlterSubscriber: '@file.upload_route_alter_subscriber'

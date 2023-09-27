@@ -230,16 +230,24 @@ class Routes implements ContainerInjectionInterface {
       $new_resource_file_upload_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => 'jsonapi.file_upload:handleFileUploadForNewResource']);
       $new_resource_file_upload_route->setMethods(['POST']);
       $new_resource_file_upload_route->setRequirement('_csrf_request_header_token', 'TRUE');
+      $new_resource_file_upload_route->setRequirement('_file_upload_access', 'TRUE');
       $routes->add(static::getFileUploadRouteName($resource_type, 'new_resource'), $new_resource_file_upload_route);
 
       $existing_resource_file_upload_route = new Route("/{$path}/{entity}/{file_field_name}");
       $existing_resource_file_upload_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => 'jsonapi.file_upload:handleFileUploadForExistingResource']);
       $existing_resource_file_upload_route->setMethods(['POST']);
       $existing_resource_file_upload_route->setRequirement('_csrf_request_header_token', 'TRUE');
+      $existing_resource_file_upload_route->setRequirement('_file_upload_access', 'TRUE');
       $routes->add(static::getFileUploadRouteName($resource_type, 'existing_resource'), $existing_resource_file_upload_route);
 
       // Add entity parameter conversion to every route.
       $routes->addOptions(['parameters' => ['entity' => ['type' => 'entity:' . $entity_type_id]]]);
+      // Add defaults for our access check.
+      $routes->addDefaults([
+        'entity_type_id' => $entity_type_id,
+        'bundle' => $resource_type->getBundle(),
+        'field_name' => '{file_field_name}',
+      ]);
 
       // Add the resource type as a parameter to every resource route.
       foreach ($routes as $route) {

@@ -13,6 +13,7 @@ use Drupal\user\Entity\User;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
  * @group jsonapi
+ * @group legacy
  */
 class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
 
@@ -129,6 +130,8 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     // error for any field whether it is a base field or a bundle field.
     $base_field_definition = $this->container->get('entity_field.manager')->getBaseFieldDefinitions('node')['title'];
     $bundle_field_definition = $this->container->get('entity_field.manager')->getFieldDefinitions('node', 'article')['field_relationships'];
+
+    $this->expectDeprecation('Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader::checkFileUploadAccess() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileUploadAccessCheck instead. See https://www.drupal.org/node/3380927');
 
     // Tests the expected access result for each user.
     // The $article_editor account can edit any article.
