@@ -16,3 +16,6 @@ block_content.type.*:
     description:
       type: text
       label: 'Description'
+      nullable: true
+      constraints:
+        NotBlank: []
