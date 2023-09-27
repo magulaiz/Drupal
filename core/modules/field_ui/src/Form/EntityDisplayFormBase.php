@@ -228,19 +228,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
     unset($display_mode_options['default']);
 
     if ($this->entity->getEntityTypeId() == 'entity_form_display' || $this->entity->getEntityTypeId() == 'entity_view_display') {
-      // Create a URL for the form route.
-      if ($this->entity->getEntityTypeId() == 'entity_form_display') {
-        $route_label = $this->t('Add new form mode');
-        $route_name = 'entity.entity_form_mode.add_form';
-      }
-      elseif ($this->entity->getEntityTypeId() == 'entity_view_display') {
-        $route_name = 'entity.entity_view_mode.add_form';
-        $route_label = $this->t('Add new view mode');
-      }
-
-      $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
-
-      $url = Url::fromRoute($route_name, $route_arguments);
 
       $form['modes'] = [
         '#type' => 'details',
@@ -258,6 +245,20 @@ abstract class EntityDisplayFormBase extends EntityForm {
         '#options' => $display_mode_options,
         '#default_value' => $default,
       ];
+
+      if ($this->entity->getEntityTypeId() == 'entity_form_display') {
+        $route_label = $this->t('Add new form mode');
+        $route_name = 'entity.entity_form_mode.add_form';
+      }
+      elseif ($this->entity->getEntityTypeId() == 'entity_view_display') {
+        $route_name = 'entity.entity_view_mode.add_form';
+        $route_label = $this->t('Add new view mode');
+      }
+
+      $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
+      // Create a URL for the form route.
+      $url = Url::fromRoute($route_name, $route_arguments);
+      
       $form['modes']['add_new_display_mode'] = [
         '#type' => 'link',
         '#title' => $route_label,
