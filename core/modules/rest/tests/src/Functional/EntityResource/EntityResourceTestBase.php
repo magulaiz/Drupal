@@ -1023,6 +1023,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->entity->set('rest_test_validation', 'ALWAYS_FAIL');
       $this->entity->save();
 
+      $valid_request_body['vid'][0] = $this->entity->getRevisionId();
+      $request_options[RequestOptions::BODY] = $this->serializer->serialize($valid_request_body, static::$format);
       // Information disclosure prevented: when a malicious user correctly
       // guesses the current invalid value of a field, ensure a 200 is not sent
       // because this would disclose to the attacker what the current value is.
