@@ -11,7 +11,7 @@ block_content.type.*:
       type: required_label
       label: 'Label'
     revision:
-      type: integer
+      type: boolean
       label: 'Create new revision'
     description:
       type: text
