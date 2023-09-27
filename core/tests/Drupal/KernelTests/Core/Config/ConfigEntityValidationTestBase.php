@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\TypedData\Plugin\DataType\LanguageReference;
@@ -17,6 +18,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group Validation
  */
 abstract class ConfigEntityValidationTestBase extends KernelTestBase {
+
+  use SchemaCheckTrait;
 
   /**
    * {@inheritdoc}
@@ -356,6 +359,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     $actual_messages = [];
     foreach ($violations as $violation) {
+      if (static::isViolationForIgnoredPropertyPath($violation)) {
+        continue;
+      }
+
       $property_path = $violation->getPropertyPath();
 
       if (!isset($actual_messages[$property_path])) {

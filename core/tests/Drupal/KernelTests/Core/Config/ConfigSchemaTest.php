@@ -87,6 +87,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
+    $expected['required'] = TRUE;
     $this->assertEquals($expected, $definition, 'Automatic type detected for a scalar is undefined.');
     $definition = $config->get('testlist')->getDataDefinition()->toArray();
     $expected = [];
@@ -95,6 +96,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
+    $expected['required'] = TRUE;
     $this->assertEquals($expected, $definition, 'Automatic type detected for a list is undefined.');
     $definition = $config->get('test_no_schema')->getDataDefinition()->toArray();
     $expected = [];
@@ -103,6 +105,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
+    $expected['required'] = TRUE;
     $this->assertEquals($expected, $definition, 'Automatic type detected for an undefined integer is undefined.');
 
     // Simple case, straight metadata.
@@ -164,6 +167,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Ignore::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
+    $expected['required'] = TRUE;
     $this->assertEquals($expected, $definition);
     $definition = \Drupal::service('config.typed')->get('config_schema_test.ignore')->get('indescribable')->getDataDefinition()->toArray();
     $expected['label'] = 'Indescribable';
@@ -225,6 +229,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = $effects->get('bddf0d06-42f9-4c75-a700-a33cafa25ea0')->get('data')->getDataDefinition()->toArray();
     // This should be the schema for image.effect.image_scale, reuse previous one.
     $expected['type'] = 'image.effect.image_scale';
+    $expected['required'] = TRUE;
 
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for the first effect of image.style.medium');
 
@@ -240,6 +245,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'integer' => ['type' => 'integer'],
       'string' => ['type' => 'string'],
     ];
+    $expected['required'] = TRUE;
     $expected['constraints'] = ['ValidKeys' => '<infer>'];
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for config_test.dynamic.third_party:third_party_settings.config_schema_test');
 
@@ -282,6 +288,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'class' => StringData::class,
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
       'unwrap_for_canonical_representation' => TRUE,
+      'required' => TRUE,
     ];
     $this->assertEquals($expected, $definition);
 
@@ -294,6 +301,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'class' => StringData::class,
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
       'unwrap_for_canonical_representation' => TRUE,
+      'required' => TRUE,
     ];
     $this->assertEquals($expected, $definition);
 
@@ -306,6 +314,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'class' => StringData::class,
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
       'unwrap_for_canonical_representation' => TRUE,
+      'required' => TRUE,
     ];
     $this->assertEquals($expected, $definition);
   }
