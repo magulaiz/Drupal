@@ -20,6 +20,7 @@ class MenuSelectionTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'starterkit_theme';
+
   /**
    * {@inheritdoc}
    */
