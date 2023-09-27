@@ -175,7 +175,7 @@ class SiteInformationForm extends ConfigFormBase {
     switch ($config_name) {
       case 'system.site':
         return match ($key) {
-          'name' => 'site_name',
+        'name' => 'site_name',
           'slogan' => 'site_slogan',
           'mail' => 'site_mail',
           'page.front' => 'site_frontpage',
@@ -184,8 +184,8 @@ class SiteInformationForm extends ConfigFormBase {
           default => self::defaultMapConfigKeyToFormElementName($config_name, $key),
         };
 
-      default:
-        throw new \InvalidArgumentException();
+        default:
+          throw new \InvalidArgumentException();
     }
   }
 
