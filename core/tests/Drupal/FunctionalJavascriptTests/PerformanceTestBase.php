@@ -237,7 +237,7 @@ class PerformanceTestBase extends WebDriverTestBase {
       // to all other 'ts' timestamps. Note that if the two events actually
       // happen at different times, then the offset will be wrong by that
       // difference.
-      // @see https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
+      // See https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
       if ($dom_loaded_timestamp_page === NULL && $message['method'] === 'Page.domContentEventFired') {
         $dom_loaded_timestamp_page = $message['params']['timestamp'] * static::NANOSECONDS_PER_SECOND;
       }
