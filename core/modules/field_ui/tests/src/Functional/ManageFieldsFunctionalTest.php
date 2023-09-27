@@ -21,6 +21,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Tests the Field UI "Manage fields" screen.
  *
  * @group field_ui
+ * @group #slow
  */
 class ManageFieldsFunctionalTest extends BrowserTestBase {
 
@@ -240,7 +241,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'settings[test_field_storage_setting]' => $string,
     ];
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
 
     // Go to the field edit page.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
@@ -291,7 +292,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => '',
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Number of values is required.');
 
     // Submit a custom number.
@@ -300,8 +301,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 6,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Updated field Body field settings.');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet($field_edit_path);
     $this->assertSession()->fieldValueEquals('cardinality', 'number');
     $this->assertSession()->fieldValueEquals('cardinality_number', 6);
@@ -324,7 +324,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 1,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("There is 1 entity with 2 or more values in this field");
 
     // Create a second entity with three values.
@@ -337,8 +337,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Updated field Body field settings.');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet($field_edit_path);
     $this->assertSession()->fieldValueEquals('cardinality', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->assertSession()->fieldValueEquals('cardinality_number', 1);
@@ -350,7 +349,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 1,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("There are 2 entities with 2 or more values in this field");
 
     $edit = [
@@ -358,7 +357,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 2,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("There is 1 entity with 3 or more values in this field");
 
     $edit = [
@@ -366,7 +365,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 3,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
 
     // Test the cardinality validation is not access sensitive.
 
@@ -375,7 +374,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
@@ -396,21 +395,21 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 2,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("There are 2 entities with 3 or more values in this field");
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("There is 1 entity with 4 or more values in this field");
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 4,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
   }
 
   /**
@@ -490,7 +489,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'field_name' => $field_exceed_max_length_input,
     ];
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
@@ -642,14 +641,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
@@ -755,11 +754,17 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testDuplicateFieldName() {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
-    $url = 'admin/structure/types/manage/' . $this->contentType;
-    $this->fieldUIAddNewField($url, 'tags', $this->randomMachineName(), 'entity_reference', [], [], FALSE);
+    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
+    $this->drupalGet($url);
+    $edit = [
+      'label' => $this->randomMachineName(),
+      'field_name' => 'tags',
+      'new_storage_type' => 'boolean',
+    ];
+    $this->submitForm($edit, 'Continue');
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-    $this->assertSession()->addressEquals($url . '/fields/add-field');
+    $this->assertSession()->addressEquals($url);
   }
 
   /**
@@ -770,7 +775,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'query' => ['destinations' => ['http://example.com']],
     ];
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
-    $this->submitForm([], 'Save field settings');
+    $this->submitForm([], 'Save');
     // The external redirect should not fire.
     $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);

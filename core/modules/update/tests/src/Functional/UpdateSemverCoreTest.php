@@ -8,6 +8,7 @@ use Drupal\Core\Url;
  * Tests the semantic version handling in the Update Manager.
  *
  * @group update
+ * @group #slow
  */
 class UpdateSemverCoreTest extends UpdateSemverTestBase {
   use UpdateTestTrait;
@@ -523,7 +524,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     \Drupal::keyValueExpirable('update_available_releases')->deleteAll();
     // This cron run should retrieve fixed updates.
     $this->cronRun();
-    $this->drupalGet('admin/structure');
+    $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
   }
