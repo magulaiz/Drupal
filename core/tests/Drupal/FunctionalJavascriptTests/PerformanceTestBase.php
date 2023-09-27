@@ -136,17 +136,18 @@ class PerformanceTestBase extends WebDriverTestBase {
 
   /**
    * Gets the chromedriver performance log and extracts metrics from it.
+   *
+   * The performance log is cumulative, and is emptied each time it is
+   * collected. If the log grows to the point it will overflow, it may also be
+   * emptied resulting in lost messages. There is no specific
+   * LargestContentfulPaint event, instead there are
+   * largestContentfulPaint::Candidate events which may be superseded by later
+   * events. From manual testing none of the core pages result in more than
+   * two largestContentfulPaint::Candidate events, so we keep looking until
+   * either two have been sent, or until 30 seconds has passed.
+   * @todo https://www.drupal.org/project/drupal/issues/3379757
    */
   protected function getChromeDriverPerformanceMetrics(string|Url $path): void {
-    // The performance log is cumulative, and is emptied each time it is
-    // collected. If the log grows to the point it will overflow, it may also be
-    // emptied resulting in lost messages. There is no specific
-    // LargestContentfulPaint event, instead there are
-    // largestContentfulPaint::Candidate events which may be superseded by later
-    // events. From manual testing none of the core pages result in more than
-    // two largestContentfulPaint::Candidate events, so we keep looking until
-    // either two have been sent, or until 30 seconds has passed.
-    // @todo https://www.drupal.org/project/drupal/issues/3379757
     $attempts = 0;
     $lcp_count = 0;
     $messages = [];
