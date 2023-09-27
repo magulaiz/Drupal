@@ -3,6 +3,7 @@
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -531,7 +532,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/types/manage/$id/fields/add-field");
     $this->submitForm([
       'new_storage_type' => 'boolean',
-      'label' => 'custom_label',
+      'label' => 'Bool field label',
       'field_name' => 'boolean',
     ], 'Continue');
     $this->getSession()->getPage()->pressButton('Continue');
@@ -555,7 +556,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->getSession()->getPage()->pressButton('Save layout');
     $this->drupalGet("$field_ui_prefix/default/layout");
     $this->clickLink('Add block');
-    $this->clickLink('custom_label');
+    $this->clickLink('Bool field label');
     $this->getSession()->getPage()->pressButton('Add block');
 
     $this->drupalGet('admin/config/regional/config-translation');
@@ -570,12 +571,21 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // We expect the custom_label and field info to show up thrice as twice
     // under layout_builder and once as just a field under the custom content
     // type.
-    $this->assertSession()->pageTextMatchesCount(1, '/Block settings/');
-    $this->assertSession()->pageTextMatchesCount(3, '/custom_label/');
-    // When a section is named.
-    $this->assertSession()->pageTextMatchesCount(3, '/Custom section/');
-    $this->assertSession()->pageTextMatchesCount(2, '/Field: field_boolean, type: Boolean/');
-    $this->assertSession()->pageTextMatchesCount(2, '/Label/');
+    $xpath = new \DOMXPath(Html::load($this->getSession()->getPage()->getHtml()));
+    $expected_labels = ["Boolean format settings",
+      "Bool field label\n  Field: field_boolean, type: Boolean",
+      "Block settings",
+      "Bool field label",
+      "Components",
+      "Custom section",
+    ];
+    // Initially select the deepest element.
+    $element = $xpath->query('//details/summary[text()=" format settings"]')->item(0)->parentNode;
+    foreach ($expected_labels as $expected_label) {
+      $this->assertTrue(str_starts_with($element->nodeValue, $expected_label));
+      $element = $element->parentNode;
+    }
+
   }
 
   /**

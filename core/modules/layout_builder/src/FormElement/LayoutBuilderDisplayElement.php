@@ -48,9 +48,8 @@ class LayoutBuilderDisplayElement extends ListElement {
   public function layoutBuilderGetElementNames(array $parent_build): array {
     // Configuration name will be also used as element name.
     $element_names = [];
-    $entities = LayoutBuilderEntityViewDisplay::loadMultiple();
     $element_name = $this->element->getParent()->getParent()->getName();
-    $entity = $entities[str_replace("core.entity_view_display.", "", $element_name)];
+    $entity = LayoutBuilderEntityViewDisplay::load(str_replace("core.entity_view_display.", "", $element_name));
     /** @var \Drupal\layout_builder\Section $section */
     foreach ($entity->getSections() as $section_index => $section) {
       $section_components = $section->getComponents();
