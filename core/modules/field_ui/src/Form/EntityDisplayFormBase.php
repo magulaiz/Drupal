@@ -258,7 +258,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
       $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
       // Create a URL for the form route.
       $url = Url::fromRoute($route_name, $route_arguments);
-      
       $form['modes']['add_new_display_mode'] = [
         '#type' => 'link',
         '#title' => $route_label,
