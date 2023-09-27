@@ -297,7 +297,7 @@ class PerformanceTestBase extends WebDriverTestBase {
             // Tracing timestamps are microseconds since OS boot. However they
             // appear to start from a slightly different point from page
             // timestamps. Apply an offset calculated from DOM content loaded.
-            // @see https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
+            // See https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
             $fcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
             $fcp_span = $tracer->spanBuilder('firstContentfulPaint')
               ->setStartTimestamp($timestamp)
