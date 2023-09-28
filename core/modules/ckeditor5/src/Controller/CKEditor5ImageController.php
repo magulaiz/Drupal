@@ -162,7 +162,7 @@ class CKEditor5ImageController extends ControllerBase {
     $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray();
     $extensions = [];
     foreach ($imageUploadPlugin['ckeditor5']['config']['image']['upload']['types'] as $mime_type) {
-      $extensions[] = $mimetypes->getExtensions($mime_type);
+      $extensions = array_merge($extensions, $mimetypes->getExtensions($mime_type));
     }
 
     $validators = [
