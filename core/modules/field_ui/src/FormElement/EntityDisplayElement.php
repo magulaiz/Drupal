@@ -2,9 +2,11 @@
 
 namespace Drupal\field_ui\FormElement;
 
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\config_translation\FormElement\ListElement;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
+use Drupal\layout_builder\FormElement\LayoutBuilderDisplayElement;
 
 /**
  * Adds translatable labels to entity_display elements.
@@ -41,7 +43,16 @@ class EntityDisplayElement extends ListElement {
       $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
     }
 
+    // Don't provide duplicate settings for fields under layout builder.
+    $layout_element_names = LayoutBuilderDisplayElement::getElementNames();
+    foreach ($layout_element_names as $key => $value) {
+      [,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $value, 3);
+      $element_names = array_diff($element_names, [$field_name]);
+      unset($parent_build['content'][$field_name]);
+    }
+
     if (empty($element_names)) {
+      unset($parent_build['content']);
       return $parent_build;
     }
 

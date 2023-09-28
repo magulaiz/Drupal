@@ -11,6 +11,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
  * Adds translatable labels to layout_builder elements.
  */
 class LayoutBuilderDisplayElement extends ListElement {
+  public static $data = NULL;
 
   /**
    * {@inheritdoc}
@@ -33,6 +34,7 @@ class LayoutBuilderDisplayElement extends ListElement {
     if (empty($build_element_names)) {
       return $parent_build;
     }
+    self::setElementNames($build_element_names);
     $this->addLabels($parent_build, $build_element_names);
     return $parent_build;
   }
@@ -144,6 +146,20 @@ class LayoutBuilderDisplayElement extends ListElement {
       }
     }
 
+  }
+
+  /**
+   * Set element names.
+   */
+  public static function setElementNames($data) {
+    return self::$data = $data;
+  }
+
+  /**
+   * Get element names.
+   */
+  public static function getElementNames() {
+    return self::$data;
   }
 
 }
