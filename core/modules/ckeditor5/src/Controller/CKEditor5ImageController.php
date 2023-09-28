@@ -74,11 +74,11 @@ class CKEditor5ImageController extends ControllerBase {
   protected $eventDispatcher;
 
   /**
-   * The module handler.
+   * The CKEditor 5 plugin manager.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\ckeditor5\Plugin\CKEditor5PluginManager
    */
-  protected $moduleHandler;
+  protected $ckePluginService;
 
   /**
    * Constructs a new CKEditor5ImageController.
@@ -93,16 +93,16 @@ class CKEditor5ImageController extends ControllerBase {
    *   The lock service.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManager $ckePluginService
+   *   The CKEditor 5 plugin manager.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler) {
+  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, CKEditor5PluginManager $ckePluginService) {
     $this->fileSystem = $file_system;
     $this->currentUser = $current_user;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->lock = $lock;
     $this->eventDispatcher = $event_dispatcher;
-    $this->moduleHandler = $module_handler;
+    $this->ckePluginService = $ckePluginService;
   }
 
   /**
@@ -115,7 +115,7 @@ class CKEditor5ImageController extends ControllerBase {
       $container->get('file.mime_type.guesser'),
       $container->get('lock'),
       $container->get('event_dispatcher'),
-      $container->get('module_handler'),
+      $container->get('plugin.manager.ckeditor5.plugin'),
     );
   }
 
@@ -157,10 +157,9 @@ class CKEditor5ImageController extends ControllerBase {
       $max_dimensions = 0;
     }
 
-    $pluginService = \Drupal::service('plugin.manager.ckeditor5.plugin');
-    $plugin_definitions = $pluginService->getDefinitions();
+    $plugin_definitions = $this->ckePluginService->getDefinitions();
     $mimetypes = new MimeTypes();
-    $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray(); //todo plugin_definitions
+    $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray();
     $extensions = [];
     foreach ($imageUploadPlugin['ckeditor5']['config']['image']['upload']['types'] as $mime_type) {
       $extensions[] = $mimetypes->getExtensions($mime_type);
