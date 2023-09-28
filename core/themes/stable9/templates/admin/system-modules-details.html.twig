@@ -34,11 +34,19 @@
     {% for module in modules %}
       {% set zebra = cycle(['odd', 'even'], loop.index0) %}
       <tr{{ module.attributes.addClass(zebra) }}>
-        <td class="checkbox">
-          {{ module.checkbox }}
-        </td>
+        {% if module.checkbox %}
+          <td class="checkbox">
+            {{ module.checkbox }}
+          </td>
+        {% else %}
+          <td></td>
+        {% endif %}
         <td class="module">
-          <label id="{{ module.id }}" for="{{ module.enable_id }}" class="module-name table-filter-text-source">{{ module.name }}</label>
+          {% if module.checkbox %}
+            <label id="{{ module.id }}" for="{{ module.enable_id }}" class="module-name table-filter-text-source">{{ module.name }}</label>
+          {% else %}
+            <label class="module-name table-filter-text-source">{{ module.name }}</label>
+          {% endif %}
         </td>
         <td class="description expand priority-low">
           <details class="js-form-wrapper form-wrapper" id="{{ module.enable_id }}-description">
