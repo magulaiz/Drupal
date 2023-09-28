@@ -229,6 +229,7 @@ stages:
     - |
       echo "ℹ️ Changes from ${TARGET_BRANCH}"
       git diff refs/heads/${TARGET_BRANCH} --name-only
+      echo "If this list contains more files than what you changed, then you need to rebase your branch."
       echo "1️⃣ Reverting non test changes"
       if [[ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
         git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
