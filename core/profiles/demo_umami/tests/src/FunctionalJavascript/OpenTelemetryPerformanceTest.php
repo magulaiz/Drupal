@@ -34,9 +34,11 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Logs front page tracing data with a warm cache.
+   * Logs front page tracing data with a hot cache.
+   *
+   * Hot here means that all possible caches are warmed.
    */
-  public function testFrontPageWarmCache() {
+  public function testFrontPageHotCache() {
     // Request the page twice so that asset aggregates and image derivatives are
     // definitely cached in the browser cache. The first response builds the
     // file and serves from PHP with private, no-store headers. The second
@@ -53,10 +55,10 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
   /**
    * Logs front page tracing data with a lukewarm cache.
    *
-   * Lukewarm here means that 'global' site caches are warm but anything
+   * Cool here means that 'global' site caches are warm but anything
    * specific to the front page is cold.
    */
-  public function testFrontPageLukewarmCache() {
+  public function testFrontPageCoolCache() {
     // First of all visit the front page to ensure the image style exists.
     $this->drupalGet('<front>');
     $this->rebuildAll();
@@ -83,9 +85,11 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Logs node page tracing data with a warm cache.
+   * Logs node page tracing data with a hot cache.
+   *
+   * Hot here means that all possible caches are warmed.
    */
-  public function testNodePageWarmCache() {
+  public function testNodePageHotCache() {
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('node/1');
@@ -97,12 +101,12 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Logs node/1 tracing data with a lukewarm cache.
+   * Logs node/1 tracing data with a cool cache.
    *
-   * Lukewarm here means that 'global' site caches are warm but anything
+   * Cool here means that 'global' site caches are warm but anything
    * specific to the route or path is cold.
    */
-  public function testNodePageLukeWarmCache() {
+  public function testNodePageCoolCache() {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
     $this->rebuildAll();
@@ -115,12 +119,12 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Log node/1 tracing data with a tepid cache.
+   * Log node/1 tracing data with a warm cache.
    *
-   * Tepid here means that 'global' site caches and route-specific caches are
+   * Warm here means that 'global' site caches and route-specific caches are
    * warm but caches specific to this particular node/path are not.
    */
-  public function testNodePageTepidCache() {
+  public function testNodePageWarmCache() {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
     $this->rebuildAll();
