@@ -275,7 +275,7 @@ class VersionHistoryController extends ControllerBase {
    * @return array
    *   A table row.
    */
-  protected function buildRow(RevisionableInterface $revision, &$current_revision_displayed): array {
+  protected function buildRow(RevisionableInterface $revision, bool &$current_revision_displayed): array {
     $row = [];
     $rowAttributes = [];
 
