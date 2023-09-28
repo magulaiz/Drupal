@@ -252,8 +252,6 @@ class PerformanceTestBase extends WebDriverTestBase {
     $first_request_timestamp = $entry['requestStart'] * static::NANOSECONDS_PER_MILLISECOND;
     $first_response_timestamp = $entry['responseStart'] * static::NANOSECONDS_PER_MILLISECOND;
 
-    $time_to_first_byte = $entry['responseStart'] - $entry['requestStart'];
-
     // @todo: get commit hash from an environment variable and add this as an
     // additional attribute.
     // @see https://www.drupal.org/project/drupal/issues/3379761
@@ -279,7 +277,6 @@ class PerformanceTestBase extends WebDriverTestBase {
     $last_timestamp = $first_byte_timestamp = (int) ($timestamp + ($first_response_timestamp - $first_request_timestamp));
 
     try {
-      $first_request_timestamp = NULL;
       $scope = $span->activate();
       $first_byte_span = $tracer->spanBuilder('firstByte')
         ->setStartTimestamp($timestamp)
