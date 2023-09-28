@@ -1,7 +1,3 @@
 id: testing_config_overrides
 label: Testing Config Overrides optional configuration
 description: ''
-dependencies:
-  enforced:
-    config:
-      - entity_test.entity_test_bundle.install_test

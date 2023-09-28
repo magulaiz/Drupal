@@ -1,5 +1,5 @@
 id: install_test
-label: Overridden Default Install Config 1
+label: Optional configuration can be overridden.
 description: ''
 dependencies:
   enforced:

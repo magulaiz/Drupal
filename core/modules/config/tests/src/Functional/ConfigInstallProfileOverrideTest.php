@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\system\Entity\Action;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Config\FileStorage;
 use Drupal\user\Entity\Role;
@@ -80,10 +81,15 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
 
     // Ensure that the configuration entity has the expected dependencies and
     // overrides.
+    $action = Action::load('user_block_user_action');
+    $this->assertEquals('Overridden block the selected user(s)', $action->label());
+    $action = Action::load('user_cancel_user_action');
+    $this->assertEquals('Cancel the selected user account(s)', $action->label(), 'Default configuration that is not overridden is not affected.');
+
     $config_test = \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('install_test');
-    $this->assertEquals('Overridden Default Install Config 1', $config_test->label());
+    $this->assertEquals('Optional configuration can be overridden.', $config_test->label());
     $config_test = \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('install_test2');
-    $this->assertEquals('Default Install Config 2', $config_test->label());
+    $this->assertEquals('Optional configuration that is not overridden is not affected.', $config_test->label());
 
     // Ensure the optional configuration is installed. Note that the overridden
     // ConfigTest install_test has a dependency on this
