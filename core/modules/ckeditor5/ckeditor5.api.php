@@ -253,7 +253,7 @@ function hook_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
     ],
   ];
   $plugin_definitions['ckeditor5_link'] = new CKEditor5PluginDefinition($link_plugin_definition);
-
+  
   // Add a custom file type to the image upload plugin. Note that 'tiff' below
   // should be an IANA image media type Name.
   // @see https://www.iana.org/assignments/media-types/media-types.xhtml#image
@@ -280,19 +280,6 @@ function hook_ckeditor4to5upgrade_plugin_info_alter(array &$plugin_definitions):
   // equivalent). This allows a different CKEditor4To5Upgrade plugin to define
   // this upgrade path instead.
   unset($plugin_definitions['core']['cke4_buttons']['Maximize']);
-}
-
-/**
- * Modifies the list of allowed extensions for the image upload plugin.
- *
- * @param array &$extensions
- *   A list of file name extensions.
- */
-function hook_ckeditor5_image_controller_extensions_alter(array &$extensions): void {
-  // The following array values should be the file name extensions to be
-  // validated by the image upload controller.
-  // @see https://www.drupal.org/node/3363700
-  $extensions[] = 'tiff';
 }
 
 /**

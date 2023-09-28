@@ -8,16 +8,6 @@
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 
 /**
- * Implements hook_ckeditor5_image_controller_extensions_alter().
- */
-function ckeditor5_test_module_allowed_image_ckeditor5_image_controller_extensions_alter(array &$extensions): void {
-  // The following array values should be the file name extensions to be
-  // validated by the image upload controller.
-  // @see https://www.drupal.org/node/3363700
-  $extensions[] = 'svg';
-}
-
-/**
  * Implements hook_ckeditor5_plugin_info_alter().
  */
 function ckeditor5_test_module_allowed_image_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {

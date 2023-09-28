@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -156,9 +157,14 @@ class CKEditor5ImageController extends ControllerBase {
       $max_dimensions = 0;
     }
 
-    $extensions = ['gif', 'png', 'jpg', 'jpeg'];
-    $this->moduleHandler
-      ->alter('ckeditor5_image_controller_extensions', $extensions);
+    $pluginService = \Drupal::service('plugin.manager.ckeditor5.plugin');
+    $plugin_definitions = $pluginService->getDefinitions();
+    $mimetypes = new MimeTypes();
+    $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray(); //todo plugin_definitions
+    $extensions = [];
+    foreach ($imageUploadPlugin['ckeditor5']['config']['image']['upload']['types'] as $mime_type) {
+      $extensions[] = $mimetypes->getExtensions($mime_type);
+    }
 
     $validators = [
       'file_validate_extensions' => [implode(' ', $extensions)],
