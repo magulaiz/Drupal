@@ -10,7 +10,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  * @group OpenTelemetry
  * @group #slow
  */
-class OpenTelemetryNodePagPerformanceTest extends PerformanceTestBase {
+class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
 
   /**
    * {@inheritdoc}
