@@ -90,25 +90,28 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   }
 
   /**
-   * {@inheritdoc}
+   * Callback function for updating the parent link select list.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) {
-    $selectedMenu = $form_state->getValue('menu_parent_menu');
+    $selected_menu = $form_state->getValue('menu_parent_menu');
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-    $allMenuLinks = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
-    $selectedParentMenu = '';
-    foreach ($allMenuLinks as $key => $value) {
-      if ($value === $selectedMenu) {
-        $selectedParentMenu = $key;
+    $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
+
+    $selected_parent_menu = '';
+    foreach ($all_menu_links as $key => $value) {
+      if ($value === $selected_menu) {
+        $selected_parent_menu = $key;
       }
     }
-    $menuOfSelectedType = [];
-    foreach ($allMenuLinks as $key => $value) {
-      if (strpos($key, $selectedParentMenu) === 0) {
-        $menuOfSelectedType[$key] = $value;
+
+    $menu_of_selected_type = [];
+    foreach ($all_menu_links as $key => $value) {
+      if (strpos($key, $selected_parent_menu) === 0) {
+        $menu_of_selected_type[$key] = $value;
       }
     }
-    $form['menu_parent']['#options'] = $menuOfSelectedType;
+
+    $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
   }
 
@@ -156,20 +159,19 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     ];
 
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-    $allMenuLinks = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
+    $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
 
-    $parentMenuLinks = [];
-    foreach ($allMenuLinks as $menuLink) {
-      if (strpos($menuLink, '<') === 0) {
-        $parentMenuLinks[$menuLink] = $menuLink;
+    $parent_menu_links = [];
+    foreach ($all_menu_links as $menu_link) {
+      if (strpos($menu_link, '<') === 0) {
+        $parent_menu_links[$menu_link] = $menu_link;
       }
     }
     $form['menu_parent_menu'] = [
       '#type' => 'select',
       '#title' => $this->t('Menu'),
       '#description' => $this->t('Select the menu'),
-      '#options' => $parentMenuLinks,
-      // this ajax callback is not getting executed.
+      '#options' => $parent_menu_links,
       '#ajax' => [
         'callback' => [$this, 'updateParentLinks'],
         'wrapper' => 'ajax-updated-section',
@@ -179,7 +181,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#type' => 'select',
       '#title' => $this->t('Parent link'),
       '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
-      '#options' => $allMenuLinks,
+      '#options' => $all_menu_links,
       '#prefix' => '<div id="ajax-updated-section">',
       '#suffix' => '</div>',
     ];
