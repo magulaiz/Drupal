@@ -21,6 +21,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     'node',
     'field_ui',
     'block',
+    'entity_test',
   ];
 
   /**
@@ -46,6 +47,10 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
       'administer display modes',
       'administer node display',
       'administer node form display',
+      'administer entity_test content',
+      'administer entity_test fields',
+      'administer entity_test display',
+      'administer entity_test form display',
     ]);
     // Create a new form mode 'foobar' for content.
     EntityFormMode::create([
@@ -148,6 +153,25 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
       'view display' => ['view', 'display', 'full'],
       'form display' => ['form', 'form-display', 'foobar'],
     ];
+  }
+
+  /**
+   * Tests the display modes links in respective tabs.
+   */
+  public function testDisplayModeLinks() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('entity_test/structure/entity_test/form-display');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
+    $this->clickLink('Add new form mode');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $page->find('css', '[data-drupal-selector="edit-label"]')->setValue('test');
+    $page->find('css', '[data-drupal-selector="edit-bundles-by-entity-entity-test"]')->check();
+
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+    $assert_session->pageTextContains('Enable more display modes');
   }
 
 }
