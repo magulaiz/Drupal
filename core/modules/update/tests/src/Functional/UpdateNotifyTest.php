@@ -55,4 +55,28 @@ class UpdateNotifyTest extends UpdateTestBase {
     $this->assertSame($request_time, \Drupal::state()->get('update.last_email_notification'));
   }
 
+  /**
+   * Checks that the update notification is not sent on other days.
+   */
+  public function testUpdateNotificationNotSent() {
+    $this->setProjectInstalledVersion('8.0.0');
+    $this->mockReleaseHistory(['drupal' => '0.1']);
+
+    $request_time = \Drupal::time()->getRequestTime();
+    $day = (int) DateHelper::dayOfWeek(date('Y-m-d', $request_time));
+    $update_settings = \Drupal::configFactory()->getEditable('update.settings');
+    // Set the update day to be tomorrow and then try running cron today.
+    $day = ($day + 1) % 6;
+    $update_settings
+      ->set('check.interval_days', 7)
+      ->set('check.update_day', $day)
+      ->set('notification.emails', ['abc@gmail.com'])
+      ->save(TRUE);
+    $cron = $this->container->get('cron');
+    $cron->run();
+    // Last email notification time will not be set to the recent request time
+    // if the mail has not sent. @see _update_cron_notify().
+    $this->assertNotSame($request_time, \Drupal::state()->get('update.last_email_notification'));
+  }
+
 }
