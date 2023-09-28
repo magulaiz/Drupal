@@ -6,7 +6,6 @@ use Drupal\Tests\PerformanceData;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use Drupal\node\NodeInterface;
 
-
 /**
  * Tests that anonymous users are not served any JavaScript.
  *
@@ -66,7 +65,7 @@ class NoJavaScriptAnonymousTest extends PerformanceTestBase {
     $performance_data = new PerformanceData();
     $this->collectPerformanceData(function () use ($user) {
       $this->drupalGet('user/' . $user->id());
-     }, $performance_data);
+    }, $performance_data);
     $this->assertNoJavaScript($performance_data);
   }
 
