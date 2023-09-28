@@ -46,3 +46,6 @@ parameters:
     - "#^Plugin definitions cannot be altered.#"
     - "#^Missing cache backend declaration for performance.#"
     - "#^Class .* extends @internal class#"
+
+    # Ignore too much opinionated errors from ekino/phpstan-banned-code.
+    - "#Should not use node with type .*, please change the code#"
