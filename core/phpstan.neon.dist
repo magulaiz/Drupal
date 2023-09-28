@@ -30,12 +30,12 @@ parameters:
     # Below extends on purpose a non existing class for testing.
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
 
-	banned_code:
-		nodes:
-			-
-				type: Expr_FuncCall
-				functions:
-					- uniqid
+  banned_code:
+    nodes:
+      -
+        type: Expr_FuncCall
+        functions:
+          - uniqid
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
