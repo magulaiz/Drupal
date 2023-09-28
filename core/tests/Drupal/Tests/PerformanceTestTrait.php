@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests;
 
-use Drupal\Core\Url;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 use OpenTelemetry\Contrib\Otlp\SpanExporter;
