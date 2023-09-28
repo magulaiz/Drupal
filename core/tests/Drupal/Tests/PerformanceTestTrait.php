@@ -28,21 +28,21 @@ trait PerformanceTestTrait {
    *
    * @var int
    */
-  protected int $nanoseconds_per_second = 1000_000_000;
+  protected int $nanosecondsPerSecond = 1000_000_000;
 
   /**
    * The number of nanoseconds in a millisecond.
    *
    * @var int
    */
-  protected int $nanoseconds_per_millisecond = 1000_000;
+  protected int $nanosecondsPerMillisecond = 1000_000;
 
   /**
    * The number of nanoseconds in a microsecond.
    *
    * @var int
    */
-  protected int $nanoseconds_per_microsecond = 1000;
+  protected int $nanoSecondsPerMicrosecond = 1000;
 
   /**
    * The telemetry service name.
@@ -104,10 +104,13 @@ trait PerformanceTestTrait {
   /**
    * Logs telemetry data to an Open Telemetry endpoint (when configured).
    *
+   * @param string $service_name
+   *   A human readable identifier so that traces can be grouped together.
    * @param callable $callable
    *   A callable, for example wrapping ::drupalGet().
    * @param PerformanceData|null $performance_data
    *   (optional) An instance of the performance data value object.
+   *
    * @return mixed
    *   The return value from the callable.
    */
@@ -232,11 +235,11 @@ trait PerformanceTestTrait {
       // request as '0' and calculate offsets against that.
       if ($timestamp === NULL && $message['method'] === 'Network.requestWillBeSent') {
         $url = $message['url'];
-        $timestamp = (int) ($message['params']['wallTime'] * $this->nanoseconds_per_second);
+        $timestamp = (int) ($message['params']['wallTime'] * $this->nanosecondsPerSecond);
         // Network timestamps are formatted as a second float with three point
         // precision. Record this so it can be compared against other
         // timestamps.
-        $timestamp_since_os_boot = (int) ($message['params']['timestamp'] * $this->nanoseconds_per_second);
+        $timestamp_since_os_boot = (int) ($message['params']['timestamp'] * $this->nanosecondsPerSecond);
       }
       // The DOM content loaded event is in both the 'page' and 'timeline'
       // sections of the performance log in different formats. This lets us
@@ -248,17 +251,17 @@ trait PerformanceTestTrait {
       // difference.
       // See https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
       if ($dom_loaded_timestamp_page === NULL && $message['method'] === 'Page.domContentEventFired') {
-        $dom_loaded_timestamp_page = $message['params']['timestamp'] * $this->nanoseconds_per_second;
+        $dom_loaded_timestamp_page = $message['params']['timestamp'] * $this->nanosecondsPerSecond;
       }
       if ($dom_loaded_timestamp_timeline === NULL && $message['method'] === 'Tracing.dataCollected' && isset($message['params']['args']['data']['type']) && $message['params']['args']['data']['type'] === 'DOMContentLoaded') {
-        $dom_loaded_timestamp_timeline = $message['params']['ts'] * $this->nanoseconds_per_microsecond;
+        $dom_loaded_timestamp_timeline = $message['params']['ts'] * $this->nanoSecondsPerMicrosecond;
       }
     }
 
     $offset = $dom_loaded_timestamp_page - $dom_loaded_timestamp_timeline;
     $entry = $this->getSession()->evaluateScript("window.performance.getEntriesByType('navigation')")[0];
-    $first_request_timestamp = $entry['requestStart'] * $this->nanoseconds_per_millisecond;
-    $first_response_timestamp = $entry['responseStart'] * $this->nanoseconds_per_millisecond;
+    $first_request_timestamp = $entry['requestStart'] * $this->nanosecondsPerMillisecond;
+    $first_response_timestamp = $entry['responseStart'] * $this->nanosecondsPerMillisecond;
 
     // @todo: get commit hash from an environment variable and add this as an
     // additional attribute.
@@ -304,7 +307,7 @@ trait PerformanceTestTrait {
             // appear to start from a slightly different point from page
             // timestamps. Apply an offset calculated from DOM content loaded.
             // See https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
-            $fcp_timestamp = ($message['params']['ts'] * $this->nanoseconds_per_microsecond) + $offset;
+            $fcp_timestamp = ($message['params']['ts'] * $this->nanoSecondsPerMicrosecond) + $offset;
             $fcp_span = $tracer->spanBuilder('firstContentfulPaint')
               ->setStartTimestamp($timestamp)
               ->setAttribute('http.url', $url)
@@ -317,7 +320,7 @@ trait PerformanceTestTrait {
         // There can be multiple largestContentfulPaint candidates, remember
         // the largest one.
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate' && $message['params']['args']['data']['size'] > $lcp_size) {
-          $lcp_timestamp = ($message['params']['ts'] * $this->nanoseconds_per_microsecond) + $offset;
+          $lcp_timestamp = ($message['params']['ts'] * $this->nanoSecondsPerMicrosecond) + $offset;
           $lcp_size = $message['params']['args']['data']['size'];
         }
       }
