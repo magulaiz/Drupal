@@ -111,7 +111,7 @@ trait PerformanceTestTrait {
    * @return mixed
    *   The return value from the callable.
    */
-  public function logTelemetry(string $service_name, callable $callable, ?PerformanceData $performance_data) {
+  public function logTelemetry(string $service_name, callable $callable, ?PerformanceData $performance_data = NULL) {
     $this->telemetryServiceName = $service_name;
     $return = $this->collectPerformanceData($callable, $performance_data);
     $this->telemetryServiceName = FALSE;
@@ -124,7 +124,7 @@ trait PerformanceTestTrait {
    * @param callable $callable
    *   A callable, for example ::drupalGet().
    * @param PerformanceData|null $performance_data
-   *   (optional) An instance of the performance data value object.
+   *   An instance of the performance data value object.
    *
    * @return mixed
    *   The return value from the callable.
