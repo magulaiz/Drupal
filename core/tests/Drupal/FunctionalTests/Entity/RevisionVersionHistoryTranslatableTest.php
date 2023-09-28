@@ -91,15 +91,27 @@ final class RevisionVersionHistoryTranslatableTest extends BrowserTestBase {
       'type' => 'entity_test_mul_revlog',
     ]);
     $entity->save();
+    $first_revision_id = $entity->getRevisionId();
+
+    $entity->setNewRevision();
+    $entity->setName($label . ',2')
+      ->save();
 
     $entity->setNewRevision();
     $entity->addTranslation('es', ['label' => 'version history test translations es']);
     $entity->save();
 
     $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 2);
+
+    $this->assertSession()->linkByHrefExists($first_revision_id->toUrl('revision-revert-form')->toString());
+    $this->assertSession()->linkByHrefExists($first_revision_id->toUrl('revision-delete-form')->toString());
     $this->assertSession()->pageTextContains('Current revision');
 
     $this->drupalGet($entity->getTranslation('es')->toUrl('version-history'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 1);
     $this->assertSession()->pageTextContains('Current revision');
   }
 
