@@ -20,7 +20,7 @@ class PerformanceData {
    * @param int $count
    *   The number of stylesheet requests recorded.
    */
-  public function setStylesheetCount($count): void {
+  public function setStylesheetCount(int $count): void {
     $this->stylesheetCount = $count;
   }
 
@@ -40,7 +40,7 @@ class PerformanceData {
    * @param int $count
    *   The number of script requests recorded.
    */
-  public function setScriptCount($count) {
+  public function setScriptCount(int $count) {
     $this->scriptCount = $count;
   }
 

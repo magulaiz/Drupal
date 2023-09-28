@@ -36,10 +36,13 @@ class PerformanceTest extends PerformanceTestBase {
   public function testFrontPagePerformance(): void {
     $admin_user = $this->drupalCreateUser(['access toolbar']);
     $this->drupalLogin($admin_user);
-    $this->drupalGet('<front>');
+    $performance_data = new PerformanceData();
+    $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    }, $performance_data);
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertSame(2, $this->stylesheetCount);
-    $this->assertSame(2, $this->scriptCount);
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(2, $performance_data->getScriptCount());
   }
 
 }

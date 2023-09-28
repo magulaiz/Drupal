@@ -133,7 +133,7 @@ trait PerformanceTestTrait {
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
     $return = $callable();
-    $this->getChromeDriverPerformanceMetrics($this->traceUrl, $performance_data);
+    $this->getChromeDriverPerformanceMetrics($performance_data);
     return $return;
   }
 
@@ -200,7 +200,7 @@ trait PerformanceTestTrait {
           $stylesheet_count++;
         }
         if ($message['params']['type'] === 'Script') {
-          $this->scriptCount++;
+          $script_count++;
         }
       }
     }
