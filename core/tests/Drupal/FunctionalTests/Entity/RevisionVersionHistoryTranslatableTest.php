@@ -81,4 +81,26 @@ final class RevisionVersionHistoryTranslatableTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists($firstRevision->getTranslation('es')->toUrl('revision-delete-form')->toString());
   }
 
+  /**
+   * Tests that the current revision is indicated correctly for translations.
+   */
+  public function testVersionHistoryCurrentRevisionTranslations(): void {
+    $label = 'view all revisions,revert,delete revision';
+    $entity = EntityTestMulWithRevisionLog::create([
+      'name' => $label,
+      'type' => 'entity_test_mul_revlog',
+    ]);
+    $entity->save();
+
+    $entity->setNewRevision();
+    $entity->addTranslation('es', ['label' => 'version history test translations es']);
+    $entity->save();
+
+    $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->pageTextContains('Current revision');
+
+    $this->drupalGet($entity->getTranslation('es')->toUrl('version-history'));
+    $this->assertSession()->pageTextContains('Current revision');
+  }
+
 }
