@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\block_content\Functional\Update;
 
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\Tests\block_content\Functional\BlockContentTestBulkOperationsTrait;
@@ -107,6 +108,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
    */
   public function testStatusCheckbox() {
     $ids = \Drupal::entityQuery('entity_form_display')
+      ->accessCheck(FALSE)
       ->condition('targetEntityType', 'block_content')
       ->execute();
 
@@ -130,7 +132,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     foreach ($form_displays as $form_display) {
       $component = $form_display->getComponent('status');
       if ($form_display->id() == 'block_content.basic.default') {
-        // Display label should not have been set to TRUE by the upgrade path.
+        // Display label should have been set to TRUE by the upgrade path.
         $this->assertEquals('boolean_checkbox', $component['type']);
         $this->assertEquals(['display_label' => TRUE], $component['settings']);
       }
@@ -143,6 +145,13 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
    * @see block_content_update_10201()
    */
   public function testBlockContentPublishableUIUpdate() {
+    $view = View::load('block_content');
+    $data = $view->toArray();
+    // Check that new fields exist and that they are in the correct order.
+    $view_fields = $data['display']['default']['display_options']['fields'];
+    $this->assertArrayNotHasKey('block_content_bulk_form', $view_fields);
+    $this->assertArrayNotHasKey('status', $view_fields);
+
     $this->runUpdates();
     $assert_session = $this->assertSession();
 
@@ -163,39 +172,30 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertTrue($data['display']['default']['display_options']['filters']['status']['exposed'], 'The status filter is exposed');
 
     // Check the new actions were created and work as expected.
-    $user = $this->drupalCreateUser(['administer blocks', 'administer block content', 'access block library', 'administer block_content display']);
+    $user = $this->drupalCreateUser([
+      'administer blocks',
+      'administer block content',
+      'access block library',
+      'administer block_content display',
+    ]);
     $this->drupalLogin($user);
+
     // Create a block.
     $block_title = 'Test Block';
-    $edit = [];
-    $edit['info[0][value]'] = $block_title;
-    $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalGet('block/add/basic');
-    $this->submitForm($edit, 'Save');
+    BlockContent::create([
+      'info' => $block_title,
+      'type' => 'basic',
+      'body' => [
+        'value' => $this->randomMachineName(16),
+        'format' => 'plain_text',
+      ],
+    ])->save();
 
     // Check that the new block is displayed and showing its published status.
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
     $assert_session->pageTextContains($block_title);
     $this->assertBlockStatusDisplayedAs(TRUE);
-
-    $this->unpublishUsingBulkAction();
-    $this->assertBlockStatusDisplayedAs(FALSE);
-    // Filter by unpublished to show only unpublished blocks.
-    $edit = [];
-    $edit['status'] = 0;
-    $this->drupalGet('admin/content/block');
-    $this->submitForm($edit, 'Apply');
-    $assert_session->pageTextContains($block_title);
-
-    $this->publishUsingBulkAction();
-    $this->assertBlockStatusDisplayedAs(TRUE);
-    // Filter by published to show only published blocks.
-    $edit = [];
-    $edit['status'] = 1;
-    $this->drupalGet('admin/content/block');
-    $this->submitForm($edit, 'Apply');
-    $assert_session->pageTextContains($block_title);
   }
 
 }

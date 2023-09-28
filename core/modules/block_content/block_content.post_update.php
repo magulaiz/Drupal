@@ -119,7 +119,7 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
   // @see \Drupal\Core\Config\ConfigInstall::createConfiguration()
   unset($config_array['uuid'], $config_array['_core']);
   if (empty($hash) || $hash != Crypt::hashBase64(serialize($config_array))) {
-    // return;
+    return;
   }
 
   $published_key = \Drupal::entityDefinitionUpdateManager()->getEntityType('block_content')->getKey('published');
@@ -128,12 +128,7 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
   $fields = $view->get("display.default.display_options.fields");
 
   // Find out if the status field is already present.
-  $status_field_exists = FALSE;
-  foreach ($fields as $field) {
-    if ($field['field'] == $published_key) {
-      $status_field_exists = TRUE;
-    }
-  }
+  $status_field_exists = in_array($published_key, array_column($fields, 'field'));
 
   // Add bulk form and status fields.
   $block_content_bulk_form = [
