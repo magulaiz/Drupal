@@ -35,6 +35,8 @@ parameters:
       -
         type: Expr_FuncCall
         functions:
+          - md5
+          - sha1
           - uniqid
 
   ignoreErrors:
