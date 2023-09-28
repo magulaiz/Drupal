@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
+use Drupal\Tests\PerformanceData;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
 /**
@@ -20,14 +21,20 @@ class PerformanceTest extends PerformanceTestBase {
    * Just load the front page.
    */
   public function testPagesAnonymous(): void {
-    $this->drupalGet('<front>');
+    $performance_data = new PerformanceData();
+    $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    }, $performance_data);
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertSame(2, $this->stylesheetCount);
-    $this->assertSame(1, $this->scriptCount);
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
 
-    $this->drupalGet('node/1');
-    $this->assertSame(2, $this->stylesheetCount);
-    $this->assertSame(1, $this->scriptCount);
+    $performance_data = new PerformanceData();
+    $this->collectPerformanceData(function () {
+      $this->drupalGet('node/1');
+    }, $performance_data);
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
   }
 
   /**
