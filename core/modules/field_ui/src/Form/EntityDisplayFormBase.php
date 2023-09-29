@@ -21,6 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for EntityDisplay edit forms.
@@ -256,8 +257,11 @@ abstract class EntityDisplayFormBase extends EntityForm {
       }
 
       $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
+
+      $request = Request::createFromGlobals();
+      $current_url = $request->getRequestUri();
       // Create a URL for the form route.
-      $url = Url::fromRoute($route_name, $route_arguments);
+      $url = Url::fromRoute($route_name, $route_arguments, ['query' => ['destination' => $current_url]]);
       $form['modes']['add_new_display_mode'] = [
         '#type' => 'link',
         '#title' => $route_label,

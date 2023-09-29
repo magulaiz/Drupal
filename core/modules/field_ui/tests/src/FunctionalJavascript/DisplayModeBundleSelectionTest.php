@@ -21,7 +21,6 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     'node',
     'field_ui',
     'block',
-    'entity_test',
   ];
 
   /**
@@ -47,10 +46,6 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
       'administer display modes',
       'administer node display',
       'administer node form display',
-      'administer entity_test content',
-      'administer entity_test fields',
-      'administer entity_test display',
-      'administer entity_test form display',
     ]);
     // Create a new form mode 'foobar' for content.
     EntityFormMode::create([
@@ -157,21 +152,44 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
   /**
    * Tests the display modes links in respective tabs.
+   *
+   * @param string $display_mode
+   *   View or Form display mode.
+   * @param string $path
+   *   Display mode path.
+   *
+   * @dataProvider providerDisplayModeLinks
    */
-  public function testDisplayModeLinks() {
+  public function testDisplayModeLinks($display_mode, $path) {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->drupalGet('entity_test/structure/entity_test/form-display');
+    $this->drupalGet("/admin/structure/types/manage/article/$path");
+
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
-    $this->clickLink('Add new form mode');
+    $this->clickLink("Add new $display_mode mode");
     $assert_session->assertWaitOnAjaxRequest();
 
-    $page->find('css', '[data-drupal-selector="edit-label"]')->setValue('test');
-    $page->find('css', '[data-drupal-selector="edit-bundles-by-entity-entity-test"]')->check();
-
+    $page->find('css', '[data-drupal-selector="edit-label"]')->setValue("test-$display_mode");
+    $page->find('css', '[data-drupal-selector="edit-bundles-by-entity-article"]')->check();
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
-    $assert_session->pageTextContains('Enable more display modes');
+
+    $assert_session->pageTextContains("Saved the test-$display_mode $display_mode mode.");
+
+    // Check that the display mode checkbox is checked.
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable more display modes');
+    $this->assertTrue($page->find('css', "#edit-display-modes-custom-test-$display_mode")->isChecked());
+
+  }
+
+  /**
+   * Data provider for testDisplayModeLinks().
+   */
+  public function providerDisplayModeLinks() {
+    return [
+      'view display' => ['view', 'display'],
+      'form display' => ['form', 'form-display'],
+    ];
   }
 
 }
