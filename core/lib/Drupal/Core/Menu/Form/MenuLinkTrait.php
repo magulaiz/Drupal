@@ -11,7 +11,6 @@ trait MenuLinkTrait {
 
   /**
    * All menu links.
-   *
    */
   protected $allMenuLinks;
 
@@ -40,7 +39,7 @@ trait MenuLinkTrait {
   }
 
   /**
-   * Helper function to build the menu parent select form elements.
+   * Helper function to build the select form elements.
    */
   protected function buildMenuFormElements(array $form, array $all_menu_links) {
 
