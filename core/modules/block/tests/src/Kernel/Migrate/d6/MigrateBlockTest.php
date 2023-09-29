@@ -27,7 +27,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     'forum',
     'path_alias',
     'statistics',
-    'system',
   ];
 
   /**
