@@ -195,7 +195,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'label_display' => '0',
       'level' => 1,
       'depth' => 0,
-      'expand_all_items' => false,
+      'expand_all_items' => FALSE,
     ];
     $this->assertEntity('menu', [], 'header', 'olivero', -5, $settings);
 
