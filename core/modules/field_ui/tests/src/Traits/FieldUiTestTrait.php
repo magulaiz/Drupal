@@ -35,7 +35,6 @@ trait FieldUiTestTrait {
     // Generate a label containing only letters and numbers to prevent random
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
-    $label = $label ?: $this->randomMachineName();
     $initial_edit = [];
 
     // Allow the caller to set a NULL path in case they navigated to the right
@@ -55,8 +54,6 @@ trait FieldUiTestTrait {
       // If the element exists then we can add it to our object.
       $initial_edit = [
         'new_storage_type' => $field_type,
-        'label' => $label,
-        'field_name' => $field_name,
       ];
     }
     // If the element could not be found then it is probably in a group.
@@ -68,19 +65,18 @@ trait FieldUiTestTrait {
         $selected_group = [
           'new_storage_type' => $field_group,
         ];
-        $this->submitForm($selected_group, 'Change field group');
+        $this->submitForm($selected_group, 'Change field');
         $initial_edit = [
           'group_field_options_wrapper' => $field_type,
-          'label' => $label,
-          'field_name' => $field_name,
         ];
       }
     }
-    $this->submitForm($initial_edit, 'Continue');
+    $this->submitForm($initial_edit, 'Change field');
+    $this->clickLink('Continue');
     // Assert that the field is not created.
     $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
-      $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
+      $this->assertSession()->pageTextContains("These settings apply to this field everywhere it is used.");
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
 
@@ -100,10 +96,9 @@ trait FieldUiTestTrait {
       }
 
       // Second step: 'Storage settings' form.
-      $this->submitForm($prefixed_storage_edit, 'Update settings');
-
-      // Third step: 'Field settings' form.
-      $this->submitForm($field_edit, 'Save settings');
+      $settings_storage_edit = array_merge($prefixed_storage_edit, $field_edit);
+      $settings_edit = array_merge(['label' => $label, 'field_name' => $field_name], $settings_storage_edit);
+      $this->submitForm($settings_edit, 'Save settings');
       $this->assertSession()->pageTextContains("Saved $label configuration.");
 
       // Check that the field appears in the overview form.
@@ -206,7 +201,7 @@ trait FieldUiTestTrait {
       $test = [
         'new_storage_type' => $group,
       ];
-      $this->submitForm($test, 'Change field group');
+      $this->submitForm($test, 'Change field');
       try {
         $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
         return $group;
