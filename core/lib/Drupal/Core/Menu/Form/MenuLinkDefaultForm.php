@@ -3,15 +3,15 @@
 namespace Drupal\Core\Menu\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Provides an edit form for static menu links.
@@ -22,6 +22,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
 
   use StringTranslationTrait;
   use DependencySerializationTrait;
+  use MenuLinkTrait;
 
   /**
    * The edited menu link.
@@ -90,32 +91,6 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   }
 
   /**
-   * Callback function for updating the parent link select list.
-   */
-  public function updateParentLinks(array $form, FormStateInterface $form_state) {
-    $selected_menu = $form_state->getValue('menu_parent_menu');
-    $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-    $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
-
-    $selected_parent_menu = '';
-    foreach ($all_menu_links as $key => $value) {
-      if ($value === $selected_menu) {
-        $selected_parent_menu = $key;
-      }
-    }
-
-    $menu_of_selected_type = [];
-    foreach ($all_menu_links as $key => $value) {
-      if (strpos($key, $selected_parent_menu) === 0) {
-        $menu_of_selected_type[$key] = $value;
-      }
-    }
-
-    $form['menu_parent']['#options'] = $menu_of_selected_type;
-    return $form['menu_parent'];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
@@ -157,34 +132,10 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded. This option may be overridden for the entire menu tree when placing a menu block.'),
       '#default_value' => $this->menuLink->isExpanded(),
     ];
-
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
 
-    $parent_menu_links = [];
-    foreach ($all_menu_links as $menu_link) {
-      if (strpos($menu_link, '<') === 0) {
-        $parent_menu_links[$menu_link] = $menu_link;
-      }
-    }
-    $form['menu_parent_menu'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Menu'),
-      '#description' => $this->t('Select the menu'),
-      '#options' => $parent_menu_links,
-      '#ajax' => [
-        'callback' => [$this, 'updateParentLinks'],
-        'wrapper' => 'ajax-updated-section',
-      ],
-    ];
-    $form['menu_parent'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Parent link'),
-      '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
-      '#options' => $all_menu_links,
-      '#prefix' => '<div id="ajax-updated-section">',
-      '#suffix' => '</div>',
-    ];
+    $form += $this->buildMenuFormElements($form, $all_menu_links);
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [

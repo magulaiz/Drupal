@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Menu\Form\MenuLinkTrait;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkContentForm extends ContentEntityForm {
 
   use DeprecatedServicePropertyTrait;
+  use MenuLinkTrait;
 
   /**
    * The deprecated properties and services on this class.
@@ -88,24 +90,10 @@ class MenuLinkContentForm extends ContentEntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
+    $menu_parent = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
+    $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->entity->getPluginId())['#options'];
 
-    $parent_id = $this->entity->getParentId() ?: $this->getRequest()->query->get('parent');
-    $default = $this->entity->getMenuName() . ':' . $parent_id;
-    $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
-    if ($this->entity->isNew()) {
-      $menu_id = $this->entity->getMenuName();
-      $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
-      $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
-        $menu_id => $menu->label(),
-      ]);
-    }
-    else {
-      $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
-    }
-    $form['menu_parent']['#weight'] = 10;
-    $form['menu_parent']['#title'] = $this->t('Parent link');
-    $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-    $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+    $form += $this->buildMenuFormElements($form, $all_menu_links);
 
     return $form;
   }
