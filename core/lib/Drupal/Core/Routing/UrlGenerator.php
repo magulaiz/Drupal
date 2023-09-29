@@ -300,26 +300,28 @@ class UrlGenerator implements UrlGeneratorInterface {
     }
     // Ensure the resulting path has at most one leading slash, to prevent it
     // becoming an external URL without a protocol like //example.com.
-    if (strpos($path, '//') === 0) {
-      $path = '/' . ltrim($path, '/');
-    }
-    // The contexts base URL is already encoded
-    // (see Symfony\Component\HttpFoundation\Request).
-    $path = str_replace($this->decodedChars[0], $this->decodedChars[1], rawurlencode($path));
-
-    // Drupal paths rarely include dots, so skip this processing if possible.
-    if (strpos($path, '/.') !== FALSE) {
-      // the path segments "." and ".." are interpreted as relative reference when
-      // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
-      // so we need to encode them as they are not used for this purpose here
-      // otherwise we would generate a URI that, when followed by a user agent
-      // (e.g. browser), does not match this route
-      $path = strtr($path, ['/../' => '/%2E%2E/', '/./' => '/%2E/']);
-      if ('/..' === substr($path, -3)) {
-        $path = substr($path, 0, -2) . '%2E%2E';
+    if ($path) {
+      if (strpos($path, '//') === 0) {
+        $path = '/' . ltrim($path, '/');
       }
-      elseif ('/.' === substr($path, -2)) {
-        $path = substr($path, 0, -1) . '%2E';
+      // The contexts base URL is already encoded
+      // (see Symfony\Component\HttpFoundation\Request).
+      $path = str_replace($this->decodedChars[0], $this->decodedChars[1], rawurlencode($path));
+
+      // Drupal paths rarely include dots, so skip this processing if possible.
+      if (strpos($path, '/.') !== FALSE) {
+        // the path segments "." and ".." are interpreted as relative reference when
+        // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
+        // so we need to encode them as they are not used for this purpose here
+        // otherwise we would generate a URI that, when followed by a user agent
+        // (e.g. browser), does not match this route
+        $path = strtr($path, ['/../' => '/%2E%2E/', '/./' => '/%2E/']);
+        if ('/..' === substr($path, -3)) {
+          $path = substr($path, 0, -2) . '%2E%2E';
+        }
+        elseif ('/.' === substr($path, -2)) {
+          $path = substr($path, 0, -1) . '%2E';
+        }
       }
     }
 
