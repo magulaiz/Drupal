@@ -234,8 +234,9 @@ function forum_update_10102(&$sandbox = NULL) {
   $connection = \Drupal::database();
   if ($connection->schema()->tableExists('forum_index')) {
     // Data in this table could have duplicates. The data can be re-constructed
-    // from other data in the site. To avoid duplicate key errors we truncate
-    // the table and then recreate it from data in the site.
+    // from other data in the site. To avoid duplicate key errors we delete any
+    // rows that are duplicates and then recreate them in a post-update hook.
+    // @see \forum_post_update_recreate_forum_index_rows().
     $connection->schema()->addPrimaryKey('forum_index', ['nid', 'tid']);
     return \t('Added primary key to the forum_index table.');
   }
