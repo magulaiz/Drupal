@@ -6,7 +6,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Translate settings and entities to various languages.
+ * Translate site information to various languages.
  *
  * @group config_translation
  */
