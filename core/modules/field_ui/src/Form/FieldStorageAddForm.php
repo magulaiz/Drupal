@@ -236,25 +236,17 @@ class FieldStorageAddForm extends FormBase {
     }
     uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
     $form['add']['new_storage_type'] = $field_type_options_radios;
-    $form['group_submit'] = [
+
+    $form['no_js_submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Change field group'),
+      '#value' => $this->t('Change field'),
       '#limit_validation_errors' => [],
       '#attributes' => [
         'class' => ['js-hide'],
       ],
       '#submit' => [[static::class, 'rebuildForm']],
     ];
-    $form['field_submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Update link with field'),
-      '#limit_validation_errors' => [],
-      '#attributes' => [
-        'class' => ['js-hide'],
-      ],
-      '#submit' => [[static::class, 'rebuildForm']],
-    ];
-    // @todo Maybe rename this since the 'Continue' button lives here now.
+    // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
     $form['group_field_options_wrapper'] = [
       '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
       '#suffix' => '</div>',
