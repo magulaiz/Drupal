@@ -261,6 +261,7 @@ class UrlHelper {
 
       // Initialize a temporary variable which will be used to drill down into the $parsed array
       // Linter not be able to detect the indirect & changes made to $parsed via $temp. The code does actually use $temp in the $parsed array.
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $temp = &$parsed;
 
       // Drill down into the $parsed array based on the nested keys (if any)
