@@ -44,7 +44,7 @@ class DateRangeItem extends DateTimeItem {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('datetime_iso8601')
       ->setLabel(t('Start date value'))
-      ->setRequired(FALSE);
+      ->setRequired(TRUE);
 
     $properties['start_date'] = DataDefinition::create('any')
       ->setLabel(t('Computed start date'))
@@ -95,6 +95,7 @@ class DateRangeItem extends DateTimeItem {
     $element['optional_end_date'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Optional end date'),
+      '#description' => $this->t('Allow end date to be optional opposed to the default behaviour where end date is required.'),
       '#default_value' => $this->getSetting('optional_end_date'),
     ];
 
