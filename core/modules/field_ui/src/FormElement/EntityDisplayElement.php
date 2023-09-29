@@ -45,10 +45,12 @@ class EntityDisplayElement extends ListElement {
 
     // Don't provide duplicate settings for fields under layout builder.
     $layout_element_names = LayoutBuilderDisplayElement::getElementNames();
-    foreach ($layout_element_names as $key => $value) {
-      [,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $value, 3);
-      $element_names = array_diff($element_names, [$field_name]);
-      unset($parent_build['content'][$field_name]);
+    if ($layout_element_names) {
+      foreach ($layout_element_names as $key => $value) {
+        [,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $value, 3);
+        $element_names = array_diff($element_names, [$field_name]);
+        unset($parent_build['content'][$field_name]);
+      }
     }
 
     if (empty($element_names)) {

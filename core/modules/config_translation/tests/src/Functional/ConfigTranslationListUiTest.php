@@ -538,6 +538,20 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->getSession()->getPage()->pressButton('Continue');
     $this->getSession()->getPage()->pressButton('Save settings');
 
+    // Before layout builder is enabled.
+    $this->drupalGet('admin/structure/types/manage/' . $id . '/display/default/translate/de/edit');
+    // Initially select the deepest element.
+    $expected_labels = ["Boolean format settings",
+      "Bool field label\n  Field: field_boolean, type: Boolean",
+      "Field formatters",
+    ];
+    $xpath = new \DOMXPath(Html::load($this->getSession()->getPage()->getHtml()));
+    $element = $xpath->query('//details/summary[text()=" format settings"]')->item(0)->parentNode;
+    foreach ($expected_labels as $expected_label) {
+      $this->assertTrue(str_starts_with($element->nodeValue, $expected_label));
+      $element = $element->parentNode;
+    }
+
     // Setup layout builder.
     $field_ui_prefix = "admin/structure/types/manage/$id/display";
     $page = $this->getSession()->getPage();
@@ -554,10 +568,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'layout_settings[label]' => 'Custom section',
     ], 'Update');
     $this->getSession()->getPage()->pressButton('Save layout');
-    $this->drupalGet("$field_ui_prefix/default/layout");
-    $this->clickLink('Add block');
-    $this->clickLink('Bool field label');
-    $this->getSession()->getPage()->pressButton('Add block');
 
     $this->drupalGet('admin/config/regional/config-translation');
     $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/node_view_display');
@@ -567,10 +577,8 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/' . $id . '/display/default/translate');
     $this->drupalGet('admin/structure/types/manage/' . $id . '/display/default/translate/de/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Field formatters');
-    // We expect the custom_label and field info to show up thrice as twice
-    // under layout_builder and once as just a field under the custom content
-    // type.
+    // Assert duplicate field formatter settings is not found.
+    $this->assertSession()->pageTextNotContains('Field formatters');
     $xpath = new \DOMXPath(Html::load($this->getSession()->getPage()->getHtml()));
     $expected_labels = ["Boolean format settings",
       "Bool field label\n  Field: field_boolean, type: Boolean",
@@ -578,6 +586,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       "Bool field label",
       "Components",
       "Custom section",
+      "Sequence",
+      "Per-view-mode Layout Builder settings",
+      "Third party settings",
     ];
     // Initially select the deepest element.
     $element = $xpath->query('//details/summary[text()=" format settings"]')->item(0)->parentNode;
