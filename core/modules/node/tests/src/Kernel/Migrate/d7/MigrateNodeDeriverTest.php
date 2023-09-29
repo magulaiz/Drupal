@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -21,8 +22,8 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
    */
   public function testNoTranslations() {
     // Without content_translation, there should be no translation migrations.
-    $migrations = $this->container->get('plugin.manager.migration')->createInstances('d7_node_translation');
-    $this->assertEmpty($migrations);
+    $this->expectException(PluginNotFoundException::class);
+    $this->container->get('plugin.manager.migration')->createInstances('d7_node_translation');
   }
 
   /**
