@@ -265,12 +265,13 @@
    *   The event triggered.
    * @param {Drupal.dialog~dialogDefinition} dialog
    *   The dialog instance.
-   * @param {jQuery} $element
-   *   The jQuery collection of the dialog element.
+   * @param {HTMLElement} element
+   *   The dialog element.
    * @param {object} [settings]
    *   Dialog settings.
    */
-  $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
+  $(window).on('dialog:aftercreate', (e, dialog, element, settings) => {
+    const $element = $(element);
     $element.on('click.dialog', '.dialog-cancel', (e) => {
       dialog.close('cancel');
       e.preventDefault();
@@ -285,10 +286,11 @@
    *   The event triggered.
    * @param {Drupal.dialog~dialogDefinition} dialog
    *   The dialog instance.
-   * @param {jQuery} $element
-   *   jQuery collection of the dialog element.
+   * @param {HTMLElement} element
+   *   The dialog element.
    */
-  $(window).on('dialog:beforeclose', (e, dialog, $element) => {
+  $(window).on('dialog:beforeclose', (e, dialog, element) => {
+    const $element = $(element);
     $element.off('.dialog');
   });
 

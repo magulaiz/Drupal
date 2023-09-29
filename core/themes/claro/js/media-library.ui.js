@@ -22,7 +22,8 @@
       }
       $(window).on(
         'dialog:aftercreate',
-        (event, dialog, $element, settings) => {
+        (event, dialog, element, settings) => {
+          const $element = $(element);
           // Since the dialog HTML is not part of the context, we can't use
           // context here.
           const moveCounter = ($selectedCount, $buttonPane) => {
