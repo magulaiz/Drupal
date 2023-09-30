@@ -732,6 +732,35 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $this->assertResult();
 
+    // Using a different operator than "=" should still yield the correct
+    // results.
+    $this->queryResults = $this->storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition("id.%delta.value", [1, 3, 5], 'IN')
+      ->condition("id.%delta", 1, '<')
+      ->sort('id')
+      ->execute();
+    $this->assertResult(1, 3, 5);
+
+    // An delta range condition as part of an OR condition group should always
+    // return all results.
+    $this->queryResults = $this->storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition("id.%delta.value", 99, '=')
+      ->sort('id')
+      ->execute();
+    $this->assertResult();
+    $this->queryResults = $this->storage
+      ->getQuery('OR')
+      ->accessCheck(FALSE)
+      ->condition("id.%delta.value", 99, '=')
+      ->condition("id.%delta", 0, '=')
+      ->sort('id')
+      ->execute();
+    $this->assertResult(range(0, 15));
+
   }
 
   /**
