@@ -1042,7 +1042,6 @@
    * Sets the throbber progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorThrobber = function () {
-    console.log('here');
     this.progress.element = $(
       Drupal.theme('ajaxProgressThrobber', this.progress.message),
     );
