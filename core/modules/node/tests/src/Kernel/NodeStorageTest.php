@@ -34,7 +34,6 @@ class NodeStorageTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
-    $this->installSchema('system', 'sequences');
     $this->installSchema('node', ['node_access']);
 
     $nodeType = NodeType::create([
