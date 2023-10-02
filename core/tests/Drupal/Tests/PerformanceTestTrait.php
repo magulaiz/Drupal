@@ -56,8 +56,10 @@ trait PerformanceTestTrait {
    * Helper for ::setUp().
    *
    * Resets configuration to be closer to production settings.
+   *
+   * @see \Drupal\Tests\BrowserTestBase::setUp()
    */
-  protected function doSetUpTasks(): void {
+  private function doSetUpTasks(): void {
     \Drupal::configFactory()->getEditable('system.performance')
       ->set('css.preprocess', TRUE)
       ->set('js.preprocess', TRUE)
@@ -65,11 +67,14 @@ trait PerformanceTestTrait {
   }
 
   /**
-   * Helper for ::instalModulesFormClassProperty().
+   * Helper for ::installModulesFromClassProperty().
    *
-   * To use this, override the method and call this helper.
+   * To use this, override BrowserTestBase::installModulesFromClassProperty()
+   * and call this helper.
+   *
+   * @see \Drupal\Tests\BrowserTestBase::installModulesFromClassProperty()
    */
-  protected function doInstallModulesFromClassProperty(ContainerInterface $container) {
+  private function doInstallModulesFromClassProperty(ContainerInterface $container) {
     // Bypass everything that WebDriverTestBase does here to get closer to
     // a production configuration.
     BrowserTestBase::installModulesFromClassProperty($container);
@@ -78,10 +83,15 @@ trait PerformanceTestTrait {
   /**
    * Helper for ::getMinkDriverArgs().
    *
-   * To use this, override the method and call this helper.
+   * To use this, override BrowserTestBase::getMinkDriverArgs() and call this
+   * helper.
+   *
+   * @return string
+   *   The JSON encoded driver args with performance logging preferences added.
+   *
+   * @see \Drupal\Tests\BrowserTestBase::getMinkDriverArgs()
    */
-  protected function doGetMinkDriverArgs() {
-
+  private function doGetMinkDriverArgs(): string {
     // Add performance logging preferences to the existing driver arguments to
     // avoid clobbering anything set via environment variables.
     // @see https://chromedriver.chromium.org/logging/performance-log
@@ -108,7 +118,7 @@ trait PerformanceTestTrait {
    * @param callable $callable
    *   A callable, for example wrapping ::drupalGet().
    *
-   * @return Drupal\Tests\PerformanceData
+   * @return \Drupal\Tests\PerformanceData
    *   A PerformanceData value object.
    */
   public function logTelemetry(string $service_name, callable $callable): PerformanceData {
@@ -124,7 +134,7 @@ trait PerformanceTestTrait {
    * @param callable $callable
    *   A callable, for example ::drupalGet().
    *
-   * @return Drupal\Tests\PerformanceData
+   * @return \Drupal\Tests\PerformanceData
    *   A PerformanceData value object.
    */
   public function collectPerformanceData(callable $callable): PerformanceData {
@@ -151,7 +161,12 @@ trait PerformanceTestTrait {
    * events. From manual testing none of the core pages result in more than
    * two largestContentfulPaint::Candidate events, so we keep looking until
    * either two have been sent, or until 30 seconds has passed.
+   *
    * @todo https://www.drupal.org/project/drupal/issues/3379757
+   *
+   * @param PerformanceData|null $performance_data
+   *   An instance of the performance data value object. If provided, this
+   *   object will be used to collect performance data from Chrome.
    */
   protected function getChromeDriverPerformanceMetrics(?PerformanceData $performance_data): void {
     $attempts = 0;
@@ -194,7 +209,7 @@ trait PerformanceTestTrait {
    * @param PerformanceData $performance_data
    *   An instance of the performance data value object.
    */
-  protected function collectNetworkData(array $messages, $performance_data): void {
+  private function collectNetworkData(array $messages, PerformanceData $performance_data): void {
     $stylesheet_count = 0;
     $script_count = 0;
     foreach ($messages as $message) {
@@ -219,7 +234,7 @@ trait PerformanceTestTrait {
    *
    * @see https://opentelemetry.io/docs/instrumentation/php/manual/
    */
-  protected function openTelemetryTracing(array $messages): void {
+  private function openTelemetryTracing(array $messages): void {
     // Open telemetry timestamps are always in nanoseconds.
     $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
     if ($collector === NULL) {
