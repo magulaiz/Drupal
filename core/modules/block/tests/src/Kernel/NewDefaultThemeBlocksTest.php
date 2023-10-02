@@ -162,7 +162,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
       unset($new_blocks[str_replace($default_theme . '_', $new_theme . '_', $default_block_name)]);
     }
     // The test_theme_user_login_block machine name is already in use, so therefore
-    // \Drupal\block\BlockMachineNameGenerator::getUniqueMachineName
+    // \Drupal\block\BlockRepository::getUniqueMachineName
     // appends a counter.
     unset($new_blocks[$new_theme . '_user_login_block_2']);
     $this->assertEmpty($new_blocks);

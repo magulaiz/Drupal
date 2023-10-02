@@ -3,7 +3,7 @@
 namespace Drupal\Tests\block\Unit;
 
 use Drupal\block\BlockForm;
-use Drupal\block\BlockMachineNameGenerator;
+use Drupal\block\BlockRepository;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
@@ -36,7 +36,6 @@ class BlockFormTest extends UnitTestCase {
    */
   protected $language;
 
-
   /**
    * The theme handler.
    *
@@ -45,11 +44,25 @@ class BlockFormTest extends UnitTestCase {
   protected $themeHandler;
 
   /**
+   * The theme manager service.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $themeManager;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
+
+  /**
+   * The mocked context handler.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $contextHandler;
 
   /**
    * The mocked context repository.
@@ -66,11 +79,11 @@ class BlockFormTest extends UnitTestCase {
   protected $pluginFormFactory;
 
   /**
-   * The machine name generator.
+   * The block repository.
    *
-   * @var \Drupal\block\BlockMachineNameGeneratorInterface
+   * @var \Drupal\block\BlockRepositoryInterface
    */
-  protected $machineNameGenerator;
+  protected $blockRepository;
 
   /**
    * {@inheritdoc}
@@ -90,6 +103,10 @@ class BlockFormTest extends UnitTestCase {
       ->willReturn($this->storage);
 
     $this->pluginFormFactory = $this->prophesize(PluginFormFactoryInterface::class);
+
+    $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
+    $this->contextHandler = $this->createMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
+    $this->blockRepository = new BlockRepository($this->entityTypeManager, $this->themeManager, $this->contextHandler);
   }
 
   /**
@@ -144,8 +161,7 @@ class BlockFormTest extends UnitTestCase {
       ->method('getQuery')
       ->willReturn($query);
 
-    $machine_name_generator = new BlockMachineNameGenerator($this->entityTypeManager);
-    $block_form_controller = new BlockForm($this->entityTypeManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal(), $machine_name_generator);
+    $block_form_controller = new BlockForm($this->entityTypeManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal(), $this->blockRepository);
 
     // Ensure that the block with just one other instance gets
     // the next available name suggestion.

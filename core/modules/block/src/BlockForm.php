@@ -74,11 +74,11 @@ class BlockForm extends EntityForm {
   protected $pluginFormFactory;
 
   /**
-   * The block machine name generator.
+   * The block repository service.
    *
-   * @var \Drupal\block\BlockMachineNameGeneratorInterface
+   * @var \Drupal\block\BlockRepositoryInterface
    */
-  protected $machineNameGenerator;
+  protected $blockRepository;
 
   /**
    * Constructs a BlockForm object.
@@ -95,13 +95,13 @@ class BlockForm extends EntityForm {
    *   The theme handler.
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
    *   The plugin form manager.
-   * @param BlockMachineNameGeneratorInterface|null $machine_name_generator
-   *   The unique machine name generator.
+   * @param \Drupal\block\BlockRepositoryInterface|null $block_repository
+   *   The block repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager, ?BlockMachineNameGeneratorInterface $machine_name_generator = NULL) {
-    if ($machine_name_generator === NULL) {
-      @trigger_error('Calling BlockMachineNameGenerator::__construct() without the $machine_name_generator argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3333575', E_USER_DEPRECATED);
-      $machine_name_generator = \Drupal::service('block.machine_name_generator');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager, ?BlockRepositoryInterface $block_repository = NULL) {
+    if ($block_repository === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $block_repository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3333575', E_USER_DEPRECATED);
+      $block_repository = \Drupal::service('block.repository');
     }
     $this->storage = $entity_type_manager->getStorage('block');
     $this->manager = $manager;
@@ -109,7 +109,7 @@ class BlockForm extends EntityForm {
     $this->language = $language;
     $this->themeHandler = $theme_handler;
     $this->pluginFormFactory = $plugin_form_manager;
-    $this->machineNameGenerator = $machine_name_generator;
+    $this->blockRepository = $block_repository;
   }
 
   /**
@@ -123,7 +123,7 @@ class BlockForm extends EntityForm {
       $container->get('language_manager'),
       $container->get('theme_handler'),
       $container->get('plugin_form.factory'),
-      $container->get('block.machine_name_generator')
+      $container->get('block.repository')
     );
   }
 
@@ -405,7 +405,7 @@ class BlockForm extends EntityForm {
    */
   public function getUniqueMachineName(BlockInterface $block) {
     $suggestion = $block->getPlugin()->getMachineNameSuggestion();
-    return $this->machineNameGenerator->getUniqueMachineName($suggestion, $block->getTheme());
+    return $this->blockRepository->getUniqueMachineName($suggestion, $block->getTheme());
   }
 
   /**
