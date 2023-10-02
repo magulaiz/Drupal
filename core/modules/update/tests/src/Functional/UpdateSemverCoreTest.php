@@ -8,6 +8,7 @@ use Drupal\Core\Url;
  * Tests the semantic version handling in the Update Manager.
  *
  * @group update
+ * @group #slow
  */
 class UpdateSemverCoreTest extends UpdateSemverTestBase {
   use UpdateTestTrait;
@@ -432,25 +433,25 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * Tests that exactly one fetch task per project is created and not more.
    */
   public function testFetchTasks() {
-    $projecta = [
+    $project_a = [
       'name' => 'aaa_update_test',
     ];
-    $projectb = [
+    $project_b = [
       'name' => 'bbb_update_test',
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
     $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
-    update_create_fetch_task($projecta);
+    update_create_fetch_task($project_a);
     $this->assertEquals(1, $queue->numberOfItems(), 'Queue contains one item');
-    update_create_fetch_task($projectb);
+    update_create_fetch_task($project_b);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
-    update_create_fetch_task($projecta);
+    update_create_fetch_task($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
     update_storage_clear();
-    update_create_fetch_task($projecta);
+    update_create_fetch_task($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 
@@ -523,7 +524,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     \Drupal::keyValueExpirable('update_available_releases')->deleteAll();
     // This cron run should retrieve fixed updates.
     $this->cronRun();
-    $this->drupalGet('admin/structure');
+    $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
   }

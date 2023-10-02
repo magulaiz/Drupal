@@ -362,18 +362,23 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       if (static::isViolationForIgnoredPropertyPath($violation)) {
         continue;
       }
-      if (!isset($actual_messages[$violation->getPropertyPath()])) {
-        $actual_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();
+
+      $property_path = $violation->getPropertyPath();
+
+      if (!isset($actual_messages[$property_path])) {
+        $actual_messages[$property_path] = (string) $violation->getMessage();
       }
       else {
         // Transform value from string to array.
-        if (is_string($actual_messages[$violation->getPropertyPath()])) {
-          $actual_messages[$violation->getPropertyPath()] = (array) $actual_messages[$violation->getPropertyPath()];
+        if (is_string($actual_messages[$property_path])) {
+          $actual_messages[$property_path] = (array) $actual_messages[$violation->getPropertyPath()];
         }
         // And append.
-        $actual_messages[$violation->getPropertyPath()][] = (string) $violation->getMessage();
+        $actual_messages[$property_path][] = (string) $violation->getMessage();
       }
     }
+    ksort($expected_messages);
+    ksort($actual_messages);
     $this->assertSame($expected_messages, $actual_messages);
   }
 
