@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @coversDefaultClass \Drupal\Core\DrupalKernel
  * @group DrupalKernel
  */
-class DrupalKernelTest extends UnitTestCase {
+class DrupalKernelTest extends UnitTestCase
+{
 
   /**
    * Tests hostname validation with settings.
@@ -21,7 +22,8 @@ class DrupalKernelTest extends UnitTestCase {
    * @covers ::setupTrustedHosts
    * @dataProvider providerTestTrustedHosts
    */
-  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE) {
+  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE)
+  {
     $request = new Request();
 
     $trusted_host_patterns = [
@@ -51,7 +53,8 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Provides test data for testTrustedHosts().
    */
-  public function providerTestTrustedHosts() {
+  public function providerTestTrustedHosts()
+  {
     $data = [];
 
     // Tests canonical URL.
@@ -112,7 +115,8 @@ class DrupalKernelTest extends UnitTestCase {
    * @covers ::findSitePath
    * @runInSeparateProcess
    */
-  public function testFindSitePath() {
+  public function testFindSitePath()
+  {
     $vfs_root = vfsStream::setup('drupal_root');
     $sites_php = <<<'EOD'
 <?php
@@ -141,7 +145,8 @@ EOD;
    * @covers ::getServiceIdMapping
    * @group legacy
    */
-  public function testGetServiceIdMapping() {
+  public function testGetServiceIdMapping()
+  {
     $this->expectDeprecation("Drupal\Core\DrupalKernel::getServiceIdMapping() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
     $this->expectDeprecation("Drupal\Core\DrupalKernel::collectServiceIdMapping() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
     $service = new BarClass();
@@ -149,13 +154,13 @@ EOD;
     $container->set('bar', $service);
     $this->assertEquals($container->get('kernel')->getServiceIdMapping()[$container->generateServiceIdHash($service)], 'bar');
   }
-
 }
 
 /**
  * A fake autoloader for testing.
  */
-class FakeAutoloader {
+class FakeAutoloader
+{
 
   /**
    * Registers this instance as an autoloader.
@@ -163,35 +168,36 @@ class FakeAutoloader {
    * @param bool $prepend
    *   Whether to prepend the autoloader or not
    */
-  public function register($prepend = FALSE) {
+  public function register($prepend = FALSE)
+  {
     spl_autoload_register([$this, 'loadClass'], TRUE, $prepend);
   }
 
   /**
    * Unregisters this instance as an autoloader.
    */
-  public function unregister() {
+  public function unregister()
+  {
     spl_autoload_unregister([$this, 'loadClass']);
   }
 
   /**
    * Loads the given class or interface.
    *
-   * @return null
-   *   This class never loads.
+   * This class never loads.
    */
-  public function loadClass() {
+  public function loadClass()
+  {
     return NULL;
   }
 
   /**
    * Finds a file by class name while caching lookups to APC.
    *
-   * @return null
-   *   This class never finds.
+   * This class never finds.
    */
-  public function findFile() {
+  public function findFile()
+  {
     return NULL;
   }
-
 }
