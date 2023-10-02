@@ -251,7 +251,7 @@
 
         if (firstVisibleRegion !== null) {
           gotoFiltered.classList.add('link-to-element');
-          gotoFiltered.textContent = Drupal.t('go to next element.');
+          gotoFiltered.textContent = Drupal.t('Go to items found.');
           document.querySelector('#goto-filtered').style.display = 'block';
         }
       };
