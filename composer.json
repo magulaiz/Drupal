@@ -85,7 +85,6 @@
             "phpstan/extension-installer": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": true,
-            "ergebnis/composer-normalize": true
         },
         "platform": {
             "php": "8.1.0"
