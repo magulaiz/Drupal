@@ -167,7 +167,6 @@ class FieldConfigEditForm extends EntityForm {
       $this->fieldTempStoreKey = $this->entity->get('field_name');
     }
 
-    // @todo Change this.
     $form_title = $this->t('Field settings for %bundle', [
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
@@ -185,12 +184,6 @@ class FieldConfigEditForm extends EntityForm {
       '#type' => 'container',
       '#attributes' => [
         'class' => ['field-ui-new-storage-wrapper'],
-      ],
-      // @todo: Remove this?
-      '#states' => [
-        '!visible' => [
-          ':input[name="new_storage_type"]' => ['value' => ''],
-        ],
       ],
       '#weight' => -20,
     ];
