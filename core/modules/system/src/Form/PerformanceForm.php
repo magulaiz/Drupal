@@ -130,34 +130,6 @@ class PerformanceForm extends ConfigFormBase {
       '#access' => !$this->moduleHandler->moduleExists('page_cache'),
     ];
 
-    $directory = 'assets://';
-    $is_writable = is_dir($directory) && is_writable($directory);
-    $disabled = !$is_writable;
-    $disabled_message = '';
-    if (!$is_writable) {
-      $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">optimized assets file system path</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
-    }
-
-    $form['bandwidth_optimization'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Bandwidth optimization'),
-      '#open' => TRUE,
-      '#description' => $this->t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
-    ];
-
-    $form['bandwidth_optimization']['preprocess_css'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Aggregate CSS files'),
-      '#default_value' => $config->get('css.preprocess'),
-      '#disabled' => $disabled,
-    ];
-    $form['bandwidth_optimization']['preprocess_js'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Aggregate JavaScript files'),
-      '#default_value' => $config->get('js.preprocess'),
-      '#disabled' => $disabled,
-    ];
-
     return parent::buildForm($form, $form_state);
   }
 
@@ -170,8 +142,6 @@ class PerformanceForm extends ConfigFormBase {
 
     $this->config('system.performance')
       ->set('cache.page.max_age', $form_state->getValue('page_cache_maximum_age'))
-      ->set('css.preprocess', $form_state->getValue('preprocess_css'))
-      ->set('js.preprocess', $form_state->getValue('preprocess_js'))
       ->save();
 
     parent::submitForm($form, $form_state);

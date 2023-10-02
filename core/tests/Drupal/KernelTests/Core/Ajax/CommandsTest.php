@@ -53,12 +53,14 @@ class CommandsTest extends KernelTestBase {
       $this->assertCommand($response->getCommands(), $expected, $message);
     };
 
-    $config = $this->config('system.performance');
-
-    $config->set('js.preprocess', FALSE)->save();
+    \Drupal::state()->set('system.performance', [
+      'js.preprocess' => FALSE,
+    ]);
     $assert('Settings command exists when JS aggregation is disabled.');
 
-    $config->set('js.preprocess', TRUE)->save();
+    \Drupal::state()->set('system.performance', [
+      'js.preprocess' => TRUE,
+    ]);
     $assert('Settings command exists when JS aggregation is enabled.');
   }
 

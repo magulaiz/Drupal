@@ -76,14 +76,6 @@ class AssetOptimizationTest extends BrowserTestBase {
   protected function doTestAggregation(array $settings): void {
     $this->writeSettings($settings);
     $this->rebuildAll();
-    $this->config('system.performance')->set('css', [
-      'preprocess' => TRUE,
-      'gzip' => TRUE,
-    ])->save();
-    $this->config('system.performance')->set('js', [
-      'preprocess' => TRUE,
-      'gzip' => TRUE,
-    ])->save();
     $this->requestPage();
     $session = $this->getSession();
     $page = $session->getPage();

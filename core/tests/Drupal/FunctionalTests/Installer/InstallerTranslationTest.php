@@ -104,8 +104,8 @@ class InstallerTranslationTest extends InstallerTestBase {
 
     // Assert that the theme CSS was added to the page.
     $edit = ['preprocess_css' => FALSE];
-    $this->drupalGet('admin/config/development/performance');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalGet('admin/config/development/settings');
+    $this->submitForm($edit, 'Save settings');
     $this->drupalGet('<front>');
     $this->assertSession()->responseContains('my_theme/css/my-container-inline.css');
 

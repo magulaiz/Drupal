@@ -13,8 +13,6 @@ source:
     - page_compression
   source_module: system
 process:
-  'css/preprocess': preprocess_css
-  'js/preprocess': preprocess_js
   'cache/page/max_age': cache_lifetime
 destination:
   plugin: config

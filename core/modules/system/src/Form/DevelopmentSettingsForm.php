@@ -6,6 +6,7 @@ use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,7 +26,7 @@ class DevelopmentSettingsForm extends FormBase {
    */
   public function __construct(
     protected StateInterface $state,
-    protected DrupalKernelInterface $kernel
+    protected DrupalKernelInterface $kernel,
   ) {
   }
 
@@ -52,6 +53,18 @@ class DevelopmentSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // System aggregation setting.
+    $directory = 'assets://';
+    $is_writable = is_dir($directory) && is_writable($directory);
+    $disabled = !$is_writable;
+    $disabled_message = '';
+    if (!$is_writable) {
+      $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">optimized assets file system path</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
+    }
+    $development_settings = $this->state->get('system.performance');
+    $performance_css_config = isset($development_settings['css.preprocess']) ? (bool) $development_settings['css.preprocess'] : TRUE;
+    $performance_js_config = isset($development_settings['js.preprocess']) ? (bool) $development_settings['js.preprocess'] : TRUE;
+
     $form['description'] = [
       '#plain_text' => $this->t('These settings should only be enabled on development environments and never on production.'),
     ];
@@ -103,6 +116,40 @@ class DevelopmentSettingsForm extends FormBase {
       '#description' => $this->t('Disables render cache, dynamic page cache, and page cache.'),
       '#default_value' => $this->state->get('disable_rendered_output_cache_bins', FALSE),
     ];
+    $bandwidth_optimization_state_condition = [
+      'input[data-drupal-selector="edit-bandwidth-optimization-checkbox"]' => [
+        'checked' => TRUE,
+      ],
+    ];
+    $form['bandwidth_optimization_checkbox'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Bandwidth optimization'),
+      '#description' => $this->t('Exposes Bandwidth optimization settings.'),
+      '#default_value' => $performance_css_config || $performance_js_config,
+    ];
+    $form['bandwidth_optimization'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Bandwidth optimization'),
+      '#description' => $this->t("External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.") . $disabled_message,
+      '#states' => [
+        'visible' => [
+          $bandwidth_optimization_state_condition,
+        ],
+      ],
+    ];
+
+    $form['bandwidth_optimization']['preprocess_css'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Aggregate CSS files'),
+      '#default_value' => $performance_css_config,
+      '#disabled' => $disabled,
+    ];
+    $form['bandwidth_optimization']['preprocess_js'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Aggregate JavaScript files'),
+      '#default_value' => $performance_js_config,
+      '#disabled' => $disabled,
+    ];
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [
@@ -145,6 +192,14 @@ class DevelopmentSettingsForm extends FormBase {
     if ($invalidate_container || $disable_rendered_output_cache_bins_previous !== $disable_rendered_output_cache_bins) {
       $this->kernel->invalidateContainer();
     }
+    // Save system performance aggregation configuration.
+    $performance_css_config = (bool) $form_state->getValue('preprocess_css');
+    $performance_js_config = (bool) $form_state->getValue('preprocess_js');
+    // Store the configuration values in a state variable.
+    $this->state->set('system.performance', [
+      'css.preprocess' => $performance_css_config,
+      'js.preprocess' => $performance_js_config,
+    ]);
 
     $this->messenger()->addStatus($this->t('The settings have been saved.'));
   }
