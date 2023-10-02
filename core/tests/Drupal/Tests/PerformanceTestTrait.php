@@ -133,7 +133,7 @@ trait PerformanceTestTrait {
     $performance_data = new PerformanceData();
     $return = $callable();
     if (isset($return)) {
-      $performance_data->setOriginalReturn($performance_data);
+      $performance_data->setReturnValue($performance_data);
     }
     $this->getChromeDriverPerformanceMetrics($performance_data);
 
