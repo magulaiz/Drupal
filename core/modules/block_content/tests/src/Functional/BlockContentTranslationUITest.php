@@ -184,7 +184,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
       foreach ($this->langcodes as $langcode) {
         // The block content is created as unpublished thus we switch to the
         // published status first.
-        $status = !$value;
+        $status = !$index;
         $translation = $entity->getTranslation($langcode);
         $this->assertEquals($status, $this->manager->getTranslationMetadata($translation)
           ->isPublished(), 'The translation has been correctly unpublished.');

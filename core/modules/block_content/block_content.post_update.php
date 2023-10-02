@@ -130,9 +130,11 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
   // Unset system added properties as hash generated without them.
   // @see \Drupal\Core\Config\ConfigInstall::createConfiguration()
   unset($config_array['uuid'], $config_array['_core']);
-  if (empty($hash) || $hash != Crypt::hashBase64(serialize($config_array))) {
+  if (!empty($hash) && $hash !== Crypt::hashBase64(serialize($config_array))) {
     return;
   }
+
+  $view->
 
   $published_key = \Drupal::entityDefinitionUpdateManager()->getEntityType('block_content')->getKey('published');
 
