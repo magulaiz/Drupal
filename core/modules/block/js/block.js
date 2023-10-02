@@ -90,8 +90,8 @@
        *
        * @param {jQuery} table
        *   The jQuery object representing the table to inspect.
-       * @param {jQuery} rowObject
-       *   The jQuery object representing the table row.
+       * @param {Drupal.tableDrag.row} rowObject
+       *   Drupal table drag row dropped.
        */
       function checkEmptyRegions(table, rowObject) {
         table.find('tr.region-message').each(function () {
@@ -128,7 +128,7 @@
        * @param {jQuery} table
        *   The jQuery object representing the table to inspect.
        * @param {Drupal.tableDrag.row} rowObject
-       *   The jQuery object representing the table row.
+       *   Drupal table drag row dropped.
        */
       function updateLastPlaced(table, rowObject) {
         // Remove the color-success class from new block if applicable.
