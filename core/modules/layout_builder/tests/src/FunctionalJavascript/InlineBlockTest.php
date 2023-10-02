@@ -150,6 +150,12 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->pageTextContains('The block body');
     $blocks = $this->blockStorage->loadMultiple();
     $this->assertCount(1, $blocks);
+    $this->addInlineBlockToLayout('Block title', 'The reusable block body', TRUE);
+    $this->assertSaveLayout();
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The reusable block body');
+    $blocks = $this->blockStorage->loadMultiple();
+    $this->assertCount(2, $blocks);
     /** @var \Drupal\Core\Entity\ContentEntityBase $block */
     $block = array_pop($blocks);
     $revision_id = $block->getRevisionId();
@@ -219,7 +225,10 @@ class InlineBlockTest extends InlineBlockTestBase {
     ]));
     // Enable layout builder and overrides.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
     $this->drupalGet('node/1/layout');
 
     // Add an inline block.
@@ -281,7 +290,10 @@ class InlineBlockTest extends InlineBlockTestBase {
       'create and edit custom blocks',
     ]));
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $block_1_locator = static::INLINE_BLOCK_LOCATOR;
     $block_2_locator = sprintf('%s + %s', static::INLINE_BLOCK_LOCATOR, static::INLINE_BLOCK_LOCATOR);
@@ -500,7 +512,10 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     // Enable layout builder and overrides.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     // Ensure we have 2 copies of the block in node overrides.
     $this->drupalGet('node/1/layout');
@@ -550,7 +565,10 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     // Enable layout builder and overrides.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
     $this->drupalGet($layout_default_path);
@@ -578,8 +596,8 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet($layout_default_path);
     // Add a basic block with the body field set.
     $page->clickLink('Add block');
-    // Confirm that, when more than 1 type exists, "Create content block" shows a
-    // list of block types.
+    // Confirm that, when more than 1 type exists, "Create content block"
+    // shows a list of block types.
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkNotExists('Basic block');
     $assert_session->linkNotExists('Advanced block');

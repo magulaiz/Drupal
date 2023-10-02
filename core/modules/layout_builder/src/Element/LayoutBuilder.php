@@ -170,7 +170,8 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
         $title = $this->t('Add section <span class="visually-hidden">at start of layout</span>');
       }
       else {
-        $title = $this->t('Add section <span class="visually-hidden">between @first and @second</span>', ['@first' => $delta, '@second' => $delta + 1]);
+        $title = $this->t('Add section <span class="visually-hidden">between @first and @second</span>',
+          ['@first' => $delta, '@second' => $delta + 1]);
       }
     }
 
@@ -239,6 +240,13 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           $component['#attributes']['data-layout-block-uuid'] = $uuid;
           $component['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
           $component['#contextual_links'] = [
+          $component = &$build[$region][$uuid];
+
+          $component['#attributes']['class'][] = 'js-layout-builder-block';
+          $component['#attributes']['class'][] = 'layout-builder-block';
+          $component['#attributes']['data-layout-block-uuid'] = $uuid;
+          $component['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
+          $component['#contextual_links'] = [
             'layout_builder_block' => [
               'route_parameters' => [
                 'section_storage_type' => $storage_type,
@@ -257,7 +265,9 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
             ],
           ];
 
-          if ($component['#base_plugin_id'] === 'inline_block' && $component['content']['#block_content']?->isReusable() === FALSE) {
+          if (isset($component['#base_plugin_id'])
+            && $component['#base_plugin_id'] === 'inline_block'
+            && $component['content']['#block_content']?->isReusable() === FALSE) {
             $component['#contextual_links']['layout_builder_content_block'] = [
               'route_parameters' => [
                 'section_storage_type' => $storage_type,
@@ -277,7 +287,8 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['layout_builder_add_block']['link'] = [
         '#type' => 'link',
         // Add one to the current delta since it is zero-indexed.
-        '#title' => $this->t('Add block <span class="visually-hidden">in @section, @region region</span>', ['@section' => $section_label, '@region' => $region_labels[$region]]),
+        '#title' => $this->t('Add block <span class="visually-hidden">in @section, @region region</span>',
+          ['@section' => $section_label, '@region' => $region_labels[$region]]),
         '#url' => Url::fromRoute('layout_builder.choose_block',
           [
             'section_storage_type' => $storage_type,

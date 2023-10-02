@@ -128,7 +128,7 @@ class AddBlockForm extends ConfigureBlockFormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Make sure that appropriate ajax handler will be triggered.
