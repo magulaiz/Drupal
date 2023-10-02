@@ -193,7 +193,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $is_lb = $form_state->get('is_layout_builder');
@@ -228,7 +228,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::validateConfigurationForm($form, $form_state);
@@ -247,7 +247,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
