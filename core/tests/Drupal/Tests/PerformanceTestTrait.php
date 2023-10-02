@@ -130,7 +130,7 @@ trait PerformanceTestTrait {
   public function collectPerformanceData(callable $callable): PerformanceData {
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
-    $performance_data = new \PerformanceData();
+    $performance_data = new PerformanceData();
     $return = $callable();
     if (isset($return)) {
       $performance_data->setOriginalReturn($performance_data);
