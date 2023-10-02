@@ -182,6 +182,13 @@
     this.indentEnabled = false;
 
     /**
+     *
+     * @type {string}
+     */
+    this.dragOrientation = this.table.dataset.dragOrientation
+      ? this.table.dataset.dragOrientation
+      : 'drag';
+    /**
      * Keeps track of rows that have changed.
      */
     this.changedRowIds = Drupal.tableDrag[table.id]
@@ -762,7 +769,7 @@
     $(item).addClass('drag');
 
     // Set the document to use the move cursor during drag.
-    $('body').addClass('drag');
+    $('body').addClass(this.dragOrientation);
     if (self.oldRowElement) {
       $(self.oldRowElement).removeClass('drag-previous');
     }
@@ -894,7 +901,7 @@
     // Functionality specific only to pointerup events.
     if (self.dragObject !== null) {
       self.dragObject = null;
-      $('body').removeClass('drag');
+      $('body').removeClass(self.dragOrientation);
       clearInterval(self.scrollInterval);
     }
   };

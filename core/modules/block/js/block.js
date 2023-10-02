@@ -278,6 +278,10 @@
             tableDrag.changed = true;
           }
           // Remove focus from selectbox.
+          document
+            .querySelectorAll('.select.block-region-select')
+            .forEach(sel => sel.classList.remove('last-selected-item'));
+          select.removeClass('last-selected-item');
           select.trigger('blur');
         },
       );

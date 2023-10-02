@@ -138,9 +138,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     ];
 
     $form['filters']['search_blocks'] = [
-      '#type' => 'textfield',
+      '#type' => 'search',
       '#title' => $this->t('Filter'),
       '#placeholder' => $this->t('Filter by block name or block category'),
+      '#description' => "<p class='js-input-filter-goto-element' id='goto-filtered'>go to next element</p>",
       '#attributes' => [
         'class' => ['block-filter-region-text'],
         'title' => $this->t('Enter a part of the block name to filter by.'),
@@ -196,6 +197,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ],
       '#attributes' => [
         'id' => 'blocks',
+        'data-drag-orientation' => 'drag-y',
       ],
     ];
 
@@ -237,6 +239,12 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           'data-region' => $region,
         ],
       ];
+
+      $regionFilterControl = "<div class='region-filter-control' data-drupal-selector='region-" . $region . "-filter-result'>
+        <span data-toggle-region='" . $region . "' class='js-filter-result'></span>
+        <a class='js-region-goto-filter'>change filter </a>
+      </div>";
+
       $form['region-' . $region]['title'] = [
         '#theme_wrappers' => [
           'container' => [
@@ -246,6 +254,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         '#prefix' => $title,
         '#type' => 'link',
         '#title' => $this->t('Place block <span class="visually-hidden">in the %region region</span>', ['%region' => $title]),
+        '#suffix' => $regionFilterControl,
         '#url' => Url::fromRoute('block.admin_library', ['theme' => $this->getThemeName()], ['query' => ['region' => $region]]),
         '#wrapper_attributes' => [
           'colspan' => 5,
