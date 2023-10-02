@@ -107,15 +107,13 @@ trait PerformanceTestTrait {
    *   A human readable identifier so that traces can be grouped together.
    * @param callable $callable
    *   A callable, for example wrapping ::drupalGet().
-   * @param PerformanceData|null $performance_data
-   *   (optional) An instance of the performance data value object.
    *
-   * @return mixed
-   *   The return value from the callable.
+   * @return Drupal\Tests\PerformanceData
+   *   A PerformanceData value object.
    */
-  public function logTelemetry(string $service_name, callable $callable, ?PerformanceData $performance_data = NULL) {
+  public function logTelemetry(string $service_name, callable $callable): PerformanceData {
     $this->telemetryServiceName = $service_name;
-    $return = $this->collectPerformanceData($callable, $performance_data);
+    $return = $this->collectPerformanceData($callable);
     $this->telemetryServiceName = FALSE;
     return $return;
   }
@@ -125,18 +123,21 @@ trait PerformanceTestTrait {
    *
    * @param callable $callable
    *   A callable, for example ::drupalGet().
-   * @param PerformanceData|null $performance_data
-   *   An instance of the performance data value object.
    *
-   * @return mixed
-   *   The return value from the callable.
+   * @return Drupal\Tests\PerformanceData
+   *   A PerformanceData value object.
    */
-  public function collectPerformanceData(callable $callable, ?PerformanceData $performance_data) {
+  public function collectPerformanceData(callable $callable): PerformanceData {
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
+    $performance_data = new \PerformanceData();
     $return = $callable();
+    if (isset($return)) {
+      $performance_data->setOriginalReturn($performance_data);
+    }
     $this->getChromeDriverPerformanceMetrics($performance_data);
-    return $return;
+
+    return $performance_data;
   }
 
   /**

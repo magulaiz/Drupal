@@ -47,34 +47,34 @@ class NoJavaScriptAnonymousTest extends PerformanceTestBase {
     ]);
 
     // Test frontpage.
-    $performance_data = new PerformanceData();
-    $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('');
-    }, $performance_data);
+    });
     $this->assertNoJavaScript($performance_data);
 
     // Test node page.
-    $performance_data = new PerformanceData();
-    $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
-    }, $performance_data);
+    });
     $this->assertNoJavaScript($performance_data);
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
-    $performance_data = new PerformanceData();
-    $this->collectPerformanceData(function () use ($user) {
+    $performance_data = $this->collectPerformanceData(function () use ($user) {
       $this->drupalGet('user/' . $user->id());
-    }, $performance_data);
+    });
     $this->assertNoJavaScript($performance_data);
   }
 
   /**
    * Passes if no JavaScript is found on the page.
    *
+   * @param Drupal\Tests\PerformanceData $performance_data
+   *   A PerformanceData value object.
+   *
    * @internal
    */
-  protected function assertNoJavaScript($performance_data): void {
+  protected function assertNoJavaScript(PerformanceData $performance_data): void {
     // Ensure drupalSettings is not set.
     $settings = $this->getDrupalSettings();
     $this->assertEmpty($settings, 'drupalSettings is not set.');
