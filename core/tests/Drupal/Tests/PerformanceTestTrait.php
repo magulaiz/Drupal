@@ -117,7 +117,7 @@ trait PerformanceTestTrait {
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
     $return = $callable();
-    $this->processChromeDriverPerformanceLogs($service_name);
+    $performance_data = $this->processChromeDriverPerformanceLogs($service_name);
     if (isset($return)) {
       $performance_data->setReturnValue($performance_data);
     }
