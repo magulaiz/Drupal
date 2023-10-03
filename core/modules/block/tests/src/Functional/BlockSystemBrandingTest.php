@@ -94,8 +94,8 @@ class BlockSystemBrandingTest extends BlockTestBase {
 
     // Turn just the site slogan off.
     $this->config('block.block.site_branding')
-      ->set('settings.use_site_name', 1)
-      ->set('settings.use_site_slogan', 0)
+      ->set('settings.use_site_name', TRUE)
+      ->set('settings.use_site_slogan', FALSE)
       ->save();
     $this->drupalGet('');
 
@@ -134,8 +134,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     // Re-test all branding elements.
     $this->assertSession()->elementExists('xpath', $new_site_name_xpath);
     // Check for the configuration dependencies of branding block.
-    $expected_config = ['system.site'];
-    $this->assertSame($expected_config, Block::load('site_branding')->getDependencies()['config']);
+    $this->assertSame(['system.site'], Block::load('site_branding')->getDependencies()['config']);
   }
 
 }

@@ -20,10 +20,10 @@ function block_removed_post_updates() {
 /**
  * Adds config dependency for site branding block on 'system.site'.
  */
-function block_post_update_branding_block(array &$sandbox = NULL) {
+function block_post_update_add_dependency_to_branding_block(array &$sandbox = NULL) {
   $site_branding_settings = \Drupal::configFactory()->getEditable('block.block.site_branding');
   $dependencies = $site_branding_settings->get('dependencies');
-  $dependencies['config'] = ['system.site'];
+  $dependencies['config'][] = ['system.site'];
   $site_branding_settings
     ->set('dependencies', $dependencies)
     ->save(TRUE);
