@@ -42,7 +42,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // the browser cache.
     $this->drupalGet('node/1');
     $this->drupalGet('node/1');
-    $this->collectPerformanceData('umamiNodePageHotCache', function () {
+    $this->collectPerformanceData(function () {
       $this->drupalGet('/node/1');
     }, 'umamiNodePageHotCache');
     $this->assertSession()->pageTextContains('quiche');
