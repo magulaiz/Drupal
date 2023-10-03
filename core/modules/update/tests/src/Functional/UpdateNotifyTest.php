@@ -41,7 +41,7 @@ class UpdateNotifyTest extends UpdateTestBase {
     $this->mockReleaseHistory(['drupal' => '0.1']);
 
     $request_time = \Drupal::time()->getRequestTime();
-    $day = (int) DateHelper::dayOfWeek(date('Y-m-d', $request_time));
+    $day = DateHelper::dayOfWeekName(date('Y-m-d', $request_time), FALSE);
     $update_settings = \Drupal::configFactory()->getEditable('update.settings');
     $update_settings
       ->set('check.interval_days', 7)
@@ -63,13 +63,12 @@ class UpdateNotifyTest extends UpdateTestBase {
     $this->mockReleaseHistory(['drupal' => '0.1']);
 
     $request_time = \Drupal::time()->getRequestTime();
-    $day = (int) DateHelper::dayOfWeek(date('Y-m-d', $request_time));
     $update_settings = \Drupal::configFactory()->getEditable('update.settings');
     // Set the update day to be tomorrow and then try running cron today.
-    $day = ($day + 1) % 6;
+    $tomorrow = DateHelper::dayOfWeekName(date('Y-m-d', strtotime('tomorrow')), FALSE);
     $update_settings
       ->set('check.interval_days', 7)
-      ->set('check.update_day', $day)
+      ->set('check.update_day', $tomorrow)
       ->set('notification.emails', ['abc@gmail.com'])
       ->save(TRUE);
     $cron = $this->container->get('cron');

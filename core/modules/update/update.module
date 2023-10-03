@@ -175,7 +175,7 @@ function update_cron() {
   $last_check = \Drupal::state()->get('update.last_check', 0);
   $request_time = \Drupal::time()->getRequestTime();
   $day_of_week = $update_config->get('check.update_day');
-  $day = (int) DateHelper::dayOfWeek(date('Y-m-d', $request_time));
+  $day = DateHelper::dayOfWeekName(date('Y-m-d', $request_time), FALSE);
   if (($request_time - $last_check) > $interval) {
     if (($frequency === 7 && $day_of_week === $day) || $frequency == 1) {
       // If the configured update interval has elapsed, we want to invalidate

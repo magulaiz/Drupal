@@ -33,7 +33,7 @@ function update_post_update_day_of_week() {
   $update_settings = \Drupal::configFactory()->getEditable('update.settings');
   if ($update_settings->get('check.update_day') === NULL) {
     $update_settings
-      ->set('check.update_day', 4)
+      ->set('check.update_day', 'Thursday')
       ->save(TRUE);
   }
 }

@@ -14,8 +14,9 @@ update.settings:
         interval_days:
           type: integer
           label: 'Days since last check'
+        # Using the 'l' format from DateTime::format().
         update_day:
-          type: integer
+          type: string
           label: 'Day of week to check update'
     fetch:
       type: mapping

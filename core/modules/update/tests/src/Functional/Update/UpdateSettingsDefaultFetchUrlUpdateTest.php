@@ -118,7 +118,7 @@ class UpdateSettingsDefaultFetchUrlUpdateTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     $update_day_after = $this->config('update.settings')->get('check.update_day');
-    $this->assertSame(4, $update_day_after);
+    $this->assertSame('Thursday', $update_day_after);
   }
 
 }

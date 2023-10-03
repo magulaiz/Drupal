@@ -50,13 +50,13 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Day of update check'),
       '#default_value' => $config->get('check.update_day'),
       '#options' => [
-        '0' => $this->t('Sunday'),
-        '1' => $this->t('Monday'),
-        '2' => $this->t('Tuesday'),
-        '3' => $this->t('Wednesday'),
-        '4' => $this->t('Thursday'),
-        '5' => $this->t('Friday'),
-        '6' => $this->t('Saturday'),
+        'Sunday' => $this->t('Sunday'),
+        'Monday' => $this->t('Monday'),
+        'Tuesday' => $this->t('Tuesday'),
+        'Wednesday' => $this->t('Wednesday'),
+        'Thursday' => $this->t('Thursday'),
+        'Friday' => $this->t('Friday'),
+        'Saturday' => $this->t('Saturday'),
       ],
       '#states' => [
         'visible' => [
