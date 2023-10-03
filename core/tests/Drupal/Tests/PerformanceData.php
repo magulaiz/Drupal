@@ -17,7 +17,7 @@ class PerformanceData {
   /**
    * The number of scripts requested.
    */
-  public readonly $scriptCount = 0;
+  public readonly int $scriptCount;
 
   /**
    * The original return value from a callable.
@@ -52,20 +52,6 @@ class PerformanceData {
    */
   public function setReturnValue($return): void {
     $this->returnValue = $return;
-  }
-
-  /**
-   * Gets the original return value.
-   *
-   * PerformanceTestTrait::collectPerformanceData() takes a callable as its
-   * argument. This method allows the original return value of the callable to
-   * be retrieved.
-   *
-   * @return mixed
-   *   The original return value.
-   */
-  public function getReturnValue() {
-    return $this->returnValue;
   }
 
 }
