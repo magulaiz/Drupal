@@ -424,7 +424,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       '#open' => $new_revision_default,
       '#group' => 'advanced',
       '#weight' => 20,
-      '#access' => array_key_exists($log_message_field, $this->entity->getFields()) ? $this->entity->get('revision_log')->access('edit') || $this->entity->get($entity_type->getKey('revision'))->access('edit') : $this->entity->get($entity_type->getKey('revision'))->access('edit'),
+      '#access' => array_key_exists($log_message_field, $this->entity->getFields()) ? $this->entity->get($log_message_field)->access('edit') || $this->entity->get($entity_type->getKey('revision'))->access('edit') : $this->entity->get($entity_type->getKey('revision'))->access('edit'),
       '#optional' => TRUE,
       '#attributes' => [
         'class' => ['entity-content-form-revision-information'],
@@ -450,6 +450,8 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
           ],
         ],
       ];
+      // Add identifier class.
+      $form[$log_message_field]['#attributes']['class'][] = "js-revision-log";
     }
   }
 
