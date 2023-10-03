@@ -33,8 +33,7 @@
           if (
             (revisionCheckbox.length && revisionCheckbox[0].checked) ||
             (!revisionCheckbox.length &&
-              $revisionContext.find('.field--name-revision-log')
-                .length)
+              $revisionContext.find('.field--name-revision-log').length)
           ) {
             return Drupal.t('New revision');
           }
