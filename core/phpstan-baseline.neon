@@ -523,11 +523,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/EntityConfirmFormBase.php
 
 		-
-			message: "#^Variable \\$selection in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/EntityDeleteMultipleAccessCheck.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityDisplayBase\\:\\:\\$_serializedKeys\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
@@ -1088,16 +1083,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/config_translation/src/FormElement/DateFormat.php
-
-		-
-			message: "#^Variable \\$settings_locations in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
-
-		-
-			message: "#^Variable \\$source_string in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
 
 		-
 			message: "#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2920,11 +2905,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: "#^Variable \\$machine_name_1_value in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/Core/MachineNameTest.php
 
 		-
 			message: "#^Variable \\$rawResult on left side of \\?\\? always exists and is not nullable\\.$#"
