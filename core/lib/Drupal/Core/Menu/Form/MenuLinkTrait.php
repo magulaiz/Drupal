@@ -54,9 +54,9 @@ trait MenuLinkTrait {
 
     $this->allMenuLinks = $all_menu_links;
     $parent_menu_links = [];
-    foreach ($this->allMenuLinks as $menu_link) {
-      if (strpos($menu_link, '<') === 0) {
-        $parent_menu_links[$menu_link] = $menu_link;
+    foreach ($this->allMenuLinks as $key => $value) {
+      if (strpos($value, '<') === 0) {
+        $parent_menu_links[$key] = $value;
       }
     }
     $form['menu_parent_menu'] = [
