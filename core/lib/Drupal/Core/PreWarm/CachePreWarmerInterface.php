@@ -32,11 +32,10 @@ namespace Drupal\Core\PreWarm;
  * different between different routes and sites.
  *
  * To reduce duplicate work, and to enable those first pages after a cache clear
- * to be served faster, we want to divide up different cache building between
- * the different requests that are coming in. This is achieved by the
- * cache_prewarmable service tag and Drupal\Core\PreWarm\PreWarmableInterface
- * where any service can define itself as prewarmable with a common method to
- * call to warm caches.
+ * to be served faster, we want to divide up cache building between different
+ * requests that are coming in. This is achieved by the cache_prewarmable
+ * service tag and Drupal\Core\PreWarm\PreWarmableInterface* where any service
+ * can define itself as prewarmable with a common method to call to warm caches.
  *
  * By default, prewarming is triggered when DrupalKernel::handle() reaches
  * a Fiber::suspend() call. A service can call Fiber::suspend() either when it
@@ -62,11 +61,11 @@ interface CachePreWarmerInterface {
   /**
    * Prewarms one PreWarmable service.
    */
-  public function preWarmOneCache();
+  public function preWarmOneCache(): void;
 
   /**
    * Prewarms all PreWarmable services.
    */
-  public function preWarmAllCaches();
+  public function preWarmAllCaches(): void;
 
 }
