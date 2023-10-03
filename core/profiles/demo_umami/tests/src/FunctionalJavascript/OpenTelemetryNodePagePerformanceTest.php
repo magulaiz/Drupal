@@ -26,7 +26,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->collectPerformanceData('umamiNodePageColdCache', function () {
+    $this->collectPerformanceData(function () {
       $this->drupalGet('/node/1');
     }, 'umamiNodePageColdCache');
     $this->assertSession()->pageTextContains('quiche');
