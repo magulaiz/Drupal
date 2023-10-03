@@ -703,7 +703,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
       // Wrap request handling in a Fiber, this allows us to call the cache
       // prewarming service if any code tries to suspend a fiber.
-      $fiber = new \Fiber(fn () => $this->getHttpKernel()->handle($request, $type, $catch));
+      $fiber = new \Fiber(fn() => $this->getHttpKernel()->handle($request, $type, $catch));
       $fiber->start();
       while ($fiber->isSuspended()) {
         $this->container->get('cache_prewarmer')->preWarmOneCache();

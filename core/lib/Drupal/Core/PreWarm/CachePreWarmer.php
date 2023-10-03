@@ -85,11 +85,12 @@ class CachePreWarmer implements CachePreWarmerInterface, DestructableInterface {
    * {@inheritdoc}
    */
   public function preWarmAllCaches(): void {
-    $candidates = shuffle($this->serviceIds);
+    $candidates = $this->serviceIds;
+    $shuffle($candidates);
     while ($candidates) {
       $key = key($candidates);
       unset($candidates[$key]);
-      $service = $this->classResolver->getInstanceFromDefinition($this->serviceIds[$key]);
+      $service = $this->classResolver->getInstanceFromDefinition($candidates[$key]);
       $service->preWarm();
     }
   }
