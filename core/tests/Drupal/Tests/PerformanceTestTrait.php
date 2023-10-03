@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 trait PerformanceTestTrait {
 
-
   /**
    * Helper for ::setUp().
    *
