@@ -394,7 +394,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains("Are you sure you want to delete the custom menu link {$link_title}?");
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the menu {$link_title}?");
     $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
