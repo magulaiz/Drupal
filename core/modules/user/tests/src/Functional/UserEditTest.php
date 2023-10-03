@@ -152,6 +152,7 @@ class UserEditTest extends BrowserTestBase {
     $edit['current_pass'] = $admin_user->pass_raw;
     $this->submitForm($edit, t('Save'));
     $this->assertSession()->responseContains(t("The changes have been saved."));
+    $this->assertSession()->pageTextNotContains($admin_user->pass_raw);
   }
 
   /**
