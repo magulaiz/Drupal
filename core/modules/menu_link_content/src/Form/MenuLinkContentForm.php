@@ -99,7 +99,7 @@ class MenuLinkContentForm extends ContentEntityForm {
 
     }
     else {
-     $form += $this->buildMenuFormElements($form, $all_menu_links);
+      $form += $this->buildMenuFormElements($form, $all_menu_links);
     }
 
     return $form;

@@ -34,7 +34,6 @@ trait MenuLinkTrait {
     return $menu_of_selected_type;
   }
 
-
   /**
    * Callback function for updating the parent link select list.
    */
