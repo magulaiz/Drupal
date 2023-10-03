@@ -5,7 +5,7 @@ namespace Drupal\FunctionalJavascriptTests\Core\Form;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * Tests the state of elements based on another elements.
+ * Tests the password unmask functionality.
  *
  * @group javascript
  */
@@ -22,38 +22,63 @@ class PasswordUnmaskTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test the password_unmask form element functionality.
+   * {@inheritdoc}
    */
-  public function testPasswordRevealFormElement() {
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->drupalLogin($this->rootUser);
+  }
+
+  /**
+   * Test the password_unmask form element functionality.
+   *
+   * @dataProvider providerPasswordFieldSelector
+   */
+  public function testPasswordRevealFormElement($label, $selector, $password_field_id, $data_selector) {
+    $this->drupalGet('/admin/config/people/accounts');
+    $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-user-password-type-reveal"]')->check();
+    $this->submitForm([], 'Save configuration');
+
     $this->drupalGet('/form-test/password-reveal');
     $page = $this->getSession()->getPage();
 
-    $toggle_password_one_link = $page->find('css', '.toggle-password');
-    $password_one_field = $page->findById('edit-password-one');
-    $password_two_field = $page->findById('edit-password-two');
+    $label = $page->find('css', $selector);
+    $password_field = $page->findById($password_field_id);
 
     /* Initial state: before the show password link is clicked. */
+    // Test that password fields type is password.
+    $this->assertEquals($password_field->getAttribute('type'), 'password');
 
-    // Test that both password fields type is password.
-    $this->assertEquals($password_one_field->getAttribute('type'), 'password');
-    $this->assertEquals($password_two_field->getAttribute('type'), 'password');
-
+    $page->find('css', $data_selector)->setValue("TestPasswordVisible");
+    // Asserts that password is not visible.
+    $this->assertSession()->pageTextNotContains('TestPasswordVisible');
     // Change state: click the "show password" of password one link.
-    $toggle_password_one_link->click();
-
+    $label->click();
     // Test that the password one field type is now text.
-    $this->assertEquals($password_one_field->getAttribute('type'), 'text');
-    // Test that the password two field type is still password.
-    $this->assertEquals($password_two_field->getAttribute('type'), 'password');
+    $this->assertEquals($password_field->getAttribute('type'), 'text');
+
+    $this->assertSession()->waitForElementVisible('css', $data_selector);
+    // Asserts that password is visible.
+    $this->assertSession()->waitForText('TestPasswordVisible');
 
     // Change state: click the "hide password" link.
-    $toggle_password_one_link->click();
+    $label->click();
 
     // Test that the password field type is password.
-    $this->assertEquals($password_one_field->getAttribute('type'), 'password');
-    // Test that the password two field type is still password.
-    $this->assertEquals($password_two_field->getAttribute('type'), 'password');
+    $this->assertEquals($password_field->getAttribute('type'), 'password');
 
+  }
+
+  /**
+   * Data provider for testPasswordRevealFormElement().
+   */
+  public function providerPasswordFieldSelector() {
+    return [
+      'password_one_field' => ['password_one_field', '.form-item-password-one button', 'edit-password-one', '[data-drupal-selector="edit-password-one"]'],
+      'password_two_field' => ['password_two_field', '.form-item-password-two button', 'edit-password-two', '[data-drupal-selector="edit-password-two"]'],
+
+    ];
   }
 
 }
