@@ -20,7 +20,7 @@ trait MenuLinkTrait {
   public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) {
     $selected_parent_menu = '';
     foreach ($all_menu_links as $key => $value) {
-      if ($value === $selected_menu) {
+      if ($key === $selected_menu) {
         $selected_parent_menu = $key;
       }
     }
