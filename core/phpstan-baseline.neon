@@ -3445,3 +3445,13 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Listeners/DrupalListener.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\PerformanceData has an uninitialized readonly property \\$scriptCount\\. Assign it in the constructor\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/PerformanceData.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\PerformanceData has an uninitialized readonly property \\$stylesheetCount\\. Assign it in the constructor\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/PerformanceData.php
