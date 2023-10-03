@@ -5,6 +5,8 @@ namespace Drupal\views\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Plugin\PreWarmablePluginManagerTrait;
+use Drupal\Core\PreWarm\PreWarmableInterface;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -12,7 +14,9 @@ use Symfony\Component\DependencyInjection\Container;
  *
  * @ingroup views_plugins
  */
-class ViewsPluginManager extends DefaultPluginManager {
+class ViewsPluginManager extends DefaultPluginManager implements PreWarmableInterface {
+
+  use PreWarmablePluginManagerTrait;
 
   /**
    * Constructs a ViewsPluginManager object.

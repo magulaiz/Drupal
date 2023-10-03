@@ -841,6 +841,10 @@ presetid
 presetname
 pretransaction
 preuninstall
+prewarmable
+prewarmables
+prewarmer
+prewarmers
 processlist
 proname
 prophesize
@@ -1269,6 +1273,9 @@ vfsstream
 viewmode
 viewports
 vocabs
+volgende
+vorige
+warmable
 wcag
 wcprops
 webassert
