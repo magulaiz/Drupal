@@ -76,7 +76,6 @@ class PasswordConfirm extends FormElementBase {
       '#attributes' => [
         'class' => ['password-field', 'js-password-field'],
         'autocomplete' => ['new-password'],
-        'data-drupal-password-strength' => TRUE,
       ],
       '#error_no_message' => TRUE,
     ];

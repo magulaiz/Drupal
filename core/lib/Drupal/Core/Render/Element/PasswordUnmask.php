@@ -57,7 +57,6 @@ class PasswordUnmask extends Password {
     $element['#attributes']['class'][] = 'password-field';
     $element['#attributes']['class'][] = 'js-password-field';
     $element['#attributes']['data-drupal-password-unmask'] = TRUE;
-    $element['#attributes']['data-drupal-password-strength'] = TRUE;
 
     return $element;
   }
