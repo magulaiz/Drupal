@@ -15,24 +15,33 @@ trait MenuLinkTrait {
   protected $allMenuLinks;
 
   /**
-   * Callback function for updating the parent link select list.
+   * Helper function to the list of parent link select list.
    */
-  public function updateParentLinks(array $form, FormStateInterface $form_state) {
-    $selected_menu = $form_state->getValue('menu_parent_menu');
-
+  public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) {
     $selected_parent_menu = '';
-    foreach ($this->allMenuLinks as $key => $value) {
+    foreach ($all_menu_links as $key => $value) {
       if ($value === $selected_menu) {
         $selected_parent_menu = $key;
       }
     }
 
     $menu_of_selected_type = [];
-    foreach ($this->allMenuLinks as $key => $value) {
+    foreach ($all_menu_links as $key => $value) {
       if (strpos($key, $selected_parent_menu) === 0) {
         $menu_of_selected_type[$key] = $value;
       }
     }
+    return $menu_of_selected_type;
+  }
+
+
+  /**
+   * Callback function for updating the parent link select list.
+   */
+  public function updateParentLinks(array $form, FormStateInterface $form_state) {
+    $selected_menu = $form_state->getValue('menu_parent_menu');
+
+    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
 
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
@@ -60,11 +69,13 @@ trait MenuLinkTrait {
         'wrapper' => 'ajax-updated-section',
       ],
     ];
+    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, reset($parent_menu_links));
+
     $form['menu_parent'] = [
       '#type' => 'select',
       '#title' => $this->t('Parent link'),
       '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
-      '#options' => $this->allMenuLinks,
+      '#options' => $menu_of_selected_type,
       '#prefix' => '<div id="ajax-updated-section">',
       '#suffix' => '</div>',
     ];
