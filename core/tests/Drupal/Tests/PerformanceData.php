@@ -12,15 +12,15 @@ class PerformanceData {
   /**
    * The number of stylesheets requested.
    */
-  protected int $stylesheetCount = 0;
+  public readonly int $stylesheetCount;
 
   /**
    * The number of scripts requested.
    */
-  protected int $scriptCount = 0;
+  public readonly $scriptCount = 0;
 
   /**
-   * The original return value.
+   * The original return value from a callable.
    */
   protected $returnValue;
 
@@ -35,16 +35,6 @@ class PerformanceData {
   }
 
   /**
-   * Gets the stylesheet request count.
-   *
-   * @return int
-   *   The number of stylesheet requests recorded.
-   */
-  public function getStylesheetCount(): int {
-    return $this->stylesheetCount;
-  }
-
-  /**
    * Sets the script request count.
    *
    * @param int $count
@@ -52,16 +42,6 @@ class PerformanceData {
    */
   public function setScriptCount(int $count) {
     $this->scriptCount = $count;
-  }
-
-  /**
-   * Gets the script request count.
-   *
-   * @return int
-   *   The number of script requests recorded.
-   */
-  public function getScriptCount(): int {
-    return $this->scriptCount;
   }
 
   /**

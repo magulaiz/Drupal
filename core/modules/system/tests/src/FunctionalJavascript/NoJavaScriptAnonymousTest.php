@@ -79,7 +79,7 @@ class NoJavaScriptAnonymousTest extends PerformanceTestBase {
     $settings = $this->getDrupalSettings();
     $this->assertEmpty($settings, 'drupalSettings is not set.');
     $this->assertSession()->responseNotMatches('/\.js/');
-    $this->assertSame(0, $performance_data->getScriptCount());
+    $this->assertSame(0, $performance_data->scriptCount);
   }
 
 }
