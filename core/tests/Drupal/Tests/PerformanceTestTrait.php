@@ -44,15 +44,6 @@ trait PerformanceTestTrait {
   protected int $nanoSecondsPerMicrosecond = 1000;
 
   /**
-   * The telemetry service name.
-   *
-   * A string that uniquely identifies the request being made, for example
-   * umamiFrontPageColdCache. Or FALSE to prevent telemetry data from being
-   * sent, for example when warming caches.
-   */
-  protected false|string $telemetryServiceName = FALSE;
-
-  /**
    * Helper for ::setUp().
    *
    * Resets configuration to be closer to production settings.
@@ -111,41 +102,25 @@ trait PerformanceTestTrait {
   }
 
   /**
-   * Logs telemetry data to an Open Telemetry endpoint (when configured).
-   *
-   * @param string $service_name
-   *   A human readable identifier so that traces can be grouped together.
-   * @param callable $callable
-   *   A callable, for example wrapping ::drupalGet().
-   *
-   * @return \Drupal\Tests\PerformanceData
-   *   A PerformanceData value object.
-   */
-  public function logTelemetry(string $service_name, callable $callable): PerformanceData {
-    $this->telemetryServiceName = $service_name;
-    $return = $this->collectPerformanceData($callable);
-    $this->telemetryServiceName = FALSE;
-    return $return;
-  }
-
-  /**
    * Executes a callable and collects performance data.
    *
    * @param callable $callable
    *   A callable, for example ::drupalGet().
+   * @param string|null $service_name
+   *   An optional human readable identifier to enable sending traces to an Open
+   *   Telemetry endpoint (if configured).
    *
    * @return \Drupal\Tests\PerformanceData
    *   A PerformanceData value object.
    */
-  public function collectPerformanceData(callable $callable): PerformanceData {
+  public function collectPerformanceData(callable $callable, ?string $service_name = NULL): PerformanceData {
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
-    $performance_data = new PerformanceData();
     $return = $callable();
+    $this->processChromeDriverPerformanceLogs($service_name);
     if (isset($return)) {
       $performance_data->setReturnValue($performance_data);
     }
-    $this->getChromeDriverPerformanceMetrics($performance_data);
 
     return $performance_data;
   }
@@ -164,11 +139,13 @@ trait PerformanceTestTrait {
    *
    * @todo https://www.drupal.org/project/drupal/issues/3379757
    *
-   * @param PerformanceData|null $performance_data
-   *   An instance of the performance data value object. If provided, this
-   *   object will be used to collect performance data from Chrome.
+   * @param string|null $service_name
+   *   An optional human readable identifier so that traces can be grouped together.
+   *
+   * @return \Drupal\Tests\PerformanceData
+   *   An instance of the performance data value object.
    */
-  protected function getChromeDriverPerformanceMetrics(?PerformanceData $performance_data): void {
+  protected function processChromeDriverPerformanceLogs(?string $service_name): PerformanceData {
     $attempts = 0;
     $lcp_count = 0;
     $messages = [];
@@ -185,20 +162,21 @@ trait PerformanceTestTrait {
         }
         $messages[] = $message;
       }
-      // Only check once if $this->telemetryServiceName is false, since
+      // Only check once if $service_name is not set, since
       // largestContentfulPaint is not currently asserted on.
-      if ($lcp_count === 2 || !$this->telemetryServiceName) {
+      if ($lcp_count === 2 || !isset($service_name)) {
         break;
       }
       sleep(1);
     }
-    if (is_object($performance_data)) {
-      $this->collectNetworkData($messages, $performance_data);
+    $performance_data = new PerformanceData();
+    $this->collectNetworkData($messages, $performance_data);
+
+    if (isset($service_name)) {
+      $this->openTelemetryTracing($messages, $service_name);
     }
 
-    if ($this->telemetryServiceName) {
-      $this->openTelemetryTracing($messages);
-    }
+    return $performance_data;
   }
 
   /**
@@ -206,7 +184,7 @@ trait PerformanceTestTrait {
    *
    * @param array $messages
    *   The chromedriver performance log messages.
-   * @param PerformanceData $performance_data
+   * @param \Drupal\Tests\PerformanceData $performance_data
    *   An instance of the performance data value object.
    */
   private function collectNetworkData(array $messages, PerformanceData $performance_data): void {
@@ -231,10 +209,12 @@ trait PerformanceTestTrait {
    *
    * @param array $messages
    *   The ChromeDriver performance log messages.
+   * @param string $service_name
+   *   A human readable identifier so that traces can be grouped together.
    *
    * @see https://opentelemetry.io/docs/instrumentation/php/manual/
    */
-  private function openTelemetryTracing(array $messages): void {
+  private function openTelemetryTracing(array $messages, string $service_name): void {
     // Open telemetry timestamps are always in nanoseconds.
     $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
     if ($collector === NULL) {
@@ -283,7 +263,7 @@ trait PerformanceTestTrait {
     // @see https://www.drupal.org/project/drupal/issues/3379761
     $resource = ResourceInfoFactory::merge(ResourceInfo::create(Attributes::create([
       ResourceAttributes::SERVICE_NAMESPACE => 'Drupal',
-      ResourceAttributes::SERVICE_NAME => $this->telemetryServiceName,
+      ResourceAttributes::SERVICE_NAME => $service_name,
       ResourceAttributes::SERVICE_INSTANCE_ID => 1,
       ResourceAttributes::SERVICE_VERSION => \Drupal::VERSION,
       ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',

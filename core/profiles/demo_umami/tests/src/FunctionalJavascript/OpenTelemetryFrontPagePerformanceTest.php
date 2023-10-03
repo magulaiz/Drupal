@@ -21,15 +21,14 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
    * Logs front page tracing data with a cold cache.
    */
   public function testFrontPageColdCache() {
-    $this->telemetryServiceName = FALSE;
     // @todo: Chromedriver doesn't collect tracing performance logs for the very
     // first request in a test, so warm it up.
     // See https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->logTelemetry('umamiFrontPageColdCache', function () {
+    $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
-    });
+    }, 'umamiFrontPageColdCache');
     $this->assertSession()->pageTextContains('Umami');
   }
 
@@ -47,9 +46,9 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     // in the browser cache.
     $this->drupalGet('<front>');
     $this->drupalGet('<front>');
-    $this->logTelemetry('umamiFrontPageWarmCache', function () {
+    $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
-    });
+    }, 'umamiFrontPageWarmCache');
   }
 
   /**
@@ -64,9 +63,9 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->rebuildAll();
     // Now visit a different page to warm non-route-specific caches.
     $this->drupalGet('/user/login');
-    $this->logTelemetry('umamiFrontPageLukewarmCache', function () {
+    $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
-    });
+    }, 'umamiFrontPageCoolCache');
   }
 
 }
