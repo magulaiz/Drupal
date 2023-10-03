@@ -233,7 +233,7 @@ trait PerformanceTestTrait {
         $dom_loaded_timestamp_page = $message['params']['timestamp'] * $nanoseconds_per_second;
       }
       if ($dom_loaded_timestamp_timeline === NULL && $message['method'] === 'Tracing.dataCollected' && isset($message['params']['args']['data']['type']) && $message['params']['args']['data']['type'] === 'DOMContentLoaded') {
-        $dom_loaded_timestamp_timeline = $message['params']['ts'] * $nanoSeconds_per_microsecond;
+        $dom_loaded_timestamp_timeline = $message['params']['ts'] * $nanoseconds_per_microsecond;
       }
     }
 
