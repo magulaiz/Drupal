@@ -158,7 +158,7 @@ class BlockContentController extends ControllerBase {
    * @see https://www.drupal.org/node/3320855
    */
   public function blockContentTypeRedirect(RouteMatchInterface $route_match, Request $request): RedirectResponse {
-    @trigger_error('The path /admin/structure/block/block-content/types is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/structure/block-content. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    @trigger_error('The path /admin/structure/block/block-content/types is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/structure/block-content. See https://www.drupal.org/node/3320855', E_USER_DEPRECATED);
     $helper = new PathChangedHelper($route_match, $request);
     $params = [
       '%old_path' => $helper->oldPath(),
@@ -189,7 +189,7 @@ class BlockContentController extends ControllerBase {
    * @see https://www.drupal.org/node/3320855
    */
   public function blockLibraryRedirect(RouteMatchInterface $route_match, Request $request) {
-    @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block. See https://www.drupal.org/node/3320855', E_USER_DEPRECATED);
     $helper = new PathChangedHelper($route_match, $request);
     $params = [
       '%old_path' => $helper->oldPath(),
