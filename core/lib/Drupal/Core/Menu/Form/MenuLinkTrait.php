@@ -35,10 +35,22 @@ trait MenuLinkTrait {
   }
 
   /**
+   * Submit handler for the non-JS case.
+   */
+  public function updateParentLinksNonJs(array $form, FormStateInterface $form_state) {
+    $selected_menu = $form_state->getValue('select_list');
+
+    $menu_of_selected_type = $this->getParentLinkSelectList($form_state->getValue('menu_parent'), $selected_menu);
+    $form['menu_parent']['#options'] = $menu_of_selected_type;
+    $form_state->setRebuild();
+    return $form['menu_parent'];
+  }
+
+  /**
    * Callback function for updating the parent link select list.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) {
-    $selected_menu = $form_state->getValue('menu_parent_menu');
+    $selected_menu = $form_state->getValue('select_list');
 
     $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
 
@@ -58,7 +70,7 @@ trait MenuLinkTrait {
         $parent_menu_links[$key] = $value;
       }
     }
-    $form['menu_parent_menu'] = [
+    $form['menu_parent_menu']['select_list'] = [
       '#type' => 'select',
       '#title' => $this->t('Menu'),
       '#description' => $this->t('Select the menu'),
@@ -66,14 +78,29 @@ trait MenuLinkTrait {
       '#ajax' => [
         'callback' => [$this, 'updateParentLinks'],
         'wrapper' => 'ajax-updated-section',
+        'trigger_as' => ['name' => 'update_parent_links'],
+        'event' => 'change',
       ],
     ];
-    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, reset($parent_menu_links));
+    $form['menu_parent_menu']['submit'] = [
+      '#type' => 'submit',
+      '#name' => 'update_parent_links',
+      '#value' => $this->t('Update parent link'),
+      '#submit' => ['::updateParentLinksNonJs'],
+      '#attributes' => ['class' => ['js-hide']],
+      '#ajax' => [
+        'callback' => [$this, 'updateParentLinks'],
+        'wrapper' => 'ajax-updated-section',
+      ],
+    ];
+
+    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, array_key_first($parent_menu_links));
 
     $form['menu_parent'] = [
       '#type' => 'select',
       '#title' => $this->t('Parent link'),
       '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
+      '#value' => $this->allMenuLinks,
       '#options' => $menu_of_selected_type,
       '#prefix' => '<div id="ajax-updated-section">',
       '#suffix' => '</div>',
