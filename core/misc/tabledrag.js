@@ -907,7 +907,6 @@
     // Functionality specific only to pointerup events.
     if (self.dragObject !== null) {
       self.dragObject = null;
-      // $('body').removeClass('drag');
       $('body').removeClass(self.dragOrientation);
       clearInterval(self.scrollInterval);
     }
