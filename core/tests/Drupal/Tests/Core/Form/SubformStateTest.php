@@ -314,7 +314,7 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * @covers ::getFormObject
-=   */
+=  */
   public function testFormObject() {
     $parent_form_state = $this->prophesize(FormStateInterface::class);
     $parent_form_object = $this->prophesize(FormInterface::class)->reveal();
