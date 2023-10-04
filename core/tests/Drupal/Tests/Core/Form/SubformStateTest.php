@@ -318,7 +318,7 @@ class SubformStateTest extends UnitTestCase {
   public function testFormObject() {
     $parent_form_state = $this->prophesize(FormStateInterface::class);
     $parent_form_object = $this->prophesize(FormInterface::class)->reveal();
-    $parent_form_state->getFormObject()->willReturn($parent_form_object);
+    $parent_form_state->getFormObject()->willReturn($parent_form_object)->shouldBeCalledOnce();
 
     $subform_form_object = $this->prophesize(FormInterface::class)->reveal();
     $subform_state = SubformState::createForSubform($this->parentForm['dog'], $this->parentForm, $parent_form_state->reveal(), $subform_form_object);
