@@ -45,7 +45,7 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
     $form['fallback'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fallback value'),
-      '#description' => $this->t('The fallback value to use when the above query parameter is not present.'),
+      '#description' => $this->t('The fallback value to use when the above query parameter is not present. Global replacement tokens may be used.'),
       '#default_value' => $this->options['fallback'],
     ];
     $form['multiple'] = [
@@ -80,7 +80,7 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
     }
     else {
       // Otherwise, use the fixed fallback value.
-      return $this->options['fallback'];
+      return $this->globalTokenReplace($this->options['fallback']);
     }
   }
 
