@@ -179,6 +179,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ],
       '#attributes' => [
         'id' => 'blocks',
+        'data-drag-orientation' => 'drag-y',
       ],
     ];
 
