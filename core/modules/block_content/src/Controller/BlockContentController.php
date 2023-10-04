@@ -223,7 +223,7 @@ class BlockContentController extends ControllerBase {
    * @see https://www.drupal.org/node/3320855
    */
   public function editRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
-    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/edit. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/edit. See https://www.drupal.org/node/3320855', E_USER_DEPRECATED);
     $helper = new PathChangedHelper($route_match, $request);
     $params = [
       '%old_path' => $helper->oldPath(),
