@@ -185,7 +185,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
    */
   public function testUserCancel() {
 
-    // Set the user cancel reassing to anonymous as the default method.
+    // Set the user cancel default method.
     $this->config('user.settings')
       ->set('cancel_method', 'user_cancel_reassign')
       ->save();
