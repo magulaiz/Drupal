@@ -93,6 +93,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (!array_key_exists('allowed_values', $form_state->getStorage())) {
       $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
     }
+    $form['field_storage_submit']['#submit'][] = [static::class, 'submitFieldStorageUpdate'];
+    $form['field_storage_submit']['#limit_validation_errors'] = [];
 
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
@@ -122,6 +124,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#attributes' => [
         'id' => 'allowed-values-order',
         'data-field-list-table' => TRUE,
+        'class' => ['allowed-values-table'],
       ],
       '#tabledrag' => [
         [
@@ -131,7 +134,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         ],
       ],
       '#attached' => [
-        'library' => ['core/drupal.fieldListKeyboardNavigation'],
+        'library' => [
+          'core/drupal.fieldListKeyboardNavigation',
+          'field_ui/drupal.field_ui',
+        ],
       ],
     ];
 
@@ -555,6 +561,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   protected static function castAllowedValue($value) {
     return $value;
+  }
+
+  /**
+   * Resets the static variable on field storage update.
+   */
+  public static function submitFieldStorageUpdate() {
+    drupal_static_reset('options_allowed_values');
   }
 
 }

@@ -169,24 +169,6 @@ class FieldConfigEditForm extends EntityForm {
     $form['field_storage']['subform'] = [
       '#parents' => ['field_storage', 'subform'],
     ];
-    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
-    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
-    $field_storage_form->setEntity($field_storage);
-    $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity);
-
-    $form['#entity'] = _field_create_entity_from_ids($ids);
-    $items = $this->getTypedData($this->entity, $form['#entity']);
-    $item = $items->first() ?: $items->appendItem();
-
-    unset($form['field_storage']['subform']['actions']);
-    $this->addAjaxCallBacks($form['field_storage']['subform']);
-
-    if (isset($form['field_storage']['subform']['cardinality_container'])) {
-      $form['field_storage']['subform']['cardinality_container']['#parents'] = [
-        'field_storage',
-        'subform',
-      ];
-    }
     $form['field_storage']['subform']['field_storage_submit'] = [
       '#type' => 'submit',
       '#name' => 'field_storage_submit',
@@ -198,6 +180,23 @@ class FieldConfigEditForm extends EntityForm {
       '#limit_validation_errors' => [$form['field_storage']['subform']['#parents']],
       '#submit' => ['::fieldStorageSubmit'],
     ];
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
+    $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
+    $field_storage_form->setEntity($field_storage);
+    $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity);
+
+    $form['#entity'] = _field_create_entity_from_ids($ids);
+    $items = $this->getTypedData($this->entity, $form['#entity']);
+    $item = $items->first() ?: $items->appendItem();
+
+    $this->addAjaxCallBacks($form['field_storage']['subform']);
+
+    if (isset($form['field_storage']['subform']['cardinality_container'])) {
+      $form['field_storage']['subform']['cardinality_container']['#parents'] = [
+        'field_storage',
+        'subform',
+      ];
+    }
     // Add field settings for the field type and a container for third party
     // settings that modules can add to via hook_form_FORM_ID_alter().
     $form['settings'] = [

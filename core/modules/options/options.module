@@ -5,12 +5,10 @@
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\FieldStorageConfigInterface;
 
@@ -137,31 +135,4 @@ function _options_values_in_use($entity_type, $field_name, $values) {
   }
 
   return FALSE;
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for field_config_edit_form.
- */
-function options_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
-  $entity = $form_state->getFormObject()->getEntity();
-  if ($entity->getFieldStorageDefinition()->getTypeProvider() === 'options') {
-    $form['field_storage']['subform']['field_storage_submit']['#submit'][] = 'options_field_config_edit_form_submit';
-    $form['field_storage']['subform']['field_storage_submit']['#limit_validation_errors'] = [];
-
-    $table = &NestedArray::getValue($form, ['field_storage', 'subform', 'settings', 'allowed_values', 'table']);
-    if (!$table) {
-      return;
-    }
-
-    // @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::storageSettingsForm
-    $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
-    $table['#attributes']['class'][] = 'allowed-values-table';
-  }
-}
-
-/**
- * Form submission handler for field_config_edit_form.
- */
-function options_field_config_edit_form_submit($form, FormStateInterface $form_state) {
-  drupal_static_reset('options_allowed_values');
 }
