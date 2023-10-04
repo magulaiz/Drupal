@@ -242,9 +242,10 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertEquals('Lorem ipsum Lorem ipsum…', $comment1->getSubject());
 
     // Break at 29 characters where there's no boundary before that.
-    $body_text2 = 'LoremipsumloremipsumLoremingipsumLoremipsum';
+    // cspell:ignore Pneumonoultramicroscopicsili
+    $body_text2 = 'Pneumonoultramicroscopicsilicovolcanoconiosis';
     $comment2 = $this->postComment(NULL, $body_text2, '', TRUE);
-    $this->assertEquals('LoremipsumloremipsumLoreming…', $comment2->getSubject());
+    $this->assertEquals('Pneumonoultramicroscopicsili…', $comment2->getSubject());
   }
 
   /**
