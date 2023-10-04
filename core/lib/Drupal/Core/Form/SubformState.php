@@ -26,6 +26,13 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
   protected $subform;
 
   /**
+   * The subform form object.
+   *
+   * @var mixed
+   */
+  protected mixed $formObject;
+
+  /**
    * Constructs a new instance.
    *
    * @param mixed[] $subform
@@ -149,6 +156,25 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
     parent::setErrorByName($name, $message);
 
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFormObject(FormInterface $form_object) {
+    $this->formObject = $form_object;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormObject() {
+    if ($this->formObject) {
+      return $this->formObject;
+    }
+
+    return parent::getFormObject();
   }
 
 }

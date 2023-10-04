@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
@@ -311,4 +312,21 @@ class SubformStateTest extends UnitTestCase {
     $this->assertSame($subform_state, $subform_state->setErrorByName($subform_error_name, $message));
   }
 
+  /**
+   * @covers ::getFormObject
+   * @covers ::setFormObject
+   */
+  public function testFormObject() {
+    $parent_form_state = $this->prophesize(FormStateInterface::class);
+    $parent_form_object = $this->prophesize(FormInterface::class)->reveal();
+    $parent_form_state->getFormObject()->willReturn($parent_form_object);
+
+    $subform_state = SubformState::createForSubform($this->parentForm['dog'], $this->parentForm, $parent_form_state->reveal());
+
+    $form_object = $this->prophesize(FormInterface::class)->reveal();
+    $subform_state->setFormObject($form_object);
+    $this->assertSame($form_object, $subform_state->getFormObject());
+
+    $this->assertSame($parent_form_object, $subform_state->getCompleteFormState()->getFormObject());
+  }
 }
