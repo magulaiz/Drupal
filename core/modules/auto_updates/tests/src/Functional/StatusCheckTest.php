@@ -67,7 +67,7 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->setReleaseMetadata(__DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
     $this->mockActiveCoreVersion('9.8.1');
 
     $this->reportViewerUser = $this->createUser([

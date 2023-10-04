@@ -41,7 +41,7 @@ abstract class AutoUpdatesFunctionalTestBase extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->useFixtureDirectoryAsActive(__DIR__ . '/../../../package_manager/tests/fixtures/fake_site');
+    $this->useFixtureDirectoryAsActive(__DIR__ . '/../../../../package_manager/tests/fixtures/fake_site');
     // @todo Remove in https://www.drupal.org/project/auto_updates/issues/3284443
     $this->config('auto_updates.settings')
       ->set('unattended.level', CronUpdateRunner::SECURITY)
@@ -59,7 +59,7 @@ abstract class AutoUpdatesFunctionalTestBase extends BrowserTestBase {
 
     // To prevent tests from making real requests to the Internet, use fake
     // release metadata that exposes a pretend Drupal 9.8.2 release.
-    $this->setReleaseMetadata(__DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml');
 
     parent::installModulesFromClassProperty($container);
   }

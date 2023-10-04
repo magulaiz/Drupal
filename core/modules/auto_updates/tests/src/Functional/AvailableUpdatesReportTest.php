@@ -50,7 +50,7 @@ class AvailableUpdatesReportTest extends AutoUpdatesFunctionalTestBase {
     $form_url = Url::fromRoute('update.report_update')->toString();
 
     $this->config('auto_updates.settings')->set('allow_core_minor_updates', TRUE)->save();
-    $fixture_directory = __DIR__ . '/../../../package_manager/tests/fixtures/release-history';
+    $fixture_directory = __DIR__ . '/../../../../package_manager/tests/fixtures/release-history';
     $this->setReleaseMetadata("$fixture_directory/drupal.9.8.1-security.xml");
     $this->mockActiveCoreVersion('9.8.0');
     $this->checkForUpdates();

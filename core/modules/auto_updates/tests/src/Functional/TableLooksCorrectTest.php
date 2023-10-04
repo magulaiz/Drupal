@@ -83,7 +83,7 @@ class TableLooksCorrectTest extends UpdaterFormTestBase {
     // Check the form when there are updates in the current and next minors but
     // the site does not support minor updates.
     $this->config('auto_updates.settings')->set('allow_core_minor_updates', FALSE)->save();
-    $this->setReleaseMetadata(__DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml');
     $page->clickLink('Check manually');
     $this->checkForMetaRefresh();
     $assert_session->pageTextContainsOnce('Currently installed: 9.7.0 (Update available)');
@@ -112,7 +112,7 @@ class TableLooksCorrectTest extends UpdaterFormTestBase {
     // Check that if minor updates are enabled then updates in the next minors
     // are visible.
     $this->config('auto_updates.settings')->set('allow_core_minor_updates', TRUE)->save();
-    $this->setReleaseMetadata(__DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.10.0.0.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.10.0.0.xml');
     $this->mockActiveCoreVersion('9.5.0');
     $page->clickLink('Check manually');
     $this->checkForMetaRefresh();

@@ -47,7 +47,7 @@ class UpdateStageTest extends AutoUpdatesKernelTestBase {
     // is available.
     $this->setCoreVersion('9.8.0');
     $this->setReleaseMetadata([
-      'drupal' => __DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml',
+      'drupal' => __DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml',
     ]);
 
     // Create a user who will own the stage even after the container is rebuilt.

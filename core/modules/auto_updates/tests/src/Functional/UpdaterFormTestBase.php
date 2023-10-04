@@ -44,7 +44,7 @@ abstract class UpdaterFormTestBase extends AutoUpdatesFunctionalTestBase {
     static::$errorsExplanation = 'Your site cannot be automatically updated until further action is performed.';
     parent::setUp();
 
-    $this->setReleaseMetadata(__DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
     $permissions = [
       'administer site configuration',
       'administer software updates',

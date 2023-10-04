@@ -138,7 +138,7 @@ END;
    *   The test cases.
    */
   public function providerUpdateStageCalled(): array {
-    $fixture_dir = __DIR__ . '/../../../package_manager/tests/fixtures/release-history';
+    $fixture_dir = __DIR__ . '/../../../../package_manager/tests/fixtures/release-history';
     return [
       'disabled, normal release' => [
         CronUpdateRunner::DISABLED,
@@ -532,7 +532,7 @@ END;
       $this->getStageFixtureManipulator()->setCorePackageVersion('9.8.2');
     }
     $this->setReleaseMetadata([
-      'drupal' => __DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml',
+      'drupal' => __DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml',
     ]);
     $this->config('auto_updates.settings')
       ->set('unattended.level', CronUpdateRunner::ALL)

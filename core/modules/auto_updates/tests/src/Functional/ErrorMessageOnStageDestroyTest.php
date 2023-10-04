@@ -29,7 +29,7 @@ class ErrorMessageOnStageDestroyTest extends AutoUpdatesFunctionalTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->setReleaseMetadata(__DIR__ . '/../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
     $this->mockActiveCoreVersion('9.8.0');
 
     $this->drupalLogin($this->createUser([
