@@ -354,6 +354,10 @@ class FieldStorageAddForm extends FormBase {
           ]),
         ],
       ];
+      // Hide the continue button until the sub-field is selected.
+      if (isset($group_field_options) && !array_key_exists($form_state->getValue('group_field_options_wrapper'), $group_field_options)) {
+        $form['group_field_options_wrapper']['submit']['#attributes']['class'][] = 'js-hide';
+      }
 
     }
     // Place the 'translatable' property as an explicit value so that contrib
