@@ -45,7 +45,7 @@ class UpdaterFormNoRecommendedReleaseMessageTest extends AutoUpdatesFunctionalTe
    *   The test cases.
    */
   public function providerMessages(): array {
-    $dir = __DIR__ . '/../../../package_manager/tests/fixtures/release-history';
+    $dir = __DIR__ . '/../../../../package_manager/tests/fixtures/release-history';
 
     return [
       'current' => [
