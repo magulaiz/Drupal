@@ -17,6 +17,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\auto_updates\Validation\AdminStatusCheckMessages;
 use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
+use Drupal\Core\Utility\Error;
 use Drupal\system\Controller\DbUpdateController;
 
 /**
@@ -111,7 +112,7 @@ function auto_updates_mail(string $key, array &$message, array $params): void {
   // If this email was related to an unattended update, explicitly state that
   // this isn't supported yet.
   if (str_starts_with($key, 'cron_')) {
-    $message['body'][] = t('This e-mail was sent by the Automatic Updates module. Unattended updates are not yet fully supported.', [], $options);
+    $message['body'][] = t('This email was sent by the Automatic Updates module. Unattended updates are not yet fully supported.', [], $options);
     $message['body'][] = t('If you are using this feature in production, it is strongly recommended for you to visit your site and ensure that everything still looks good.', [], $options);
   }
 }
@@ -276,7 +277,7 @@ function auto_updates_preprocess_update_project_status(array &$variables) {
   catch (RuntimeException $exception) {
     // If for some reason we are not able to get the update recommendations
     // do not alter the report.
-    watchdog_exception('auto_updates', $exception);
+    Error::logException(\Drupal::logger('auto_updates'), $exception);
     return;
   }
   $variables['#attached']['library'][] = 'auto_updates/update_status';
