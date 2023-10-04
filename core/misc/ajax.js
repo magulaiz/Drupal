@@ -150,14 +150,14 @@
     const readyStateText =
       xmlhttp.status === 0
         ? `\n${Drupal.t('ReadyState: !readyState', {
-            '!readyState': xmlhttp.readyState,
-          })}`
+          '!readyState': xmlhttp.readyState,
+        })}`
         : '';
 
     customMessage = customMessage
       ? `\n${Drupal.t('CustomMessage: !customMessage', {
-          '!customMessage': customMessage,
-        })}`
+        '!customMessage': customMessage,
+      })}`
       : '';
 
     /**
@@ -1217,18 +1217,18 @@
    */
   Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) =>
     (response.effect || ajax.effect) !== 'none' &&
-    $newContent.filter(
-      (i) =>
-        !(
-          // We can not consider HTML comments or whitespace text as separate
-          // roots, since they do not cause visual regression with effect.
-          (
-            $newContent[i].nodeName === '#comment' ||
-            ($newContent[i].nodeName === '#text' &&
-              /^(\s|\n|\r)*$/.test($newContent[i].textContent))
-          )
-        ),
-    ).length > 1
+      $newContent.filter(
+        (i) =>
+          !(
+            // We can not consider HTML comments or whitespace text as separate
+            // roots, since they do not cause visual regression with effect.
+            (
+              $newContent[i].nodeName === '#comment' ||
+              ($newContent[i].nodeName === '#text' &&
+                /^(\s|\n|\r)*$/.test($newContent[i].textContent))
+            )
+          ),
+      ).length > 1
       ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent)
       : $newContent;
 
@@ -1277,7 +1277,7 @@
    *
    * @constructor
    */
-  Drupal.AjaxCommands = function () {};
+  Drupal.AjaxCommands = function () { };
   Drupal.AjaxCommands.prototype = {
     /**
      * Command to insert new content into the DOM.
@@ -1826,6 +1826,7 @@
      *   Selector to use.
      */
     scrollTop(ajax, response) {
+      const scrollAnimationSpeed = 500;
       const offset = $(response.selector).offset();
       // We can't guarantee that the scrollable object should be
       // the body, as the element could be embedded in something
@@ -1836,19 +1837,27 @@
         scrollTarget = $(scrollTarget).parent();
       }
 
+      // Getting the document offset as a starting value.
       let scrollOffset = offset.top;
+
       if (scrollTarget.length > 0 && scrollTarget.offset().top > 0) {
+        // If target element name is not empty and its inner offset more than
+        // zero, append the target element offset (scroll position) on the
+        // document, and the offset inside the inner element (scroll position).
         scrollOffset =
           scrollOffset +
           $(scrollTarget).scrollTop() -
           scrollTarget.offset().top;
       }
+
+      // Scroll only if target (inner) element position is lower than the
+      // document scroll position.
       if (scrollOffset - 10 < $(scrollTarget).scrollTop()) {
         $(scrollTarget).animate(
           {
             scrollTop: scrollOffset - 10,
           },
-          500,
+          scrollAnimationSpeed,
         );
       }
     },
