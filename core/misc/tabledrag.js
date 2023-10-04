@@ -182,6 +182,16 @@
     this.indentEnabled = false;
 
     /**
+     *
+     * @type {string}
+     */
+    this.dragOrientation = this.table.dataset.dragOrientation
+      ? this.table.dataset.dragOrientation
+      : 'drag';
+
+    console.log(this.dragOrientation);
+
+    /**
      * Keeps track of rows that have changed.
      */
     this.changedRowIds = Drupal.tableDrag[table.id]
@@ -500,6 +510,9 @@
     $item.find('td:first-of-type').find('a').addClass('menu-item__link');
     // Create the handle.
     const $handle = $(Drupal.theme('tableDragHandle'));
+    if (this.dragOrientation === 'drag-y') {
+      $handle.addClass('tabledrag-handle-y');
+    }
     // Insert the handle after indentations (if any).
     const $indentationLast = $item
       .find('td:first-of-type')
@@ -762,7 +775,7 @@
     $(item).addClass('drag');
 
     // Set the document to use the move cursor during drag.
-    $('body').addClass('drag');
+    $('body').addClass(this.dragOrientation);
     if (self.oldRowElement) {
       $(self.oldRowElement).removeClass('drag-previous');
     }
@@ -894,7 +907,8 @@
     // Functionality specific only to pointerup events.
     if (self.dragObject !== null) {
       self.dragObject = null;
-      $('body').removeClass('drag');
+      // $('body').removeClass('drag');
+      $('body').removeClass(self.dragOrientation);
       clearInterval(self.scrollInterval);
     }
   };
