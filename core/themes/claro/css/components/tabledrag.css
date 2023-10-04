@@ -33,11 +33,6 @@ body.drag-y {
   font-weight: bold;
 }
 
-.region-title.drag {
-  font-weight: bold;
-  cursor: row-resize;
-}
-
 /* Empty region message row in table. */
 
 .region-message {
@@ -144,6 +139,8 @@ body.drag-y {
   margin-right: calc(var(--space-m) * -1);
   margin-left: 0;
 }
+
+/* Change icon and cursor if only vertical drag is allowed. */
 
 .tabledrag-handle.tabledrag-handle-y {
   cursor: row-resize;
