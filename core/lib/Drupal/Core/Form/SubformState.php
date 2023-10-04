@@ -26,13 +26,6 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
   protected $subform;
 
   /**
-   * The subform form object.
-   *
-   * @var mixed
-   */
-  protected mixed $formObject;
-
-  /**
    * Constructs a new instance.
    *
    * @param mixed[] $subform
@@ -41,8 +34,10 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    *   The subform's parent form.
    * @param \Drupal\Core\Form\FormStateInterface $parent_form_state
    *   The parent form state.
+   * @param \Drupal\Core\Form\FormInterface|null $subformFormObject
+   *    The subform form object when it's not the same as the parent form.
    */
-  protected function __construct(array &$subform, array &$parent_form, FormStateInterface $parent_form_state) {
+  protected function __construct(array &$subform, array &$parent_form, FormStateInterface $parent_form_state, readonly ?FormInterface $subformFormObject = NULL) {
     $this->decoratedFormState = $parent_form_state;
     $this->parentForm = $parent_form;
     $this->subform = $subform;
@@ -57,11 +52,13 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    *   The subform's parent form.
    * @param \Drupal\Core\Form\FormStateInterface $parent_form_state
    *   The parent form state.
+   * @param \Drupal\Core\Form\FormInterface|null $subform_form_object
+   *   The subform form object when it's not the same as the parent form.
    *
    * @return static
    */
-  public static function createForSubform(array &$subform, array &$parent_form, FormStateInterface $parent_form_state) {
-    return new static($subform, $parent_form, $parent_form_state);
+  public static function createForSubform(array &$subform, array &$parent_form, FormStateInterface $parent_form_state, ?FormInterface $subform_form_object = NULL) {
+    return new static($subform, $parent_form, $parent_form_state, $subform_form_object);
   }
 
   /**
@@ -161,17 +158,9 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
   /**
    * {@inheritdoc}
    */
-  public function setFormObject(FormInterface $form_object) {
-    $this->formObject = $form_object;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFormObject() {
-    if ($this->formObject) {
-      return $this->formObject;
+    if ($this->subformFormObject) {
+      return $this->subformFormObject;
     }
 
     return parent::getFormObject();

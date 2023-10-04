@@ -180,10 +180,9 @@ class FieldConfigEditForm extends EntityForm {
       '#limit_validation_errors' => [$form['field_storage']['subform']['#parents']],
       '#submit' => ['::fieldStorageSubmit'],
     ];
-    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($field_storage);
-    $subform_state->setFormObject($field_storage_form);
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
     $form['field_storage']['subform'] = $field_storage_form->buildForm($form['field_storage']['subform'], $subform_state, $this->entity);
 
     $form['#entity'] = _field_create_entity_from_ids($ids);
@@ -353,8 +352,7 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
-    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
-    $subform_state->setFormObject($field_storage_form);
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
     $field_storage_form->validateForm($form['field_storage']['subform'], $subform_state);
 
     // Make sure that the default value form is validated using the field
@@ -379,8 +377,7 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
-    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
-    $subform_state->setFormObject($field_storage_form);
+    $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
     $field_storage_form->submitForm($form['field_storage']['subform'], $subform_state);
     try {
       $field_storage_form->save($form['field_storage']['subform'], $subform_state);

@@ -294,10 +294,9 @@ function field_ui_form_field_config_edit_form_alter(&$form, FormStateInterface $
   $form_id = 'field_storage_config_edit_form';
   $hook = 'form_' . $form_id;
 
-  $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state);
   $field_storage_form = \Drupal::entityTypeManager()->getFormObject('field_storage_config', $form_state->getFormObject()->getOperation());
   $field_storage_form->setEntity($field_config->getFieldStorageDefinition());
-  $subform_state->setFormObject($field_storage_form);
+  $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
 
   \Drupal::moduleHandler()->alterDeprecated('Use hook_form_field_config_edit_form_alter() instead. See https://www.drupal.org/node/3386675.', $hook, $form['field_storage']['subform'], $subform_state, $form_id);
   \Drupal::theme()->alter($hook, $form['field_storage']['subform'], $subform_state, $form_id);

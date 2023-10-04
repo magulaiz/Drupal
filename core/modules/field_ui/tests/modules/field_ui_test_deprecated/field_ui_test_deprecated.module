@@ -19,6 +19,9 @@ function field_ui_test_deprecated_form_field_storage_config_edit_form_alter(&$fo
   if (!($form_state->getFormObject()->getEntity() instanceof FieldStorageConfigInterface)) {
     throw new \LogicException('field_storage_config_edit_form() expects to get access to the field storage config entity.');
   }
+  if (!isset($form['cardinality_container']['cardinality'])) {
+    throw new \LogicException('field_storage_config_edit_form() expects to that the cardinality container with the cardinality form element exists.');
+  }
 
   $form['cardinality_container']['hello'] = [
     '#markup' => 'Greetings from the field_storage_config_edit_form() alter.',
