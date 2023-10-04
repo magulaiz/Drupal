@@ -62,7 +62,7 @@ class ModuleFilterTest extends WebDriverTestBase {
     // Test Drupal.announce() message when one match is expected.
     // Using a very specific module name, we expect only one row.
     $filter->setValue('System dependency test');
-    $session->wait(1000, 'jQuery("#module-node:visible").length == 0');
+    $session->wait(1000, 'jQuery("#module-node:visible").length == 1');
     $visible_rows = $this->filterVisibleElements($module_rows);
     self::assertEquals(1, count($visible_rows));
     $expected_message = '1 module is available in the modified list.';
