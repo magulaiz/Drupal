@@ -39,7 +39,7 @@ class MenuSelectionTest extends WebDriverTestBase {
     $this->drupalGet('admin/structure/menu/manage/account');
     $this->clickLink('Edit');
     // Select the tools option from the menu list.
-    $this->getSession()->getPage()->findField('menu_parent_menu')->selectOption('<Tools>');
+    $this->getSession()->getPage()->findField('select_list')->selectOption('<Tools>');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->optionExists('Parent link', '-- Compose tips (disabled)');
     $this->assertSession()->optionExists('Parent link', '<Tools>');
