@@ -303,7 +303,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
     return $cases;
   }
 
-
   /**
    * Tests that only the cache contexts for policies that apply are added.
    *
