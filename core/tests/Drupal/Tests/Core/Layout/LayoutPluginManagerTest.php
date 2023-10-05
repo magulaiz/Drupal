@@ -118,6 +118,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->assertSame('2 column layout', (string) $layout_definition->getLabel());
     $this->assertSame('Columns: 2', (string) $layout_definition->getCategory());
     $this->assertSame('A theme provided layout', (string) $layout_definition->getDescription());
+    $this->assertSame(0, $layout_definition->getWeight());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getLabel());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getCategory());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getDescription());
@@ -147,6 +148,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->assertSame('1 column layout', (string) $layout_definition->getLabel());
     $this->assertSame('Columns: 1', (string) $layout_definition->getCategory());
     $this->assertSame('A module provided layout', (string) $layout_definition->getDescription());
+    $this->assertSame(10, $layout_definition->getWeight());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getLabel());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getCategory());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getDescription());
@@ -177,6 +179,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->assertEquals('Layout plugin', $layout_definition->getLabel());
     $this->assertEquals('Columns: 1', $layout_definition->getCategory());
     $this->assertEquals('Test layout', $layout_definition->getDescription());
+    $this->assertSame(8, $layout_definition->getWeight());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getLabel());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getCategory());
     $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getDescription());
@@ -263,11 +266,10 @@ EOS;
    */
   public function testGetSortedDefinitions() {
     $expected = [
-      'module_a_provided_layout',
-      'plugin_provided_layout',
       'theme_a_provided_layout',
+      'plugin_provided_layout',
+      'module_a_provided_layout',
     ];
-
     $layout_definitions = $this->layoutPluginManager->getSortedDefinitions();
     $this->assertEquals($expected, array_keys($layout_definitions));
     $this->assertContainsOnlyInstancesOf(LayoutDefinition::class, $layout_definitions);
@@ -279,8 +281,8 @@ EOS;
   public function testGetGroupedDefinitions() {
     $category_expected = [
       'Columns: 1' => [
-        'module_a_provided_layout',
         'plugin_provided_layout',
+        'module_a_provided_layout',
       ],
       'Columns: 2' => [
         'theme_a_provided_layout',
