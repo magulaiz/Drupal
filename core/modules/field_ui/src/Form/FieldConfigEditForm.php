@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -69,12 +70,16 @@ class FieldConfigEditForm extends EntityForm {
    *   The entity display repository.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
    *   The private tempstore.
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface|null $elementInfo
+   *   The element info manager.
    */
   public function __construct(
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     protected TypedDataManagerInterface $typedDataManager,
     protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
-    protected ?PrivateTempStore $tempStore = NULL) {
+    protected ?PrivateTempStore $tempStore = NULL,
+    protected ?ElementInfoManagerInterface $elementInfo = NULL,
+  ) {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     if ($this->entityDisplayRepository === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
@@ -83,6 +88,10 @@ class FieldConfigEditForm extends EntityForm {
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
+    }
+    if ($this->elementInfo === NULL) {
+      @trigger_error('Calling FieldConfigEditForm::__construct() without the $elementInfo argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
+      $this->elementInfo = \Drupal::service('plugin.manager.element_info');
     }
   }
 
@@ -95,6 +104,7 @@ class FieldConfigEditForm extends EntityForm {
       $container->get('typed_data_manager'),
       $container->get('entity_display.repository'),
       $container->get('tempstore.private')->get('field_ui'),
+      $container->get('plugin.manager.element_info'),
     );
   }
 
@@ -192,7 +202,7 @@ class FieldConfigEditForm extends EntityForm {
     $items = $this->getTypedData($this->entity, $form['#entity']);
     $item = $items->first() ?: $items->appendItem();
 
-    $this->addAjaxCallBacks($form['field_storage']['subform']);
+    $this->addAjaxCallbacks($form['field_storage']['subform']);
 
     if (isset($form['field_storage']['subform']['cardinality_container'])) {
       $form['field_storage']['subform']['cardinality_container']['#parents'] = [
@@ -516,25 +526,19 @@ class FieldConfigEditForm extends EntityForm {
    * @param array $form
    *   An associative array containing the structure of the form.
    */
-  private function addAjaxCallBacks(array &$form): void {
-    $field_types = [
-      'checkbox',
-      'select',
-      'radios',
-      'textarea',
-      'number',
-      'textfield',
-    ];
-    if (isset($form['#type']) && in_array($form['#type'], $field_types) && !isset($form['#ajax'])) {
-      $form['#ajax'] = [
-        'trigger_as' => ['name' => 'field_storage_submit'],
-        'wrapper' => 'field-combined',
-        'event' => 'change',
-      ];
+  private function addAjaxCallbacks(array &$form): void {
+    if (isset($form['#type']) && !isset($form['#ajax'])) {
+      if ($this->elementInfo->getInfoProperty($form['#type'], '#input') && !$this->elementInfo->getInfoProperty($form['#type'], '#is_button')) {
+        $form['#ajax'] = [
+          'trigger_as' => ['name' => 'field_storage_submit'],
+          'wrapper' => 'field-combined',
+          'event' => 'change',
+        ];
+      }
     }
 
     foreach (Element::children($form) as $child_key) {
-      $this->addAjaxCallBacks($form[$child_key]);
+      $this->addAjaxCallbacks($form[$child_key]);
     }
   }
 
