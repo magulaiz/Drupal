@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Session;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\VariationCacheInterface;
@@ -42,45 +43,9 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Tests that access policies are properly added and returned.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::getAccessPolicies
-   */
-  public function testAddAccessPolicy() {
-    $processor = $this->setUpAccessPolicyProcessor();
-    $access_policies = [
-      new FooAccessPolicy(),
-      new BarAccessPolicy(),
-      new BazAccessPolicy(),
-      new BarAlterAccessPolicy(),
-    ];
-
-    foreach ($access_policies as $access_policy) {
-      $processor->addAccessPolicy($access_policy);
-    }
-
-    $this->assertEquals($access_policies, $processor->getAccessPolicies(), 'The added access policies match the returned ones.');
-  }
-
-  /**
-   * Tests that the persistent cache contexts are returned properly.
-   *
-   * @covers ::getPersistentCacheContexts
-   */
-  public function testGetPersistentCacheContexts() {
-    $processor = $this->setUpAccessPolicyProcessor();
-
-    foreach ([new FooAccessPolicy(), new BarAccessPolicy(), new BazAccessPolicy(), new BarAlterAccessPolicy()] as $access_policy) {
-      $processor->addAccessPolicy($access_policy);
-    }
-
-    $this->assertEquals(['foo', 'bar'], $processor->getPersistentCacheContexts('anything'), 'Cache contexts match only those access policies that apply to the scope.');
-  }
-
-  /**
    * Tests that access policies are properly processed.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testCalculatePermissions() {
@@ -98,6 +63,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests that access policies that do not apply are not processed.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testCalculatePermissionsNoApply() {
@@ -116,6 +82,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests that access policies can alter the final result.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testAlterPermissions() {
@@ -136,6 +103,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests that alters that do not apply are not processed.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testAlterPermissionsNoApply() {
@@ -153,6 +121,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests that access policies which do nothing are properly processed.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testEmptyCalculator() {
@@ -186,6 +155,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests the wrong scope exception.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testWrongScopeException() {
@@ -200,6 +170,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests the multiple scopes exception.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testMultipleScopeException() {
@@ -215,6 +186,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests the multiple scopes exception.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    */
   public function testMultipleScopeAlterException() {
@@ -230,6 +202,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests if the account switcher switches properly when user cache context is present.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    * @dataProvider accountSwitcherProvider
    */
@@ -267,8 +240,9 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Tests if the account switcher switches properly when user cache context is present.
+   * Tests if the caches are called correctly.
    *
+   * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    * @dataProvider cachingProvider
    */
@@ -327,6 +301,30 @@ class AccessPolicyProcessorTest extends UnitTestCase {
       'db-cache-hit' => [TRUE, FALSE],
     ];
     return $cases;
+  }
+
+
+  /**
+   * Tests that only the cache contexts for policies that apply are added.
+   *
+   * @covers ::addAccessPolicy
+   * @covers ::processAccessPolicies
+   */
+  public function testCacheContexts() {
+    // BazAccessPolicy and BarAlterAccessPolicy shouldn't add any contexts.
+    $initial_cacheability = (new CacheableMetadata())->addCacheContexts(['foo', 'bar']);
+    $final_cacheability = (new CacheableMetadata())->addCacheContexts(['foo', 'bar'])->addCacheTags(['access_policies']);
+
+    $cache_db = $this->prophesize(VariationCacheInterface::class);
+    $cache_db->get(Argument::cetera())->willReturn(FALSE);
+    $cache_db->set(['access_policies', 'anything'], Argument::any(), $final_cacheability, $initial_cacheability)->shouldBeCalled();
+    $processor = $this->setUpAccessPolicyProcessor($cache_db->reveal());
+
+    foreach ([new FooAccessPolicy(), new BarAccessPolicy(), new BazAccessPolicy(), new BarAlterAccessPolicy()] as $access_policy) {
+      $processor->addAccessPolicy($access_policy);
+    }
+
+    $processor->processAccessPolicies($this->prophesize(AccountInterface::class)->reveal(), 'anything');
   }
 
   /**
@@ -388,7 +386,7 @@ class FooAccessPolicy extends AccessPolicyBase {
 
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
-    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], TRUE, 'foo', 1));
+    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], TRUE, $scope, 1));
   }
 
   public function getPersistentCacheContexts(string $scope): array {
@@ -405,7 +403,7 @@ class BarAccessPolicy extends AccessPolicyBase {
 
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
-    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], FALSE, 'bar', 1));
+    return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], FALSE, $scope, 1));
   }
 
   public function getPersistentCacheContexts(string $scope): array {

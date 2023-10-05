@@ -47,13 +47,6 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAccessPolicies(): array {
-    return $this->accessPolicies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function processAccessPolicies(AccountInterface $account, string $scope = AccessPolicyInterface::SCOPE_DRUPAL): CalculatedPermissionsInterface {
     $persistent_cache_contexts = $this->getPersistentCacheContexts($scope);
     $initial_cacheability = (new CacheableMetadata())->addCacheContexts($persistent_cache_contexts);
@@ -103,7 +96,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     else {
       // Build mode, allow all access policies to add initial data.
       $calculated_permissions = new RefinableCalculatedPermissions();
-      foreach ($this->getAccessPolicies() as $access_policy) {
+      foreach ($this->accessPolicies as $access_policy) {
         if (!$access_policy->applies($scope)) {
           continue;
         }
@@ -117,7 +110,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       }
 
       // Alter mode, allow all access policies to alter the complete build.
-      foreach ($this->getAccessPolicies() as $access_policy) {
+      foreach ($this->accessPolicies as $access_policy) {
         if (!$access_policy->applies($scope)) {
           continue;
         }
@@ -163,9 +156,15 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the persistent cache contexts of all policies within a given scope.
+   *
+   * @param string $scope
+   *   The scope to get the persistent cache contexts for.
+   *
+   * @return string[]
+   *   The persistent cache contexts of all policies within the scope.
    */
-  public function getPersistentCacheContexts(string $scope): array {
+  protected function getPersistentCacheContexts(string $scope): array {
     $cid = 'access_policies:access_policy_processor:contexts:' . $scope;
 
     // Retrieve the contexts from the regular static cache if available.
@@ -174,7 +173,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     }
     else {
       $contexts = [];
-      foreach ($this->getAccessPolicies() as $access_policy) {
+      foreach ($this->accessPolicies as $access_policy) {
         if ($access_policy->applies($scope)) {
           $contexts = array_merge($contexts, $access_policy->getPersistentCacheContexts($scope));
         }
