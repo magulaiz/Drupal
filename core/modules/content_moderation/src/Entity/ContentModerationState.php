@@ -109,13 +109,13 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
    *   This method should only be called as a result of saving the related
    *   content entity.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
-   *   Use ContentModerationState::realSave() directly instead.
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
    *
    * @see https://www.drupal.org/node/3341126
    */
   public static function updateOrCreateFromEntity(ContentModerationState $content_moderation_state) {
-    @trigger_error(sprintf("The method %s is deprecated as of 10.1.0 and will be removed in 11.0.0. Use ContentModerationState::realSave(). See https://www.drupal.org/node/3341126", __METHOD__), E_USER_DEPRECATED);
+    @trigger_error("updateOrCreateFromEntity() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3341126", E_USER_DEPRECATED);
     $content_moderation_state->realSave();
   }
 
@@ -132,13 +132,13 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
    *   This method should only be called by code directly handling the
    *   ContentModerationState entity objects.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
-   *   Use \Drupal::service('content_moderation.moderation_information')->loadFromModeratedEntity();
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
    *
    * @see https://www.drupal.org/node/3341126
    */
   public static function loadFromModeratedEntity(EntityInterface $entity): ?ContentModerationStateInterface {
-    @trigger_error(sprintf("The method %s is deprecated as of 10.1.0 and will be removed in 11.0.0. Use \Drupal::service('content_moderation.moderation_information')->loadFromModeratedEntity(). See https://www.drupal.org/node/3341126", __METHOD__), E_USER_DEPRECATED);
+    @trigger_error("loadFromModeratedEntity() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3341126", E_USER_DEPRECATED);
     return \Drupal::service('content_moderation.moderation_information')->loadFromModeratedEntity($entity);
   }
 
