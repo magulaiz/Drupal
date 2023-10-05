@@ -609,6 +609,21 @@ class ContainerTest extends TestCase {
   }
 
   /**
+   * Tests that private services wrapped in a closure work correctly.
+   *
+   * @covers ::get
+   * @covers ::createService
+   * @covers ::resolveServicesAndParameters
+   */
+  public function testResolveServicesAndParametersForPrivateServiceReferencedViaServiceClosure() {
+    $service = $this->container->get('private_service_within_service_closure');
+    $other_service = $this->container->get('other.service');
+    $factory_function = $service->getSomeOtherService();
+    $this->assertInstanceOf(\Closure::class, $factory_function);
+    $this->assertEquals($other_service, call_user_func($factory_function));
+  }
+
+  /**
    * Tests that an invalid argument throw an Exception.
    *
    * @covers ::get
@@ -868,6 +883,15 @@ class ContainerTest extends TestCase {
       ]),
     ];
 
+
+    $services['private_service_within_service_closure'] = [
+      'class' => MockService::class,
+      'arguments' => $this->getCollection([
+        $this->getPrivateServiceClosureCall($private_service),
+        $this->getParameterCall('some_private_config'),
+      ]),
+    ];
+
     $services['factory_service'] = [
       'class' => '\Drupal\service_container\ServiceContainer\ControllerInterface',
       'factory' => [
@@ -1013,6 +1037,15 @@ class ContainerTest extends TestCase {
       'id' => $id,
       'invalidBehavior' => $invalid_behavior,
     ];
+  }
+
+  /**
+   * Helper function to return a service closure definition.
+   */
+  protected function getPrivateServiceClosureCall($private_service) {
+    $object = $this->getPrivateServiceCall('other.service', $private_service, TRUE);
+    $object->type = 'service_closure_private';
+    return $object;
   }
 
   /**
