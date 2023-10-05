@@ -622,8 +622,6 @@ trait FunctionalTestSetupTrait {
     $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
-    // TestRunnerKernel expects the working directory to be DRUPAL_ROOT.
-    chdir(DRUPAL_ROOT);
     $kernel->boot();
     $kernel->preHandle($request);
     $this->prepareDatabasePrefix();
