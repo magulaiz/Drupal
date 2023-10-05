@@ -883,7 +883,6 @@ class ContainerTest extends TestCase {
       ]),
     ];
 
-
     $services['private_service_within_service_closure'] = [
       'class' => MockService::class,
       'arguments' => $this->getCollection([
