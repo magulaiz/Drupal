@@ -102,6 +102,9 @@ class FieldConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function getFormId() {
+    // Ensure that the form ID remains consistent between both 'default' and
+    // 'edit' operations. This is needed because historically it was only
+    // possible to edit the field configuration.
     return 'field_config_edit_form';
   }
 
