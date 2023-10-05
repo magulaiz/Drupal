@@ -3,6 +3,7 @@
 namespace Drupal\Tests\toolbar\Functional;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -436,6 +437,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $this->submitForm($edit, 'Save');
+    $this->assertSession()->selectExists('select_list')->selectOption('admin:');
+    $this->getSession()->getPage()->findById('edit-submit')->click();
+    $this->assertSession()->selectExists('menu_parent')->selectOption('admin:system.admin');
+    $this->getSession()->getPage()->findButton('Save')->press();
 
     // Assert that the new menu link is shown on the menu link listing.
     $this->drupalGet('admin/structure/menu/manage/admin');
