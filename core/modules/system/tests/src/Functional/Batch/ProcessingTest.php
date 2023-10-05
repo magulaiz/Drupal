@@ -122,8 +122,9 @@ class ProcessingTest extends BrowserTestBase {
     $this->drupalGet('batch-test');
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->linkExists('the error page');
-    $this->clickLink('the error page');
     $this->assertSession()->responseContains('Exception in batch');
+    $this->clickLink('the error page');
+
     $this->assertSession()->assertNoEscaped('<');
 
     // Ensure correct order of the nested batches. We reset the indexes in

@@ -52,12 +52,14 @@ class BatchTestSimpleForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     batch_test_stack(NULL, TRUE);
 
-    foreach ($form_state->getValue('batch') as $batch) {
+    $batch_values = $form_state->getValue('batch');
+    foreach ($batch_values as $batch) {
       $function = '_batch_test_' . $batch;
       batch_set($function());
     }
-
-    $form_state->setRedirect('batch_test.redirect');
+    if (!in_array('batch_8', $batch_values, TRUE)) {
+      $form_state->setRedirect('batch_test.redirect');
+    }
   }
 
 }
