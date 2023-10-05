@@ -257,7 +257,7 @@ class FieldConfigEditForm extends EntityForm {
 
       $form['default_value'] = $element;
     }
-    $form['#prefix'] = '<div id="field-combined" >';
+    $form['#prefix'] = '<div id="field-combined">';
     $form['#suffix'] = '</div>';
     return $form;
   }
