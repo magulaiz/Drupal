@@ -242,12 +242,13 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       // against caches being built twice in a request.
       if (\Fiber::getCurrent() !== NULL) {
         \Fiber::suspend();
-      }
-      // Check for the cache item again in case it was set while we
-      // were suspended.
-      if ($cache = $this->cache->get($cid)) {
-        $routes = $cache->data;
-        $this->serializedRoutes += $routes;
+        // Check for the cache item again in case it was set while we
+        // were suspended.
+        if ($cache = $this->cache->get($cid)) {
+          $routes = $cache->data;
+          $this->serializedRoutes += $routes;
+          return;
+        }
       }
       try {
         $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
