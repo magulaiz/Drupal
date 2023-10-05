@@ -175,9 +175,10 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       $contexts = [];
       foreach ($this->accessPolicies as $access_policy) {
         if ($access_policy->applies($scope)) {
-          $contexts = array_merge($contexts, $access_policy->getPersistentCacheContexts($scope));
+          $contexts[] = $access_policy->getPersistentCacheContexts($scope);
         }
       }
+      $contexts = array_merge(...$contexts);
 
       // Store the contexts in the regular static cache.
       $this->regularStatic->set($cid, $contexts);
