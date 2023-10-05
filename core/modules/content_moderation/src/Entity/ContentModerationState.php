@@ -109,7 +109,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
    *   This method should only be called as a result of saving the related
    *   content entity.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3341126
@@ -132,7 +132,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
    *   This method should only be called by code directly handling the
    *   ContentModerationState entity objects.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3341126
