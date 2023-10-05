@@ -18,7 +18,9 @@ namespace Drupal\Core\PreWarm;
  * will be called, so it can not (for example) assume that routing has been
  * completed. You should either ensure that you can prewarm your cache without
  * knowing the route or current theme, or return early if these aren't
- * available.
+ * available. You should also ensure that if your ::preWarm() method is called
+ * early in a request, that later requests to your service retrieve the cached
+ * information from memory rather than requesting it from the cache bin again.
  *
  * @see Drupal\Core\Prewarm\PreWarmerInterface
  */
