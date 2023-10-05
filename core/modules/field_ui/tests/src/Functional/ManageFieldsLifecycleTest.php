@@ -90,7 +90,8 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
   protected function updateField() {
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);    $this->assertSession()->assertEscaped($this->fieldLabel);
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
+    $this->assertSession()->assertEscaped($this->fieldLabel);
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
