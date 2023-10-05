@@ -45,10 +45,10 @@ namespace Drupal\Core\PreWarm;
  * execute some different code, either a different callback in a Fiber, or in
  * the case of DrupalKernel::handle(), this prewarming service.
  *
- * This implementation takes the list of prewarmable services, and picks one at
- * random. By choosing the service at random, it increases the likelihood that
- * when multiple requests all try to prewarm at the same time, that they'll try
- * to prewarm different things. If we always chose the service to prewarm
+ * The default implementation takes the list of prewarmable services, and picks
+ * one at random. By choosing the service at random, it increases the likelihood
+ * that when multiple requests all try to prewarm at the same time, that they'll
+ * try to prewarm different things. If we always chose the service to prewarm
  * sequentially, we could end up reproducing the cache stampede situation.
  *
  * @see Drupal\Core\PreWarm\PreWarmableInterface

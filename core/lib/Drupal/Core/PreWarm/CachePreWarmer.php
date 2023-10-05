@@ -3,7 +3,6 @@
 namespace Drupal\Core\PreWarm;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\DestructableInterface;
 
 // cspell:ignore ABCDEF FCDABE BEDAFC
 
@@ -37,7 +36,7 @@ use Drupal\Core\DestructableInterface;
  * @see Drupal\Core\LockBackendAbstract::wait()
  * @see Drupal\Core\Routing\RouteProvider::preLoadRoutes()
  */
-class CachePreWarmer implements CachePreWarmerInterface, DestructableInterface {
+class CachePreWarmer implements CachePreWarmerInterface {
 
   /**
    * Whether to prewarm caches at the end of the request.
@@ -55,13 +54,6 @@ class CachePreWarmer implements CachePreWarmerInterface, DestructableInterface {
   protected array $calledServices = [];
 
   public function __construct(protected readonly ClassResolverInterface $classResolver, protected readonly array $serviceIds) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setPreWarmNeeded(): void {
-    $this->needsPreWarming = TRUE;
-  }
 
   /**
    * {@inheritdoc}
@@ -92,15 +84,6 @@ class CachePreWarmer implements CachePreWarmerInterface, DestructableInterface {
       $service = $this->classResolver->getInstanceFromDefinition($candidates[$key]);
       unset($candidates[$key]);
       $service->preWarm();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function destruct(): void {
-    if ($this->needsPreWarming) {
-      $this->preWarmAllCaches();
     }
   }
 
