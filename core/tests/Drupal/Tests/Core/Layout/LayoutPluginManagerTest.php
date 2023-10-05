@@ -263,9 +263,9 @@ EOS;
    */
   public function testGetSortedDefinitions() {
     $expected = [
-      'module_a_provided_layout',
       'plugin_provided_layout',
       'theme_a_provided_layout',
+      'module_a_provided_layout',
     ];
 
     $layout_definitions = $this->layoutPluginManager->getSortedDefinitions();
@@ -279,8 +279,8 @@ EOS;
   public function testGetGroupedDefinitions() {
     $category_expected = [
       'Columns: 1' => [
-        'module_a_provided_layout',
         'plugin_provided_layout',
+        'module_a_provided_layout',
       ],
       'Columns: 2' => [
         'theme_a_provided_layout',
@@ -308,6 +308,7 @@ module_a_provided_layout:
   theme_hook: onecol
   path: layouts
   library: module_a/onecol
+  weight: 10
   regions:
     top:
       label: Top region
