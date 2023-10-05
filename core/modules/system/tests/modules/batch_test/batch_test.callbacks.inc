@@ -104,6 +104,13 @@ function _batch_test_callback_7($id, $sleep, &$context) {
   $context['results'][7][] = $id;
 }
 
+function _batch_test_callback_8(bool $throw_exception): void {
+  usleep(500);
+  if ($throw_exception) {
+    throw new Exception('Exception in batch');
+  }
+}
+
 /**
  * Implements callback_batch_operation().
  *

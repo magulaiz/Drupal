@@ -117,6 +117,15 @@ class ProcessingTest extends BrowserTestBase {
     foreach ($batch['sets'] as $index => $batch_set) {
       $this->assertEquals('drupal_batch:' . $batch['id'] . ':' . $index, $batch_set['queue']['name']);
     }
+
+    $edit = ['batch' => 'batch_8'];
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->linkExists('the error page');
+    $this->clickLink('the error page');
+    $this->assertSession()->responseContains('Exception in batch');
+    $this->assertSession()->assertNoEscaped('<');
+
     // Ensure correct order of the nested batches. We reset the indexes in
     // order to directly access the batches by their order.
     $batch_sets = array_values($batch['sets']);
