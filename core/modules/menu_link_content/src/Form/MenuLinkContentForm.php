@@ -95,11 +95,19 @@ class MenuLinkContentForm extends ContentEntityForm {
 
     if ($this->entity->isNew()) {
       $form += $this->buildMenuFormElements($form, $form_state, $all_menu_links);
+      $form_state->set('menu_parent_menu_add', $form['menu_parent_menu']);
+      $form_state->set('menu_parent_add', $form['menu_parent']);
       unset($form['menu_parent_menu']);
 
     }
     else {
-      $form += $this->buildMenuFormElements($form, $form_state, $all_menu_links);
+      if ($form_state->get('menu_parent_menu_add') || $form_state->get('menu_parent_add')) {
+        $form['menu_parent_menu'] = $form_state->get('menu_parent_menu_add');
+        $form['menu_parent'] = $form_state->get('menu_parent_add');
+      }
+      else {
+        $form += $this->buildMenuFormElements($form, $form_state, $all_menu_links);
+      }
     }
 
     return $form;
