@@ -119,7 +119,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     // Update the menu link.
     $this->drupalGet("admin/structure/menu/link/views_view:views.test_page_display_menu.page_3/edit");
-    $this->getSession()->getPage()->findField('menu_parent')->selectOption('tools:');
+    $this->getSession()->getPage()->findField('select_list')->selectOption('tools:');
     $this->submitForm(['title' => 'New title'], 'Save');
 
     $this->drupalGet('<front>');
