@@ -1148,6 +1148,6 @@ function template_preprocess_views_mini_pager(&$variables) {
  * theme registry cache!
  *
  * @ingroup views_overview
- * @see \Drupal\views\ViewExecutable::buildThemeFunctions()
+ * @see \Drupal\views\ViewExecutable::themeSuggestions()
  * @}
  */

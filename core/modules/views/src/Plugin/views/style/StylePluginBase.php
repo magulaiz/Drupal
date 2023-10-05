@@ -444,8 +444,9 @@ abstract class StylePluginBase extends PluginBase {
    */
   protected function renderRowGroup(array $rows = []) {
     return [
-      '#theme' => $this->themeFunctions(),
+      '#theme' => $this->definition['theme'],
       '#view' => $this->view,
+      '#context' => ['plugin' => $this],
       '#rows' => $rows,
     ];
   }
@@ -482,7 +483,6 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function renderGroupingSets($sets) {
     $output = [];
-    $theme_functions = $this->view->buildThemeFunctions($this->groupingTheme);
     foreach ($sets as $set) {
       $level = $set['level'] ?? 0;
 
@@ -490,8 +490,9 @@ abstract class StylePluginBase extends PluginBase {
       // Render as a grouping set.
       if (is_array($row) && isset($row['group'])) {
         $single_output = [
-          '#theme' => $theme_functions,
+          '#theme' => $this->groupingTheme,
           '#view' => $this->view,
+          '#context' => ['view' => $this->view],
           '#grouping' => $this->options['grouping'][$level],
           '#rows' => $set['rows'],
         ];

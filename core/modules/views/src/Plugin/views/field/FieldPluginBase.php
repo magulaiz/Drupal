@@ -143,6 +143,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if (!isset($this->options['exclude'])) {
       $this->options['exclude'] = '';
     }
+
+    // Provide a default theme hook if none was explicitly specified.
+    if (!isset($this->definition['theme'])) {
+      $this->definition['theme'] = 'views_view_field';
+    }
   }
 
   /**
@@ -1776,8 +1781,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   public function theme(ResultRow $values) {
     $renderer = $this->getRenderer();
     $build = [
-      '#theme' => $this->themeFunctions(),
+      '#theme' => $this->definition['theme'],
       '#view' => $this->view,
+      '#context' => ['plugin' => $this],
       '#field' => $this,
       '#row' => $values,
     ];
@@ -1793,7 +1799,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
   public function themeFunctions() {
     $themes = [];
-    $hook = 'views_view_field';
+    $hook = $this->definition['theme'];
 
     $display = $this->view->display_handler->display;
 

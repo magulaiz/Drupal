@@ -43,8 +43,9 @@ class SearchRow extends RowPluginBase {
    */
   public function render($row) {
     return [
-      '#theme' => $this->themeFunctions(),
+      '#theme' => $this->definition['theme'],
       '#view' => $this->view,
+      '#context' => ['plugin' => $this],
       '#options' => $this->options,
       '#row' => $row,
     ];

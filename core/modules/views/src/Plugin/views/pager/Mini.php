@@ -94,7 +94,8 @@ class Mini extends SqlBase {
       3 => $this->options['tags']['next'],
     ];
     return [
-      '#theme' => $this->themeFunctions(),
+      '#theme' => $this->definition['theme'],
+      '#context' => ['plugin' => $this],
       '#tags' => $tags,
       '#element' => $this->options['id'],
       '#parameters' => $input,
