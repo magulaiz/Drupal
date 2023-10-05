@@ -52,7 +52,6 @@ trait MenuLinkTrait {
     $selected_menu = $form_state->getValue('select_list');
 
     $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
-    $form_state->getValue('select_list');
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
   }
@@ -93,7 +92,7 @@ trait MenuLinkTrait {
       ],
     ];
 
-    $menu_of_selected_type = ($form_state->get('test') !== NULL) ? $form_state->get('updated_parent_list') : $this->getParentLinkSelectList($this->allMenuLinks, array_key_first($parent_menu_links));
+    $menu_of_selected_type = ($form_state->get('updated_parent_list') !== NULL) ? $form_state->get('updated_parent_list') : $this->getParentLinkSelectList($this->allMenuLinks, array_key_first($parent_menu_links));
 
     $form['menu_parent'] = [
       '#type' => 'select',
