@@ -21,6 +21,7 @@
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.4",
         "drupal/coder": "^8.3.10",
+        "ekino/phpstan-banned-code": "^1.0",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
         "mglaman/phpstan-drupal": "^1.2",

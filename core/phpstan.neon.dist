@@ -30,6 +30,15 @@ parameters:
     # Below extends on purpose a non existing class for testing.
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
 
+  banned_code:
+    nodes:
+      -
+        type: Expr_FuncCall
+        functions:
+          - md5
+          - sha1
+          - uniqid
+
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static#"
@@ -39,3 +48,6 @@ parameters:
     - "#^Plugin definitions cannot be altered.#"
     - "#^Missing cache backend declaration for performance.#"
     - "#^Class .* extends @internal class#"
+
+    # Ignore too much opinionated errors from ekino/phpstan-banned-code.
+    - "#Should not use node with type .*, please change the code#"
