@@ -263,9 +263,9 @@ EOS;
    */
   public function testGetSortedDefinitions() {
     $expected = [
+      'module_a_provided_layout',
       'plugin_provided_layout',
       'theme_a_provided_layout',
-      'module_a_provided_layout',
     ];
 
     $layout_definitions = $this->layoutPluginManager->getSortedDefinitions();
@@ -279,8 +279,8 @@ EOS;
   public function testGetGroupedDefinitions() {
     $category_expected = [
       'Columns: 1' => [
-        'plugin_provided_layout',
         'module_a_provided_layout',
+        'plugin_provided_layout',
       ],
       'Columns: 2' => [
         'theme_a_provided_layout',
@@ -343,6 +343,7 @@ use Drupal\Core\Layout\LayoutDefault;
  *   id = "plugin_provided_layout",
  *   label = @Translation("Layout plugin"),
  *   category = @Translation("Columns: 1"),
+ *   weight = 8,
  *   description = @Translation("Test layout"),
  *   path = "core/lib/Drupal/Core",
  *   template = "templates/plugin-provided-layout",
