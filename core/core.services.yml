@@ -301,7 +301,6 @@ services:
     arguments: ['@class_resolver']
     tags:
       - { name: service_id_collector, tag: cache_prewarmable }
-      - { name: needs_destruction }
   Drupal\Core\PreWarm\CachePreWarmerInterface: '@cache_prewarmer'
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
