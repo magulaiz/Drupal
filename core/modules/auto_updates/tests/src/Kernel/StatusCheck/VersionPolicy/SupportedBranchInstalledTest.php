@@ -77,7 +77,7 @@ class SupportedBranchInstalledTest extends AutoUpdatesKernelTestBase {
   public function testSupportedBranchInstalled(string $installed_version, array $allow_minor_updates, array $expected_errors): void {
     $this->setCoreVersion($installed_version);
     $this->setReleaseMetadata([
-      'drupal' => __DIR__ . '/../../../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml',
+      'drupal' => __DIR__ . '/../../../../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml',
     ]);
 
     $rule = SupportedBranchInstalled::create($this->container);
