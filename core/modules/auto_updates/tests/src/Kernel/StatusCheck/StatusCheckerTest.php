@@ -225,7 +225,7 @@ class StatusCheckerTest extends AutoUpdatesKernelTestBase {
     $this->getStageFixtureManipulator()->setCorePackageVersion('9.8.1');
     $this->setCoreVersion('9.8.0');
     $this->setReleaseMetadata([
-      'drupal' => __DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml',
+      'drupal' => __DIR__ . '/../../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml',
     ]);
     $this->container->get('module_installer')->install(['auto_updates']);
 
