@@ -1,0 +1,10 @@
+ban.ban_whitelisted_ip.*:
+  type: config_entity
+  label: 'Whitelisted IPs'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    whitelistedIp:
+      type: string
+      label: 'whitelistedIp'

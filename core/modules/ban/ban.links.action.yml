@@ -1,0 +1,5 @@
+ban.whitelist.add_form:
+  route_name: 'entity.ban_whitelisted_ip.add_form'
+  title: 'Add Whitelisted IP'
+  appears_on:
+    - entity.ban_whitelisted_ip.collection

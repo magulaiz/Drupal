@@ -14,3 +14,35 @@ ban.delete:
     _title: 'Delete IP address'
   requirements:
     _permission: 'ban IP addresses'
+
+entity.ban_whitelisted_ip.collection:
+  path: '/admin/config/people/ban-whitelist'
+  defaults:
+    _entity_list: 'ban_whitelisted_ip'
+    _title: 'Whitelisted IP configuration'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.ban_whitelisted_ip.add_form:
+  path: '/admin/config/people/ban-whitelist/add'
+  defaults:
+    _entity_form: 'ban_whitelisted_ip.add'
+    _title: 'Add Whitelisted IP'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.ban_whitelisted_ip.edit_form:
+  path: '/admin/config/people/ban-whitelist/{ban_whitelisted_ip}'
+  defaults:
+    _entity_form: 'ban_whitelisted_ip.edit'
+    _title: 'Edit Whitelisted IP'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.ban_whitelisted_ip.delete_form:
+  path: '/admin/config/people/ban-whitelist/{ban_whitelisted_ip}/delete'
+  defaults:
+    _entity_form: 'ban_whitelisted_ip.delete'
+    _title: 'Delete Whitelisted IP'
+  requirements:
+    _permission: 'administer site configuration'

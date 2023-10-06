@@ -4,3 +4,9 @@ ban.admin_page:
   route_name: ban.admin_page
   weight: 10
   parent: user.admin_index
+
+ban.whitelist.collection:
+  title: 'Ban - whitelisted IPs'
+  parent: user.admin_index
+  description: 'Configure whitelisted IP adresses'
+  route_name: entity.ban_whitelisted_ip.collection
