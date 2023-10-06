@@ -191,9 +191,9 @@ function _batch_test_batch_7() {
 }
 
 /**
- * Batch 0: Does nothing.
+ * Batch 8: Throws an exception.
  */
-function _batch_test_batch_8() {
+function _batch_test_batch_8(): array {
   $batch_builder = (new BatchBuilder())
     ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->addOperation('_batch_test_callback_8', [FALSE])
