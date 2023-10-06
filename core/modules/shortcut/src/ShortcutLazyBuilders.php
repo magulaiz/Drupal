@@ -4,14 +4,14 @@ namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 
 /**
  * Lazy builders for the shortcut module.
  */
-class ShortcutLazyBuilders implements TrustedCallbackInterface {
+class ShortcutLazyBuilders {
 
   /**
    * The renderer service.
@@ -35,13 +35,6 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['lazyLinks'];
-  }
-
-  /**
    * #lazy_builder callback; builds shortcut toolbar links.
    *
    * @param bool $show_configure_link
@@ -50,6 +43,7 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
    * @return array
    *   A renderable array of shortcut links.
    */
+  #[TrustedCallback]
   public function lazyLinks(bool $show_configure_link = TRUE) {
     $shortcut_set = $this->entityTypeManager->getStorage('shortcut_set')
       ->getDisplayedToUser($this->currentUser);

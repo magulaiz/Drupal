@@ -10,8 +10,8 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\VariationCache;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Lock\NullLockBackend;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\State;
 use Drupal\Core\Cache\Cache;
 
@@ -548,11 +548,12 @@ class RendererBubblingTest extends RendererTestBase {
 }
 
 
-class BubblingTest implements TrustedCallbackInterface {
+class BubblingTest {
 
   /**
    * #pre_render callback for testBubblingWithPrerender().
    */
+  #[TrustedCallback]
   public static function bubblingPreRender($elements) {
     $elements += [
       'child_cache_context' => [
@@ -592,6 +593,7 @@ class BubblingTest implements TrustedCallbackInterface {
   /**
    * #pre_render callback for testBubblingWithPrerender().
    */
+  #[TrustedCallback]
   public static function bubblingNestedPreRenderUncached($elements) {
     \Drupal::state()->set('bubbling_nested_pre_render_uncached', TRUE);
     $elements['#markup'] = 'Nested!';
@@ -601,6 +603,7 @@ class BubblingTest implements TrustedCallbackInterface {
   /**
    * #pre_render callback for testBubblingWithPrerender().
    */
+  #[TrustedCallback]
   public static function bubblingNestedPreRenderCached($elements) {
     \Drupal::state()->set('bubbling_nested_pre_render_cached', TRUE);
     return $elements;
@@ -609,6 +612,7 @@ class BubblingTest implements TrustedCallbackInterface {
   /**
    * #lazy_builder callback for testBubblingWithPrerender().
    */
+  #[TrustedCallback]
   public static function bubblingPlaceholder($foo, $baz) {
     return [
       '#markup' => 'Placeholder!' . $foo . $baz,
@@ -618,6 +622,7 @@ class BubblingTest implements TrustedCallbackInterface {
   /**
    * #pre_render callback for testOverWriteCacheKeys().
    */
+  #[TrustedCallback]
   public static function bubblingCacheOverwritePrerender($elements) {
     // Overwrite the #cache entry with new data.
     $elements['#cache'] = [
@@ -625,13 +630,6 @@ class BubblingTest implements TrustedCallbackInterface {
     ];
     $elements['#markup'] = 'Setting cache keys just now!';
     return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['bubblingPreRender', 'bubblingNestedPreRenderUncached', 'bubblingNestedPreRenderCached', 'bubblingPlaceholder', 'bubblingCacheOverwritePrerender'];
   }
 
 }

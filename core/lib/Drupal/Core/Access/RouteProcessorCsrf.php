@@ -4,14 +4,14 @@ namespace Drupal\Core\Access;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
 use Symfony\Component\Routing\Route;
 
 /**
  * Processes the outbound route to handle the CSRF token.
  */
-class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCallbackInterface {
+class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
 
   /**
    * The CSRF token generator.
@@ -70,6 +70,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
    * @return array
    *   A renderable array representing the CSRF token.
    */
+  #[TrustedCallback]
   public function renderPlaceholderCsrfToken($path) {
     return [
       '#markup' => $this->csrfToken->get($path),
@@ -80,13 +81,6 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
         ],
       ],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderPlaceholderCsrfToken'];
   }
 
 }

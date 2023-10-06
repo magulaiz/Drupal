@@ -14,7 +14,7 @@ use Drupal\Core\Cache\VariationCache;
 use Drupal\Core\Render\PlaceholderGenerator;
 use Drupal\Core\Render\PlaceholderingRenderCache;
 use Drupal\Core\Render\Renderer;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -287,7 +287,7 @@ abstract class RendererTestBase extends UnitTestCase {
 }
 
 
-class PlaceholdersTest implements TrustedCallbackInterface {
+class PlaceholdersTest {
 
   /**
    * #lazy_builder callback; attaches setting, generates markup.
@@ -301,6 +301,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function callback($animal, $use_animal_as_array_key = FALSE) {
     $value = $animal;
     if ($use_animal_as_array_key) {
@@ -325,6 +326,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function callbackPerUser($animal) {
     // As well as adding the user cache context, additionally suspend the
     // current Fiber if there is one.
@@ -345,6 +347,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function callbackTagCurrentTemperature($animal) {
     $build = static::callback($animal);
     $build['#cache']['tags'][] = 'current-temperature';
@@ -357,15 +360,9 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return bool
    *   TRUE, which is not a valid return value for a lazy builder.
    */
+  #[TrustedCallback]
   public static function callbackNonArrayReturn() {
     return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback', 'callbackNonArrayReturn'];
   }
 
 }

@@ -17,7 +17,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeInterface;
@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: 'node_search',
   title: new TranslatableMarkup('Content'),
 )]
-class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface, TrustedCallbackInterface {
+class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface {
 
   /**
    * The current database connection.
@@ -425,6 +425,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    * @return array
    *   The modified build array.
    */
+  #[TrustedCallback]
   public function removeSubmittedInfo(array $build) {
     unset($build['created']);
     unset($build['uid']);
@@ -866,13 +867,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         unset($this->configuration['rankings'][$var]);
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['removeSubmittedInfo'];
   }
 
 }

@@ -2,7 +2,7 @@
 
 namespace Drupal\editor;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Component\Plugin\PluginManagerInterface;
@@ -11,7 +11,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 /**
  * Defines a service for Text Editor's render elements.
  */
-class Element implements TrustedCallbackInterface {
+class Element {
 
   /**
    * The Text Editor plugin manager service.
@@ -31,15 +31,9 @@ class Element implements TrustedCallbackInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderTextFormat'];
-  }
-
-  /**
    * Additional #pre_render callback for 'text_format' elements.
    */
+  #[TrustedCallback]
   public function preRenderTextFormat(array $element) {
     // Allow modules to programmatically enforce no client-side editor by
     // setting the #editor property to FALSE.

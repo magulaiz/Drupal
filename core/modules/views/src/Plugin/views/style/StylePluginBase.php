@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\style;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
@@ -744,15 +745,6 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    $callbacks = parent::trustedCallbacks();
-    $callbacks[] = 'elementPreRenderRow';
-    return $callbacks;
-  }
-
-  /**
    * #pre_render callback for view row field rendering.
    *
    * @see self::render()
@@ -763,6 +755,7 @@ abstract class StylePluginBase extends PluginBase {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public function elementPreRenderRow(array $data) {
     // Render row fields.
     foreach ($this->view->field as $id => $field) {

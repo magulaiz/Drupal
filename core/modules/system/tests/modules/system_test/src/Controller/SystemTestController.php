@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\LocalRedirectResponse;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller routines for system_test routes.
  */
-class SystemTestController extends ControllerBase implements TrustedCallbackInterface {
+class SystemTestController extends ControllerBase {
 
   /**
    * The lock service.
@@ -281,6 +282,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * Sets a cache tag on an element to help test #pre_render and cache tags.
    */
+  #[TrustedCallback]
   public static function preRenderCacheTags($elements) {
     $elements['#cache']['tags'][] = 'pre_render';
     return $elements;
@@ -448,13 +450,6 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    */
   public function respondWithTrustedRedirectResponse(int $status_code): TrustedRedirectResponse {
     return new TrustedRedirectResponse('/llamas', $status_code);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderCacheTags'];
   }
 
   /**

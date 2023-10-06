@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\user\Entity\Role;
@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for the user account forms.
  */
-abstract class AccountForm extends ContentEntityForm implements TrustedCallbackInterface {
+abstract class AccountForm extends ContentEntityForm {
 
   /**
    * The language manager.
@@ -314,13 +314,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['alterPreferredLangcodeDescription'];
-  }
-
-  /**
    * Alters the preferred language widget description.
    *
    * @param array $element
@@ -329,6 +322,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    * @return array
    *   The preferred language form element.
    */
+  #[TrustedCallback]
   public function alterPreferredLangcodeDescription(array $element) {
     // Only add to the description if the form element has a description.
     if (isset($element['#description'])) {

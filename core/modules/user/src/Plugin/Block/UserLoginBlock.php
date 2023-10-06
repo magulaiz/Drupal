@@ -6,7 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   admin_label: new TranslatableMarkup("User login"),
   category: new TranslatableMarkup("Forms")
 )]
-class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
+class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   use RedirectDestinationTrait;
 
@@ -159,19 +159,13 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
    *
    * @see \Drupal\Core\Form\FormBuilder::renderPlaceholderFormAction()
    */
+  #[TrustedCallback]
   public static function renderPlaceholderFormAction() {
     return [
       '#type' => 'markup',
       '#markup' => UrlHelper::filterBadProtocol(Url::fromRoute('<current>', [], ['query' => \Drupal::destination()->getAsArray(), 'external' => FALSE])->toString()),
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderPlaceholderFormAction'];
   }
 
 }

@@ -6,7 +6,7 @@ use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -26,7 +26,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'text_with_summary',
   ],
 )]
-class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInterface {
+class TextTrimmedFormatter extends FormatterBase {
 
   /**
    * {@inheritdoc}
@@ -118,16 +118,10 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
    * @see filter_pre_render_text()
    * @see text_summary()
    */
+  #[TrustedCallback]
   public static function preRenderSummary(array $element) {
     $element['#markup'] = text_summary($element['#markup'], $element['#format'], $element['#text_summary_trim_length']);
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderSummary'];
   }
 
 }

@@ -9,13 +9,13 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\RenderContext;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\toolbar\Ajax\SetSubtreesCommand;
 
 /**
  * Defines a controller for the toolbar module.
  */
-class ToolbarController extends ControllerBase implements TrustedCallbackInterface {
+class ToolbarController extends ControllerBase {
 
   /**
    * Constructs a ToolbarController object.
@@ -78,6 +78,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
+  #[TrustedCallback]
   public static function preRenderAdministrationTray(array $element) {
     $menu_tree = \Drupal::service('toolbar.menu_tree');
     // Load the administrative menu. The first level is the "Administration"
@@ -102,6 +103,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    *
    * @internal
    */
+  #[TrustedCallback]
   public static function preRenderGetRenderedSubtrees(array $data) {
     $menu_tree = \Drupal::service('toolbar.menu_tree');
     $renderer = \Drupal::service('renderer');
@@ -147,13 +149,6 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
     $data['#subtrees'] = $subtrees;
 
     return $data;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderAdministrationTray', 'preRenderGetRenderedSubtrees'];
   }
 
 }

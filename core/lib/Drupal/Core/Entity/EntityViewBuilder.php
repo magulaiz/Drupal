@@ -10,7 +10,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup entity_api
  */
-class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterface, EntityViewBuilderInterface, TrustedCallbackInterface {
+class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterface, EntityViewBuilderInterface {
 
   /**
    * The type of entities for which this view builder is instantiated.
@@ -135,13 +135,6 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
-    return ['build', 'buildMultiple'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function viewMultiple(array $entities = [], $view_mode = 'full', $langcode = NULL) {
     $build_list = [
       '#sorted' => TRUE,
@@ -234,6 +227,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
+  #[TrustedCallback]
   public function build(array $build) {
     $build_list = [$build];
     $build_list = $this->buildMultiple($build_list);
@@ -258,6 +252,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
+  #[TrustedCallback]
   public function buildMultiple(array $build_list) {
     // Build the view modes and display objects.
     $view_modes = [];

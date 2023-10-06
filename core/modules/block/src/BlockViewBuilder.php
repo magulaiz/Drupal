@@ -12,12 +12,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a Block view builder.
  */
-class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInterface {
+class BlockViewBuilder extends EntityViewBuilder {
 
   /**
    * {@inheritdoc}
@@ -137,13 +137,6 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRender', 'lazyBuilder'];
-  }
-
-  /**
    * #lazy_builder callback; builds a #pre_render-able block.
    *
    * @param $entity_id
@@ -154,6 +147,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
    * @return array
    *   A render array with a #pre_render callback to render the block.
    */
+  #[TrustedCallback]
   public static function lazyBuilder($entity_id, $view_mode) {
     return static::buildPreRenderableBlock(Block::load($entity_id), \Drupal::service('module_handler'));
   }
@@ -167,6 +161,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
    * - if there is content, moves the contextual links from the block content to
    *   the block itself.
    */
+  #[TrustedCallback]
   public static function preRender($build) {
     $content = $build['#block']->getPlugin()->build();
     // Remove the block entity from the render array, to ensure that blocks

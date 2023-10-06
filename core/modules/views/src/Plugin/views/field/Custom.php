@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsField;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 
@@ -58,15 +59,6 @@ class Custom extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
-    $callbacks = parent::trustedCallbacks();
-    $callbacks[] = 'preRenderCustomForm';
-    return $callbacks;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function render(ResultRow $values) {
     // Return the text, so the code never thinks the value is empty.
     return ViewsRenderPipelineMarkup::create(Xss::filterAdmin($this->options['alter']['text']));
@@ -81,6 +73,7 @@ class Custom extends FieldPluginBase {
    * @return array
    *   The modified form build array.
    */
+  #[TrustedCallback]
   public function preRenderCustomForm($form) {
     $form['text'] = $form['alter']['text'];
     $form['help'] = $form['alter']['help'];

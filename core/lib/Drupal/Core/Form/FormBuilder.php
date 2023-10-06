@@ -15,7 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\FileBag;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ingroup form_api
  */
-class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface, TrustedCallbackInterface {
+class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface {
 
   /**
    * The module handler.
@@ -644,6 +644,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @return array
    *   A renderable array representing the form action.
    */
+  #[TrustedCallback]
   public function renderPlaceholderFormAction() {
     return [
       '#type' => 'markup',
@@ -662,6 +663,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @return array
    *   A renderable array containing the CSRF token.
    */
+  #[TrustedCallback]
   public function renderFormTokenPlaceholder($placeholder) {
     return [
       '#markup' => $this->csrfToken->get($placeholder),
@@ -1408,13 +1410,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderPlaceholderFormAction', 'renderFormTokenPlaceholder'];
   }
 
 }

@@ -69,6 +69,7 @@ trait DoTrustedCallbackTrait {
         $safe_callback = TRUE;
       }
       elseif (is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
+        @trigger_error('Usage of the ' . TrustedCallbackInterface::class . " is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute for the method. See https://www.drupal.org/node/3349470", E_USER_DEPRECATED);
         if (is_object($object_or_classname)) {
           $methods = $object_or_classname->trustedCallbacks();
         }

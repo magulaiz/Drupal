@@ -35,10 +35,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
     };
 
     $tests['closure'] = [$closure];
-    $tests['TrustedCallbackInterface_object'] = [[new TrustedMethods(), 'callback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_object_attribute'] = [[new TrustedMethods(), 'attributeCallback'], TrustedInterface::class];
-    $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedMethods::callback', TrustedInterface::class];
-    $tests['TrustedCallbackInterface_static_array'] = [[TrustedMethods::class, 'callback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_array_attribute'] = [[TrustedMethods::class, 'attributeCallback'], TrustedInterface::class];
     $tests['extra_trusted_interface_object'] = [[new TrustedObject(), 'callback'], TrustedInterface::class];
     $tests['extra_trusted_interface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedObject::callback', TrustedInterface::class];
@@ -66,6 +63,27 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
     $tests['untrusted_object_static_string'] = ['\Drupal\Tests\Core\Security\UntrustedObject::callback', TrustedInterface::class];
     $tests['untrusted_object_static_array'] = [[UntrustedObject::class, 'callback'], TrustedInterface::class];
     $tests['invokable_untrusted_object_static_array'] = [new InvokableUntrustedObject(), TrustedInterface::class];
+    return $tests;
+  }
+
+  /**
+   * @covers ::doTrustedCallback
+   * @dataProvider providerTestDeprecatedTrustedCallbacks
+   * @group legacy
+   */
+  public function testDeprecatedTrustedCallbacks($callback, $extra_trusted_interface = NULL) {
+    $this->expectDeprecation('Usage of the Drupal\Core\Security\TrustedCallbackInterface is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute for the method. See https://www.drupal.org/node/3349470');
+    $return = $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface);
+    $this->assertSame('test', $return);
+  }
+
+  /**
+   * Data provider for ::testDeprecatedTrustedCallbacks().
+   */
+  public function providerTestDeprecatedTrustedCallbacks() {
+    $tests['TrustedCallbackInterface_object'] = [[new DeprecatedTrustedMethod(), 'callback'], TrustedInterface::class];
+    $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\DeprecatedTrustedMethod::callback', TrustedInterface::class];
+    $tests['TrustedCallbackInterface_static_array'] = [[DeprecatedTrustedMethod::class, 'callback'], TrustedInterface::class];
     return $tests;
   }
 
@@ -126,15 +144,7 @@ class InvokableUntrustedObject {
 
 }
 
-class TrustedMethods implements TrustedCallbackInterface {
-
-  public static function trustedCallbacks() {
-    return ['callback'];
-  }
-
-  public static function callback() {
-    return 'test';
-  }
+class TrustedMethods {
 
   #[TrustedCallback]
   public static function attributeCallback() {
@@ -142,6 +152,18 @@ class TrustedMethods implements TrustedCallbackInterface {
   }
 
   public static function unTrustedCallback() {
+    return 'test';
+  }
+
+}
+
+class DeprecatedTrustedMethod implements TrustedCallbackInterface {
+
+  public static function trustedCallbacks() {
+    return ['callback'];
+  }
+
+  public static function callback() {
     return 'test';
   }
 

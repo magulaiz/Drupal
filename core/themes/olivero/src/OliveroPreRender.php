@@ -2,18 +2,19 @@
 
 namespace Drupal\olivero;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Implements trusted prerender callbacks for the Olivero theme.
  *
  * @internal
  */
-class OliveroPreRender implements TrustedCallbackInterface {
+class OliveroPreRender {
 
   /**
    * Prerender callback for text_format elements.
    */
+  #[TrustedCallback]
   public static function textFormat($element) {
     $element['format']['#attributes']['class'][] = 'filter-wrapper';
     $element['format']['format']['#wrapper_attributes']['class'][] = 'form-item--editor-format';
@@ -34,21 +35,12 @@ class OliveroPreRender implements TrustedCallbackInterface {
    * @return array
    *   The updated renderable array containing the placeholder.
    */
+  #[TrustedCallback]
   public static function messagePlaceholder(array $element) {
     if (isset($element['fallback']['#markup'])) {
       $element['fallback']['#markup'] = '<div data-drupal-messages-fallback class="hidden messages-list"></div>';
     }
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return [
-      'textFormat',
-      'messagePlaceholder',
-    ];
   }
 
 }
