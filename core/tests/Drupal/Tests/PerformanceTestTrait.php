@@ -148,7 +148,6 @@ trait PerformanceTestTrait {
           $response_count++;
         }
         $messages[] = $message;
-
       }
       // Performance entries are logged indeterminately since page loading
       // varies by request. Chrome returns a response as soon as the HTML page
