@@ -126,6 +126,7 @@ trait PerformanceTestTrait {
    */
   protected function processChromeDriverPerformanceLogs(?string $service_name): PerformanceData {
     $attempts = 0;
+    $lcp_count = 0;
     $messages = [];
     $session = $this->getSession();
     while ($attempts <= 30) {
@@ -135,6 +136,9 @@ trait PerformanceTestTrait {
       foreach ($performance_log as $entry) {
         $decoded = json_decode($entry['message'], TRUE);
         $message = $decoded['message'];
+        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
+          $lcp_count++;
+        }
         $messages[] = $message;
       }
       // If no performance log entries were returned, then nothing has happened
