@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests batch processing in form and non-form workflow.
  *
- * @group system2
+ * @group Batch
  */
 class ProcessingTest extends BrowserTestBase {
 

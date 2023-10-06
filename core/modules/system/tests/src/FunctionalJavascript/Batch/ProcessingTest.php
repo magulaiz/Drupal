@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\FunctionalJavascript\Batch;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * @group system2
+ * @group Batch
  */
 class ProcessingTest extends WebDriverTestBase {
 
