@@ -3,7 +3,7 @@
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
 _phpunit_testgroups_to_execute: &testgroups
   # Default: all of Drupal core's test suite runs.
-  testgroups: '--class "Drupal\Tests\system\Functional\Batch\ProcessingTest"'
+  testgroups: '--module systems2"'
   # Alternative: run only the tests for one particular module.
   # testgroups: '--module ckeditor5'
 build:
@@ -16,6 +16,12 @@ build:
         halt-on-fail: true
       run_tests.functional:
         types: 'PHPUnit-Functional'
+        suppress-deprecations: false
+        halt-on-fail: false
+        <<: *testgroups
+      run_tests.javascript:
+        concurrency: 15
+        types: 'PHPUnit-FunctionalJavascript'
         suppress-deprecations: false
         halt-on-fail: false
         <<: *testgroups
