@@ -141,9 +141,9 @@ trait PerformanceTestTrait {
         }
         $messages[] = $message;
       }
-      // Only check once if $service_name is not set, since
-      // largestContentfulPaint is not currently asserted on.
-      if ($lcp_count === 2 || !isset($service_name)) {
+      // If no performance log entries were returned, then nothing has happened
+      // in the past second, so stop polling.
+      if (empty($performance_log)) {
         break;
       }
       sleep(1);
