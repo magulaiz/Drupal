@@ -8,3 +8,9 @@ layercake:
       css/layout.css: {}
   dependencies:
     - core/ckeditor5
+
+fancy_off_canvas:
+  version: VERSION
+  css:
+    theme:
+      css/fancy.css: {}

@@ -1,0 +1,31 @@
+#drupal-off-canvas div,
+#drupal-off-canvas * div,
+[dir=ltr] #drupal-off-canvas div {
+  background: blue;
+}
+
+@media screen, print {
+  #drupal-off-canvas div,
+  #drupal-off-canvas * div,
+  [dir=ltr] #drupal-off-canvas div {
+    background: green;
+  }
+}
+
+@supports (display: block) {
+  #drupal-off-canvas div,
+  #drupal-off-canvas * div,
+  [dir=ltr] #drupal-off-canvas div {
+    background: yellow;
+  }
+}
+
+@supports (display: block) {
+  @media screen, print {
+    #drupal-off-canvas div,
+    #drupal-off-canvas * div,
+    [dir=ltr] #drupal-off-canvas div {
+      background: pink;
+    }
+  }
+}

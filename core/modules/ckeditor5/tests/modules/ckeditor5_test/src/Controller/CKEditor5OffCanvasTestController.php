@@ -29,6 +29,7 @@ class CKEditor5OffCanvasTestController {
       ],
     ];
     $build['#attached']['library'][] = 'core/drupal.dialog.off_canvas';
+    $build['#attached']['library'][] = 'ckeditor5_test/fancy_off_canvas';
     return $build;
   }
 
