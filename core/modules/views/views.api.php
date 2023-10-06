@@ -854,7 +854,7 @@ function hook_views_pre_render(ViewExecutable $view) {
  * structured content array, it may use this hook to add a #post_render
  * callback:
  * @code
- * // The object must implement \Drupal\Core\Security\TrustedCallbackInterface.
+ * // The method must be annotated using \Drupal\Core\Security\Attribute\TrustedCallback.
  * $output['#post_render'][] = '\Drupal\my_module\View::postRender';
  * @endcode
  *
