@@ -7,7 +7,7 @@ namespace Drupal\announcements_feed;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Url;
  *
  * @internal
  */
-final class LazyBuilders implements TrustedCallbackInterface {
+final class LazyBuilders {
 
   /**
    * Constructs LazyBuilders object.
@@ -34,6 +34,7 @@ final class LazyBuilders implements TrustedCallbackInterface {
    * @return array
    *   Render array.
    */
+  #[TrustedCallback]
   public function renderAnnouncements(): array {
     $build = [
       '#type' => 'link',
@@ -81,13 +82,6 @@ final class LazyBuilders implements TrustedCallbackInterface {
     // @see https://www.drupal.org/project/drupal/issues/2609250
     $build += $this->elementInfo->getInfo('link');
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks(): array {
-    return ['renderAnnouncements'];
   }
 
 }
