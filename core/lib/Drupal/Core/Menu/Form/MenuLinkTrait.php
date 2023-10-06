@@ -73,6 +73,7 @@ trait MenuLinkTrait {
       '#title' => $this->t('Menu'),
       '#description' => $this->t('Select the menu'),
       '#options' => $parent_menu_links,
+      '#default_value' => ($this->entity !== NULL) ? $this->entity->getMenuName() . ':' : $this->menuLink->getMenuName() . ':',
       '#ajax' => [
         'callback' => [$this, 'updateParentLinks'],
         'wrapper' => 'ajax-updated-section',
@@ -92,13 +93,14 @@ trait MenuLinkTrait {
       ],
     ];
 
-    $menu_of_selected_type = ($form_state->get('updated_parent_list') !== NULL) ? $form_state->get('updated_parent_list') : $this->getParentLinkSelectList($this->allMenuLinks, array_key_first($parent_menu_links));
+    $menu_of_selected_type = ($form_state->get('updated_parent_list') !== NULL) ? $form_state->get('updated_parent_list') : $this->getParentLinkSelectList($this->allMenuLinks, ($this->menuLink !== NULL) ? $this->menuLink->getMenuName() . ':' : $this->entity->getMenuName() . ':');
 
     $form['menu_parent'] = [
       '#type' => 'select',
       '#title' => $this->t('Parent link'),
       '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
       '#value' => $this->allMenuLinks,
+      '#default_value' => ($this->menuLink !== NULL) ? $this->menuLink->getMenuName() . ':' : $this->entity->getMenuName() . ':',
       '#options' => $menu_of_selected_type,
       '#prefix' => '<div id="ajax-updated-section">',
       '#suffix' => '</div>',
