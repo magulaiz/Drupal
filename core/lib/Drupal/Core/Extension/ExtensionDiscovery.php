@@ -442,6 +442,10 @@ class ExtensionDiscovery {
       if (empty($extension_arguments) || !is_array($extension_arguments)) {
         // Determine extension type from info file.
         $type = FALSE;
+        // Skip this loop iteration if this is not a regular file.
+        if (!$fileinfo->isFile()) {
+          continue;
+        }
         $file = $fileinfo->openFile('r');
         while (!$type && !$file->eof()) {
           preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
