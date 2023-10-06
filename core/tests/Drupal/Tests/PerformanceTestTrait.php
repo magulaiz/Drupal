@@ -142,8 +142,9 @@ trait PerformanceTestTrait {
         $messages[] = $message;
       }
       // If no performance log entries were returned, then nothing has happened
-      // in the past second, so stop polling.
-      if (empty($performance_log)) {
+      // in the past second, so stop polling once we've received
+      // a largestContentfulPaint::Candidate event.
+      if ($lcp_count && empty($performance_log)) {
         break;
       }
       sleep(1);
