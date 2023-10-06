@@ -105,6 +105,17 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
 
         $route = new Route(
+          "$path/fields/add-field/{selected_field_type}",
+          [
+            '_form' => '\Drupal\field_ui\Form\FieldStorageAddSubfieldForm',
+            '_title' => 'Add Sub-field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_storage_config_add_sub_$entity_type_id", $route);
+
+        $route = new Route(
           "$path/reset/{entity_type}/{field_name}",
           [
             '_controller' => FieldTempStoreDeleteController::class . '::deleteTempStore',
