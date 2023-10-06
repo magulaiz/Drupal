@@ -150,14 +150,14 @@
     const readyStateText =
       xmlhttp.status === 0
         ? `\n${Drupal.t('ReadyState: !readyState', {
-          '!readyState': xmlhttp.readyState,
-        })}`
+            '!readyState': xmlhttp.readyState,
+          })}`
         : '';
 
     customMessage = customMessage
       ? `\n${Drupal.t('CustomMessage: !customMessage', {
-        '!customMessage': customMessage,
-      })}`
+          '!customMessage': customMessage,
+        })}`
       : '';
 
     /**
@@ -1217,18 +1217,18 @@
    */
   Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) =>
     (response.effect || ajax.effect) !== 'none' &&
-      $newContent.filter(
-        (i) =>
-          !(
-            // We can not consider HTML comments or whitespace text as separate
-            // roots, since they do not cause visual regression with effect.
-            (
-              $newContent[i].nodeName === '#comment' ||
-              ($newContent[i].nodeName === '#text' &&
-                /^(\s|\n|\r)*$/.test($newContent[i].textContent))
-            )
-          ),
-      ).length > 1
+    $newContent.filter(
+      (i) =>
+        !(
+          // We can not consider HTML comments or whitespace text as separate
+          // roots, since they do not cause visual regression with effect.
+          (
+            $newContent[i].nodeName === '#comment' ||
+            ($newContent[i].nodeName === '#text' &&
+              /^(\s|\n|\r)*$/.test($newContent[i].textContent))
+          )
+        ),
+    ).length > 1
       ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent)
       : $newContent;
 
@@ -1277,7 +1277,7 @@
    *
    * @constructor
    */
-  Drupal.AjaxCommands = function () { };
+  Drupal.AjaxCommands = function () {};
   Drupal.AjaxCommands.prototype = {
     /**
      * Command to insert new content into the DOM.
