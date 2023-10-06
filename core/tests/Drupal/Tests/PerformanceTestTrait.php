@@ -152,16 +152,16 @@ trait PerformanceTestTrait {
       }
       // Performance entries are logged indeterminately since page loading
       // varies by request. Chrome returns a response as soon as the HTML page
-      // has returned to the browser, but CSS, Javascript, image and AJAX
+      // has returned to the browser, but CSS, JavaScript, image and AJAX
       // requests may all occur after this, and in turn trigger further requests
-      // and page rendering events. Therefore, continue collecting performance
-      // data until all of the following are true, or until 30 seconds has
-      // passed:
+      // and page rendering events, and there is no performance log event for
+      // the page loading 'finishing' since this is cannot be detected as such.
+      // Therefore, continue collecting performance data until all of the
+      // following are true, or until 30 seconds has passed:
       // - a largestContentfulPaint::candidate event has been fired
       // - all network requests have received a response
       // - no new performance log events have been recorded since the last
       //   iteration.
-
       if ($lcp_count && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
