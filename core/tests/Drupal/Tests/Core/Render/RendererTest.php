@@ -619,6 +619,7 @@ class RendererTest extends RendererTestBase {
     }
 
     $build = [
+      // @phpstan-ignore-next-line
       '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::' . $method,
     ];
 
