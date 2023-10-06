@@ -250,7 +250,7 @@ class UrlHelper {
     foreach (explode('&', $query) as $param) {
 
       // Split the key=value pair into separate variables
-      list($name, $value) = explode('=', $param, 2);
+      list($name, $value) = explode('=', $param, 2) + ['', ''];
 
       // Decode the URL-encoded string for the parameter name and value
       $name = rawurldecode($name);
