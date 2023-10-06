@@ -200,6 +200,7 @@ function _batch_test_batch_8(): array {
     ->addOperation('_batch_test_callback_8', [TRUE]);
   return $batch_builder->toArray() + ['batch_test_id' => 'batch_8'];
 }
+
 /**
  * Implements callback_batch_operation().
  *
