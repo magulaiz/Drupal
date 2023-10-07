@@ -47,8 +47,11 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
   /**
    * Modules to enable after the database is loaded.
+   *
+   * @todo temporarily force 'mysqli' to be enabled, probably we would need
+   *   skipping updates for it or create a dumpfile specific for mysqli?
    */
-  protected static $modules = [];
+  protected static $modules = ['mysqli'];
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
