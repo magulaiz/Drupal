@@ -119,19 +119,69 @@
    */
   Drupal.behaviors.blockFilterRegionText = {
     attach(context) {
-
-      document.querySelectorAll('.tabledrag-handle:not(.tabledrag-handle-y)')
-        .forEach(el => el.classList.add('tabledrag-handle-y'))
-
       let firstVisibleRegion = null;
       let isFocusingFilterElement = false;
       const gotoFiltered = document.querySelector('#goto-filtered');
-
       const $inputFilter = once(
         'block-filter-region-text',
         '[data-drupal-selector="edit-search-blocks"]',
       );
 
+      let inputFilterElement;
+      if (
+        $inputFilter.length === 0 ||
+        !(inputFilterElement = $inputFilter[0])
+      ) {
+        return;
+      }
+
+      /**
+       * Users can filter blocks and regions and goes to bottom of page,
+       * to make easier change the filter sticky the filter input,
+       * below the Drupal menu.
+       */
+      const moveInputFilterWhenScrolling = () => {
+        // Sticky input filter when scroll down.
+        document.addEventListener('DOMContentLoaded', function () {
+          const toolbarHeight =
+            document.getElementById('toolbar-bar').clientHeight;
+          const submenu = document.getElementById(
+            'toolbar-item-administration-tray',
+          ).clientHeight;
+          const paddingTop = toolbarHeight + submenu;
+          const inputFilterForm = document.querySelector(
+            'fieldset[data-drupal-selector="edit-filters"]',
+          );
+          const topFilter = paddingTop;
+          const sticky = inputFilterForm.offsetTop;
+          let lastVisiblePosition;
+
+          function calcInputFilterPositionOnScroll() {
+            const scrollPosition = window.scrollY + paddingTop;
+            if (scrollPosition >= sticky) {
+              inputFilterForm.style.top = `${topFilter}px`;
+              inputFilterForm.classList.add('filter-block');
+              document.getElementById(
+                'blocks',
+              ).style.marginTop = `${inputFilterForm.offsetHeight}px`;
+            } else {
+              document.getElementById('blocks').style.marginTop = 0;
+              lastVisiblePosition = window.scrollY;
+              inputFilterForm.classList.remove('filter-block');
+            }
+          }
+          window.onscroll = calcInputFilterPositionOnScroll;
+        });
+      };
+
+      /**
+       * Function to count the blocks and their status by region.
+       *
+       * @param {string} regionName
+       *   The name of the region to get the status.
+       * @return {{total: number, visible: number, invisible: number}}
+       *   Return an object with regions blocks status.
+       */
       const getRegionBlocksStatus = (regionName) => {
         const blocks = document.querySelectorAll(
           `tr[data-parent-region="${regionName}"]`,
@@ -153,16 +203,93 @@
         }
       };
 
-      // Rollback blocks and eye element to the initial state.
-      const resetFilterBlockRegion = () => {
+      /**
+       * Function to reset the state of blocks and filter control.
+       *
+       * Reset all button elements to closed eyes icon and make any row,
+       * be hidden by the filter.
+       */
+      const resetBlockRegionState = () => {
         document
           .querySelectorAll('.js-filter-result-toggle')
           .forEach((el) => el.classList.remove(['js-filter-result-toggle']));
         document
-          .querySelectorAll('.js-filter-result')
-          .forEach((el) => el.classList.remove(['js-filter-result-opened']));
+          .querySelectorAll('.region-filter-control')
+          .forEach((el) =>
+            el.classList.remove(['region-filter-control-opened']),
+          );
       };
 
+      /**
+       * Update regions and their blocks states.
+       *
+       * Each region updating the filtered blocks message status.
+       * Also, update the region empty message status.
+       *
+       * @param {string} query
+       *   The value of the filter typed by the user.
+       * @param {Node} table
+       *   The updated dom element block with all regions.
+       */
+      const updateRegions = (query, table) => {
+        const regionHeaders = table.querySelectorAll('.region-title');
+        regionHeaders.forEach((el) => {
+          const currentRegionName = el.dataset.region;
+          const { total, visible, invisible } =
+            getRegionBlocksStatus(currentRegionName);
+          // Set first visible region to be used on the help go to element link.
+          if (
+            total > 0 &&
+            visible > 0 &&
+            firstVisibleRegion === null &&
+            query !== ''
+          ) {
+            firstVisibleRegion = el;
+          }
+
+          // Update the region filter status.
+          const filteredRegionStatus = document.querySelector(
+            `[data-drupal-selector="region-filtered-quantity-${currentRegionName}"]`,
+          );
+          if (total > 0) {
+            const toggleAction =
+              query !== '' && total !== visible ? 'add' : 'remove';
+            filteredRegionStatus.parentElement.parentElement.classList[
+              toggleAction
+            ]('filtered');
+            filteredRegionStatus.textContent = Drupal.t(
+              '@invisible filtered this region',
+              { '@invisible': invisible },
+            );
+          }
+
+          const regionEmptyMessage = el.nextElementSibling;
+          let showEmptyRegion = false;
+          if (
+            (query === '' &&
+              table.querySelectorAll(
+                `tr[data-parent-region="${currentRegionName}"]`,
+              ).length === 0) ||
+            total === 0
+          ) {
+            showEmptyRegion = true;
+          }
+          regionEmptyMessage.style.display = showEmptyRegion ? '' : 'none';
+        });
+      };
+
+      /**
+       * Filter all draggable rows on the table.
+       *
+       * When filtering the row will be keep as visible if,
+       * The name of the block/region matches with text typed.
+       * Or, if the filtered control foe the regions is turned on,
+       * no matter if block name and region match with typed text,
+       * all the blocks of that region will be displayed.
+       *
+       * @param {string} query
+       *   The text type.
+       */
       const filterCallback = (query = null) => {
         if (query === null) {
           query = document
@@ -196,48 +323,7 @@
           }
         });
 
-        const regionHeaders = table.querySelectorAll('.region-title');
-        regionHeaders.forEach((el) => {
-          const currentRegionName = el.dataset.region;
-          const { total, visible, invisible } =
-            getRegionBlocksStatus(currentRegionName);
-          // Set first visible region to be used on the help go to element link.
-          if (
-            total > 0 &&
-            visible > 0 &&
-            firstVisibleRegion === null &&
-            query !== ''
-          ) {
-            firstVisibleRegion = el;
-          }
-
-          // Update the region filter status.
-          const filterRegionControl = document.querySelector(
-            `div[data-drupal-selector="region-${currentRegionName}-filter-result"]`,
-          );
-          if (total > 0) {
-            filterRegionControl.style.display = query !== '' ? 'block' : 'none';
-            const filterResultEl = filterRegionControl.querySelector(
-              'span.js-filter-result',
-            );
-            if (query !== '') {
-              filterResultEl.textContent = `${invisible} filtered`;
-            }
-          }
-
-          const regionEmptyMessage = el.nextElementSibling;
-          let showEmptyRegion = false;
-          if (
-            (query === '' &&
-              table.querySelectorAll(
-                `tr[data-parent-region="${currentRegionName}"]`,
-              ).length === 0) ||
-            total === 0
-          ) {
-            showEmptyRegion = true;
-          }
-          regionEmptyMessage.style.display = showEmptyRegion ? '' : 'none';
-        });
+        updateRegions(query, table);
 
         const visibleItems = Array.from(listItems).filter(
           (tr) => tr.style.display !== 'none',
@@ -245,7 +331,9 @@
 
         if (visibleItems.length === 0) {
           gotoFiltered.classList.remove('link-to-element');
-          gotoFiltered.textContent = Drupal.t('There are no blocks matching the filter conditions.');
+          gotoFiltered.textContent = Drupal.t(
+            'There are no blocks matching the filter conditions.',
+          );
           document.querySelector('#goto-filtered').style.display = 'block';
         }
 
@@ -259,46 +347,40 @@
       // In some cases the blocks searched are on the bottom of page,
       // to help users get there faster they can click on the link
       // below the input filter.
-      gotoFiltered
-        .addEventListener('click', (e) => {
-          if (firstVisibleRegion === null) {
-            return;
-          }
-          e.preventDefault();
-          let offset = 0;
-          const regionHeight = firstVisibleRegion.offsetHeight;
-          let region = firstVisibleRegion
-          while (region) {
-            offset += region.offsetTop;
-            region = region.offsetParent;
-          }
-          window.scrollTo({
-            top: offset - regionHeight,
-            behavior: 'smooth',
-          });
+      gotoFiltered.addEventListener('click', (e) => {
+        if (firstVisibleRegion === null) {
+          return;
+        }
+        e.preventDefault();
+        let offset = 0;
+        const regionHeight = firstVisibleRegion.offsetHeight;
+        let region = firstVisibleRegion;
+        while (region) {
+          offset += region.offsetTop;
+          region = region.offsetParent;
+        }
+        window.scrollTo({
+          top: offset - regionHeight,
         });
+      });
 
-      // Users can override the filter clicking on the eye element.
-      // Toggling this element will display all blocks on the region,
-      // no matters if filter applied.
-      // When the filter is cleaned this button back to hidden state.
-
-      function toggleBlocksByRegion(region, action = 'toggle') {
+      const toggleBlocksByRegion = (region, action = 'toggle') => {
         document
-          .querySelector(`span[data-toggle-region="${region}"]`)
-          .classList[action]('js-filter-result-opened');
-
+          .querySelector(`a[data-toggle-region="${region}"]`)
+          .classList[action]('region-filter-control-opened');
         document
-          .querySelectorAll(
-            `tr[data-parent-region="${region}"]`,
-          )
+          .querySelectorAll(`tr[data-parent-region="${region}"]`)
           .forEach((tr) => {
             tr.classList[action]('js-filter-result-toggle');
           });
-      }
+      };
 
+      // Users can override the filter clicking on the eye action.
+      // Toggling this element will display all blocks on the region,
+      // no matters if filter applied.
+      // When the filter is cleaned this button back to hidden states.
       document
-        .querySelectorAll('.js-filter-result:not(.built)')
+        .querySelectorAll('.region-filter-control:not(.built)')
         .forEach((element) => {
           element.classList.add('built');
           element.addEventListener('click', () => {
@@ -307,58 +389,41 @@
           });
         });
 
-      if ($inputFilter.length > 0) {
-        const inputFilterElement = $inputFilter[0];
-        if (!inputFilterElement) {
-          return;
+      inputFilterElement.addEventListener(
+        'keyup',
+        debounce((e) => filterCallback(e.target.value.toLowerCase()), 200),
+      );
+
+      // Add event to clear HTML5 x button.
+      // But do the filter only on the click button because we already,
+      // searching on keyup event with debounce.
+      inputFilterElement.addEventListener('search', (e) => {
+        if (e.target.value === '') {
+          firstVisibleRegion = null;
+          document.querySelector('#goto-filtered').style.display = 'none';
+          filterCallback('');
+          resetBlockRegionState();
         }
+      });
+      inputFilterElement.addEventListener('keydown', preventEnter);
+      inputFilterElement.addEventListener('keyup', (e) => {
+        if (e.target.value === '') {
+          firstVisibleRegion = null;
+          document.querySelector('#goto-filtered').style.display = 'none';
+          resetBlockRegionState();
+        }
+      });
 
-        inputFilterElement.addEventListener(
-          'keyup',
-          debounce((e) => filterCallback(e.target.value.toLowerCase()), 200),
-        );
-        // Add event to clear HTML5 x button.
-        // But do the filter only on the click button because we already,
-        // searching on keyup event with debounce.
-        inputFilterElement.addEventListener('search', (e) => {
-          if (e.target.value === '') {
-            firstVisibleRegion = null;
-            document.querySelector('#goto-filtered').style.display = 'none';
-            filterCallback('');
-            resetFilterBlockRegion();
-          }
-        });
-        inputFilterElement.addEventListener('keydown', preventEnter);
-        inputFilterElement.addEventListener('keyup', (e) => {
-          if (e.target.value === '') {
-            firstVisibleRegion = null;
-            document.querySelector('#goto-filtered').style.display = 'none';
-            resetFilterBlockRegion();
-          }
-        });
-
-        // Users can scroll to the input filter clicking on change filter link.
-        document.querySelectorAll('.js-region-goto-filter').forEach((e) => {
-          e.addEventListener('click', () => {
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
-            isFocusingFilterElement = true;
-          });
-        });
-
-        // Focus the input filter only when scroll to the top finished.
-        const checkScroll = function () {
-          // Only focus the input if the user clicked to.
-          if (window.scrollY === 0 && isFocusingFilterElement) {
-            window.removeEventListener('scroll', checkScroll);
-            inputFilterElement.focus();
-            isFocusingFilterElement = false;
-          }
-        };
-        window.addEventListener('scroll', checkScroll);
-      }
+      // Focus the input filter only when scroll to the top finished.
+      const checkScroll = function () {
+        // Only focus the input if the user clicked to.
+        if (window.scrollY === 0 && isFocusingFilterElement) {
+          window.removeEventListener('scroll', checkScroll);
+          inputFilterElement.focus();
+          isFocusingFilterElement = false;
+        }
+      };
+      window.addEventListener('scroll', checkScroll);
 
       // Do the filter after region changed by select field.
       const $selectRegionChange = once(
@@ -381,7 +446,10 @@
       ) {
         const tableDrag = { ...Drupal.tableDrag.blocks };
         Drupal.tableDrag.blocks.onDrop = function () {
-          if (tableDrag.rowObject == null || tableDrag.rowObject.element === null) {
+          if (
+            tableDrag.rowObject == null ||
+            tableDrag.rowObject.element === null
+          ) {
             return;
           }
           const rowDropped = tableDrag.rowObject.element;
@@ -413,6 +481,8 @@
           tableDrag.onDrop();
         };
       }
+
+      moveInputFilterWhenScrolling();
     },
   };
 })(jQuery, Drupal, Drupal.debounce, once);

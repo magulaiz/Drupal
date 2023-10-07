@@ -240,10 +240,22 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ],
       ];
 
-      $regionFilterControl = "<div class='region-filter-control' data-drupal-selector='region-" . $region . "-filter-result'>
-        <span data-toggle-region='" . $region . "' class='js-filter-result'></span>
-        <a class='js-region-goto-filter'>change filter </a>
-      </div>";
+      $link = [
+        '#type' => 'link',
+        '#title' => $this->t('Place block <span class="visually-hidden">in the %region region</span>', ['%region' => $title]),
+        '#url' => Url::fromRoute('block.admin_library', ['theme' => $this->getThemeName()], ['query' => ['region' => $region]]),
+        '#attributes' => [
+          'class' => ['use-ajax', 'button', 'button--small'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
+        ],
+      ];
+
+      $filter = [
+        '#markup' => '<a data-toggle-region="' . $region . '" class="button button--small region-filter-control">' . $this->t('Show filtered') . '</a>',
+      ];
 
       $form['region-' . $region]['title'] = [
         '#theme_wrappers' => [
@@ -252,19 +264,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           ],
         ],
         '#prefix' => $title,
-        '#type' => 'link',
-        '#title' => $this->t('Place block <span class="visually-hidden">in the %region region</span>', ['%region' => $title]),
-        '#suffix' => $regionFilterControl,
-        '#url' => Url::fromRoute('block.admin_library', ['theme' => $this->getThemeName()], ['query' => ['region' => $region]]),
+        'link' => $link,
+        'filter' => $filter,
         '#wrapper_attributes' => [
           'colspan' => 5,
-        ],
-        '#attributes' => [
-          'class' => ['use-ajax', 'button', 'button--small'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => Json::encode([
-            'width' => 880,
-          ]),
         ],
       ];
 
@@ -280,6 +283,26 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ];
       $form['region-' . $region . '-message']['message'] = [
         '#markup' => '<em>' . $this->t('No blocks in this region') . '</em>',
+        '#wrapper_attributes' => [
+          'colspan' => 5,
+        ],
+      ];
+
+      $form['region-' . $region . '-filter'] = [
+        '#attributes' => [
+          'class' => [
+            'region-filter',
+            'region-' . $region . '-filter',
+            empty($blocks[$region]) ? 'region-empty' : 'region-populated',
+          ],
+          'data-region-message' => $region,
+        ],
+      ];
+      $regionFilterControl = "";
+
+
+      $form['region-' . $region . '-filter']['filter'] = [
+        '#markup' => '<em data-drupal-selector="region-filtered-quantity-' . $region . '"></em>',
         '#wrapper_attributes' => [
           'colspan' => 5,
         ],
