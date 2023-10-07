@@ -90,9 +90,15 @@ final class NamedPlaceholderConverter {
    *   The statement arguments.
    */
   public function parse(string $sql, array $args): void {
-    // Remove the initial colon from the placeholders.
     foreach ($args as $key => $value) {
-      $this->originalParameters[substr($key, 1)] = $value;
+      if (is_int($key)) {
+        // Positional placeholder; edge case.
+        $this->originalParameters[$key] = $value;
+      }
+      else {
+        // Named placeholder like ':placeholder'; remove the initial colon.
+        $this->originalParameters[substr($key, 1)] = $value;
+      }
     }
     $this->originalParameterIndex = 0;
     $this->convertedSQL = [];
