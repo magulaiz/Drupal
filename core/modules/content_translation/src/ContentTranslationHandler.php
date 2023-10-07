@@ -20,6 +20,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -591,6 +592,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
+  #[TrustedCallback]
   public function entityFormSharedElements($element, FormStateInterface $form_state, $form) {
     static $ignored_types;
 

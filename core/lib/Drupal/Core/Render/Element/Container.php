@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a render element that wraps child elements in a container.
@@ -78,6 +79,7 @@ class Container extends RenderElementBase {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processContainer(&$element, FormStateInterface $form_state, &$complete_form) {
     // Generate the ID of the element if it's not explicitly given.
     if (!isset($element['#id'])) {

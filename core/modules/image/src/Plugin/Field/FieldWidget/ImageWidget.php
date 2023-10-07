@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
@@ -194,6 +195,7 @@ class ImageWidget extends FileWidget {
    *
    * This method is assigned as a #process callback in formElement() method.
    */
+  #[TrustedCallback]
   public static function process($element, FormStateInterface $form_state, $form) {
     $item = $element['#value'];
     $item['fids'] = $element['fids']['#value'];

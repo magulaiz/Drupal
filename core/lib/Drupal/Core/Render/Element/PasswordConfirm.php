@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for double-input of passwords.
@@ -46,6 +47,7 @@ class PasswordConfirm extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
       $element += ['#default_value' => []];
@@ -67,6 +69,7 @@ class PasswordConfirm extends FormElementBase {
   /**
    * Expand a password_confirm field into two text boxes.
    */
+  #[TrustedCallback]
   public static function processPasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
     $element['pass1'] = [
       '#type' => 'password',
@@ -120,6 +123,47 @@ class PasswordConfirm extends FormElementBase {
     $form_state->setValueForElement($element['pass1'], NULL);
     $form_state->setValueForElement($element['pass2'], NULL);
     $form_state->setValueForElement($element, $pass1);
+
+    return $element;
+  }
+
+  /**
+   * Form element process handler for client-side password validation.
+   *
+   * This #process handler is automatically invoked for 'password_confirm' form
+   * elements to add the JavaScript and string translations for dynamic password
+   * validation.
+   */
+  #[TrustedCallback]
+  public static function addClientSideValidation(&$element) {
+    $password_settings = [
+      'confirmTitle' => t('Passwords match:'),
+      'confirmSuccess' => t('yes'),
+      'confirmFailure' => t('no'),
+      'showStrengthIndicator' => FALSE,
+    ];
+
+    if (\Drupal::config('user.settings')->get('password_strength')) {
+      $password_settings['showStrengthIndicator'] = TRUE;
+      $password_settings += [
+        'strengthTitle' => t('Password strength:'),
+        'hasWeaknesses' => t('Recommendations to make your password stronger:'),
+        'tooShort' => t('Make it at least 12 characters'),
+        'addLowerCase' => t('Add lowercase letters'),
+        'addUpperCase' => t('Add uppercase letters'),
+        'addNumbers' => t('Add numbers'),
+        'addPunctuation' => t('Add punctuation'),
+        'sameAsUsername' => t('Make it different from your username'),
+        'weak' => t('Weak'),
+        'fair' => t('Fair'),
+        'good' => t('Good'),
+        'strong' => t('Strong'),
+        'username' => \Drupal::currentUser()->getAccountName(),
+      ];
+    }
+
+    $element['#attached']['library'][] = 'user/drupal.user';
+    $element['#attached']['drupalSettings']['password'] = $password_settings;
 
     return $element;
   }

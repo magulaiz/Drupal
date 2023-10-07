@@ -178,6 +178,7 @@ class Datelist extends DateElementBase {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function processDatelist(&$element, FormStateInterface $form_state, &$complete_form) {
     // Load translated date part labels from the appropriate calendar plugin.
     $date_helper = new DateHelper();

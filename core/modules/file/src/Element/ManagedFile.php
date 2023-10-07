@@ -211,6 +211,7 @@ class ManagedFile extends FormElementBase {
    * Expands the file type to include Upload and Remove buttons, as well as
    * support for a default value.
    */
+  #[TrustedCallback]
   public static function processManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
 
     // This is used sometimes so let's implode it just once.

@@ -17,6 +17,7 @@ use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataReferenceDefinition;
@@ -695,6 +696,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    *
    * @see static::fieldSettingsForm()
    */
+  #[TrustedCallback]
   public static function fieldSettingsAjaxProcess($form, FormStateInterface $form_state) {
     static::fieldSettingsAjaxProcessElement($form, $form);
     return $form;
@@ -705,6 +707,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    *
    * @see static::fieldSettingsAjaxProcess()
    */
+  #[TrustedCallback]
   public static function fieldSettingsAjaxProcessElement(&$element, $main_form) {
     // Elements are marked as TRUE ('#ajax' => TRUE,), so not empty.
     if (!empty($element['#ajax'])) {
@@ -728,6 +731,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    *
    * @see _entity_reference_field_settings_process()
    */
+  #[TrustedCallback]
   public static function formProcessMergeParent($element) {
     $parents = $element['#parents'];
     array_pop($parents);

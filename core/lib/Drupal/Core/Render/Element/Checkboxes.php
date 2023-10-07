@@ -58,6 +58,7 @@ class Checkboxes extends FormElementBase {
   /**
    * Processes a checkboxes form element.
    */
+  #[TrustedCallback]
   public static function processCheckboxes(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = is_array($element['#value']) ? $element['#value'] : [];
     $element['#tree'] = TRUE;

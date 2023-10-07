@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -499,6 +500,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * Process handler for subform submit.
    */
+  #[TrustedCallback]
   public static function processFieldStorageSubmit(array $element, FormStateInterface $form_state, &$complete_form) {
     // Limit validation errors to the field storage form while the field storage
     // form is being edited.

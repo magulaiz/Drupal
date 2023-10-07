@@ -2,12 +2,12 @@
 
 namespace Drupal\language\Element;
 
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element\FormElementBase;
-
+use Drupal\Core\Security\Attribute\TrustedCallback;
+use Drupal\Core\Url;
 /**
  * Defines an element for language configuration for a single field.
  */
@@ -31,6 +31,7 @@ class LanguageConfiguration extends FormElementBase {
   /**
    * Process handler for the language_configuration form element.
    */
+  #[TrustedCallback]
   public static function processLanguageConfiguration(&$element, FormStateInterface $form_state, &$form) {
     $options = $element['#options'] ?? [];
     // Avoid validation failure since we are moving the '#options' key in the

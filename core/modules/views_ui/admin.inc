@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\views_ui\Form\ViewsUiFormCallbacks;
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.
@@ -70,7 +71,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     // form API has added the #parents property to the triggering element for
     // us, we don't have any (easy) way to find out where its submitted values
     // will eventually appear in $form_state->getValues().
-    '#process' => array_merge(['views_ui_add_limited_validation'], $element_info->getInfoProperty('submit', '#process', [])),
+    '#process' => array_merge([[ViewsUiFormCallbacks::class, 'addLimitedValidation']], $element_info->getInfoProperty('submit', '#process', [])),
     // Add an after-build function that inserts a wrapper around the region of
     // the form that needs to be refreshed by AJAX (so that the AJAX system can
     // detect and dynamically update it). This is done in #after_build because
@@ -118,34 +119,15 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
 
 /**
  * Processes a non-JavaScript fallback submit button to limit its validation errors.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0 Use
+ *   ViewsUiFormCallbacks::addLimitedValidation() instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function views_ui_add_limited_validation($element, FormStateInterface $form_state) {
-  // Retrieve the AJAX triggering element so we can determine its parents. (We
-  // know it's at the same level of the complete form array as the submit
-  // button, so all we have to do to find it is swap out the submit button's
-  // last array parent.)
-  $array_parents = $element['#array_parents'];
-  array_pop($array_parents);
-  $array_parents[] = $element['#views_ui_ajax_data']['trigger_key'];
-  $ajax_triggering_element = NestedArray::getValue($form_state->getCompleteForm(), $array_parents);
-
-  // Limit this button's validation to the AJAX triggering element, so it can
-  // update the form for that change without requiring that the rest of the
-  // form be filled out properly yet.
-  $element['#limit_validation_errors'] = [$ajax_triggering_element['#parents']];
-
-  // If we are in the process of a form submission and this is the button that
-  // was clicked, the form API workflow in \Drupal::formBuilder()->doBuildForm()
-  // will have already copied it to $form_state->getTriggeringElement() before
-  // our #process function is run. So we need to make the same modifications in
-  // $form_state as we did to the element itself, to ensure that
-  // #limit_validation_errors will actually be set in the correct place.
-  $clicked_button = &$form_state->getTriggeringElement();
-  if ($clicked_button && $clicked_button['#name'] == $element['#name'] && $clicked_button['#value'] == $element['#value']) {
-    $clicked_button['#limit_validation_errors'] = $element['#limit_validation_errors'];
-  }
-
-  return $element;
+  return ViewsUiFormCallbacks::addLimitedValidation($element, $form_state);
 }
 
 /**
@@ -296,25 +278,15 @@ function views_ui_build_form_url(FormStateInterface $form_state) {
 }
 
 /**
- * #process callback for a button; determines if a button is the form's triggering element.
+ * Implements #process callback.
  *
- * The Form API has logic to determine the form's triggering element based on
- * the data in POST. However, it only checks buttons based on a single #value
- * per button. This function may be added to a button's #process callbacks to
- * extend button click detection to support multiple #values per button. If the
- * data in POST matches any value in the button's #values array, then the
- * button is detected as having been clicked. This can be used when the value
- * (label) of the same logical button may be different based on context (e.g.,
- * "Apply" vs. "Apply and continue").
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0 Use
+ * ViewsUiFormCallbacks::formButtonClicked()
+ * instead.
  *
- * @see _form_builder_handle_input_element()
- * @see _form_button_was_clicked()
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function views_ui_form_button_was_clicked($element, FormStateInterface $form_state) {
-  $user_input = $form_state->getUserInput();
-  $process_input = empty($element['#disabled']) && ($form_state->isProgrammed() || ($form_state->isProcessingInput() && (!isset($element['#access']) || $element['#access'])));
-  if ($process_input && !$form_state->getTriggeringElement() && !empty($element['#is_button']) && isset($user_input[$element['#name']]) && isset($element['#values']) && in_array($user_input[$element['#name']], array_map('strval', $element['#values']), TRUE)) {
-    $form_state->setTriggeringElement($element);
-  }
-  return $element;
+  return ViewsUiFormCallbacks::formButtonClicked($element, $form_state);
 }

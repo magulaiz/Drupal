@@ -4,6 +4,8 @@ namespace Drupal\inline_form_errors;
 
 use Drupal\Core\Form\FormStateInterface;
 
+use Drupal\Core\Security\Attribute\TrustedCallback;
+
 /**
  * Provides functionality to process render elements.
  */
@@ -37,6 +39,7 @@ class RenderElementHelper {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processElement(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Prevent displaying inline form errors when disabled for the whole form.
     if (!empty($complete_form['#disable_inline_form_errors'])) {

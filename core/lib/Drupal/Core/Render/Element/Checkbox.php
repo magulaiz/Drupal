@@ -107,6 +107,7 @@ class Checkbox extends FormElementBase {
   /**
    * Sets the #checked property of a checkbox element.
    */
+  #[TrustedCallback]
   public static function processCheckbox(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = $element['#value'];
     $return_value = $element['#return_value'];

@@ -155,6 +155,7 @@ class EntityAutocomplete extends Textfield {
    *   Exception thrown when the #target_type or #autocreate['bundle'] are
    *   missing.
    */
+  #[TrustedCallback]
   public static function processEntityAutocomplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Nothing to do if there is no target entity type.
     if (empty($element['#target_type'])) {

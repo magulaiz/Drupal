@@ -223,6 +223,7 @@ class Datetime extends DateElementBase {
    *
    * @see \Drupal\Core\Datetime\DateFormatterInterface::format()
    */
+  #[TrustedCallback]
   public static function processDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
     $format_settings = [];
     // The value callback has populated the #value array.
@@ -313,6 +314,7 @@ class Datetime extends DateElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
     $element = parent::processAjaxForm($element, $form_state, $complete_form);
 

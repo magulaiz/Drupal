@@ -8,6 +8,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -211,6 +212,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    *
    * @see \Drupal\Core\Entity\Entity\EntityFormDisplay::buildForm()
    */
+  #[TrustedCallback]
   public function processForm($element, FormStateInterface $form_state, $form) {
     // Assign the weights configured in the form display.
     foreach ($this->getComponents() as $name => $options) {

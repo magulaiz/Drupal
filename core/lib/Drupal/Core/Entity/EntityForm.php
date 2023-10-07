@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Base class for entity forms.
@@ -149,6 +150,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    *
    * @see \Drupal\Core\Entity\EntityForm::form()
    */
+  #[TrustedCallback]
   public function processForm($element, FormStateInterface $form_state, $form) {
     // If the form is cached, process callbacks may not have a valid reference
     // to the entity object, hence we must restore it.
@@ -164,6 +166,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * form is being rebuilt (e.g. submitted via AJAX), so that subsequent
    * processing (e.g. AJAX callbacks) can rely on it.
    */
+  #[TrustedCallback]
   public function afterBuild(array $element, FormStateInterface $form_state) {
     // Rebuild the entity if #after_build is being called as part of a form
     // rebuild, i.e. if we are processing input.

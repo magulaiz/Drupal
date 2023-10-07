@@ -5,6 +5,7 @@ namespace Drupal\form_test\Form;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form builder for \Drupal\Core\Form\FormState::cleanValues() test.
@@ -49,6 +50,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
   /**
    * Helper function to clean a value on an element.
    */
+  #[TrustedCallback]
   public static function cleanValue(&$element, FormStateInterface $form_state, &$complete_form) {
     $form_state->addCleanValueKey('wine');
   }

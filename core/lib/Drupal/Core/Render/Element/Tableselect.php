@@ -221,6 +221,7 @@ class Tableselect extends Table {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processTableselect(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#multiple']) {
       $value = is_array($element['#value']) ? $element['#value'] : [];

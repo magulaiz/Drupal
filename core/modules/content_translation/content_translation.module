@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\content_translation\BundleTranslationSettingsInterface;
 use Drupal\content_translation\ContentTranslationManager;
+use Drupal\content_translation\Form\ContentTranslationFormCallbacks;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\ContentEntityFormInterface;
@@ -537,7 +538,7 @@ function content_translation_entity_presave(EntityInterface $entity) {
  */
 function content_translation_element_info_alter(&$type) {
   if (isset($type['language_configuration'])) {
-    $type['language_configuration']['#process'][] = 'content_translation_language_configuration_element_process';
+    $type['language_configuration']['#process'][] = [ContentTranslationFormCallbacks::class, 'LanguageConfigurationElementProcess'];
   }
 }
 
@@ -563,7 +564,8 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
   $context = $form_state->get(['language', $key]) ?: [];
   $context += ['entity_type' => $entity_type, 'bundle' => $bundle];
   $form_state->set(['language', $key], $context);
-  $element = content_translation_language_configuration_element_process(['#name' => $key], $form_state, $form);
+  $element = ['#name' => $key];
+  $element = ContentTranslationFormCallbacks::LanguageConfigurationElementProcess($element, $form_state, $form);
   unset($element['content_translation']['#element_validate']);
   return $element;
 }
@@ -576,37 +578,20 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  *
  * @return array
  *   Processed language configuration element.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0 Use
+ *   ContentTranslationFormCallbacks::LanguageConfigurationElementProcess()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {
-  if (empty($element['#content_translation_skip_alter']) && \Drupal::currentUser()->hasPermission('administer content translation')) {
-    $key = $element['#name'];
-    $form_state->set(['content_translation', 'key'], $key);
-    $context = $form_state->get(['language', $key]);
-
-    $element['content_translation'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Enable translation'),
-      // For new bundle, we don't know the bundle name yet,
-      // default to no translatability.
-      '#default_value' => $context['bundle'] ? \Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) : FALSE,
-      '#element_validate' => ['content_translation_language_configuration_element_validate'],
-    ];
-
-    $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-    // Only add the submit handler on the submit button if the #submit property
-    // is already available, otherwise this breaks the form submit function.
-    if (isset($form['actions'][$submit_name]['#submit'])) {
-      $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
-    }
-    else {
-      $form['#submit'][] = 'content_translation_language_configuration_element_submit';
-    }
-  }
-  return $element;
+  return ContentTranslationFormCallbacks::LanguageConfigurationElementProcess($element, $form_state, $form);
 }
 
 /**
- * Form validation handler for element added with content_translation_language_configuration_element_process().
+ * Form validation handler for element added with TrustedFormCallbacks::LanguageConfigurationElementProcess().
  *
  * Checks whether translation can be enabled: if language is set to one of the
  * special languages and language selector is not hidden, translation cannot be
@@ -629,7 +614,7 @@ function content_translation_language_configuration_element_validate($element, F
 }
 
 /**
- * Form submission handler for element added with content_translation_language_configuration_element_process().
+ * Form submission handler for element added with TrustedFormCallbacks::LanguageConfigurationElementProcess().
  *
  * Stores the content translation settings.
  *

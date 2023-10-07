@@ -49,6 +49,7 @@ class File extends FormElementBase {
   /**
    * Processes a file upload element, make use of #multiple if present.
    */
+  #[TrustedCallback]
   public static function processFile(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#multiple']) {
       $element['#attributes']['multiple'] = 'multiple';

@@ -183,6 +183,7 @@ class Table extends FormElementBase {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processTable(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#tableselect']) {
       if ($element['#multiple']) {

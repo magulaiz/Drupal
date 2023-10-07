@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for input of a weight.
@@ -47,6 +48,7 @@ class Weight extends FormElementBase {
   /**
    * Expands a weight element into a select/number element.
    */
+  #[TrustedCallback]
   public static function processWeight(&$element, FormStateInterface $form_state, &$complete_form) {
     // If the number of options is small enough, use a select field. Otherwise,
     // use a number field.

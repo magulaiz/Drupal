@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Queue\DatabaseQueue;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -47,6 +48,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    * @return array
    *   Processed element.
    */
+  #[TrustedCallback]
   public function process($element) {
     return $element;
   }

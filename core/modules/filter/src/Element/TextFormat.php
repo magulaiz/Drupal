@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -79,6 +80,7 @@ class TextFormat extends RenderElementBase {
    * @return array
    *   The form element.
    */
+  #[TrustedCallback]
   public static function processFormat(&$element, FormStateInterface $form_state, &$complete_form) {
     $user = static::currentUser();
 

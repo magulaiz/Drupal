@@ -20,6 +20,7 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldConfigInterface;
@@ -277,6 +278,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
   /**
    * Render API callback: builds the formatter settings elements.
    */
+  #[TrustedCallback]
   public function formatterSettingsProcessCallback(array &$element, FormStateInterface $form_state, array &$complete_form) {
     if ($formatter = $this->getFormatter($element['#parents'], $form_state)) {
       $element['settings_wrapper']['settings'] = $formatter->settingsForm($complete_form, $form_state);

@@ -123,6 +123,7 @@ class Select extends FormElementBase {
    *
    * @see _form_validate()
    */
+  #[TrustedCallback]
   public static function processSelect(&$element, FormStateInterface $form_state, &$complete_form) {
     // #multiple select fields need a special #name.
     if ($element['#multiple']) {

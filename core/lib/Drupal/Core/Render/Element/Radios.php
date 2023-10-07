@@ -58,6 +58,7 @@ class Radios extends FormElementBase {
   /**
    * Expands a radios element into individual radio elements.
    */
+  #[TrustedCallback]
   public static function processRadios(&$element, FormStateInterface $form_state, &$complete_form) {
     if (count($element['#options']) > 0) {
       $weight = 0;

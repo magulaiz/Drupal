@@ -125,6 +125,7 @@ class MachineName extends Textfield {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processMachineName(&$element, FormStateInterface $form_state, &$complete_form) {
     // We need to pass the langcode to the client.
     $language = \Drupal::languageManager()->getCurrentLanguage();

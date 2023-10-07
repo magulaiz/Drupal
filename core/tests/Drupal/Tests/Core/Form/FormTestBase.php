@@ -153,6 +153,11 @@ abstract class FormTestBase extends UnitTestCase {
   protected $themeManager;
 
   /**
+   * @var \Drupal\Core\Utility\CallableResolver|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $callableResolver;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -185,6 +190,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->callableResolver = $this->createMock('Drupal\Core\Utility\CallableResolver');
     $this->request = Request::createFromGlobals();
     $this->request->setSession(new Session(new MockArraySessionStorage()));
     $this->eventDispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
@@ -199,7 +205,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
 
-    $this->formBuilder = new FormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken);
+    $this->formBuilder = new FormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->callableResolver, $this->csrfToken);
   }
 
   /**
