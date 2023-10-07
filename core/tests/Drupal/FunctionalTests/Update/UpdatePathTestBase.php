@@ -47,11 +47,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
   /**
    * Modules to enable after the database is loaded.
-   *
-   * @todo temporarily force 'mysqli' to be enabled, probably we would need
-   *   skipping updates for it or create a dumpfile specific for mysqli?
    */
-  protected static $modules = ['mysqli'];
+  protected static $modules = [];
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
@@ -203,6 +200,9 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * Helper function to run pending database updates.
    */
   protected function runUpdates() {
+    // @todo temporarily force installation of mysqli module, a specific
+    //   db dump is needed instead?
+    \Drupal::service('module_installer')->install(['mysqli'], TRUE);
     $this->doRunUpdates($this->updateUrl);
   }
 
