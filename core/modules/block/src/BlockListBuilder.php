@@ -197,7 +197,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ],
       '#attributes' => [
         'id' => 'blocks',
-        'data-drag-orientation' => 'drag-y',
       ],
     ];
 
@@ -298,8 +297,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           'data-region-message' => $region,
         ],
       ];
-      $regionFilterControl = "";
-
 
       $form['region-' . $region . '-filter']['filter'] = [
         '#markup' => '<em data-drupal-selector="region-filtered-quantity-' . $region . '"></em>',

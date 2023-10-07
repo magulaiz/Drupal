@@ -127,13 +127,10 @@
         '[data-drupal-selector="edit-search-blocks"]',
       );
 
-      let inputFilterElement;
-      if (
-        $inputFilter.length === 0 ||
-        !(inputFilterElement = $inputFilter[0])
-      ) {
+      if ($inputFilter.length === 0) {
         return;
       }
+      const inputFilterElement = $inputFilter[0];
 
       /**
        * Users can filter blocks and regions and goes to bottom of page,
@@ -434,7 +431,7 @@
         $selectRegionChange.forEach((selectElement) => {
           selectElement.addEventListener('change', (e) => {
             toggleBlocksByRegion(e.target.value, 'add');
-            filterCallback($inputFilter[0].value);
+            filterCallback(inputFilterElement.value);
           });
         });
       }
