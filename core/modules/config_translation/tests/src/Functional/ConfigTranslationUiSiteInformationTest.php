@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\config_translation\Functional;
 
+// cspell:ignore libellé
+
 /**
  * Translate site information to various languages.
  *
