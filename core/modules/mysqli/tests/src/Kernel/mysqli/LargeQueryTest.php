@@ -3,7 +3,7 @@
 namespace Drupal\Tests\mysqli\Kernel\mysqli;
 
 use Drupal\Component\Utility\Environment;
-// use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Tests\mysql\Kernel\mysql\LargeQueryTest as BaseMySqlTest;
 
@@ -18,26 +18,30 @@ class LargeQueryTest extends BaseMySqlTest {
    * Tests truncation of messages when max_allowed_packet exception occurs.
    */
   public function testMaxAllowedPacketQueryTruncating(): void {
+    $connectionInfo = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'testMaxAllowedPacketQueryTruncating', $connectionInfo['default']);
+    $testConnection = Database::getConnection('testMaxAllowedPacketQueryTruncating');
+
     // The max_allowed_packet value is configured per database instance.
     // Retrieve the max_allowed_packet value from the current instance and
     // check if PHP is configured with sufficient allowed memory to be able
     // to generate a query larger than max_allowed_packet.
-    $max_allowed_packet = $this->connection->query('SELECT @@global.max_allowed_packet')->fetchField();
+    $max_allowed_packet = $testConnection->query('SELECT @@global.max_allowed_packet')->fetchField();
     if (!Environment::checkMemoryLimit($max_allowed_packet + (16 * 1024 * 1024))) {
       $this->markTestSkipped('The configured max_allowed_packet exceeds the php memory limit. Therefore the test is skipped.');
     }
 
     $long_name = str_repeat('a', $max_allowed_packet + 1);
     try {
-      $this->connection->query('SELECT [name] FROM {test} WHERE [name] = :name', [':name' => $long_name]);
+      $testConnection->query('SELECT [name] FROM {test} WHERE [name] = :name', [':name' => $long_name]);
       $this->fail("An exception should be thrown for queries larger than 'max_allowed_packet'");
     }
     catch (\Throwable $e) {
-      dump($e, $max_allowed_packet);
+      dump([$e, $max_allowed_packet]);
       // throw $e;
       // Close and re-open the connection. Otherwise we will run into error
       // 2006 "MySQL server had gone away" afterwards.
-      // Database::closeConnection();
+      Database::closeConnection('testMaxAllowedPacketQueryTruncating');
       // Database::getConnection();
       $this->assertInstanceOf(DatabaseExceptionWrapper::class, $e);
       // Got a packet bigger than 'max_allowed_packet' bytes exception thrown.
