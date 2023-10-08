@@ -200,6 +200,9 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * Helper function to run pending database updates.
    */
   protected function runUpdates() {
+    // @todo temporarily force installation of mysqli module, a specific
+    //   db dump is needed instead?
+    \Drupal::service('module_installer')->install(['mysqli'], TRUE);
     $this->doRunUpdates($this->updateUrl);
   }
 
