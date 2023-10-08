@@ -133,6 +133,7 @@
   --color--gray-60: hsl(var(--color--gray-hue), var(--color--gray-saturation), 57%); /* Gray medium */
   --color--gray-65: hsl(var(--color--gray-hue), var(--color--gray-saturation), 63%); /* Black 4 */
   --color--gray-70: hsl(var(--color--gray-hue), var(--color--gray-saturation), 72%); /* Gray medium 2 */
+  --color--gray-85: hsl(var(--color--gray-hue), var(--color--gray-saturation), 84%); /* Gray medium 3 */
   --color--gray-90: hsl(var(--color--gray-hue), var(--color--gray-saturation), 88%); /* Gray light */
   --color--gray-95: hsl(var(--color--gray-hue), var(--color--gray-saturation), 93%); /* Gray light 1 */
   --color--gray-100: hsl(var(--color--gray-hue), var(--color--gray-saturation), 97%); /* Gray light 2 */
