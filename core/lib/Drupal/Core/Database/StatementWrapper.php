@@ -7,7 +7,7 @@ namespace Drupal\Core\Database;
 /**
  * Implementation of StatementInterface encapsulating PDOStatement.
  */
-class StatementWrapper implements \IteratorAggregate, StatementInterface {
+class StatementWrapper implements StatementInterface {
 
   /**
    * The Drupal database connection object.
@@ -130,7 +130,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
       }
     }
 
-    foreach ($this as $record) {
+    foreach ($this->fetchAll() as $record) {
       $record_key = is_object($record) ? $record->$key : $record[$key];
       $return[$record_key] = $record;
     }
@@ -144,7 +144,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
     $return = [];
     $this->setFetchMode(\PDO::FETCH_NUM);
-    foreach ($this as $record) {
+    foreach ($this->fetchAll() as $record) {
       $return[$record[$key_index]] = $record[$value_index];
     }
     return $return;
@@ -253,14 +253,6 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
       default:
         return $this->clientStatement->fetchAll($mode, $column_index, $constructor_arguments);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
-    return new \ArrayIterator($this->fetchAll());
   }
 
 }
