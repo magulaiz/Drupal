@@ -5,7 +5,7 @@ namespace Drupal\Tests\config_translation\Functional;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
-// cspell:ignore libellé viewsviewfiles
+// cspell:ignore viewsviewfiles
 
 /**
  * Translate settings and entities to various languages.
