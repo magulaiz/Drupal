@@ -13,7 +13,7 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
  *
  * @internal
  *
- * @see https://github.com/doctrine/dbal/tree/3.6.x/src/SQL/Parser
+ * @see https://github.com/doctrine/dbal/blob/3.6.x/src/SQL/Parser.php
  */
 final class NamedPlaceholderConverter {
   /**

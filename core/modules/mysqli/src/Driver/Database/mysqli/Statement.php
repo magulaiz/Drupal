@@ -16,6 +16,12 @@ class Statement extends StatementWrapperIterator {
 
   /**
    * Holds the index position of named parameters.
+   *
+   * The mysqli driver only allows positional placeholders '?', whareas in
+   * Drupal the SQL is generated with named placeholders ':name'. In order to
+   * execute the SQL, the string containing the named placeholders is converted
+   * to using positional ones, and the position (index) of each named
+   * placeholder in the string is stored here.
    */
   protected array $paramsPositions;
 
@@ -113,6 +119,8 @@ class Statement extends StatementWrapperIterator {
       $this->connection->dispatchEvent($startEvent);
     }
 
+    // In mysqli, the results of the statement execution are returned in a
+    // different object than the statement itself.
     $return = $this->clientStatement->execute($args);
     $this->markResultsetIterable($return);
     $result = $this->clientStatement->get_result();
@@ -170,7 +178,7 @@ class Statement extends StatementWrapperIterator {
       $row[$column] = $value === NULL ? NULL : (string) $value;
     }
 
-    $ret = match($mode) {
+    $returnValue = match($mode) {
       \PDO::FETCH_ASSOC => $row,
       // @phpstan-ignore-next-line
       \PDO::FETCH_BOTH => $this->assocToBoth($row),
@@ -185,8 +193,8 @@ class Statement extends StatementWrapperIterator {
       default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported.'),
     };
 
-    $this->setResultsetCurrentRow($ret);
-    return $ret;
+    $this->setResultsetCurrentRow($returnValue);
+    return $returnValue;
   }
 
   /**
@@ -206,6 +214,8 @@ class Statement extends StatementWrapperIterator {
 
     $rows = [];
     if (\PDO::FETCH_COLUMN == $mode) {
+      // When fetching a column's value across the entire dataset, fetch
+      // through it and pick the requested column value for each row.
       if ($column_index === NULL) {
         $column_index = 0;
       }

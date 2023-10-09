@@ -66,6 +66,9 @@ class Connection extends BaseMySqlConnection {
    * {@inheritdoc}
    */
   public static function open(array &$connection_options = []) {
+    // Sets mysqli error reporting mode to report errors from mysqli function
+    // calls and to throw mysqli_sql_exception for errors.
+    // @see https://www.php.net/manual/en/mysqli-driver.report-mode.php
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
     if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
