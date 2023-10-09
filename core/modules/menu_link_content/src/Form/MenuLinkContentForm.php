@@ -93,13 +93,22 @@ class MenuLinkContentForm extends ContentEntityForm {
     $menu_parent = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
     $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->entity->getPluginId())['#options'];
 
+    $parent_id = $this->entity->getParentId() ?: $this->getRequest()->query->get('parent');
+    $default = $this->entity->getMenuName() . ':' . $parent_id;
+    $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
     if ($this->entity->isNew()) {
-      $form += $this->buildMenuFormElements($form, $form_state, $all_menu_links);
-      unset($form['menu_parent_menu']);
-
+      $menu_id = $this->entity->getMenuName();
+      $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
+      $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
+        $menu_id => $menu->label(),
+      ]);
+      $form = array_merge($this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
+      unset($form['menu_parent_child']);
     }
     else {
-      $form += $this->buildMenuFormElements($form, $form_state, $all_menu_links);
+      $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
+      $form['menu_parent_child'] = $this->menuParentSelector->parentSelectElement($default, $id);
+      $form = array_merge($this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
     }
 
     return $form;
@@ -123,7 +132,7 @@ class MenuLinkContentForm extends ContentEntityForm {
     /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
 
-    [$menu_name, $parent] = explode(':', array_key_first($form_state->getValue('menu_parent')), 2);
+    [$menu_name, $parent] = explode(':', $form_state->getValue('menu_parent'), 2);
 
     $entity->parent->value = $parent;
     $entity->menu_name->value = $menu_name;

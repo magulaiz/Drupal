@@ -135,7 +135,9 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
 
-    $form += $this->buildMenuFormElements($form, $form_state, $all_menu_links);
+    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
+    $form['menu_parent_child'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
+    $form = array_merge($this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [
@@ -162,7 +164,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $new_definition['enabled'] = $form_state->getValue('enabled') ? 1 : 0;
     $new_definition['weight'] = (int) $form_state->getValue('weight');
     $new_definition['expanded'] = $form_state->getValue('expanded') ? 1 : 0;
-    [$menu_name, $parent] = explode(':', $form_state->getValue('select_list'), 2);
+    [$menu_name, $parent] = explode(':', $form_state->getValue('menu_parent_child'), 2);
     if (!empty($menu_name)) {
       $new_definition['menu_name'] = $menu_name;
     }
