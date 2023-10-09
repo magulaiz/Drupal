@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Url;
@@ -197,7 +196,6 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $session_assert->pageTextContains('You do not have access to transition from Draft to Draft');
   }
 
-
   /**
    * Tests that o user cancel the default revision still the same.
    */
@@ -270,7 +268,6 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->assertSession()
       ->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertSession()->pageTextContains('First version of the content en.');
-
 
     $this->drupalLogin($second_web_user);
 
