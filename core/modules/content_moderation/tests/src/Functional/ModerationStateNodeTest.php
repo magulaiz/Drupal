@@ -1,9 +1,12 @@
 <?php
 
+
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Url;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests general content moderation workflow for nodes.
@@ -16,6 +19,21 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'language',
+    'content_translation',
+    'content_moderation',
+    'block',
+    'block_content',
+    'node',
+    'entity_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -177,6 +195,128 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       'title[0][value]' => 'moderated content',
     ], 'Save');
     $session_assert->pageTextContains('You do not have access to transition from Draft to Draft');
+  }
+
+
+  /**
+   * Tests that o user cancel the default revision still the same.
+   */
+  public function testUserCancel() {
+
+    // Enable additional languages.
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    // Enable translation for the current entity type and ensure the change is
+    // picked up.
+    \Drupal::service('content_translation.manager')->setEnabled('node', 'moderated_content', TRUE);
+
+    // Set the user cancel default method.
+    $this->config('user.settings')
+      ->set('cancel_method', 'user_cancel_reassign')
+      ->save();
+
+    // Add permissions to admin of cancel account.
+    $role_ids = $this->adminUser->getRoles();
+    $role_id = reset($role_ids);
+    $role = Role::load($role_id);
+    $role->grantPermission('administer users');
+    $role->grantPermission('view any unpublished content');
+    $role->save();
+
+    // Create the first user.
+    $web_user = $this->drupalCreateUser([
+      'view any unpublished content',
+      'access content overview',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'use editorial transition archive',
+      'use editorial transition archived_draft',
+      'use editorial transition archived_published',
+    ]);
+
+    $this->grantUserPermissionToCreateContentOfType($web_user, 'moderated_content');
+
+    // Create a second user.
+    $second_web_user = $this->drupalCreateUser([
+      'view any unpublished content',
+      'access content overview',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'use editorial transition archive',
+      'use editorial transition archived_draft',
+      'use editorial transition archived_published',
+      'translate any entity',
+    ]);
+
+    $this->grantUserPermissionToCreateContentOfType($second_web_user, 'moderated_content');
+
+    $this->drupalLogin($web_user);
+
+    // Create the first revision of the content.
+    // The author will be "web_user".
+    $this->drupalGet('node/add/moderated_content');
+    $this->submitForm([
+      'title[0][value]' => 'First version of the content en.',
+      'moderation_state[0][state]' => 'published',
+    ], 'Save');
+
+    $node = $this->getNodeByTitle('First version of the content en.');
+    if (!$node) {
+      $this->fail('Test node was not saved correctly.');
+    }
+    $this->assertEquals('published', $node->moderation_state->value);
+
+    // After saving, we should be at the canonical URL and viewing the first
+    // revision.
+    $this->assertSession()
+      ->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->pageTextContains('First version of the content en.');
+
+
+    $this->drupalLogin($second_web_user);
+
+    $translation_path = sprintf('node/%d/translations/add/en/es', $node->id());
+    // Create a second revision.
+    $this->drupalGet($translation_path);
+    $this->submitForm([
+      'title[0][value]' => 'First version of the content es.',
+      'moderation_state[0][state]' => 'published',
+    ], 'Save');
+
+    $this->assertSession()
+      ->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['langcode' => 'es']));
+    $this->assertSession()->pageTextContains('First version of the content es.');
+
+    // Cancel "web_user" account.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('user/' . $web_user->id() . '/cancel');
+    $this->submitForm([], 'Confirm');
+
+    // Confirm user deletion.
+    $this->assertSession()
+      ->pageTextContains("Account {$web_user->getAccountName()} has been deleted.");
+
+    // Check content as anonymous.
+    $this->drupalLogout();
+
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
+
+    // Check default language.
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
+    $this->drupalGet($node->toUrl('canonical', ['language' => $node->language()])->toString());
+    $this->assertSession()->pageTextContains('First version of the content en.');
+
+    // Check translation.
+    $this->drupalGet($node->toUrl('canonical', ['language' => $node->getTranslation('es')->language()])->toString());
+    $this->assertSession()->pageTextContains('First version of the content es.');
+
+    // Check that the author, previously "web_user", now is anonymous.
+    $this->assertEquals(0, $node->uid->entity->id());
+    $this->assertEquals('First version of the content en.', $node->title->value);
+
+    // Check that the translation revision still have the right users "second_web_user".
+    $translation = $node->getTranslation('es');
+    $this->assertEquals('First version of the content es.', $translation->title->value);
+    $this->assertEquals($second_web_user->id(), $translation->uid->entity->id());
   }
 
 }
