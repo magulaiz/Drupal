@@ -394,7 +394,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains("Are you sure you want to delete the menu {$link_title}?");
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the custom menu link {$link_title}?");
     $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
@@ -763,7 +763,7 @@ class MenuUiTest extends BrowserTestBase {
       'description[0][value]' => '',
       'enabled[value]' => 1,
       'expanded[value]' => $expanded,
-      'menu_parent' => $menu_name . ':' . $parent,
+      'menu_parent_child' => $menu_name . ':' . $parent,
       'weight[0][value]' => $weight,
     ];
 
@@ -814,7 +814,7 @@ class MenuUiTest extends BrowserTestBase {
       $edit = [
         'link[0][uri]' => '/',
         'title[0][value]' => $title,
-        'menu_parent' => $parent,
+        'menu_parent_child' => $parent,
         'description[0][value]' => '',
         'enabled[value]' => 1,
         'expanded[value]' => FALSE,
@@ -902,7 +902,7 @@ class MenuUiTest extends BrowserTestBase {
     $mlid = $item->id();
 
     $edit = [
-      'menu_parent' => $menu_name . ':' . $parent,
+      'menu_parent_child' => $menu_name . ':' . $parent,
     ];
     $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
     $this->submitForm($edit, 'Save');

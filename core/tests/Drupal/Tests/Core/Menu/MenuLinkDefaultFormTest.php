@@ -35,7 +35,7 @@ class MenuLinkDefaultFormTest extends UnitTestCase {
     $form_state->setValue('enabled', FALSE);
     $form_state->setValue('weight', 5);
     $form_state->setValue('expanded', TRUE);
-    $form_state->setValue('select_list', 'foo:bar');
+    $form_state->setValue('menu_parent', 'foo:bar');
 
     $form = [];
     $result = $menu_link_form->extractFormValues($form, $form_state);
