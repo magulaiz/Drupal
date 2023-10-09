@@ -41,4 +41,5 @@ final class JsonApiErrorSource {
       'header' => $this->header,
     ]);
   }
+
 }
