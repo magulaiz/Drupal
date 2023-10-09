@@ -329,6 +329,7 @@ class NestedArray {
     $result = [];
     foreach ($arrays as $array) {
       foreach ($array as $key => $value) {
+        // Ensure that NULL values don't override real values, if instructed so.
         if ($value === NULL && $preserve_null_values === FALSE) {
           continue;
         }
