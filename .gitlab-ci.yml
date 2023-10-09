@@ -150,6 +150,13 @@ stages:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
 
+'PHP 8.1 MySQL 8 async':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mysql-8"
+    DB_ASYNC: "1"
+
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
   variables:
