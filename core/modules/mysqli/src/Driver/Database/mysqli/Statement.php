@@ -17,7 +17,7 @@ class Statement extends StatementWrapperIterator {
   /**
    * Holds the index position of named parameters.
    *
-   * The mysqli driver only allows positional placeholders '?', whareas in
+   * The mysqli driver only allows positional placeholders '?', whereas in
    * Drupal the SQL is generated with named placeholders ':name'. In order to
    * execute the SQL, the string containing the named placeholders is converted
    * to using positional ones, and the position (index) of each named
