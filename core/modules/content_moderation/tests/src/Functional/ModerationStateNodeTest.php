@@ -302,18 +302,18 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->drupalGet($node->toUrl('canonical', ['language' => $node->language()])->toString());
     $this->assertSession()->pageTextContains('First version of the content en.');
 
-    // Check translation.
-    $this->drupalGet($node->toUrl('canonical', ['language' => $node->getTranslation('es')->language()])->toString());
-    $this->assertSession()->pageTextContains('First version of the content es.');
-
     // Check that the author, previously "web_user", now is anonymous.
     $this->assertEquals(0, $node->uid->entity->id());
     $this->assertEquals('First version of the content en.', $node->title->value);
 
     // Check that the translation revision still have the right users "second_web_user".
     $translation = $node->getTranslation('es');
+
+    // Check translation.
+    $this->drupalGet('/es/' . $node->toUrl()->toString());
+    $this->assertSession()->pageTextContains('First version of the content es.');
     $this->assertEquals('First version of the content es.', $translation->title->value);
-    $this->assertEquals($second_web_user->id(), $translation->uid->entity->id());
+    $this->assertEquals($second_web_user->id(), $translation->uid->entity->id(), 'Check user on translation.');
   }
 
 }
