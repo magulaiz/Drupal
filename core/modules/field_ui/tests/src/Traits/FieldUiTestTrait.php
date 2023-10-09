@@ -85,9 +85,7 @@ trait FieldUiTestTrait {
       $this->getSession()->getPage()->findLink($label);
 
       // Second step: 'Storage settings' form.
-      $this->submitForm($storage_edit, 'Continue');
-      // Assert that the field is not created.
-      $this->assertFieldDoesNotExist($bundle_path, $label);
+      $this->submitForm($storage_edit, 'Update settings');
 
       // Third step: 'Field settings' form.
       $this->submitForm($field_edit, 'Save settings');
@@ -178,8 +176,8 @@ trait FieldUiTestTrait {
    * @param string $field_type
    *   The name of the field type.
    *
-   * @returns string
-   *  Group name
+   * @return string
+   *   Group name
    */
   public function getFieldFromGroup($field_type) {
     $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
