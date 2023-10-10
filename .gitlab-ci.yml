@@ -139,6 +139,8 @@ stages:
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "mysql-8"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -149,20 +151,24 @@ stages:
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.1 MySQLi 5.7':
   <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
-    MYSQLI: "1"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 'PHP 8.1 MySQLi 8':
   <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-8"
-    MYSQLI: "1"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
@@ -194,12 +200,16 @@ stages:
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB: "mariadb-10.3.22"
+#     _TARGET_DB_DRIVER: "mysql"
+#     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 # 'PHP 8.1 MySQL 5.7 with updated deps':
 #   <<: [ *default-stage, *run-daily ]
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB: "mysql-5.7"
+#     _TARGET_DB_DRIVER: "mysql"
+#     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.1 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
