@@ -53,7 +53,7 @@ class JsonApiSettingsForm extends ConfigFormBase {
    * @return bool|string
    *   The transformed value.
    */
-  public function transformReadOnly(bool|string $read_only) {
+  public function transformReadOnly(bool|string $read_only): bool|string {
     if (is_bool($read_only)) {
       return $read_only ? 'r' : 'rw';
     }
