@@ -47,15 +47,6 @@ class NegotiationSessionForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    // This form does not yet support config validation, and implicitly enabling
-    // it (i.e., by letting the parent method run) will break a test.
-    throw new \BadMethodCallException();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.negotiation')
       ->set('session.parameter', $form_state->getValue('language_negotiation_session_param'))
