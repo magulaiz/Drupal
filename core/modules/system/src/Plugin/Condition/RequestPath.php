@@ -156,17 +156,20 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     // with different case. Ex: /Page, /page, /PAGE.
     $pages = mb_strtolower($this->configuration['pages']);
     if (!$pages) {
-      return TRUE;
+      $result = TRUE;
+    }
+    else {
+      $request = $this->requestStack->getCurrentRequest();
+      // Compare the lowercase path alias (if any) and internal path.
+      $path = $this->currentPath->getPath($request);
+      // Do not trim a trailing slash if that is the complete path.
+      $path = $path === '/' ? $path : rtrim($path, '/');
+      $path_alias = mb_strtolower($this->aliasManager->getAliasByPath($path));
+
+      $result = $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
     }
 
-    $request = $this->requestStack->getCurrentRequest();
-    // Compare the lowercase path alias (if any) and internal path.
-    $path = $this->currentPath->getPath($request);
-    // Do not trim a trailing slash if that is the complete path.
-    $path = $path === '/' ? $path : rtrim($path, '/');
-    $path_alias = mb_strtolower($this->aliasManager->getAliasByPath($path));
-
-    return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
+    return $this->evaluateIsNegated($result);
   }
 
   /**

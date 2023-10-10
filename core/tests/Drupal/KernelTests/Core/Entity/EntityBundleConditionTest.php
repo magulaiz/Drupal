@@ -79,6 +79,21 @@ class EntityBundleConditionTest extends EntityKernelTestBase {
       'test' => 'test',
     ]);
     $this->assertEquals('Test entity bundle is page, article or test', $condition->summary());
+
+    // Check the negated condition.
+    $condition->setConfig('bundles', [
+      'page' => 'page',
+    ]);
+    $condition->setConfig('negate', TRUE);
+    $this->assertEquals('Test entity bundle is not page', $condition->summary());
+
+    // Set the context to the test entity.
+    $condition->setContextValue('entity_test_with_bundle', $page);
+    $this->assertFalse($condition->execute(), 'Test type entities pass bundle checks for pages');
+    $condition->setContextValue('entity_test_with_bundle', $article);
+    $this->assertTrue($condition->execute(), 'Test type entities pass bundle checks for other than pages');
+    $condition->setContextValue('entity_test_with_bundle', $test);
+    $this->assertTrue($condition->execute(), 'Test type entities pass bundle checks for other than pages');
   }
 
 }

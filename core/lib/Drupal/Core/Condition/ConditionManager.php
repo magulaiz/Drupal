@@ -65,8 +65,7 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
    */
   public function execute(ExecutableInterface $condition) {
     if ($condition instanceof ConditionInterface) {
-      $result = $condition->evaluate();
-      return $condition->isNegated() ? !$result : $result;
+      return $condition->evaluate();
     }
     throw new ExecutableException("This manager object can only execute condition plugins");
   }

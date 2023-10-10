@@ -77,11 +77,14 @@ class UserRole extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate() {
-    if (empty($this->configuration['roles']) && !$this->isNegated()) {
+    if (empty($this->configuration['roles'])) {
       return TRUE;
     }
     $user = $this->getContextValue('user');
-    return (bool) array_intersect($this->configuration['roles'], $user->getRoles());
+
+    $result = (bool) array_intersect($this->configuration['roles'], $user->getRoles());
+
+    return $this->evaluateIsNegated($result);
   }
 
   /**

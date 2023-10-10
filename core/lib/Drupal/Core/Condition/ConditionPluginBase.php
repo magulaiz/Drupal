@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
  *
  * @ingroup plugin_api
  */
-abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface {
+abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface, ConditionPluginBaseInterface {
 
   use ContextAwarePluginAssignmentTrait;
 
@@ -75,6 +75,13 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
     if ($form_state->hasValue('context_mapping')) {
       $this->setContextMapping($form_state->getValue('context_mapping'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function evaluateIsNegated($evaluation_result): bool {
+    return $this->isNegated() ? !$evaluation_result : $evaluation_result;
   }
 
   /**

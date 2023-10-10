@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -83,13 +84,16 @@ class EntityBundle extends ConditionPluginBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function evaluate() {
-    // Returns true if no bundles are selected and negate option is disabled.
-    if (empty($this->configuration['bundles']) && !$this->isNegated()) {
+    // Returns true if no bundles are selected.
+    if (empty($this->configuration['bundles'])) {
       return TRUE;
     }
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->getContextValue($this->getDerivativeId());
-    return !empty($this->configuration['bundles'][$entity->bundle()]);
+
+    $result = $entity instanceof ContentEntityInterface && !empty($this->configuration['bundles'][$entity->bundle()]);
+
+    return $this->evaluateIsNegated($result);
   }
 
   /**

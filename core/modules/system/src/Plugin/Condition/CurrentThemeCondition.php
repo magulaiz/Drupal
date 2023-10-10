@@ -104,7 +104,9 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
       return TRUE;
     }
 
-    return $this->themeManager->getActiveTheme()->getName() == $this->configuration['theme'];
+    $result = $this->themeManager->getActiveTheme()->getName() == $this->configuration['theme'];
+
+    return $this->evaluateIsNegated($result);
   }
 
   /**

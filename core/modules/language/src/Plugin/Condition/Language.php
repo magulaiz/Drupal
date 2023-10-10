@@ -131,13 +131,14 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function evaluate() {
-    if (empty($this->configuration['langcodes']) && !$this->isNegated()) {
+    if (empty($this->configuration['langcodes'])) {
       return TRUE;
     }
 
     $language = $this->getContextValue('language');
     // Language visibility settings.
-    return !empty($this->configuration['langcodes'][$language->getId()]);
+    $result = !empty($this->configuration['langcodes'][$language->getId()]);
+    return $this->evaluateIsNegated($result);
   }
 
   /**
