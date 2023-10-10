@@ -9,6 +9,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
@@ -83,6 +84,13 @@ class ConfigImporterFactory {
   protected $moduleExtensionList;
 
   /**
+   * The theme extension list service.
+   *
+   * @var \Drupal\Core\Extension\ThemeExtensionList
+   */
+  protected $themeExtensionList;
+
+  /**
    * Creates a ConfigImporterFactory instance.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
@@ -103,6 +111,8 @@ class ConfigImporterFactory {
    *   The string translation service.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list service.
+   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
+   *   The theme extension list service.
    */
   public function __construct(
     EventDispatcherInterface $event_dispatcher,
@@ -113,7 +123,8 @@ class ConfigImporterFactory {
     ModuleInstallerInterface $module_installer,
     ThemeHandlerInterface $theme_handler,
     TranslationManager $string_translation,
-    ModuleExtensionList $module_extension_list
+    ModuleExtensionList $module_extension_list,
+    ThemeExtensionList $theme_extension_list
   ) {
     $this->eventDispatcher = $event_dispatcher;
     $this->configManager = $config_manager;
@@ -124,6 +135,7 @@ class ConfigImporterFactory {
     $this->themeHandler = $theme_handler;
     $this->stringTranslation = $string_translation;
     $this->moduleExtensionList = $module_extension_list;
+    $this->themeExtensionList = $theme_extension_list;
   }
 
   /**
@@ -147,6 +159,7 @@ class ConfigImporterFactory {
       $this->themeHandler,
       $this->stringTranslation,
       $this->moduleExtensionList,
+      $this->themeExtensionList,
     );
   }
 
