@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
  *
  * @ingroup plugin_api
  */
-abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface, ConditionPluginBaseInterface {
+abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface {
 
   use ContextAwarePluginAssignmentTrait;
 
