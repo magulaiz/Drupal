@@ -79,6 +79,9 @@ final class FieldConfigAddController extends ControllerBase {
       'default_options' => $temp_storage['default_options'],
     ]);
 
+    $edit_form['new_storage_wrapper']['label']['#value'] = $temp_storage['label_machine']['label'];
+    $edit_form['new_storage_wrapper']['field_name']['#value'] = $temp_storage['label_machine']['machine_name'];
+
     $field_type = $entity->getFieldStorageDefinition()->getType();
     $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field_type]['label'];
 

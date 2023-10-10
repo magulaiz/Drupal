@@ -59,7 +59,11 @@ final class FieldTempStoreController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The field instance edit form.
    */
-  public function setTempStore($entity_type, $field_storage_type, $field_temp_store_key, $bundle) {
+  public function setTempStore($entity_type, $field_storage_type, $field_temp_store_key, $bundle, $field_label , $field_machine_name) {
+    $label_machine = [
+      'label' => $field_label,
+      'machine_name' => $field_machine_name,
+    ];
     $field_values = [
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -100,6 +104,7 @@ final class FieldTempStoreController extends ControllerBase {
       'field_storage' => $field_storage_entity,
       'field_config_values' => $field_values,
       'default_options' => $default_options,
+      'label_machine' => $label_machine,
     ]);
     $route_parameters = [
       'entity_type' => $entity_type,

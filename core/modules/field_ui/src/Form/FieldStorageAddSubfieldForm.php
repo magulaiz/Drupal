@@ -5,6 +5,10 @@ namespace Drupal\field_ui\Form;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Ajax\AjaxFormHelperTrait;
+use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -25,6 +29,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddSubfieldForm extends FormBase {
+  use AjaxFormHelperTrait;
+  use AjaxHelperTrait;
+
+  /**
+   * The name of the selected field type.
+   *
+   * @var string
+   */
+  protected $selectedFieldType;
+
+   /**
+   * The name of the selected field type.
+   *
+   * @var string
+   */
+  protected $selectedFieldStorageType;
 
   /**
    * The name of the entity type.
@@ -197,34 +217,31 @@ class FieldStorageAddSubfieldForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#size' => 30,
-      '#required' => TRUE,
+    // '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
 
-//    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-//    $form['group_field_options_wrapper']['field_name'] = [
-//      '#type' => 'machine_name',
-//      '#field_prefix' => $field_prefix,
-//      '#attributes' => [
-//        'class' => ['js-hide'],
-//      ],
-//      '#size' => 15,
-//      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-//      // Calculate characters depending on the length of the field prefix
-//      // setting. Maximum length is 32.
-//      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
-//      '#machine_name' => [
-//        'source' => ['new_storage_wrapper', 'label'],
-//        'exists' => [$this, 'fieldNameExists'],
-//      ],
-//      '#required' => FALSE,
-//    ];
-
+    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
+    $form['group_field_options_wrapper']['field_name'] = [
+      '#type' => 'machine_name',
+      '#field_prefix' => $field_prefix,
+      '#size' => 15,
+      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
+          // Calculate characters depending on the length of the field prefix
+          // setting. Maximum length is 32.
+      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+      '#machine_name' => [
+        'source' => ['group_field_options_wrapper', 'field_name_label'],
+        'exists' => [$this, 'fieldNameExists'],
+      ],
+      '#required' => FALSE,
+    ];
     // Set the selected field to the form state by checking
     // the checked attribute.
     $selected_field_storage_type = NULL;
     if (isset($selected_field_type)) {
+      $this->selectedFieldType = $selected_field_type;
       $group_display = $field_type_options_radios[$selected_field_type]['#data']['#group_display'];
       if ($group_display) {
         $form['group_field_options_wrapper']['label'] = [
@@ -283,6 +300,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
         foreach ($group_field_options as $option) {
           if ($option['#attributes']['checked']) {
             $selected_field_storage_type = $option['#return_value'];
+            $this->selectedFieldStorageType = $selected_field_storage_type;
             break;
           }
         }
@@ -296,26 +314,8 @@ class FieldStorageAddSubfieldForm extends FormBase {
       $this->fieldTempStoreKey = '_' . uniqid();
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-      $route_parameters = [
-        'entity_type' => $this->entityTypeId,
-        'field_storage_type' => $selected_field_storage_type ?? $selected_field_type,
-        'field_temp_store_key' => $this->fieldTempStoreKey,
-      ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-
-      $form['group_field_options_wrapper']['submit'] = [
-        '#type' => 'link',
-        '#title' => $this->t('Continue'),
-        '#url' => Url::fromRoute('help.main'),
-        '#attributes' => [
-          'class' => ['button', 'button--primary', 'use-ajax'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => Json::encode([
-            'width' => '85vw',
-          ]),
-        ],
-      ];
       $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-      $form['group_field_options_wrapper']['back'] = [
+      $form['actions']['previous'] = [
         '#type' => 'link',
         '#title' => $this->t('Change field'),
         '#url' => Url::fromRoute("field_ui.field_storage_config_add_$entity_type_id", $route_parameters_back),
@@ -327,6 +327,31 @@ class FieldStorageAddSubfieldForm extends FormBase {
           ]),
         ],
       ];
+
+      $form['actions']['submit'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Continue'),
+        '#submit' => ['::submitForm'],
+        '#attributes' => [
+          'class' => ['button', 'button--primary', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '85vw',
+          ]),
+        ],
+      ];
+      if ($this->isAjax()) {
+        $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
+        // @todo static::ajaxSubmit() requires data-drupal-selector to be the same
+        //   between the various Ajax requests. A bug in
+        //   \Drupal\Core\Form\FormBuilder prevents that from happening unless
+        //   $form['#id'] is also the same. Normally, #id is set to a unique HTML
+        //   ID via Html::getUniqueId(), but here we bypass that in order to work
+        //   around the data-drupal-selector bug. This is okay so long as we
+        //   assume that this form only ever occurs once on a page. Remove this
+        //   workaround in https://www.drupal.org/node/2897377.
+        $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
+      }
       // Hide the continue button until the sub-field is selected.
       if (isset($group_field_options) && !array_key_exists($form_state->getValue('group_field_options_wrapper'), $group_field_options)) {
         $form['group_field_options_wrapper']['submit']['#attributes']['class'][] = 'js-hide';
@@ -357,18 +382,66 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->getValue('new_storage_type')) {
-      $form_state->setErrorByName('new_storage_type', $this->t('You need to select a field type.'));
+    $this->validateAddNew($form, $form_state);
+  }
+
+  /**
+   * Validates the 'add new field' case.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @see \Drupal\field_ui\Form\FieldStorageAddForm::validateForm()
+   */
+  protected function validateAddNew(array $form, FormStateInterface $form_state) {
+    // Validate if any information was provided in the 'add new field' case.
+    // Missing label.
+    if (!$form_state->getValue('field_name_label')) {
+      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
-    elseif (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper')) {
-      $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to select a field type.'));
+
+    // Missing field name.
+    if (!$form_state->getValue('field_name')) {
+      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
     }
+    // Field name validation.
+    else {
+      $field_name = $form_state->getValue('field_name');
+
+      // Add the field prefix.
+      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
+      $form_state->setValueForElement($form['group_field_options_wrapper']['field_name'], $field_name);
+    }
+  }
+
+  /**
+   * Checks if a field machine name is taken.
+   *
+   * @param string $value
+   *   The machine name, not prefixed.
+   * @param array $element
+   *   An array containing the structure of the 'field_name' element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return bool
+   *   Whether or not the field machine name is taken.
+   */
+  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
+    // Add the field prefix.
+    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
+
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
+    return isset($field_storage_definitions[$field_name]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $var = 1;
     // No-op since form is routed to the below controller.
     // @see \Drupal\field_ui\Controller\FieldTempStoreController::setTempStore
   }
@@ -385,6 +458,30 @@ class FieldStorageAddSubfieldForm extends FormBase {
    */
   public static function rebuildForm($form, FormStateInterface &$form_state) {
     $form_state->setRebuild();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+    $route_parameters = [
+      'entity_type' => $this->entityTypeId,
+      'field_storage_type' => $this->selectedFieldStorageType ?? $this->selectedFieldType,
+      'field_temp_store_key' => $this->fieldTempStoreKey,
+      'field_label' => $form_state->getValue('field_name_label'),
+      'field_machine_name' => $form_state->getValue('field_name'),
+    ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
+    $url = URL::fromRoute("field_ui.field_storage_entity_add_{$this->entityTypeId}", $route_parameters);
+    if ($url) {
+      $command = new RedirectCommand($url->setAbsolute()->toString());
+    }
+    else {
+      // Settings Tray always provides a destination.
+      throw new \Exception("No destination provided by form");
+    }
+    $response = new AjaxResponse();
+    return $response->addCommand($command);
   }
 
 }
