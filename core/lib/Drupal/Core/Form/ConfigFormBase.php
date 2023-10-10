@@ -19,6 +19,23 @@ abstract class ConfigFormBase extends FormBase {
   use ConfigFormBaseTrait;
 
   /**
+   * The $form_state key which stores a map of config keys to form elements.
+   *
+   * The map's keys are in the form of CONFIG_NAME:PROPERTY_PATH (e.g.,
+   * `system.site:name`), and the values are indexed arrays with the following
+   * elements:
+   * - The #name of the corresponding form element.
+   * - The #parents of the corresponding form element.
+   * - A callback which should be called to transform the config value when it
+   *   is being loaded and saved, or NULL if no transformation should be done.
+   *
+   * @see ::storeConfigKeyToFormElementMap()
+   *
+   * @var string
+   */
+  protected const CONFIG_KEY_TO_FORM_ELEMENT_MAP = 'config_targets';
+
+  /**
    * Constructs a \Drupal\system\ConfigFormBase object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -123,7 +140,7 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
     if (array_key_exists('#config_target', $element)) {
-      $map = $form_state->get('config_key_to_form_element_map') ?? [];
+      $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
       $config_target = $element['#config_target'];
       $transformation = NULL;
@@ -136,7 +153,7 @@ abstract class ConfigFormBase extends FormBase {
         $element['#parents'],
         $transformation,
       ];
-      $form_state->set('config_key_to_form_element_map', $map);
+      $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
       $element[$key] = $this->storeConfigKeyToFormElementMap($element[$key], $form_state);
@@ -150,7 +167,7 @@ abstract class ConfigFormBase extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
 
-    $map = $form_state->get('config_key_to_form_element_map') ?? [];
+    $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
     foreach ($this->getEditableConfigNames() as $config_name) {
       $config = $this->config($config_name);
@@ -280,7 +297,7 @@ abstract class ConfigFormBase extends FormBase {
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
   protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    $map = $form_state->get('config_key_to_form_element_map') ?? [];
+    $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
     foreach ($map as $config_target => [$name, $parents, $transformation]) {
       if (str_starts_with($config_target, $config->getName() . ':')) {
