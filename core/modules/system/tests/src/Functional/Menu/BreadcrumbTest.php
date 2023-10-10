@@ -267,7 +267,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $edit = [
         'title[0][value]' => "$name link",
         'link[0][uri]' => "/taxonomy/term/{$term->id()}",
-        'menu_parent' => "$menu:{$parent_mlid}",
+        'menu_parent_child' => "$menu:{$parent_mlid}",
         'enabled[value]' => 1,
       ];
       $this->drupalGet("admin/structure/menu/manage/{$menu}/add");

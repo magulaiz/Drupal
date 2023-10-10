@@ -763,7 +763,7 @@ class MenuUiTest extends BrowserTestBase {
       'description[0][value]' => '',
       'enabled[value]' => 1,
       'expanded[value]' => $expanded,
-      'menu_parent_child' => $menu_name . ':' . $parent,
+      'menu_parent' => $menu_name . ':' . $parent,
       'weight[0][value]' => $weight,
     ];
 
@@ -814,7 +814,7 @@ class MenuUiTest extends BrowserTestBase {
       $edit = [
         'link[0][uri]' => '/',
         'title[0][value]' => $title,
-        'menu_parent_child' => $parent,
+        'menu_parent' => $parent,
         'description[0][value]' => '',
         'enabled[value]' => 1,
         'expanded[value]' => FALSE,
@@ -902,7 +902,7 @@ class MenuUiTest extends BrowserTestBase {
     $mlid = $item->id();
 
     $edit = [
-      'menu_parent_child' => $menu_name . ':' . $parent,
+      'menu_parent' => $menu_name . ':' . $parent,
     ];
     $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
     $this->submitForm($edit, 'Save');

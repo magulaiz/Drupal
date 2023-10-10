@@ -99,15 +99,22 @@ class MenuLinkContentForm extends ContentEntityForm {
     if ($this->entity->isNew()) {
       $menu_id = $this->entity->getMenuName();
       $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
+      $form['menu_parent_menu'] = $this->menuParentSelector->parentSelectElement($default, $id, [
+        $menu_id => $menu->label(),
+      ]);
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
         $menu_id => $menu->label(),
       ]);
+      $form['menu_parent_menu']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent_menu']['#options'];
+      $form['menu_parent']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent']['#options'];
       $form = array_merge($this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
-      unset($form['menu_parent_child']);
+      unset($form['menu_parent']);
     }
     else {
+      $form['menu_parent_menu'] = $this->menuParentSelector->parentSelectElement($default, $id);
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
-      $form['menu_parent_child'] = $this->menuParentSelector->parentSelectElement($default, $id);
+      $form['menu_parent_menu']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent_menu']['#options'];
+      $form['menu_parent']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent']['#options'];
       $form = array_merge($this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
     }
 
@@ -132,7 +139,7 @@ class MenuLinkContentForm extends ContentEntityForm {
     /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
 
-    [$menu_name, $parent] = explode(':', $form_state->getValue('menu_parent'), 2);
+    [$menu_name, $parent] = explode(':', $form_state->getValue('menu_parent_menu'), 2);
 
     $entity->parent->value = $parent;
     $entity->menu_name->value = $menu_name;
