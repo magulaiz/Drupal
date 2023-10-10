@@ -29,19 +29,7 @@ trait ConfigTestTrait {
         $this->container->get('config.storage.sync'),
         $this->container->get('config.storage')
       );
-      $this->configImporter = new ConfigImporter(
-        $storage_comparer,
-        $this->container->get('event_dispatcher'),
-        $this->container->get('config.manager'),
-        $this->container->get('lock'),
-        $this->container->get('config.typed'),
-        $this->container->get('module_handler'),
-        $this->container->get('module_installer'),
-        $this->container->get('theme_handler'),
-        $this->container->get('string_translation'),
-        $this->container->get('extension.list.module'),
-        $this->container->get('extension.list.theme')
-      );
+      $this->configImporter = $this->container->get('config.importer.factory')->createConfigImporter($storage_comparer);
     }
     // Always recalculate the changelist when called.
     return $this->configImporter->reset();
