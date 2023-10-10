@@ -97,8 +97,8 @@ stages:
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-      [[ $DB_ASYNC == "1" && $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
-      [[ $DB_ASYNC == "1" && $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
+      [[ $MYSQLI == "1" && $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
+      [[ $MYSQLI == "1" && $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
@@ -142,8 +142,8 @@ stages:
       [[ $_TARGET_DB == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-      [[ $DB_ASYNC == "1" && $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
-      [[ $DB_ASYNC == "1" && $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
+      [[ $MYSQLI == "1" && $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
+      [[ $MYSQLI == "1" && $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
@@ -228,8 +228,8 @@ stages:
       [[ $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
       [[ $_TARGET_DB == mariadb* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
       [[ $_TARGET_DB == pgsql* ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-      [[ $DB_ASYNC == "1" && $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
-      [[ $DB_ASYNC == "1" && $_TARGET_DB == mariadb* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
+      [[ $MYSQLI == "1" && $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
+      [[ $MYSQLI == "1" && $_TARGET_DB == mariadb* ]] && export DRUPAL_TEST_DB_URL=mysqli://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysqli
     - cp ./core/.env.example ./core/.env
     # dotenv-safe/config does not support environment variables
     # @see https://github.com/rolodato/dotenv-safe/issues/126
