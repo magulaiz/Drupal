@@ -202,6 +202,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
+    // Ensure the filters have been sorted before saving.
+    $this->filters()->sort();
+
     parent::preSave($storage);
 
     assert(is_string($this->label()), 'Filter format label is expected to be a string.');
@@ -216,9 +219,6 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
 
     // Clear the static caches of filter_formats() and others.
     filter_formats_reset();
-    // Unset the filter collection, so it is rebuilt from configuration post save
-    // and is sorted correctly if it is used.
-    $this->filterCollection = NULL;
 
     if (!$update && !$this->isSyncing()) {
       // Default configuration of modules and installation profiles is allowed
