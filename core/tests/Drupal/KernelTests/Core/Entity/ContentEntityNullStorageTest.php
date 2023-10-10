@@ -54,7 +54,7 @@ class ContentEntityNullStorageTest extends KernelTestBase {
       $this->container->get('config.storage.sync'),
       $this->container->get('config.storage')
     );
-    $this->configImporter = $this->container->get('config.importer.factory')->createConfigImporter($storage_comparer->createChangelist());
+    $config_importer = $this->container->get('config.importer.factory')->createConfigImporter($storage_comparer->createChangelist());
 
     // Delete the contact message in sync.
     $sync = $this->container->get('config.storage.sync');

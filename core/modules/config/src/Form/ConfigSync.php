@@ -80,28 +80,12 @@ class ConfigSync extends FormBase {
    *   The target storage.
    * @param \Drupal\Core\Config\StorageInterface $snapshot_storage
    *   The snapshot storage.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock object.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   Event dispatcher.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   Configuration manager.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
-   *   The typed configuration manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
-   *   The module installer.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
-   *   The module extension list
    * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
    *   The import transformer service.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
-   *   The theme extension list.
+   * @param \Drupal\Core\Config\ConfigImporterFactory $config_importer_factory
+   *   The config importer factory.
    */
   public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, RendererInterface $renderer, ImportStorageTransformer $import_transformer, ConfigImporterFactory $config_importer_factory) {
     $this->syncStorage = $sync_storage;

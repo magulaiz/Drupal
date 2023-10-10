@@ -77,7 +77,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *   The config storage.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Config\ConfigImporterFactory
+   * @param \Drupal\Core\Config\ConfigImporterFactory $config_importer_factory
    *   The config importer factory.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, ConfigImporterFactory $config_importer_factory) {

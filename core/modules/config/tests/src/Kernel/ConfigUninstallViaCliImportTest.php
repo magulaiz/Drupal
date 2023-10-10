@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config\Kernel;
 
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 
