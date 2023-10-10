@@ -5,6 +5,8 @@ namespace Drupal\Tests\layout_builder\Functional;
 use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 
+// cspell:ignore blockmy
+
 /**
  * Tests the Layout Builder UI.
  *
@@ -408,6 +410,8 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // Assert that the blocks are visible, and save the layout.
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('My Menu');
+    $assert_session->elementExists('xpath', "//nav/h2[starts-with(@id, 'block-system-menu-blockmy-menu-')]");
+    $assert_session->elementExists('xpath', "//nav[starts-with(@aria-labelledby, 'block-system-menu-blockmy-menu-')]");
     $assert_session->elementExists('css', '.block.menu--my-menu');
     $page->pressButton('Save layout');
 
