@@ -2,10 +2,6 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\ConfigImporter;
-use Drupal\Core\Config\ConfigManagerInterface;
-use Drupal\Core\Config\StorageComparerInterface;
-use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
