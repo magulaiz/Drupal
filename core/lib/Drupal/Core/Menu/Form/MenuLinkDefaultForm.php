@@ -135,9 +135,9 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
 
+    $form['menu_parent_menu'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
     $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
-    $form['menu_parent_child'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
-    $form = array_merge($this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
+    $form = array_merge($form, $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [

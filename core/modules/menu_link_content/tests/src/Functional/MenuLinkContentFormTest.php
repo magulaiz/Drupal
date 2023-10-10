@@ -87,7 +87,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
   public function testMenuLinkContentForm() {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     // Test that other menus are not available when creating a new menu link.
-    $this->assertSession()->optionExists('edit-menu-parent', 'main:');
+    $this->assertSession()->optionNotExists('edit-menu-parent', 'main:');
     $option = $this->assertSession()->optionExists('edit-menu-parent', 'admin:');
     $this->assertTrue($option->isSelected());
     // Test that the field description is present.

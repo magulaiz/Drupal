@@ -31,7 +31,6 @@ trait MenuLinkTrait {
         $menu_of_selected_type[$key] = $value;
       }
     }
-    unset($menu_of_selected_type[$selected_parent_menu]);
     return $menu_of_selected_type;
   }
 
@@ -41,7 +40,7 @@ trait MenuLinkTrait {
   public function updateParentLinksNonJs(array $form, FormStateInterface $form_state) {
     $selected_menu = $form_state->getValue('menu_parent_menu');
 
-    $menu_of_selected_type = $this->getParentLinkSelectList($form_state->getValue('menu_parent'), $selected_menu);
+    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
     $form_state->set('updated_child_list', $menu_of_selected_type);
     $form_state->setRebuild();
   }
@@ -53,7 +52,6 @@ trait MenuLinkTrait {
     $selected_menu = $form_state->getValue('menu_parent_menu');
 
     $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
-    $form_state->set('updated_child_list', array_key_first($menu_of_selected_type));
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
   }
@@ -98,7 +96,6 @@ trait MenuLinkTrait {
     $form['menu_parent']['#weight'] = 10;
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     $form['menu_parent']['#title'] = $this->t('Parent link');
-    $form['menu_parent']['#value'] = $this->allMenuLinks;
     $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
     $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
     $form['menu_parent']['#prefix'] = '<div id="ajax-updated-section">';

@@ -431,7 +431,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit = [
       'title[0][value]' => 'External URL',
       'link[0][uri]' => 'http://example.org',
-      'menu_parent_menu' => 'admin:',
+      'menu_parent' => 'admin:system.admin',
       'description[0][value]' => 'External URL & escaped',
     ];
     $this->drupalGet('admin/structure/menu/manage/admin/add');

@@ -763,7 +763,7 @@ class MenuUiTest extends BrowserTestBase {
       'description[0][value]' => '',
       'enabled[value]' => 1,
       'expanded[value]' => $expanded,
-      'menu_parent' => $menu_name . ':' . $parent,
+      'menu_parent' => $menu_name ,
       'weight[0][value]' => $weight,
     ];
 
