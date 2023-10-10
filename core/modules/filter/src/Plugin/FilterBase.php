@@ -2,6 +2,7 @@
 
 namespace Drupal\filter\Plugin;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 
@@ -58,15 +59,13 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    if (isset($configuration['status'])) {
-      $this->status = (bool) $configuration['status'];
-    }
-    if (isset($configuration['weight'])) {
-      $this->weight = (int) $configuration['weight'];
-    }
-    if (isset($configuration['settings'])) {
-      $this->settings = (array) $configuration['settings'];
-    }
+    $configuration = NestedArray::mergeDeep(
+      $this->defaultConfiguration(),
+      $configuration
+    );
+    $this->status = (bool) $configuration['status'];
+    $this->weight = (int) $configuration['weight'];
+    $this->settings = (array) $configuration['settings'];
     return $this;
   }
 
