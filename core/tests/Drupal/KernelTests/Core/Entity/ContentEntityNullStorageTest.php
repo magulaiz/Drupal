@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\contact\Entity\ContactForm;
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 

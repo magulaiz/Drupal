@@ -4,7 +4,6 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Uuid\Php;
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\node\Entity\NodeType;

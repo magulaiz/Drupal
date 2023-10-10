@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config\Importer;
 
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Installer\InstallerKernel;
 
 /**

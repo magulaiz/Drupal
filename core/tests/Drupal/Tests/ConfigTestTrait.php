@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\StorageCopyTrait;
 use Drupal\Core\Config\StorageInterface;
