@@ -89,8 +89,8 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
     return [
       'provider' => $this->pluginDefinition['provider'],
       'status' => FALSE,
-      'weight' => $this->pluginDefinition['weight'] ?: 0,
-      'settings' => $this->pluginDefinition['settings'],
+      'weight' => $this->pluginDefinition['weight'] ?? 0,
+      'settings' => $this->pluginDefinition['settings'] ?? [],
     ];
   }
 
