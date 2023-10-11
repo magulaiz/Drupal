@@ -68,7 +68,11 @@ trait DoTrustedCallbackTrait {
       if ($extra_trusted_interface && is_subclass_of($object_or_classname, $extra_trusted_interface)) {
         $safe_callback = TRUE;
       }
-      elseif (is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
+      if (!$safe_callback) {
+        $method = new \ReflectionMethod($object_or_classname, $method_name);
+        $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
+      }
+      if (!$safe_callback && is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
         @trigger_error('Usage of the ' . TrustedCallbackInterface::class . " is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute for the method. See https://www.drupal.org/node/3349470", E_USER_DEPRECATED);
         if (is_object($object_or_classname)) {
           // @phpstan-ignore-next-line
@@ -78,10 +82,6 @@ trait DoTrustedCallbackTrait {
           $methods = call_user_func($object_or_classname . '::trustedCallbacks');
         }
         $safe_callback = in_array($method_name, $methods, TRUE);
-      }
-      if (!$safe_callback) {
-        $method = new \ReflectionMethod($object_or_classname, $method_name);
-        $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
       }
     }
     elseif ($callback instanceof \Closure) {
