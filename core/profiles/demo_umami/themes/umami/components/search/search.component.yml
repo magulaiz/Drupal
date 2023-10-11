@@ -21,9 +21,11 @@ props:
     title_prefix:
       type: array
       title: Title prefix
+      description: Content that should be presented immediately prior to the title in a template.
     title_suffix:
       type: array
       title: Title suffix
+      description: Content that should be shown immediately following the title in a template.
     label:
       type: string
       title: Label
@@ -31,11 +33,12 @@ props:
     title_attributes:
       type: Drupal\Core\Template\Attribute
       title: Title attributes
+      description: Title attributes.
 
 # Slots always hold arbitrary markup. We know that beforehand, so no need for
 # a schema for slots.
 slots:
-  # The key is the name of the slot. In your template you will use 
+  # The key is the name of the slot. In your template you will use
   # {% block body %}.
   content:
     label: content
