@@ -201,11 +201,9 @@ class NamedPlaceholderConverterTest extends UnitTestCase {
     ];
 
     yield [
-      "SELECT table.column1, ARRAY['3']::integer[] FROM schema.table table"
-        . " WHERE table.f1 = :foo AND ARRAY['3']::integer[]",
+      "SELECT table.column1, ARRAY['3']::integer[] FROM schema.table table" . " WHERE table.f1 = :foo AND ARRAY['3']::integer[]",
       [':foo' => 'qux'],
-      "SELECT table.column1, ARRAY['3']::integer[] FROM schema.table table"
-        . " WHERE table.f1 = ? AND ARRAY['3']::integer[]",
+      "SELECT table.column1, ARRAY['3']::integer[] FROM schema.table table" . " WHERE table.f1 = ? AND ARRAY['3']::integer[]",
       ['qux'],
     ];
 
@@ -217,11 +215,9 @@ class NamedPlaceholderConverterTest extends UnitTestCase {
     ];
 
     yield [
-      'SELECT table.column1, ARRAY[:foo]::integer[] FROM schema.table table'
-        . " WHERE table.f1 = :bar AND ARRAY['3']::integer[]",
+      'SELECT table.column1, ARRAY[:foo]::integer[] FROM schema.table table' . " WHERE table.f1 = :bar AND ARRAY['3']::integer[]",
       [':foo' => 'qux', ':bar' => 'git'],
-      'SELECT table.column1, ARRAY[?]::integer[] FROM schema.table table'
-        . " WHERE table.f1 = ? AND ARRAY['3']::integer[]",
+      'SELECT table.column1, ARRAY[?]::integer[] FROM schema.table table' . " WHERE table.f1 = ? AND ARRAY['3']::integer[]",
       ['qux', 'git'],
     ];
 
@@ -235,7 +231,7 @@ WHERE bar = ':not_a_param1 ''":not_a_param2"'''
    OR bar=''
    OR bar=:a_param3
 SQL
-,
+      ,
       [':a_param1' => 'qux', ':a_param2' => 'git', ':a_param3' => 'foo'],
     <<<'SQL'
 SELECT * FROM foo
@@ -246,29 +242,21 @@ WHERE bar = ':not_a_param1 ''":not_a_param2"'''
    OR bar=''
    OR bar=?
 SQL
-,
+      ,
       ['qux', 'git', 'foo'],
     ];
 
     yield [
-      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data'
-        . " WHERE (data.description LIKE :condition_0 ESCAPE '\\\\')"
-        . " AND (data.description LIKE :condition_1 ESCAPE '\\\\') ORDER BY id ASC",
+      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data' . " WHERE (data.description LIKE :condition_0 ESCAPE '\\\\')" . " AND (data.description LIKE :condition_1 ESCAPE '\\\\') ORDER BY id ASC",
       [':condition_0' => 'qux', ':condition_1' => 'git'],
-      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data'
-        . " WHERE (data.description LIKE ? ESCAPE '\\\\')"
-        . " AND (data.description LIKE ? ESCAPE '\\\\') ORDER BY id ASC",
+      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data' . " WHERE (data.description LIKE ? ESCAPE '\\\\')" . " AND (data.description LIKE ? ESCAPE '\\\\') ORDER BY id ASC",
       ['qux', 'git'],
     ];
 
     yield [
-      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data'
-        . ' WHERE (data.description LIKE :condition_0 ESCAPE "\\\\")'
-        . ' AND (data.description LIKE :condition_1 ESCAPE "\\\\") ORDER BY id ASC',
+      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data' . ' WHERE (data.description LIKE :condition_0 ESCAPE "\\\\")' . ' AND (data.description LIKE :condition_1 ESCAPE "\\\\") ORDER BY id ASC',
       [':condition_0' => 'qux', ':condition_1' => 'git'],
-      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data'
-        . ' WHERE (data.description LIKE ? ESCAPE "\\\\")'
-        . ' AND (data.description LIKE ? ESCAPE "\\\\") ORDER BY id ASC',
+      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data' . ' WHERE (data.description LIKE ? ESCAPE "\\\\")' . ' AND (data.description LIKE ? ESCAPE "\\\\") ORDER BY id ASC',
       ['qux', 'git'],
     ];
 
@@ -279,7 +267,7 @@ SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
  WHERE (data.description LIKE :condition_0 ESCAPE "\\")
    AND (data.description LIKE :condition_1 ESCAPE '\\') ORDER BY id ASC
 SQL
-,
+      ,
       [':condition_0' => 'qux', ':condition_1' => 'git'],
       <<<'SQL'
 SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
@@ -287,18 +275,14 @@ SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
  WHERE (data.description LIKE ? ESCAPE "\\")
    AND (data.description LIKE ? ESCAPE '\\') ORDER BY id ASC
 SQL
-,
+      ,
       ['qux', 'git'],
     ];
 
     yield [
-      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data'
-        . ' WHERE (data.description LIKE :condition_0 ESCAPE `\\\\`)'
-        . ' AND (data.description LIKE :condition_1 ESCAPE `\\\\`) ORDER BY id ASC',
+      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data' . ' WHERE (data.description LIKE :condition_0 ESCAPE `\\\\`)' . ' AND (data.description LIKE :condition_1 ESCAPE `\\\\`) ORDER BY id ASC',
       [':condition_0' => 'qux', ':condition_1' => 'git'],
-      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data'
-        . ' WHERE (data.description LIKE ? ESCAPE `\\\\`)'
-        . ' AND (data.description LIKE ? ESCAPE `\\\\`) ORDER BY id ASC',
+      'SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id FROM test_data data' . ' WHERE (data.description LIKE ? ESCAPE `\\\\`)' . ' AND (data.description LIKE ? ESCAPE `\\\\`) ORDER BY id ASC',
       ['qux', 'git'],
     ];
 
@@ -309,7 +293,7 @@ SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
  WHERE (data.description LIKE :condition_0 ESCAPE '\\')
    AND (data.description LIKE :condition_1 ESCAPE `\\`) ORDER BY id ASC
 SQL
-,
+      ,
       [':condition_0' => 'qux', ':condition_1' => 'git'],
       <<<'SQL'
 SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
@@ -317,7 +301,7 @@ SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
  WHERE (data.description LIKE ? ESCAPE '\\')
    AND (data.description LIKE ? ESCAPE `\\`) ORDER BY id ASC
 SQL
-,
+      ,
       ['qux', 'git'],
     ];
 
@@ -332,7 +316,7 @@ SELECT dummy as "dummy?"
 -- AND dummy <> ?
    AND dummy = ?
 SQL
-,
+      ,
       ['baz'],
       <<<'SQL'
 /*
@@ -344,7 +328,7 @@ SELECT dummy as "dummy?"
 -- AND dummy <> ?
    AND dummy = ?
 SQL
-,
+      ,
       ['baz'],
     ];
 
@@ -359,7 +343,7 @@ SELECT dummy as "dummy?"
 -- AND dummy <> :dummy
    AND dummy = :key
 SQL
-,
+      ,
       [':key' => 'baz'],
       <<<'SQL'
 /*
@@ -371,7 +355,7 @@ SELECT dummy as "dummy?"
 -- AND dummy <> :dummy
    AND dummy = ?
 SQL
-,
+      ,
       ['baz'],
     ];
 
@@ -379,12 +363,12 @@ SQL
       <<<'SQL'
 SELECT '{"a":null}'::jsonb ?? :key
 SQL
-,
+      ,
       [':key' => 'qux'],
       <<<'SQL'
 SELECT '{"a":null}'::jsonb ?? ?
 SQL
-,
+      ,
       ['qux'],
     ];
   }
