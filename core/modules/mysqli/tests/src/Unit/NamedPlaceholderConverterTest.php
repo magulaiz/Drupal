@@ -230,8 +230,7 @@ WHERE bar = ':not_a_param1 ''":not_a_param2"'''
    OR bar=':not_a_param4 '':not_a_param5'' :not_a_param6'
    OR bar=''
    OR bar=:a_param3
-SQL
-      ,
+SQL,
       [':a_param1' => 'qux', ':a_param2' => 'git', ':a_param3' => 'foo'],
     <<<'SQL'
 SELECT * FROM foo
@@ -241,8 +240,7 @@ WHERE bar = ':not_a_param1 ''":not_a_param2"'''
    OR bar=':not_a_param4 '':not_a_param5'' :not_a_param6'
    OR bar=''
    OR bar=?
-SQL
-      ,
+SQL,
       ['qux', 'git', 'foo'],
     ];
 
@@ -266,16 +264,14 @@ SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
   FROM test_data data
  WHERE (data.description LIKE :condition_0 ESCAPE "\\")
    AND (data.description LIKE :condition_1 ESCAPE '\\') ORDER BY id ASC
-SQL
-      ,
+SQL,
       [':condition_0' => 'qux', ':condition_1' => 'git'],
       <<<'SQL'
 SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
   FROM test_data data
  WHERE (data.description LIKE ? ESCAPE "\\")
    AND (data.description LIKE ? ESCAPE '\\') ORDER BY id ASC
-SQL
-      ,
+SQL,
       ['qux', 'git'],
     ];
 
@@ -292,16 +288,14 @@ SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
   FROM test_data data
  WHERE (data.description LIKE :condition_0 ESCAPE '\\')
    AND (data.description LIKE :condition_1 ESCAPE `\\`) ORDER BY id ASC
-SQL
-      ,
+SQL,
       [':condition_0' => 'qux', ':condition_1' => 'git'],
       <<<'SQL'
 SELECT data.age AS age, data.id AS id, data.name AS name, data.id AS id
   FROM test_data data
  WHERE (data.description LIKE ? ESCAPE '\\')
    AND (data.description LIKE ? ESCAPE `\\`) ORDER BY id ASC
-SQL
-      ,
+SQL,
       ['qux', 'git'],
     ];
 
@@ -315,8 +309,7 @@ SELECT dummy as "dummy?"
  WHERE '?' = '?'
 -- AND dummy <> ?
    AND dummy = ?
-SQL
-      ,
+SQL,
       ['baz'],
       <<<'SQL'
 /*
@@ -327,8 +320,7 @@ SELECT dummy as "dummy?"
  WHERE '?' = '?'
 -- AND dummy <> ?
    AND dummy = ?
-SQL
-      ,
+SQL,
       ['baz'],
     ];
 
@@ -342,8 +334,7 @@ SELECT dummy as "dummy?"
  WHERE '?' = '?'
 -- AND dummy <> :dummy
    AND dummy = :key
-SQL
-      ,
+SQL,
       [':key' => 'baz'],
       <<<'SQL'
 /*
@@ -354,21 +345,18 @@ SELECT dummy as "dummy?"
  WHERE '?' = '?'
 -- AND dummy <> :dummy
    AND dummy = ?
-SQL
-      ,
+SQL,
       ['baz'],
     ];
 
     yield 'Escaped question' => [
       <<<'SQL'
 SELECT '{"a":null}'::jsonb ?? :key
-SQL
-      ,
+SQL,
       [':key' => 'qux'],
       <<<'SQL'
 SELECT '{"a":null}'::jsonb ?? ?
-SQL
-      ,
+SQL,
       ['qux'],
     ];
   }
