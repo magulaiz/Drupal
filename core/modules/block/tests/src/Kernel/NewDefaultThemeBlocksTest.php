@@ -118,7 +118,6 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     $theme_installer = $this->themeInstaller;
     $theme_installer->install([$default_theme]);
 
-
     // Add two instances of the user login block with machine
     // names that will collide.
     $this->placeBlock('user_login_block', [
