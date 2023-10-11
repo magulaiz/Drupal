@@ -53,4 +53,6 @@ services:
   Drupal\auto_updates\MaintenanceModeAwareCommitter:
     tags:
       - { name: event_subscriber }
-  Drupal\auto_updates\CommandExecutor: {}
+  Drupal\auto_updates\CommandExecutor:
+    arguments:
+      $appRoot: '%app.root%'
