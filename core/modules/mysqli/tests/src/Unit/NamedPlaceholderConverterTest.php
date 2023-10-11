@@ -15,6 +15,8 @@ class NamedPlaceholderConverterTest extends UnitTestCase {
 
   /**
    * @covers ::parse
+   * @covers ::getConvertedSQL
+   * @covers ::getConvertedParameters
    * @dataProvider statementsWithParametersProvider
    */
   public function testParse(string $sql, array $parameters, string $expectedSql, array $expectedParameters): void {
@@ -24,6 +26,9 @@ class NamedPlaceholderConverterTest extends UnitTestCase {
     $this->assertSame($expectedParameters, $converter->getConvertedParameters());
   }
 
+  /**
+   * Data for testParse.
+   */
   public static function statementsWithParametersProvider(): iterable {
     yield [
       'SELECT ?',
