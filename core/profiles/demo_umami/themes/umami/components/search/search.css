@@ -3,35 +3,35 @@
  * This file is used to style the search block.
  */
 
-.search-block-form {
+.umami-search {
   display: none;
 }
 
 @media screen and (min-width: 48em) {
-  .search-block-form {
+  .umami-search {
     display: block;
   }
 }
 
-.search-block-form form {
+.umami-search form {
   display: flex;
   margin-top: 1.3rem;
   margin-bottom: 1.2rem;
 }
 
-.search-iconwrap {
+.umami-search-iconwrap {
   /* Compensate for focus styling that offsets left alignment of icon */
   margin-left: -7px;
 }
 
 @media screen and (min-width: 48em) {
-  .search-iconwrap {
+  .umami-search-iconwrap {
     display: none;
   }
 }
 
 /* Search icon for mobile */
-.search-link {
+.umami-search-link {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -52,21 +52,21 @@
 }
 
 /* Search input */
-.search-block-form .form-type-search {
+.umami-search .form-type-search {
   margin-top: 0;
   margin-bottom: 0;
   border: 1px solid #dbdbdb;
   border-top-left-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
-[dir=rtl] .search-block-form .form-type-search {
+[dir=rtl] .umami-search .form-type-search {
   border-top-left-radius: 0;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 0;
 }
 
-.search-block-form .form-search {
+.umami-search .form-search {
   width: auto;
   height: auto;
   margin: 0;
@@ -79,17 +79,17 @@
 }
 
 @media screen and (min-width: 48em) {
-  .search-block-form .form-search {
+  .umami-search .form-search {
     width: 20rem;
   }
 }
 
-.search-block-form .form-search:focus {
+.umami-search .form-search:focus {
   border: 2px solid #008068;
   border-top-left-radius: 2px;  /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
-[dir=rtl] .search-block-form .form-search:focus {
+[dir=rtl] .umami-search .form-search:focus {
   border-top-left-radius: 0;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
@@ -104,7 +104,7 @@
 }
 
 /* Search submit */
-.search-block-form .form-actions {
+.umami-search .form-actions {
   position: relative;
   margin: 0;
   padding: 0;
@@ -114,7 +114,7 @@
   border-top-right-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
-[dir=rtl] .search-block-form .form-actions {
+[dir=rtl] .umami-search .form-actions {
   border-right: none;
   border-left: 1px solid #dbdbdb;
   border-top-left-radius: 3px;
@@ -122,10 +122,10 @@
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 3px;
 }
-.search-block-form .form-actions .button {
+.umami-search .form-actions .button {
   margin: 0;
 }
-.search-block-form .form-submit {
+.umami-search .form-submit {
   margin: 0;
   padding: 0.6em 1.25em 0.4em;
   transition: background-color 0.5s ease, border 0.5s ease;
@@ -136,11 +136,11 @@
 }
 
 @media screen and (min-width: 48em) {
-  .search-block-form .form-submit {
+  .umami-search .form-submit {
     border-top-left-radius: 0; /* LTR */
     border-bottom-left-radius: 0; /* LTR */
   }
-  [dir=rtl] .search-block-form .form-submit {
+  [dir=rtl] .umami-search .form-submit {
     border-top-left-radius: 3px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -148,8 +148,8 @@
   }
 }
 
-.search-block-form .form-submit:focus,
-.search-block-form .form-submit:hover {
+.umami-search .form-submit:focus,
+.umami-search .form-submit:hover {
   margin: 0;
   border: 2px solid #008068;
   outline-offset: 2px;
