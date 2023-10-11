@@ -10,11 +10,6 @@ trait MenuLinkTrait {
   use StringTranslationTrait;
 
   /**
-   * All menu links.
-   */
-  protected $allMenuLinks;
-
-  /**
    * Helper function to the list of parent link select list.
    */
   public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) {
@@ -33,7 +28,7 @@ trait MenuLinkTrait {
   public function updateParentLinksNonJs(array $form, FormStateInterface $form_state) {
     $selected_menu = $form_state->getValue('menu_parent_menu');
 
-    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
+    $menu_of_selected_type = $this->getParentLinkSelectList($form_state->getValue('all_menu_links'), $selected_menu);
     $form_state->set('updated_child_list', $menu_of_selected_type);
     $form_state->setRebuild();
   }
@@ -44,7 +39,7 @@ trait MenuLinkTrait {
   public function updateParentLinks(array $form, FormStateInterface $form_state) {
     $selected_menu = $form_state->getValue('menu_parent_menu');
 
-    $menu_of_selected_type = $this->getParentLinkSelectList($this->allMenuLinks, $selected_menu);
+    $menu_of_selected_type = $this->getParentLinkSelectList($form_state->getValue('all_menu_links'), $selected_menu);
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
   }
@@ -53,14 +48,16 @@ trait MenuLinkTrait {
    * Helper function to build the select form elements.
    */
   protected function buildMenuFormElements(array $form, FormStateInterface $form_state, array $all_menu_links, string $menu_parent) {
-
-    $this->allMenuLinks = $all_menu_links;
     $parent_menu_links = [];
-    foreach ($this->allMenuLinks as $key => $value) {
+    foreach ($all_menu_links as $key => $value) {
       if (strpos($value, '<') === 0) {
         $parent_menu_links[$key] = $value;
       }
     }
+    $form['all_menu_links'] = [
+      '#type' => 'value',
+      '#value' => $all_menu_links,
+    ];
     $form['menu_parent_menu']['#weight'] = 10;
     $form['menu_parent_menu']['#options'] = $parent_menu_links;
     $form['menu_parent_menu']['#title'] = $this->t('Menu');
@@ -84,7 +81,7 @@ trait MenuLinkTrait {
         'wrapper' => 'ajax-updated-section',
       ],
     ];
-    $menu_of_selected_type = ($form_state->get('updated_child_list') !== NULL) ? $form_state->get('updated_child_list') : $this->getParentLinkSelectList($this->allMenuLinks, $menu_parent);
+    $menu_of_selected_type = ($form_state->get('updated_child_list') !== NULL) ? $form_state->get('updated_child_list') : $this->getParentLinkSelectList($all_menu_links, $menu_parent);
 
     $form['menu_parent']['#weight'] = 10;
     $form['menu_parent']['#options'] = $menu_of_selected_type;
