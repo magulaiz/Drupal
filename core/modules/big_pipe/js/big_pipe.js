@@ -59,8 +59,9 @@
    */
   function processReplacement(replacement) {
     const id = replacement.dataset.bigPipeReplacementForPlaceholderWithId;
-    // Because we use a mutation observer the content is guaranteed to be
-    // complete at this point.
+    // The content is not guaranteed to be complete at this point, but trimming
+    // it will not make a big change, since json will not be valid if it was
+    // not fully loaded anyway.
     const content = replacement.textContent.trim();
 
     // Ignore any placeholders that are not in the known placeholder list. Used
@@ -117,6 +118,8 @@
     mutations.forEach(({ addedNodes, type, target }) => {
       addedNodes.forEach(checkMutationAndProcess);
 
+      // Checks if parent node of target node has not been processed.
+      // @see `@ingroup large_chunk` for more information.
       if (
         type === 'characterData' &&
         checkMutation(target.parentNode) &&
@@ -138,9 +141,16 @@
   // in the DOM before the mutation observer is started.
   document.querySelectorAll(replacementsSelector).forEach(processReplacement);
 
-  // Start observing the body element for new children.
+  // Start observing the body element for new children and for new changes in
+  // Text nodes of elements. We need to track Text nodes because content
+  // of the node can be too large, browser will receive not fully loaded chunk
+  // and render it as is. At this moment json inside script will be invalid and
+  // we need to track new changes to that json (Text node), once it will be
+  // fully loaded it will be processed.
+  // @ingroup large_chunk
   observer.observe(document.body, {
     childList: true,
+    // Without this options characterData will not be triggered inside child nodes.
     subtree: true,
     characterData: true,
   });
