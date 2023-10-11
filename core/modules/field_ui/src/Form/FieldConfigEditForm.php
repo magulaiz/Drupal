@@ -3,6 +3,10 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -13,6 +17,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
@@ -400,6 +405,19 @@ class FieldConfigEditForm extends EntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save settings');
+    $route_parameters = [
+      'field_config' => $this->entity->id(),
+      'node_type' => $this->entity->getTargetBundle(),
+    ];
+    $actions['submit']['#ajax'] = [
+      'callback' => [$this, 'ajaxSubmitForm'],
+      'url' => Url::fromRoute("entity.field_config.{$this->entity->getTargetEntityTypeId()}_field_edit_form", $route_parameters),
+      'options' => [
+        'query' => [
+          FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+        ],
+      ],
+    ];
     $entity_type = $this->entity->getTargetEntityTypeId();
     $temp_field_name = $this->entity->get('field_name');
     $route_parameters = [
@@ -446,6 +464,21 @@ class FieldConfigEditForm extends EntityForm {
     }
 
     return $actions;
+  }
+
+  /**
+   *
+   */
+  public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if ($form_state::hasAnyErrors()) {
+      $response->addCommand(new ReplaceCommand('#field-ui-edit-form', $form));
+      return $response;
+    }
+
+    $response->addCommand(new CloseModalDialogCommand());
+    $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
+    return $response;
   }
 
   /**

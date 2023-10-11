@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\field_ui\Controller;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
@@ -60,7 +58,7 @@ final class FieldConfigAddController extends ControllerBase {
    * @param string $field_name
    *   The name of the field to create.
    *
-   * @return \Drupal\Core\Ajax\AjaxResponse
+   * @return array
    *   The field instance edit form.
    */
   public function fieldConfigAddConfigureForm(string $entity_type, string $field_name) {
@@ -82,17 +80,7 @@ final class FieldConfigAddController extends ControllerBase {
     $edit_form['new_storage_wrapper']['label']['#value'] = $temp_storage['label_machine']['label'];
     $edit_form['new_storage_wrapper']['field_name']['#value'] = $temp_storage['label_machine']['machine_name'];
 
-    $field_type = $entity->getFieldStorageDefinition()->getType();
-    $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field_type]['label'];
-
-    if ($this->isAjax()) {
-      $response = new AjaxResponse();
-      $response->addCommand(new OpenModalDialogCommand("New {$field_type_label} field settings", $edit_form, ['width' => '85vw']));
-    }
-    else {
-      $response = $edit_form;
-    }
-    return $response;
+    return $edit_form;
   }
 
 }

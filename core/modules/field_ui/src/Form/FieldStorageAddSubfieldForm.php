@@ -8,8 +8,9 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
@@ -31,6 +32,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldStorageAddSubfieldForm extends FormBase {
   use AjaxFormHelperTrait;
   use AjaxHelperTrait;
+
+  /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
 
   /**
    * The name of the selected field type.
@@ -110,12 +118,15 @@ class FieldStorageAddSubfieldForm extends FormBase {
    *   The private tempstore.
    * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
    *   The field type category plugin manager.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, protected ?PrivateTempStore $tempStore = NULL, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, protected ?PrivateTempStore $tempStore = NULL, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL,ControllerResolverInterface $controller_resolver) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
     $this->entityFieldManager = $entity_field_manager;
+    $this->controllerResolver = $controller_resolver;
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldStorageAddForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
@@ -144,6 +155,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
       $container->get('entity_field.manager'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
+      $container->get('controller_resolver'),
     );
   }
 
@@ -464,24 +476,124 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-    $route_parameters = [
-      'entity_type' => $this->entityTypeId,
-      'field_storage_type' => $this->selectedFieldStorageType ?? $this->selectedFieldType,
-      'field_temp_store_key' => $this->fieldTempStoreKey,
-      'field_label' => $form_state->getValue('field_name_label'),
-      'field_machine_name' => $form_state->getValue('field_name'),
-    ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-    $url = URL::fromRoute("field_ui.field_storage_entity_add_{$this->entityTypeId}", $route_parameters);
-    if ($url) {
-      $command = new RedirectCommand($url->setAbsolute()->toString());
+    $field_storage_type = $this->selectedFieldStorageType ?? $this->selectedFieldType;
+    $this->setTempStore($this->entityTypeId, $field_storage_type, $this->fieldTempStoreKey, $this->bundle, $form_state->getValue('field_name_label'), $form_state->getValue('field_name'));
+
+    $response = new AjaxResponse();
+    $callback = $this->controllerResolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldConfigAddController::fieldConfigAddConfigureForm');
+    $edit_form = call_user_func_array($callback,
+      [$this->entityTypeId, $this->fieldTempStoreKey]);
+    $field_type = $form_state->getValue('group_field_options_wrapper');
+    $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field_type]['label'];
+    $response->addCommand(new OpenModalDialogCommand("New {$field_type_label} field settings", $edit_form, ['width' => '880']));
+    return $response;
+  }
+
+  /**
+   * Get default options from preconfigured options for a new field.
+   *
+   * @param string $field_name
+   *   The machine name of the field.
+   * @param string $preset_key
+   *   A key in the preconfigured options array for the field.
+   *
+   * @return array
+   *   An array of settings with keys 'field_storage_config', 'field_config',
+   *   'entity_form_display', and 'entity_view_display'.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *
+   * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
+   */
+  protected function getNewFieldDefaults(string $field_name, string $preset_key): array {
+    $field_type_definition = $this->fieldTypePluginManager->getDefinition($field_name);
+    $options = $this->fieldTypePluginManager->getPreconfiguredOptions($field_type_definition['id']);
+    $field_options = $options[$preset_key] ?? [];
+
+    $default_options = [];
+    // Merge in preconfigured field storage options.
+    if (isset($field_options['field_storage_config'])) {
+      foreach (['cardinality', 'settings'] as $key) {
+        if (isset($field_options['field_storage_config'][$key])) {
+          $default_options['field_storage_config'][$key] = $field_options['field_storage_config'][$key];
+        }
+      }
+    }
+
+    // Merge in preconfigured field options.
+    if (isset($field_options['field_config'])) {
+      foreach (['required', 'settings'] as $key) {
+        if (isset($field_options['field_config'][$key])) {
+          $default_options['field_config'][$key] = $field_options['field_config'][$key];
+        }
+      }
+    }
+
+    // Preconfigured options only apply to the default display modes.
+    foreach (['entity_form_display', 'entity_view_display'] as $key) {
+      if (isset($field_options[$key])) {
+        $default_options[$key] = [
+          'default' => array_intersect_key($field_options[$key], ['type' => '', 'settings' => []]),
+        ];
+      }
+      else {
+        $default_options[$key] = ['default' => []];
+      }
+    }
+
+    return $default_options;
+  }
+
+  /**
+   * Creates a dummy field to set in temp store in order to build the edit form.
+   */
+  public function setTempStore($entity_type, $field_storage_type, $field_temp_store_key, $bundle, $field_label, $field_machine_name) {
+    $label_machine = [
+      'label' => $field_label,
+      'machine_name' => $field_machine_name,
+    ];
+    $field_values = [
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+    ];
+    $default_options = [];
+    // Check if we're dealing with a preconfigured field.
+    if (strpos($field_storage_type, 'field_ui:') === 0) {
+      [, $field_type, $preset_key] = explode(':', $field_storage_type, 3);
+      $default_options = $this->getNewFieldDefaults($field_type, $preset_key);
     }
     else {
-      // Settings Tray always provides a destination.
-      throw new \Exception("No destination provided by form");
+      $field_type = $field_storage_type;
     }
-    $response = new AjaxResponse();
-    return $response->addCommand($command);
+    $field_values += [
+      ...$default_options['field_config'] ?? [],
+      'field_name' => $field_temp_store_key,
+      // Field translatability should be explicitly enabled by the users.
+      'translatable' => FALSE,
+    ];
+
+    $field_storage_values = [
+      ...$default_options['field_storage_config'] ?? [],
+      'field_name' => $field_temp_store_key,
+      'type' => $field_type,
+      'entity_type' => $entity_type,
+    ];
+
+    try {
+      $field_storage_entity = \Drupal::entityTypeManager()->getStorage('field_storage_config')->create($field_storage_values);
+    }
+    catch (\Exception $e) {
+      $this->messenger()->addError($this->t('There was a problem creating field %label: @message'));
+      exit;
+    }
+
+    // Save field and field storage values in tempstore.
+    $this->tempStore->set($entity_type . ':' . $field_temp_store_key, [
+      'field_storage' => $field_storage_entity,
+      'field_config_values' => $field_values,
+      'default_options' => $default_options,
+      'label_machine' => $label_machine,
+    ]);
   }
 
 }
