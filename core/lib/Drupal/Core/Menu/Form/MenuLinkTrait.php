@@ -18,16 +18,9 @@ trait MenuLinkTrait {
    * Helper function to the list of parent link select list.
    */
   public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) {
-    $selected_parent_menu = '';
-    foreach ($all_menu_links as $key => $value) {
-      if ($key === $selected_menu) {
-        $selected_parent_menu = $key;
-      }
-    }
-
     $menu_of_selected_type = [];
     foreach ($all_menu_links as $key => $value) {
-      if (strpos($key, $selected_parent_menu) === 0) {
+      if (strpos($key, $selected_menu) === 0) {
         $menu_of_selected_type[$key] = $value;
       }
     }
