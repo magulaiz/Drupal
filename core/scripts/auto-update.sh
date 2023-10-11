@@ -38,7 +38,7 @@ if (empty($autoloader)) {
 // a Drupal module, which means Drupal must be booted up in order to access it.
 // Since Drupal isn't booted yet, we need to make the autoloader aware of the
 // command namespace.
-$autoloader->addPsr4('Drupal\\auto_updates\\Commands\\', __DIR__ . '/src/Commands');
+$autoloader->addPsr4('Drupal\\auto_updates\\Commands\\', __DIR__ . '/../modules/auto_updates/src/Commands');
 
 $application = new Application('Automatic Updates', '3.0.0');
 $application->add(new RunCommand($autoloader));
