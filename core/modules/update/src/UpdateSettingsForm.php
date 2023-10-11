@@ -4,9 +4,9 @@ namespace Drupal\update;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure update settings for this site.
@@ -45,6 +45,23 @@ class UpdateSettingsForm extends ConfigFormBase {
       ],
       '#description' => $this->t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
     ];
+
+    $user = \Drupal::currentUser();
+    // Calculate the SAs time according to user's timezone.
+    $user_timezone = new \DateTimeZone($user->getTimeZone());
+
+    // Calculate the upcoming Wednesday in UTC.
+    $today = new \DateTime('now', new \DateTimeZone('UTC'));
+    $nextWednesday = $today->modify('next Wednesday');
+
+    // Set the time to 6 PM. Which is the time for SAs.
+    $nextWednesday->setTime(18, 0, 0);
+
+    // Convert to the user's timezone.
+    $nextWednesday->setTimezone($user_timezone);
+    $day_of_week = $nextWednesday->format('l');
+    $time = $nextWednesday->format('H:i');
+
     $form['update_day_of_week'] = [
       '#type' => 'select',
       '#title' => $this->t('Day of update check'),
@@ -63,7 +80,10 @@ class UpdateSettingsForm extends ConfigFormBase {
           ':input[name="update_check_frequency"]' => ['value' => 7],
         ],
       ],
-      '#description' => $this->t('Select the day you want to automatically check for new releases of your currently installed modules and themes.'),
+      '#description' => $this->t('Select the day you want to automatically check for new releases of your currently installed modules and themes. Drupal SAs are usually released from @time on @day_of_week.', [
+        '@time' => $time,
+        '@day_of_week' => $day_of_week,
+      ]),
     ];
 
     $form['update_check_disabled'] = [
