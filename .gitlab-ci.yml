@@ -50,6 +50,7 @@ variables:
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
 
 .test-variables: &test-variables
+  _TARGET_PHP: 8.2
   FF_NETWORK_PER_BUILD: 1
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
@@ -324,6 +325,8 @@ stages:
   services:
     - <<: *with-database
     - <<: *with-chrome
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   script:
     #  Determine DB driver.
     - export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
