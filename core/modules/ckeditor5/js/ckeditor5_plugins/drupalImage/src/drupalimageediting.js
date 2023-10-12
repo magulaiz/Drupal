@@ -591,28 +591,18 @@ export default class DrupalImageEditing extends Plugin {
 
     if (schema.isRegistered('imageInline')) {
       schema.extend('imageInline', {
-        allowAttributes: [
-          'dataEntityUuid',
-          'dataEntityType',
-          'isDecorative',
-        ],
+        allowAttributes: ['dataEntityUuid', 'dataEntityType', 'isDecorative'],
       });
     }
 
     if (schema.isRegistered('imageBlock')) {
       schema.extend('imageBlock', {
-        allowAttributes: [
-          'dataEntityUuid',
-          'dataEntityType',
-          'isDecorative',
-        ],
+        allowAttributes: ['dataEntityUuid', 'dataEntityType', 'isDecorative'],
       });
     }
 
     // Conversion.
-    conversion
-      .for('upcast')
-      .add(viewImageToModelImage(editor));
+    conversion.for('upcast').add(viewImageToModelImage(editor));
 
     if (editor.plugins.has('DataFilter')) {
       const dataFilter = editor.plugins.get('DataFilter');
