@@ -302,100 +302,6 @@ function modelImageStyleToDataAttribute() {
 }
 
 /**
- * Generates a callback that saves the width value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageWidthToAttribute() {
-  /**
-   * Callback for the attribute:width event.
-   *
-   * Saves the width value to the width attribute.
-   *
-   * @type {converterHandler}
-   */
-  function converter(event, data, conversionApi) {
-    const { item } = data;
-    const { consumable, writer } = conversionApi;
-
-    if (!consumable.consume(item, event.name)) {
-      return;
-    }
-
-    const viewElement = conversionApi.mapper.toViewElement(item);
-    const imageInFigure = Array.from(viewElement.getChildren()).find(
-      (child) => child.name === 'img',
-    );
-
-    writer.setAttribute(
-      'width',
-      data.attributeNewValue.replace('px', ''),
-      imageInFigure || viewElement,
-    );
-  }
-
-  return (dispatcher) => {
-    dispatcher.on('attribute:width:imageInline', converter, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:width:imageBlock', converter, {
-      priority: 'high',
-    });
-  };
-}
-
-/**
- * Generates a callback that saves the height value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageHeightToAttribute() {
-  /**
-   * Callback for the attribute:height event.
-   *
-   * Saves the height value to the height attribute.
-   *
-   * @type {converterHandler}
-   */
-  function converter(event, data, conversionApi) {
-    const { item } = data;
-    const { consumable, writer } = conversionApi;
-
-    if (!consumable.consume(item, event.name)) {
-      return;
-    }
-
-    const viewElement = conversionApi.mapper.toViewElement(item);
-    const imageInFigure = Array.from(viewElement.getChildren()).find(
-      (child) => child.name === 'img',
-    );
-
-    writer.setAttribute(
-      'height',
-      data.attributeNewValue.replace('px', ''),
-      imageInFigure || viewElement,
-    );
-  }
-
-  return (dispatcher) => {
-    dispatcher.on('attribute:height:imageInline', converter, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:height:imageBlock', converter, {
-      priority: 'high',
-    });
-  };
-}
-
-/**
  * Generates a callback that handles the data downcast for the img element.
  *
  * @return {function}
@@ -689,8 +595,6 @@ export default class DrupalImageEditing extends Plugin {
           'dataEntityUuid',
           'dataEntityType',
           'isDecorative',
-          'width',
-          'height',
         ],
       });
     }
@@ -701,8 +605,6 @@ export default class DrupalImageEditing extends Plugin {
           'dataEntityUuid',
           'dataEntityType',
           'isDecorative',
-          'width',
-          'height',
         ],
       });
     }
@@ -710,37 +612,7 @@ export default class DrupalImageEditing extends Plugin {
     // Conversion.
     conversion
       .for('upcast')
-      .add(viewImageToModelImage(editor))
-      .attributeToAttribute({
-        view: {
-          name: 'img',
-          key: 'width',
-        },
-        model: {
-          key: 'width',
-          value: (viewElement) => {
-            if (isNumberString(viewElement.getAttribute('width'))) {
-              return `${viewElement.getAttribute('width')}px`;
-            }
-            return `${viewElement.getAttribute('width')}`;
-          },
-        },
-      })
-      .attributeToAttribute({
-        view: {
-          name: 'img',
-          key: 'height',
-        },
-        model: {
-          key: 'height',
-          value: (viewElement) => {
-            if (isNumberString(viewElement.getAttribute('height'))) {
-              return `${viewElement.getAttribute('height')}px`;
-            }
-            return `${viewElement.getAttribute('height')}`;
-          },
-        },
-      });
+      .add(viewImageToModelImage(editor));
 
     if (editor.plugins.has('DataFilter')) {
       const dataFilter = editor.plugins.get('DataFilter');
@@ -770,8 +642,6 @@ export default class DrupalImageEditing extends Plugin {
         converterPriority: 'high',
       })
       .add(modelImageStyleToDataAttribute())
-      .add(modelImageWidthToAttribute())
-      .add(modelImageHeightToAttribute())
       .add(downcastBlockImageLink());
   }
 }
