@@ -33,7 +33,7 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'entity.block_content.collection':
-      $output = '<p>' . t('This page provides a list of all block types on the site and allows you to manage the fields, form and display settings for each. Create blocks of each type on the <a href=":types">Blocks</a> page in the custom block library.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
+      $output = '<p>' . t('This page provides a list of all block types on the site and allows you to manage the fields, form and display settings for each. Create blocks of each type on the <a href=":types">Content blocks</a> page..', [':types' => Url::fromRoute('entity.block_content.collection')->toString()]) . '</p>';
       return $output;
   }
 }
