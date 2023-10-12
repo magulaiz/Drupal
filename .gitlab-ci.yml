@@ -304,7 +304,7 @@ stages:
 
 
 .with-database: &with-database
-  name: $_CONFIG_DOCKERHUB_ROOT/myqsql-8:production
+  name: $_CONFIG_DOCKERHUB_ROOT/mysql-8:production
   alias: database
 
 .with-chrome: &with-chrome
