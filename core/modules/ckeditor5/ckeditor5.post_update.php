@@ -104,3 +104,31 @@ function ckeditor5_post_update_code_block(&$sandbox = []) {
     return in_array('codeBlock', $settings['toolbar']['items'], TRUE);
   });
 }
+
+/**
+ * Updates Text Editors using CKEditor 5.
+ */
+function ckeditor5_post_update_list_multiblock(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+    $settings = $editor->getSettings();
+
+    // Nothing to do if this Text Editor does not use the list plugin.
+    if (!array_key_exists('ckeditor5_list', $settings['plugins'])) {
+      return FALSE;
+    }
+
+    // Update to the new config structure.
+    $settings['plugins']['ckeditor5_list'] = [
+      'properties' => $settings['plugins']['ckeditor5_list'],
+      'multiBlock' => TRUE,
+    ];
+    $editor->setSettings($settings);
+
+    return TRUE;
+  });
+}
