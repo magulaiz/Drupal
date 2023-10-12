@@ -218,7 +218,7 @@ BROKEN;
     // Install Actions UI module and check that it's checkbox is not present on the page.
     $edit = ['modules[action][enable]' => 'action'];
     $this->submitForm($edit, 'Install');
-    $assert_session->elementNotExists('xpath','//*[@id="edit-modules-action-enable"]');
+    $assert_session->elementNotExists('xpath', '//*[@id="edit-modules-action-enable"]');
 
     $xpath = new \DOMXPath(Html::load($this->getSession()->getPage()->getHtml()));
     $expected_labels = [
