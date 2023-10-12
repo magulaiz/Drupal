@@ -252,38 +252,6 @@ class FieldStorageAddForm extends FormBase {
       ],
       '#submit' => [[static::class, 'rebuildForm']],
     ];
-    // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
-//    $form['group_field_options_wrapper'] = [
-//      '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
-//      '#suffix' => '</div>',
-//    ];
-//    $form['actions'] = ['#type' => 'actions'];
-//
-//    // Set the selected field to the form state by checking
-//    // the checked attribute.
-//    $selected_field_type = NULL;
-//    $selected_field_storage_type = NULL;
-//    if (isset($selected_field_type)) {
-//      $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-//      $route_parameters = [
-//        'entity_type' => $this->entityTypeId,
-//        'bundle' => $this->bundle,
-//        'selected_field_type' => $selected_field_type,
-//      ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-//
-//      $form['group_field_options_wrapper']['submit'] = [
-//        '#type' => 'link',
-//        '#title' => $this->t('Continue'),
-//        '#url' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters),
-//        '#attributes' => [
-//          'class' => ['button', 'button--primary', 'use-ajax'],
-//          'data-dialog-type' => 'modal',
-//          'data-dialog-options' => Json::encode([
-//            'width' => '85vw',
-//          ]),
-//        ],
-//      ];
-//    }
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
     // we create field storage as translatable so it will be possible to enable

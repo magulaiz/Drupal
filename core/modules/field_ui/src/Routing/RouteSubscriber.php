@@ -6,8 +6,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\field_ui\Controller\FieldConfigAddController;
-use Drupal\field_ui\Controller\FieldTempStoreController;
 use Drupal\field_ui\Controller\FieldTempStoreDeleteController;
+use Drupal\field_ui\Form\FieldStorageAddSubfieldForm;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -140,7 +140,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/add-field/{entity_type}/{field_storage_type}/{field_temp_store_key}/{field_label}/{field_machine_name}",
           [
-            '_controller' => FieldTempStoreController::class . '::setTempStore',
+            '_controller' => FieldStorageAddSubfieldForm::class . '::setTempStore',
             '_title' => 'Add field',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],

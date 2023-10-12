@@ -467,7 +467,7 @@ class FieldConfigEditForm extends EntityForm {
   }
 
   /**
-   *
+   * @todo.
    */
   public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();

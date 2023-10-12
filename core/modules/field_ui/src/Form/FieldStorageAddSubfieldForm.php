@@ -47,7 +47,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    */
   protected $selectedFieldType;
 
-   /**
+  /**
    * The name of the selected field type.
    *
    * @var string
@@ -121,7 +121,15 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, protected ?PrivateTempStore $tempStore = NULL, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL,ControllerResolverInterface $controller_resolver) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    FieldTypePluginManagerInterface $field_type_plugin_manager,
+    ConfigFactoryInterface $config_factory,
+    EntityFieldManagerInterface $entity_field_manager,
+    protected ?PrivateTempStore $tempStore = NULL,
+    protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL,
+    ?ControllerResolverInterface $controller_resolver = NULL
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
@@ -134,6 +142,10 @@ class FieldStorageAddSubfieldForm extends FormBase {
     if ($this->fieldTypeCategoryManager === NULL) {
       @trigger_error('Calling FieldStorageAddForm::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
       $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
+    }
+    if ($this->controllerResolver === NULL) {
+      @trigger_error('Calling FieldStorageAddForm::__construct() without the $controller_resolver argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
+      $this->controllerResolver = \Drupal::service('controller_resolver');
     }
   }
 
@@ -453,7 +465,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $var = 1;
     // No-op since form is routed to the below controller.
     // @see \Drupal\field_ui\Controller\FieldTempStoreController::setTempStore
   }
