@@ -296,3 +296,23 @@ stages:
     - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
     - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+
+'🚲 Performance tests':
+  <<: [ *with-composer, *setup-webserver, *default-job-settings ]
+  when: manual
+  interruptible: true
+  variables:
+    <<: *test-variables
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  script:
+    #  Determine DB driver.
+    - export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+    - export OTEL_COLLECTOR=http://otel-collector.tag1demo.tag1.io/v1/traces
+    - export
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB"                                                          MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/  default/files/simpletest/phpunit-performance.xml
+
