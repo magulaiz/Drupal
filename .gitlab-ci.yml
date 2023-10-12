@@ -49,21 +49,6 @@ variables:
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
 
-.test-variables: &test-variables
-  _TARGET_PHP: 8.2
-  FF_NETWORK_PER_BUILD: 1
-  SIMPLETEST_BASE_URL: http://localhost/subdirectory
-  DB_DRIVER: mysql
-  MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE: mysql
-  MYSQL_USER: drupaltestbot
-  MYSQL_PASSWORD: drupaltestbotpw
-  POSTGRES_DB: drupaltestbot
-  POSTGRES_USER: drupaltestbot
-  POSTGRES_PASSWORD: drupaltestbotpw
-  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--      headless"]}}, "http://localhost:9515"]'
-  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
-  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 #############
 # Stages    #
@@ -315,6 +300,38 @@ stages:
     - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
     - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+
+
+
+.with-database: &with-database
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
+  alias: database
+
+.with-chrome: &with-chrome
+  name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+  alias: chrome
+  entrypoint:
+    - chromedriver
+    - "--no-sandbox"
+    - "--log-path=/tmp/chromedriver.log"
+    - "--verbose"
+    - "--whitelisted-ips="
+
+.test-variables: &test-variables
+  _TARGET_PHP: 8.2
+  FF_NETWORK_PER_BUILD: 1
+  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  DB_DRIVER: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: mysql
+  MYSQL_USER: drupaltestbot
+  MYSQL_PASSWORD: drupaltestbotpw
+  POSTGRES_DB: drupaltestbot
+  POSTGRES_USER: drupaltestbot
+  POSTGRES_PASSWORD: drupaltestbotpw
+  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--      headless"]}}, "http://localhost:9515"]'
+  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
+  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 '🚲 Performance tests':
   <<: [ *with-composer, *setup-webserver ]
