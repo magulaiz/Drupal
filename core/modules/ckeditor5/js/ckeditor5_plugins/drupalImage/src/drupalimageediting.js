@@ -307,10 +307,7 @@ function modelImageStyleToDataAttribute() {
 function ignoredDuringDowncast(event, data, conversionApi) {
   const { item } = data;
   const { consumable } = conversionApi;
-
-  if (!consumable.consume(item, event.name)) {
-    return;
-  }
+  consumable.consume(item, event.name);
 }
 
 /**
