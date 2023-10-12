@@ -127,6 +127,7 @@ trait PerformanceTestTrait {
   protected function processChromeDriverPerformanceLogs(?string $service_name): PerformanceData {
     $attempts = 0;
     $lcp_count = 0;
+    $fcp_count = 0;
     $request_count = 0;
     $response_count = 0;
     $messages = [];
@@ -140,6 +141,9 @@ trait PerformanceTestTrait {
         $message = $decoded['message'];
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
           $lcp_count++;
+        }
+        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'firstContentfulPaint') {
+          $fcp_count++;
         }
         if ($message['method'] === 'Network.requestWillBeSent') {
           $request_count++;
@@ -157,11 +161,12 @@ trait PerformanceTestTrait {
       // the page loading 'finishing' since this is cannot be detected as such.
       // Therefore, continue collecting performance data until all of the
       // following are true, or until 30 seconds has passed:
+      // - a firstContentfulPaint event has been fired
       // - a largestContentfulPaint::candidate event has been fired
       // - all network requests have received a response
       // - no new performance log events have been recorded since the last
       //   iteration.
-      if ($lcp_count && empty($performance_log) && ($request_count === $response_count)) {
+      if ($fcp_count && $lcp_count && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
       sleep(1);
@@ -218,8 +223,8 @@ trait PerformanceTestTrait {
     $nanoseconds_per_millisecond = 1000_000;
     $nanoseconds_per_microsecond = 1000;
 
-    $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
-    if ($collector === NULL) {
+    $collector = getenv('OTEL_COLLECTOR');
+    if ($collector === FALSE) {
       return;
     }
     $timestamp = NULL;

@@ -274,3 +274,25 @@ stages:
     REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
   services:
     - <<: *with-database
+
+'🚲 Performance tests':
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
+  rules:
+    - if: $_TARGET_DB == "mysql-8" && $_TARGET_PHP == "8.2"
+      when: manual
+      allow_failure: true
+    - if: $PERFORMANCE_TEST == "1" && $_TARGET_DB == "mysql-8" && $_TARGET_PHP == "8.2"
+  interruptible: true
+  variables:
+    <<: *test-variables
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  script:
+    #  Determine DB driver.
+    - export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+    - export OTEL_COLLECTOR=http://otel-collector.tag1demo.tag1.io/v1/traces
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
