@@ -5,6 +5,8 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use Drupal\Tests\TestFileCreationTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -14,6 +16,9 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @internal
  */
 class CKEditor5UploadModuleAllowedImageTest extends CKEditor5TestBase {
+
+  use CKEditor5TestTrait;
+  use TestFileCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -38,11 +43,9 @@ class CKEditor5UploadModuleAllowedImageTest extends CKEditor5TestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <em> <a href> <img alt height width src data-caption data-align>',
+            'allowed_html' => '<p> <br> <img alt height width src data-entity-uuid data-entity-type>',
           ],
         ],
-        'filter_align' => ['status' => TRUE],
-        'filter_caption' => ['status' => TRUE],
       ],
     ])->save();
     Editor::create([
@@ -52,22 +55,20 @@ class CKEditor5UploadModuleAllowedImageTest extends CKEditor5TestBase {
         'toolbar' => [
           'items' => [
             'drupalInsertImage',
-            'sourceEditing',
-            'link',
-            'italic',
           ],
         ],
         'plugins' => [
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => [],
-          ],
           'ckeditor5_imageResize' => [
             'allow_resize' => TRUE,
           ],
         ],
       ],
       'image_upload' => [
-        'status' => FALSE,
+        'status' => TRUE,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+        'max_size' => '1M',
+        'max_dimensions' => ['width' => 100, 'height' => 100],
       ],
     ])->save();
     $this->assertSame([], array_map(
@@ -102,29 +103,18 @@ class CKEditor5UploadModuleAllowedImageTest extends CKEditor5TestBase {
    * Tests that it's possible to upload SVG image, with the test module enabled.
    */
   public function testCanUploadSvg(): void {
-    $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $image_selector = '.ck-widget.image-inline';
-    $src = '/core/modules/ckeditor5/tests/fixtures/test-svg-upload.svg';
+    $src = 'core/modules/ckeditor5/tests/fixtures/test-svg-upload.svg';
 
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $this->pressEditorButton('Insert image');
-    $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
-    $src_input = $panel->find('css', 'input[type=text]');
-    $src_input->setValue($src);
-    $panel->find('xpath', "//button[span[text()='Insert']]")->click();
-
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $image_selector));
-    $this->click($image_selector);
-    $this->assertVisibleBalloon('[aria-label="Image toolbar"]');
-
-    $this->pressEditorButton('Insert image');
-    $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
-    $src_input = $panel->find('css', 'input[type=text]');
-    $this->assertEquals($src, $src_input->getValue());
+    // @see \Drupal\Tests\ckeditor5\FunctionalJavascript\ImageTest::addImage()
+    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $image_upload_field->attachFile($this->container->get('file_system')->realpath($src));
+    // Wait for the image to be uploaded and rendered by CKEditor 5.
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image-inline > img[src$="test-svg-upload.svg"]'));
   }
 
 }
