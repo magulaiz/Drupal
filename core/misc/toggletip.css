@@ -1,4 +1,5 @@
 .toggletip__tip {
+  display: inline-flex;
   width: max-content;
   max-width: 50rem;
   margin: 0;
@@ -22,6 +23,7 @@
 }
 
 .toggletip__toggle {
+  display: inline-flex;
   width: 1.5rem;
   height: 1.5rem;
   color: #55565b;
@@ -46,4 +48,18 @@
   height: 0.5rem;
   transform: rotate(45deg);
   background: #222;
+}
+
+.form-item__label[for] {
+  display: inline-block;
+}
+@media (min-width: 31.25rem) {
+  [type="text"] {
+    display: flex;
+    width: auto;
+  }
+  [type="textarea"] {
+    display: flex;
+    width: auto;
+  }
 }
