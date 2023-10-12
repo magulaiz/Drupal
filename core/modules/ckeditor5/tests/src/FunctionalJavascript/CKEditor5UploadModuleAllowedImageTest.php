@@ -8,11 +8,12 @@ use Drupal\filter\Entity\FilterFormat;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * Test that it's possible to upload SVG image, with the test module enabled.
+ * Tests that it's possible to upload SVG image, with the test module enabled.
  *
  * @group ckeditor5
+ * @internal
  */
-class CKEditor5UploadModuleAllowedImageTest extends ImageTestBase {
+class CKEditor5UploadModuleAllowedImageTest extends CKEditor5TestBase {
 
   /**
    * {@inheritdoc}
@@ -98,7 +99,7 @@ class CKEditor5UploadModuleAllowedImageTest extends ImageTestBase {
   }
 
   /**
-   * Test that it's possible to upload SVG image, with the test module enabled.
+   * Tests that it's possible to upload SVG image, with the test module enabled.
    */
   public function testCanUploadSvg(): void {
     $assert_session = $this->assertSession();
