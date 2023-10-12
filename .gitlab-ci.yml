@@ -49,6 +49,20 @@ variables:
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
 
+.test-variables: &test-variables
+  FF_NETWORK_PER_BUILD: 1
+  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  DB_DRIVER: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: mysql
+  MYSQL_USER: drupaltestbot
+  MYSQL_PASSWORD: drupaltestbotpw
+  POSTGRES_DB: drupaltestbot
+  POSTGRES_USER: drupaltestbot
+  POSTGRES_PASSWORD: drupaltestbotpw
+  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--      headless"]}}, "http://localhost:9515"]'
+  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
+  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 #############
 # Stages    #
@@ -100,6 +114,10 @@ stages:
     reports:
       junit: junit.xml
 
+.setup-webroot: &setup-webserver
+  before_script:
+    - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
+    - sudo service apache2 start
 
 ################
 # Stages
