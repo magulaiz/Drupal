@@ -452,8 +452,8 @@ class CoreUpdateTest extends UpdateTestBase {
     $this->createTestProject('RecommendedProject');
 
     $dir = $this->getWorkspaceDirectory() . '/project';
-    $command = [$dir . '/web/core/scripts/auto-update.sh'];
 
+    $command = [$dir . '/web/core/scripts/auto-update.sh'];
     $process = new Process($command, $dir);
     // Give the update process as much time as it needs to run.
     $process->setTimeout(NULL)->mustRun();
