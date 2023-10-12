@@ -317,7 +317,7 @@ stages:
     - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
 
 '🚲 Performance tests':
-  <<: [ *with-composer, *setup-webserver, *default-job-settings ]
+  <<: [ *with-composer, *setup-webserver ]
   when: manual
   interruptible: true
   variables:
