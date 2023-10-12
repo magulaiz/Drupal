@@ -41,6 +41,8 @@ class WebDriverCurlService extends CurlService {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
    */
   public function execute($requestMethod, $url, $parameters = NULL, $extraOptions = []) {
     $extraOptions += [
