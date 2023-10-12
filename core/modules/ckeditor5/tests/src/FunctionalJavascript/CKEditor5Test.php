@@ -635,8 +635,10 @@ JS;
         ],
         'plugins' => [
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => FALSE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
@@ -678,7 +680,7 @@ JS;
     // Enable the reversed functionality.
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
-    $settings['plugins']['ckeditor5_list']['reversed'] = TRUE;
+    $settings['plugins']['ckeditor5_list']['properties']['reversed'] = TRUE;
     $editor->setSettings($settings);
     $editor->save();
     $this->getSession()->reload();
@@ -693,7 +695,7 @@ JS;
     // Have both the reversed and the start index enabled.
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
-    $settings['plugins']['ckeditor5_list']['startIndex'] = TRUE;
+    $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = TRUE;
     $editor->setSettings($settings);
     $editor->save();
     $this->getSession()->reload();
