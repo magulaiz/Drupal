@@ -50,7 +50,7 @@ trait MenuLinkTrait {
   protected function buildMenuFormElements(array $form, FormStateInterface $form_state, array $all_menu_links, string $menu_parent) {
     $parent_menu_links = [];
     foreach ($all_menu_links as $key => $value) {
-      if (explode(':',$key, 2)[1] === '') {
+      if (explode(':', $key, 2)[1] === '') {
         $parent_menu_links[$key] = $value;
       }
     }
