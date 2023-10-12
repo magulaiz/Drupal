@@ -7,7 +7,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 /**
  * Tests the menu selection.
  *
- * @group mymodule
+ * @group Menu
  */
 class MenuSelectionTest extends WebDriverTestBase {
 

@@ -39,7 +39,7 @@ trait MenuLinkTrait {
   public function updateParentLinks(array $form, FormStateInterface $form_state) {
     $selected_menu = $form_state->getValue('menu_parent_menu');
 
-    $menu_of_selected_type = $this->getParentLinkSelectList($form_state->getValue('all_menu_links'), $selected_menu);
+    $menu_of_selected_type = $form_state->get('updated_child_list');
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
   }
@@ -74,18 +74,19 @@ trait MenuLinkTrait {
     $form['menu_parent_submit'] = [
       '#type' => 'submit',
       '#name' => 'update_parent_links',
-      '#value' => $this->t('Update parent link'),
+      '#value' => $this->t('Change selected menu'),
       '#submit' => ['::updateParentLinksNonJs'],
       '#attributes' => ['class' => ['js-hide']],
       '#ajax' => [
         'callback' => [$this, 'updateParentLinks'],
         'wrapper' => 'ajax-updated-section',
       ],
+      '#weight' => 11,
     ];
 
     $menu_of_selected_type = ($form_state->get('updated_child_list') !== NULL) ? $form_state->get('updated_child_list') : $this->getParentLinkSelectList($all_menu_links, $menu_parent);
 
-    $form['menu_parent']['#weight'] = 10;
+    $form['menu_parent']['#weight'] = 12;
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     $form['menu_parent']['#title'] = $this->t('Parent link');
     $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
