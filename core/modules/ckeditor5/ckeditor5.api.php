@@ -255,7 +255,8 @@ function hook_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
   $plugin_definitions['ckeditor5_link'] = new CKEditor5PluginDefinition($link_plugin_definition);
 
   // Add a custom file type to the image upload plugin. Note that 'tiff' below
-  // should be an IANA image media type Name.
+  // should be an IANA image media type Name, with the "image/" prefix omitted.
+  // In other words: a subtype of type image.
   // @see https://www.iana.org/assignments/media-types/media-types.xhtml#image
   // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_image_imageconfig-ImageUploadConfig.html#member-types
   assert($plugin_definitions['ckeditor5_imageUpload'] instanceof CKEditor5PluginDefinition);
