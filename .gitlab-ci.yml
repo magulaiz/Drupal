@@ -335,6 +335,7 @@ stages:
 
 '🚲 Performance tests':
   <<: [ *with-composer, *setup-webserver ]
+  stage: 🗜️ Test
   when: manual
   interruptible: true
   variables:
