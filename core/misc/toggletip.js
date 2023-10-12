@@ -218,8 +218,8 @@
               .closest('.js-form-item')
               .querySelector('label');
             if (label) {
-              label.append(button);
-              label.append(tip);
+              label.parentNode.insertBefore(button, label.nextSibling);
+              label.parentNode.insertBefore(tip, label.nextSibling);
             }
           } else {
             tipElement.append(button);
