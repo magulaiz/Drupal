@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
@@ -202,6 +203,40 @@ BROKEN;
     file_put_contents($file_path, Yaml::encode($incompatible_info));
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains($incompatible_modules_message);
+  }
+
+  /**
+   * Tests that the installed modules are present in a separate group called Installed modules.
+   */
+  public function testInstalledModule() {
+    // Check Actions UI module is present on page as uninstalled module.
+    $this->drupalGet('admin/modules');
+    $assert_session = $this->assertSession();
+    $assert_session->pageTextContains('Actions UI');
+    $assert_session->checkboxNotChecked('modules[action][enable]');
+
+    // Install Actions UI module and check that it's checkbox is not present on the page.
+    $edit = ['modules[action][enable]' => 'action'];
+    $this->submitForm($edit, 'Install');
+    $assert_session->elementNotExists('xpath','//*[@id="edit-modules-action-enable"]');
+
+    $xpath = new \DOMXPath(Html::load($this->getSession()->getPage()->getHtml()));
+    $expected_labels = [
+      "Allows configuration of tasks to be executed in response to events.",
+      "Allows configuration of tasks to be executed in response to events.",
+      "Actions UI",
+      "Actions UI",
+      "Installed\n      Name\n      Description",
+      "Installed modules\n  Some modules may be uninstalled on the Uninstall page.",
+    ];
+    // Initially select deepest element in the summary.
+    $element = $xpath->query('//*[@id="module-action-description"]/summary')->item(0)->parentNode;
+
+    // Go one level up each time and check it.
+    foreach ($expected_labels as $expected_label) {
+      $this->assertTrue(str_contains($element->nodeValue, $expected_label));
+      $element = $element->parentNode;
+    }
   }
 
 }
