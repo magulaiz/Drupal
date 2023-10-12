@@ -301,6 +301,113 @@ function modelImageStyleToDataAttribute() {
   };
 }
 
+// The official CKEditor 5 image plugin stores the natural width and height in the `width` and `height attributes.
+// This is unnecessary for Drupal, because it never allowed resizing to not respect the aspect ratio.
+// @see https://github.com/ckeditor/ckeditor5/commit/58e9c88ae6a9d192cc559e429b999a32a03a2dca
+function ignoredDuringDowncast(event, data, conversionApi) {
+  const { item } = data;
+  const { consumable } = conversionApi;
+
+  if (!consumable.consume(item, event.name)) {
+    return;
+  }
+}
+
+/**
+ * Generates a callback that saves the width value to an attribute on
+ * data downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
+function modelImageWidthToAttribute() {
+  /**
+   * Callback for the attribute:width event.
+   *
+   * Saves the width value to the width attribute.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
+    const { item } = data;
+    const { consumable, writer } = conversionApi;
+
+    if (!consumable.consume(item, event.name)) {
+      return;
+    }
+
+    const viewElement = conversionApi.mapper.toViewElement(item);
+    const imageInFigure = Array.from(viewElement.getChildren()).find(
+      (child) => child.name === 'img',
+    );
+
+    writer.setAttribute(
+      'width',
+      data.attributeNewValue.replace('px', ''),
+      imageInFigure || viewElement,
+    );
+    writer.setAttribute(
+      'height',
+      // @todo figure out how to get the natural height, which requires accessing the <img> DOM element.
+      '',
+      imageInFigure || viewElement,
+    );
+  }
+
+  return (dispatcher) => {
+    // In Drupal, the natural width does not need to be stored.
+    dispatcher.on('attribute:width:imageInline', ignoredDuringDowncast, {
+      priority: 'high',
+    });
+    dispatcher.on('attribute:width:imageBlock', ignoredDuringDowncast, {
+      priority: 'high',
+    });
+    // In Drupal, only the resized width must be stored.
+    dispatcher.on('attribute:resizedWidth:imageInline', converter, {
+      priority: 'high',
+    });
+    dispatcher.on('attribute:resizedWidth:imageBlock', converter, {
+      priority: 'high',
+    });
+  };
+}
+
+/**
+ * Generates a callback that saves the height value to an attribute on
+ * data downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
+function modelImageHeightToAttribute() {
+  return (dispatcher) => {
+    // In Drupal, the natural height does not need to be stored.
+    dispatcher.on('attribute:height:imageInline', ignoredDuringDowncast, {
+      priority: 'high',
+    });
+    dispatcher.on('attribute:height:imageBlock', ignoredDuringDowncast, {
+      priority: 'high',
+    });
+    // In Drupal, only the resized height must be stored.
+    // TRICKY: CKEditor 5 does not generate a `resizedHeight` attribute, presumably it uses this only if the aspect
+    // ratio is not respected!
+    dispatcher.on(
+      'attribute:resizedHeight:imageInline',
+      ignoredDuringDowncast,
+      {
+        priority: 'high',
+      },
+    );
+    dispatcher.on('attribute:resizedHeight:imageBlock', ignoredDuringDowncast, {
+      priority: 'high',
+    });
+  };
+}
+
 /**
  * Generates a callback that handles the data downcast for the img element.
  *
@@ -632,6 +739,8 @@ export default class DrupalImageEditing extends Plugin {
         converterPriority: 'high',
       })
       .add(modelImageStyleToDataAttribute())
+      .add(modelImageWidthToAttribute())
+      .add(modelImageHeightToAttribute())
       .add(downcastBlockImageLink());
   }
 }
