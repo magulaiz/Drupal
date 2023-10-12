@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\Registry;
@@ -21,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup entity_api
  */
 class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterface, EntityViewBuilderInterface, TrustedCallbackInterface {
+
+  use LoggerChannelTrait;
 
   /**
    * The type of entities for which this view builder is instantiated.
@@ -81,6 +84,15 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   protected $singleFieldDisplays;
 
   /**
+   * A collection of keys.
+   *
+   * It identifies rendering in progress, used to prevent recursion.
+   *
+   * @var array
+   */
+  protected array $recursionKeys = [];
+
+  /**
    * Constructs a new EntityViewBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -107,13 +119,15 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
+    $instance = new static(
       $entity_type,
       $container->get('entity.repository'),
       $container->get('language_manager'),
       $container->get('theme.registry'),
       $container->get('entity_display.repository')
     );
+    $instance->setLoggerFactory($container->get('logger.factory'));
+    return $instance;
   }
 
   /**
@@ -136,7 +150,12 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['build', 'buildMultiple'];
+    return [
+      'build',
+      'buildMultiple',
+      'setRecursiveRenderProtection',
+      'unsetRecursiveRenderProtection',
+    ];
   }
 
   /**
@@ -189,39 +208,31 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         'max-age' => $entity->getCacheMaxAge(),
       ],
     ];
+    // Add callbacks to protect from recursive rendering.
+    $build['#pre_render'] = [[$this, 'setRecursiveRenderProtection']];
+    $build['#post_render'] = [[$this, 'unsetRecursiveRenderProtection']];
 
     // Add the default #theme key if a template exists for it.
     if ($this->themeRegistry->getRuntime()->has($this->entityTypeId)) {
       $build['#theme'] = $this->entityTypeId;
     }
 
-    $keys = [
-      'entity_view',
-      $this->entityTypeId,
-      $entity->id(),
-      $view_mode,
-    ];
-
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
     if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
       $build['#cache'] += [
-        'keys' => $keys,
+        'keys' => [
+          'entity_view',
+          $this->entityTypeId,
+          $entity->id(),
+          $view_mode,
+        ],
         'bin' => $this->cacheBin,
       ];
 
       if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
         $build['#cache']['keys'][] = $entity->language()->getId();
       }
-    }
-
-    // Add keys for the renderer to use to identify recursive rendering.
-    $build['#recursion_keys'] = $keys;
-    if ($entity instanceof RevisionableInterface) {
-      $build['#recursion_keys'][] = $entity->getRevisionId();
-    }
-    if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
-      $build['#recursion_keys'][] = $entity->language()->getId();
     }
 
     return $build;
@@ -544,6 +555,40 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     }
 
     return $display;
+  }
+
+  /**
+   * Entity render array #pre_render callback.
+   */
+  public function setRecursiveRenderProtection(array $build): array {
+    // Checks whether entity render array with matching cache keys is being
+    // recursively rendered. If not already being rendered, add an entry to track
+    // that it is.
+    $recursion_key = implode(':', $build['#cache']['keys'] ?? []);
+    if (isset($this->recursionKeys[$recursion_key])) {
+      $this->getLogger('entity')
+        ->error('Recursive rendering attempt aborted for %key. In progress: %guards', [
+          '%key' => $recursion_key,
+          '%guards' => print_r($this->recursionKeys, TRUE),
+        ]);
+      $build['#printed'] = TRUE;
+    }
+    else {
+      $this->recursionKeys[$recursion_key] = $recursion_key;
+    }
+    return $build;
+  }
+
+  /**
+   * Entity render array #post_render callback.
+   */
+  public function unsetRecursiveRenderProtection(string $renderedEntity, array $build): string {
+    // Removes rendered entity matching cache keys from recursive render
+    // tracking, once the entity has been rendered.
+    $recursion_key = implode(':', $build['#cache']['keys'] ?? []);
+    unset($this->recursionKeys[$recursion_key]);
+
+    return $renderedEntity;
   }
 
 }

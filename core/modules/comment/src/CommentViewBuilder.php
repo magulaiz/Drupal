@@ -61,7 +61,7 @@ class CommentViewBuilder extends EntityViewBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
+    $instance = new static(
       $entity_type,
       $container->get('entity.repository'),
       $container->get('language_manager'),
@@ -70,6 +70,8 @@ class CommentViewBuilder extends EntityViewBuilder {
       $container->get('entity_display.repository'),
       $container->get('entity_type.manager')
     );
+    $instance->setLoggerFactory($container->get('logger.factory'));
+    return $instance;
   }
 
   /**

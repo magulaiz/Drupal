@@ -30,10 +30,11 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    *
    * @var int
    *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0.
-   * Use #recursion_keys in render arrays to prevent recursion.
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0.
+   * EntityViewBuilder #pre_render and #post_render callbacks prevent recursion.
    *
    * @see https://www.drupal.org/node/2940605
+   * @see \Drupal\Core\Entity\EntityViewBuilder::getBuildDefaults()
    */
   const RECURSIVE_RENDER_LIMIT = 20;
 

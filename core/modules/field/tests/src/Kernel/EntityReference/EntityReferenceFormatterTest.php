@@ -5,7 +5,6 @@ namespace Drupal\Tests\field\Kernel\EntityReference;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -261,7 +260,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     ]);
     $referencing_entity->save();
 
-    $count = EntityReferenceEntityFormatter::RECURSIVE_RENDER_LIMIT + 1;
+    $count = 21;
     $build = $view_builder->viewMultiple(array_fill(0, $count, $referencing_entity), 'default');
     $output = $renderer->renderRoot($build);
     // The title of entity_test entities is printed twice by default, so we have
