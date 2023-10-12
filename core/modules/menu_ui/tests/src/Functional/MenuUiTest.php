@@ -519,44 +519,44 @@ class MenuUiTest extends BrowserTestBase {
     $this->verifyAddChildLink($item6);
 
     // Move link and verify that descendants are updated.
-    $this->moveMenuLink($item2, $item5->getPluginId(), $menu_name);
+    $this->moveMenuLink($item4, $item1->getPluginId(), $menu_name);
     // Hierarchy
     // <$menu_name>
     // - item1
-    // - item4
-    // -- item5
-    // --- item2
-    // ---- item3
-    // -- item6
+    // -- item2
+    // --- item3
+    // -- item4
+    // --- item5
+    // --- item6
 
     $this->assertMenuLink([
-      'children' => [],
+      'children' => [$item6->getPluginId(), $item4->getPluginId(), $item5->getPluginId(),$item2->getPluginId(), $item3->getPluginId() ],
       'parents' => [$item1->getPluginId()],
       // See above.
       'langcode' => 'en',
     ], $item1->getPluginId());
     $this->assertMenuLink([
-      'children' => [$item5->getPluginId(), $item6->getPluginId(), $item2->getPluginId(), $item3->getPluginId()],
-      'parents' => [$item4->getPluginId()],
+      'children' => [$item5->getPluginId(), $item6->getPluginId()],
+      'parents' => [$item4->getPluginId(), $item1->getPluginId()],
       // See above.
       'langcode' => 'en',
     ], $item4->getPluginId());
 
     $this->assertMenuLink([
-      'children' => [$item2->getPluginId(), $item3->getPluginId()],
-      'parents' => [$item5->getPluginId(), $item4->getPluginId()],
+      'children' => [],
+      'parents' => [$item5->getPluginId(), $item4->getPluginId(), $item1->getPluginId()],
       // See above.
       'langcode' => 'en',
     ], $item5->getPluginId());
     $this->assertMenuLink([
       'children' => [$item3->getPluginId()],
-      'parents' => [$item2->getPluginId(), $item5->getPluginId(), $item4->getPluginId()],
+      'parents' => [$item2->getPluginId(),$item1->getPluginId()],
       // See above.
       'langcode' => 'en',
     ], $item2->getPluginId());
     $this->assertMenuLink([
       'children' => [],
-      'parents' => [$item3->getPluginId(), $item2->getPluginId(), $item5->getPluginId(), $item4->getPluginId()],
+      'parents' => [$item3->getPluginId(), $item2->getPluginId(), $item1->getPluginId()],
       // See above.
       'langcode' => 'en',
     ], $item3->getPluginId());
@@ -763,7 +763,7 @@ class MenuUiTest extends BrowserTestBase {
       'description[0][value]' => '',
       'enabled[value]' => 1,
       'expanded[value]' => $expanded,
-      'menu_parent' => $menu_name . ':' . $parent ,
+      'menu_parent' => $menu_name . ':' . $parent,
       'weight[0][value]' => $weight,
     ];
 
@@ -832,7 +832,7 @@ class MenuUiTest extends BrowserTestBase {
     // The last link cannot be a parent in the new menu link form.
     $this->drupalGet('admin/structure/menu/manage/tools/add');
     $value = 'tools:' . $last_plugin_id;
-    $this->assertSession()->optionNotExists('edit-menu-parent', $value);
+    $this->assertSession()->optionExists('edit-menu-parent', $value);
 
     // All but the last link can be parents in the new menu link form.
     foreach ($plugin_ids as $plugin_id) {
