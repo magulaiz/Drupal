@@ -21,6 +21,20 @@ class CKEditor5UploadModuleAllowedImageTest extends CKEditor5TestBase {
   use TestFileCreationTrait;
 
   /**
+   * The user to use during testing.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
+   * A host entity with a body field to embed images in.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $host;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
