@@ -105,6 +105,7 @@ class MenuLinkContentForm extends ContentEntityForm {
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
         $menu_id => $menu->label(),
       ]);
+
       $form['menu_parent_menu']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent_menu']['#options'];
       $form['menu_parent']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent']['#options'];
       $form = array_merge($form, $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
@@ -115,6 +116,7 @@ class MenuLinkContentForm extends ContentEntityForm {
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
       $form['menu_parent_menu']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent_menu']['#options'];
       $form['menu_parent']['#options'] = $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent)['menu_parent']['#options'];
+
       $form = array_merge($form, $this->buildMenuFormElements($form, $form_state, $all_menu_links, $menu_parent));
     }
 

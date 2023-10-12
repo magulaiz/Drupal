@@ -132,6 +132,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded. This option may be overridden for the entire menu tree when placing a menu block.'),
       '#default_value' => $this->menuLink->isExpanded(),
     ];
+
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $all_menu_links = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId())['#options'];
 

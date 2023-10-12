@@ -31,17 +31,18 @@ class MenuSelectionTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the behavior of parent link selection list based on selected menu.
+   * Tests the rendering of parent link selection list based on selected menu.
    */
   public function testSelectLists() {
 
-    // Visit the edit form for the test menu link.
+    // Visit the edit form to test the menu link.
     $this->drupalGet('admin/structure/menu/manage/account');
     $this->clickLink('Edit');
     // Select the tools option from the menu list.
     $this->getSession()->getPage()->findField('menu_parent_menu')->selectOption('<Tools>');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->optionExists('Parent link', '-- Compose tips (disabled)');
+    $this->assertSession()->optionExists('Parent link', '<Tools>');
 
   }
 

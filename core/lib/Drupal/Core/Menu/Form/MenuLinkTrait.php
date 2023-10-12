@@ -50,7 +50,7 @@ trait MenuLinkTrait {
   protected function buildMenuFormElements(array $form, FormStateInterface $form_state, array $all_menu_links, string $menu_parent) {
     $parent_menu_links = [];
     foreach ($all_menu_links as $key => $value) {
-      if (strpos($value, '<') === 0) {
+      if (explode(':',$key, 2)[1] === '') {
         $parent_menu_links[$key] = $value;
       }
     }
@@ -58,6 +58,7 @@ trait MenuLinkTrait {
       '#type' => 'value',
       '#value' => $all_menu_links,
     ];
+
     $form['menu_parent_menu']['#weight'] = 10;
     $form['menu_parent_menu']['#options'] = $parent_menu_links;
     $form['menu_parent_menu']['#title'] = $this->t('Menu');
@@ -81,6 +82,7 @@ trait MenuLinkTrait {
         'wrapper' => 'ajax-updated-section',
       ],
     ];
+
     $menu_of_selected_type = ($form_state->get('updated_child_list') !== NULL) ? $form_state->get('updated_child_list') : $this->getParentLinkSelectList($all_menu_links, $menu_parent);
 
     $form['menu_parent']['#weight'] = 10;
