@@ -1104,7 +1104,7 @@
                 const classListString =
                   Array.from(prevParentClasslist).join('.');
                 const selector = `.${classListString}`;
-                if (target.querySelector(selector)) {
+                if (classListString && target.querySelector(selector)) {
                   target = target.querySelector(selector);
                 } else {
                   target = tabbable(target)[0];
