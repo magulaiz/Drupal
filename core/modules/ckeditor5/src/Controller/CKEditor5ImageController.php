@@ -89,7 +89,7 @@ class CKEditor5ImageController extends ControllerBase {
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManager $pluginManager
    *   The CKEditor 5 plugin manager.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, protected readonly CKEditor5PluginManagerInterface $pluginManager) {
+  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, protected CKEditor5PluginManagerInterface $pluginManager) {
     $this->fileSystem = $file_system;
     $this->currentUser = $current_user;
     $this->mimeTypeGuesser = $mime_type_guesser;
