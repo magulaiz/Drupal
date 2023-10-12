@@ -530,7 +530,7 @@ class MenuUiTest extends BrowserTestBase {
     // --- item6
 
     $this->assertMenuLink([
-      'children' => [$item6->getPluginId(), $item4->getPluginId(), $item5->getPluginId(), $item2->getPluginId(), $item3->getPluginId() ],
+      'children' => [$item6->getPluginId(), $item4->getPluginId(), $item5->getPluginId(), $item2->getPluginId(), $item3->getPluginId()],
       'parents' => [$item1->getPluginId()],
       // See above.
       'langcode' => 'en',
