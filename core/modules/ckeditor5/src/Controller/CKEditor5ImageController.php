@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Controller;
 
+use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
@@ -15,7 +16,6 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginManager;
 use Drupal\editor\Entity\Editor;
 use Drupal\Core\Validation\DrupalTranslator;
 use Drupal\file\Entity\File;
@@ -74,13 +74,6 @@ class CKEditor5ImageController extends ControllerBase {
   protected $eventDispatcher;
 
   /**
-   * The CKEditor 5 plugin manager.
-   *
-   * @var \Drupal\ckeditor5\Plugin\CKEditor5PluginManager
-   */
-  protected $ckePluginService;
-
-  /**
    * Constructs a new CKEditor5ImageController.
    *
    * @param \Drupal\Core\File\FileSystemInterface $file_system
@@ -93,16 +86,16 @@ class CKEditor5ImageController extends ControllerBase {
    *   The lock service.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManager $ckePluginService
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManager $pluginManager
    *   The CKEditor 5 plugin manager.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, CKEditor5PluginManager $ckePluginService) {
+  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, protected readonly CKEditor5PluginManagerInterface $pluginManager) {
     $this->fileSystem = $file_system;
     $this->currentUser = $current_user;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->lock = $lock;
     $this->eventDispatcher = $event_dispatcher;
-    $this->ckePluginService = $ckePluginService;
+    $this->pluginManager = $pluginManager;
   }
 
   /**
@@ -157,7 +150,7 @@ class CKEditor5ImageController extends ControllerBase {
       $max_dimensions = 0;
     }
 
-    $plugin_definitions = $this->ckePluginService->getDefinitions();
+    $plugin_definitions = $this->pluginManager->getDefinitions();
     $mimetypes = new MimeTypes();
     $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray();
     $extensions = [];
