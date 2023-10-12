@@ -2,7 +2,7 @@
 
 /**
  * @file
- * A module to add a custom image type for CKEditor5.
+ * A module to add a custom image type for CKEditor 5.
  */
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
