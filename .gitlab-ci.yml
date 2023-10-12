@@ -114,7 +114,7 @@ stages:
     reports:
       junit: junit.xml
 
-.setup-webroot: &setup-webserver
+.setup-webserver: &setup-webserver
   before_script:
     - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
     - sudo service apache2 start
