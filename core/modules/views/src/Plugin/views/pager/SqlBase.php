@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,6 +31,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   protected $pagerParameters;
 
   /**
+   * The shared temporary storage for views pager ids.
+   *
+   * @var \Drupal\Core\TempStore\SharedTempStore
+   */
+  protected $tempStore;
+
+  /**
    * Constructs a SqlBase object.
    *
    * @param array $configuration
@@ -42,11 +50,14 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
    *   The pager manager.
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_parameters
    *   The pager parameters.
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
+   *   The factory for shared temporary storages.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters, SharedTempStoreFactory $temp_store_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->pagerManager = $pager_manager;
     $this->pagerParameters = $pager_parameters;
+    $this->tempStore = $temp_store_factory->get('views_pager_elements');
   }
 
   /**
@@ -58,7 +69,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       $plugin_id,
       $plugin_definition,
       $container->get('pager.manager'),
-      $container->get('pager.parameters')
+      $container->get('pager.parameters'),
+      $container->get('tempstore.shared')
     );
   }
 
@@ -67,6 +79,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $options['items_per_page'] = ['default' => 10];
     $options['offset'] = ['default' => 0];
     $options['id'] = ['default' => 0];
+    $options['id_unique'] = ['default' => FALSE];
     $options['total_pages'] = ['default' => ''];
     $options['expose'] = [
       'contains' => [
@@ -117,6 +130,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       '#title' => $this->t('Pager ID'),
       '#description' => $this->t("Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
       '#default_value' => $this->options['id'],
+    ];
+
+    $form['id_unique'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Unique pager ID'),
+      '#description' => $this->t("Have a pager id set dynamically. Use this if you have multiple pagers on one page, want to avoid duplicate IDs and don't need a static one."),
+      '#default_value' => $this->options['id_unique'],
     ];
 
     $form['total_pages'] = [
@@ -289,6 +309,23 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   }
 
   /**
+   * This function is the heart of this override class. If pager id is set to be unique, it stores pager ID in a
+   * shared tempstore, so it doesn't hand out duplicate pager IDs. Otherwise, id option is returned.
+   */
+  private function getPagerElement(): int {
+    if (!$this->options['id_unique'] || $this->view === NULL || $this->view->dom_id === NULL) {
+      return $this->options['id'];
+    }
+    $pager_element = $this->tempStore->get($this->view->dom_id);
+    if ($pager_element) {
+      return $pager_element;
+    }
+    $this->tempStore->set($this->view->dom_id, $this->pagerManager->getMaxPagerElementId() + 1);
+    $this->pagerManager->reservePagerElementId($this->tempStore->get($this->view->dom_id));
+    return $this->tempStore->get($this->view->dom_id);
+  }
+
+  /**
    * Set the current page.
    *
    * @param $number
@@ -301,7 +338,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       return;
     }
 
-    $this->current_page = max(0, $this->pagerParameters->findPage($this->options['id']));
+    $this->current_page = max(0, $this->pagerParameters->findPage($this->getPagerElement()));
   }
 
   public function getPagerTotal() {
@@ -321,6 +358,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
    * page is out of range.
    */
   public function updatePageInfo() {
+    $this->options['id'] = $this->getPagerElement();
+
     if (!empty($this->options['total_pages'])) {
       if (($this->options['total_pages'] * $this->options['items_per_page']) < $this->total_items) {
         $this->total_items = $this->options['total_pages'] * $this->options['items_per_page'];
