@@ -63,3 +63,6 @@
     width: auto;
   }
 }
+.js-form-item-textarea .toggletip__toggle {
+  top: auto!important;
+}
