@@ -224,7 +224,7 @@ trait PerformanceTestTrait {
     $nanoseconds_per_microsecond = 1000;
 
     $collector = getenv('OTEL_COLLECTOR');
-    if ($collector === FALSE) {
+    if (!$collector) {
       return;
     }
     $timestamp = NULL;
