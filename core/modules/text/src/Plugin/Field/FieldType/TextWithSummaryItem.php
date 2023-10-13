@@ -110,11 +110,11 @@ class TextWithSummaryItem extends TextItemBase {
       '#element_validate' => [[static::class, 'validateRequiredSummary']],
       '#default_value' => $settings['required_summary'],
       '#states' => [
-        'enabled' => [
-          ':input[name="settings[display_summary]"]' => ['checked' => TRUE],
-        ],
         'unchecked' => [
           ':input[name="settings[display_summary]"]' => ['checked' => FALSE],
+        ],
+        'visible' => [
+          ':input[name="settings[display_summary]"]' => ['checked' => TRUE],
         ],
       ],
     ];
