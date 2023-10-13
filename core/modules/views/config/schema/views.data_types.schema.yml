@@ -602,6 +602,9 @@ views_pager_sql:
     id:
       type: integer
       label: 'Pager ID'
+    id_unique:
+      type: boolean
+      label: 'Dynamic unique pager id'
     tags:
       type: mapping
       label: 'Pager link labels'

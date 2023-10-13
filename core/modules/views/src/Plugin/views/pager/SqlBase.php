@@ -78,7 +78,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $options = parent::defineOptions();
     $options['items_per_page'] = ['default' => 10];
     $options['offset'] = ['default' => 0];
-    $options['id'] = ['default' => $this->getPagerElement()];
+    $options['id'] = ['default' => 0];
+    $options['id_unique'] = ['default' => FALSE];
     $options['total_pages'] = ['default' => ''];
     $options['expose'] = [
       'contains' => [
@@ -129,6 +130,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       '#title' => $this->t('Pager ID'),
       '#description' => $this->t("Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
       '#default_value' => $this->options['id'],
+    ];
+
+    $form['id_unique'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Unique pager ID'),
+      '#description' => $this->t("Have a pager id set dynamically. Use this if you have multiple pagers on one page, want to avoid duplicate IDs and don't need a static one."),
+      '#default_value' => $this->options['id_unique'],
     ];
 
     $form['total_pages'] = [
@@ -239,7 +247,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     // Only accept integer values.
     $error = FALSE;
     $exposed_options = $form_state->getValue(['pager_options', 'expose', 'items_per_page_options']);
-    if (strpos($exposed_options, '.') !== FALSE) {
+    if (str_contains($exposed_options, '.')) {
       $error = TRUE;
     }
     $options = explode(',', $exposed_options);
@@ -272,7 +280,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     if ($this->itemsPerPageExposed()) {
       $query = $this->view->getRequest()->query;
       $items_per_page = $query->get('items_per_page');
-      if ($items_per_page > 0) {
+      if ((int) $items_per_page > 0) {
         $this->options['items_per_page'] = $items_per_page;
       }
       elseif ($items_per_page == 'All' && $this->options['expose']['items_per_page_options_all']) {
@@ -301,12 +309,12 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   }
 
   /**
-   * This function is the heart of this override class. It stores pager ID in a
-   * shared tempstore, so it doesn't hand out duplicate pager IDs.
+   * This function is the heart of this override class. If pager id is set to be unique, it stores pager ID in a
+   * shared tempstore, so it doesn't hand out duplicate pager IDs. Otherwise, id option is returned.
    */
   private function getPagerElement(): int {
-    if ($this->view === NULL || $this->view->dom_id === NULL) {
-      return 0;
+    if (!$this->options['id_unique'] || $this->view === NULL || $this->view->dom_id === NULL) {
+      return $this->options['id'];
     }
     $pager_element = $this->tempStore->get($this->view->dom_id);
     if ($pager_element) {
