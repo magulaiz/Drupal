@@ -279,7 +279,6 @@ stages:
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
   rules:
     - if: $PERFORMANCE_TEST == "TRUE"
-  interruptible: true
   variables:
     <<: *test-variables
   services:
