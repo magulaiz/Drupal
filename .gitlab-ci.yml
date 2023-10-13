@@ -78,10 +78,6 @@ stages:
       - scheduler_failure
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $DAILY_TEST == "yes" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 .with-composer: &with-composer
   needs:
@@ -90,6 +86,10 @@ stages:
 .with-yarn: &with-yarn
   needs:
     - '📦️ Yarn'
+
+.no-performance: &no-performance
+  rules:
+    - if: $PERFORMANCE_TEST == null
 
 .junit-artifacts: &junit-artifacts
   artifacts:
@@ -139,9 +139,11 @@ stages:
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "mysql-8"
+    PERFORMANCE_TEST: $PERFORMANCE_TEST
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $PERFORMANCE_TEST == "TRUE"
 
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':
@@ -270,7 +272,7 @@ stages:
 ################
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint, *no-performance ]
   stage: 🪄 Lint
   variables:
     <<: *default-lint-variables
@@ -282,7 +284,7 @@ stages:
       codequality: phpstan-quality-report.json
 
 '🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint, *no-performance ]
   stage: 🪄 Lint
   variables:
     <<: *default-lint-variables
@@ -294,7 +296,7 @@ stages:
       codequality: phpcs-quality-report.json
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint, *no-performance ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -305,7 +307,7 @@ stages:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint, *no-performance ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -316,7 +318,7 @@ stages:
       codequality: stylelint-quality-report.json
 
 '🧹 Compilation check':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *with-yarn, *default-job-settings-lint, *no-performance ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -325,7 +327,7 @@ stages:
     - cd core && yarn run -s check:ckeditor5
 
 '📔 Spell-checking':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *with-yarn, *default-job-settings-lint, *no-performance ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
