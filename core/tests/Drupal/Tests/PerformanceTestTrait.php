@@ -165,8 +165,8 @@ trait PerformanceTestTrait {
       // - a largestContentfulPaint::candidate event has been fired
       // - all network requests have received a response
       // - no new performance log events have been recorded since the last
-      //   iteration.
-      if ($fcp_count && $lcp_count && empty($performance_log) && ($request_count === $response_count)) {
+      //   iteration, and at least two iterations have occurred.
+      if ($attempts >= 2 && $fcp_count && $lcp_count && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
       sleep(1);
