@@ -24,11 +24,11 @@
 
   .disclaimer__disclaimer {
     max-width: 40%;
-    margin-left: 0.5rem; /* LTR */
+    margin-left: var(--spacing-smaller); /* LTR */
   }
 
   [dir="rtl"] .disclaimer__disclaimer {
-    margin-right: 0.5rem;
+    margin-right: var(--spacing-smaller);
     margin-left: 0;
   }
 

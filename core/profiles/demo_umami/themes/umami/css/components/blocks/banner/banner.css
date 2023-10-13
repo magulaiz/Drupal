@@ -4,7 +4,7 @@
  */
 
 .banner-block__content {
-  margin: 1rem 4%;
+  margin: var(--spacing) 4%;
   font-size: 1.188em;
 }
 
@@ -23,10 +23,10 @@
   transition: background-color 0.5s ease;
   text-align: center;
   text-decoration: none;
-  color: #fff;
-  border: 2px solid #d93760;
-  border-radius: 3px;
-  background-color: #d93760;
+  color: var(--color-white);
+  border: var(--border-width-medium) solid var(--color-secondary);
+  border-radius: var(--border-radius);
+  background-color: var(--color-secondary);
   font-family: "Scope One", Georgia, serif;
   font-size: 1.2rem;
   font-weight: 400;
@@ -34,17 +34,17 @@
 
 .banner-block .field--name-field-content-link a:focus,
 .banner-block .field--name-field-content-link a:hover {
-  color: #000;
-  border-color: #d93760;
-  outline-color: #fff;
+  color: var(--color-black);
+  border-color: var(--color-secondary);
+  outline-color: var(--color-white);
   outline-offset: 2px;
-  background-color: #fcece7;
+  background-color: var(--color-tertiary-dark);
 }
 /* Medium */
 @media screen and (min-width: 48rem) { /* 768px */
   .banner-block {
     position: relative; /* Anchor absolutely positioned background image. */
-    background-color: #464646;
+    background-color: var(--color-gray-darkest);
   }
 
   .banner-block__inner {
@@ -61,8 +61,8 @@
     max-width: 50%;
     margin: 0;
     padding: 1.777em;
-    color: #fff;
-    border: 1px solid #464646;
+    color: var(--color-white);
+    border: var(--border-width) solid var(--color-gray-darkest);
     background: rgba(0, 0, 0, 0.42);
   }
 

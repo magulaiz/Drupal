@@ -5,5 +5,5 @@
  */
 
 .node {
-  background: #fff;
+  background: var(--color-white);
 }
