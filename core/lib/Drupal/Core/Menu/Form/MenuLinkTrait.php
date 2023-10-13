@@ -37,7 +37,6 @@ trait MenuLinkTrait {
    * Callback function for updating the parent link select list.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) {
-    $selected_menu = $form_state->getValue('menu_parent_menu');
 
     $menu_of_selected_type = $form_state->get('updated_child_list');
     $form['menu_parent']['#options'] = $menu_of_selected_type;
