@@ -3,6 +3,7 @@
 namespace Drupal\Tests\text\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -26,6 +27,7 @@ class TextSummaryTest extends KernelTestBase {
     'filter',
     'text',
     'field',
+    'field_ui',
     'entity_test',
   ];
 
@@ -249,8 +251,49 @@ class TextSummaryTest extends KernelTestBase {
 
   /**
    * Tests required summary.
+   *
+   * @param bool $display_summary
+   *   TRUE if a checkbox "Summary input" is checked.
+   *   This allows authors to input an explicit summary, to be displayed
+   *   instead of the automatically trimmed text.
+   *   (for example, it can be set on a page
+   *    admin/structure/types/manage/article/fields/node.article.body)
+   * @param bool $require_summary
+   *   TRUE if a checkbox "Require summary" is checked.
+   *   This make a summary field required when a text is edited by an author.
+   *   (for example, it can be set on a page
+   *    admin/structure/types/manage/article/fields/node.article.body)
+   * @param array $expected_entity_form
+   *   An expected state of an entity form when certain
+   *   display_summary and require_summary values are provided.
+   *   The summary is used here as a regular widget
+   *   (for example on a page node/add/article)
+   *   An associative array with the following keys:
+   *    - display_type: (string) A summary field's type
+   *      (equals to 'textarea' or 'value').
+   *    - require: (bool) TRUE if a summary field is required.
+   *    - violations: (int) Number of violations after validation.
+   *    - violation_path: (string) A property path from the root element
+   *      to the violation or the form element which raised an error.
+   *    - violation_message: (string) A message associated with the violation.
+   * @param array $expected_field_config_form
+   *   An expected state of a field config form when certain
+   *   display_summary and require_summary are provided.
+   *   The summary is used here as a default value widget.
+   *   (for example on a page
+   *    admin/structure/types/manage/article/fields/node.article.body)
+   *   An associative array with the following keys:
+   *    - display_type: (string) A summary field's type
+   *      (equals to 'textarea' or 'value').
+   *    - require: (bool) TRUE if a summary field is required.
+   *    - violations: (int) Number of violations after validation.
+   *    - violation_path: (string) A property path from the root element
+   *      to the violation or the form element which raised an error.
+   *    - violation_message: (string) A message associated with the violation.
+   *
+   * @dataProvider providerTestRequiredSummary
    */
-  public function testRequiredSummary() {
+  public function testRequiredSummary(bool $display_summary, bool $require_summary, array $expected_entity_form, array $expected_field_config_form) {
     $this->installEntitySchema('entity_test');
     $this->setUpCurrentUser();
     $field_definition = FieldStorageConfig::create([
@@ -271,8 +314,8 @@ class TextSummaryTest extends KernelTestBase {
       'bundle' => 'entity_test',
       'settings' => [
         'text_processing' => TRUE,
-        'display_summary' => TRUE,
-        'required_summary' => TRUE,
+        'display_summary' => $display_summary,
+        'required_summary' => $require_summary,
       ],
     ]);
     $instance->save();
@@ -292,21 +335,126 @@ class TextSummaryTest extends KernelTestBase {
       ->save();
 
     // Check the required summary.
+    // Create a test entity with a 'text with summary' field.
+    // Fill in a text field and leave its summary empty.
     $entity = EntityTest::create([
       'name' => $this->randomMachineName(),
       'type' => 'entity_test',
       'test_textwithsummary' => ['value' => $this->randomMachineName()],
     ]);
-    $form = \Drupal::service('entity.form_builder')->getForm($entity);
-    $this->assertNotEmpty($form['test_textwithsummary']['widget'][0]['summary'], 'Summary field is shown');
-    $this->assertNotEmpty($form['test_textwithsummary']['widget'][0]['summary']['#required'], 'Summary field is required');
 
-    // Test validation.
+    // Check the state of a summary field when an entity form is displayed.
+    // If an author edits a text its summary can be visible as a textarea
+    // or hidden as a value.
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
+    $this->assertEquals($expected_entity_form['display_type'], $form['test_textwithsummary']['widget'][0]['summary']['#type']);
+    $this->assertEquals($expected_entity_form['require'], !empty($form['test_textwithsummary']['widget'][0]['summary']['#required']));
+
+    // Test entity form validation.
     /** @var \Symfony\Component\Validator\ConstraintViolation[] $violations */
     $violations = $entity->validate();
-    $this->assertCount(1, $violations);
-    $this->assertEquals('test_textwithsummary.0.summary', $violations[0]->getPropertyPath());
-    $this->assertEquals('The summary field is required for A text field', $violations[0]->getMessage());
+    $violation_path = !count($violations) ? '' : $violations[0]->getPropertyPath();
+    $violation_message = !count($violations) ? '' : $violations[0]->getMessage();
+    $this->assertCount($expected_entity_form['violations'], $violations);
+    $this->assertEquals($expected_entity_form['violation_path'], $violation_path);
+    $this->assertEquals($expected_entity_form['violation_message'], $violation_message);
+
+    // Check the default summary field is not required in a field config form.
+    $form_object = \Drupal::entityTypeManager()->getFormObject($instance->getEntityTypeId(), 'edit');
+    $form_object->setEntity($instance);
+    $form = \Drupal::formBuilder()->getForm($form_object);
+    $this->assertEquals($expected_field_config_form['display_type'], $form['default_value']['widget'][0]['summary']['#type']);
+    $this->assertEquals($expected_field_config_form['require'], !empty($form['default_value']['widget'][0]['summary']['#required']));
+
+    // Test a field config form validation.
+    $form_state = (new FormState())->setFormState([]);
+    \Drupal::formBuilder()->submitForm($form_object, $form_state);
+    $errors = $form_state->getErrors();
+    $error_key = !count($errors) ? '' : key($errors);
+    $error_message = !count($errors) ? '' : $errors[$error_key];
+    $this->assertCount($expected_field_config_form['violations'], $errors);
+    $this->assertEquals($expected_field_config_form['violation_path'], $error_key);
+    $this->assertEquals($expected_field_config_form['violation_message'], $error_message);
+  }
+
+  /**
+   * Provides test data for testRequiredSummary().
+   */
+  public function providerTestRequiredSummary(): array {
+    return [
+      [
+        'display_summary' => TRUE,
+        'require_summary' => TRUE,
+        'expected_entity_form' => [
+          'display_type' => 'textarea',
+          'require' => TRUE,
+          'violations' => 1,
+          'violation_path' => 'test_textwithsummary.0.summary',
+          'violation_message' => 'The summary field is required for A text field',
+        ],
+        'expected_field_config_form' => [
+          'display_type' => 'textarea',
+          'require' => FALSE,
+          'violations' => 0,
+          'violation_path' => '',
+          'violation_message' => '',
+        ],
+      ],
+      [
+        'display_summary' => TRUE,
+        'require_summary' => FALSE,
+        'expected_entity_form' => [
+          'display_type' => 'textarea',
+          'require' => FALSE,
+          'violations' => 0,
+          'violation_path' => '',
+          'violation_message' => '',
+        ],
+        'expected_field_config_form' => [
+          'display_type' => 'textarea',
+          'require' => FALSE,
+          'violations' => 0,
+          'violation_path' => '',
+          'violation_message' => '',
+        ],
+      ],
+      [
+        'display_summary' => FALSE,
+        'require_summary' => TRUE,
+        'expected_entity_form' => [
+          'display_type' => 'value',
+          'require' => FALSE,
+          'violations' => 0,
+          'violation_path' => '',
+          'violation_message' => '',
+        ],
+        'expected_field_config_form' => [
+          'display_type' => 'value',
+          'require' => FALSE,
+          'violations' => 1,
+          'violation_path' => 'settings][required_summary',
+          'violation_message' => 'If "Require summary" is checked "Summary input" has to be checked as well.',
+        ],
+      ],
+      [
+        'display_summary' => FALSE,
+        'require_summary' => FALSE,
+        'expected_entity_form' => [
+          'display_type' => 'value',
+          'require' => FALSE,
+          'violations' => 0,
+          'violation_path' => '',
+          'violation_message' => '',
+        ],
+        'expected_field_config_form' => [
+          'display_type' => 'value',
+          'require' => FALSE,
+          'violations' => 0,
+          'violation_path' => '',
+          'violation_message' => '',
+        ],
+      ],
+    ];
   }
 
   /**
