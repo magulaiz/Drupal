@@ -1273,8 +1273,6 @@ vfsstream
 viewmode
 viewports
 vocabs
-volgende
-vorige
 warmable
 wcag
 wcprops
