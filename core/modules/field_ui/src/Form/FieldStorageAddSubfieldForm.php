@@ -97,13 +97,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
   protected $configFactory;
 
   /**
-   * ID for the field stored in temp store.
-   *
-   * @var string
-   */
-  protected $fieldTempStoreKey;
-
-  /**
    * Constructs a new FieldStorageAddForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -330,24 +323,17 @@ class FieldStorageAddSubfieldForm extends FormBase {
         }
       }
 
-      // Create a random string as the field name, so we can create a dummy
-      // entity in order to create the field storage settings. Inside the edit
-      // form, a new entity with the user inputted field name will get created
-      // that is saved.
-      // @see \Drupal\field_ui\Form\FieldConfigEdit::validateForm
-      $this->fieldTempStoreKey = '_' . uniqid();
-
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
       $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
       $form['actions']['previous'] = [
         '#type' => 'link',
-        '#title' => $this->t('Change field'),
+        '#title' => $this->t('Change field type'),
         '#url' => Url::fromRoute("field_ui.field_storage_config_add_$entity_type_id", $route_parameters_back),
         '#attributes' => [
-          'class' => ['button', 'button--primary', 'use-ajax'],
+          'class' => ['button', 'use-ajax'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'width' => '85vw',
+            'width' => '1100',
           ]),
         ],
       ];
@@ -360,7 +346,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
           'class' => ['button', 'button--primary', 'use-ajax'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'width' => '85vw',
+            'width' => '1100',
           ]),
         ],
       ];
@@ -488,15 +474,16 @@ class FieldStorageAddSubfieldForm extends FormBase {
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $field_storage_type = $this->selectedFieldStorageType ?? $this->selectedFieldType;
-    $this->setTempStore($this->entityTypeId, $field_storage_type, $this->fieldTempStoreKey, $this->bundle, $form_state->getValue('field_name_label'), $form_state->getValue('field_name'));
+    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $form_state->getValue('field_name');
+    $this->setTempStore($this->entityTypeId, $field_storage_type, $field_name, $this->bundle, $form_state->getValue('field_name_label'), $form_state->getValue('field_name'));
 
     $response = new AjaxResponse();
     $callback = $this->controllerResolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldConfigAddController::fieldConfigAddConfigureForm');
     $edit_form = call_user_func_array($callback,
-      [$this->entityTypeId, $this->fieldTempStoreKey]);
+      [$this->entityTypeId, $field_name]);
     $field_type = $form_state->getValue('group_field_options_wrapper');
     $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field_type]['label'];
-    $response->addCommand(new OpenModalDialogCommand("New {$field_type_label} field settings", $edit_form, ['width' => '880']));
+    $response->addCommand(new OpenModalDialogCommand("Configure field: {$field_type_label}", $edit_form, ['width' => '1100']));
     return $response;
   }
 

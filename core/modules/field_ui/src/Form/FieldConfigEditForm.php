@@ -3,6 +3,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
@@ -39,6 +40,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldConfigEditForm extends EntityForm {
 
   use FieldStorageCreationTrait;
+  use AjaxFormHelperTrait;
 
   /**
    * The entity being used by this form.
@@ -81,13 +83,6 @@ class FieldConfigEditForm extends EntityForm {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * ID for the field stored in temp store.
-   *
-   * @var string
-   */
-  protected $fieldTempStoreKey;
 
   /**
    * Constructs a new FieldConfigDeleteForm object.
@@ -167,10 +162,6 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
-
-    if (!isset($this->fieldTempStoreKey)) {
-      $this->fieldTempStoreKey = $this->entity->get('field_name');
-    }
 
     $form_title = $this->t('Field settings for %bundle', [
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
@@ -404,20 +395,22 @@ class FieldConfigEditForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Save settings');
-    $route_parameters = [
-      'field_config' => $this->entity->id(),
-      'node_type' => $this->entity->getTargetBundle(),
-    ];
+    $actions['submit']['#value'] = $this->t('Save');
     $actions['submit']['#ajax'] = [
-      'callback' => [$this, 'ajaxSubmitForm'],
-      'url' => Url::fromRoute("entity.field_config.{$this->entity->getTargetEntityTypeId()}_field_edit_form", $route_parameters),
+      'callback' => [$this, 'ajaxSubmit'],
       'options' => [
         'query' => [
           FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
         ],
       ],
     ];
+    if ($this->entity->isNew()) {
+      $route_parameters = [
+        'field_name' => $this->entity->getName(),
+        'entity_type' => $this->entity->getTargetEntityTypeId(),
+      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId()), $this->entity->getTargetBundle());;
+      $actions['submit']['#ajax']['url'] = Url::fromRoute("field_ui.field_add_{$this->entity->getTargetEntityTypeId()}", $route_parameters);
+    }
     $entity_type = $this->entity->getTargetEntityTypeId();
     $temp_field_name = $this->entity->get('field_name');
     $route_parameters = [
@@ -428,13 +421,13 @@ class FieldConfigEditForm extends EntityForm {
     $actions['back'] = [
       '#type' => 'link',
       '#weight' => 1,
-      '#title' => $this->t('Back'),
+      '#title' => $this->t('Change field type'),
       '#limit_validation_errors' => [],
       '#attributes' => [
         'class' => ['button', 'use-ajax'],
         'data-dialog-type' => 'modal',
         'data-dialog-options' => Json::encode([
-          'width' => '85vw',
+          'width' => '1100',
         ]),
       ],
       '#url' => Url::fromRoute("field_ui.field_reset_$entity_type", $route_parameters),
@@ -469,13 +462,8 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * @todo.
    */
-  public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
+  public function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    if ($form_state::hasAnyErrors()) {
-      $response->addCommand(new ReplaceCommand('#field-ui-edit-form', $form));
-      return $response;
-    }
-
     $response->addCommand(new CloseModalDialogCommand());
     $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
     return $response;
@@ -487,7 +475,7 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     $entity_type = $this->entity->getTargetEntityTypeId();
-    $temp_store = $this->tempStore->get($entity_type . ':' . $this->fieldTempStoreKey);
+    $temp_store = $this->tempStore->get($entity_type . ':' . $this->entity->getName());
     $default_options = $temp_store['default_options'];
 
     $this->validateAddNew($form, $form_state);
@@ -595,7 +583,7 @@ class FieldConfigEditForm extends EntityForm {
 
       if ($this->entity->isNew()) {
         // Delete the temp store entry.
-        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->fieldTempStoreKey);
+        $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
       }
 
       $this->messenger()

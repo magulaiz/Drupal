@@ -189,8 +189,8 @@ class FieldStorageAddForm extends FormBase {
           'tabindex' => '0',
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'width' => 880,
-            'title' => $this->t('Add @type Field', ['@type' => $field_type['label']]),
+            'width' => 1100,
+            'title' => $this->t('Add field: @type', ['@type' => $category_info->getLabel()]),
           ]),
           'href' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters)->toString(),
         ],
@@ -204,7 +204,7 @@ class FieldStorageAddForm extends FormBase {
             '#type' => 'container',
             '#attributes' => [
               'class' => ['field-option__icon', $display_as_group ?
-                "field-icon-$field_type[category]" : "field-icon-$cleaned_class_name",
+                "field-icon-{$field_type['category']}" : "field-icon-$cleaned_class_name",
               ],
             ],
           ],
@@ -224,7 +224,7 @@ class FieldStorageAddForm extends FormBase {
             ],
             '#type' => 'html_tag',
             '#tag' => 'span',
-            '#value' => $field_type['label'],
+            '#value' => $category_info->getLabel(),
           ],
           'description' => [
             '#type' => 'container',
@@ -245,7 +245,7 @@ class FieldStorageAddForm extends FormBase {
 
     $form['no_js_submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Change field'),
+      '#value' => $this->t('Change field type'),
       '#limit_validation_errors' => [],
       '#attributes' => [
         'class' => ['js-hide'],

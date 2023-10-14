@@ -69,7 +69,7 @@ class FieldUiLocalAction extends DeriverBase implements ContainerDeriverInterfac
               'class' => ['use-ajax', 'button'],
               'data-dialog-type' => 'modal',
               'data-dialog-options' => Json::encode([
-                'width' => '85vw',
+                'width' => '1100',
               ]),
             ],
           ],
@@ -83,7 +83,7 @@ class FieldUiLocalAction extends DeriverBase implements ContainerDeriverInterfac
               'class' => ['use-ajax', 'button'],
               'data-dialog-type' => 'modal',
               'data-dialog-options' => Json::encode([
-                'width' => '85vw',
+                'width' => '1100',
               ]),
             ],
           ],
