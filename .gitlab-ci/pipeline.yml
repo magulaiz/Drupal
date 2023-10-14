@@ -22,7 +22,7 @@ stages:
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "TRUE"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
 
 .junit-artifacts: &junit-artifacts
   artifacts:
@@ -278,7 +278,7 @@ stages:
 '🚲 Performance tests':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
   rules:
-    - if: $PERFORMANCE_TEST == "TRUE"
+    - if: $PERFORMANCE_TEST == "1"
   variables:
     <<: *test-variables
   services:
