@@ -224,11 +224,12 @@ trait PerformanceTestTrait {
     }
     $first_request_timestamp = NULL;
     $first_response_timestamp = NULL;
+    $request_wall_time = NULL;
+    $response_wall_time = NULL;
     $url = NULL;
-    $timestamp_since_os_boot = NULL;
     foreach ($messages as $message) {
       // Since chrome timestamps are since OS start, we take the first network
-      // request and respons, determine the wall times of each, then calculate
+      // request and response, determine the wall times of each, then calculate
       // offsets from those for everything else.
       if ($first_response_timestamp === NULL
         && $message['method'] === 'Tracing.dataCollected'
@@ -238,14 +239,14 @@ trait PerformanceTestTrait {
 
         // Get the actual timestamp of the response which is a millisecond unix
         // epoch timestamp. The log doesn't provide this for the request.
-        $response_walltime = (int) ($message['params']['args']['data']['responseTime'] * $nanoseconds_per_millisecond);
+        $response_wall_time = (int) ($message['params']['args']['data']['responseTime'] * $nanoseconds_per_millisecond);
 
         // 'requestTime' is in the format 'seconds since OS boot with
         // microsecond precision'.
         $first_request_timestamp = (int) ($message['params']['args']['data']['timing']['requestTime'] * $nanoseconds_per_second);
-        // By subtracting the request timestamp from the response walltime we
+        // By subtracting the request timestamp from the response wall time we
         // get the request wall time.
-        $request_walltime = ($response_walltime - ($first_response_timestamp - $first_request_timestamp));
+        $request_wall_time = ($response_wall_time - ($first_response_timestamp - $first_request_timestamp));
       }
     }
 
@@ -267,21 +268,21 @@ trait PerformanceTestTrait {
     $tracer = $tracerProvider->getTracer('Drupal');
 
     $span = $tracer->spanBuilder('main')
-      ->setStartTimestamp($request_walltime)
+      ->setStartTimestamp($request_wall_time)
       ->setAttribute('http.method', 'GET')
       ->setAttribute('http.url', $url)
       ->setSpanKind(SpanKind::KIND_SERVER)
       ->startSpan();
 
-    $last_timestamp = $response_walltime;
+    $last_timestamp = $response_wall_time;
 
     try {
       $scope = $span->activate();
       $first_byte_span = $tracer->spanBuilder('firstByte')
-        ->setStartTimestamp($request_walltime)
+        ->setStartTimestamp($request_wall_time)
         ->setAttribute('http.url', $url)
         ->startSpan();
-      $first_byte_span->end($response_walltime);
+      $first_byte_span->end($response_wall_time);
       $lcp_timestamp = NULL;
       $fcp_timestamp = NULL;
       $lcp_size = 0;
@@ -291,11 +292,11 @@ trait PerformanceTestTrait {
             // Tracing timestamps are microseconds since OS boot.
             $fcp_timestamp = $message['params']['ts'] * $nanoseconds_per_microsecond;
             $fcp_span = $tracer->spanBuilder('firstContentfulPaint')
-              ->setStartTimestamp($request_walltime)
+              ->setStartTimestamp($request_wall_time)
               ->setAttribute('http.url', $url)
               ->startSpan();
-            $last_timestamp = $first_contentful_paint_walltime = (int) ($request_walltime + ($fcp_timestamp - $first_request_timestamp));
-            $fcp_span->end($first_contentful_paint_walltime);
+            $last_timestamp = $first_contentful_paint_wall_time = (int) ($request_wall_time + ($fcp_timestamp - $first_request_timestamp));
+            $fcp_span->end($first_contentful_paint_wall_time);
           }
         }
 
@@ -308,12 +309,12 @@ trait PerformanceTestTrait {
       }
       if (isset($lcp_timestamp)) {
         $lcp_span = $tracer->spanBuilder('largestContentfulPaint')
-          ->setStartTimestamp($request_walltime)
+          ->setStartTimestamp($request_wall_time)
           ->setAttribute('http.url', $url)
           ->startSpan();
-        $last_timestamp = $largest_contentful_paint_walltime = (int) ($request_walltime + ($lcp_timestamp - $first_request_timestamp));
+        $last_timestamp = $largest_contentful_paint_wall_time = (int) ($request_wall_time + ($lcp_timestamp - $first_request_timestamp));
         $lcp_span->setAttribute('lcp.size', $lcp_size);
-        $lcp_span->end($largest_contentful_paint_walltime);
+        $lcp_span->end($largest_contentful_paint_wall_time);
       }
     }
     finally {
