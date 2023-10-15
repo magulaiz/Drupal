@@ -3,7 +3,7 @@
 namespace Drupal\Tests\phpass\Unit;
 
 use Drupal\phpass\Password\PhpassHashedPassword;
-use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\Password\PasswordHashInterface;
 use Drupal\Core\Password\PhpPassword;
 use Drupal\Tests\UnitTestCase;
 
@@ -24,7 +24,7 @@ class PasswordVerifyTest extends UnitTestCase {
     $samplePassword = $this->randomMachineName();
     $sampleHash = $this->randomMachineName();
 
-    $corePassword = $this->prophesize(PasswordInterface::class);
+    $corePassword = $this->prophesize(PasswordHashInterface::class);
     $corePassword->hash($samplePassword)->willReturn($sampleHash);
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
@@ -41,7 +41,7 @@ class PasswordVerifyTest extends UnitTestCase {
   public function testPasswordNeedsRehash() {
     $sampleHash = $this->randomMachineName();
 
-    $corePassword = $this->prophesize(PasswordInterface::class);
+    $corePassword = $this->prophesize(PasswordHashInterface::class);
     $corePassword->needsRehash($sampleHash)->willReturn(TRUE);
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
@@ -58,7 +58,7 @@ class PasswordVerifyTest extends UnitTestCase {
     $samplePassword = $this->randomMachineName();
     $sampleHash = $this->randomMachineName();
 
-    $corePassword = $this->prophesize(PasswordInterface::class);
+    $corePassword = $this->prophesize(PasswordHashInterface::class);
     $corePassword->check($samplePassword, $sampleHash)->willReturn(TRUE);
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
@@ -85,7 +85,7 @@ class PasswordVerifyTest extends UnitTestCase {
 
     $invalidPassword = 'invalid password';
 
-    $corePassword = $this->prophesize(PasswordInterface::class);
+    $corePassword = $this->prophesize(PasswordHashInterface::class);
     $corePassword->check()->shouldNotBeCalled();
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
@@ -143,14 +143,14 @@ class PasswordVerifyTest extends UnitTestCase {
    */
   public function providerLongPasswords() {
     // '512 byte long password is allowed.'
-    $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
+    $passwords['allowed'] = [str_repeat('x', PasswordHashInterface::PASSWORD_MAX_LENGTH), TRUE];
     // 513 byte long password is not allowed.
-    $passwords['too_long'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE];
+    $passwords['too_long'] = [str_repeat('x', PasswordHashInterface::PASSWORD_MAX_LENGTH + 1), FALSE];
 
     // Check a string of 3-byte UTF-8 characters, 510 byte long password is
     // allowed.
-    $len = (int) floor(PasswordInterface::PASSWORD_MAX_LENGTH / 3);
-    $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
+    $len = (int) floor(PasswordHashInterface::PASSWORD_MAX_LENGTH / 3);
+    $diff = PasswordHashInterface::PASSWORD_MAX_LENGTH % 3;
     $passwords['utf8'] = [str_repeat('€', $len), TRUE];
     // 512 byte long password is allowed.
     $passwords['ut8_extended'] = [$passwords['utf8'][0] . str_repeat('x', $diff), TRUE];

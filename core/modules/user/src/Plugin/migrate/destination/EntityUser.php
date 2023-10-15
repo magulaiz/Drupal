@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
-use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\Password\PasswordHashInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
@@ -71,7 +71,7 @@ class EntityUser extends EntityContentBase {
   /**
    * The password service class.
    *
-   * @var \Drupal\Core\Password\PasswordInterface
+   * @var \Drupal\Core\Password\PasswordHashInterface
    */
   protected $password;
 
@@ -94,12 +94,12 @@ class EntityUser extends EntityContentBase {
    *   The entity field manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type plugin manager service.
-   * @param \Drupal\Core\Password\PasswordInterface $password
+   * @param \Drupal\Core\Password\PasswordHashInterface $password
    *   The password service.
    * @param \Drupal\Core\Session\AccountSwitcherInterface|null $account_switcher
    *   The account switcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, PasswordInterface $password, AccountSwitcherInterface $account_switcher = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, PasswordHashInterface $password, AccountSwitcherInterface $account_switcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_field_manager, $field_type_manager, $account_switcher);
     $this->password = $password;
   }

@@ -3,7 +3,7 @@
 namespace Drupal\KernelTests\Core\Field\FieldType;
 
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\Password\PasswordHashInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -164,7 +164,7 @@ class PasswordItemTest extends FieldKernelTestBase {
    */
   public function testPreSaveExceptionNew() {
     $entity = EntityTest::create();
-    $entity->test_field = str_repeat('a', PasswordInterface::PASSWORD_MAX_LENGTH + 1);
+    $entity->test_field = str_repeat('a', PasswordHashInterface::PASSWORD_MAX_LENGTH + 1);
     $this->expectException(EntityStorageException::class);
     $this->expectExceptionMessage('The entity does not have a password');
     $entity->save();
@@ -182,7 +182,7 @@ class PasswordItemTest extends FieldKernelTestBase {
 
     $this->expectException(EntityStorageException::class);
     $this->expectExceptionMessage('The entity does not have a password');
-    $entity->test_field = str_repeat('a', PasswordInterface::PASSWORD_MAX_LENGTH + 1);
+    $entity->test_field = str_repeat('a', PasswordHashInterface::PASSWORD_MAX_LENGTH + 1);
     $entity->save();
   }
 

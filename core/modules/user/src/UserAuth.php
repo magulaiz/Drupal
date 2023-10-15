@@ -3,7 +3,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\Password\PasswordHashInterface;
 
 /**
  * Validates user authentication credentials.
@@ -20,7 +20,7 @@ class UserAuth implements UserAuthInterface {
   /**
    * The password hashing service.
    *
-   * @var \Drupal\Core\Password\PasswordInterface
+   * @var \Drupal\Core\Password\PasswordHashInterface
    */
   protected $passwordChecker;
 
@@ -29,10 +29,10 @@ class UserAuth implements UserAuthInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Password\PasswordInterface $password_checker
+   * @param \Drupal\Core\Password\PasswordHashInterface $password_checker
    *   The password service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, PasswordInterface $password_checker) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, PasswordHashInterface $password_checker) {
     $this->entityTypeManager = $entity_type_manager;
     $this->passwordChecker = $password_checker;
   }
@@ -47,7 +47,7 @@ class UserAuth implements UserAuthInterface {
       $account_search = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username]);
 
       if ($account = reset($account_search)) {
-        if ($this->passwordChecker->check($password, $account->getPassword())) {
+        if ($this->passwordChecker->verify($password, $account->getPassword())) {
           // Successful authentication.
           $uid = $account->id();
 
