@@ -876,10 +876,35 @@ abstract class Connection {
    *   run. The given options will be merged with self::defaultOptions().
    */
   public function executeDdlStatement(string $sql, array $arguments = [], array $options = []): void {
+    if (count($arguments) > 0) {
+      $this->query($sql, $arguments, $options);
+    }
+    else {
+      $this->executeStatement($sql, $options);
+    }
+
+    // DDL statements when in a transaction force a commit in some databases.
+    // Void the transaction in that case.
     if (!$this->transactionalDDLSupport && $this->inTransaction()) {
       $this->transactionManager()->voidClientTransaction();
     }
-    $this->query($sql, $arguments, $options);
+  }
+
+  /**
+   * Executes an SQL statement, directly through the client connection.
+   *
+   * This method does not allow placeholders. It assumes the client connection
+   * is \PDO. Non-PDO based drivers need to override this method.
+   *
+   * @param string $sql
+   *   The SQL statement to execute.
+   * @param array $options
+   *   (Optional) An associative array of options. The given options will be
+   *    merged with self::defaultOptions().
+   */
+  protected function executeStatement(string $sql, array $options = []): void {
+    $sql = $this->preprocessStatement($sql, $options);
+    $this->getClientConnection()->exec($sql);
   }
 
   /**
