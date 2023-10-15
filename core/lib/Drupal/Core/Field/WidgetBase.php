@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -303,6 +304,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * This stores the final location of the field within the form structure so
    * that flagErrors() can assign validation errors to the right form element.
    */
+  #[TrustedCallback]
   public static function afterBuild(array $element, FormStateInterface $form_state) {
     $parents = $element['#field_parents'];
     $field_name = $element['#field_name'];

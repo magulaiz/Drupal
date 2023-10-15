@@ -267,6 +267,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function afterBuild(array $element, FormStateInterface $form_state) {
     // Delegate ::afterBuild to the subform.
     // @todo remove after https://www.drupal.org/i/3385205 has been addressed.

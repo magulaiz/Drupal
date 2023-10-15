@@ -167,7 +167,9 @@ class TranslationStatusForm extends FormBase {
       '#multiple' => TRUE,
       '#required' => TRUE,
       '#not_found' => $languages_not_found,
-      '#after_build' => ['locale_translation_language_table'],
+      '#after_build' => [
+        [LocaleFormCallbacks::class, 'translationLanguageTable'],
+      ],
     ];
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';

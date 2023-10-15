@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form to test page cache storage.
@@ -46,7 +47,7 @@ class FormTestStoragePageCacheForm extends FormBase {
       '#submit' => [[$this, 'form_test_storage_page_cache_rebuild']],
     ];
 
-    $form['#after_build'] = [[$this, 'form_test_storage_page_cache_old_build_id']];
+    $form['#after_build'] = [[$this, 'formTestStoragePageCacheOldBuildId']];
 
     return $form;
   }
@@ -54,7 +55,8 @@ class FormTestStoragePageCacheForm extends FormBase {
   /**
    * Form element #after_build callback: output the old form build-id.
    */
-  public function form_test_storage_page_cache_old_build_id($form) {
+  #[TrustedCallback]
+  public function formTestStoragePageCacheOldBuildId($form) {
     if (isset($form['#build_id_old'])) {
       $form['test_build_id_old']['#plain_text'] = $form['#build_id_old'];
     }

@@ -7,9 +7,9 @@
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -22,6 +22,7 @@ use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Form\FileUploadForm;
+use Drupal\media_library\Form\MediaLibraryFormCallbacks;
 use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
@@ -290,7 +291,7 @@ function media_library_form_alter(array &$form, FormStateInterface $form_state, 
   // Add a process callback to ensure that the media library view's exposed
   // filters submit button is not moved to the modal dialog's button area.
   if ($form_id === 'views_exposed_form' && str_starts_with($form['#id'], 'views-exposed-form-media-library-widget')) {
-    $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
+    $form['#after_build'][] = [MediaLibraryFormCallbacks::class, 'viewsFormMediaLibrary'];
   }
 
   // Configures media_library displays when a type is submitted.
@@ -305,19 +306,16 @@ function media_library_form_alter(array &$form, FormStateInterface $form_state, 
 
 /**
  * Form #after_build callback for media_library view's exposed filters form.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   MediaLibraryFormCallbacks::viewsFormMediaLibrary()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function _media_library_views_form_media_library_after_build(array $form, FormStateInterface $form_state) {
-  // Remove .form-actions from the view's exposed filter actions. This prevents
-  // the "Apply filters" submit button from being moved into the dialog's
-  // button area.
-  // @see \Drupal\Core\Render\Element\Actions::processActions
-  // @see Drupal.behaviors.dialog.prepareDialogButtons
-  // @todo Remove this after
-  //   https://www.drupal.org/project/drupal/issues/3089751 is fixed.
-  if (($key = array_search('form-actions', $form['actions']['#attributes']['class'])) !== FALSE) {
-    unset($form['actions']['#attributes']['class'][$key]);
-  }
-  return $form;
+  return MediaLibraryFormCallbacks::viewsFormMediaLibrary($form, $form_state);
 }
 
 /**

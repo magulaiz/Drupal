@@ -8,6 +8,7 @@ use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
+use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -18,7 +19,7 @@ use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\ckeditor5\SmartDefaultSettings;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
 use Drupal\editor\Attribute\Editor;
@@ -479,6 +480,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @see \Drupal\Core\Entity\EntityForm::afterBuild()
    */
+  #[TrustedCallback]
   public static function assessActiveTextEditorAfterBuild(array $element, FormStateInterface $form_state): array {
     // The case of the form being built initially, and the text editor plugin in
     // use is already CKEditor 5.
