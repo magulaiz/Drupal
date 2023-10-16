@@ -3,12 +3,12 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Transaction\ClientConnectionTransactionState;
 use Drupal\Core\Database\Transaction\StackItem;
 use Drupal\Core\Database\Transaction\StackItemType;
 use Drupal\Core\Database\TransactionExplicitCommitNotAllowedException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests the transaction abstraction system.
@@ -269,18 +269,19 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // the DDL statement should commit the transaction stack.
       $this->cleanUp();
       $transaction = $this->connection->startTransaction();
+      $reflectionMethod = new \ReflectionMethod(get_class($this->connection->transactionManager()), 'getConnectionTransactionState');
+      $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+      $this->assertEquals(ClientConnectionTransactionState::Active, $reflectionMethod->invoke($this->connection->transactionManager()));
       $this->insertRow('row');
-      $this->executeDDLStatement();
 
-      try {
-        // Rollback the outer transaction.
-        $transaction->rollBack();
-        // @see \Drupal\mysql\Driver\Database\mysql\TransactionManager::rollbackClientTransaction()
-        $this->fail('Rolling back a transaction containing DDL should produce a warning.');
-      }
-      catch (Warning $warning) {
-        $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
-      }
+      $this->executeDDLStatement();
+      $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+      $this->assertEquals(ClientConnectionTransactionState::Voided, $reflectionMethod->invoke($this->connection->transactionManager()));
+      $this->assertRowPresent('row');
+
+      // Rollback the outer transaction. Nothing happens as the transaction was
+      // voided.
+      $transaction->rollBack();
       unset($transaction);
       $this->assertRowPresent('row');
     }
