@@ -39,7 +39,7 @@ class UserCreateFailMailTest extends BrowserTestBase {
     $edit = [
       'name' => $name,
       'mail' => $this->randomMachineName() . '@example.com',
-      'pass' =>  $this->randomString(),
+      'pass' => $this->randomString(),
       'notify' => TRUE,
     ];
     $this->drupalGet('admin/people/create');

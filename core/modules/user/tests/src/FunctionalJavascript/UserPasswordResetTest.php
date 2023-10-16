@@ -100,7 +100,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
 
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
-    $edit = ['pass' => $password,];
+    $edit = ['pass' => $password];
     $this->submitForm($edit, 'Save');
 
     // Verify that the password reset session has been destroyed.

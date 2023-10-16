@@ -142,7 +142,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
-    $edit = ['pass' => $password,];
+    $edit = ['pass' => $password];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
@@ -366,7 +366,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Change the password.
     $password = \Drupal::service('password_generator')->generate();
-    $edit = ['pass' => $password,];
+    $edit = ['pass' => $password];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 

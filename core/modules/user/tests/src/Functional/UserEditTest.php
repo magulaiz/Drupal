@@ -47,20 +47,6 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->responseContains($user1->getDisplayName());
     $this->assertSession()->titleEquals(strip_tags($user1->getDisplayName()) . ' | Drupal');
 
-//    // Check that filling out a single password field does not validate.
-//    $edit = [];
-//    $edit['pass[pass1]'] = '';
-//    $edit['pass[pass2]'] = $this->randomMachineName();
-//    $this->drupalGet("user/" . $user1->id() . "/edit");
-//    $this->submitForm($edit, 'Save');
-//    $this->assertSession()->pageTextContains("The specified passwords do not match.");
-//
-//    $edit['pass[pass1]'] = $this->randomMachineName();
-//    $edit['pass[pass2]'] = '';
-//    $this->drupalGet("user/" . $user1->id() . "/edit");
-//    $this->submitForm($edit, 'Save');
-//    $this->assertSession()->pageTextContains("The specified passwords do not match.");
-
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
     $edit = [];
