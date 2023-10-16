@@ -64,7 +64,7 @@ class JsonApiSettingsForm extends ConfigFormBase {
   /**
    * Transformation callback for the read_only config value.
    *
-   * @param string $read_only
+   * @param string $value
    *   The value to transform.
    *
    * @return bool
