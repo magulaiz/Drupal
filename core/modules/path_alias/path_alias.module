@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types = 1);
-
 /**
  * @file
  * Enables users to rename URLs.
  */
+
+declare(strict_types = 1);
 
 use Drupal\path_alias\Form\SystemInformationFormAlter;
 
