@@ -27,15 +27,8 @@ field.field_settings.text:
         type: string
 
 field.value.text:
-  type: mapping
+  type: text_format
   label: 'Default value'
-  mapping:
-    value:
-      type: label
-      label: 'Value'
-    format:
-      type: string
-      label: 'Text format'
 
 field.storage_settings.text_long:
   label: 'Text (formatted, long) settings'
@@ -52,15 +45,8 @@ field.field_settings.text_long:
         type: string
 
 field.value.text_long:
-  type: mapping
+  type: text_format
   label: 'Default value'
-  mapping:
-    value:
-      type: text
-      label: 'Value'
-    format:
-      type: string
-      label: 'Text format'
 
 field.storage_settings.text_with_summary:
   label: 'Text (formatted, long, with summary) settings'
@@ -83,18 +69,8 @@ field.field_settings.text_with_summary:
         type: string
 
 field.value.text_with_summary:
-  type: mapping
+  type: text_format_with_summary
   label: 'Default value'
-  mapping:
-    value:
-      type: text
-      label: 'Body'
-    summary:
-      type: string
-      label: 'Summary'
-    format:
-      type: string
-      label: 'Text format'
 
 field.formatter.settings.text_default:
   type: mapping
