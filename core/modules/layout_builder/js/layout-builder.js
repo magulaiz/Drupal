@@ -46,14 +46,16 @@
           const $link = $(link);
           const textMatch =
             link.textContent.toLowerCase().indexOf(query) !== -1;
+          const $closestLbCategory = $link.closest(
+            '.js-layout-builder-category',
+          );
           // Checks if a category is currently hidden.
           // Toggles the category on if so.
           if (
-            Drupal.elementIsHidden(
-              $link.closest('.js-layout-builder-category')[0],
-            )
+            $closestLbCategory.length > 0 &&
+            Drupal.elementIsHidden($closestLbCategory[0])
           ) {
-            $link.closest('.js-layout-builder-category').show();
+            $closestLbCategory.show();
           }
           // Toggle the li tag of the matching link.
           $link.parent().toggle(textMatch);
