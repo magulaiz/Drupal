@@ -50,7 +50,7 @@ final class CommandExecutor {
    *   way, with the `--host` and `--site-path` options always set.
    */
   public function create(string $arguments = NULL): Process {
-    $script = $this->appRoot . '/core/scripts/auto-update.sh';
+    $script = $this->appRoot . '/core/scripts/auto-update';
     $command_line = implode(' ', [
       // Always run the command script directly through the PHP interpreter.
       (new PhpExecutableFinder())->find(),
