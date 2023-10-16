@@ -14,6 +14,7 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\Tests\WebAssert;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
@@ -445,7 +446,10 @@ class CoreUpdateTest extends UpdateTestBase {
 
     $dir = $this->getWorkspaceDirectory() . '/project';
 
-    $command = [$this->getWebRoot() . '/core/scripts/auto-update.sh'];
+    $command = [
+      (new PhpExecutableFinder())->find(),
+      $this->getWebRoot() . '/core/scripts/auto-update',
+    ];
     $process = new Process($command, $dir);
     // Give the update process as much time as it needs to run.
     $process->setTimeout(NULL)->mustRun();
