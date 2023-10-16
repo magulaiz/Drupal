@@ -53,7 +53,11 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
       '#rows' => 4,
-      '#config_target' => ['update.settings:notification.emails', '::arrayToMultiLineString'],
+      '#config_target' => [
+        'target' => 'update.settings:notification.emails',
+        'load_callback' => '::arrayToMultiLineString',
+        'save_callback' => '::arrayToMultiLineString',
+      ],
       '#description' => $this->t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
 

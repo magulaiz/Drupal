@@ -99,15 +99,13 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function loadDefaultValuesFromConfig(array $element, FormStateInterface $form_state): array {
     if (array_key_exists('#config_target', $element) && !array_key_exists('#default_value', $element)) {
-      $config_target = $element['#config_target'];
-      if (is_array($config_target)) {
-        [$config_target, $transformation] = $config_target;
-      }
+      $config_target = self::unpackConfigTarget($element['#config_target']);
 
-      [$config_name, $property] = explode(':', $config_target, 2);
+      [$config_name, $property] = explode(':', $config_target['target'], 2);
       $value = $this->config($config_name)->get($property);
-      if (isset($transformation)) {
-        $transformation = $form_state->prepareCallback($transformation);
+
+      if ($config_target['load_callback']) {
+        $transformation = $form_state->prepareCallback($config_target['load_callback']);
         $value = $transformation($value);
       }
       $element['#default_value'] = $value;
@@ -142,17 +140,10 @@ abstract class ConfigFormBase extends FormBase {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
-      $config_target = $element['#config_target'];
-      $transformation = NULL;
-
-      if (is_array($config_target)) {
-        [$config_target, $transformation] = $config_target;
-      }
-      $map[$config_target] = [
-        $element['#name'],
-        $element['#parents'],
-        $transformation,
-      ];
+      $config_target = self::unpackConfigTarget($element['#config_target']);
+      $config_target['name'] = $element['#name'];
+      $config_target['parents'] = $element['#parents'];
+      $map[$config_target['target']] = $config_target;
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -205,7 +196,7 @@ abstract class ConfigFormBase extends FormBase {
           // will not have the sequence index in it.
           $property_path = rtrim($property_path, '0123456789.');
         }
-        $form_element_name = $map["$config_name:$property_path"][0];
+        $form_element_name = $map["$config_name:$property_path"]['name'];
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
@@ -309,7 +300,7 @@ abstract class ConfigFormBase extends FormBase {
       throw new \BadMethodCallException();
     }
 
-    foreach ($map as $config_target => [$name, $parents, $transformation]) {
+    foreach ($map as $config_target => ['parents' => $parents, 'save_callback' => $transformation]) {
       if (str_starts_with($config_target, $config->getName() . ':')) {
         $value = $form_state->getValue($parents);
         if ($transformation) {
@@ -321,6 +312,33 @@ abstract class ConfigFormBase extends FormBase {
         $config->set($property_path, $value);
       }
     }
+  }
+
+  /**
+   * Expands the #config_target property of a form element.
+   *
+   * @param array|string $target
+   *   The #config_target property of a form element.
+   *
+   * @return array
+   *   An array with the following keys:
+   *   - 'target': The config name and property path targeted by the element,
+   *     in the form CONFIG_NAME:PROPERTY_PATH.
+   *   - 'save_callback': A callback function to transform a submitted value
+   *     before it is saved to config, or NULL if no transformation should be
+   *     done.
+   *   - 'load_callback': A callback function to transform a value loaded from
+   *     config before it is set as the form element's default value, or NULL
+   *     if no transformation is necessary.
+   */
+  private static function unpackConfigTarget(array|string $target): array {
+    if (is_string($target)) {
+      $target = ['target' => $target];
+    }
+    return $target + [
+      'save_callback' => NULL,
+      'load_callback' => NULL,
+    ];
   }
 
 }
