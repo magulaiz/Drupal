@@ -220,8 +220,7 @@ class UserLoginTest extends BrowserTestBase {
     $edit = [
       'current_pass' => $current_password,
       'mail' => $account->getEmail(),
-      'pass[pass1]' => $new_password,
-      'pass[pass2]' => $new_password,
+      'pass' => $new_password,
     ];
 
     // Change the password.

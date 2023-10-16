@@ -47,19 +47,19 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->responseContains($user1->getDisplayName());
     $this->assertSession()->titleEquals(strip_tags($user1->getDisplayName()) . ' | Drupal');
 
-    // Check that filling out a single password field does not validate.
-    $edit = [];
-    $edit['pass[pass1]'] = '';
-    $edit['pass[pass2]'] = $this->randomMachineName();
-    $this->drupalGet("user/" . $user1->id() . "/edit");
-    $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("The specified passwords do not match.");
-
-    $edit['pass[pass1]'] = $this->randomMachineName();
-    $edit['pass[pass2]'] = '';
-    $this->drupalGet("user/" . $user1->id() . "/edit");
-    $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("The specified passwords do not match.");
+//    // Check that filling out a single password field does not validate.
+//    $edit = [];
+//    $edit['pass[pass1]'] = '';
+//    $edit['pass[pass2]'] = $this->randomMachineName();
+//    $this->drupalGet("user/" . $user1->id() . "/edit");
+//    $this->submitForm($edit, 'Save');
+//    $this->assertSession()->pageTextContains("The specified passwords do not match.");
+//
+//    $edit['pass[pass1]'] = $this->randomMachineName();
+//    $edit['pass[pass2]'] = '';
+//    $this->drupalGet("user/" . $user1->id() . "/edit");
+//    $this->submitForm($edit, 'Save');
+//    $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
@@ -76,8 +76,7 @@ class UserEditTest extends BrowserTestBase {
 
     // Test that the user must enter current password before changing passwords.
     $edit = [];
-    $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
-    $edit['pass[pass2]'] = $new_pass;
+    $edit['pass'] = $new_pass = $this->randomMachineName();
     $this->drupalGet("user/" . $user1->id() . "/edit");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Your current password is missing or incorrect; it's required to change the Password.");
@@ -168,7 +167,7 @@ class UserEditTest extends BrowserTestBase {
     // Create a regular user.
     $user1 = $this->drupalCreateUser([]);
 
-    $edit = ['pass[pass1]' => '0', 'pass[pass2]' => '0'];
+    $edit = ['pass' => '0'];
     $this->drupalGet("user/" . $user1->id() . "/edit");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The changes have been saved.");
