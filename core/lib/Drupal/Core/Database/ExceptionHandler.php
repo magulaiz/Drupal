@@ -55,7 +55,7 @@ class ExceptionHandler {
    */
   public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): void {
     if ($exception instanceof \PDOException) {
-      $this->throwExecutionException($exception->getMessage() . ": " . $statement->getQueryString() . "; " . print_r($arguments, TRUE));
+      $this->throwExecutionException($exception, $exception->getMessage() . ": " . $statement->getQueryString() . "; " . print_r($arguments, TRUE));
     }
     throw $exception;
   }
@@ -76,7 +76,7 @@ class ExceptionHandler {
    */
   public function handleExecuteSqlException(\Exception $exception, string $sql, array $options = []): void {
     if ($exception instanceof \PDOException) {
-      $this->throwExecutionException($exception->getMessage() . ": " . $sql);
+      $this->throwExecutionException($exception, $exception->getMessage() . ": " . $sql);
     }
     throw $exception;
   }

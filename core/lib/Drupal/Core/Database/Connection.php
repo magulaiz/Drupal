@@ -906,6 +906,7 @@ abstract class Connection {
     $sql = $this->preprocessStatement($sql, $options);
     try {
       $this->getClientConnection()->exec($sql);
+    }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleExecuteSqlException($e, $sql, $options);
     }
