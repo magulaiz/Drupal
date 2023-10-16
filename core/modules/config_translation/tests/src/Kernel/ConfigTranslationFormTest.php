@@ -22,6 +22,7 @@ class ConfigTranslationFormTest extends KernelTestBase {
     'config_translation_test',
     'language',
     'locale',
+    'text',
   ];
 
   /**
