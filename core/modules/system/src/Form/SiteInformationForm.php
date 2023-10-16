@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteInformationForm extends ConfigFormBase {
 
   /**
-   * The path alias manager.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
    * The path validator.
    *
    * @var \Drupal\Core\Path\PathValidatorInterface
@@ -46,16 +39,19 @@ class SiteInformationForm extends ConfigFormBase {
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
-   *   The path alias manager.
-   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   * @param \Drupal\Core\Path\PathValidatorInterface|\Drupal\path_alias\AliasManagerInterface $path_validator
    *   The path validator.
-   * @param \Drupal\Core\Routing\RequestContext $request_context
+   * @param \Drupal\Core\Routing\RequestContext|\Drupal\Core\Path\PathValidatorInterface $request_context
    *   The request context.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, PathValidatorInterface|AliasManagerInterface $path_validator, RequestContext|PathValidatorInterface $request_context) {
     parent::__construct($config_factory, $typedConfigManager);
-    $this->aliasManager = $alias_manager;
+    if ($path_validator instanceof AliasManagerInterface) {
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $alias_manager argument is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3096092', E_USER_DEPRECATED);
+      $path_validator = func_get_arg(3);
+      $request_context = func_get_arg(4);
+    }
+
     $this->pathValidator = $path_validator;
     $this->requestContext = $request_context;
   }
@@ -67,7 +63,6 @@ class SiteInformationForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('config.typed'),
-      $container->get('path_alias.manager'),
       $container->get('path.validator'),
       $container->get('router.request_context')
     );
@@ -130,7 +125,7 @@ class SiteInformationForm extends ConfigFormBase {
     $form['front_page']['site_frontpage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default front page'),
-      '#default_value' => $this->aliasManager->getAliasByPath($site_config->get('page.front')),
+      '#default_value' => $site_config->get('page.front'),
       '#required' => TRUE,
       '#size' => 40,
       '#description' => $this->t('Specify a relative URL to display as the front page.'),
@@ -163,8 +158,6 @@ class SiteInformationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // Get the normal path of the front page.
-    $form_state->setValueForElement($form['front_page']['site_frontpage'], $this->aliasManager->getPathByAlias($form_state->getValue('site_frontpage')));
     // Validate front page path.
     if (($value = $form_state->getValue('site_frontpage')) && $value[0] !== '/') {
       $form_state->setErrorByName('site_frontpage', $this->t("The path '%path' has to start with a slash.", ['%path' => $form_state->getValue('site_frontpage')]));
@@ -172,13 +165,6 @@ class SiteInformationForm extends ConfigFormBase {
     }
     if (!$this->pathValidator->isValid($form_state->getValue('site_frontpage'))) {
       $form_state->setErrorByName('site_frontpage', $this->t("Either the path '%path' is invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_frontpage')]));
-    }
-    // Get the normal paths of both error pages.
-    if (!$form_state->isValueEmpty('site_403')) {
-      $form_state->setValueForElement($form['error_page']['site_403'], $this->aliasManager->getPathByAlias($form_state->getValue('site_403')));
-    }
-    if (!$form_state->isValueEmpty('site_404')) {
-      $form_state->setValueForElement($form['error_page']['site_404'], $this->aliasManager->getPathByAlias($form_state->getValue('site_404')));
     }
     if (($value = $form_state->getValue('site_403')) && $value[0] !== '/') {
       $form_state->setErrorByName('site_403', $this->t("The path '%path' has to start with a slash.", ['%path' => $form_state->getValue('site_403')]));
