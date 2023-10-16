@@ -890,6 +890,18 @@ drupal.toggletip:
   dependencies:
     - core/once
     - core/drupal
+    - core/drupal.tooltip
+
+drupal.tooltip:
+  version: VERSION
+  js:
+    misc/tooltip.js: {}
+  css:
+    component:
+      misc/tooltip.css: {}
+  dependencies:
+    - core/once
+    - core/drupal
     - core/drupal.displace
     - core/internal.floating-ui
     - core/popover.polyfill

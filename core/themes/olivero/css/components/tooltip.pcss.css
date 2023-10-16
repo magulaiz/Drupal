@@ -1,0 +1,8 @@
+/**
+ * @file
+ * Tooltip
+ */
+
+.tooltip {
+  line-height: var(--line-height-base); /* Override for olivero specific styling. */
+}

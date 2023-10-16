@@ -86,3 +86,5 @@ libraries-extend:
     - olivero/content_moderation
   core/drupal.toggletip:
     - olivero/toggletip
+  core/drupal.tooltip:
+    - olivero/tooltip

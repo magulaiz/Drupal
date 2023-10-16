@@ -89,6 +89,11 @@ libraries-override:
       component:
         misc/toggletip.css: css/core/toggletip.css
 
+  core/drupal.tooltip:
+    css:
+      component:
+        misc/tooltip.css: css/core/tooltip.css
+
   core/drupal.vertical-tabs:
     css:
       component:

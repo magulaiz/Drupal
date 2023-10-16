@@ -5,17 +5,12 @@
  */
 // cspell:ignore UIDOM Wolfson
 
-((
-  Drupal,
-  displace,
-  { computePosition, flip, shift, offset, autoUpdate, arrow },
-) => {
+((Drupal) => {
   // Keeps track of generated ids to ensure no duplicates are created.
   const toggletipIds = new Set();
   Drupal.toggletip = {
     defaultConfig: {
       atDescription: '',
-      placement: 'top-end',
       offset: 24,
       positionOffsetPrimary: 0,
       positionOffsetSecondary: 0,
@@ -189,16 +184,6 @@
             config,
           );
 
-          // Create the toggletip content container.
-          const tip = Drupal.theme.toggletipTip(
-            descriptionId,
-            tipId,
-            toggletipConfig,
-          );
-
-          // Create the arrow that points to the tip's disclosure button.
-          const tipArrow = Drupal.theme.toggletipArrow(tip);
-
           // When a toggletip option is directly added to a details element, the
           // button is appended to its summary. To add a toggletip inside a
           // details element, add it to a child render array.
@@ -208,7 +193,6 @@
           ) {
             const summary = tipElement.querySelector('summary');
             summary.append(button);
-            summary.append(tip);
           } else if (
             tipElement.hasAttribute('data-drupal-toggletip-form-element')
           ) {
@@ -219,12 +203,12 @@
               .querySelector('label');
             if (label) {
               label.parentNode.insertBefore(button, label.nextSibling);
-              label.parentNode.insertBefore(tip, label.nextSibling);
             }
           } else {
             tipElement.append(button);
-            tipElement.append(tip);
           }
+
+          Drupal.behaviors.tooltip.attach(tipElement);
 
           // Determine the line height so the toggle button can be vertically
           // centered.
@@ -254,90 +238,6 @@
           if (config.place) {
             placeButton(button, tipElement, config);
           }
-
-          // Position the toggletip.
-          autoUpdate(button, tip, () => {
-            displace();
-            computePosition(button, tip, {
-              placement: config.placement,
-              middleware: [
-                offset(config.offset),
-                // Account for Drupal's top offset so the toggletip is not hidden
-                // under the toolbar.
-                flip({
-                  padding: {
-                    top: displace.offsets.top
-                      ? displace.offsets.top + config.offset
-                      : 0,
-                  },
-                  crossAxis: false,
-                }),
-                shift({ padding: config.shiftPadding }),
-                arrow({ element: tipArrow }),
-              ],
-              // eslint-disable-next-line max-nested-callbacks
-            }).then(({ x, y, placement, middlewareData }) => {
-              // Position the tip.
-              const { left, right } = displace.offsets;
-
-              // If the default X position is less than the left offset, the x position
-              // should begin at the left offset.
-              let offsetX = x < left ? left : x;
-
-              // If the default X position is less than 0, then just add the
-              // offset.
-              if (x < 0) {
-                offsetX = left + x;
-              }
-              const { marginLeft, marginRight } = getComputedStyle(tip);
-              const marginOffset =
-                parseInt(marginLeft.replace(/\D/g, ''), 10) +
-                parseInt(marginRight.replace(/\D/g, ''), 10);
-              Object.assign(tip.style, {
-                left: `${offsetX}px`,
-                top: `${y}px`,
-                position: 'absolute',
-                width:
-                  left || right
-                    ? `${
-                        document.body.offsetWidth -
-                        // Subtract right because right offset does not change
-                        // the body offset width.
-                        right -
-                        config.offset -
-                        config.shiftPadding -
-                        marginOffset
-                      }px`
-                    : 'auto',
-              });
-
-              // Use middleware to dynamically position the arrow.
-              const { x: arrowX, y: arrowY } = middlewareData.arrow;
-
-              // Placement will the opposite of the tip's primary axis.
-              const staticSide = {
-                top: 'bottom',
-                right: 'left',
-                bottom: 'top',
-                left: 'right',
-              }[placement.split('-')[0]];
-
-              let offsetArrowX = arrowX - marginOffset / 2;
-
-              if (offsetX !== x) {
-                const addToOffset = x > 0 && arrowX > left ? x : 0;
-                offsetArrowX = Math.abs(arrowX - left) + addToOffset;
-              }
-
-              Object.assign(tipArrow.style, {
-                left: arrowX != null ? `${offsetArrowX}px` : '',
-                top: arrowY != null ? `${arrowY}px` : '',
-                right: '',
-                bottom: '',
-                [staticSide]: '-4px',
-              });
-            });
-          });
         },
       );
     },
@@ -359,7 +259,7 @@
   Drupal.theme.toggletipButton = (descriptionId, tipId, toggleId, config) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.setAttribute('data-drupal-toggletip-toggle-button', true);
+    button.setAttribute('data-drupal-tooltip-toggle-button', config.content);
     button.setAttribute('aria-expanded', false);
     button.setAttribute('aria-labelledby', descriptionId);
     button.setAttribute('aria-controls', tipId);
@@ -369,45 +269,4 @@
     button.setAttribute('popovertarget', tipId);
     return button;
   };
-
-  /**
-   * Theme function for a tip.
-   *
-   * @param {string} descriptionId
-   *   The descriptionId.
-   * @param {string} tipId
-   *   The tipId.
-   * @param {object} toggletipConfig
-   *   The toggletipConfig object.
-   *
-   * @return {HTMLElement}
-   *   A DOM Node.
-   */
-  Drupal.theme.toggletipTip = (descriptionId, tipId, toggletipConfig) => {
-    const tip = document.createElement('div');
-    tip.classList.add('toggletip__tip');
-    tip.setAttribute('tabindex', '0');
-    tip.setAttribute('role', 'status');
-    tip.setAttribute('data-drupal-toggletip-tip', true);
-    tip.id = tipId;
-    tip.setAttribute('popover', '');
-    tip.innerHTML = toggletipConfig.content;
-    return tip;
-  };
-
-  /**
-   * Theme function for a tipArrow.
-   *
-   * @param {HTMLElement} tip
-   *   The tip.
-   *
-   * @return {HTMLElement}
-   *   A DOM Node.
-   */
-  Drupal.theme.toggletipArrow = (tip) => {
-    const tipArrow = document.createElement('div');
-    tipArrow.classList.add('toggletip__arrow');
-    tip.append(tipArrow);
-    return tipArrow;
-  };
-})(Drupal, Drupal.displace, window.FloatingUIDOM);
+})(Drupal);

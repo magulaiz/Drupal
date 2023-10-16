@@ -6,7 +6,3 @@
 .form-item-textarea > label > .toggletip__toggle {
   top: unset !important; /* Override for olivero specific styling. */
 }
-
-.toggletip__tip {
-  line-height: var(--line-height-base) !important; /* Override for olivero specific styling. */
-}

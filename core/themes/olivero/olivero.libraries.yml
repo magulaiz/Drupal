@@ -294,3 +294,9 @@ toggletip:
   css:
     component:
       css/components/toggletip.css: {}
+
+tooltip:
+  version: VERSION
+  css:
+    component:
+      css/components/tooltip.css: {}
