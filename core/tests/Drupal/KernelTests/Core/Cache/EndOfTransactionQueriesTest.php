@@ -79,7 +79,9 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
       $executed_statements[] = $log['query'];
     }
     $last_statement_index = max(array_keys($executed_statements));
+    dump(['$executed_statements', $executed_statements, $last_statement_index]);
     $cachetag_statements = array_keys($this->getStatementsForTable($executed_statements, 'cachetags'));
+    dump(['$cachetag_statements', $cachetag_statements, $last_statement_index - count($cachetag_statements) + 1]);
     $this->assertSame($last_statement_index - count($cachetag_statements) + 1, min($cachetag_statements), 'All of the last queries in the transaction are for the "cachetags" table.');
 
     // Verify that a nested entity save occurred.

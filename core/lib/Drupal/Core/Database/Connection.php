@@ -4,6 +4,8 @@ namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Event\DatabaseEvent;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
@@ -905,7 +907,31 @@ abstract class Connection {
   protected function executeSql(string $sql, array $options = []): void {
     $sql = $this->preprocessStatement($sql, $options);
     try {
+      if ($this->isEventEnabled(StatementExecutionStartEvent::class)) {
+        $startEvent = new StatementExecutionStartEvent(
+          spl_object_id($this),
+          $this->getKey(),
+          $this->getTarget(),
+          $sql,
+          [],
+          $this->findCallerFromDebugBacktrace()
+        );
+        $this->dispatchEvent($startEvent);
+      }
+
       $this->getClientConnection()->exec($sql);
+
+      if (isset($startEvent) && $this->isEventEnabled(StatementExecutionEndEvent::class)) {
+        $this->dispatchEvent(new StatementExecutionEndEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time
+        ));
+      }
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleExecuteSqlException($e, $sql, $options);
