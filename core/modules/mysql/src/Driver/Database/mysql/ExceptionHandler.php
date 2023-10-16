@@ -8,7 +8,6 @@ use Drupal\Core\Database\ExceptionHandler as BaseExceptionHandler;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
-use Drupal\Core\Database\StatementInterface;
 
 /**
  * MySql database exception handler class.
