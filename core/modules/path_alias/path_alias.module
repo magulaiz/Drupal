@@ -10,9 +10,9 @@ declare(strict_types = 1);
 use Drupal\path_alias\Form\SystemInformationFormAlter;
 
 /**
- * * Implements hook_form_FORM_ID_alter().
- * */
-function path_form_system_site_information_settings_alter(array &$form): void {
+ * Implements hook_form_FORM_ID_alter().
+ */
+function path_alias_form_system_site_information_settings_alter(array &$form): void {
   Drupal::classResolver()
     ->getInstanceFromDefinition(SystemInformationFormAlter::class)
     ->alterForm($form);
