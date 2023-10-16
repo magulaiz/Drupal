@@ -880,12 +880,12 @@ abstract class Connection {
       $this->query($sql, $arguments, $options);
     }
     else {
-      $this->executeStatement($sql, $options);
+      $this->executeSql($sql, $options);
     }
 
     // DDL statements when in a transaction force a commit in some databases.
     // Void the transaction in that case.
-    if (!$this->transactionalDDLSupport && $this->inTransaction()) {
+    if (!$this->transactionalDDLSupport && $this->transactionManager()->inTransaction()) {
       $this->transactionManager()->voidClientTransaction();
     }
   }
@@ -902,9 +902,13 @@ abstract class Connection {
    *   (Optional) An associative array of options. The given options will be
    *    merged with self::defaultOptions().
    */
-  protected function executeStatement(string $sql, array $options = []): void {
+  protected function executeSql(string $sql, array $options = []): void {
     $sql = $this->preprocessStatement($sql, $options);
-    $this->getClientConnection()->exec($sql);
+    try {
+      $this->getClientConnection()->exec($sql);
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleExecuteSqlException($e, $sql, $options);
+    }
   }
 
   /**
