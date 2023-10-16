@@ -326,12 +326,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
     ]);
     $field->save();
 
-    $form_display = EntityFormDisplay::create([
-      'targetEntityType' => 'node',
-      'bundle' => 'article',
-      'mode' => 'default',
-      'status' => TRUE,
-    ]);
+    $form_display = EntityFormDisplay::load('node.article.default');
     $form_display->setComponent($field_name, ['weight' => 10]);
     $form_display->save();
 
