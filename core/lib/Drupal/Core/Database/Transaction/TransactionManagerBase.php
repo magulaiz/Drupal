@@ -408,7 +408,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $callbacks = $this->postTransactionCallbacks;
       $this->postTransactionCallbacks = [];
       foreach ($callbacks as $callback) {
-        call_user_func($callback, $this->getConnectionTransactionState() === ClientConnectionTransactionState::Committed);
+        call_user_func($callback, $this->getConnectionTransactionState() === ClientConnectionTransactionState::Committed || $this->getConnectionTransactionState() === ClientConnectionTransactionState::Voided);
       }
     }
   }
