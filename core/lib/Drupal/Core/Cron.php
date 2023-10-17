@@ -316,10 +316,32 @@ class Cron implements CronInterface {
    */
   protected function invokeCronHandlers() {
     $module_previous = '';
+    $service_previous = '';
 
     // If detailed logging isn't enabled, don't log individual execution times.
     $time_logging_enabled = \Drupal::config('system.cron')->get('logging');
     $logger = $time_logging_enabled ? $this->logger : new NullLogger();
+
+    // Also call all tagged services.
+    foreach ($this->cronServices as $cron_service) {
+      $service_class = get_class($cron_service);
+      if (!$service_previous) {
+        $logger->info('Starting execution of service @class.', [
+          '@class' => $service_class,
+        ]);
+      }
+      else {
+        $logger->info('Starting execution of service @class(), execution of @previous_class() took @time.', [
+          '@module' => $service_class,
+          '@module_previous' => $service_previous,
+          '@time' => Timer::read('cron_' . $service_previous) . 'ms',
+        ]);
+      }
+      Timer::start('cron_' . $service_class);
+      $cron_service->run();
+      Timer::stop('cron_' . $service_class);
+      $service_previous = $service_class;
+    }
 
     // Iterate through the modules calling their cron handlers (if any):
     $this->moduleHandler->invokeAllWith('cron', function (callable $hook, string $module) use (&$module_previous, $logger) {
@@ -353,11 +375,6 @@ class Cron implements CronInterface {
         '@module_previous' => $module_previous,
         '@time' => Timer::read('cron_' . $module_previous) . 'ms',
       ]);
-    }
-
-    // Also call all tagged services.
-    foreach ($this->cronServices as $cron_service) {
-      $cron_service->run();
     }
 
   }
