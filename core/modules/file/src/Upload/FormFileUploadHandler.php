@@ -25,11 +25,11 @@ class FormFileUploadHandler {
    * Constructs a FormFileUploader object.
    */
   public function __construct(
-    protected MemoryCacheInterface $memoryCache,
-    protected FileUploadHandler $fileUploadHandler,
-    protected FormUploadedFileRetriever $uploadedFileRetriever,
-    protected EventDispatcherInterface $eventDispatcher,
-    protected FileUploadErrorHandlerInterface $defaultErrorHandler
+    protected readonly MemoryCacheInterface $memoryCache,
+    protected readonly FileUploadHandler $fileUploadHandler,
+    protected readonly FormUploadedFileRetriever $uploadedFileRetriever,
+    protected readonly EventDispatcherInterface $eventDispatcher,
+    protected readonly FileUploadErrorHandlerInterface $defaultErrorHandler
   ) {}
 
   /**

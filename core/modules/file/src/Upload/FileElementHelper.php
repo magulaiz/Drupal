@@ -26,11 +26,11 @@ class FileElementHelper {
    * Constructs a FileFormHelper object.
    */
   public function __construct(
-    protected FileSystemInterface $fileSystem,
-    protected LoggerInterface $logger,
-    protected FormFileUploadHandler $formUploadHandler,
-    protected FormUploadedFileRetriever $uploadedFileRetriever,
-    protected MessageCollectingErrorHandlerFactory $errorHandlerFactory,
+    protected readonly FileSystemInterface $fileSystem,
+    protected readonly LoggerInterface $logger,
+    protected readonly FormFileUploadHandler $formUploadHandler,
+    protected readonly FormUploadedFileRetriever $uploadedFileRetriever,
+    protected readonly MessageCollectingErrorHandlerFactory $errorHandlerFactory,
   ) {}
 
   /**
