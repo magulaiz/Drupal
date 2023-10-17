@@ -23,7 +23,7 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'block'];
+  protected static $modules = ['language', 'block', 'path_alias'];
 
   /**
    * {@inheritdoc}

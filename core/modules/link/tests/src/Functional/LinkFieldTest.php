@@ -36,6 +36,7 @@ class LinkFieldTest extends BrowserTestBase {
     'link',
     'node',
     'link_test_base_field',
+    'path_alias',
   ];
 
   /**
