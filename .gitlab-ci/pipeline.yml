@@ -1,19 +1,6 @@
 # cspell:ignore drupaltestbot drupaltestbotpw
 
 stages:
-  ################
-  # Build
-  #
-  # Assemble the test environment.
-  ################
-  - 🏗️ Build
-
-  ################
-  # Test
-  #
-  # The test phase actually executes the tests, as well as gathering results
-  # and artifacts.
-  ################
   - 🗜️ Test
 
 #############
@@ -21,42 +8,21 @@ stages:
 #############
 
 .default-job-settings: &default-job-settings
+  stage: 🗜️ Test
   interruptible: true
   allow_failure: false
+  retry:
+    max: 2
+    when:
+      - unknown_failure
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+      - scheduler_failure
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-
-.composer-cache: &composer-cache
-  key:
-    files:
-      - ./composer.json
-      - ./composer.lock
-  paths:
-    - ./vendor
-
-.yarn-cache: &yarn-cache
-  key:
-    files:
-      - ./core/package.json
-      - ./core/yarn.lock
-  paths:
-    - ./core/node_modules
-
-.with-composer-cache: &with-composer-cache
-  needs:
-    - '📦️ Composer'
-  cache:
-    policy: pull
-    <<: *composer-cache
-
-.with-yarn-cache: &with-yarn-cache
-  needs:
-    - '📦️ Yarn'
-  cache:
-    policy: pull
-    <<: *yarn-cache
 
 .junit-artifacts: &junit-artifacts
   artifacts:
@@ -67,13 +33,17 @@ stages:
     reports:
       junit: junit.xml
 
+.with-composer: &with-composer
+  needs:
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Composer'
+
 .with-composer-and-yarn: &with-composer-and-yarn
   needs:
-    - '📦️ Composer'
-    - '📦️ Yarn'
-  dependencies:
-    - '📦️ Yarn'
-    - '📦️ Composer'
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Composer'
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Yarn'
 
 .test-variables: &test-variables
   FF_NETWORK_PER_BUILD: 1
@@ -143,58 +113,9 @@ stages:
 # Documentation: https://docs.gitlab.com/ee/ci/jobs/
 ################
 
-################
-# Build Jobs
-################
-
-'📦️ Composer':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  cache:
-    <<: *composer-cache
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'web-vendor'
-    paths:
-      - vendor/
-  script:
-      - composer validate
-      - composer install
-
-'📦️ Yarn':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  cache:
-    <<: *yarn-cache
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
-  script:
-    # Installs all core javascript dependencies and adds junit formatter.
-    - yarn --cwd ./core add stylelint-junit-formatter
-
-################
-# Test Jobs
-################
-
-'⚡️ PHPUnit Unit':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
-  services:
-    # There are some unit tests that need a database.
-    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
-    - <<: *with-database
-  variables:
-    <<: *test-variables
-    TESTSUITE: PHPUnit-Unit
-    CONCURRENCY: "$CONCURRENCY"
-
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
-  parallel: 6
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  parallel: 7
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
@@ -203,8 +124,7 @@ stages:
     - <<: *with-database
 
 '🩹 Test-only changes':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
   when: manual
   interruptible: true
   allow_failure: true
@@ -216,11 +136,10 @@ stages:
   script:
     #  Determine DB driver.
     - |
-      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-    - export
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
@@ -251,8 +170,8 @@ stages:
       fi
 
 '⚙️️ PHPUnit Kernel':
-  <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [*with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
@@ -261,8 +180,8 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
@@ -272,8 +191,7 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
@@ -281,9 +199,19 @@ stages:
   services:
     - <<: *with-database
 
+'⚡️ PHPUnit Unit':
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  services:
+    # There are some unit tests that need a database.
+    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
+    - <<: *with-database
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Unit
+    CONCURRENCY: "$CONCURRENCY"
+
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
-  stage: 🗜️ Test
   variables:
     <<: *test-variables
   services:
