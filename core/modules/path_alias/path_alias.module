@@ -7,7 +7,24 @@
 
 declare(strict_types = 1);
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\path_alias\Form\SystemInformationFormAlter;
+
+/**
+ * Implements hook_help().
+ */
+function path_alias_help($route_name, RouteMatchInterface $route_match): string {
+  switch ($route_name) {
+    case 'help.page.path_alias':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      // @todo put something meaningful here.
+      $output .= '<p>' . t('The Path alias module foo bar baz') . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":path_alias">online documentation for the Path alias module</a>.', [':path_alias' => 'https://www.drupal.org/documentation/modules/path_alias']);
+      return $output;
+  }
+  return '';
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().
