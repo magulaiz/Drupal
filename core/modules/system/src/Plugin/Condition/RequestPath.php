@@ -23,13 +23,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * An alias manager to find the alias for the current system path.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface|null
-   */
-  protected $aliasManager;
-
-  /**
    * The path matcher.
    *
    * @var \Drupal\Core\Path\PathMatcherInterface
@@ -53,24 +46,30 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
   /**
    * Constructs a RequestPath condition plugin.
    *
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
-   *   An alias manager to find the alias for the current system path.
-   * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
+   * @param \Drupal\Core\Path\PathMatcherInterface|\Drupal\path_alias\AliasManagerInterface $path_matcher
    *   The path matcher service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|\Drupal\Core\Path\PathMatcherInterface $request_stack
    *   The request stack.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   * @param \Drupal\Core\Path\CurrentPathStack|\Symfony\Component\HttpFoundation\RequestStack $current_path
    *   The current path.
-   * @param array $configuration
+   * @param array|\Drupal\Core\Path\CurrentPathStack $configuration
    *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
+   * @param string|array $plugin_id
    *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
+   * @param array|string $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(?AliasManagerInterface $alias_manager, PathMatcherInterface $path_matcher, RequestStack $request_stack, CurrentPathStack $current_path, array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(PathMatcherInterface|AliasManagerInterface $path_matcher, RequestStack|PathMatcherInterface $request_stack, CurrentPathStack|RequestStack $current_path, array|CurrentPathStack $configuration, $plugin_id, array|string $plugin_definition) {
+    if ($path_matcher instanceof AliasManagerInterface) {
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $alias_manager argument is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3096092', E_USER_DEPRECATED);
+      $path_matcher = func_get_arg(1);
+      $request_stack = func_get_arg(2);
+      $current_path = func_get_arg(3);
+      $configuration = func_get_arg(4);
+      $plugin_id = func_get_arg(5);
+      $plugin_definition = func_get_arg(6);
+    }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->aliasManager = $alias_manager;
     $this->pathMatcher = $path_matcher;
     $this->requestStack = $request_stack;
     $this->currentPath = $current_path;
@@ -81,7 +80,6 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->has('path_alias.manager') ? $container->get('path_alias.manager') : NULL,
       $container->get('path.matcher'),
       $container->get('request_stack'),
       $container->get('path.current'),
@@ -161,13 +159,11 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     }
 
     $request = $this->requestStack->getCurrentRequest();
-    // Compare the lowercase path alias (if any) and internal path.
     $path = $this->currentPath->getPath($request);
     // Do not trim a trailing slash if that is the complete path.
     $path = $path === '/' ? $path : rtrim($path, '/');
-    $path_alias = $this->aliasManager === NULL ? $path : mb_strtolower($this->aliasManager->getAliasByPath($path));
 
-    return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
+    return $this->pathMatcher->matchPath($path, $pages);
   }
 
   /**

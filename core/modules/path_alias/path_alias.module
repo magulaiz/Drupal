@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\path_alias\Form\SystemInformationFormAlter;
+use Drupal\path_alias\Plugin\Condition\PathAliasRequestPath;
 
 /**
  * Implements hook_help().
@@ -24,6 +25,15 @@ function path_alias_help($route_name, RouteMatchInterface $route_match): string 
       return $output;
   }
   return '';
+}
+
+/**
+ * Implements hook_condition_info_alter().
+ */
+function path_alias_condition_info_alter(array &$definitions): void {
+  if (isset($definitions['request_path'])) {
+    $definitions['request_path']['class'] = PathAliasRequestPath::class;
+  }
 }
 
 /**
