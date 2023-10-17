@@ -21,13 +21,8 @@ abstract class ConfigFormBase extends FormBase {
   /**
    * The $form_state key which stores a map of config keys to form elements.
    *
-   * The map's keys are in the form of CONFIG_NAME:PROPERTY_PATH (e.g.,
-   * `system.site:name`), and the values are indexed arrays with the following
-   * elements:
-   * - The #name of the corresponding form element.
-   * - The #parents of the corresponding form element.
-   * - A callback which should be called to transform the config value when it
-   *   is being loaded and saved, or NULL if no transformation should be done.
+   * This map is generated and stored by ::storeConfigKeyToFormElementMap(),
+   * which is one of the form's #after_build callbacks.
    *
    * @see ::storeConfigKeyToFormElementMap()
    *
@@ -122,11 +117,13 @@ abstract class ConfigFormBase extends FormBase {
    *
    * This will store an array in the form state whose keys are strings in the
    * form of `CONFIG_NAME:PROPERTY_PATH`, and whose values are arrays containing
-   * three elements, in order:
-   * - The #name of the element which maps to that config value.
-   * - The #parents of the element which maps to that config value,
-   * - A transformation callback to apply to the submitted or loaded value, or
-   *   NULL if no transformation is needed.
+   * the results of ::unpackConfigTarget(), plus the following:
+   * - 'name': The #name property of the relevant form element.
+   * - 'parents': The #parents property of the relevant form element.
+   *
+   * This callback is run in the form's #after_build stage, rather than
+   * #process, to guarantee that all of the form's elements have their final
+   * #name and #parents properties set.
    *
    * @param array $element
    *   The element being processed.
@@ -135,6 +132,8 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @return array
    *   The processed element.
+   *
+   * @see ::unpackConfigTarget()
    */
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
     if (array_key_exists('#config_target', $element)) {
