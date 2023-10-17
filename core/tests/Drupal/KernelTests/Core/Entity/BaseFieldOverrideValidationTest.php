@@ -34,13 +34,17 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = []): void {
-    // If we don't clear the previous settings here, we will get unrelated
-    // validation errors (in addition to the one we're expecting), because the
-    // settings from the *old* field_type won't match the config schema for the
-    // settings of the *new* field_type.
-    $this->entity->set('settings', []);
-    parent::testImmutableProperties($valid_values);
+  public function testImmutableProperties(array $valid_values = [], array $indirect_consequences = []): void {
+    parent::testImmutableProperties($valid_values, [
+      'field_type' => [
+        'settings' => [
+          "'min' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'max' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'prefix' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'suffix' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+        ],
+      ],
+    ]);
   }
 
 }
