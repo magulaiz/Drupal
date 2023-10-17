@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\path_alias\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Alteration class for the site information settings form.
  */
 class SystemInformationFormAlter implements ContainerInjectionInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * Constructs a SystemInformationFormAlter object.
