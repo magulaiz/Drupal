@@ -68,13 +68,6 @@ class FieldStorageAddForm extends FormBase {
   protected $configFactory;
 
   /**
-   * ID for the field stored in temp store.
-   *
-   * @var string
-   */
-  protected $fieldTempStoreKey;
-
-  /**
    * Constructs a new FieldStorageAddForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -242,16 +235,6 @@ class FieldStorageAddForm extends FormBase {
     }
     uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
     $form['add']['new_storage_type'] = $field_type_options_radios;
-
-    $form['no_js_submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Change field type'),
-      '#limit_validation_errors' => [],
-      '#attributes' => [
-        'class' => ['js-hide'],
-      ],
-      '#submit' => [[static::class, 'rebuildForm']],
-    ];
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
     // we create field storage as translatable so it will be possible to enable
@@ -265,9 +248,6 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
       'core/drupal.dialog.ajax',
-      // @todo Remove below workarounds needed for modal functionality.
-      'core/drupal.machine-name',
-      'core/drupal.states',
     ];
     return $form;
   }
@@ -276,11 +256,9 @@ class FieldStorageAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Can also be removed.
     if (!$form_state->getValue('new_storage_type')) {
       $form_state->setErrorByName('new_storage_type', $this->t('You need to select a field type.'));
-    }
-    elseif (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper')) {
-      $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to select a field type.'));
     }
   }
 
@@ -290,13 +268,6 @@ class FieldStorageAddForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // No-op since form is routed to the below controller.
     // @see \Drupal\field_ui\Controller\FieldTempStoreController::setTempStore
-  }
-
-  /**
-   * Callback for displaying fields after a group has been selected.
-   */
-  public function showFieldsCallback($form, FormStateInterface &$form_state) {
-    return $form['group_field_options_wrapper'];
   }
 
   /**
