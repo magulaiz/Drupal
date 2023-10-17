@@ -25,7 +25,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
   /**
    * An alias manager to find the alias for the current system path.
    *
-   * @var \Drupal\path_alias\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface|null
    */
   protected $aliasManager;
 
@@ -68,7 +68,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    * @param array $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(AliasManagerInterface $alias_manager, PathMatcherInterface $path_matcher, RequestStack $request_stack, CurrentPathStack $current_path, array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(?AliasManagerInterface $alias_manager, PathMatcherInterface $path_matcher, RequestStack $request_stack, CurrentPathStack $current_path, array $configuration, $plugin_id, array $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasManager = $alias_manager;
     $this->pathMatcher = $path_matcher;
@@ -81,7 +81,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('path_alias.manager'),
+      $container->has('path_alias.manager') ? $container->get('path_alias.manager') : NULL,
       $container->get('path.matcher'),
       $container->get('request_stack'),
       $container->get('path.current'),
@@ -165,7 +165,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     $path = $this->currentPath->getPath($request);
     // Do not trim a trailing slash if that is the complete path.
     $path = $path === '/' ? $path : rtrim($path, '/');
-    $path_alias = mb_strtolower($this->aliasManager->getAliasByPath($path));
+    $path_alias = $this->aliasManager === NULL ? $path : mb_strtolower($this->aliasManager->getAliasByPath($path));
 
     return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
   }
