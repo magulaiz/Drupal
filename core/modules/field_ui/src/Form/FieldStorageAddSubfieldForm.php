@@ -256,7 +256,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
     ];
     // Set the selected field to the form state by checking
     // the checked attribute.
-    $selected_field_storage_type = NULL;
     if (isset($selected_field_type)) {
       $this->selectedFieldType = $selected_field_type;
       $group_display = $field_type_options_radios[$selected_field_type]['#data']['#group_display'];
@@ -352,14 +351,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
       ];
       if ($this->isAjax()) {
         $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
-        // @todo static::ajaxSubmit() requires data-drupal-selector to be the same
-        //   between the various Ajax requests. A bug in
-        //   \Drupal\Core\Form\FormBuilder prevents that from happening unless
-        //   $form['#id'] is also the same. Normally, #id is set to a unique HTML
-        //   ID via Html::getUniqueId(), but here we bypass that in order to work
-        //   around the data-drupal-selector bug. This is okay so long as we
-        //   assume that this form only ever occurs once on a page. Remove this
-        //   workaround in https://www.drupal.org/node/2897377.
         $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
       }
       // Hide the continue button until the sub-field is selected.
@@ -381,9 +372,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
       'core/drupal.dialog.ajax',
-      // @todo Remove below workarounds needed for modal functionality.
-      'core/drupal.machine-name',
-      'core/drupal.states',
     ];
     return $form;
   }
