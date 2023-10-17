@@ -369,6 +369,7 @@ services:
   config.importer.factory:
     class: Drupal\Core\Config\ConfigImporterFactory
     arguments: ['@event_dispatcher', '@config.manager', '@lock.persistent', '@config.typed', '@module_handler', '@module_installer', '@theme_handler', '@string_translation', '@extension.list.module', '@extension.list.theme']
+  Drupal\Core\Config\ConfigImporterFactory: '@config.importer.factory'
   config.importer_subscriber:
     class: Drupal\Core\Config\Importer\FinalMissingContentSubscriber
   config.installer:
