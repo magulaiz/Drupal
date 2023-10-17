@@ -241,7 +241,10 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertNodeConfig(TRUE, FALSE);
     // Enable the views module (which node provides some optional config for).
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[views][enable]' => "1"], 'Install');
+    $this->submitForm([
+      'modules[path_alias][enable]' => "1",
+      'modules[views][enable]' => "1",
+    ], 'Install');
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, TRUE);
   }
