@@ -412,6 +412,11 @@ class FieldStorageAddSubfieldForm extends FormBase {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
 
+    // Missing subtype.
+    if (!$form_state->getValue('group_field_options_wrapper') && isset($form['group_field_options_wrapper']['fields'])) {
+      $form_state->setErrorByName('storage type', $this->t('Add new field: you need to select a subtype.'));
+    }
+
     // Missing field name.
     if (!$form_state->getValue('field_name')) {
       $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));

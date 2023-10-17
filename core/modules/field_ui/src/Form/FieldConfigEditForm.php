@@ -397,7 +397,7 @@ class FieldConfigEditForm extends EntityForm {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save');
     $actions['submit']['#ajax'] = [
-      'callback' => [$this, 'ajaxSubmit'],
+      'callback' => ['::ajaxSubmit'],
       'options' => [
         'query' => [
           FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
