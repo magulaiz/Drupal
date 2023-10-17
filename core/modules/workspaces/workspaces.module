@@ -243,13 +243,6 @@ function workspaces_views_query_alter(ViewExecutable $view, QueryPluginBase $que
 }
 
 /**
- * Implements hook_cron().
- */
-function workspaces_cron() {
-  \Drupal::service('workspaces.manager')->purgeDeletedWorkspacesBatch();
-}
-
-/**
  * Implements hook_toolbar().
  */
 function workspaces_toolbar() {

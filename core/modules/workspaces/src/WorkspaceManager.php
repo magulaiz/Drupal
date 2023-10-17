@@ -3,6 +3,7 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
+use Drupal\Core\CronInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Provides the workspace manager.
  */
-class WorkspaceManager implements WorkspaceManagerInterface {
+class WorkspaceManager implements WorkspaceManagerInterface, CronInterface {
 
   use StringTranslationTrait;
 
@@ -236,6 +237,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
       // Delete any possible leftover association entries.
       $this->workspaceAssociation->deleteAssociations($workspace_id);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function run() {
+    $this->purgeDeletedWorkspacesBatch();
   }
 
 }
