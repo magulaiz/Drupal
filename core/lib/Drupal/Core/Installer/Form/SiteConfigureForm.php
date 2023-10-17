@@ -7,9 +7,10 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
-use Drupal\user\UserStorageInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -114,7 +115,7 @@ class SiteConfigureForm extends ConfigFormBase {
     global $install_state;
     $form['#title'] = $this->t('Configure site');
 
-    // Warn about settings.php permissions risk
+    // Warn about settings.php permissions risk.
     $settings_dir = $this->sitePath;
     $settings_file = $settings_dir . '/settings.php';
     // Check that $_POST is empty so we only show this message when the form is
@@ -126,7 +127,9 @@ class SiteConfigureForm extends ConfigFormBase {
     // successfully.)
     $post_params = $this->getRequest()->request->all();
     if (empty($post_params) && (Settings::get('skip_permissions_hardening') || !drupal_verify_install_file($this->root . '/' . $settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE) || !drupal_verify_install_file($this->root . '/' . $settings_dir, FILE_NOT_WRITABLE, 'dir'))) {
+      // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
       $this->messenger()->addWarning($this->t('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href=":handbook_url">online handbook</a>.', ['%dir' => $settings_dir, '%file' => $settings_file, ':handbook_url' => 'https://www.drupal.org/server-permissions']));
+      // phpcs:enable
     }
 
     $form['#attached']['library'][] = 'system/drupal.system';
@@ -252,6 +255,7 @@ class SiteConfigureForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($error = user_validate_name($form_state->getValue(['account', 'name']))) {
       $form_state->setErrorByName('account][name', $error);

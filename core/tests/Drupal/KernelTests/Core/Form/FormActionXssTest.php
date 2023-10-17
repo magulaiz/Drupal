@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Form;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +46,7 @@ class FormActionXssTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**

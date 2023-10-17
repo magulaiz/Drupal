@@ -5,6 +5,7 @@ namespace Drupal\form_test\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * A multistep form for testing the form storage.
@@ -32,7 +33,7 @@ class FormTestStorageForm extends FormBase {
     if ($form_state->isRebuilding()) {
       $form_state->setUserInput([]);
     }
-    // Initialize
+    // Initialize.
     $storage = $form_state->getStorage();
     $session = $this->getRequest()->getSession();
     if (empty($storage)) {
@@ -40,7 +41,7 @@ class FormTestStorageForm extends FormBase {
       if (empty($user_input)) {
         $session->set('constructions', 0);
       }
-      // Put the initial thing into the storage
+      // Put the initial thing into the storage.
       $storage = [
         'thing' => [
           'title' => 'none',
@@ -102,10 +103,11 @@ class FormTestStorageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($this->getRequest()->get('cache')) {
-      // Manually activate caching, so we can test that the storage keeps working
-      // when it's enabled.
+      // Manually activate caching, so we can test that the storage keeps
+      // working when it's enabled.
       $form_state->setCached();
     }
   }
@@ -115,11 +117,12 @@ class FormTestStorageForm extends FormBase {
    *
    * Tests updating of cached form storage during validation.
    */
+  #[TrustedCallback]
   public function elementValidateValueCached($element, FormStateInterface $form_state) {
     // If caching is enabled and we receive a certain value, change the storage.
-    // This presumes that another submitted form value triggers a validation error
-    // elsewhere in the form. Form API should still update the cached form storage
-    // though.
+    // This presumes that another submitted form value triggers a validation
+    // error elsewhere in the form. Form API should still update the cached
+    // form storage though.
     if ($this->getRequest()->get('cache') && $form_state->getValue('value') == 'change_title') {
       $form_state->set(['thing', 'changed'], TRUE);
     }

@@ -5,6 +5,7 @@ namespace Drupal\file_test\Form;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * File test form class.
@@ -75,6 +76,7 @@ class FileTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**

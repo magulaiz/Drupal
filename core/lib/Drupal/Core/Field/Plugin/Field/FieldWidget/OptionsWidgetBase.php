@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -88,6 +89,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
+  #[TrustedCallback]
   public static function validateElement(array $element, FormStateInterface $form_state) {
     if ($element['#required'] && $element['#value'] == '_none') {
       if (isset($element['#required_error'])) {

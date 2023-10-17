@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -48,6 +49,7 @@ abstract class TextItemBase extends FieldItemBase {
    *
    * @see static::fieldSettingsForm()
    */
+  #[TrustedCallback]
   public static function validateAllowedFormats(array &$element, FormStateInterface $form_state) {
     $value = array_values(array_filter($form_state->getValue($element['#parents'])));
     $form_state->setValueForElement($element, $value);

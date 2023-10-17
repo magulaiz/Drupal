@@ -8,7 +8,6 @@
  * used for navigation.
  */
 
-use Drupal\Core\Url;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Block\BlockPluginInterface;
@@ -16,10 +15,12 @@ use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\menu_ui\Form\MenuUiFormCallbacks;
+use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
-use Drupal\node\NodeInterface;
 use Drupal\system\MenuInterface;
 
 /**
@@ -34,8 +35,10 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing menus') . '</dt>';
+      // phpcs:ignore
       $output .= '<dd>' . t('Users with the <em>Administer menus and menu links</em> permission can add, edit, and delete custom menus on the <a href=":menu">Menus page</a>. Custom menus can be special site menus, menus of external links, or any combination of internal and external links. You may create an unlimited number of additional menus, each of which will automatically have an associated block (if you have the <a href=":block_help">Block module</a> installed). By selecting <em>Edit menu</em>, you can add, edit, or delete links for a given menu. The links listing page provides a drag-and-drop interface for controlling the order of links, and creating a hierarchy within the menu.', [':block_help' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('help.page', ['name' => 'block'])->toString() : '#', ':menu' => Url::fromRoute('entity.menu.collection')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Displaying menus') . '</dt>';
+      // phpcs:ignore
       $output .= '<dd>' . t('If you have the Block module installed, then each menu that you create is rendered in a block that you enable and position on the <a href=":blocks">Block layout page</a>. In some <a href=":themes">themes</a>, the main menu and possibly the secondary menu will be output automatically; you may be able to disable this behavior on the <a href=":themes">theme\'s settings page</a>.', [':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#', ':themes' => Url::fromRoute('system.themes_page')->toString(), ':theme_settings' => Url::fromRoute('system.theme_settings')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
@@ -141,7 +144,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   $defaults = FALSE;
   if ($node->id()) {
     $id = FALSE;
-    // Give priority to the default menu
+    // Give priority to the default menu.
     $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
     if (in_array($menu_name, $type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
@@ -212,7 +215,8 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
  * @see menu_ui_form_node_form_submit()
  */
 function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
-  // Generate a list of possible parents (not including this link or descendants).
+  // Generate a list of possible parents
+  // (not including this link or descendants).
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
   $defaults = menu_ui_get_menu_link_defaults($node);
@@ -337,8 +341,8 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
       if (empty(trim($values['title']))) {
         $values['title'] = $node->label();
       }
-      // Decompose the selected menu parent option into 'menu_name' and 'parent',
-      // if the form used the default parent selection widget.
+      // Decompose the selected menu parent option into 'menu_name'
+      // and 'parent', if the form used the default parent selection widget.
       if (!empty($values['menu_parent'])) {
         [$menu_name, $parent] = explode(':', $values['menu_parent'], 2);
         $values['menu_name'] = $menu_name;
@@ -398,28 +402,23 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   ];
   $options_cacheability->applyTo($form['menu']['menu_parent']);
 
-  $form['#validate'][] = 'menu_ui_form_node_type_form_validate';
+  $form['#validate'][] = [MenuUiFormCallbacks::class, 'nodeTypeFormValidate'];
   $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';
 }
 
 /**
  * Validate handler for forms with menu options.
  *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   MenuUiFormCallbacks::nodeTypeFormValidate()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  * @see menu_ui_form_node_type_form_alter()
  */
 function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state) {
-  $available_menus = array_filter($form_state->getValue('menu_options'));
-  // If there is at least one menu allowed, the selected item should be in
-  // one of them.
-  if (count($available_menus)) {
-    $menu_item_id_parts = explode(':', $form_state->getValue('menu_parent'));
-    if (!in_array($menu_item_id_parts[0], $available_menus)) {
-      $form_state->setErrorByName('menu_parent', t('The selected menu link is not under one of the selected menus.'));
-    }
-  }
-  else {
-    $form_state->setValue('menu_parent', '');
-  }
+  MenuUiFormCallbacks::nodeTypeFormValidate($form, $form_state);
 }
 
 /**

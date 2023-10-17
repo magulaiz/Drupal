@@ -106,6 +106,7 @@ class PasswordConfirm extends FormElementBase {
   /**
    * Validates a password_confirm element.
    */
+  #[TrustedCallback]
   public static function validatePasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
     $pass1 = trim($element['pass1']['#value']);
     $pass2 = trim($element['pass2']['#value']);

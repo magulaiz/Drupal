@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for input of a URL.
@@ -60,8 +61,9 @@ class Url extends FormElementBase {
   /**
    * Form element validation handler for #type 'url'.
    *
-   * Note that #maxlength and #required is validated by _form_validate() already.
+   * Note that #maxlength and #required is validated by form_validate() already.
    */
+  #[TrustedCallback]
   public static function validateUrl(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = trim($element['#value']);
     $form_state->setValueForElement($element, $value);

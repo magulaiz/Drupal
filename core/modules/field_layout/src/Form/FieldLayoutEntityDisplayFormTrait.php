@@ -5,6 +5,7 @@ namespace Drupal\field_layout\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
 
 /**
@@ -142,6 +143,7 @@ trait FieldLayoutEntityDisplayFormTrait {
   /**
    * Overrides \Drupal\field_ui\Form\EntityDisplayFormBase::validateForm().
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 

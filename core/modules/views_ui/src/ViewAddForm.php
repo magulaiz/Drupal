@@ -2,12 +2,13 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\wizard\WizardPluginBase;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Plugin\views\wizard\WizardException;
+use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\views\Plugin\ViewsPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Form controller for the Views add form.
@@ -172,6 +173,7 @@ class ViewAddForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $wizard_type = $form_state->getValue(['show', 'wizard_key']);
     $wizard_instance = $this->wizardManager->createInstance($wizard_type);

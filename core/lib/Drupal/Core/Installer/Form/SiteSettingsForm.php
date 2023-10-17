@@ -9,6 +9,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -150,6 +151,7 @@ class SiteSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';

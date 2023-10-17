@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Form;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -34,6 +35,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function customValidateForm(array &$form, FormStateInterface $form_state) {
     $test_handlers = $form_state->get('test_handlers');
     $test_handlers['validate'][] = __FUNCTION__;
@@ -43,6 +45,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $test_handlers = $form_state->get('test_handlers');
     $test_handlers['validate'][] = __FUNCTION__;

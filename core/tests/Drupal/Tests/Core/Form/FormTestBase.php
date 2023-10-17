@@ -153,6 +153,8 @@ abstract class FormTestBase extends UnitTestCase {
   protected $themeManager;
 
   /**
+   * The mocked callable resolver.
+   *
    * @var \Drupal\Core\Utility\CallableResolver|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $callableResolver;
@@ -198,7 +200,7 @@ abstract class FormTestBase extends UnitTestCase {
     $this->requestStack->push($this->request);
     $this->logger = $this->createMock('Drupal\Core\Logger\LoggerChannelInterface');
     $form_error_handler = $this->createMock('Drupal\Core\Form\FormErrorHandlerInterface');
-    $this->formValidator = new FormValidator($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler);
+    $this->formValidator = new FormValidator($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler, $this->callableResolver);
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
       ->setConstructorArgs([$this->requestStack, $this->urlGenerator, $this->redirectResponseSubscriber])
       ->onlyMethods(['batchGet'])

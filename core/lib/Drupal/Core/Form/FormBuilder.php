@@ -16,15 +16,16 @@ use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderCallbackInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Utility\CallableResolver;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides form building and processing.
@@ -869,6 +870,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm($form_id, &$form, FormStateInterface &$form_state) {
     $this->formValidator->validateForm($form_id, $form, $form_state);
   }
@@ -1255,7 +1257,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
           // Skip all value callbacks except safe ones like text if the CSRF
           // token was invalid.
           if (!$form_state->hasInvalidToken() || $this->valueCallableIsSafe($value_callable)) {
-            $element['#value'] = call_user_func_array($value_callable, [&$element, $input, &$form_state]);
+            $element['#value'] = $this->doCallback(
+              $form_state,
+              '#value_callback',
+              $value_callable,
+              [&$element, $input, &$form_state]
+            );
           }
           else {
             $input = NULL;
@@ -1425,7 +1432,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @return mixed
    *   The callback's return value.
    *
-   * @see \Drupal\Core\Security\TrustedCallbackInterface
+   * @see \Drupal\Core\Security\DoTrustedCallbackTrait
    */
   protected function doCallback(FormStateInterface $formState, $callback_type, $callback, array $args) {
     $callback = $formState->prepareCallback($callback);

@@ -2,10 +2,11 @@
 
 namespace Drupal\condition_test;
 
-use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Condition\ConditionManager;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\Node;
 
@@ -68,6 +69,7 @@ class FormController implements FormInterface {
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $subformState = SubformState::createForSubform($form['entity_bundle'], $form, $form_state);
     $this->condition->validateConfigurationForm($form['entity_bundle'], $subformState);

@@ -3,6 +3,7 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Simple class for testing methods as Form API callbacks.
@@ -12,6 +13,7 @@ class Callbacks {
   /**
    * Form element validation handler for 'name' in form_test_validate_form().
    */
+  #[TrustedCallback]
   public function validateName(&$element, FormStateInterface $form_state) {
     $triggered = FALSE;
     if ($form_state->getValue('name') == 'element_validate') {

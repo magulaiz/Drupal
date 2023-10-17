@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -84,6 +85,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
   /**
    * Element validation helper.
    */
+  #[TrustedCallback]
   public static function multipleValidate($element, FormStateInterface $form_state) {
     $values = array_map('trim', explode(',', $element['#value']));
     $items = [];

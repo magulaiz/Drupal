@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
@@ -211,6 +212,7 @@ class FieldStorageConfigEditForm extends EntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
+  #[TrustedCallback]
   public function validateCardinality(array &$element, FormStateInterface $form_state) {
     $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entity->getTargetEntityTypeId());
 

@@ -514,6 +514,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    */
+  #[TrustedCallback]
   public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state) {
     $field = $form_state->getFormObject()->getEntity();
     $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);

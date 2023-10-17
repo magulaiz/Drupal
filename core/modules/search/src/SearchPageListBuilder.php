@@ -11,6 +11,7 @@ use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -338,6 +339,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
   }
 
@@ -377,6 +379,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * Form validation handler for adding a new search page.
    */
+  #[TrustedCallback]
   public function validateAddSearchPage(array &$form, FormStateInterface $form_state) {
     if ($form_state->isValueEmpty('search_type')) {
       $form_state->setErrorByName('search_type', $this->t('You must select the new search page type.'));

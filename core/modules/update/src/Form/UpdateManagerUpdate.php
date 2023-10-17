@@ -3,13 +3,14 @@
 namespace Drupal\update\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\update\ProjectRelease;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
@@ -206,9 +207,9 @@ class UpdateManagerUpdate extends FormBase {
 
       // If the recommended release for a contributed project is not compatible
       // with the currently installed version of core, list that project in a
-      // separate table. If core compatibility is not defined, it means we can't determine
-      // compatibility requirements (or we're looking at core), so we assume it
-      // is compatible.
+      // separate table. If core compatibility is not defined, it means
+      // we can't determine compatibility requirements (or we're looking at
+      // core), so we assume it is compatible.
       $compatible = $recommended_release->isCoreCompatible() ?? TRUE;
 
       if ($needs_manual) {
@@ -355,6 +356,7 @@ class UpdateManagerUpdate extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('projects')) {
       $installed = array_filter($form_state->getValue('projects'));

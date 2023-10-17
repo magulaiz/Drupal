@@ -7,6 +7,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
@@ -127,6 +128,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
@@ -176,6 +178,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    *   Test cases.
    */
   public static function providerUntrusted() : array {
+    // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
     return [
       'untrusted date' => [
         'datetimeDateCallback',
@@ -188,6 +191,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
         sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([static::class, 'datetimeTimeCallback'])),
       ],
     ];
+    // phpcs:enable
   }
 
   /**

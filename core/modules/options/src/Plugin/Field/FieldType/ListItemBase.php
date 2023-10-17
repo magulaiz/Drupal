@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -334,16 +335,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   abstract protected function allowedValuesDescription();
 
   /**
-   * #element_validate callback for options field allowed values.
+   * Implements #element_validate callback for options field allowed values.
    *
    * @param $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form for the form this element belongs to.
    *
    * @see \Drupal\Core\Render\Element\FormElementBase::processPattern()
    */
+  #[TrustedCallback]
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
     $items = array_filter(array_map(function ($item) use ($element) {
       $current_element = $element['table'][$item];

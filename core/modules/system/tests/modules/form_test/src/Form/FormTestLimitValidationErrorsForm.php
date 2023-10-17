@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Builds a simple form with a button triggering partial validation.
@@ -85,6 +86,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function elementValidateLimitValidationErrors($element, FormStateInterface $form_state) {
     if ($element['#value'] == 'invalid') {
       $form_state->setError($element, t('@label element is invalid', ['@label' => $element['#title']]));

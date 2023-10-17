@@ -5,6 +5,7 @@ namespace Drupal\locale\Form;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\locale\SourceString;
 
 /**
@@ -154,6 +155,7 @@ class TranslateEditForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $langcode = $form_state->getValue('langcode');
     foreach ($form_state->getValue('strings') as $lid => $translations) {

@@ -740,6 +740,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Validates the submitted content translation metadata.
    */
+  #[TrustedCallback]
   public function entityFormValidate($form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('content_translation')) {
       $translation = $form_state->getValue('content_translation');

@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form builder to test programmatic form submissions.
@@ -86,6 +87,7 @@ class FormTestProgrammaticForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->isValueEmpty('textfield')) {
       $form_state->setErrorByName('textfield', t('Textfield is required.'));

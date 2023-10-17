@@ -2,13 +2,16 @@
 
 namespace Drupal\content_moderation\Plugin\Field\FieldWidget;
 
+use Drupal\content_moderation\ModerationInformation;
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
+use Drupal\content_moderation\StateTransitionValidationInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsSelectWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformation;
 use Drupal\content_moderation\StateTransitionValidationInterface;
@@ -184,6 +187,7 @@ class ModerationStateWidget extends OptionsSelectWidget {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function validateElement(array $element, FormStateInterface $form_state) {
     $form_state->setValueForElement($element, [$element['state']['#key_column'] => $element['state']['#value']]);
   }

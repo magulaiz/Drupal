@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element\Textfield;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -97,6 +98,7 @@ class EntityAutocomplete extends Textfield {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // Process the #default_value property.
     if ($input === FALSE && isset($element['#default_value']) && $element['#process_default_value']) {
@@ -201,6 +203,7 @@ class EntityAutocomplete extends Textfield {
   /**
    * Form element validation handler for entity_autocomplete elements.
    */
+  #[TrustedCallback]
   public static function validateEntityAutocomplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $value = NULL;
 

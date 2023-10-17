@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -93,6 +94,7 @@ abstract class LanguageFormBase extends EntityForm {
   /**
    * Validates the language editing element.
    */
+  #[TrustedCallback]
   public function validateCommon(array $form, FormStateInterface $form_state) {
     // Ensure sane field values for langcode and name.
     if (!isset($form['langcode_view']) && !preg_match('@^' . LanguageInterface::VALID_LANGCODE_REGEX . '$@', $form_state->getValue('langcode'))) {

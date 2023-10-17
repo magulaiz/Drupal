@@ -11,10 +11,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\views\Entity\View;
+use Drupal\views\Form\ViewsFormCallbacks;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views\ViewsConfigUpdater;
 
@@ -792,15 +793,16 @@ function views_get_view_result($name, $display_id = NULL) {
 
 /**
  * Validation callback for query tags.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   ViewsFormCallbacks::elementValidateTags()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function views_element_validate_tags($element, FormStateInterface $form_state) {
-  $values = array_map('trim', explode(',', $element['#value']));
-  foreach ($values as $value) {
-    if (preg_match("/[^a-z_]/", $value)) {
-      $form_state->setError($element, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
-      return;
-    }
-  }
+  ViewsFormCallbacks::elementValidateTags($element, $form_state);
 }
 
 /**

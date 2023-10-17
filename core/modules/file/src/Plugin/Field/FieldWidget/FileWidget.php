@@ -315,6 +315,7 @@ class FileWidget extends WidgetBase {
    *
    * This method is assigned as a #value_callback in formElement() method.
    */
+  #[TrustedCallback]
   public static function value($element, $input, FormStateInterface $form_state) {
     if ($input) {
       if (empty($input['display'])) {
@@ -350,6 +351,7 @@ class FileWidget extends WidgetBase {
    *
    * This validator is used only when cardinality not set to 1 or unlimited.
    */
+  #[TrustedCallback]
   public static function validateMultipleCount($element, FormStateInterface $form_state, $form) {
     $values = NestedArray::getValue($form_state->getValues(), $element['#parents']);
 

@@ -44,7 +44,7 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
    * Process callback.
    *
    * @param array $element
-   *   Form element
+   *   Form element.
    *
    * @return array
    *   Processed element.
@@ -65,6 +65,7 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**

@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Builds a simple form to test the #group property on #type 'vertical_tabs'.
@@ -54,6 +55,7 @@ class FormTestGroupVerticalTabsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('element_2') === 'bad') {
       $form_state->setErrorByName('element_2', $this->t('there was an error'));

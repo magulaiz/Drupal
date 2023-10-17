@@ -4,6 +4,7 @@ namespace Drupal\views_test_data\Form;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Implements a test form that has a validation error.
@@ -35,6 +36,7 @@ class ViewsTestDataErrorForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->setErrorByName('text', t('Form validation error'));
   }

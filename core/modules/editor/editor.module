@@ -5,18 +5,18 @@
  * Adds bindings for client-side "text editors" to text formats.
  */
 
-use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Form\SubformState;
-use Drupal\editor\EditorInterface;
-use Drupal\editor\Entity\Editor;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\editor\EditorInterface;
+use Drupal\editor\Entity\Editor;
+use Drupal\editor\Form\EditorFormCallbacks;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\text\Plugin\Field\FieldType\TextItemBase;
@@ -27,6 +27,7 @@ use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 function editor_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.editor':
+      // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
       $output = '';
       $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href=":ckeditor5">CKEditor5 module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href=":documentation">online documentation for the Text Editor module</a>.', [':documentation' => 'https://www.drupal.org/documentation/modules/editor', ':ckeditor5' => (\Drupal::moduleHandler()->moduleExists('ckeditor5')) ? Url::fromRoute('help.page', ['name' => 'ckeditor5'])->toString() : '#']) . '</p>';
@@ -42,6 +43,8 @@ function editor_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('If you change the text format on a text field, the text editor will change as well because the text editor configuration is associated with the individual text format. This allows the use of the same text editor with different options for different text formats. It also allows users to choose between text formats with different text editors if they are installed.') . '</dd>';
       $output .= '</dl>';
       return $output;
+
+      // phpcs:enable
   }
 }
 
@@ -162,7 +165,7 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
     $form['editor']['settings']['subform']['#parents'] = ['editor', 'settings'];
   }
 
-  $form['#validate'][] = 'editor_form_filter_admin_format_validate';
+  $form['#validate'][] = [EditorFormCallbacks::class, 'filterAdminFormatValidate'];
   $form['actions']['submit']['#submit'][] = 'editor_form_filter_admin_format_submit';
 }
 
@@ -198,27 +201,16 @@ function editor_form_filter_admin_form_ajax($form, FormStateInterface $form_stat
 
 /**
  * Additional validate handler for filter_format_form().
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   EditorFormCallbacks::filterAdminFormatValidate()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function editor_form_filter_admin_format_validate($form, FormStateInterface $form_state) {
-  $editor_set = $form_state->getValue(['editor', 'editor']) !== "";
-  $subform_array_exists = (!empty($form['editor']['settings']['subform']) && is_array($form['editor']['settings']['subform']));
-  if ($editor_set && $subform_array_exists && $editor_plugin = $form_state->get('editor_plugin')) {
-    $subform_state = SubformState::createForSubform($form['editor']['settings']['subform'], $form, $form_state);
-    $editor_plugin->validateConfigurationForm($form['editor']['settings']['subform'], $subform_state);
-  }
-
-  // This validate handler is not applicable when using the 'Configure' button.
-  if ($form_state->getTriggeringElement()['#name'] === 'editor_configure') {
-    return;
-  }
-
-  // When using this form with JavaScript disabled in the browser, the
-  // 'Configure' button won't be clicked automatically. So, when the user has
-  // selected a text editor and has then clicked 'Save configuration', we should
-  // point out that the user must still configure the text editor.
-  if ($form_state->getValue(['editor', 'editor']) !== '' && !$form_state->get('editor')) {
-    $form_state->setErrorByName('editor][editor', t('You must configure the selected text editor.'));
-  }
+  EditorFormCallbacks::filterAdminFormatValidate($form, $form_state);
 }
 
 /**
@@ -502,7 +494,6 @@ function editor_file_download($uri) {
   // Temporary files are handled by file_file_download(), so nothing to do here
   // about them.
   // @see file_file_download()
-
   // Find out if any editor-backed field contains the file.
   $usage_list = \Drupal::service('file.usage')->listUsage($file);
 
@@ -591,7 +582,7 @@ function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
   }
 
   // Only return formatted text fields.
-  // @todo: improve as part of https://www.drupal.org/node/2732429
+  // @todo Improve as part of https://www.drupal.org/node/2732429
   $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
   return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) use ($field_type_manager) {
     $type = $definition->getType();

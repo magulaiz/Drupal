@@ -3,12 +3,12 @@
 namespace Drupal\ajax_test\Form;
 
 use Drupal\ajax_test\Controller\AjaxTestController;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -60,6 +60,7 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
   }

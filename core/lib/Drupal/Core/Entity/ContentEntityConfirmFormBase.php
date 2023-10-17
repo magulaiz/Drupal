@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Form\ConfirmFormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a generic base class for an entity-based confirmation form.
@@ -113,6 +114,7 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Override the default validation implementation as it is not necessary
     // nor possible to validate an entity in a confirmation form.

@@ -4,6 +4,7 @@ namespace Drupal\dblog\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides the database logging filter form.
@@ -67,6 +68,7 @@ class DblogFilterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->isValueEmpty('type') && $form_state->isValueEmpty('severity')) {
       $form_state->setErrorByName('type', $this->t('You must select something to filter by.'));

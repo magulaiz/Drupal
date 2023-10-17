@@ -292,6 +292,7 @@ class ImageWidget extends FileWidget {
    * This is separated in a validate function instead of a #required flag to
    * avoid being validated on the process callback.
    */
+  #[TrustedCallback]
   public static function validateRequiredFields($element, FormStateInterface $form_state) {
     // Only do validation if the function is triggered from other places than
     // the image process form.

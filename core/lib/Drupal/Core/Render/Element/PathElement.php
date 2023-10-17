@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a matched path render element.
@@ -47,6 +48,7 @@ class PathElement extends Textfield {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     return NULL;
   }
@@ -58,6 +60,7 @@ class PathElement extends Textfield {
    *
    * This checks that the submitted value matches an active route.
    */
+  #[TrustedCallback]
   public static function validateMatchedPath(&$element, FormStateInterface $form_state, &$complete_form) {
     if (!empty($element['#value']) && ($element['#validate_path'] || $element['#convert_path'] != self::CONVERT_NONE)) {
       /** @var \Drupal\Core\Url $url */

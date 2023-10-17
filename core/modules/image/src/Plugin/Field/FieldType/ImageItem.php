@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
@@ -408,6 +409,7 @@ class ImageItem extends FileItem {
   /**
    * Element validate function for dimensions fields.
    */
+  #[TrustedCallback]
   public static function validateResolution($element, FormStateInterface $form_state) {
     if (!empty($element['x']['#value']) || !empty($element['y']['#value'])) {
       foreach (['x', 'y'] as $dimension) {
@@ -493,6 +495,7 @@ class ImageItem extends FileItem {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
+  #[TrustedCallback]
   public static function validateDefaultImageForm(array &$element, FormStateInterface $form_state) {
     // Consolidate the array value of this field to a single FID as #extended
     // for default image is not TRUE and this is a single value.

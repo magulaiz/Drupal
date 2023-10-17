@@ -467,7 +467,7 @@ services:
   Drupal\Core\Form\FormBuilderInterface: '@form_builder'
   form_validator:
     class: Drupal\Core\Form\FormValidator
-    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form', '@form_error_handler']
+    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form', '@form_error_handler', '@callable_resolver']
   Drupal\Core\Form\FormValidatorInterface: '@form_validator'
   form_submitter:
     class: Drupal\Core\Form\FormSubmitter

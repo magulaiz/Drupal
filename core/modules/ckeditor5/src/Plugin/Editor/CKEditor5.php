@@ -504,6 +504,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * Validate callback to inform the user of CKEditor 5 compatibility problems.
    */
+  #[TrustedCallback]
   public static function validateSwitchingToCKEditor5(array $form, FormStateInterface $form_state): void {
     if (!$form_state->get('ckeditor5_is_active') && $form_state->get('ckeditor5_is_selected')) {
       $minimal_ckeditor5_editor = EditorEntity::create([
@@ -552,6 +553,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    * @return string
    *   The value to assign to the element.
    */
+  #[TrustedCallback]
   public static function getGeneratedAllowedHtmlValue(array &$element, $input, FormStateInterface $form_state): string {
     if ($form_state->isValidationComplete()) {
       $validated_format = $form_state->get('ckeditor5_validated_pair')->getFilterFormat();

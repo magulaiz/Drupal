@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -317,6 +318,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
   /**
    * Element validate; Check View is valid.
    */
+  #[TrustedCallback]
   public static function settingsFormValidate($element, FormStateInterface $form_state, $form) {
     // Split view name and display name from the 'view_and_display' value.
     if (!empty($element['view_and_display']['#value'])) {

@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Form;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -63,6 +64,7 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
   }
 

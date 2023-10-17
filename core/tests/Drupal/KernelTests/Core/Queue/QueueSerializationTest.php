@@ -28,6 +28,8 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
   protected static $modules = ['system', 'user'];
 
   /**
+   * A queue.
+   *
    * @var \Drupal\Core\Queue\DatabaseQueue
    */
   protected DatabaseQueue $queue;
@@ -43,7 +45,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    * Process callback.
    *
    * @param array $element
-   *   Form element
+   *   Form element.
    *
    * @return array
    *   Processed element.
@@ -64,6 +66,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**

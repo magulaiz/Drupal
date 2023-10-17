@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form constructor to test the #required property.
@@ -73,6 +74,7 @@ class FormTestValidateRequiredForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function elementValidateRequired($element, FormStateInterface $form_state) {
     // Set a custom validation error on the #required element.
     if (!empty($element['#required_but_empty']) && isset($element['#form_test_required_error'])) {

@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -224,6 +225,7 @@ class FileItem extends EntityReferenceItem {
    * This function is assigned as an #element_validate callback in
    * fieldSettingsForm().
    */
+  #[TrustedCallback]
   public static function validateDirectory($element, FormStateInterface $form_state) {
     // Strip slashes from the beginning and end of $element['file_directory'].
     $value = trim($element['#value'], '\\/');
@@ -240,6 +242,7 @@ class FileItem extends EntityReferenceItem {
    * Commas are allowed by the end-user, but ultimately the value will be stored
    * as a space-separated list for compatibility with file_validate_extensions().
    */
+  #[TrustedCallback]
   public static function validateExtensions($element, FormStateInterface $form_state) {
     if (!empty($element['#value'])) {
       $extensions = preg_replace('/([, ]+\.?)/', ' ', trim(strtolower($element['#value'])));
@@ -275,6 +278,7 @@ class FileItem extends EntityReferenceItem {
    * This function is assigned as an #element_validate callback in
    * fieldSettingsForm().
    */
+  #[TrustedCallback]
   public static function validateMaxFilesize($element, FormStateInterface $form_state) {
     $element['#value'] = trim($element['#value']);
     $form_state->setValue(['settings', 'max_filesize'], $element['#value']);

@@ -2,15 +2,16 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore deutsch
 
@@ -142,6 +143,7 @@ class NegotiationUrlForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $languages = $this->languageManager->getLanguages();
 

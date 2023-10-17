@@ -3,9 +3,10 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Component\Utility\Environment;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -158,6 +159,7 @@ class ImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->file = _file_save_upload_from_form($form['file'], $form_state, 0);
 

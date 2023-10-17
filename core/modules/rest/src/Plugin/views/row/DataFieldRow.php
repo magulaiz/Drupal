@@ -5,9 +5,10 @@ namespace Drupal\rest\Plugin\views\row;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsRow;
-use Drupal\views\ViewExecutable;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\row\RowPluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Plugin which displays fields as raw data.
@@ -111,6 +112,7 @@ class DataFieldRow extends RowPluginBase {
   /**
    * Form element validation handler for \Drupal\rest\Plugin\views\row\DataFieldRow::buildOptionsForm().
    */
+  #[TrustedCallback]
   public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
       $form_state->setError($element, $this->t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));

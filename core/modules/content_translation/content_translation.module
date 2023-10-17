@@ -6,9 +6,6 @@
  */
 
 use Drupal\Core\Url;
-use Drupal\content_translation\BundleTranslationSettingsInterface;
-use Drupal\content_translation\ContentTranslationManager;
-use Drupal\content_translation\Form\ContentTranslationFormCallbacks;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\ContentEntityFormInterface;
@@ -19,6 +16,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\content_translation\BundleTranslationSettingsInterface;
+use Drupal\content_translation\ContentTranslationManager;
+use Drupal\content_translation\Form\ContentTranslationFormCallbacks;
 use Drupal\language\ContentLanguageSettingsInterface;
 
 /**
@@ -538,7 +538,7 @@ function content_translation_entity_presave(EntityInterface $entity) {
  */
 function content_translation_element_info_alter(&$type) {
   if (isset($type['language_configuration'])) {
-    $type['language_configuration']['#process'][] = [ContentTranslationFormCallbacks::class, 'LanguageConfigurationElementProcess'];
+    $type['language_configuration']['#process'][] = [ContentTranslationFormCallbacks::class, 'languageConfigurationElementProcess'];
   }
 }
 
@@ -565,7 +565,7 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
   $context += ['entity_type' => $entity_type, 'bundle' => $bundle];
   $form_state->set(['language', $key], $context);
   $element = ['#name' => $key];
-  $element = ContentTranslationFormCallbacks::LanguageConfigurationElementProcess($element, $form_state, $form);
+  $element = ContentTranslationFormCallbacks::languageConfigurationElementProcess($element, $form_state, $form);
   unset($element['content_translation']['#element_validate']);
   return $element;
 }
@@ -580,41 +580,38 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  *   Processed language configuration element.
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0 Use
- *   ContentTranslationFormCallbacks::LanguageConfigurationElementProcess()
+ *   ContentTranslationFormCallbacks::languageConfigurationElementProcess()
  *   instead.
  *
  * @todo Replace with CR url for issue 2966711
  * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {
-  return ContentTranslationFormCallbacks::LanguageConfigurationElementProcess($element, $form_state, $form);
+  return ContentTranslationFormCallbacks::languageConfigurationElementProcess($element, $form_state, $form);
 }
 
 /**
- * Form validation handler for element added with TrustedFormCallbacks::LanguageConfigurationElementProcess().
+ * Form validation handler for element added with TrustedFormCallbacks::languageConfigurationElementProcess().
  *
  * Checks whether translation can be enabled: if language is set to one of the
  * special languages and language selector is not hidden, translation cannot be
  * enabled.
  *
  * @see content_translation_language_configuration_element_submit()
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   ContentTranslationFormCallbacks::languageConfigurationElementValidate()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form) {
-  $key = $form_state->get(['content_translation', 'key']);
-  $values = $form_state->getValue($key);
-  if (!$values['language_alterable'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-    foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
-      $locked_languages[$language->getId()] = $language->getName();
-    }
-    // @todo Set the correct form element name as soon as the element parents
-    //   are correctly set. We should be using NestedArray::getValue() but for
-    //   now we cannot.
-    $form_state->setErrorByName('', t('"Show language selector" is not compatible with translating content that has default language: %choice. Either do not hide the language selector or pick a specific language.', ['%choice' => $locked_languages[$values['langcode']]]));
-  }
+  ContentTranslationFormCallbacks::languageConfigurationElementValidate($element, $form_state, $form);
 }
 
 /**
- * Form submission handler for element added with TrustedFormCallbacks::LanguageConfigurationElementProcess().
+ * Form submission handler for element added with TrustedFormCallbacks::languageConfigurationElementProcess().
  *
  * Stores the content translation settings.
  *

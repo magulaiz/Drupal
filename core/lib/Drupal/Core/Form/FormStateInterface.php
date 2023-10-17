@@ -421,10 +421,11 @@ interface FormStateInterface {
    * through to the submission handlers.
    *
    * Note that form validation functions are specified in the '#validate'
-   * component of the form array (the value of $form['#validate'] is an array of
-   * validation function names). If the form does not originate in your module,
-   * you can implement hook_form_FORM_ID_alter() to add a validation function
-   * to $form['#validate'].
+   * component of the form array. The value of $form['#validate'] is an array of
+   * validation callables. These callables must be annotated with the
+   * #[TrustedCallback] attribute. If the form does not originate in your
+   * module, you can implement hook_form_FORM_ID_alter() to add a validation
+   * callback to $form['#validate'].
    *
    * @param array $element
    *   The form element that should have its value updated; in most cases you

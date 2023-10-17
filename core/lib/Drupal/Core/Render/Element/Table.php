@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Component\Utility\Html as HtmlUtility;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a render element for a table.
@@ -151,6 +152,7 @@ class Table extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // If #multiple is FALSE, the regular default value of radio buttons is used.
     if (!empty($element['#tableselect']) && !empty($element['#multiple'])) {
@@ -307,6 +309,7 @@ class Table extends FormElementBase {
    * @param array $complete_form
    *   The complete form structure.
    */
+  #[TrustedCallback]
   public static function validateTable(&$element, FormStateInterface $form_state, &$complete_form) {
     // Skip this validation if the button to submit the form does not require
     // selected table row data.

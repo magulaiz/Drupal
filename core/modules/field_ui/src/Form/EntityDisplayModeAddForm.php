@@ -3,6 +3,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -21,13 +22,19 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
-    $form['#title'] = $this->t('Add new @entity-type %label', ['@entity-type' => $definition->getLabel(), '%label' => $this->entityType->getSingularLabel()]);
+    $form['#title'] = $this->t('Add new @entity-type %label',
+      [
+        '@entity-type' => $definition->getLabel(),
+        '%label' => $this->entityType->getSingularLabel(),
+      ]
+    );
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 

@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Component\Utility\Html as HtmlUtility;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -81,6 +82,7 @@ class Tableselect extends Table {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // If $element['#multiple'] == FALSE, then radio buttons are displayed and
     // the default value handling is used.

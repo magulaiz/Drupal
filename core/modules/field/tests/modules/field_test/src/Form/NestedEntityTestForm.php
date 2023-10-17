@@ -2,11 +2,12 @@
 
 namespace Drupal\field_test\Form;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form for field_test routes.
@@ -68,6 +69,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $entity_1 = $form_state->get('entity_1');
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display_1 */
@@ -102,8 +104,9 @@ class NestedEntityTestForm extends FormBase {
     /** @var \Drupal\Core\Entity\EntityInterface $entity_2 */
     $entity_2 = $form_state->get('entity_2');
     $entity_2->save();
-
+    // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
     $this->messenger()->addStatus($this->t('test_entities @id_1 and @id_2 have been updated.', ['@id_1' => $entity_1->id(), '@id_2' => $entity_2->id()]));
+    // phpcs:enable
   }
 
 }

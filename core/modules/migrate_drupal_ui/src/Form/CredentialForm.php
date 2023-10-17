@@ -7,8 +7,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\State\StateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
@@ -258,6 +259,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $connection = NULL;
     $source_connection = $form_state->getValue('source_connection');
@@ -360,6 +362,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
    *
    * Ensures that entered path can be read.
    */
+  #[TrustedCallback]
   public function validatePaths($element, FormStateInterface $form_state) {
     $version = $form_state->getValue('version');
     // Only validate the paths relevant to the legacy Drupal version.

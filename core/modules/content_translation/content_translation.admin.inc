@@ -7,13 +7,13 @@
 
 use Drupal\content_translation\BundleTranslationSettingsInterface;
 use Drupal\content_translation\ContentTranslationManager;
+use Drupal\content_translation\Form\ContentTranslationFormCallbacks;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -163,7 +163,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
     }
   }
 
-  $form['#validate'][] = 'content_translation_form_language_content_settings_validate';
+  $form['#validate'][] = [ContentTranslationFormCallbacks::class, 'formLanguageContentSettingsValidate'];
   $form['#submit'][] = 'content_translation_form_language_content_settings_submit';
 }
 
@@ -310,31 +310,16 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
 /**
  * Form validation handler for content_translation_admin_settings_form().
  *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   ContentTranslationFormCallbacks::formLanguageContentSettingsValidate()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  * @see content_translation_admin_settings_form_submit()
  */
 function content_translation_form_language_content_settings_validate(array $form, FormStateInterface $form_state) {
-  $settings = &$form_state->getValue('settings');
-  foreach ($settings as $entity_type => $entity_settings) {
-    foreach ($entity_settings as $bundle => $bundle_settings) {
-      if (!empty($bundle_settings['translatable'])) {
-        $name = "settings][$entity_type][$bundle][translatable";
-
-        $translatable_fields = isset($settings[$entity_type][$bundle]['fields']) ? array_filter($settings[$entity_type][$bundle]['fields']) : FALSE;
-        if (empty($translatable_fields)) {
-          $t_args = ['%bundle' => $form['settings'][$entity_type][$bundle]['settings']['#label']];
-          $form_state->setErrorByName($name, t('At least one field needs to be translatable to enable %bundle for translation.', $t_args));
-        }
-
-        $values = $bundle_settings['settings']['language'];
-        if (empty($values['language_alterable']) && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-          foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
-            $locked_languages[] = $language->getName();
-          }
-          $form_state->setErrorByName($name, t('Translation is not supported if language is always one of: @locked_languages', ['@locked_languages' => implode(', ', $locked_languages)]));
-        }
-      }
-    }
-  }
+  ContentTranslationFormCallbacks::formLanguageContentSettingsValidate($form, $form_state);
 }
 
 /**

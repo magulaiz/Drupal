@@ -53,6 +53,7 @@ class UnicornEditor extends EditorBase {
    *
    * @see editor_image_upload_settings_form()
    */
+  #[TrustedCallback]
   public function validateImageUploadSettings(array $element, FormStateInterface $form_state) {
     $settings = &$form_state->getValue(['editor', 'settings', 'image_upload']);
     $form_state->get('editor')->setImageUploadSettings($settings);

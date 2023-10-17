@@ -73,6 +73,7 @@ class FormTestStoragePageCacheForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Test using form cache when re-displaying a form due to validation
     // errors.
