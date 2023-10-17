@@ -55,8 +55,8 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#rows' => 4,
       '#config_target' => [
         'target' => 'update.settings:notification.emails',
-        'load_callback' => '::arrayToMultiLineString',
-        'save_callback' => '::arrayToMultiLineString',
+        'load_callback' => '::loadEmailsFromConfig',
+        'save_callback' => '::storeEmailsInConfig',
       ],
       '#description' => $this->t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
@@ -112,18 +112,28 @@ class UpdateSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Converts a multi-line string into, or from, an array.
+   * Prepares the submitted value to be stored in the notify_emails property.
    *
-   * @param array|string $value
-   *   Either an array of values, or a set of values separated by new lines.
+   * @param string $value
+   *   The submitted value.
    *
-   * @return array|string
-   *   The transformed value.
+   * @return array
+   *   The value to be stored in config.
    */
-  public function arrayToMultiLineString(array|string $value): array|string {
-    if (is_string($value)) {
-      return array_map('trim', explode("\n", trim($value)));
-    }
+  public function storeEmailsInConfig(string $value): array {
+    return array_map('trim', explode("\n", trim($value)));
+  }
+
+  /**
+   * Prepares the saved notify_emails property to be displayed in the form.
+   *
+   * @param array $value
+   *   The value saved in config.
+   *
+   * @return string
+   *   The value of the form element.
+   */
+  public function loadEmailsFromConfig(array $value): string {
     return implode("\n", $value);
   }
 
