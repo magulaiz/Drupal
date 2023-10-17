@@ -59,9 +59,9 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $configuration = NestedArray::mergeDeep(
-      $this->defaultConfiguration(),
-      $configuration
+    $configuration = NestedArray::mergeDeepArray(
+      [$this->defaultConfiguration(), $configuration],
+      TRUE
     );
     $this->status = (bool) $configuration['status'];
     $this->weight = (int) $configuration['weight'];
