@@ -338,7 +338,14 @@ class Cron implements CronInterface {
         ]);
       }
       Timer::start('cron_' . $service_class);
-      $cron_service->run();
+
+      try {
+        $cron_service->run();
+      }
+      catch (\Exception $e) {
+        Error::logException($this->logger, $e);
+      }
+
       Timer::stop('cron_' . $service_class);
       $service_previous = $service_class;
     }
