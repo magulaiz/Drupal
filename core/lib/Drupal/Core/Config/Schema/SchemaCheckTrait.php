@@ -77,6 +77,11 @@ trait SchemaCheckTrait {
         "'.*' is a conditionally required key because visibility\..* is .* \(see config schema type condition\.plugin\..*",
       ],
     ],
+    'node.type.*' => [
+      'third_party_settings.menu_ui' => [
+        "'available_menus' is a required key.",
+      ],
+    ],
     'core.base_field_override.*.*.*' => [
       'settings.handler_settings' => [
         "'target_type' is a required key.",
