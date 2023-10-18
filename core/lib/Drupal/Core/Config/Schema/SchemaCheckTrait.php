@@ -71,6 +71,7 @@ trait SchemaCheckTrait {
         // @see \Drupal\views\Plugin\Block\ViewsBlock
         "'views_label' is a conditionally required key because plugin is views_block:.* \(see config schema type block\.settings\.views_block:\*.*",
         // @see \Drupal\views\Plugin\Block\ViewsExposedFilterBlock
+        "'items_per_page' is a conditionally required key because plugin is views_block:.* \(see config schema type block\.settings\.views_block:*.*",
         "'items_per_page' is a conditionally required key because plugin is views_exposed_filter_block:.* \(see config schema type block\.settings\.views_exposed_filter_block:*.*",
       ],
       'visibility.*' => [
