@@ -16,7 +16,6 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\sdc\Component\ComponentValidator;
 use Drupal\sdc\Component\SchemaCompatibilityChecker;
-use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\IncompatibleComponentSchema;
 use Drupal\sdc\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
