@@ -580,6 +580,7 @@ trait SchemaCheckTrait {
         "'inherit_exposed_filters' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
         "'inherit_pager' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
         "'render_pager' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
+        "'displays' is a conditionally required key because display\..*\.display_plugin is attachment \(see config schema type views\.display\.attachment.*",
         // @see \Drupal\rest\Plugin\views\display\RestExport
         "'auth' is a conditionally required key because display\..*\.display_plugin is rest_export \(see config schema type views\.display\.rest_export.*",
         // @see \Drupal\views\Plugin\views\display\Block
