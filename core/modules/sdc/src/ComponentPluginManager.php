@@ -83,10 +83,7 @@ final class ComponentPluginManager extends DefaultPluginManager {
     $this->moduleHandler = $module_handler;
     $this->factory = new ContainerFactory($this);
     $this->setCacheBackend($cacheBackend, 'sdc_plugins');
-    // Note that we are intentionally skipping $this->alterInfo('sdc_info');
-    // We want to ensure that everything related to a component is in the
-    // single directory. If the alteration of a component is necessary,
-    // component replacement is the preferred tool for that.
+    $this->alterInfo('sdc_info');
   }
 
   /**
