@@ -80,6 +80,7 @@ trait SchemaCheckTrait {
     'node.type.*' => [
       'third_party_settings.menu_ui' => [
         "'available_menus' is a required key.",
+        "'parent' is a required key.",
       ],
     ],
     'core.base_field_override.*.*.*' => [
@@ -103,7 +104,7 @@ trait SchemaCheckTrait {
       ],
       'third_party_settings.*.settings' => [
         "'context_mapping' is a required key.",
-      ]
+      ],
     ],
     'core.entity_view_display.*.*.*' => [
       'content.*' => [
@@ -117,6 +118,7 @@ trait SchemaCheckTrait {
         "'use_description_as_link_text' is a conditionally required key because content\..*\.type is file_default \(see config schema type field\.formatter\.settings\.file_default\).",
         "'image_loading' is a conditionally required key because content\..*\.type is image \(see config schema type field\.formatter\.settings\.image\).",
         "'test_formatter_setting' is a conditionally required key because content\..*\.type is field_test_default \(see config schema type field.formatter.settings.field_test_default\).",
+        "'link_to_entity' is a conditionally required key because content\..*\.type is string \(see config schema type field\.formatter\.settings\.string\).",
       ],
       'third_party_settings.layout_builder' => [
         "'sections' is a required key.",
@@ -142,8 +144,8 @@ trait SchemaCheckTrait {
         "'formatter' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.configuration\.id is extra_field_block:.* \(see config schema type block\.settings\.extra_field_block:\*:\*:\*.*",
       ],
       'third_party_settings.layout_builder.sections.*.components.*.configuration.formatter.settings' => [
-        "'link' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.components\..*\.configuration\.formatter\.type is entity_reference_entity_view \(see config schema type field.formatter.settings.entity_reference_entity_view\)."
-      ]
+        "'link' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.components\..*\.configuration\.formatter\.type is entity_reference_entity_view \(see config schema type field.formatter.settings.entity_reference_entity_view\).",
+      ],
     ],
     'layout_builder_test.test_simple_config.*' => [
       'sections.*.layout_settings' => [
@@ -163,7 +165,7 @@ trait SchemaCheckTrait {
     'field.field.*.*.*' => [
       'settings' => [
         "'allowed_formats' is a required key.",
-        "'allowed_formats' is a conditionally required key because field_type is text_.* \(see config schema type field.field_settings.text_.*\)."
+        "'allowed_formats' is a conditionally required key because field_type is text.* \(see config schema type field.field_settings.text.*\).",
       ],
       'settings.handler_settings' => [
         "'target_type' is a required key.",
@@ -192,6 +194,7 @@ trait SchemaCheckTrait {
         // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem
         // @see \Drupal\file\Plugin\Field\FieldType\FileItem (inherited)
         // @see \Drupal\image\Plugin\Field\FieldType\ImageItem (inherited)
+        "'target_id' is a conditionally required key because field_type is (entity_reference|file|image) \(see config schema type field\.value\..*",
         "'target_uuid' is a conditionally required key because field_type is (entity_reference|file|image) \(see config schema type field\.value\..*",
         // @see \Drupal\link\Plugin\Field\FieldType\LinkItem
         "'attributes' is a conditionally required key because field_type is link \(see config schema type field\.value\.link.*",
@@ -251,6 +254,22 @@ trait SchemaCheckTrait {
     'language.types' => [
       'negotiation.*' => [
         "'method_weights' is a required key.",
+      ],
+    ],
+    'test_theme_settings.settings' => [
+      'favicon' => [
+        "'mimetype' is a required key.",
+        "'path' is a required key.",
+        "'url' is a required key.",
+      ],
+      'features' => [
+        "'slogan' is a required key.",
+        "'name' is a required key.",
+        "'logo' is a required key.",
+      ],
+      'logo' => [
+        "'url' is a required key.",
+        "'path' is a required key.",
       ],
     ],
     'test_subtheme.settings' => [
@@ -1121,6 +1140,11 @@ trait SchemaCheckTrait {
     'condition_test.settings' => [
       'visibility.*' => [
         "'.*' is a conditionally required key because visibility\..* is .* \(see config schema type condition\.plugin\..*",
+      ],
+    ],
+    'locale_test_translate.settings' => [
+      '' => [
+        "'key_set_during_install' is a required key.",
       ],
     ],
   ];
