@@ -74,7 +74,8 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests RequiredKeys constraint validator detecting optional keys.
    *
-   * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$message
+   * @covers ::validate()
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$message
    */
   public function testMarkedAsOptional(): void {
     $violations = $this->config->validate();
@@ -102,7 +103,8 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests RequiredKeys constraint validator detecting missing required keys.
    *
-   * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$conditionalMessage
+   * @covers ::validate()
+   * @covers ::getConditionalMessageParameters()
    */
   public function testRequiredKeys(): void {
     // Start from the valid config.
@@ -134,7 +136,9 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests RequiredKeys detecting missing conditionally required keys.
    *
-   * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$conditionalMessage
+   * @covers ::validate()
+   * @covers ::getConditionalMessageParameters()
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$conditionalMessage
    */
   public function testConditionallyRequiredKeys(): void {
     // Start from the valid config.
@@ -165,7 +169,9 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests RequiredKeys constraint validator detecting extraneous keys.
    *
-   * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$extraneousMessage
+   * @covers ::validate()
+   * @covers ::getConditionalMessageParameters()
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$extraneousMessage
    */
   public function testExtraneousKeys(): void {
     // Start from the valid config.
