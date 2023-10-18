@@ -101,6 +101,9 @@ trait SchemaCheckTrait {
       'content.*.settings' => [
         "'.*' is a conditionally required key because content\..*\.type is .* \(see config schema type field\.widget\.settings\..*",
       ],
+      'third_party_settings.*.settings' => [
+        "'context_mapping' is a required key.",
+      ]
     ],
     'core.entity_view_display.*.*.*' => [
       'content.*' => [
@@ -111,6 +114,9 @@ trait SchemaCheckTrait {
       ],
       'content.*.settings' => [
         "'pager_id' is a conditionally required key because content\..*\.type is comment_default \(see config schema type field\.formatter\.settings\.comment_default.*",
+        "'use_description_as_link_text' is a conditionally required key because content\..*\.type is file_default \(see config schema type field\.formatter\.settings\.file_default\).",
+        "'image_loading' is a conditionally required key because content\..*\.type is image \(see config schema type field\.formatter\.settings\.image\).",
+        "'test_formatter_setting' is a conditionally required key because content\..*\.type is field_test_default \(see config schema type field.formatter.settings.field_test_default\).",
       ],
       'third_party_settings.layout_builder' => [
         "'sections' is a required key.",
@@ -135,6 +141,9 @@ trait SchemaCheckTrait {
         "'context_mapping' is a required key.",
         "'formatter' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.configuration\.id is extra_field_block:.* \(see config schema type block\.settings\.extra_field_block:\*:\*:\*.*",
       ],
+      'third_party_settings.layout_builder.sections.*.components.*.configuration.formatter.settings' => [
+        "'link' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.components\..*\.configuration\.formatter\.type is entity_reference_entity_view \(see config schema type field.formatter.settings.entity_reference_entity_view\)."
+      ]
     ],
     'layout_builder_test.test_simple_config.*' => [
       'sections.*.layout_settings' => [
@@ -154,6 +163,7 @@ trait SchemaCheckTrait {
     'field.field.*.*.*' => [
       'settings' => [
         "'allowed_formats' is a required key.",
+        "'allowed_formats' is a conditionally required key because field_type is text_.* \(see config schema type field.field_settings.text_.*\)."
       ],
       'settings.handler_settings' => [
         "'target_type' is a required key.",
@@ -612,7 +622,7 @@ trait SchemaCheckTrait {
         "'query_tags' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
         "'replica' is a conditionally required key because display\..*\.query\.type is views_query \(see config schema type views\.query\.views_query.*",
       ],
-      'display.default.display_options.empty.*' => [
+      'display.*.display_options.empty.*' => [
         "'entity_field' is a required key.",
         "'entity_type' is a required key.",
         "'label' is a required key.",
@@ -1106,6 +1116,11 @@ trait SchemaCheckTrait {
         "'published' is a required key.",
         "'default_revision' is a required key.",
         "'extra' is a required key.",
+      ],
+    ],
+    'condition_test.settings' => [
+      'visibility.*' => [
+        "'.*' is a conditionally required key because visibility\..* is .* \(see config schema type condition\.plugin\..*",
       ],
     ],
   ];
