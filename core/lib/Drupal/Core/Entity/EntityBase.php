@@ -172,7 +172,12 @@ abstract class EntityBase implements EntityInterface {
 
     if (isset($link_templates[$rel])) {
       $route_parameters = $this->urlRouteParameters($rel);
-      $route_name = "entity.{$this->entityTypeId}." . str_replace(['-', 'drupal:'], ['_', ''], $rel);
+      if ($this->entityTypeId === 'node' && $rel === 'collection') {
+        $route_name = 'system.admin_content';
+      }
+      else {
+        $route_name = "entity.{$this->entityTypeId}." . str_replace(['-', 'drupal:'], ['_', ''], $rel);
+      }
       $uri = new Url($route_name, $route_parameters);
     }
     else {
