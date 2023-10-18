@@ -18,6 +18,7 @@ use Drupal\sdc\Component\ComponentValidator;
 use Drupal\sdc\Component\SchemaCompatibilityChecker;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\IncompatibleComponentSchema;
+use Drupal\sdc\Plugin\Component;
 use Drupal\sdc\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
 
 /**
