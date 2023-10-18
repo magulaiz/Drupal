@@ -155,10 +155,9 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
     $child_ids = array_values($menu_link_manager->getChildIds($menu_plugin_id));
     if ($child_ids) {
       return $this->t('This page has %number child menu links,These will be moved one page higher in the menu hierarchy', [
-        '%number' => sizeof($child_ids),
+        '%number' => count($child_ids),
       ]);
     }
-
 
     return $this->traitGetQuestion();
   }
