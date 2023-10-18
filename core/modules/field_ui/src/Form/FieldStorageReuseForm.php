@@ -2,6 +2,11 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Ajax\AjaxFormHelperTrait;
+use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -10,7 +15,6 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
@@ -20,8 +24,17 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
  * @internal
  */
 class FieldStorageReuseForm extends FormBase {
+  use AjaxFormHelperTrait;
+  use AjaxHelperTrait;
 
   use FieldStorageCreationTrait;
+
+  /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
 
   /**
    * The name of the entity type.
@@ -50,14 +63,19 @@ class FieldStorageReuseForm extends FormBase {
    *   The entity display repository.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfoService
    *   The bundle info service.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
     protected EntityFieldManagerInterface $entityFieldManager,
     protected EntityDisplayRepositoryInterface $entityDisplayRepository,
-    protected EntityTypeBundleInfoInterface $bundleInfoService
-  ) {}
+    protected EntityTypeBundleInfoInterface $bundleInfoService,
+    protected ControllerResolverInterface $controller_resolver,
+  ) {
+    $this->controllerResolver = $controller_resolver;
+  }
 
   /**
    * {@inheritdoc}
@@ -75,7 +93,8 @@ class FieldStorageReuseForm extends FormBase {
       $container->get('plugin.manager.field.field_type'),
       $container->get('entity_field.manager'),
       $container->get('entity_display.repository'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
+      $container->get('controller_resolver'),
     );
   }
 
@@ -167,9 +186,7 @@ class FieldStorageReuseForm extends FormBase {
             'aria-label' => $this->t('Reuse @field_name', ['@field_name' => $field['field_name']]),
             'data-dialog-type' => 'modal',
           ],
-          '#submit' => [
-            'callback' => [$this, 'reuseCallback'],
-          ],
+          '#submit' => ['::ajaxSubmit'],
         ],
       ];
       $rows[] = $row;
@@ -231,17 +248,9 @@ class FieldStorageReuseForm extends FormBase {
   }
 
   /**
-   * Callback function to handle re-using an existing field.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @throws \Exception
-   *   Thrown when there is an error re-using the field.
+   * {@inheritdoc}
    */
-  public function reuseCallback(array $form, FormStateInterface $form_state) {
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $field_name = $form_state->getTriggeringElement()['#name'];
     // Get settings from existing configuration.
@@ -254,6 +263,7 @@ class FieldStorageReuseForm extends FormBase {
     $field = $fields ? $this->entityTypeManager->getStorage('field_config')->load(reset($fields)) : NULL;
     // Have a default label in case a field storage doesn't have any fields.
     $existing_storage_label = $field ? $field->label() : $field_name;
+    $response = new AjaxResponse();
     try {
       $field = $this->entityTypeManager->getStorage('field_config')->create([
         ...$default_options['field_config'] ?? [],
@@ -272,7 +282,17 @@ class FieldStorageReuseForm extends FormBase {
 
       // Store new field information for any additional submit handlers.
       $form_state->set(['fields_added', '_add_existing_field'], $field_name);
-      $form_state->setRedirect("entity.field_config.{$this->entityTypeId}_field_edit_form", array_merge(FieldUI::getRouteBundleParameter($entity_type, $this->bundle), ['field_config' => "$this->entityTypeId.$this->bundle.$field_name"]));
+      // ##########################################
+      // Gets to the edit form using a controller.
+      // Url::fromRoute("entity.field_config.{$this->entityTypeId}_field_edit_form",
+      // array_merge(FieldUI::getRouteBundleParameter($entity_type, $this->bundle),
+      // ['field_config' => "$this->entityTypeId.$this->bundle.$field_name"]))->toString()
+      // ##########################################
+      $callback = $this->controllerResolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldConfigAddController::fieldConfigAddConfigureForm');
+      $edit_form = call_user_func_array($callback,
+      [$this->entityTypeId, $field_name]);
+      $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field->get('field_type')]['label'];
+      $response->addCommand(new OpenModalDialogCommand("Configure field: {$field_type_label}", $edit_form, ['width' => '1100']));
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('There was a problem reusing field %label: @message', [
@@ -280,6 +300,7 @@ class FieldStorageReuseForm extends FormBase {
         '@message' => $e->getMessage(),
       ]));
     }
+    return $response;
   }
 
   /**
