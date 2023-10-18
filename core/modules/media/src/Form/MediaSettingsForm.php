@@ -5,6 +5,7 @@ namespace Drupal\media\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\media\IFrameUrlHelper;
@@ -103,10 +104,7 @@ class MediaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('iFrame domain'),
       '#size' => 40,
       '#maxlength' => 255,
-      '#config_target' => [
-        'target' => 'media.settings:iframe_domain',
-        'save_callback' => '::nullIfEmptyString',
-      ],
+      '#config_target' => ConfigTarget::create('media.settings:iframe_domain', toConfig: '::nullIfEmptyString'),
       '#description' => $this->t('Enter a different domain from which to serve oEmbed content, including the <em>http://</em> or <em>https://</em> prefix. This domain needs to point back to this site, or existing oEmbed content may not display correctly, or at all.'),
     ];
 

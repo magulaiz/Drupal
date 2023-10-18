@@ -3,6 +3,7 @@
 namespace Drupal\update;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
@@ -53,11 +54,11 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
       '#rows' => 4,
-      '#config_target' => [
-        'target' => 'update.settings:notification.emails',
-        'load_callback' => '::loadEmailsFromConfig',
-        'save_callback' => '::storeEmailsInConfig',
-      ],
+      '#config_target' => ConfigTarget::create(
+        'update.settings:notification.emails',
+        '::loadEmailsFromConfig',
+        '::storeEmailsInConfig',
+      ),
       '#description' => $this->t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
 

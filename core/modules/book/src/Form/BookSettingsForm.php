@@ -3,6 +3,7 @@
 namespace Drupal\book\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -34,10 +35,7 @@ class BookSettingsForm extends ConfigFormBase {
     $form['book_allowed_types'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Content types allowed in book outlines'),
-      '#config_target' => [
-        'target' => 'book.settings:allowed_types',
-        'save_callback' => '::filterAndSortAllowedTypes',
-      ],
+      '#config_target' => ConfigTarget::create('book.settings:allowed_types', toConfig: '::filterAndSortAllowedTypes'),
       '#options' => $types,
       '#description' => $this->t('Users with the %outline-perm permission can add all content types.', ['%outline-perm' => $this->t('Administer book outlines')]),
       '#required' => TRUE,
