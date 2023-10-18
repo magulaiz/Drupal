@@ -369,6 +369,7 @@ trait SchemaCheckTrait {
       '' => [
         "'favicon' is a required key.",
         "'features' is a required key.",
+        "'logo' is a required key.",
       ],
       'logo' => [
         "'url' is a required key.",
@@ -387,6 +388,10 @@ trait SchemaCheckTrait {
     'rest.resource.*' => [
       'configuration' => [
         "'.*' is a conditionally required key because granularity is method \(see config schema type rest_resource.method.*",
+      ],
+      'configuration.GET' => [
+        "'supported_formats' is a required key.",
+        "'supported_auth' is a required key.",
       ],
     ],
     'contact.settings' => [
