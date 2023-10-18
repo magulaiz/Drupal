@@ -58,12 +58,28 @@ final class ConfigTarget {
     }
   }
 
+  /**
+   * Creates a ConfigTarget object.
+   *
+   * @param string $target
+   *   The name of the config object, and property path, being read from or
+   *   written to, in the form `CONFIG_NAME:PROPERTY_PATH`. For example,
+   *   `system.site:page.front`.
+   * @param string|null $fromConfig
+   *   (optional) A callback which should transform the value loaded from
+   *   config before it gets displayed by the form. If NULL, no transformation
+   *   will be done. Defaults to NULL.
+   * @param string|null $toConfig
+   *   (optional) A callback which should transform the value submitted by the
+   *   form before it is set in the config object. If NULL, no transformation
+   *   will be done. Defaults to NULL.
+   *
+   * @return self
+   *   A ConfigTarget instance.
+   */
   public static function fromString(string $target, ?string $fromConfig = NULL, ?string $toConfig = NULL): self {
-    return new static(
-      ...explode(':', $target, 2),
-      $fromConfig,
-      $toConfig,
-    );
+    [$configName, $propertyPath] = explode(':', $target, 2);
+    return new self($configName, $propertyPath, $fromConfig, $toConfig);
   }
 
 }
