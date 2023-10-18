@@ -136,8 +136,10 @@ abstract class ConfigFormBase extends FormBase {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
-      /** @var \Drupal\Core\Form\ConfigTarget $target */
       $target = $element['#config_target'];
+      if (is_string($target)) {
+        $target = new ConfigTarget($target);
+      }
       $target->elementName = $element['#name'];
       $target->elementParents = $element['#parents'];
       $map[$target->configName . ':' . $target->propertyPath] = $target;
