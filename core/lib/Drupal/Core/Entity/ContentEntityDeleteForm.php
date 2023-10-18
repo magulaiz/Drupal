@@ -142,7 +142,6 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
     // Reset the static load cache.
     \Drupal::entityTypeManager()->getStorage('menu_link_content')->resetCache();
     $menu_plugin_id = $entity->getPluginId();
-    $definition = $menu_link_manager->getDefinition($menu_plugin_id);
 
     $entity = NULL;
 
