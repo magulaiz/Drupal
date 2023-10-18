@@ -1190,6 +1190,9 @@ trait SchemaCheckTrait {
         "'default_revision' is a required key.",
         "'extra' is a required key.",
       ],
+      'type_settings.transitions.*' => [
+        "'extra' is a required key.",
+      ],
     ],
     'condition_test.settings' => [
       'visibility.*' => [
