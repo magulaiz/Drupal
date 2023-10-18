@@ -2,8 +2,8 @@
 
 namespace Drupal\sdc\Component;
 
+use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\InvalidComponentException;
-use Drupal\sdc\Plugin\Component;
 use Drupal\sdc\Utilities;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
@@ -127,7 +127,7 @@ final class ComponentValidator {
    *
    * @param array $context
    *   The Twig context that contains the prop data.
-   * @param \Drupal\sdc\Plugin\Component $component
+   * @param \Drupal\sdc\ComponentInterface $component
    *   The component to validate the props against.
    *
    * @return bool
@@ -135,7 +135,7 @@ final class ComponentValidator {
    *
    * @throws \Drupal\sdc\Exception\InvalidComponentException
    */
-  public function validateProps(array $context, Component $component): bool {
+  public function validateProps(array $context, ComponentInterface $component): bool {
     // If the validator isn't set, then the validation library is not installed.
     if (!$this->validator) {
       return TRUE;

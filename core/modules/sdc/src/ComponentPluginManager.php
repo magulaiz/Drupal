@@ -16,9 +16,9 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\sdc\Component\ComponentValidator;
 use Drupal\sdc\Component\SchemaCompatibilityChecker;
+use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\IncompatibleComponentSchema;
-use Drupal\sdc\Plugin\Component;
 use Drupal\sdc\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
 
 /**
@@ -93,14 +93,14 @@ final class ComponentPluginManager extends DefaultPluginManager {
    *
    * @internal
    */
-  public function createInstance($plugin_id, array $configuration = []): Component {
+  public function createInstance($plugin_id, array $configuration = []): ComponentInterface {
     $configuration['app_root'] = $this->appRoot;
     $configuration['enforce_schemas'] = $this->shouldEnforceSchemas(
       $this->definitions[$plugin_id] ?? []
     );
     try {
       $instance = parent::createInstance($plugin_id, $configuration);
-      if (!$instance instanceof Component) {
+      if (!$instance instanceof ComponentInterface) {
         throw new ComponentNotFoundException(sprintf(
           'Unable to find component "%s" in the component repository.',
           $plugin_id,
@@ -125,14 +125,14 @@ final class ComponentPluginManager extends DefaultPluginManager {
    * @param string $component_id
    *   The component ID.
    *
-   * @return \Drupal\sdc\Plugin\Component
+   * @return \Drupal\sdc\ComponentInterface
    *   The component.
    *
    * @throws \Drupal\sdc\Exception\ComponentNotFoundException
    *
    * @internal
    */
-  public function find(string $component_id): Component {
+  public function find(string $component_id): ComponentInterface {
     $definitions = $this->getDefinitions();
     if (empty($definitions)) {
       throw new ComponentNotFoundException('Unable to find any component definition.');
@@ -144,8 +144,8 @@ final class ComponentPluginManager extends DefaultPluginManager {
   /**
    * Gets all components.
    *
-   * @return \Drupal\sdc\Plugin\Component[]
-   *   An array of Component objects.
+   * @return \Drupal\sdc\ComponentInterface[]
+   *   An array of component plugin instances.
    *
    * @internal
    */

@@ -2,8 +2,8 @@
 
 namespace Drupal\sdc\Twig;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Utility\Error;
-use Drupal\sdc\ComponentPluginManager;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
 use Psr\Log\LoggerInterface;
@@ -21,13 +21,13 @@ final class TwigComponentLoader implements LoaderInterface {
   /**
    * Constructs a new ComponentLoader object.
    *
-   * @param \Drupal\sdc\ComponentPluginManager $pluginManager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
    *   The plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
   public function __construct(
-    protected ComponentPluginManager $pluginManager,
+    protected PluginManagerInterface $pluginManager,
     protected LoggerInterface $logger,
   ) {}
 

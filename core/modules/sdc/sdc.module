@@ -5,9 +5,9 @@
  * Module implementation file.
  */
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\sdc\Plugin\Component;
-use Drupal\sdc\ComponentPluginManager;
+use Drupal\sdc\ComponentInterface;
 
 /**
  * @file
@@ -52,11 +52,11 @@ function sdc_help($route_name, RouteMatchInterface $route_match) {
 function sdc_library_info_build() {
   // Iterate over all the components to get the CSS and JS files.
   $plugin_manager = \Drupal::service('plugin.manager.sdc');
-  assert($plugin_manager instanceof ComponentPluginManager);
+  assert($plugin_manager instanceof PluginManagerInterface);
   $components = $plugin_manager->getAllComponents();
   $libraries = array_reduce(
     $components,
-    static function (array $libraries, Component $component) {
+    static function (array $libraries, ComponentInterface $component) {
       $library = $component->library;
       if (empty($library)) {
         return $libraries;
@@ -69,7 +69,7 @@ function sdc_library_info_build() {
   );
   $libraries['all'] = [
     'dependencies' => array_map(
-      static fn(Component $component) => $component->getLibraryName(),
+      static fn(ComponentInterface $component) => $component->getLibraryName(),
       $components
     ),
   ];
