@@ -147,6 +147,25 @@ trait SchemaCheckTrait {
         "'link' is a conditionally required key because third_party_settings\.layout_builder\.sections\..*\.components\..*\.configuration\.formatter\.type is entity_reference_entity_view \(see config schema type field.formatter.settings.entity_reference_entity_view\).",
       ],
     ],
+    'editor.editor.*' => [
+      'image_upload' => [
+        "'status' is a required key.",
+        "'scheme' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*)",
+        "'directory' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*)",
+        "'max_size' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*)",
+        "'max_dimensions' is an extraneous key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*)",
+      ],
+    ],
+    'ckeditor5_valid_pair__format_and_editor' => [
+      'image_upload' => [
+        "'status' is a required key.",
+      ],
+      'filters.*' => [
+        "'id' is a required key.",
+        "'provider' is a required key.",
+        "'settings' is a required key.",
+      ],
+    ],
     'layout_builder_test.test_simple_config.*' => [
       'sections.*.layout_settings' => [
         "'label' is a required key.",
@@ -171,15 +190,18 @@ trait SchemaCheckTrait {
         "'target_type' is a required key.",
         // @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
         // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection (inherited)
-        "'auto_create' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
-        "'auto_create_bundle' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
-        "'sort' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
+        // @see \Drupal\entity_reference_test\Plugin\EntityReferenceSelection\AllExceptHostEntity (inherited)
+        "'auto_create' is a conditionally required key because settings\.handler is .* \(see config schema type entity_reference_selection\..*",
+        "'auto_create_bundle' is a conditionally required key because settings\.handler is .* \(see config schema type entity_reference_selection\..*",
+        "'sort' is a conditionally required key because settings\.handler is .* \(see config schema type entity_reference_selection\..*",
         "'target_bundles' is a conditionally required key because settings\.handler is default:.* \(see config schema type entity_reference_selection\.default:.*",
         // @see \Drupal\user\Plugin\EntityReferenceSelection\UserSelection
         "'filter' is a conditionally required key because settings\.handler is default:user \(see config schema type entity_reference_selection\.default:user.*",
         "'include_anonymous' is a conditionally required key because settings\.handler is default:user \(see config schema type entity_reference_selection\.default:user.*",
         // @see \Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection
         "'view' is a conditionally required key because settings\.handler is views \(see config schema type entity_reference_selection\.views.*",
+
+        "'sort' is a conditionally required key because settings\.handler is entity_test_all_except_host \(see config schema type entity_reference_selection\.entity_test_all_except_host",
       ],
       'settings.handler_settings.sort' => [
         "'direction' is a required key.",

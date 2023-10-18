@@ -12,6 +12,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
@@ -48,6 +49,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *   Plugin classes are internal.
  */
 class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
+
+  use SchemaCheckTrait;
 
   /**
    * The CKEditor plugin manager.
@@ -238,6 +241,9 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     foreach ($violations as $i => $violation) {
       assert($violation instanceof ConstraintViolation);
       if (explode('.', $violation->getPropertyPath())[0] === 'filters' && is_a($violation->getConstraint(), PrimitiveTypeConstraint::class)) {
+        $violations->remove($i);
+      }
+      if (self::isViolationForIgnoredPropertyPath($violation)) {
         $violations->remove($i);
       }
     }
