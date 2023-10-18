@@ -8,10 +8,8 @@ use Drupal\sdc\Exception\InvalidComponentException;
 
 /**
  * Simple value object that contains information about the component.
- *
- * @internal
  */
-final class Component extends PluginBase {
+class Component extends PluginBase {
 
   /**
    * The component's metadata.
