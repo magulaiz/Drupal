@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\sdc\Twig;
 
-use Drupal\Component\Plugin\PluginManagerInterface
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\InvalidComponentException;
