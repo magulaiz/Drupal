@@ -28,15 +28,12 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // Install the System module and its config so that we can test that the
-    // validator infers the allowed keys from a defined schema.
-    $this->enableModules(['system']);
-    $this->installConfig('system');
-
+    // Install the Block module and create a Block config entity, so that we can
+    // test that the validator infers the required keys from a defined schema.
+    $this->enableModules(['system', 'block']);
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['stark']);
-    $this->enableModules(['block']);
     $block = Block::create([
       'id' => 'branding',
       'plugin' => 'system_branding_block',
