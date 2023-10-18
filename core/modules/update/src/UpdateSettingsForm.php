@@ -54,8 +54,9 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
       '#rows' => 4,
-      '#config_target' => ConfigTarget::create(
-        'update.settings:notification.emails',
+      '#config_target' => new ConfigTarget(
+        'update.settings',
+        'notification.emails',
         static::class . '::loadEmailsFromConfig',
         static::class . '::storeEmailsInConfig',
       ),

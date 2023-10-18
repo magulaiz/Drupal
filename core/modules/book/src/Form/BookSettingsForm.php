@@ -35,7 +35,7 @@ class BookSettingsForm extends ConfigFormBase {
     $form['book_allowed_types'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Content types allowed in book outlines'),
-      '#config_target' => ConfigTarget::create('book.settings:allowed_types', toConfig: static::class . '::filterAndSortAllowedTypes'),
+      '#config_target' => new ConfigTarget('book.settings', 'allowed_types', toConfig: static::class . '::filterAndSortAllowedTypes'),
       '#options' => $types,
       '#description' => $this->t('Users with the %outline-perm permission can add all content types.', ['%outline-perm' => $this->t('Administer book outlines')]),
       '#required' => TRUE,
