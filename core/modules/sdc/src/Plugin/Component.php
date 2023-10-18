@@ -4,12 +4,13 @@ namespace Drupal\sdc\Plugin;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\sdc\Component\ComponentMetadata;
+use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\InvalidComponentException;
 
 /**
  * Simple value object that contains information about the component.
  */
-class Component extends PluginBase {
+class Component extends PluginBase implements ComponentInterface {
 
   /**
    * The component's metadata.
@@ -69,20 +70,14 @@ class Component extends PluginBase {
   }
 
   /**
-   * The template path.
-   *
-   * @return string|null
-   *   The path to the template.
+   * {@inheritdoc}
    */
   public function getTemplatePath(): ?string {
     return $this->metadata->path . DIRECTORY_SEPARATOR . $this->template;
   }
 
   /**
-   * The auto-computed library name.
-   *
-   * @return string
-   *   The library name.
+   * {@inheritdoc}
    */
   public function getLibraryName(): string {
     $library_id = $this->getPluginId();
