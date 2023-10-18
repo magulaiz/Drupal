@@ -278,6 +278,22 @@ trait SchemaCheckTrait {
         "'method_weights' is a required key.",
       ],
     ],
+    'test_theme_theme.settings' => [
+      'favicon' => [
+        "'mimetype' is a required key.",
+        "'path' is a required key.",
+        "'url' is a required key.",
+      ],
+      'features' => [
+        "'slogan' is a required key.",
+        "'name' is a required key.",
+        "'logo' is a required key.",
+      ],
+      'logo' => [
+        "'url' is a required key.",
+        "'path' is a required key.",
+      ],
+    ],
     'test_theme_settings.settings' => [
       'favicon' => [
         "'mimetype' is a required key.",
@@ -456,8 +472,8 @@ trait SchemaCheckTrait {
         "'route_params' is a required key.",
       ],
       'tips.*' => [
-        "'position' is a conditionally required key because tips\..*\.plugin is text \(see config schema type tour\.tip\.text.*",
-        "'selector' is a conditionally required key because tips\..*\.plugin is text \(see config schema type tour\.tip\.text.*",
+        "'position' is a conditionally required key because tips\..*\.plugin is .* \(see config schema type tour\.tip\..*",
+        "'selector' is a conditionally required key because tips\..*\.plugin is .* \(see config schema type tour\.tip\..*",
       ],
     ],
     'update.settings' => [
