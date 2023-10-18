@@ -58,4 +58,12 @@ final class ConfigTarget {
     }
   }
 
+  public static function fromString(string $target, ?string $fromConfig = NULL, ?string $toConfig = NULL): self {
+    return new static(
+      ...explode(':', $target, 2),
+      $fromConfig,
+      $toConfig,
+    );
+  }
+
 }

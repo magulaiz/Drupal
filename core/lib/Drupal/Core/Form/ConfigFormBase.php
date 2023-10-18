@@ -92,10 +92,11 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function loadDefaultValuesFromConfig(array $element): array {
     if (array_key_exists('#config_target', $element) && !array_key_exists('#default_value', $element)) {
-      if (is_string($element['#config_target'])) {
-        $element['#config_target'] = new ConfigTarget(...explode(':', $element['#config_target'], 2));
-      }
       $target = $element['#config_target'];
+      if (is_string($target)) {
+        $target = ConfigTarget::fromString($target);
+      }
+
       $value = $this->config($target->configName)->get($target->propertyPath);
       if ($target->fromConfig) {
         $value = call_user_func($target->fromConfig, $value);
@@ -138,7 +139,7 @@ abstract class ConfigFormBase extends FormBase {
 
       $target = $element['#config_target'];
       if (is_string($target)) {
-        $target = new ConfigTarget($target);
+        $target = ConfigTarget::fromString($target);
       }
       $target->elementName = $element['#name'];
       $target->elementParents = $element['#parents'];
