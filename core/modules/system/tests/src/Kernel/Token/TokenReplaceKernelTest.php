@@ -233,7 +233,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], [], $bubbleable_metadata);
-      $this->assertSame($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertSame($expected, $output, "Token '$input' was not replaced.");
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, new FormattableMarkup('Asserting metadata for token %token.', ['%token' => $input]));
     }
   }
@@ -300,7 +300,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], [], $bubbleable_metadata);
-      $this->assertSame($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertSame($expected, $output, "Token '$input' was not replaced.");
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, new FormattableMarkup('Asserting metadata for token %token.', ['%token' => $input]));
     }
   }

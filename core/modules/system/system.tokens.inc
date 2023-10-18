@@ -257,7 +257,7 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
     $themes = \Drupal::service('theme_handler')->listInfo();
     $installed_themes = array_keys($themes);
 
-    // Detect direct tokens ([site:logo:theme-bartik]).
+    // Detect direct tokens ([site:logo:theme-olivero]).
     foreach ($tokens as $name => $original) {
       // Strip 'theme-' to get the theme name, but do not strip 'active-theme'.
       $name = str_starts_with($name, 'theme-') ? substr($name, 6) : $name;
@@ -266,7 +266,7 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
       }
     }
 
-    // Detect chained tokens ([site:logo:theme-bartik:?]).
+    // Detect chained tokens ([site:logo:theme-olivero:?]).
     foreach ($installed_themes as $installed_theme) {
       if ($created_tokens = $token_service->findWithPrefix($tokens, 'theme-' . $installed_theme)) {
         $replacements += $token_service->generate('site-logo-properties', $created_tokens, ['theme' => $installed_theme], $options, $bubbleable_metadata);
@@ -328,15 +328,15 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
 /**
  * Returns the path of the logo for the given theme.
  *
- * @see _system_tokens_get_logo_path()
- *
  * @param string $theme
- *   The theme to load the logo for.
+ *   The theme to get the logo path for.
  * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
  *   The bubbleable metadata to alter in order to cache the token.
  *
- * @return mixed
- *   The path to the logo, NULL if the setting does not exist.
+ * @return string|null
+ *   The path to the logo, NULL if logo.url does not exist for the given theme.
+ *
+ * @see _system_tokens_get_logo_path()
  */
 function _system_tokens_get_logo_path(string $theme, BubbleableMetadata &$bubbleable_metadata) {
   if ($theme === 'default-theme') {
@@ -364,15 +364,16 @@ function _system_tokens_get_logo_path(string $theme, BubbleableMetadata &$bubble
 /**
  * Returns an <img> tag for the logo of the given theme.
  *
- * @see _system_tokens_get_logo_path()
  *
  * @param string $theme
- *   The theme to load the logo for.
+ *   The theme to get the logo path for.
  * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
  *   The bubbleable metadata to alter in order to cache the token.
  *
  * @return \Drupal\Component\Render\MarkupInterface
  *   An HTML <img> tag for the logo.
+ *
+ * @see _system_tokens_get_logo_path()
  */
 function _system_tokens_get_logo_rendered(string $theme, BubbleableMetadata &$bubbleable_metadata) {
   $logo_path = _system_tokens_get_logo_path($theme, $bubbleable_metadata);
