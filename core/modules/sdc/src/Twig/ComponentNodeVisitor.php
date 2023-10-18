@@ -26,7 +26,7 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
   /**
    * Creates a new ComponentNodeVisitor object.
    *
-   * @param use Drupal\Component\Plugin\PluginManagerInterface $pluginManager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
    *   The plugin manager for components.
    */
   public function __construct(protected PluginManagerInterface $pluginManager) {}
