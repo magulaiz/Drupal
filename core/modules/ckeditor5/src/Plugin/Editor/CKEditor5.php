@@ -711,6 +711,12 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
         }
       }
 
+      // This handles CKEditor 5 plugin settings violations, not violations in
+      // generic Text Editor or Text Format parts.
+      if (!str_starts_with($violation->getPropertyPath(), 'settings')) {
+        continue;
+      }
+
       $form_item_name = static::mapPairViolationPropertyPathsToFormNames($violation->getPropertyPath(), $form);
       // When adding a toolbar item, it is possible that not all conditions for
       // using it have been met yet. FormBuilder refuses to rebuild forms when a
