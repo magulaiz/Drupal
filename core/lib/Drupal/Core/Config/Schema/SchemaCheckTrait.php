@@ -278,6 +278,17 @@ trait SchemaCheckTrait {
         "'method_weights' is a required key.",
       ],
     ],
+    'test_deprecated_theme.settings' => [
+      '' => [
+        "'features' is a required key.",
+        "'logo' is a required key.",
+      ],
+      'favicon' => [
+        "'mimetype' is a required key.",
+        "'path' is a required key.",
+        "'url' is a required key.",
+      ],
+    ],
     'test_theme_theme.settings' => [
       'favicon' => [
         "'mimetype' is a required key.",
