@@ -93,6 +93,10 @@ class CKEditor5Test extends CKEditor5TestBase {
         'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
+        'max_dimensions' => [
+          'width' => 0,
+          'height' => 0,
+        ],
       ],
     ])->save();
     $this->assertSame([], array_map(
