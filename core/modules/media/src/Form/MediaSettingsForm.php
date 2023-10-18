@@ -104,7 +104,7 @@ class MediaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('iFrame domain'),
       '#size' => 40,
       '#maxlength' => 255,
-      '#config_target' => ConfigTarget::create('media.settings:iframe_domain', toConfig: '::nullIfEmptyString'),
+      '#config_target' => ConfigTarget::create('media.settings:iframe_domain', toConfig: static::class . '::nullIfEmptyString'),
       '#description' => $this->t('Enter a different domain from which to serve oEmbed content, including the <em>http://</em> or <em>https://</em> prefix. This domain needs to point back to this site, or existing oEmbed content may not display correctly, or at all.'),
     ];
 
@@ -127,7 +127,7 @@ class MediaSettingsForm extends ConfigFormBase {
    * @return string|null
    *   The given string, or NULL if it was empty.
    */
-  public function nullIfEmptyString(?string $value): ?string {
+  public static function nullIfEmptyString(?string $value): ?string {
     return $value ?: NULL;
   }
 

@@ -35,7 +35,7 @@ class BookSettingsForm extends ConfigFormBase {
     $form['book_allowed_types'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Content types allowed in book outlines'),
-      '#config_target' => ConfigTarget::create('book.settings:allowed_types', toConfig: '::filterAndSortAllowedTypes'),
+      '#config_target' => ConfigTarget::create('book.settings:allowed_types', toConfig: static::class . '::filterAndSortAllowedTypes'),
       '#options' => $types,
       '#description' => $this->t('Users with the %outline-perm permission can add all content types.', ['%outline-perm' => $this->t('Administer book outlines')]),
       '#required' => TRUE,
@@ -72,7 +72,7 @@ class BookSettingsForm extends ConfigFormBase {
    * @return array
    *   The transformed value.
    */
-  public function filterAndSortAllowedTypes(array $allowed_types): array {
+  public static function filterAndSortAllowedTypes(array $allowed_types): array {
     $allowed_types = array_filter($allowed_types);
     // We need to save the allowed types in an array ordered by machine_name so
     // that we can save them in the correct order if node type changes.

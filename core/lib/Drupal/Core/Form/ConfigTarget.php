@@ -35,11 +35,11 @@ final class ConfigTarget {
    *   `system.site`.
    * @param string $propertyPath
    *   The property path being read or written, e.g., `page.front`.
-   * @param array|string|null $fromConfig
+   * @param string|null $fromConfig
    *   (optional) A callback which should transform the value loaded from
    *   config before it gets displayed by the form. If NULL, no transformation
    *   will be done. Defaults to NULL.
-   * @param array|string|null $toConfig
+   * @param string|null $toConfig
    *   (optional) A callback which should transform the value submitted by the
    *   form before it is set in the config object. If NULL, no transformation
    *   will be done. Defaults to NULL.
@@ -47,9 +47,16 @@ final class ConfigTarget {
   private function __construct(
     public readonly string $configName,
     public readonly string $propertyPath,
-    public readonly array|string|null $fromConfig = NULL,
-    public readonly array|string|null $toConfig = NULL,
-  ) {}
+    public readonly ?string $fromConfig = NULL,
+    public readonly ?string $toConfig = NULL,
+  ) {
+    if ($fromConfig) {
+      assert(is_callable($fromConfig));
+    }
+    if ($toConfig) {
+      assert(is_callable($toConfig));
+    }
+  }
 
   /**
    * Creates a ConfigTarget object.

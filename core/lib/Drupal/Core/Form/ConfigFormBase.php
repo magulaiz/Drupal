@@ -86,13 +86,11 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @param array $element
    *   The form element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
    *
    * @return array
    *   The form element, with its default value populated.
    */
-  public function loadDefaultValuesFromConfig(array $element, FormStateInterface $form_state): array {
+  public function loadDefaultValuesFromConfig(array $element): array {
     if (array_key_exists('#config_target', $element) && !array_key_exists('#default_value', $element)) {
       if (is_string($element['#config_target'])) {
         $element['#config_target'] = ConfigTarget::create($element['#config_target']);
@@ -100,14 +98,13 @@ abstract class ConfigFormBase extends FormBase {
       $target = $element['#config_target'];
       $value = $this->config($target->configName)->get($target->propertyPath);
       if ($target->fromConfig) {
-        $callback = $form_state->prepareCallback($target->fromConfig);
-        $value = $callback($value);
+        $value = call_user_func($target->fromConfig, $value);
       }
       $element['#default_value'] = $value;
     }
 
     foreach (Element::children($element) as $key) {
-      $element[$key] = $this->loadDefaultValuesFromConfig($element[$key], $form_state);
+      $element[$key] = $this->loadDefaultValuesFromConfig($element[$key]);
     }
     return $element;
   }
@@ -305,8 +302,7 @@ abstract class ConfigFormBase extends FormBase {
       if ($target->configName === $config->getName()) {
         $value = $form_state->getValue($target->elementParents);
         if ($target->toConfig) {
-          $callback = $form_state->prepareCallback($target->toConfig);
-          $value = $callback($value);
+          $value = call_user_func($target->toConfig, $value);
         }
         $config->set($target->propertyPath, $value);
       }
