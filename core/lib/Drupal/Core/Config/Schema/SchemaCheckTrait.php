@@ -1211,6 +1211,9 @@ trait SchemaCheckTrait {
       'display.default.display_options.cache_metadata' => [
         "'cacheable' is a required key.",
       ],
+      'display.*.display_options.tab_options' => [
+        "'menu_name' is a required key."
+      ],
       'display.*.cache_metadata' => [
         "'cacheable' is a required key.",
         "'max-age' is a required key.",
