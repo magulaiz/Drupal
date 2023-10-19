@@ -651,6 +651,8 @@ trait SchemaCheckTrait {
         "'expose_sort_order' is a required key.",
         "'sort_asc_label' is a required key.",
         "'sort_desc_label' is a required key.",
+        "'text_input_required_format' is a conditionally required key because display\..*\.display_options\.exposed_form\.type is input_required \(see config schema type views.exposed_form.input_required\).",
+        "'text_input_required' is a conditionally required key because display\..*\.display_options\.exposed_form\.type is input_required \(see config schema type views.exposed_form.input_required\).",
       ],
       'display.*.display_options.pager' => [
         "'type' is a required key.",
