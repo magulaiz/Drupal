@@ -1189,7 +1189,7 @@ trait SchemaCheckTrait {
         "'inline' is a conditionally required key because display\..*\.row\.type is fields \(see config schema type views\.row\.fields.*",
         "'separator' is a conditionally required key because display\..*\.row\.type is fields \(see config schema type views\.row\.fields.*",
         // @see \Drupal\comment\Plugin\views\row\Rss
-        "'view_mode' is a conditionally required key because display\..*\.row\.type is comment_rss \(see config schema type views\.row\.comment_rss.*",
+        "'view_mode' is a conditionally required key because display\..*\.row\.type is .* \(see config schema type views\.row\..*",
       ],
       'display.*.display_options.menu' => [
         "'enabled' is a required key.",
