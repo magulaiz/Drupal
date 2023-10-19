@@ -50,7 +50,7 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
       foreach ($entity_view_display->getSections() as $section) {
         foreach ($section->getComponents() as $component) {
           if (str_starts_with($component->getPluginId(), 'field_block:')) {
-            $configuration = $component->get('configuration');
+            $configuration = $component->getConfiguration();
             $formatter =& $configuration['formatter'];
             if ($formatter && isset($formatter['type'])) {
               $plugin_definition = $field_formatter_manager->getDefinition($formatter['type'], FALSE);
