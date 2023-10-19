@@ -57,10 +57,12 @@ class InfoParserDynamic implements InfoParserInterface {
     }
 
     // If Drupal core is on a development version, be lenient and allow contrib
-    // and custom extensions to be enabled. This is needed because these
-    // extensions' core_version_requirement will typically not include the
-    // latest development version of core. We assume that the developer knows
-    // what they are doing if they are on a development version of core.
+    // and custom extensions to be enabled. We assume that the developer knows
+    // what they are doing if they are on a development version of core. This is
+    // needed because these extensions' core_version_requirement will typically
+    // not include the latest development version of core. We skip core modules,
+    // because there are test modules which specifically should show as not
+    // being compatible.
     if (str_ends_with(\Drupal::VERSION, '-dev') && !str_starts_with($filename, 'core/') && !str_contains($parsed_info['core_version_requirement'], \Drupal::VERSION)) {
       $parsed_info['core_version_requirement'] .= ' || ' . \Drupal::VERSION;
     }
