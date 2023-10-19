@@ -137,7 +137,7 @@ class Cron implements CronInterface {
   /**
    * {@inheritdoc}
    */
-  public function run(): bool {
+  public function run() {
     // Allow execution to continue even if the request gets cancelled.
     @ignore_user_abort(TRUE);
 
