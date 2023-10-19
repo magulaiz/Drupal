@@ -29,11 +29,11 @@ class SettingsFormTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/services/jsonapi');
 
     $page = $this->getSession()->getPage();
-    $page->selectFieldOption('read_only', 0);
+    $page->selectFieldOption('read_only', 'rw');
     $page->pressButton('Save configuration');
     $this->assertFalse($this->config('jsonapi.settings')->get('read_only'));
 
-    $page->selectFieldOption('read_only', 1);
+    $page->selectFieldOption('read_only', 'r');
     $page->pressButton('Save configuration');
     $this->container->get('config.factory')->clearStaticCache();
     $this->assertTrue($this->config('jsonapi.settings')->get('read_only'));
