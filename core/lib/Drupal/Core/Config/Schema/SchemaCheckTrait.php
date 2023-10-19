@@ -306,6 +306,27 @@ trait SchemaCheckTrait {
         "'path' is a required key.",
       ],
     ],
+    'test_theme_settings_features.settings' => [
+      '' => [
+        "'logo' is a required key.",
+        "'favicon' is a required key."
+      ],
+      'favicon' => [
+        "'mimetype' is a required key.",
+        "'path' is a required key.",
+        "'url' is a required key.",
+      ],
+      'features' => [
+        "'slogan' is a required key.",
+        "'name' is a required key.",
+        "'logo' is a required key.",
+        "'favicon' is a required key.",
+      ],
+      'logo' => [
+        "'url' is a required key.",
+        "'path' is a required key.",
+      ],
+    ],
     'test_theme_settings.settings' => [
       'favicon' => [
         "'mimetype' is a required key.",
