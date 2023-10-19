@@ -5,8 +5,6 @@
  * even if the active theme is not Claro.
  */
 
- @import "../base/variables.pcss.css";
-
 .toolbar {
   font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
   /* Set base font size to 13px based on root ems. */
