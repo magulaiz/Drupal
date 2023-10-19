@@ -1081,9 +1081,12 @@ trait SchemaCheckTrait {
         "'plugin_id' is a required key.",
         // @see \Drupal\views\Plugin\views\filter\Date
         // @see \Drupal\datetime\Plugin\views\filter\Date (inherited)
-        "'type' is a conditionally required key because display\..*\.filters\..*\.plugin_id is (date|datetime) \(see config schema type views\.filter\..*",
+        "'type' is a conditionally required key because display\..*\.filters\..*\.plugin_id is .* \(see config schema type views\.filter\..*",
         // @see \Drupal\user\Plugin\views\filter\Roles
-        "'reduce_duplicates' is a conditionally required key because display\..*\.filters\..*\.plugin_id is user_roles \(see config schema type views\.filter\.user_roles.*",
+        "'reduce_duplicates' is a conditionally required key because display\..*\.filters\..*\.plugin_id is .* \(see config schema type views\.filter\..*",
+        "'hierarchy' is a conditionally required key because display\..*\.filters\..*\.plugin_id is .* \(see config schema type views\.filter\..*",
+        "'limit' is a conditionally required key because display\..*\.filters\..*\.plugin_id is .* \(see config schema type views\.filter\..*",
+        "'error_message' is a conditionally required key because display\..*\.filters\..*\.plugin_id is .* \(see config schema type views\.filter\..*",
       ],
       'display.*.display_options.filters.*.group_info' => [
         "'default_group_multiple' is a required key.",
