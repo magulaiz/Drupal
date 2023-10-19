@@ -973,7 +973,9 @@ trait SchemaCheckTrait {
         "'separator' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
         "'settings' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name) \(see config schema type views\.field\..*",
         "'type' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name|boolean) \(see config schema type views\.field\..*",
+        "'type_custom_false' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name|boolean) \(see config schema type views\.field\..*",
         "'type_custom_true' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name|boolean) \(see config schema type views\.field\..*",
+        "'not' is a conditionally required key because display\..*\.fields\..*\.plugin_id is (field|term_name|boolean) \(see config schema type views\.field\..*",
         // @see \Drupal\views\Plugin\views\field\EntityLink
         // @see \Drupal\views\Plugin\views\field\EntityLinkDelete (inherited)
         // @see \Drupal\views\Plugin\views\field\EntityLinkEdit (inherited)
