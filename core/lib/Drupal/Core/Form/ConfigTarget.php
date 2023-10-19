@@ -56,7 +56,9 @@ final class ConfigTarget {
     // callables in order to guarantee that this object can be serialized as
     // part of a larger form array. If these could be arrays, then they could be
     // in the form of [$object, 'method'], which would break serialization if
-    // $object was not serializable.
+    // $object was not serializable. This is also why we don't type hint these
+    // parameters as ?callable, since that would allow closures (which can't
+    // be serialized).
     if ($fromConfig) {
       assert(is_callable($fromConfig));
     }
