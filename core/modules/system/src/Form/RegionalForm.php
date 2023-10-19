@@ -5,6 +5,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -105,7 +106,11 @@ class RegionalForm extends ConfigFormBase {
     $form['timezone']['date_default_timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
-      '#default_value' => $system_date->get('timezone.default') ?: date_default_timezone_get(),
+      '#config_target' => new ConfigTarget(
+        'system.date',
+        'timezone.default',
+        static::class . '::loadDefaultTimeZone',
+      ),
       '#options' => $zones,
     ];
 
@@ -113,14 +118,16 @@ class RegionalForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Prepares the saved timezone.default property to be displayed in the form.
+   *
+   * @param string $value
+   *   The value saved in config.
+   *
+   * @return string
+   *   The value of the form element.
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.date')
-      ->set('timezone.default', $form_state->getValue('date_default_timezone'))
-      ->save();
-
-    parent::submitForm($form, $form_state);
+  public static function loadDefaultTimeZone(string $value): string {
+    return $value ?: date_default_timezone_get();
   }
 
 }
