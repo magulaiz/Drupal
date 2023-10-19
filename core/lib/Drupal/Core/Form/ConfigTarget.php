@@ -52,6 +52,11 @@ final class ConfigTarget {
     public readonly ?string $fromConfig = NULL,
     public readonly ?string $toConfig = NULL,
   ) {
+    // If they're passed at all, $fromConfig and $toConfig need to be string
+    // callables in order to guarantee that this object can be serialized as
+    // part of a larger form array. If these could be arrays, then they could be
+    // in the form of [$object, 'method'], which would break serialization if
+    // $object was not serializable.
     if ($fromConfig) {
       assert(is_callable($fromConfig));
     }
