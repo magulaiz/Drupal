@@ -618,17 +618,16 @@ trait SchemaCheckTrait {
         "'displays' is a conditionally required key because display\..*\.display_plugin is feed \(see config schema type views\.display\.feed.*",
         "'sitename_title' is a conditionally required key because display\..*\.display_plugin is feed \(see config schema type views\.display\.feed.*",
         // @see \Drupal\views\Plugin\views\display\Page
-        "'menu' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
-        "'tab_options' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
-        "'use_admin_theme' is a conditionally required key because display\..*\.display_plugin is page \(see config schema type views\.display\.page.*",
+        "'menu' is a conditionally required key because display\..*\.display_plugin is (page|invalid) \(see config schema type views\.display\..*",
+        "'tab_options' is a conditionally required key because display\..*\.display_plugin is (page|invalid) \(see config schema type views\.display\..*",
+        "'use_admin_theme' is a conditionally required key because display\..*\.display_plugin is (page|invalid) \(see config schema type views\.display\..*",
         // @see \Drupal\views\Plugin\views\display\PathPluginBase
         // @see \Drupal\views\Plugin\views\display\Feed (inherited)
         // @see \Drupal\views\Plugin\views\display\Page (inherited)
         // @see \Drupal\rest\Plugin\views\display\RestExport (inherited)
-        "'path' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export) \(see config schema type views\.display\..*",
-        "'route_name' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export) \(see config schema type views\.display\..*",
-        "'test_option' is a conditionally required key because display\..*\.display_plugin is display_no_area_test \(see config schema type views.display.display_no_area_test\).",
-        "'test_option' is a conditionally required key because display\..*\.display_plugin is display_test \(see config schema type views.display.display_test\).",
+        "'path' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export|invalid) \(see config schema type views\.display\..*",
+        "'route_name' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export|invalid) \(see config schema type views\.display\..*",
+        "'test_option' is a conditionally required key because display\..*\.display_plugin is display_.* \(see config schema type views.display.*",
       ],
       'display.*.display_options.cache' => [
         // @see \Drupal\views\Plugin\views\cache\Tag
