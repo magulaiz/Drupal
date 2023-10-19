@@ -30,10 +30,10 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    *
    * @var int
    *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
    * EntityViewBuilder #pre_render and #post_render callbacks prevent recursion.
    *
-   * @see https://www.drupal.org/node/2940605
+   * @see https://www.drupal.org/node/3316878
    * @see \Drupal\Core\Entity\EntityViewBuilder::getBuildDefaults()
    */
   const RECURSIVE_RENDER_LIMIT = 20;
@@ -69,10 +69,11 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    *
    * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::viewElements()
    *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0.
-   * Use #recursion_keys in render arrays to prevent recursion.
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
+   * EntityViewBuilder #pre_render and #post_render callbacks prevent recursion.
    *
-   * @see https://www.drupal.org/node/2940605
+   * @see https://www.drupal.org/node/3316878
+   * @see \Drupal\Core\Entity\EntityViewBuilder::getBuildDefaults()
    */
   protected static $recursiveRenderDepth = [];
 
