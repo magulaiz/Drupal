@@ -114,10 +114,8 @@ abstract class ConfigFormBase extends FormBase {
    * After-build callback which stores a map of element names to config keys.
    *
    * This will store an array in the form state whose keys are strings in the
-   * form of `CONFIG_NAME:PROPERTY_PATH`, and whose values are arrays containing
-   * the results of ::unpackConfigTarget(), plus the following:
-   * - 'name': The #name property of the relevant form element.
-   * - 'parents': The #parents property of the relevant form element.
+   * form of `CONFIG_NAME:PROPERTY_PATH`, and whose values are instances of
+   * \Drupal\Core\Form\ConfigTarget.
    *
    * This callback is run in the form's #after_build stage, rather than
    * #process, to guarantee that all of the form's elements have their final
@@ -130,8 +128,6 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @return array
    *   The processed element.
-   *
-   * @see ::unpackConfigTarget()
    */
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
     if (array_key_exists('#config_target', $element)) {
@@ -280,10 +276,6 @@ abstract class ConfigFormBase extends FormBase {
    * This should not change existing Config key-value pairs that are not being
    * edited by this form.
    *
-   * Generally, the only reason to override this method is if a form value needs
-   * to be transformed in a way that cannot be done by a bidirectional
-   * transformation callback specified by the #config_target property.
-   *
    * @param \Drupal\Core\Config\Config $config
    *   The configuration being edited.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -291,7 +283,7 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
+  private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP);
     // If there's no map of config keys to form elements, this form does not
     // yet support config validation.
