@@ -139,6 +139,7 @@ checkboxifier
 checkboxify
 checkboxradio
 chocolatiers
+chotchkies
 chromedriver
 chtext
 chumillas
@@ -396,6 +397,7 @@ imagecreatefrom
 imagetextalternative
 indexname
 inited
+initech
 inno
 instaclick
 instantiator
@@ -464,6 +466,7 @@ lowline
 lrdd
 lstitle
 ltitle
+lumbergh
 lzma
 lzop
 macbinary
@@ -1021,6 +1024,7 @@ vfsstream
 viewmode
 viewports
 vocabs
+waddams
 wcag
 wcprops
 webassert
