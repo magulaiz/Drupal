@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types)
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\block\Entity\Block;
@@ -146,7 +147,7 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
     $this->assertSame(
       [
-        "'use_site_name' is a conditionally required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
+        "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
       ],
       array_map(
         fn (ConstraintViolation $v) => (string) $v->getMessage(),
@@ -178,7 +179,7 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
       [
         "'use_site_logo' is an extraneous key because plugin is system_powered_by_block (see config schema type block.settings.*).",
         "'use_site_name' is an extraneous key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-        "'use_site_slogan' is an extraneous key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+        "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
       ],
       array_map(
         fn (ConstraintViolation $v) => (string) $v->getMessage(),
