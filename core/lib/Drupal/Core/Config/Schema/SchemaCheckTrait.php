@@ -229,6 +229,10 @@ trait SchemaCheckTrait {
         "'fragment' is a required key.",
         "'absolute' is a required key.",
         "'https' is a required key.",
+        "'attributes' is a required key.",
+      ],
+      'default_value.*.attributes' => [
+        "'title' is a required key.",
       ],
     ],
     'field.storage.*.*' => [
@@ -309,7 +313,7 @@ trait SchemaCheckTrait {
     'test_theme_settings_features.settings' => [
       '' => [
         "'logo' is a required key.",
-        "'favicon' is a required key."
+        "'favicon' is a required key.",
       ],
       'favicon' => [
         "'mimetype' is a required key.",
