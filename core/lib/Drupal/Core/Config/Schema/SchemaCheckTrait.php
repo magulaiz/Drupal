@@ -627,6 +627,7 @@ trait SchemaCheckTrait {
         // @see \Drupal\rest\Plugin\views\display\RestExport (inherited)
         "'path' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export) \(see config schema type views\.display\..*",
         "'route_name' is a conditionally required key because display\..*\.display_plugin is (feed|page|rest_export) \(see config schema type views\.display\..*",
+        "'test_option' is a conditionally required key because display\..*\.display_plugin is display_no_area_test \(see config schema type views.display.display_no_area_test\).",
       ],
       'display.*.display_options.cache' => [
         // @see \Drupal\views\Plugin\views\cache\Tag
