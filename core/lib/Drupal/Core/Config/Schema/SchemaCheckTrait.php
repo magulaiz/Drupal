@@ -94,6 +94,9 @@ trait SchemaCheckTrait {
         "'sort' is a conditionally required key because settings\.handler is default \(see config schema type entity_reference_selection\.default.*",
         "'target_bundles' is a conditionally required key because settings\.handler is default \(see config schema type entity_reference_selection\.default.*",
       ],
+      'default_value.*' => [
+        "'target_uuid' is a conditionally required key because field_type is entity_reference \(see config schema type field.value.entity_reference\).",
+      ],
     ],
     'core.entity_form_display.*.*.*' => [
       'content.*' => [
