@@ -4,7 +4,6 @@
  * If Claro is the admin theme, this stylesheet will be used by the active theme
  * even if the active theme is not Claro.
  */
-
 .toolbar {
   font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
   /* Set base font size to 13px based on root ems. */
