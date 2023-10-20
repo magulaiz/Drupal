@@ -20,6 +20,8 @@ olivero.settings:
       label: 'Mobile menu all widths'
       constraints:
         Choice:
+          # @see olivero_preprocess_html()
+          # Set to 1 to enable the mobile menu toggle at all widths.
           choices:
             - 0
             - 1
@@ -28,6 +30,7 @@ olivero.settings:
       label: 'Site branding background color'
       constraints:
         Choice:
+          # @see olivero_form_system_theme_settings_alter()
           choices:
             - "default"
             - "gray"
