@@ -770,7 +770,7 @@ class ConfigImporterTest extends KernelTestBase {
       $expected = static::FAIL_MESSAGE . PHP_EOL . 'Cannot change the install profile from <em class="placeholder">minimal</em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.';
       $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $config_importer->getErrors();
-      $this->assertEquals(['Cannot change the install profile from <em class="placeholder">minimal</em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
+      $this->assertEquals(['Cannot change the install profile from minimal to this_will_not_work once Drupal is installed.'], $error_log);
     }
   }
 
