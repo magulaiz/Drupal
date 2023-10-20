@@ -202,10 +202,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
-    // Ensure the filters have been sorted before saving.
-    $this->filters()->sort();
-
     parent::preSave($storage);
+    // Ensure the filters have been sorted before saving.
+    ksort($this->filters);
 
     assert(is_string($this->label()), 'Filter format label is expected to be a string.');
     $this->name = trim($this->label());
