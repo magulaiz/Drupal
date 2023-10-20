@@ -18,6 +18,11 @@ olivero.settings:
     mobile_menu_all_widths:
       type: integer
       label: 'Mobile menu all widths'
+      constraints:
+        Choice:
+          choices:
+            - 0
+            - 1
     site_branding_bg_color:
       type: string
       label: 'Site branding background color'
