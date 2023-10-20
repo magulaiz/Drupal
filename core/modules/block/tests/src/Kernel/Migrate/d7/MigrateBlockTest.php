@@ -109,7 +109,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     $this->assertSame($label_display, $config->get('settings.label_display'));
   }
 
-  /**9
+  /**
    * Tests the block migration.
    */
   public function testBlockMigration() {
@@ -124,7 +124,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     // mildly amusing limerick. We'll need its UUID to determine
     // bartik_block_1's plugin ID.
     $uuid = BlockContent::load(1)->uuid();
-    $this->assertEntity('bartik_block_1', 'block_content:' . $uuid, ['authenticated'], '', 'content', 'olivero', 0, 'Mildly amusing limerick of the day', true);
+    $this->assertEntity('bartik_block_1', 'block_content:' . $uuid, ['authenticated'], '', 'content', 'olivero', 0, 'Mildly amusing limerick of the day', TRUE);
 
     // Assert that disabled blocks (or enabled blocks whose plugin IDs could
     // be resolved) did not migrate.
