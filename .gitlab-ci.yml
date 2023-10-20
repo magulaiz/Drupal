@@ -43,7 +43,7 @@ include:
 
 variables:
   _TARGET_PHP: "8.1"
-  CONCURRENCY: 32
+  CONCURRENCY: 24
   GIT_DEPTH: "3"
 
 ################
