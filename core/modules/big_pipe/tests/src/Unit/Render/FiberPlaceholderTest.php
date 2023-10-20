@@ -5,10 +5,14 @@ namespace Drupal\Tests\big_pipe\Unit\Render;
 use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\HtmlResponse;
+use Drupal\Core\Render\PlaceholderGeneratorInterface;
+use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,11 +37,11 @@ class FiberPlaceholderTest extends UnitTestCase {
       ->willReturn(new Request());
 
     $renderer = new Renderer(
-      $this->prophesize('\Drupal\Core\Controller\ControllerResolverInterface')->reveal(),
-      $this->prophesize('\Drupal\Core\Theme\ThemeManagerInterface')->reveal(),
+      $this->prophesize(ControllerResolverInterface::class)->reveal(),
+      $this->prophesize(ThemeManagerInterface::class)->reveal(),
       $this->prophesize(ElementInfoManagerInterface::class)->reveal(),
-      $this->prophesize('\Drupal\Core\Render\PlaceholderGeneratorInterface')->reveal(),
-      $this->prophesize('\Drupal\Core\Render\RenderCacheInterface')->reveal(),
+      $this->prophesize(PlaceholderGeneratorInterface::class)->reveal(),
+      $this->prophesize(RenderCacheInterface::class)->reveal(),
       $request_stack->reveal(),
       [
         'required_cache_contexts' => [
