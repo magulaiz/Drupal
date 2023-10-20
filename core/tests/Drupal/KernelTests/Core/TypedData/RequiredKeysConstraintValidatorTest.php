@@ -129,7 +129,7 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests RequiredKeys detecting missing required keys.
    *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$conditionalMessage
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$dynamicMessage
    */
   public function testConditionallyRequiredKeys(): void {
     // Start from the valid config.

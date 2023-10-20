@@ -94,17 +94,17 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Gets all conditionally valid keys.
+   * Gets all dynamically valid keys.
    *
    * (When the `type` of the mapping is dynamic itself.)
    *
-   * @return string[]
-   *   A list of conditionally optional keys. An array with:
+   * @return string[][]
+   *   A list of dynamically valid keys. An array with:
    *   - a key for every possible resolved type
    *   - the corresponding value an array of the additional mapping keys that
    *     are supported for this resolved type
    */
-  public function getConditionallyValidKeys(): array {
+  public function getDynamicallyValidKeys(): array {
     if ($this->getParent() === NULL) {
       return [];
     }
@@ -130,9 +130,9 @@ class Mapping extends ArrayElement {
     // When using dynamic typing, the type names contain variable values. These
     // refer to nested configuration keys (that will be replaced by their value)
     // or the special strings '%key', '%parent' or '%type'.
-    // When only those special strings are used, then no conditionality exists:
-    // only if a non-special string is used, will any other configuration key's
-    // value actually be used to determine the type.
+    // When only those special strings are used, then no dynamism exists: only
+    // if a non-special string is used, will any other configuration key's value
+    // actually be used to determine the type.
     // Explained by examples:
     // - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no
     //   stored somewhere: the chosen key (in a sequence) determines the type.
@@ -213,14 +213,14 @@ class Mapping extends ArrayElement {
     if (count($valid_keys_everywhere) > 1) {
       // @todo BROKEN! Fix this in \Drupal\Core\Config\TypedConfigManager::getPossibleTypes()
     }
-    $unconditional_keys = NestedArray::mergeDeepArray($valid_keys_everywhere);
+    $statically_required_keys = NestedArray::mergeDeepArray($valid_keys_everywhere);
 
-    // Now that unconditionally valid keys are known, determine which valid keys
-    // are only valid in some cases: filter away the unconditional keys that are
+    // Now that statically valid keys are known, determine which valid keys are
+    // only valid in some cases: filter away the statically valid keys that are
     // present in each per-type array of valid keys.
     $valid_keys_some = array_diff_key($valid_keys_per_type, $valid_keys_everywhere);
     $valid_keys_some_processed = array_map(
-      fn (array $keys) => array_filter($keys, fn (string $key) => !in_array($key, $unconditional_keys, TRUE)),
+      fn (array $keys) => array_filter($keys, fn (string $key) => !in_array($key, $statically_required_keys, TRUE)),
       $valid_keys_some
     );
     return $valid_keys_some_processed;

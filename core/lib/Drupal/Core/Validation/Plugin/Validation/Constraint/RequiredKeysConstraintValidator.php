@@ -34,20 +34,20 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
     $mapping = $this->context->getObject();
     assert($mapping instanceof Mapping);
     $required_keys = $mapping->getRequiredKeys();
-    $conditionally_valid_keys = array_merge(...array_values($mapping->getConditionallyValidKeys()));
+    $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
 
     // Unconditionally required: required here and not conditionally valid.
-    $unconditional = array_diff($required_keys, $conditionally_valid_keys);
-    $missing_keys = array_diff($unconditional, array_keys($value));
+    $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
+    $missing_keys = array_diff($statically_required_keys, array_keys($value));
     foreach ($missing_keys as $key) {
       $this->context->addViolation($constraint->message, ['@key' => $key]);
     }
 
     // Conditionally required: required here and conditionally valid.
-    $conditional = array_intersect($required_keys, $conditionally_valid_keys);
+    $conditional = array_intersect($required_keys, $dynamically_valid_keys);
     $missing_conditional_keys = array_diff($conditional, array_keys($value));
     foreach ($missing_conditional_keys as $key) {
-      $this->context->addViolation($constraint->conditionalMessage, ['@key' => $key] + self::getConditionalMessageParameters($mapping));
+      $this->context->addViolation($constraint->dynamicMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
     }
   }
 
@@ -66,7 +66,7 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
    *
    * @todo Figure out how to share this with ValidKeysConstraintValidator. Trait? New utility class? Or maybe Mapping itself?
    */
-  public static function getConditionalMessageParameters(Mapping $mapping): array {
+  public static function getDynamicMessageParameters(Mapping $mapping): array {
     $definition = $mapping->getDataDefinition();
     assert($definition instanceof MapDataDefinition);
     $definition = $definition->toArray();
@@ -113,7 +113,7 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
     // this type.
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
     $property_path_parts = explode('.', $property_path_mapping);
-    // @see \Drupal\Core\Config\Schema\Mapping::getConditionallyValidKeys()
+    // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
     assert(!in_array(['%key', '%type'], $instructions));
     // Do not replace variables, do not traverse the tree of data, but instead
     // resolve the property path that contains the value causing this particular
@@ -131,7 +131,7 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
     }
     $resolved_property_path = implode('.', $property_path_parts);
     $message_parameters += [
-      '@condition_property_path' => $resolved_property_path,
+      '@dynamic_type_property_path' => $resolved_property_path,
     ];
 
     // Determine the corresponding value for that property path.
@@ -139,7 +139,7 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
     $val = is_bool($val) ? (int) $val : $val;
     return $message_parameters + [
-      '@condition_property_value' => $val,
+      '@dynamic_type_property_value' => $val,
     ];
   }
 

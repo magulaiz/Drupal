@@ -36,19 +36,19 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       $mapping = $this->context->getObject();
       assert($mapping instanceof Mapping);
       $valid_keys = $mapping->getValidKeys();
-      $conditionally_valid_keys = array_merge(...array_values($mapping->getConditionallyValidKeys()));
-      $other_type_valid_keys = array_diff($conditionally_valid_keys, $valid_keys);
+      $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
+      $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
 
-      // Unconditionally valid: valid here and not conditionally valid.
+      // Statically valid: valid here and not dynamically valid.
       $invalid_keys = array_diff(array_keys($value), $valid_keys, $other_type_valid_keys);
       foreach ($invalid_keys as $key) {
         $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
       }
 
-      // Conditionally valid: not valid here but valid elsewhere.
+      // Dynamically valid: not valid here but valid elsewhere.
       $dynamic_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
       foreach ($dynamic_invalid_keys as $key) {
-        $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + RequiredKeysConstraintValidator::getConditionalMessageParameters($mapping));
+        $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + RequiredKeysConstraintValidator::getDynamicMessageParameters($mapping));
       }
     }
     elseif (is_array($constraint->allowedKeys)) {

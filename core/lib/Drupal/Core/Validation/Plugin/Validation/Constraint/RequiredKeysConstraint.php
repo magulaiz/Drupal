@@ -28,14 +28,14 @@ class RequiredKeysConstraint extends Constraint {
    *
    * @var string
    */
-  public string $conditionalMessage = "'@key' is a required key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $dynamicMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * The error message if a key is unknown.
    *
    * @var string
    */
-  public string $unknownMessage = "'@key' is an unknown key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $unknownMessage = "'@key' is an unknown key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * Keys which are required — only `<infer>` supported currently.
