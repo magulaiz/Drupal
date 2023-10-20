@@ -643,7 +643,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   }
 
   /**
-   *  Test the autocomplete attribute is present.
+   * Test the autocomplete attribute is present.
    */
   public function testResetFormHasAutocompleteAttribute() {
     $this->drupalGet('user/password');
