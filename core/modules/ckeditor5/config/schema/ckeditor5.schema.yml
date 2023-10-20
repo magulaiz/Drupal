@@ -133,6 +133,11 @@ ckeditor5.plugin.ckeditor5_list:
       label: 'Allow start index'
       constraints:
         NotNull: []
+    styles:
+      type: boolean
+      label: 'Allow style'
+      constraints:
+        NotNull: [ ]
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
 ckeditor5.plugin.media_media:

@@ -25,7 +25,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['reversed' => TRUE, 'startIndex' => TRUE];
+    return ['reversed' => TRUE, 'startIndex' => TRUE, 'styles' => TRUE];
   }
 
   /**
@@ -42,6 +42,11 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
       '#title' => $this->t('Allow the user to specify the start index of an ordered list'),
       '#default_value' => $this->configuration['startIndex'],
     ];
+    $form['styles'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow the user to use style attribute'),
+      '#default_value' => $this->configuration['styles'],
+    ];
 
     return $form;
   }
@@ -54,6 +59,8 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
     $form_state->setValue('reversed', (bool) $form_value);
     $form_value = $form_state->getValue('startIndex');
     $form_state->setValue('startIndex', (bool) $form_value);
+    $form_value = $form_state->getValue('styles');
+    $form_state->setValue('styles', (bool) $form_value);
   }
 
   /**
@@ -62,6 +69,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['reversed'] = $form_state->getValue('reversed');
     $this->configuration['startIndex'] = $form_state->getValue('startIndex');
+    $this->configuration['styles'] = $form_state->getValue('styles');
   }
 
   /**
@@ -72,6 +80,28 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
       $static_plugin_config['list']['properties'],
       $this->getConfiguration()
     );
+
+    // Add proper configuration to use type attribute based list styles on ul
+    // and ol elements.
+    if ($this->configuration["styles"]) {
+      $static_plugin_config["list"]["properties"]["styles"] = [];
+      $static_plugin_config["list"]["properties"]["styles"]['useAttribute'] = TRUE;
+      $static_plugin_config['list']['allow'] = [
+        [
+          'name' => 'ul',
+          'attributes' => ['type' => TRUE],
+          'classes' => TRUE,
+          'styles' => TRUE,
+        ],
+        [
+          'name' => 'ol',
+          'attributes' => ['type' => TRUE],
+          'classes' => TRUE,
+          'styles' => TRUE,
+        ],
+      ];
+    }
+
     return $static_plugin_config;
   }
 

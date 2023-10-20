@@ -200,6 +200,9 @@ ol {
   margin-block: 0.25em;
   margin-inline: 2em 0;
   padding: 0;
+}
+
+ol:not([type]) {
   list-style-type: decimal;
 }
 
