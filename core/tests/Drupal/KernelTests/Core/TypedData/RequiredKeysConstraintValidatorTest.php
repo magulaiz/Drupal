@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types)
+declare(strict_types = 1);
+
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\block\Entity\Block;
@@ -126,7 +127,7 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests RequiredKeys detecting missing conditionally required keys.
+   * Tests RequiredKeys detecting missing required keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$conditionalMessage
    */
@@ -141,7 +142,7 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
       ->createFromNameAndData('block.block.branding', $data);
 
     // Now 1 validation error should be triggered: one for the missing
-    // conditionally required key. It is only conditionally required because not
+    // required key. It is only conditionally required because not
     // all block plugins support this key in their configuration.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
@@ -157,9 +158,9 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests RequiredKeys constraint validator detecting extraneous keys.
+   * Tests RequiredKeys constraint validator detecting unknown keys.
    *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$extraneousMessage
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\RequiredKeysConstraint::$unknownMessage
    */
   public function testExtraneousKeys(): void {
     // Start from the valid config.
@@ -177,8 +178,8 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
     $this->assertSame(
       [
-        "'use_site_logo' is an extraneous key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-        "'use_site_name' is an extraneous key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+        "'use_site_logo' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+        "'use_site_name' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
         "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
       ],
       array_map(

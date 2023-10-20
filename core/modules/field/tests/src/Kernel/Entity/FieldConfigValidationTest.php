@@ -98,8 +98,8 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     parent::testImmutableProperties($valid_values, [
       'field_type' => [
         'settings' => [
-          "'on_label' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
-          "'off_label' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'on_label' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'off_label' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
         ],
       ],
     ]);

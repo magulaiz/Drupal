@@ -38,10 +38,10 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
     parent::testImmutableProperties($valid_values, [
       'field_type' => [
         'settings' => [
-          "'min' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
-          "'max' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
-          "'prefix' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
-          "'suffix' is an extraneous key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'min' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'max' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'prefix' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
+          "'suffix' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
         ],
       ],
     ]);

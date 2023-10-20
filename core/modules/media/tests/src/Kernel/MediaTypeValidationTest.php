@@ -34,8 +34,8 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
     parent::testImmutableProperties($valid_values, [
       'source' => [
         'source_configuration' => [
-          "'source_field' is an extraneous key because source is <RANDOM> (see config schema type media.source.*).",
-          "'test_config_value' is an extraneous key because source is <RANDOM> (see config schema type media.source.*).",
+          "'source_field' is an unknown key because source is <RANDOM> (see config schema type media.source.*).",
+          "'test_config_value' is an unknown key because source is <RANDOM> (see config schema type media.source.*).",
         ],
       ],
     ]);

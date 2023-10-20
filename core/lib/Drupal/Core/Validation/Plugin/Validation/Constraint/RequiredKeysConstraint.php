@@ -24,18 +24,18 @@ class RequiredKeysConstraint extends Constraint {
   public string $message = "'@key' is a required key.";
 
   /**
-   * The error message if a conditionally required key is missing.
+   * The error message if a dynamically required key is missing.
    *
    * @var string
    */
-  public string $conditionalMessage = "'@key' is a conditionally required key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $conditionalMessage = "'@key' is a required key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
-   * The error message if a key is extraneous.
+   * The error message if a key is unknown.
    *
    * @var string
    */
-  public string $extraneousMessage = "'@key' is an extraneous key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $unknownMessage = "'@key' is an unknown key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * Keys which are required — only `<infer>` supported currently.
