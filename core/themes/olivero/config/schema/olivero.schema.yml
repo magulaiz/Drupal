@@ -21,6 +21,12 @@ olivero.settings:
     site_branding_bg_color:
       type: string
       label: 'Site branding background color'
+      constraints:
+        Choice:
+          choices:
+            - "default"
+            - "gray"
+            - "white"
     base_primary_color:
       type: color_hex
       label: 'Base Primary Color'
