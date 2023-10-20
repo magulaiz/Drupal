@@ -7,6 +7,8 @@ field.settings:
     purge_batch_size:
       type: integer
       label: 'Maximum number of field data records to purge'
+      constraints:
+        NotNull: []
 
 field.storage.*.*:
   type: config_entity
