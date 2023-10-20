@@ -12,7 +12,7 @@ weight: 0
 plugin: test_cache
 settings:
   label: 'Test HTML block'
-  label_display: visible
+  label_display: true
   provider: block_test
   status: true
   info: ''

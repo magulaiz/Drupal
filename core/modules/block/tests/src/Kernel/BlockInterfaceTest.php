@@ -73,7 +73,7 @@ class BlockInterfaceTest extends KernelTestBase {
         '#type' => 'checkbox',
         '#title' => 'Display title',
         '#default_value' => TRUE,
-        '#return_value' => 'visible',
+        '#return_value' => TRUE,
       ],
       'context_mapping' => [],
       'display_message' => [

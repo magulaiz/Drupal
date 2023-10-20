@@ -109,22 +109,22 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     $this->assertSame($label_display, $config->get('settings.label_display'));
   }
 
-  /**
+  /**9
    * Tests the block migration.
    */
   public function testBlockMigration() {
-    $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'olivero', 0, '', '0');
-    $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', '0');
-    $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', 'visible');
-    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_bottom', 'olivero', 10, '', '0');
-    $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'claro', 0, '', '0');
-    $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'claro', 10, 'User login title', 'visible');
+    $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'olivero', 0, '', FALSE);
+    $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', FALSE);
+    $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', TRUE);
+    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_bottom', 'olivero', 10, '', FALSE);
+    $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'claro', 0, '', FALSE);
+    $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'claro', 10, 'User login title', TRUE);
 
     // The d7_custom_block migration should have migrated a block containing a
     // mildly amusing limerick. We'll need its UUID to determine
     // bartik_block_1's plugin ID.
     $uuid = BlockContent::load(1)->uuid();
-    $this->assertEntity('bartik_block_1', 'block_content:' . $uuid, ['authenticated'], '', 'content', 'olivero', 0, 'Mildly amusing limerick of the day', 'visible');
+    $this->assertEntity('bartik_block_1', 'block_content:' . $uuid, ['authenticated'], '', 'content', 'olivero', 0, 'Mildly amusing limerick of the day', true);
 
     // Assert that disabled blocks (or enabled blocks whose plugin IDs could
     // be resolved) did not migrate.

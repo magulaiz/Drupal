@@ -27,7 +27,7 @@ class TestStateBasedSectionStorage extends SectionStorageBase {
     $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
       'id' => 'system_powered_by_block',
       'label' => 'Test block title',
-      'label_display' => 'visible',
+      'label_display' => TRUE,
     ]));
     return [$section];
   }

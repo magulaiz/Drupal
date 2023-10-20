@@ -123,7 +123,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
             'id' => 'broken',
             'label' => '',
             'provider' => 'core',
-            'label_display' => 'visible',
+            'label_display' => TRUE,
           ],
           'visibility' => [],
           'drupal_internal__id' => 'llama',

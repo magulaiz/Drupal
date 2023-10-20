@@ -79,7 +79,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
         $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
           'id' => 'static_block',
           'label' => 'Test static block title',
-          'label_display' => 'visible',
+          'label_display' => TRUE,
           'provider' => 'fake_provider',
         ]));
         $section_storage->appendSection($section);
@@ -112,7 +112,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
         $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
           'id' => 'static_block_two',
           'label' => 'Test second static block title',
-          'label_display' => 'visible',
+          'label_display' => TRUE,
           'provider' => 'fake_provider',
         ]));
         $section_storage->appendSection($section);

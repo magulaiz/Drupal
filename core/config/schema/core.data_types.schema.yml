@@ -377,7 +377,7 @@ block_settings:
       type: label
       label: 'Description'
     label_display:
-      type: string
+      type: boolean
       label: 'Display title'
     provider:
       type: string

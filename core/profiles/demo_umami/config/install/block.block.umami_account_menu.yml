@@ -16,7 +16,7 @@ plugin: 'system_menu_block:account'
 settings:
   id: 'system_menu_block:account'
   label: 'User account menu'
-  label_display: '0'
+  label_display: false
   provider: system
   level: 1
   depth: 1

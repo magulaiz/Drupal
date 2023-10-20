@@ -29,7 +29,7 @@ class BlockSettings extends ProcessPluginBase {
       $settings['label_display'] = BlockPluginInterface::BLOCK_LABEL_VISIBLE;
     }
     else {
-      $settings['label_display'] = '0';
+      $settings['label_display'] = FALSE;
     }
     switch ($plugin) {
       case 'aggregator_feed_block':
