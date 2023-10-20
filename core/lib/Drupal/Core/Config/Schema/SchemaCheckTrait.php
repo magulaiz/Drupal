@@ -1225,8 +1225,8 @@ trait SchemaCheckTrait {
     ],
     'views_test_data.tests' => [
       '' => [
-        "'handler_access_callback_argument' is a required key."
-      ]
+        "'handler_access_callback_argument' is a required key.",
+      ],
     ],
     'workflows.workflow.*' => [
       'type_settings' => [
