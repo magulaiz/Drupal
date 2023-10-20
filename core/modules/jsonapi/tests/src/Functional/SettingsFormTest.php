@@ -31,13 +31,14 @@ class SettingsFormTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('read_only', 0);
     $page->pressButton('Save configuration');
-    $this->assertFalse($this->config('jsonapi.settings')->get('read_only'));
+    $assert_session = $this->assertSession();
+    $assert_session->pageTextContains('The configuration options have been saved.');
+    $assert_session->fieldValueEquals('read_only', 0);
 
     $page->selectFieldOption('read_only', 1);
     $page->pressButton('Save configuration');
-    print_r($page->getContent());
-    $this->container->get('config.factory')->clearStaticCache();
-    $this->assertTrue($this->config('jsonapi.settings')->get('read_only'));
+    $assert_session->fieldValueEquals('read_only', '1');
+    $assert_session->pageTextContains('The configuration options have been saved.');
   }
 
 }
