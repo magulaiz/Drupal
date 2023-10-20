@@ -26,7 +26,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:page:body'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -41,7 +41,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'extra_field_block:node:page:links'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
             weight: 1
@@ -51,7 +51,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'extra_field_block:node:page:content_moderation_control'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
             weight: 2
