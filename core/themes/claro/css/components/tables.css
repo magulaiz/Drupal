@@ -135,18 +135,14 @@ tr:focus {
 
 tr.color-warning:hover,
 tr.color-warning:focus {
-  --table-warning-focus-color: #fdf8ed;
-
   color: var(--color-text);
-  background: var(--table-warning-focus-color);
+  background: #fdf8ed;
 }
 
 tr.color-error:hover,
 tr.color-error:focus {
-  --table-error-focus-color: #fcf4f2;
-
   color: var(--color-text);
-  background: var(--table-error-focus-color);
+  background: #fcf4f2;
 }
 
 tr,

@@ -41,11 +41,11 @@ th {
     &:focus,
     &:hover {
       text-decoration: none;
-    
+
       &::before {
         border-color: inherit;
       }
-    
+
       &::after {
         opacity: 1;
       }
@@ -74,16 +74,16 @@ th {
       opacity: 0.5;
       background: url(../../images/icons/000f33/sort--inactive--ltr.svg) no-repeat 50% 50%;
       background-size: contain;
-    
+
       @media (forced-colors: active) {
         opacity: 1;
         background: linktext;
         mask: url(../../images/icons/000f33/sort--inactive--ltr.svg) no-repeat 50% 50%;
       }
-    
+
       @nest [dir="rtl"] & {
         background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
-    
+
         @media (forced-colors: active) {
           mask: url(../../images/icons/000f33/sort--inactive--rtl.svg) no-repeat 50% 50%;
         }
@@ -113,17 +113,13 @@ tr {
   }
   &.color-warning:hover,
   &.color-warning:focus {
-    --table-warning-focus-color: #fdf8ed;
-
     color: var(--color-text);
-    background: var(--table-warning-focus-color);
+    background: #fdf8ed;
   }
   &.color-error:hover,
   &.color-error:focus {
-    --table-error-focus-color: #fcf4f2;
-
     color: var(--color-text);
-    background: var(--table-error-focus-color);
+    background: #fcf4f2;
   }
 }
 tr,
