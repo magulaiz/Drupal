@@ -1,8 +1,9 @@
 name: MySQLi
-core_version_requirement: ^10.1 | ^11
 type: module
 description: 'Database driver for MySQLi.'
-package: Core
 version: VERSION
+package: Core (Experimental)
+lifecycle: experimental
+hidden: true
 dependencies:
   - drupal:mysql
