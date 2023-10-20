@@ -75,8 +75,39 @@ class Email extends FormElement {
     $value = trim($element['#value']);
     $form_state->setValueForElement($element, $value);
 
-    if ($value !== '' && !\Drupal::service('email.validator')->isValid($value)) {
-      $form_state->setError($element, t('The email address %mail is not valid. Use the format user@example.com.', ['%mail' => $value]));
+    // Skip validation if the value is empty.
+    if ($value === '') {
+      return;
+    }
+
+    // If field is multiple, validate each address individually.
+    // Email addresses could be only comma-separated.
+    // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple#email_input
+    $emails = empty($element['#multiple'])
+      ? [$value]
+      : explode(',', $value);
+
+    // Make sure all email addresses are non-empty.
+    if (in_array('', $emails)) {
+      $form_state->setError($element, t('All email addresses must be non-empty.'));
+    }
+
+    // Validate each email address.
+    $invalid_addresses = [];
+    foreach ($emails as $address) {
+      if (!\Drupal::service('email.validator')->isValid(trim($address))) {
+        $invalid_addresses[] = $address;
+      }
+    }
+
+    if (!$invalid_addresses) {
+      return;
+    }
+    elseif (count($invalid_addresses) === 1) {
+      $form_state->setError($element, t('The email address %mail is not valid.', ['%mail' => reset($invalid_addresses)]));
+    }
+    else {
+      $form_state->setError($element, t('The email addresses %mails are not valid.', ['%mails' => implode(', ', $invalid_addresses)]));
     }
   }
 
@@ -93,7 +124,15 @@ class Email extends FormElement {
    */
   public static function preRenderEmail($element) {
     $element['#attributes']['type'] = 'email';
-    Element::setAttributes($element, ['id', 'name', 'value', 'size', 'maxlength', 'placeholder']);
+    Element::setAttributes($element, [
+      'id',
+      'name',
+      'value',
+      'size',
+      'maxlength',
+      'placeholder',
+      'multiple',
+    ]);
     static::setAttributes($element, ['form-email']);
     return $element;
   }
