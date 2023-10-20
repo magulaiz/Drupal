@@ -1223,6 +1223,11 @@ trait SchemaCheckTrait {
         "'tags' is a required key.",
       ],
     ],
+    'views_test_data.tests' => [
+      '' => [
+        "'handler_access_callback_argument' is a required key."
+      ]
+    ],
     'workflows.workflow.*' => [
       'type_settings' => [
         "'default_moderation_state' is a conditionally required key because type is content_moderation \(see config schema type workflow\.type_settings\.content_moderation.*",
