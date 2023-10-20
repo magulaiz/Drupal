@@ -36,6 +36,7 @@ function block_update_10100(&$sandbox) {
       case '0':
         $settings['label_display'] = FALSE;
         break;
+
       case '1':
       case 'visible':
         $settings['label_display'] = TRUE;
