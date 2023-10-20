@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
+use Drupal\Component\Diff\Engine\DiffOpCopy;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Database\Database;
@@ -125,6 +126,18 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       'delete' => [],
       'rename' => [],
     ];
+
+    // What's going on?
+    $diff = \Drupal::service('config.manager')->diff(
+      $this->container->get('config.storage.sync'),
+      $this->container->get('config.storage'),
+      'language.negotiation',
+    )->getEdits();
+
+    if (count($diff) !== 1 || !($diff[0] instanceof DiffOpCopy)) {
+      $this->assertSame([], $diff);
+    }
+
     $this->assertEquals($expected, $change_list);
   }
 
