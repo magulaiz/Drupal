@@ -40,7 +40,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:recipe:field_tags'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -56,7 +56,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:recipe:field_recipe_category'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -72,7 +72,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:recipe:field_summary'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -94,7 +94,7 @@ third_party_settings:
             configuration:
               id: 'field_block:node:recipe:field_media_image'
               label: 'Media Image'
-              label_display: '0'
+              label_display: FALSE
               provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
@@ -112,7 +112,7 @@ third_party_settings:
             region: fifth
             configuration:
               id: 'field_block:node:recipe:field_difficulty'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -127,7 +127,7 @@ third_party_settings:
             region: fourth
             configuration:
               id: 'field_block:node:recipe:field_number_of_servings'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -144,7 +144,7 @@ third_party_settings:
             region: third
             configuration:
               id: 'field_block:node:recipe:field_cooking_time'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -161,7 +161,7 @@ third_party_settings:
             region: second
             configuration:
               id: 'field_block:node:recipe:field_preparation_time'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -179,7 +179,7 @@ third_party_settings:
             configuration:
               id: 'field_block:node:recipe:field_media_image'
               label: 'Media Image'
-              label_display: '0'
+              label_display: FALSE
               provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
@@ -204,7 +204,7 @@ third_party_settings:
             region: first
             configuration:
               id: 'field_block:node:recipe:field_ingredients'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -220,7 +220,7 @@ third_party_settings:
             region: second
             configuration:
               id: 'field_block:node:recipe:field_recipe_instruction'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -241,7 +241,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'extra_field_block:node:recipe:content_moderation_control'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
             weight: 0
@@ -259,7 +259,7 @@ third_party_settings:
             configuration:
               id: 'views_block:related_recipes-related_recipes_block'
               label: ''
-              label_display: visible
+              label_display: TRUE
               provider: views
               context_mapping: {  }
               views_label: ''
