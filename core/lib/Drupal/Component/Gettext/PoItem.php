@@ -8,7 +8,7 @@ namespace Drupal\Component\Gettext;
  * @todo: This class contains some really old legacy code.
  * @see https://www.drupal.org/node/1637662
  */
-class PoItem {
+class PoItem implements PoPluralCountAwareInterface {
 
   /**
    * The delimiter used to split plural strings.
@@ -48,6 +48,13 @@ class PoItem {
    * @var bool
    */
   protected $plural;
+
+  /**
+   * The number of plurals this string has.
+   *
+   * @var int
+   */
+  protected $pluralCount;
 
   /**
    * The comment of this translation.
@@ -152,12 +159,27 @@ class PoItem {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setPluralCount(int $pluralCount) {
+    $this->pluralCount = $pluralCount;
+    return $this;
+  }
+
+  /**
    * Get if the translation has plural values.
    *
    * @return bool
    */
   public function isPlural() {
     return $this->plural;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluralCount(): int {
+    return $this->pluralCount;
   }
 
   /**
@@ -200,7 +222,12 @@ class PoItem {
     }
     if (isset($this->source) && str_contains($this->source, self::DELIMITER)) {
       $this->setSource(explode(self::DELIMITER, $this->source));
-      $this->setTranslation(explode(self::DELIMITER, $this->translation ?? ''));
+      if (!empty($this->translation)) {
+        $this->setTranslation(explode(self::DELIMITER, $this->translation ?? ''));
+      }
+      else {
+        $this->setTranslation(array_fill(0, $this->pluralCount, NULL));
+      }
       $this->setPlural(count($this->source) > 1);
     }
   }

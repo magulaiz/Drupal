@@ -35,6 +35,13 @@ class PoDatabaseReader implements PoReaderInterface {
   private $langcode;
 
   /**
+   * Number of plurals. Needed for generate empty plurals when needed.
+   *
+   * @var int
+   */
+  private $pluralCount = 2;
+
+  /**
    * Store the result of the query so it can be iterated later.
    *
    * @var resource
@@ -60,6 +67,20 @@ class PoDatabaseReader implements PoReaderInterface {
    */
   public function setLangcode($langcode) {
     $this->langcode = $langcode;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluralCount() {
+    return $this->pluralCount;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPluralCount($pluralCount) {
+    $this->pluralCount = $pluralCount;
   }
 
   /**
@@ -163,6 +184,8 @@ class PoDatabaseReader implements PoReaderInterface {
     if ($string = $this->readString()) {
       $values = (array) $string;
       $po_item = new PoItem();
+      $po_item->setLangcode($this->langcode);
+      $po_item->setPluralCount($this->pluralCount);
       $po_item->setFromArray($values);
       return $po_item;
     }

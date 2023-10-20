@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\BrowserTestBase;
 
@@ -138,6 +139,31 @@ class LocaleExportTest extends BrowserTestBase {
     $this->submitForm([], 'Export');
     // Ensure we have a translation file.
     $this->assertSession()->pageTextContains('# LANGUAGE translation of PROJECT');
+  }
+
+  /**
+   * Test exportation of untranslated plurals.
+   */
+  public function testExportUntranslatedPlurals() {
+    // Create plural string without translation in the locales_source table.
+    $this->container->get('locale.storage')
+      ->createString()
+      ->setString('@count contextual link' . PoItem::DELIMITER . '@count contextual links')
+      ->save();
+
+    // Get the translation template file.
+    $this->drupalGet('admin/config/regional/translate/export');
+    $this->submitForm([], 'Export');
+
+    // Ensure we have a translation file.
+    $session = $this->assertSession();
+    $session->responseContains('# LANGUAGE translation of PROJECT', 'Exported translation template file.');
+    // Ensure our untranslated plural strings have been exported.
+    $session->responseContains('msgid "@count contextual link');
+    $session->responseContains('msgid_plural "@count contextual links"');
+    // Ensure we have the right amount of empty plurals in the template.
+    $session->responseContains('msgstr[0] ""');
+    $session->responseContains('msgstr[1] ""');
   }
 
   /**
