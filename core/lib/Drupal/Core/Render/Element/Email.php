@@ -73,7 +73,6 @@ class Email extends FormElement {
    */
   public static function validateEmail(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = trim($element['#value']);
-    $form_state->setValueForElement($element, $value);
 
     // Skip validation if the value is empty.
     if ($value === '') {
@@ -93,21 +92,26 @@ class Email extends FormElement {
     }
 
     // Validate each email address.
-    $invalid_addresses = [];
-    foreach ($emails as $address) {
-      if (!\Drupal::service('email.validator')->isValid(trim($address))) {
-        $invalid_addresses[] = $address;
+    $invalid_emails = [];
+    foreach ($emails as $delta => $email) {
+      $email = trim($email);
+      $emails[$delta] = $email;
+      if (!\Drupal::service('email.validator')->isValid(trim($email))) {
+        $invalid_emails[] = $email;
       }
     }
 
-    if (!$invalid_addresses) {
+    // Set trimmed email address/es.
+    $form_state->setValueForElement($element, implode(',', $emails));
+
+    if (!$invalid_emails) {
       return;
     }
-    elseif (count($invalid_addresses) === 1) {
-      $form_state->setError($element, t('The email address %mail is not valid.', ['%mail' => reset($invalid_addresses)]));
+    elseif (count($invalid_emails) === 1) {
+      $form_state->setError($element, t('The email address %mail is not valid. Use the format user@example.com.', ['%mail' => reset($invalid_emails)]));
     }
     else {
-      $form_state->setError($element, t('The email addresses %mails are not valid.', ['%mails' => implode(', ', $invalid_addresses)]));
+      $form_state->setError($element, t('The email addresses %mails are not valid. Use the format user@example.com.', ['%mails' => implode(', ', $invalid_emails)]));
     }
   }
 
