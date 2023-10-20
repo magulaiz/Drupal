@@ -251,7 +251,7 @@ class FieldStorageReuseForm extends FormBase {
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+    // $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $field_name = $form_state->getTriggeringElement()['#name'];
     // Get settings from existing configuration.
     $default_options = $this->getExistingFieldDefaults($field_name);

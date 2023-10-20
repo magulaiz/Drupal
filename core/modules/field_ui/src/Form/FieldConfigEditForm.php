@@ -7,7 +7,6 @@ use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -408,7 +407,7 @@ class FieldConfigEditForm extends EntityForm {
       $route_parameters = [
         'field_name' => $this->entity->getName(),
         'entity_type' => $this->entity->getTargetEntityTypeId(),
-      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId()), $this->entity->getTargetBundle());;
+      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId()), $this->entity->getTargetBundle());
       $actions['submit']['#ajax']['url'] = Url::fromRoute("field_ui.field_add_{$this->entity->getTargetEntityTypeId()}", $route_parameters);
     }
     $entity_type = $this->entity->getTargetEntityTypeId();
@@ -460,7 +459,7 @@ class FieldConfigEditForm extends EntityForm {
   }
 
   /**
-   * @todo.
+   * @todo .
    */
   public function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
