@@ -416,7 +416,7 @@ class FieldConfigEditForm extends EntityForm {
     $route_parameters = [
       'entity_type' => $entity_type,
       'field_name' => $temp_field_name,
-      'node_type' => $this->entity->getTargetBundle(),
+      'bundle' => $this->entity->getTargetBundle(),
     ];
     $actions['back'] = [
       '#type' => 'link',
