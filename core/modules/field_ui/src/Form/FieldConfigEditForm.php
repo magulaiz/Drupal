@@ -395,7 +395,7 @@ class FieldConfigEditForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Save');
+    $actions['submit']['#value'] = $this->entity->isNew() ? $this->t('Save') : $this->t('Save settings');
     $actions['submit']['#ajax'] = [
       'callback' => [$this, 'ajaxSubmit'],
       'options' => [
