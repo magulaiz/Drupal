@@ -7,6 +7,9 @@ filter.settings:
     fallback_format:
       type: string
       label: 'Fallback text format'
+      constraints:
+        EntityExists:
+          entityType: 'filter_format'
     always_show_fallback_choice:
       type: boolean
       label: 'Always show fallback choice'
