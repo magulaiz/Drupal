@@ -102,6 +102,9 @@ class ConfigSubscriber implements EventSubscriberInterface {
         $url_prefixes = $negotiation_config->get('url.prefixes');
         $old_default_langcode = $saved_config->getOriginal('default_langcode');
         if (empty($url_prefixes[$old_default_langcode])) {
+          if ($old_default_langcode === NULL) {
+            throw new \Exception('\Drupal\language\EventSubscriber\ConfigSubscriber::onConfigSave');
+          }
           $negotiation_config->set('url.prefixes.' . $old_default_langcode, $old_default_langcode);
           $negotiation_changed = TRUE;
         }
