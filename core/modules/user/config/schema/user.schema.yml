@@ -44,6 +44,12 @@ user.settings:
     cancel_method:
       type: string
       label: 'When cancelling a user account'
+      constraints:
+        Choice:
+          choices:
+            - 'user_cancel_block'
+            - 'user_cancel_block_unpublish'
+            - 'user_cancel_reassign'
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
