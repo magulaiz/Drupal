@@ -59,6 +59,9 @@ user.settings:
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
+      constraints:
+        Range:
+          min: 0
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
