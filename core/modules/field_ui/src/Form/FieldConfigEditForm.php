@@ -418,6 +418,8 @@ class FieldConfigEditForm extends EntityForm {
       'field_name' => $temp_field_name,
       'bundle' => $this->entity->getTargetBundle(),
     ];
+    // @todo Add the 'back' button only for new fields. Decide which version of
+    // $route_parameters to use.
     $actions['back'] = [
       '#type' => 'link',
       '#weight' => 1,
