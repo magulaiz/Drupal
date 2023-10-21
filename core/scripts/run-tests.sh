@@ -165,7 +165,8 @@ if (!Composer::upgradePHPUnitCheck(Version::id())) {
   exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
-$test_list = simpletest_script_get_test_list();
+//$test_list = simpletest_script_get_test_list();
+$test_list = array_fill(0, 100, '\Drupal\FunctionalTests\Installer\InstallerExistingConfigTest');
 
 // Try to allocate unlimited time to run the tests.
 Environment::setTimeLimit(0);
