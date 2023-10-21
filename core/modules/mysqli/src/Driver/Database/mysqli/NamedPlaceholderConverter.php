@@ -97,7 +97,8 @@ final class NamedPlaceholderConverter {
       }
       else {
         // Named placeholder like ':placeholder'; remove the initial colon.
-        $this->originalParameters[substr($key, 1)] = $value;
+        $parameter = $key[0] === ':' ? substr($key, 1) : $key;
+        $this->originalParameters[$parameter] = $value;
       }
     }
     $this->originalParameterIndex = 0;
