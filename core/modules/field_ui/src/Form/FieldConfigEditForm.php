@@ -185,9 +185,10 @@ class FieldConfigEditForm extends EntityForm {
     $form['new_storage_wrapper']['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#size' => 30,
+      '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
       '#required' => TRUE,
       '#maxlength' => 255,
+      '#size' => 30,
       '#weight' => -20,
     ];
 
