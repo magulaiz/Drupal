@@ -41,6 +41,12 @@ user.settings:
     register:
       type: string
       label: 'Who can register accounts?'
+      constraints:
+        Choice:
+          choices:
+            - 'admin_only'
+            - 'visitors'
+            - 'visitors_admin_approval'
     cancel_method:
       type: string
       label: 'When cancelling a user account'
