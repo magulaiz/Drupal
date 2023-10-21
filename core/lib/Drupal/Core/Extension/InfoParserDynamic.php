@@ -60,12 +60,14 @@ class InfoParserDynamic implements InfoParserInterface {
     // and custom extensions to be enabled. We assume that the developer knows
     // what they are doing if they are on a development version of core. This is
     // needed because these extensions' core_version_requirement will typically
-    // not include the latest development version of core. We skip extensions in
-    // core, in a 'fixtures' folder, and those written to a test sites folder,
-    // because there are tests which specifically check for an extension being
-    // incompatible.
-    if (str_ends_with(\Drupal::VERSION, '-dev') && !str_starts_with($filename, 'core/') && !str_contains($filename, 'fixtures') && !str_contains($filename, 'sites/simpletest') && !str_contains($parsed_info['core_version_requirement'], \Drupal::VERSION)) {
-      $parsed_info['core_version_requirement'] .= ' || ' . \Drupal::VERSION;
+    // not include the latest development version of core.
+    if (str_ends_with(\Drupal::VERSION, '-dev')) {
+      // We skip extensions in the 'Testing' package, because there fixture
+      // modules which are specifically for tests to check for an extension
+      // being incompatible.
+      if (!isset($parsed_info['package']) || $parsed_info['package'] !== 'Testing') {
+        $parsed_info['core_version_requirement'] .= ' || ' . \Drupal::VERSION;
+      }
     }
 
     // Determine if the extension is compatible with the current version of
