@@ -61,7 +61,7 @@ final class FieldConfigAddController extends ControllerBase {
    * @return array
    *   The field instance edit form.
    */
-  public function fieldConfigAddConfigureForm(string $entity_type, string $field_name) {
+  public function fieldConfigAddConfigureForm(string $entity_type, string $field_name): array {
     $temp_storage = $this->tempStore->get($entity_type . ':' . $field_name);
     if (!$temp_storage) {
       throw new NotFoundHttpException();
