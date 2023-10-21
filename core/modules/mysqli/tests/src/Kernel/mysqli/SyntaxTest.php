@@ -15,7 +15,7 @@ class SyntaxTest extends DriverSpecificSyntaxTestBase {
    * Tests string concatenation with separator, with field values.
    */
   public function testConcatWsFields() {
-    $result = $this->connection->query("SELECT CONCAT_WS('-', [name], [age]) FROM {test} WHERE [age] = :age", [
+    $result = $this->connection->query("SELECT CONCAT_WS('-', 'name', [name], 'age', [age]) FROM {test} WHERE [age] = :age", [
       ':age' => 25,
     ]);
     $this->assertSame('name-John-age-25', $result->fetchField());
