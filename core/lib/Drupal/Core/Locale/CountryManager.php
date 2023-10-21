@@ -272,7 +272,7 @@ class CountryManager implements CountryManagerInterface {
       'TM' => t('Turkmenistan'),
       'TN' => t('Tunisia'),
       'TO' => t('Tonga'),
-      'TR' => t('Turkey'),
+      'TR' => t('Türkiye'),
       'TT' => t('Trinidad & Tobago'),
       'TV' => t('Tuvalu'),
       'TW' => t('Taiwan'),
