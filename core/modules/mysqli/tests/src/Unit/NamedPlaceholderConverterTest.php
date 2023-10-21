@@ -226,6 +226,13 @@ class NamedPlaceholderConverterTest extends UnitTestCase {
       ['qux', 'git'],
     ];
 
+    yield 'Parameter array with placeholder kyes missing starting colon' => [
+      'SELECT table.column1, ARRAY[:foo]::integer[] FROM schema.table table' . " WHERE table.f1 = :bar AND ARRAY['3']::integer[]",
+      ['foo' => 'qux', 'bar' => 'git'],
+      'SELECT table.column1, ARRAY[?]::integer[] FROM schema.table table' . " WHERE table.f1 = ? AND ARRAY['3']::integer[]",
+      ['qux', 'git'],
+    ];
+
     yield 'Quotes inside literals escaped by doubling' => [
       <<<'SQL'
 SELECT * FROM foo
