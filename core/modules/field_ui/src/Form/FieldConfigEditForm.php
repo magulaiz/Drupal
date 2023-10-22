@@ -478,7 +478,9 @@ class FieldConfigEditForm extends EntityForm {
     parent::validateForm($form, $form_state);
     $entity_type = $this->entity->getTargetEntityTypeId();
     $temp_store = $this->tempStore->get($entity_type . ':' . $this->entity->getName());
-    $default_options = $temp_store['default_options'];
+    // @todo Adding '?? []' avoids errors, but probably this should be set
+    // somewhere. Either that or get rid of $default_options.
+    $default_options = $temp_store['default_options'] ?? [];
 
     $this->validateAddNew($form, $form_state);
     $values = $form_state->getValues();
