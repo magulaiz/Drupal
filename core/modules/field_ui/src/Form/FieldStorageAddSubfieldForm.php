@@ -2,13 +2,13 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\field_ui\Ajax\OpenModalDialogWithUrl;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -293,13 +293,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
             '#wrapper_attributes' => [
               'class' => ['js-click-to-select', 'subfield-option'],
             ],
-            '#ajax' => [
-              'callback' => [$this, 'showFieldsCallback'],
-              'event' => 'updateOptions',
-              'wrapper' => 'group-field-options-wrapper',
-              'progress' => 'none',
-              'disable-refocus' => TRUE,
-            ],
             '#variant' => 'field-suboption',
           ];
           $radio_element['#return_value'] = $option['unique_identifier'];
@@ -471,12 +464,12 @@ class FieldStorageAddSubfieldForm extends FormBase {
     $this->setTempStore($this->entityTypeId, $field_storage_type, $field_name, $this->bundle, $form_state->getValue('field_name_label'), $form_state->getValue('field_name'));
 
     $response = new AjaxResponse();
-    $callback = $this->controllerResolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldConfigAddController::fieldConfigAddConfigureForm');
-    $edit_form = call_user_func_array($callback,
-      [$this->entityTypeId, $field_name]);
-    $field_type = $form_state->getValue('group_field_options_wrapper');
-    $field_type_label = $this->fieldTypePluginManager->getDefinitions()[$field_type]['label'];
-    $response->addCommand(new OpenModalDialogCommand("Configure field: {$field_type_label}", $edit_form, ['width' => '1100']));
+    $route_parameters = [
+      'field_name' => $field_name,
+      'entity_type' => $this->entityTypeId,
+    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
+    $url = Url::fromRoute("field_ui.field_add_{$this->entityTypeId}", $route_parameters);
+    $response->addCommand(new OpenModalDialogWithUrl($url->toString(), []));
     return $response;
   }
 

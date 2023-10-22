@@ -21,6 +21,8 @@ drupal.field_ui.manage_fields:
     theme:
       css/field_ui_add_field.theme.css: {}
       css/field_ui.icons.theme.css: {}
+  js:
+    js/field_ui.ajax.js: {}
 
 drupal.field_ui_table:
   version: VERSION

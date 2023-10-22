@@ -17,7 +17,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
@@ -398,11 +397,6 @@ class FieldConfigEditForm extends EntityForm {
     $actions['submit']['#value'] = $this->entity->isNew() ? $this->t('Save') : $this->t('Save settings');
     $actions['submit']['#ajax'] = [
       'callback' => [$this, 'ajaxSubmit'],
-      'options' => [
-        'query' => [
-          FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
-        ],
-      ],
     ];
     if ($this->entity->isNew()) {
       $entity_type = $this->entity->getTargetEntityTypeId();
@@ -410,7 +404,6 @@ class FieldConfigEditForm extends EntityForm {
         'field_name' => $this->entity->getName(),
         'entity_type' => $entity_type,
       ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($entity_type), $this->entity->getTargetBundle());
-      $actions['submit']['#ajax']['url'] = Url::fromRoute("field_ui.field_add_{$entity_type}", $route_parameters);
       $actions['back'] = [
         '#type' => 'link',
         '#weight' => 1,
@@ -718,7 +711,6 @@ class FieldConfigEditForm extends EntityForm {
    *   Whether or not the field machine name is taken.
    */
   public function fieldNameExists($value, $element, FormStateInterface $form_state) {
-
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
     $entity_type_id = $this->entity->getTargetEntityTypeId();
