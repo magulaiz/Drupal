@@ -405,35 +405,27 @@ class FieldConfigEditForm extends EntityForm {
       ],
     ];
     if ($this->entity->isNew()) {
+      $entity_type = $this->entity->getTargetEntityTypeId();
       $route_parameters = [
         'field_name' => $this->entity->getName(),
-        'entity_type' => $this->entity->getTargetEntityTypeId(),
-      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId()), $this->entity->getTargetBundle());
-      $actions['submit']['#ajax']['url'] = Url::fromRoute("field_ui.field_add_{$this->entity->getTargetEntityTypeId()}", $route_parameters);
+        'entity_type' => $entity_type,
+      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($entity_type), $this->entity->getTargetBundle());
+      $actions['submit']['#ajax']['url'] = Url::fromRoute("field_ui.field_add_{$entity_type}", $route_parameters);
+      $actions['back'] = [
+        '#type' => 'link',
+        '#weight' => 1,
+        '#title' => $this->t('Change field type'),
+        '#limit_validation_errors' => [],
+        '#attributes' => [
+          'class' => ['button', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '1100',
+          ]),
+        ],
+        '#url' => Url::fromRoute("field_ui.field_reset_$entity_type", $route_parameters),
+      ];
     }
-    $entity_type = $this->entity->getTargetEntityTypeId();
-    $temp_field_name = $this->entity->get('field_name');
-    $route_parameters = [
-      'entity_type' => $entity_type,
-      'field_name' => $temp_field_name,
-      'bundle' => $this->entity->getTargetBundle(),
-    ];
-    // @todo Add the 'back' button only for new fields. Decide which version of
-    // $route_parameters to use.
-    $actions['back'] = [
-      '#type' => 'link',
-      '#weight' => 1,
-      '#title' => $this->t('Change field type'),
-      '#limit_validation_errors' => [],
-      '#attributes' => [
-        'class' => ['button', 'use-ajax'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode([
-          'width' => '1100',
-        ]),
-      ],
-      '#url' => Url::fromRoute("field_ui.field_reset_$entity_type", $route_parameters),
-    ];
 
     if (!$this->entity->isNew()) {
       $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
