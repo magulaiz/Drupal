@@ -11,11 +11,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * Checks the value represents an extant entity.
- *
- * @Constraint(
- *   id = "EntityExists",
- *   label = @Translation("Entity exists", context = "Validation")
- * )
  */
 class EntityExistsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
@@ -42,9 +37,9 @@ class EntityExistsConstraintValidator extends ConstraintValidator implements Con
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\EntityExistsConstraint');
     }
 
-    // If we can load an entity of the given type with the ID in value..
+    // If we can load an entity of the given type with the ID in value we pass
+    // the constraint.
     if ($this->entityTypeManager->getStorage($constraint->entityType)->load($value)) {
-      // ..we pass the constraint.
       return;
     }
 
