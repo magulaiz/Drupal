@@ -54,6 +54,7 @@ user.settings:
         Choice:
           choices:
             - 'user_cancel_block'
+            - 'user_cancel_delete'
             - 'user_cancel_block_unpublish'
             - 'user_cancel_reassign'
     password_reset_timeout:
