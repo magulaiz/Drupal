@@ -238,6 +238,13 @@
         }
 
         updateBlockWeights(table, regionName);
+        const params = {
+          detail: {
+            regionName,
+          },
+        };
+        const onDropEvent = new CustomEvent('blocksDropped', params);
+        dragObject.rowObject.element.dispatchEvent(onDropEvent);
       };
 
       // Add the behavior to each region select list.

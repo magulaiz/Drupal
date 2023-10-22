@@ -133,7 +133,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $form['filters'] = [
       '#type' => 'fieldset',
       '#attributes' => [
-        'class' => ['js-show'],
+        'class' => ['js-show', 'block-filter-fields'],
       ],
     ];
 
@@ -143,7 +143,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       '#placeholder' => $this->t('Filter by block name or block category'),
       '#description' => "<p class='js-input-filter-goto-element' id='goto-filtered'>go to next element</p>",
       '#attributes' => [
-        'class' => ['block-filter-region-text'],
+        'class' => ['block-element-filter', 'block-filter-region-text'],
         'title' => $this->t('Enter a part of the block name to filter by.'),
       ],
     ];
@@ -197,6 +197,9 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ],
       '#attributes' => [
         'id' => 'blocks',
+        'class' => [
+          'list-blocks',
+        ],
       ],
     ];
 
@@ -253,7 +256,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ];
 
       $filter = [
-        '#markup' => '<a data-toggle-region="' . $region . '" class="button button--small region-filter-control">' . $this->t('Show filtered') . '</a>',
+        '#markup' => '<a aria-hidden="true" aria-pressed="false" href="#" data-toggle-region="' . $region . '" class="button button--small region-filter-control">' . $this->t('Show filtered') . '</a>',
       ];
 
       $form['region-' . $region]['title'] = [
@@ -290,7 +293,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $form['region-' . $region . '-filter'] = [
         '#attributes' => [
           'class' => [
-            'region-filter',
+            'js-region-filter-quantity',
             'region-' . $region . '-filter',
             empty($blocks[$region]) ? 'region-empty' : 'region-populated',
           ],
@@ -337,6 +340,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
           $form[$entity_id]['type'] = [
             '#markup' => $info['category'],
+            '#prefix' => "<span data-block-category='" . $info['category'] . "'>",
+            '#suffix' => '</span>',
           ];
           $form[$entity_id]['region-theme']['region'] = [
             '#type' => 'select',

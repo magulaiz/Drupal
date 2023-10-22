@@ -119,9 +119,8 @@
    */
   Drupal.behaviors.blockFilterRegionText = {
     attach(context) {
-      let firstVisibleRegion = null;
-      let isFocusingFilterElement = false;
-      const gotoFiltered = document.querySelector('#goto-filtered');
+      const gotoFiltered = document.getElementById('goto-filtered');
+      const fieldsetInput = document.getElementById('edit-filters');
       const $inputFilter = once(
         'block-filter-region-text',
         '[data-drupal-selector="edit-search-blocks"]',
@@ -131,45 +130,6 @@
         return;
       }
       const inputFilterElement = $inputFilter[0];
-
-      /**
-       * Users can filter blocks and regions and goes to bottom of page,
-       * to make easier change the filter sticky the filter input,
-       * below the Drupal menu.
-       */
-      const moveInputFilterWhenScrolling = () => {
-        // Sticky input filter when scroll down.
-        document.addEventListener('DOMContentLoaded', function () {
-          const toolbarHeight =
-            document.getElementById('toolbar-bar').clientHeight;
-          const submenu = document.getElementById(
-            'toolbar-item-administration-tray',
-          ).clientHeight;
-          const paddingTop = toolbarHeight + submenu;
-          const inputFilterForm = document.querySelector(
-            'fieldset[data-drupal-selector="edit-filters"]',
-          );
-          const topFilter = paddingTop;
-          const sticky = inputFilterForm.offsetTop;
-          let lastVisiblePosition;
-
-          function calcInputFilterPositionOnScroll() {
-            const scrollPosition = window.scrollY + paddingTop;
-            if (scrollPosition >= sticky) {
-              inputFilterForm.style.top = `${topFilter}px`;
-              inputFilterForm.classList.add('filter-block');
-              document.getElementById(
-                'blocks',
-              ).style.marginTop = `${inputFilterForm.offsetHeight}px`;
-            } else {
-              document.getElementById('blocks').style.marginTop = 0;
-              lastVisiblePosition = window.scrollY;
-              inputFilterForm.classList.remove('filter-block');
-            }
-          }
-          window.onscroll = calcInputFilterPositionOnScroll;
-        });
-      };
 
       /**
        * Function to count the blocks and their status by region.
@@ -208,13 +168,13 @@
        */
       const resetBlockRegionState = () => {
         document
-          .querySelectorAll('.js-filter-result-toggle')
-          .forEach((el) => el.classList.remove(['js-filter-result-toggle']));
+          .querySelectorAll('.js-override-filter-visibility')
+          .forEach((el) =>
+            el.classList.remove('js-override-filter-visibility'),
+          );
         document
           .querySelectorAll('.region-filter-control')
-          .forEach((el) =>
-            el.classList.remove(['region-filter-control-opened']),
-          );
+          .forEach((el) => el.classList.remove('region-filter-control-opened'));
       };
 
       /**
@@ -234,26 +194,25 @@
           const currentRegionName = el.dataset.region;
           const { total, visible, invisible } =
             getRegionBlocksStatus(currentRegionName);
-          // Set first visible region to be used on the help go to element link.
-          if (
-            total > 0 &&
-            visible > 0 &&
-            firstVisibleRegion === null &&
-            query !== ''
-          ) {
-            firstVisibleRegion = el;
-          }
 
           // Update the region filter status.
           const filteredRegionStatus = document.querySelector(
             `[data-drupal-selector="region-filtered-quantity-${currentRegionName}"]`,
           );
+          const linkButton = el.querySelector('.region-filter-control');
           if (total > 0) {
-            const toggleAction =
-              query !== '' && total !== visible ? 'add' : 'remove';
-            filteredRegionStatus.parentElement.parentElement.classList[
-              toggleAction
-            ]('filtered');
+            linkButton.ariaHidden = query === '';
+            if (query !== '' && total !== visible) {
+              filteredRegionStatus.parentElement.parentElement.classList.add(
+                'js-show-filtered-quantity',
+              );
+              linkButton.classList.add('region-filtered');
+              linkButton.ariaHidden = false;
+            } else {
+              filteredRegionStatus.parentElement.parentElement.classList.remove(
+                'js-show-filtered-quantity',
+              );
+            }
             filteredRegionStatus.textContent = Drupal.t(
               '@invisible filtered this region',
               { '@invisible': invisible },
@@ -262,13 +221,9 @@
 
           const regionEmptyMessage = el.nextElementSibling;
           let showEmptyRegion = false;
-          if (
-            (query === '' &&
-              table.querySelectorAll(
-                `tr[data-parent-region="${currentRegionName}"]`,
-              ).length === 0) ||
-            total === 0
-          ) {
+          if (total === 0) {
+            linkButton.classList.remove('region-filter-control-opened');
+            linkButton.classList.remove('region-filtered');
             showEmptyRegion = true;
           }
           regionEmptyMessage.style.display = showEmptyRegion ? '' : 'none';
@@ -294,6 +249,11 @@
             .value.toLowerCase();
         }
 
+        // Make sure highlighted blocks by go to filter action back to initial state.
+        document.querySelectorAll('.js-filter-block-visible').forEach((el) => {
+          el.classList.remove('color-success');
+        });
+
         const table = document.getElementById('blocks');
         const listItems = table.querySelectorAll('tbody tr.draggable');
 
@@ -308,36 +268,35 @@
             // If the user clicked to display all blocks of the regions,
             // keep this blocks visible no matter if the query filter matched.
             const isVisibleByFilter = tr.classList.contains(
-              'js-filter-result-toggle',
+              'js-override-filter-visibility',
             );
-            tr.style.display =
-              textToBeQueried.toLowerCase().includes(query) || isVisibleByFilter
-                ? ''
-                : 'none';
+
+            const textMatched = textToBeQueried.toLowerCase().includes(query);
+            tr.classList.toggle('js-filter-block-visible', textMatched);
+            tr.style.display = textMatched || isVisibleByFilter ? '' : 'none';
           } catch (error) {
             // If a problem occurs, default to showing the row.
             tr.style.display = '';
           }
         });
 
+        // Update all regions status after update blocks visibility.
         updateRegions(query, table);
 
+        // Update goto element.
         const visibleItems = Array.from(listItems).filter(
           (tr) => tr.style.display !== 'none',
         );
 
+        // Update status of goto filtered element.
         if (visibleItems.length === 0) {
-          gotoFiltered.classList.remove('link-to-element');
           gotoFiltered.textContent = Drupal.t(
             'There are no blocks matching the filter conditions.',
           );
-          document.querySelector('#goto-filtered').style.display = 'block';
-        }
-
-        if (firstVisibleRegion !== null) {
-          gotoFiltered.classList.add('link-to-element');
+          gotoFiltered.style.display = 'block';
+        } else if (query !== '') {
           gotoFiltered.textContent = Drupal.t('Go to items found.');
-          document.querySelector('#goto-filtered').style.display = 'block';
+          gotoFiltered.style.display = 'block';
         }
       };
 
@@ -345,9 +304,15 @@
       // to help users get there faster they can click on the link
       // below the input filter.
       gotoFiltered.addEventListener('click', (e) => {
-        if (firstVisibleRegion === null) {
-          return;
-        }
+        let firstVisibleRegion = null;
+        // Highlight blocks matched filter before go to.
+        document.querySelectorAll('.js-filter-block-visible').forEach((el) => {
+          if (!firstVisibleRegion) {
+            firstVisibleRegion = el;
+          }
+          el.classList.add('color-success');
+        });
+
         e.preventDefault();
         let offset = 0;
         const regionHeight = firstVisibleRegion.offsetHeight;
@@ -357,18 +322,22 @@
           region = region.offsetParent;
         }
         window.scrollTo({
-          top: offset - regionHeight,
+          top: offset - fieldsetInput.offsetTop - regionHeight,
         });
       });
 
-      const toggleBlocksByRegion = (region, action = 'toggle') => {
+      // Update all blocks by regions showing or hiding them based on the action value.
+      const toggleBlocksByRegion = (region, action) => {
+        if (inputFilterElement.value === '') {
+          return;
+        }
         document
           .querySelector(`a[data-toggle-region="${region}"]`)
           .classList[action]('region-filter-control-opened');
         document
           .querySelectorAll(`tr[data-parent-region="${region}"]`)
           .forEach((tr) => {
-            tr.classList[action]('js-filter-result-toggle');
+            tr.classList[action]('js-override-filter-visibility');
           });
       };
 
@@ -380,9 +349,16 @@
         .querySelectorAll('.region-filter-control:not(.built)')
         .forEach((element) => {
           element.classList.add('built');
-          element.addEventListener('click', () => {
-            toggleBlocksByRegion(element.dataset.toggleRegion);
+          element.addEventListener('click', (e) => {
+            element.ariaPressed = element.ariaPressed !== 'true';
+            const action = element.classList.contains(
+              'region-filter-control-opened',
+            )
+              ? 'remove'
+              : 'add';
+            toggleBlocksByRegion(element.dataset.toggleRegion, action);
             filterCallback();
+            e.preventDefault();
           });
         });
 
@@ -396,8 +372,7 @@
       // searching on keyup event with debounce.
       inputFilterElement.addEventListener('search', (e) => {
         if (e.target.value === '') {
-          firstVisibleRegion = null;
-          document.querySelector('#goto-filtered').style.display = 'none';
+          gotoFiltered.style.display = 'none';
           filterCallback('');
           resetBlockRegionState();
         }
@@ -405,22 +380,10 @@
       inputFilterElement.addEventListener('keydown', preventEnter);
       inputFilterElement.addEventListener('keyup', (e) => {
         if (e.target.value === '') {
-          firstVisibleRegion = null;
-          document.querySelector('#goto-filtered').style.display = 'none';
+          gotoFiltered.style.display = 'none';
           resetBlockRegionState();
         }
       });
-
-      // Focus the input filter only when scroll to the top finished.
-      const checkScroll = function () {
-        // Only focus the input if the user clicked to.
-        if (window.scrollY === 0 && isFocusingFilterElement) {
-          window.removeEventListener('scroll', checkScroll);
-          inputFilterElement.focus();
-          isFocusingFilterElement = false;
-        }
-      };
-      window.addEventListener('scroll', checkScroll);
 
       // Do the filter after region changed by select field.
       const $selectRegionChange = once(
@@ -437,49 +400,11 @@
       }
 
       // Extend block table drag event adding the filter callback.
-      if (
-        typeof Drupal.tableDrag !== 'undefined' &&
-        typeof Drupal.tableDrag.blocks !== 'undefined'
-      ) {
-        const tableDrag = { ...Drupal.tableDrag.blocks };
-        Drupal.tableDrag.blocks.onDrop = function () {
-          if (
-            tableDrag.rowObject == null ||
-            tableDrag.rowObject.element === null
-          ) {
-            return;
-          }
-          const rowDropped = tableDrag.rowObject.element;
-          const rowDroppedRegion = rowDropped.dataset.parentRegion;
-          let prevRow = rowDropped.previousElementSibling;
-          let newRow = null;
-          const possibleRegionValues = [
-            prevRow.dataset.parentRegion,
-            prevRow.dataset.regionMessage,
-            prevRow.dataset.region,
-          ];
-          if (possibleRegionValues.indexOf(rowDroppedRegion) === -1) {
-            while (prevRow && prevRow.nodeName === 'TR') {
-              if (
-                prevRow.classList.contains('draggable') &&
-                rowDroppedRegion === prevRow.dataset.parentRegion
-              ) {
-                newRow = prevRow;
-                break;
-              }
-              prevRow = prevRow.previousElementSibling;
-            }
-            if (newRow) {
-              tableDrag.rowObject.swap('after', newRow);
-            }
-          }
-          toggleBlocksByRegion(rowDroppedRegion, 'add');
+      document.querySelectorAll('.draggable').forEach((row) => {
+        row.addEventListener('blocksDropped', () => {
           filterCallback();
-          tableDrag.onDrop();
-        };
-      }
-
-      moveInputFilterWhenScrolling();
+        });
+      });
     },
   };
 })(jQuery, Drupal, Drupal.debounce, once);

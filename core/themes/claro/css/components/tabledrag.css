@@ -29,22 +29,35 @@ body.drag {
   font-weight: bold;
 }
 
-/* Region filter row in table. */
+/* Block list row filtered quantity display. */
 
-.region-filter {
+.js-region-filter-quantity {
   display: none;
   color: var(--color-gray-600);
 }
 
-.region-filter.filtered {
+.js-region-filter-quantity.js-show-filtered-quantity {
   display: table-row;
 }
 
-.filter-block {
-  position: fixed;
-  z-index: 1000;
+/* Make the fieldset of the input filter stick */
+
+.block-filter-fields {
+  position: sticky;
+  z-index: 500;
   top: var(--drupal-displace-offset-top, 0);
-  width: 100%;
+  height: 8.25rem;
+}
+
+/* Make thead on block list table stick on scrolling position great then
+ * toolbar menu and fields of the filter.
+ */
+
+.list-blocks thead {
+  position: sticky;
+  z-index: 500;
+  top: calc(var(--drupal-displace-offset-top, 0) + 8.375rem);
+  box-shadow: var(--details-box-shadow);
 }
 
 /* Ensure that fieldset has margin to 0. */
@@ -53,6 +66,18 @@ body.drag {
 .fieldset.filter-block {
   margin-top: 0;
 }
+
+/* Control visibility of the eye button blocks visibility control */
+
+.button.region-filter-control {
+  display: none;
+}
+
+.button.region-filter-control.region-filtered {
+  display: inline-block;
+}
+
+/* Eye button that controls blocks visibility */
 
 .region-filter-control::before {
   display: inline-block;
@@ -72,18 +97,17 @@ body.drag {
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'%3e%3c/path%3e%3ccircle cx='12' cy='12' r='3'%3e%3c/circle%3e%3c/svg%3e") no-repeat center;
 }
 
+/* Goto to element appears when any value type */
+
 .js-input-filter-goto-element {
   display: none;
   margin: 0;
   padding: 0;
   cursor: pointer;
+  color: var(--color-link);
   font-size: 0.75rem;
   font-weight: 400;
   font-style: italic;
-}
-
-.js-input-filter-goto-element.link-to-element {
-  color: var(--color-link);
 }
 
 /* Empty region message row in table. */
