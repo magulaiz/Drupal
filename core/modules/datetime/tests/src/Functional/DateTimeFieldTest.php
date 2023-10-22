@@ -393,12 +393,9 @@ class DateTimeFieldTest extends DateTestBase {
     $form_state = new FormState();
     \Drupal::formBuilder()->submitForm($form, $form_state);
     $errors = $form_state->getErrors();
-    $arguments = $errors["{$field_name}][0][value"]->getArguments();
-    $expected_error_message = new FormattableMarkup('The %field date is required. Enter a date in the format %format.', ['%field' => $field_label, '%format' => $arguments['%format']]);
+    $expected_error_message = new FormattableMarkup('The %field date is required.', ['%field' => $field_label]);
     $actual_error_message = $errors["{$field_name}][0][value"]->__toString();
     $this->assertEquals($expected_error_message->__toString(), $actual_error_message);
-    // Verify the format value is in the "YYYY-MM-DD HH:MM:SS" format.
-    $this->assertMatchesRegularExpression('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', $arguments['%format']);
   }
 
   /**
@@ -935,8 +932,8 @@ class DateTimeFieldTest extends DateTestBase {
     ];
     $this->drupalGet('node/add/date_content');
     $this->submitForm($edit, 'Save');
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
-    $this->assertSession()->elementsCount('xpath', "//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]", 1);
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->assertSession()->elementsCount('xpath', "//*[@name='field_storage[subform][settings][datetime_type]' and contains(@disabled, 'disabled')]", 1);
   }
 
 }

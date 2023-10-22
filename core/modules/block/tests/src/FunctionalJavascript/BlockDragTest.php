@@ -67,15 +67,10 @@ class BlockDragTest extends WebDriverTestBase {
     $noBlockMessage = $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-primary-menu-message"] td')->getText();
     $this->assertSession()->assert($noBlockMessage === 'No blocks in this region', 'Region primary menu should be empty.');
 
-    // Test dragging a row to an empty region.
+    // Testing drag row to an empty region.
     $pageTitle = $this->getDragRow($page, 'edit-blocks-olivero-page-title');
     $heroRegion = $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-hero-message"]');
     $pageTitle->dragTo($heroRegion);
-    $trPageTitleUpdated = $this->getSession()
-      ->getPage()
-      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-olivero-page-title"]');
-    $this->assertEquals('hero', $trPageTitleUpdated->getAttribute('data-parent-region'));
-    $this->assertEquals('hero', $trPageTitleUpdated->findField('edit-blocks-olivero-page-title-region')->getValue());
     $this->assertSession()->assert(
       $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-hero-message"] td')->getText() !== 'No blocks in this region',
       "Region here shouldn't be empty"

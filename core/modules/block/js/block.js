@@ -90,8 +90,8 @@
        *
        * @param {jQuery} table
        *   The jQuery object representing the table to inspect.
-       * @param {jQuery} rowObject
-       *   The jQuery object representing the table row.
+       * @param {Drupal.tableDrag.row} rowObject
+       *   Drupal table drag row dropped.
        */
       function checkEmptyRegions(table, rowObject) {
         table.find('tr.region-message').each(function () {
