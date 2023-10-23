@@ -25,7 +25,6 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Core\Url;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -181,30 +180,13 @@ class FieldConfigEditForm extends EntityForm {
       ],
       '#weight' => -20,
     ];
-    $form['new_storage_wrapper']['label'] = [
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
       '#required' => TRUE,
       '#maxlength' => 255,
-      '#size' => 30,
       '#weight' => -20,
-    ];
-
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['new_storage_wrapper']['field_name'] = [
-      '#type' => 'machine_name',
-      '#field_prefix' => $field_prefix,
-      '#size' => 15,
-      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-      // Calculate characters depending on the length of the field prefix
-      // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
-      '#machine_name' => [
-        'source' => ['new_storage_wrapper', 'label'],
-        'exists' => [$this, 'fieldNameExists'],
-      ],
-      '#required' => FALSE,
     ];
 
     $form['description'] = [
@@ -461,45 +443,6 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-    $entity_type = $this->entity->getTargetEntityTypeId();
-    $temp_store = $this->tempStore->get($entity_type . ':' . $this->entity->getName());
-    // @todo Adding '?? []' avoids errors, but probably this should be set
-    // somewhere. Either that or get rid of $default_options.
-    $default_options = $temp_store['default_options'] ?? [];
-
-    $this->validateAddNew($form, $form_state);
-    $values = $form_state->getValues();
-    $field_name = $values['field_name'];
-    $field_values = [
-      ...$default_options['field_config'] ?? [],
-      'field_name' => $field_name,
-      'label' => $values['label'],
-      // Field translatability should be explicitly enabled by the users.
-      'translatable' => FALSE,
-      'entity_type' => $entity_type,
-      'bundle' => $this->entity->getTargetBundle(),
-    ];
-    $field_storage_values = [
-      ...$default_options['field_storage_config'] ?? [],
-      'field_name' => $field_name,
-      'type' => $this->entity->get('field_type'),
-      'entity_type' => $entity_type,
-      'translatable' => $values['translatable'],
-    ];
-    try {
-      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
-    }
-    catch (\Exception $e) {
-      $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
-      return;
-    }
-    /** @var \Drupal\Core\Field\FieldConfigInterface $entity */
-    $entity = $this->entityTypeManager->getStorage('field_config')->create([
-      ...$field_values,
-      'field_storage' => $field_storage_entity,
-    ]);
-    // Set new entity.
-    $this->entity = $entity;
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     // Pass in new entity here.
@@ -717,37 +660,6 @@ class FieldConfigEditForm extends EntityForm {
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
     return isset($field_storage_definitions[$field_name]);
-  }
-
-  /**
-   * Validates the 'add new field' case.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @see \Drupal\field_ui\Form\FieldStorageAddForm::validateForm()
-   */
-  protected function validateAddNew(array $form, FormStateInterface $form_state) {
-    // Validate if any information was provided in the 'add new field' case.
-    // Missing label.
-    if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
-    }
-
-    // Missing field name.
-    if (!$form_state->getValue('field_name')) {
-      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-    }
-    // Field name validation.
-    else {
-      $field_name = $form_state->getValue('field_name');
-
-      // Add the field prefix.
-      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
-      $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
-    }
   }
 
 }
