@@ -142,31 +142,25 @@ trait FieldUiJSTestTrait {
   }
 
   /**
-   * Helper function that returns the field card element if it is in a group.
+   * Helper function that returns the name of the group that a field is in.
    *
    * @param string $field_type
    *   The name of the field type.
    *
-   * @return \Behat\Mink\Element\NodeElement|false|mixed|null
-   *   Field card element within a group.
+   * @return string|null
+   *   Group name
    */
-  public function getFieldFromGroupJS($field_type) {
-    $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
-    $groups = [];
-    foreach ($group_elements as $group_element) {
-      $groups[] = $group_element->getAttribute('value');
-    }
-    $field_card = NULL;
-    foreach ($groups as $group) {
-      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']")->getParent();
-      $group_field_card->click();
-      $this->assertSession()->assertWaitOnAjaxRequest();
-      $field_card = $this->getSession()->getPage()->find('css', "[name='group_field_options_wrapper'][value='$field_type']");
-      if ($field_card) {
-        break;
+  public function getFieldFromGroup($field_type): ?string {
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+    $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+    $grouped_field_types = $field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions());
+    foreach ($grouped_field_types as $group => $field_types) {
+      if (array_key_exists($field_type, $field_types)) {
+        return $group;
       }
     }
-    return $field_card->getParent();
+
+    return NULL;
   }
 
 }
