@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\field_ui\Traits;
 
+use Behat\Mink\Exception\ElementNotFoundException;
+
 /**
  * Provides common functionality for the Field UI tests that depend on JS.
  */
@@ -26,6 +28,7 @@ trait FieldUiJSTestTrait {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
+    $this->getSession()->resizeWindow(1200, 1200);
     $label = $label ?: $field_name;
 
     // Allow the caller to set a NULL path in case they navigated to the right
@@ -41,37 +44,50 @@ trait FieldUiJSTestTrait {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    if ($assert_session->waitForElementVisible('css', "[name='new_storage_type'][value='$field_type']")) {
-      $page = $this->getSession()->getPage();
-      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']")->getParent();
+    try {
+      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
+      $field_type_label = (string) $field_definitions[$field_type]['label'];
+      $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$field_type_label']]");
+      $link->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+
+      if ($this->getSession()->getPage()->hasField('group_field_options_wrapper')) {
+        $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
+      }
     }
-    else {
-      $field_card = $this->getFieldFromGroupJS($field_type);
+    // If the element could not be found then it is probably in a group.
+    catch (ElementNotFoundException) {
+      // Call the helper function to confirm it is in a group.
+      $field_group = $this->getFieldFromGroup($field_type);
+      $this->clickLink($field_group);
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
     }
-    $field_card?->click();
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->linkExists('Continue');
-    $page->clickLink('Continue');
+
+    $field_label = $page->findField('label');
+    $this->assertTrue($field_label->isVisible());
+    $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
+    $field_label->setValue($label);
+    $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
+    $this->assertNotEmpty($machine_name);
+    $page->findButton('Edit')->press();
+
+    $field_field_name = $page->findField('field_name');
+    $this->assertTrue($field_field_name->isVisible());
+    $field_field_name->setValue($field_name);
+
+    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->waitForElementVisible('css', '#drupal-modal');
 
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
-      $page = $session->getPage();
-      // Enter field label.
-      $field_label = $page->findField('edit-label');
-      $this->assertTrue($field_label->isVisible());
-      $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
-      $field_label->setValue($label);
-      $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
-      $this->assertNotEmpty($machine_name);
-      $page->findButton('Edit')->press();
-
-      $field_field_name = $page->findField('field_name');
-      $this->assertTrue($field_field_name->isVisible());
-      $field_field_name->setValue($field_name);
       // Second step: Save field settings.
-      $save_button = $page->find('css', '.ui-dialog-buttonpane')->findButton('Save settings');
+      $save_button = $page->find('css', '.ui-dialog-buttonpane')->findButton('Save');
       $save_button->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
       $assert_session->pageTextContains("Saved $label configuration.");
 
       // Check that the field appears in the overview form.

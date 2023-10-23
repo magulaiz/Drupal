@@ -327,7 +327,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
         '#value' => $this->t('Continue'),
         '#submit' => ['::submitForm'],
         '#attributes' => [
-          'class' => ['button', 'button--primary', 'use-ajax'],
+          'class' => ['button', 'button--primary'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
             'width' => '1100',
@@ -336,13 +336,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
       ];
       if ($this->isAjax()) {
         $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
-        $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
       }
-      // Hide the continue button until the sub-field is selected.
-      if (isset($group_field_options) && !array_key_exists($form_state->getValue('group_field_options_wrapper'), $group_field_options)) {
-        $form['group_field_options_wrapper']['submit']['#attributes']['class'][] = 'js-hide';
-      }
-
     }
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
