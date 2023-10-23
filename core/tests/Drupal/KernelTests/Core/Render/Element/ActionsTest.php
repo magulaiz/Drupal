@@ -65,7 +65,7 @@ class ActionsTest extends KernelTestBase implements FormInterface {
     $result = \Drupal::formBuilder()->getForm($this);
     \Drupal::service('renderer')->renderRoot($result);
     $this->assertEquals(['system/base', 'core/drupal.dropbutton'], $result['#attached']['library']);
-    $this->assertEquals(['foo'], $result['#cache']['tags']);
+    $this->assertEquals(['foo', 'render_cache_form'], $result['#cache']['tags']);
   }
 
 }

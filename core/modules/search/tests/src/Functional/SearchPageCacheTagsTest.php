@@ -185,6 +185,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'search_index',
       'search_index:node_search',
       'http_response',
+      'render_cache_form',
       'rendered',
       'node_list',
     ];
