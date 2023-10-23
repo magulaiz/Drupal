@@ -132,6 +132,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
       'comment:' . $comment->id(),
       'config:filter.format.plain_text',
       'user_view',
+      'render_cache_form',
       'user:' . $user->id(),
       'config:core.entity_form_display.comment.comment.default',
       'config:field.field.comment.comment.comment_body',
