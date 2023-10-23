@@ -2,11 +2,11 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\field_ui\Ajax\OpenModalDialogWithUrl;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
-use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -30,7 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddSubfieldForm extends FormBase {
-  use AjaxFormHelperTrait;
   use AjaxHelperTrait;
 
   /**
@@ -194,13 +193,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
       }
     }
 
-    $form['add'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => 'add-field-container',
-      ],
-    ];
-
     $field_type_options_radios = [];
     foreach ($field_type_options as $id => $field_type) {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
@@ -238,7 +230,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
         'source' => ['label'],
         'exists' => [$this, 'fieldNameExists'],
       ],
-      '#required' => FALSE,
+      '#required' => TRUE,
     ];
 
     // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
@@ -346,6 +338,10 @@ class FieldStorageAddSubfieldForm extends FormBase {
       '#type' => 'value',
       '#value' => TRUE,
     ];
+
+    $form['#prefix'] = '<div id="field-storage-subfield">';
+    $form['#suffix'] = '</div>';
+
     $form['#attached']['library'] = [
       'field_ui/drupal.field_ui',
       'field_ui/drupal.field_ui.manage_fields',
@@ -373,21 +369,11 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * @see \Drupal\field_ui\Form\FieldStorageAddForm::validateForm()
    */
   protected function validateAddNew(array $form, FormStateInterface $form_state) {
-    // Validate if any information was provided in the 'add new field' case.
-    // Missing label.
-    if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
-    }
-
     // Missing subtype.
     if (!$form_state->getValue('group_field_options_wrapper') && isset($form['group_field_options_wrapper']['fields'])) {
       $form_state->setErrorByName('storage type', $this->t('Add new field: you need to select a subtype.'));
     }
 
-    // Missing field name.
-    if (!$form_state->getValue('field_name')) {
-      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-    }
     // Field name validation.
     else {
       $field_name = $form_state->getValue('field_name');
@@ -455,7 +441,45 @@ class FieldStorageAddSubfieldForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Submit form #ajax callback.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response that display validation error messages or represents a
+   *   successful submission.
+   *
+   * @see \Drupal\Core\Ajax\AjaxFormHelperTrait
+   */
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+    if ($form_state->hasAnyErrors()) {
+      $form['status_messages'] = [
+        '#type' => 'status_messages',
+        '#weight' => -1000,
+      ];
+      $form['#sorted'] = FALSE;
+      $response = new AjaxResponse();
+      $response->addCommand(new ReplaceCommand('#field-storage-subfield', $form));
+    }
+    else {
+      $response = $this->successfulAjaxSubmit($form, $form_state);
+    }
+    return $response;
+  }
+
+  /**
+   * Respond to a successful AJAX submission.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response.
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();

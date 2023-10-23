@@ -134,6 +134,7 @@ trait FieldUiJSTestTrait {
 
     // Second step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->pageTextContains("Saved $label configuration.");
 
     // Check that the field appears in the overview form.

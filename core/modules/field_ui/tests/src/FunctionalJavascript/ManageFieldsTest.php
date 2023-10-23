@@ -79,6 +79,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->type2 = $type2->id();
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
+    $this->getSession()->resizeWindow(1300, 1300);
   }
 
   /**
@@ -178,30 +179,32 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
     $field_name = 'test_field_1';
-    $page->fillField('label', $field_name);
 
-    // Test validation.
-    $page->pressButton('Continue');
-    $assert_session->pageTextContains('You need to select a field type.');
-    $assert_session->elementExists('css', '[name="new_storage_type"].error');
-    $assert_session->pageTextNotContains('Choose an option below');
-
-    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]')->getParent());
-    $number_field->click();
+    $this->clickLink('Number');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
+
     $assert_session->pageTextContains('Choose an option below');
-    $page->pressButton('Continue');
+    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $assert_session->pageTextContains('Label field is required.');
+    $assert_session->pageTextContains('Add new field: you need to select a subtype.');
+    $assert_session->elementExists('css', '[name="label"].error');
+    $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
+    $page->fillField('label', $field_name);
+    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
+    $assert_session->assertWaitOnAjaxRequest();
+
     $assert_session->pageTextContains('You need to select a field type.');
-    $assert_session->elementNotExists('css', '[name="new_storage_type"].error');
+    $assert_session->elementNotExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
 
     // Try adding a field using a grouped field type.
-    $this->assertNotEmpty($email_field = $page->find('xpath', '//*[text() = "Email"]')->getParent());
-    $email_field->click();
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $this->clickLink('Email');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="email"]')->isSelected());
     $assert_session->pageTextNotContains('Choose an option below');
+    $assert_session->elementExists('css', '[name="label"]');
 
     $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]')->getParent());
     $text->click();
