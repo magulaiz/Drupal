@@ -56,6 +56,10 @@ trait FieldUiTestTrait {
       $field_type_label = (string) $field_definitions[$field_type]['label'];
       $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$field_type_label']]");
       $link->click();
+
+      if ($this->getSession()->getPage()->hasField('group_field_options_wrapper')) {
+        $initial_edit['group_field_options_wrapper'] = $field_type;
+      }
     }
     // If the element could not be found then it is probably in a group.
     catch (ElementNotFoundException) {
@@ -85,8 +89,10 @@ trait FieldUiTestTrait {
       }
 
       // Second step: 'Storage settings' form.
-      $edit = array_merge($prefixed_storage_edit, $field_edit);
-      $this->submitForm($edit, 'Save');
+      $this->submitForm($prefixed_storage_edit, 'Update settings');
+
+      // Third step: 'Field settings' form.
+      $this->submitForm($field_edit, 'Save');
       $this->assertSession()->pageTextContains("Saved $label configuration.");
 
       // Check that the field appears in the overview form.
