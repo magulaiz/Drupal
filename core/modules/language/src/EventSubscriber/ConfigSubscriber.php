@@ -95,7 +95,7 @@ class ConfigSubscriber implements EventSubscriberInterface {
         $this->languageManager->reset();
 
         if ($saved_config->getOriginal('default_langcode') === NULL) {
-          trigger_error(print_r($saved_config->get(), TRUE) . "\n" . (new \Exception())->getTraceAsString(), E_USER_ERROR);
+          trigger_error(print_r($saved_config->getOriginal(), TRUE) . "\n" . print_r($saved_config->get(), TRUE) . "\n" . (new \Exception())->getTraceAsString(), E_USER_ERROR);
         }
 
         // Do not do secondary writes to configuration during config sync.
