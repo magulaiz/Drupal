@@ -307,7 +307,9 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    */
   public function setContentLengthHeader(ResponseEvent $event): void {
     $response = $event->getResponse();
-    if ($response instanceof StreamedResponse) {
+    // @todo The batch system will break unless we check ob_get_level(). See
+    //   https://drupal.org/i/3392196.
+    if ($response instanceof StreamedResponse || ob_get_level()) {
       return;
     }
 
