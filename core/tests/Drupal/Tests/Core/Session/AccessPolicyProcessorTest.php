@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\VariationCacheInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AccessPolicyBase;
 use Drupal\Core\Session\AccessPolicyProcessor;
@@ -202,15 +203,28 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests if the account switcher switches properly when user cache context is present.
    *
+   * @param bool $has_user_context
+   *   Whether a user based cache context is present.
+   * @param bool $is_current_user
+   *   Whether the passed in account is the current user.
+   * @param bool $should_call_switcher
+   *   Whether the account switcher should be called.
+   *
    * @covers ::addAccessPolicy
    * @covers ::processAccessPolicies
    * @dataProvider accountSwitcherProvider
    */
-  public function testAccountSwitcher($has_user_context) {
-    $account = $this->prophesize(AccountInterface::class)->reveal();
+  public function testAccountSwitcher(bool $has_user_context, bool $is_current_user, bool $should_call_switcher) {
+    // Setting ID as string here because User objects tend to return that.
+    $account = $this->prophesize(AccountInterface::class);
+    $account->id()->willReturn('2');
+    $account = $account->reveal();
+
+    $current_user = $this->prophesize(AccountProxyInterface::class);
+    $current_user->id()->willReturn($is_current_user ? 2 : 13);
 
     $account_switcher = $this->prophesize(AccountSwitcherInterface::class);
-    if ($has_user_context) {
+    if ($should_call_switcher) {
       $account_switcher->switchTo($account)->shouldBeCalledTimes(1);
       $account_switcher->switchBack()->shouldBeCalledTimes(1);
     }
@@ -219,7 +233,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
       $account_switcher->switchBack()->shouldNotBeCalled();
     }
 
-    $processor = $this->setUpAccessPolicyProcessor(NULL, NULL, NULL, $account_switcher->reveal());
+    $processor = $this->setUpAccessPolicyProcessor(NULL, NULL, NULL, $current_user->reveal(), $account_switcher->reveal());
     $processor->addAccessPolicy(new BarAccessPolicy());
     if ($has_user_context) {
       $processor->addAccessPolicy(new UserContextAccessPolicy());
@@ -234,8 +248,30 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    *   A list of testAccountSwitcher method arguments.
    */
   public function accountSwitcherProvider() {
-    $cases['no-user-context'] = [FALSE];
-    $cases['user-context'] = [TRUE];
+    $cases['no-user-context-no-current-user'] = [
+      'has_user_context' => FALSE,
+      'is_current_user' => FALSE,
+      'should_call_switcher' => FALSE,
+    ];
+
+    $cases['no-user-context-current-user'] = [
+      'has_user_context' => FALSE,
+      'is_current_user' => TRUE,
+      'should_call_switcher' => FALSE,
+    ];
+
+    $cases['user-context-no-current-user'] = [
+      'has_user_context' => TRUE,
+      'is_current_user' => FALSE,
+      'should_call_switcher' => TRUE,
+    ];
+
+    $cases['user-context-current-user'] = [
+      'has_user_context' => TRUE,
+      'is_current_user' => TRUE,
+      'should_call_switcher' => FALSE,
+    ];
+
     return $cases;
   }
 
@@ -335,6 +371,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
     VariationCacheInterface $variation_cache = NULL,
     VariationCacheInterface $variation_cache_static = NULL,
     CacheBackendInterface $cache_static = NULL,
+    AccountProxyInterface $current_user = NULL,
     AccountSwitcherInterface $account_switcher = NULL
   ) {
     // Prophecy does not accept a willReturn call on a mocked method if said
@@ -363,6 +400,10 @@ class AccessPolicyProcessorTest extends UnitTestCase {
       $cache_static = $cache_static->reveal();
     }
 
+    if (!isset($current_user)) {
+      $current_user = $this->prophesize(AccountProxyInterface::class)->reveal();
+    }
+
     if (!isset($account_switcher)) {
       $account_switcher = $this->prophesize(AccountSwitcherInterface::class)->reveal();
     }
@@ -371,6 +412,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
       $variation_cache,
       $variation_cache_static,
       $cache_static,
+      $current_user,
       $account_switcher
     );
   }

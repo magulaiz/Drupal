@@ -21,19 +21,22 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
   /**
    * Constructs an AccessPolicyChain object.
    *
-   * @param \Drupal\Core\Cache\VariationCacheInterface $cache
+   * @param \Drupal\Core\Cache\VariationCacheInterface $variationCache
    *   The variation cache backend to use as a persistent cache.
-   * @param \Drupal\Core\Cache\VariationCacheInterface $static
+   * @param \Drupal\Core\Cache\VariationCacheInterface $variationStatic
    *   The variation cache backend to use as a static cache.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $regularStatic
+   * @param \Drupal\Core\Cache\CacheBackendInterface $static
    *   The regular cache backend to use as a static cache.
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The current user.
    * @param \Drupal\Core\Session\AccountSwitcherInterface $accountSwitcher
    *   The account switcher service.
    */
   public function __construct(
-    protected VariationCacheInterface $cache,
-    protected VariationCacheInterface $static,
-    protected CacheBackendInterface $regularStatic,
+    protected VariationCacheInterface $variationCache,
+    protected VariationCacheInterface $variationStatic,
+    protected CacheBackendInterface $static,
+    protected AccountProxyInterface $currentUser,
     protected AccountSwitcherInterface $accountSwitcher) {
   }
 
@@ -73,7 +76,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     $switch_account = FALSE;
     foreach ($persistent_cache_contexts as $cache_context) {
       [$cache_context_root] = explode('.', $cache_context, 2);
-      if ($cache_context_root === 'user') {
+      if ($cache_context_root === 'user' && $this->currentUser->id() != $account->id()) {
         $switch_account = TRUE;
         $this->accountSwitcher->switchTo($account);
         break;
@@ -83,12 +86,12 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     // Retrieve the permissions from the static cache if available.
     $static_cache_hit = FALSE;
     $persistent_cache_hit = FALSE;
-    if ($static_cache = $this->static->get($cache_keys, $initial_cacheability)) {
+    if ($static_cache = $this->variationStatic->get($cache_keys, $initial_cacheability)) {
       $static_cache_hit = TRUE;
       $calculated_permissions = $static_cache->data;
     }
     // Retrieve the permissions from the persistent cache if available.
-    elseif ($cache = $this->cache->get($cache_keys, $initial_cacheability)) {
+    elseif ($cache = $this->variationCache->get($cache_keys, $initial_cacheability)) {
       $persistent_cache_hit = TRUE;
       $calculated_permissions = $cache->data;
     }
@@ -136,7 +139,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       // we had stored a CalculatedPermissions object, we would no longer be
       // able to ask for its cache contexts.
       if (!$persistent_cache_hit) {
-        $this->cache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
+        $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
       }
 
       // Then convert the calculated permissions to an immutable value object
@@ -144,7 +147,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       // conversion every time we call for the calculated permissions from a
       // warm static cache.
       $calculated_permissions = new CalculatedPermissions($calculated_permissions);
-      $this->static->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
+      $this->variationStatic->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
     }
 
     if ($switch_account) {
@@ -168,7 +171,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     $cid = 'access_policies:access_policy_processor:contexts:' . $scope;
 
     // Retrieve the contexts from the regular static cache if available.
-    if ($static_cache = $this->regularStatic->get($cid)) {
+    if ($static_cache = $this->static->get($cid)) {
       $contexts = $static_cache->data;
     }
     else {
@@ -181,7 +184,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       $contexts = array_merge(...$contexts);
 
       // Store the contexts in the regular static cache.
-      $this->regularStatic->set($cid, $contexts);
+      $this->static->set($cid, $contexts);
     }
 
     return $contexts;
