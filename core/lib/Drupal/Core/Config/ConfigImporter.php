@@ -996,6 +996,10 @@ class ConfigImporter {
       $config->delete();
     }
     else {
+      $original_data = $this->storageComparer->getTargetStorage($collection)->read($name);
+      if (is_array($original_data)) {
+        $config->initWithData($original_data);
+      }
       $data = $this->storageComparer->getSourceStorage($collection)->read($name);
       $config->setData($data ? $data : []);
       $config->save();
