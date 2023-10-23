@@ -76,7 +76,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     $switch_account = FALSE;
     foreach ($persistent_cache_contexts as $cache_context) {
       [$cache_context_root] = explode('.', $cache_context, 2);
-      if ($cache_context_root === 'user' && $this->currentUser->id() != $account->id()) {
+      if ($cache_context_root === 'user' && $this->currentUser->id() !== $account->id()) {
         $switch_account = TRUE;
         $this->accountSwitcher->switchTo($account);
         break;

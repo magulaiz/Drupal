@@ -215,9 +215,8 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    * @dataProvider accountSwitcherProvider
    */
   public function testAccountSwitcher(bool $has_user_context, bool $is_current_user, bool $should_call_switcher) {
-    // Setting ID as string here because User objects tend to return that.
     $account = $this->prophesize(AccountInterface::class);
-    $account->id()->willReturn('2');
+    $account->id()->willReturn(2);
     $account = $account->reveal();
 
     $current_user = $this->prophesize(AccountProxyInterface::class);
