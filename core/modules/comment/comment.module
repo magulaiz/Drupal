@@ -247,12 +247,8 @@ function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInt
  * Process callback to remove comment type field option.
  */
 function comment_new_storage_type_process_callback($element, &$form_state, $form) {
-  foreach ($element as $key => $value) {
-    if (isset($value['radio']['#return_value']) && $value['radio']['#return_value'] === 'comment') {
-      // You cannot use comment fields on entity types with non-integer IDs.
-      unset($element[$key]);
-    }
-  }
+  // You cannot use comment fields on entity types with non-integer IDs.
+  unset($element['comment']);
 
   return $element;
 }
