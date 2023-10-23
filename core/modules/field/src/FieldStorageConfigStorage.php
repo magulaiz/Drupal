@@ -159,9 +159,6 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
    */
   protected function mapFromStorageRecords(array $records) {
     foreach ($records as $id => &$record) {
-      if (!isset($record['type'])) {
-        trigger_error(print_r($record, TRUE) . "\n" . (new \Exception())->getTraceAsString(), E_USER_ERROR);
-      }
       try {
         $class = $this->fieldTypeManager->getPluginClass($record['type']);
       }
