@@ -59,16 +59,17 @@ class RenderCache implements RenderCacheInterface {
    * {@inheritdoc}
    */
   public function get(array $elements) {
-    // Form submissions rely on the form being built during the POST request,
-    // and render caching of forms prevents this from happening.
-    // @todo remove the isMethodCacheable() check when
-    //   https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$this->isElementCacheable($elements)) {
+    if (!$this->isElementCacheable($elements)) {
       return FALSE;
     }
 
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
     if (($cache_bin = $this->cacheFactory->get($bin)) && $cache = $cache_bin->get($elements['#cache']['keys'], CacheableMetadata::createFromRenderArray($elements))) {
+      // @todo: should this be a configurable deny list as a container
+      // parameter?
+      if (in_array('render_cache_form', $cache->tags, TRUE)) {
+        return FALSE;
+      }
       return $cache->data;
     }
     return FALSE;
