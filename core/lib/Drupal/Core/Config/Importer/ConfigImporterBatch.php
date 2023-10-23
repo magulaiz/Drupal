@@ -58,6 +58,7 @@ class ConfigImporterBatch {
         foreach ($results['errors'] as $error) {
           $messenger->addError($error);
           $logger->error($error);
+          trigger_error((string) $error, E_USER_ERROR);
         }
         $messenger->addWarning(t('The configuration was imported with errors.'));
       }
@@ -72,6 +73,7 @@ class ConfigImporterBatch {
       $error_operation = reset($operations);
       $message = t('An error occurred while processing %error_operation with arguments: @arguments', ['%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)]);
       $messenger->addError($message);
+      trigger_error((string) $message, E_USER_ERROR);
     }
   }
 
