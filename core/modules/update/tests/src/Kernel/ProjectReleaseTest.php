@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\update\Unit;
+namespace Drupal\Tests\update\Kernel;
 
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\update\ProjectRelease;
 
 /**
@@ -10,7 +10,12 @@ use Drupal\update\ProjectRelease;
  *
  * @group update
  */
-class ProjectReleaseTest extends UnitTestCase {
+class ProjectReleaseTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['update'];
 
   /**
    * Tests creating with valid data.

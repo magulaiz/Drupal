@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Optional;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Validation;
 
 /**
  * Provides a project release value object.
@@ -163,7 +162,9 @@ final class ProjectRelease {
       ],
       'allowExtraFields' => TRUE,
     ]);
-    $violations = Validation::createValidator()->validate($data, $collection_constraint);
+    /** @var \Symfony\Component\Validator\Validator\ValidatorInterface $validator */
+    $validator = \Drupal::service('validation.basic_recursive_validator_factory')->createValidator();
+    $violations = $validator->validate($data, $collection_constraint);
     if (count($violations)) {
       foreach ($violations as $violation) {
         $violation_messages[] = "Field " . $violation->getPropertyPath() . ": " . $violation->getMessage();
