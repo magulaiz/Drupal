@@ -30,7 +30,7 @@ trait FieldUiJSTestTrait {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
-    $this->getSession()->resizeWindow(1200, 1200);
+    $this->getSession()->resizeWindow(1200, 800);
     $label = $label ?: $field_name;
 
     // Allow the caller to set a NULL path in case they navigated to the right

@@ -31,6 +31,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'node',
+    'block',
     'field_ui',
     'path',
     'taxonomy',
@@ -63,6 +64,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_actions_block');
 
     // Create a content type, with underscores.
     $type_name = $this->randomMachineName(8) . '_test';
@@ -119,14 +121,19 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
 
     // First step: 'Add new field' on the 'Manage fields' page.
-    $this->drupalGet($bundle_path . '/fields/add-field');
+    $this->drupalGet($bundle_path . '/fields');
+    $this->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Check if the commonly referenced entity types appear in the list.
-    $page->find('css', "[name='new_storage_type'][value='reference']")->getParent()->click();
+    $this->clickLink('Reference');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Choose an option below');
     $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:node']");
     $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:user']");
 
+    $this->assertSession()->buttonExists('Change field type')->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->fieldUIAddNewFieldJS(NULL, 'test', 'Test', 'entity_reference', FALSE);
 
     // Node should be selected by default.
@@ -250,7 +257,10 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Third step: confirm.
     $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
-    $this->submitForm(['required' => '1'], 'Save settings');
+    // @todo should improve the dialog positioning in this situation so it's not
+    //   outside the viewport.
+    $this->getSession()->resizeWindow(1200, 1500);
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Check that the field appears in the overview form.
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");
@@ -260,6 +270,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // The first 'Edit' link is for the Body field.
     $this->clickLink('Edit', 1);
     $this->submitForm([], 'Save settings');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
