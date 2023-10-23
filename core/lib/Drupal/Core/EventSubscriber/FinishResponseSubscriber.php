@@ -325,8 +325,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // There is no specific reason for choosing 16 beside it should be executed
     // before ::onRespond().
     $events[KernelEvents::RESPONSE][] = ['onAllResponds', 16];
-    // @todo Removing call to setContentLengthHeader. This will need to be fixed
-    //   before commit. See https://drupal.org/i/3392196.
+    // Run very late, after all other response subscribers have run. However,
+    // any response subscribers that convert a response to a streamed response
+    // must run after this and undo what this does.
+    $events[KernelEvents::RESPONSE][] = ['setContentLengthHeader', -1024];
     return $events;
   }
 
