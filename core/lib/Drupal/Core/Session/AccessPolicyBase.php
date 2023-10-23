@@ -18,7 +18,7 @@ abstract class AccessPolicyBase implements AccessPolicyInterface {
    * {@inheritdoc}
    */
   public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
-    return (new RefinableCalculatedPermissions())->addCacheContexts($this->getPersistentCacheContexts($scope));
+    return (new RefinableCalculatedPermissions())->addCacheContexts($this->getPersistentCacheContexts());
   }
 
   /**
@@ -29,7 +29,7 @@ abstract class AccessPolicyBase implements AccessPolicyInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return [];
   }
 

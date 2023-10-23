@@ -172,20 +172,18 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
 
     // Retrieve the contexts from the regular static cache if available.
     if ($static_cache = $this->static->get($cid)) {
-      $contexts = $static_cache->data;
+      return $static_cache->data;
     }
-    else {
-      $contexts = [];
-      foreach ($this->accessPolicies as $access_policy) {
-        if ($access_policy->applies($scope)) {
-          $contexts[] = $access_policy->getPersistentCacheContexts($scope);
-        }
-      }
-      $contexts = array_merge(...$contexts);
 
-      // Store the contexts in the regular static cache.
-      $this->static->set($cid, $contexts);
+    $contexts = [];
+    foreach ($this->accessPolicies as $access_policy) {
+      if ($access_policy->applies($scope)) {
+        $contexts[] = $access_policy->getPersistentCacheContexts();
+      }
     }
+    $contexts = array_merge(...$contexts);
+    // Store the contexts in the regular static cache.
+    $this->static->set($cid, $contexts);
 
     return $contexts;
   }
@@ -204,10 +202,8 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
   protected function validateScope(string $scope, CalculatedPermissionsInterface $calculated_permissions): bool {
     $actual_scopes = $calculated_permissions->getScopes();
 
-    // Validate that only the requested scope was returned. An empty result is
-    // allowed, however, as it might be that the access policy had nothing to
-    // say for this scope.
-    if (!empty($actual_scopes) && (count($actual_scopes) > 1 || reset($actual_scopes) !== $scope)) {
+    // The calculated permissions should only contain items for the given scope.
+    if (count($actual_scopes) !== 1 || reset($actual_scopes) !== $scope) {
       return FALSE;
     }
 

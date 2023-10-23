@@ -430,7 +430,7 @@ class FooAccessPolicy extends AccessPolicyBase {
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], TRUE, $scope, 1));
   }
 
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return ['foo'];
   }
 
@@ -447,7 +447,7 @@ class BarAccessPolicy extends AccessPolicyBase {
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], FALSE, $scope, 1));
   }
 
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return ['bar'];
   }
 
@@ -464,7 +464,7 @@ class BazAccessPolicy extends AccessPolicyBase {
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['baz'], FALSE, 'baz', 1));
   }
 
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return ['baz'];
   }
 
@@ -510,7 +510,7 @@ class AlwaysAddsAccessPolicy extends AccessPolicyBase {
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 1));
   }
 
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return ['always'];
   }
 
@@ -527,7 +527,7 @@ class AlwaysAltersAccessPolicy extends AccessPolicyBase {
     $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 2));
   }
 
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return ['always'];
   }
 
@@ -541,7 +541,7 @@ class UserContextAccessPolicy extends AccessPolicyBase {
     return TRUE;
   }
 
-  public function getPersistentCacheContexts(string $scope): array {
+  public function getPersistentCacheContexts(): array {
     return ['user'];
   }
 

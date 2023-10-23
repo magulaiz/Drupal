@@ -13,7 +13,8 @@ namespace Drupal\Core\Session;
  * takes care of this for you.
  *
  * Do NOT use any cache context that relies on calculated permissions in any of
- * the calculations as you'd end up in an infinite loop. E.g.: user.permissions.
+ * the calculations as you will end up in an infinite loop. E.g.: The cache
+ * context "user.permissions" relies on your calculated Drupal permissions.
  */
 interface AccessPolicyInterface {
 
@@ -58,9 +59,9 @@ interface AccessPolicyInterface {
    * a specific access policy's permissions as a whole, is by removing said
    * access policy in your module's service provider.
    *
-   * A good example use case of alterPermissions would be to flat out revoke a
-   * banned list of permissions outside of office hours. This would make it so
-   * no-one can perform any destructive actions while the help desk is offline.
+   * A good example use case of alterPermissions would be to revoke a banned
+   * list of permissions outside of office hours. This would make it so no-one
+   * can perform any destructive actions while the help desk is offline.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to alter the permissions.
@@ -72,18 +73,15 @@ interface AccessPolicyInterface {
   public function alterPermissions(AccountInterface $account, string $scope, RefinableCalculatedPermissionsInterface $calculated_permissions): void;
 
   /**
-   * Gets the persistent cache contexts for a given scope.
+   * Gets the persistent cache contexts.
    *
-   * WARNING: These should never change based on anything other than the passed
-   * in scope. If you make these cache contexts conditional, the cache might not
-   * work properly and you are exposing your site to privilege escalation.
-   *
-   * @param string $scope
-   *   The scope to get the persistent cache contexts for.
+   * These inform the system what your access policy's calculations always vary
+   * by. If you have any further cache contexts that you want to conditionally
+   * add, you can do so in calculatePermissions and alterPermissions.
    *
    * @return string[]
    *   The persistent cache contexts.
    */
-  public function getPersistentCacheContexts(string $scope): array;
+  public function getPersistentCacheContexts(): array;
 
 }
