@@ -2049,7 +2049,7 @@ abstract class Connection {
    * @see https://www.drupal.org/node/3218001
    */
   public function getPagerManager(): PagerManagerInterface {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
     return \Drupal::service('pager.manager');
   }
 

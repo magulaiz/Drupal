@@ -206,7 +206,7 @@ class ConnectionTest extends DatabaseTestBase {
    * @group legacy
    */
   public function testGetPagerManagerDeprecation() {
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::getPagerManager() is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001');
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::getPagerManager() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001');
     $this->assertInstanceOf(PagerManagerInterface ::class, $this->connection->getPagerManager());
   }
 
