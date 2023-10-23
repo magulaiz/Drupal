@@ -25,7 +25,7 @@ trait CalculatedPermissionsTrait {
    * {@inheritdoc}
    */
   public function getItems(): array {
-    return array_reduce($this->items, fn($carry, $scope_items) => [...$carry, ...$scope_items], []);
+    return array_reduce($this->items, fn($carry, $scope_items) => [...$carry, ...array_values($scope_items)], []);
   }
 
   /**
