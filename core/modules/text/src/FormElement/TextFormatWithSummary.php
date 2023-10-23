@@ -2,6 +2,7 @@
 
 namespace Drupal\text\FormElement;
 
+use Drupal\config_translation\FormElement\TextFormat;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
