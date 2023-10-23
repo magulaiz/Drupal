@@ -92,6 +92,7 @@ class CountryManager implements CountryManagerInterface {
       'CN' => t('China'),
       'CO' => t('Colombia'),
       'CP' => t('Clipperton Island'),
+      'CQ' => t('Sark'),
       'CR' => t('Costa Rica'),
       'CU' => t('Cuba'),
       'CV' => t('Cape Verde'),
