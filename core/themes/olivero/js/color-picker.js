@@ -39,7 +39,7 @@
       hex = hex.substring(1);
     }
 
-    // Convert "abc" to "aabbcc".
+    // Convert three-value to six-value syntax.
     if (hex.length === 3) {
       hex = hex
         .split('')
