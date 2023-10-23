@@ -67,30 +67,12 @@ class FieldConfigEditForm extends EntityForm {
   protected string $bundle;
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new FieldConfigDeleteForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info service.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The type data manger.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface|null $entityDisplayRepository
    *   The entity display repository.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
@@ -101,15 +83,11 @@ class FieldConfigEditForm extends EntityForm {
   public function __construct(
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     protected TypedDataManagerInterface $typedDataManager,
-    protected EntityFieldManagerInterface $entity_field_manager,
-    EntityTypeManagerInterface $entity_type_manager,
     protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
     protected ?PrivateTempStore $tempStore = NULL,
     protected ?ElementInfoManagerInterface $elementInfo = NULL,
   ) {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityTypeManager = $entity_type_manager;
     if ($this->entityDisplayRepository === NULL) {
       @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
       $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
@@ -131,8 +109,6 @@ class FieldConfigEditForm extends EntityForm {
     return new static(
       $container->get('entity_type.bundle.info'),
       $container->get('typed_data_manager'),
-      $container->get('entity_field.manager'),
-      $container->get('entity_type.manager'),
       $container->get('entity_display.repository'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.element_info'),
@@ -674,28 +650,6 @@ class FieldConfigEditForm extends EntityForm {
     $this->messenger()
       ->addError($this->t('An error occurred while saving the field: @error',
         ['@error' => $exception->getMessage()]));
-  }
-
-  /**
-   * Checks if a field machine name is taken.
-   *
-   * @param string $value
-   *   The machine name, not prefixed.
-   * @param array $element
-   *   An array containing the structure of the 'field_name' element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return bool
-   *   Whether or not the field machine name is taken.
-   */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
-    // Add the field prefix.
-    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
-    $entity_type_id = $this->entity->getTargetEntityTypeId();
-
-    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
-    return isset($field_storage_definitions[$field_name]);
   }
 
 }
