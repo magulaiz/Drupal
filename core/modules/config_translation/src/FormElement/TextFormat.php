@@ -3,7 +3,6 @@
 namespace Drupal\config_translation\FormElement;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\config_translation\FormElement\FormElementBase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
