@@ -184,21 +184,15 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     $query = UrlHelper::filterQueryParameters($query, ['_wrapper_format', 'ajax_page_state'], '');
 
     $options = ['query' => $query];
-    if (!$view->hasUrl()) {
+    $form['#action'] = match (TRUE) {
+      // If the view has a URL we can use that.
+      $view->hasUrl() => $view->getUrl()->setOptions($options)->toString(),
+      // On the views.ajax route, set the action to the page we were on.
+      $this->currentRouteMatch->getRouteName() === 'views.ajax' => Url::fromUserInput($this->currentPathStack->getPath())->setOptions($options)->toString(),
       // On any non views.ajax route, use the current route for the form action.
-      if ($this->currentRouteMatch->getRouteName() !== 'views.ajax') {
-        $form_action = Url::fromRoute('<current>')->setOptions($options)->toString();
-      }
-      else {
-        // On the views.ajax route, set the action to the page we were on.
-        $form_action = Url::fromUserInput($this->currentPathStack->getPath())->setOptions($options)->toString();
-      }
-    }
-    else {
-      $form_action = $view->getUrl()->setOptions($options)->toString();
-    }
+      default => Url::fromRoute('<current>')->setOptions($options)->toString(),
+    };
 
-    $form['#action'] = $form_action;
     // Tell the preprocessor whether it should hide the header, footer, pager,
     // etc.
     $form['show_view_elements'] = [
