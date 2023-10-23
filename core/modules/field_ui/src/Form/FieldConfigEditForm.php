@@ -226,14 +226,6 @@ class FieldConfigEditForm extends EntityForm {
       '#tree' => TRUE,
       '#weight' => 11,
     ];
-    // Place the 'translatable' property as an explicit value so that contrib
-    // modules can form_alter() the value for newly created fields. By default
-    // we create field storage as translatable so it will be possible to enable
-    // translation at field level.
-    $form['translatable'] = [
-      '#type' => 'value',
-      '#value' => TRUE,
-    ];
 
     // Create a new instance of typed data for the field to ensure that default
     // value widget is always rendered from a clean state.

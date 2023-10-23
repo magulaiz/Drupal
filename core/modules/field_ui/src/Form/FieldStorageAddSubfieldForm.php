@@ -430,7 +430,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $field_storage_type = $this->selectedFieldStorageType ?? $this->selectedFieldType;
-    $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'));
+    $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
     $form_state->setRedirectUrl($this->getRedirectUrl($form_state->getValue('field_name')));
   }
 
@@ -527,7 +527,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
   /**
    * Creates a dummy field to set in temp store in order to build the edit form.
    */
-  public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name) {
+  public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name, $translatable) {
     $field_values = [
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -554,6 +554,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
       'field_name' => $field_machine_name,
       'type' => $field_type,
       'entity_type' => $entity_type,
+      'translatable' => $translatable,
     ];
 
     try {
