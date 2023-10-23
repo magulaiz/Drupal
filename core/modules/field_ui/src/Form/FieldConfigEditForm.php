@@ -159,7 +159,8 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
-    $form_title = $this->t('Field settings for %bundle', [
+    $form_title = $this->t('%field settings for %bundle', [
+      '%field' => $this->entity->getLabel(),
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
     $form['#title'] = $form_title;

@@ -73,14 +73,9 @@ final class FieldConfigAddController extends ControllerBase {
       'field_storage' => $temp_storage['field_storage'],
     ]);
 
-    $edit_form = $this->entityFormBuilder()->getForm($entity, 'default', [
+    return $this->entityFormBuilder()->getForm($entity, 'default', [
       'default_options' => $temp_storage['default_options'],
     ]);
-
-    $edit_form['new_storage_wrapper']['label']['#value'] = $temp_storage['label_machine']['label'];
-    $edit_form['new_storage_wrapper']['field_name']['#value'] = $temp_storage['label_machine']['machine_name'];
-
-    return $edit_form;
   }
 
 }

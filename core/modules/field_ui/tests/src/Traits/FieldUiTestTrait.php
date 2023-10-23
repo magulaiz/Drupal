@@ -35,7 +35,7 @@ trait FieldUiTestTrait {
     // Generate a label containing only letters and numbers to prevent random
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
-    $initial_edit = [];
+    $label = $label ?: $this->randomMachineName();
 
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
@@ -44,41 +44,30 @@ trait FieldUiTestTrait {
       // First step: 'Add field' page.
       $this->drupalGet($bundle_path);
     }
-    else {
-      $bundle_path = $this->getUrl();
-    }
 
+    $initial_edit = [
+      'label' => $label,
+      'field_name' => $field_name,
+    ];
     try {
-      // First check if the passed in field type is not part of a group.
-      $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='$field_type']");
-      // If the element exists then we can add it to our object.
-      $initial_edit = [
-        'new_storage_type' => $field_type,
-      ];
+      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
+      $field_type_label = (string) $field_definitions[$field_type]['label'];
+      $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$field_type_label']]");
+      $link->click();
     }
     // If the element could not be found then it is probably in a group.
     catch (ElementNotFoundException) {
       // Call the helper function to confirm it is in a group.
       $field_group = $this->getFieldFromGroup($field_type);
-      if ($field_group) {
-        // Pass in the group name as the new storage type.
-        $selected_group = [
-          'new_storage_type' => $field_group,
-        ];
-        $this->submitForm($selected_group, 'Change field');
-        $initial_edit = [
-          'group_field_options_wrapper' => $field_type,
-        ];
-      }
+      $this->clickLink($field_group);
+      $initial_edit['group_field_options_wrapper'] = $field_type;
     }
-    $this->submitForm($initial_edit, 'Change field');
-    $this->clickLink('Continue');
-    // Assert that the field is not created.
-    $this->assertFieldDoesNotExist($bundle_path, $label);
+    $this->submitForm($initial_edit, 'Continue');
+
     if ($save_settings) {
-      $this->assertSession()->pageTextContains("These settings apply to this field everywhere it is used.");
-      // Test Breadcrumbs.
-      $this->getSession()->getPage()->findLink($label);
+      $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
 
       // Ensure that each array key in $storage_edit is prefixed with field_storage.
       $prefixed_storage_edit = [];
@@ -96,9 +85,8 @@ trait FieldUiTestTrait {
       }
 
       // Second step: 'Storage settings' form.
-      $settings_storage_edit = array_merge($prefixed_storage_edit, $field_edit);
-      $settings_edit = array_merge(['label' => $label, 'field_name' => $field_name], $settings_storage_edit);
-      $this->submitForm($settings_edit, 'Save settings');
+      $edit = array_merge($prefixed_storage_edit, $field_edit);
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->pageTextContains("Saved $label configuration.");
 
       // Check that the field appears in the overview form.
@@ -188,44 +176,20 @@ trait FieldUiTestTrait {
    * @param string $field_type
    *   The name of the field type.
    *
-   * @return string
+   * @return string|null
    *   Group name
    */
-  public function getFieldFromGroup($field_type) {
-    $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
-    $groups = [];
-    foreach ($group_elements as $group_element) {
-      $groups[] = $group_element->getAttribute('value');
-    }
-    foreach ($groups as $group) {
-      $test = [
-        'new_storage_type' => $group,
-      ];
-      $this->submitForm($test, 'Change field');
-      try {
-        $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
+  public function getFieldFromGroup($field_type): ?string {
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+    $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+    $grouped_field_types = $field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions());
+    foreach ($grouped_field_types as $group => $field_types) {
+      if (array_key_exists($field_type, $field_types)) {
         return $group;
       }
-      catch (ElementNotFoundException) {
-        continue;
-      }
     }
-    return NULL;
-  }
 
-  /**
-   * Asserts that the field doesn't exist in the overview form.
-   *
-   * @param string $bundle_path
-   *   The bundle path.
-   * @param string $label
-   *   The field label.
-   */
-  protected function assertFieldDoesNotExist(string $bundle_path, string $label) {
-    $original_url = $this->getUrl();
-    $this->drupalGet(explode('/fields', $bundle_path)[0] . '/fields');
-    $this->assertFieldDoesNotExistOnOverview($label);
-    $this->drupalGet($original_url);
+    return NULL;
   }
 
   /**

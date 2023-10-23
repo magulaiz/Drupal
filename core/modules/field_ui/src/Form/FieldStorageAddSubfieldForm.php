@@ -214,33 +214,19 @@ class FieldStorageAddSubfieldForm extends FormBase {
       ];
     }
 
-    $form['no_js_submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Change field'),
-      '#limit_validation_errors' => [],
-      '#attributes' => [
-        'class' => ['js-hide'],
-      ],
-      '#submit' => [[static::class, 'rebuildForm']],
-    ];
-    // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
-    $form['group_field_options_wrapper'] = [
-      '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
-      '#suffix' => '</div>',
-    ];
     $form['actions'] = ['#type' => 'actions'];
 
-    $form['group_field_options_wrapper']['field_name_label'] = [
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#size' => 30,
-    // '#required' => TRUE,
+      '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
 
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['group_field_options_wrapper']['field_name'] = [
+    $form['field_name'] = [
       '#type' => 'machine_name',
       '#field_prefix' => $field_prefix,
       '#size' => 15,
@@ -249,10 +235,16 @@ class FieldStorageAddSubfieldForm extends FormBase {
           // setting. Maximum length is 32.
       '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
       '#machine_name' => [
-        'source' => ['group_field_options_wrapper', 'field_name_label'],
+        'source' => ['label'],
         'exists' => [$this, 'fieldNameExists'],
       ],
       '#required' => FALSE,
+    ];
+
+    // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
+    $form['group_field_options_wrapper'] = [
+      '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
+      '#suffix' => '</div>',
     ];
     // Set the selected field to the form state by checking
     // the checked attribute.
@@ -389,7 +381,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
   protected function validateAddNew(array $form, FormStateInterface $form_state) {
     // Validate if any information was provided in the 'add new field' case.
     // Missing label.
-    if (!$form_state->getValue('field_name_label')) {
+    if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
 
@@ -408,7 +400,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
 
       // Add the field prefix.
       $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
-      $form_state->setValueForElement($form['group_field_options_wrapper']['field_name'], $field_name);
+      $form_state->setValueForElement($form['field_name'], $field_name);
     }
   }
 
@@ -437,8 +429,28 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // No-op since form is routed to the below controller.
-    // @see \Drupal\field_ui\Controller\FieldTempStoreController::setTempStore
+    $field_storage_type = $this->selectedFieldStorageType ?? $this->selectedFieldType;
+    $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'));
+    $form_state->setRedirectUrl($this->getRedirectUrl($form_state->getValue('field_name')));
+  }
+
+  /**
+   * Gets the redirect URL.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL to redirect to.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getRedirectUrl(string $field_name): Url {
+    $route_parameters = [
+      'field_name' => $field_name,
+      'entity_type' => $this->entityTypeId,
+    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
+    return Url::fromRoute("field_ui.field_add_{$this->entityTypeId}", $route_parameters);
   }
 
   /**
@@ -449,27 +461,11 @@ class FieldStorageAddSubfieldForm extends FormBase {
   }
 
   /**
-   * Callback to rebuild form.
-   */
-  public static function rebuildForm($form, FormStateInterface &$form_state) {
-    $form_state->setRebuild();
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-    $field_storage_type = $this->selectedFieldStorageType ?? $this->selectedFieldType;
-    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $form_state->getValue('field_name');
-    $this->setTempStore($this->entityTypeId, $field_storage_type, $field_name, $this->bundle, $form_state->getValue('field_name_label'), $form_state->getValue('field_name'));
-
     $response = new AjaxResponse();
-    $route_parameters = [
-      'field_name' => $field_name,
-      'entity_type' => $this->entityTypeId,
-    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
-    $url = Url::fromRoute("field_ui.field_add_{$this->entityTypeId}", $route_parameters);
-    $response->addCommand(new OpenModalDialogWithUrl($url->toString(), []));
+    $response->addCommand(new OpenModalDialogWithUrl($this->getRedirectUrl($form_state->getValue('field_name'))->toString(), []));
     return $response;
   }
 
@@ -531,11 +527,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
   /**
    * Creates a dummy field to set in temp store in order to build the edit form.
    */
-  public function setTempStore($entity_type, $field_storage_type, $field_temp_store_key, $bundle, $field_label, $field_machine_name) {
-    $label_machine = [
-      'label' => $field_label,
-      'machine_name' => $field_machine_name,
-    ];
+  public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name) {
     $field_values = [
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -551,14 +543,15 @@ class FieldStorageAddSubfieldForm extends FormBase {
     }
     $field_values += [
       ...$default_options['field_config'] ?? [],
-      'field_name' => $field_temp_store_key,
+      'field_name' => $field_machine_name,
+      'label' => $field_label,
       // Field translatability should be explicitly enabled by the users.
       'translatable' => FALSE,
     ];
 
     $field_storage_values = [
       ...$default_options['field_storage_config'] ?? [],
-      'field_name' => $field_temp_store_key,
+      'field_name' => $field_machine_name,
       'type' => $field_type,
       'entity_type' => $entity_type,
     ];
@@ -572,11 +565,10 @@ class FieldStorageAddSubfieldForm extends FormBase {
     }
 
     // Save field and field storage values in tempstore.
-    $this->tempStore->set($entity_type . ':' . $field_temp_store_key, [
+    $this->tempStore->set($entity_type . ':' . $field_machine_name, [
       'field_storage' => $field_storage_entity,
       'field_config_values' => $field_values,
       'default_options' => $default_options,
-      'label_machine' => $label_machine,
     ]);
   }
 
