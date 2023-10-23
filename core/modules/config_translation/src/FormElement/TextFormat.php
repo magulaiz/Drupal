@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\text\FormElement;
+namespace Drupal\config_translation\FormElement;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\config_translation\FormElement\FormElementBase;
