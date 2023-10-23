@@ -9,6 +9,8 @@ use Behat\Mink\Exception\ElementNotFoundException;
  */
 trait FieldUiJSTestTrait {
 
+  use FieldUiTestTrait;
+
   /**
    * Creates a new field through the Field UI.
    *
@@ -139,28 +141,6 @@ trait FieldUiJSTestTrait {
       ':label' => $label,
     ]);
     $this->assertSession()->elementExists('xpath', $xpath);
-  }
-
-  /**
-   * Helper function that returns the name of the group that a field is in.
-   *
-   * @param string $field_type
-   *   The name of the field type.
-   *
-   * @return string|null
-   *   Group name
-   */
-  public function getFieldFromGroup($field_type): ?string {
-    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
-    $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
-    $grouped_field_types = $field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions());
-    foreach ($grouped_field_types as $group => $field_types) {
-      if (array_key_exists($field_type, $field_types)) {
-        return $group;
-      }
-    }
-
-    return NULL;
   }
 
 }
