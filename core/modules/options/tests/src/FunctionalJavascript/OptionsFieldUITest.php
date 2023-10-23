@@ -167,7 +167,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
       $this->assertHasFocusByAttribute('name', $key_element_name);
       $this->assertAllowValuesRowCount($expected_rows);
     }
-    $page->pressButton('Save');
+    $page->pressButton('Save settings');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Test the order of the option list on node form.
     $this->drupalGet($this->nodeFormPath);
@@ -182,7 +183,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Change the order the items appear.
     $drag_handle->dragTo($target);
     $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
-    $page->pressButton('Save');
+    $page->pressButton('Save settings');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', 'Second', 'Third', 'First']);
@@ -196,7 +198,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->pressButton('remove_row_button__1');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertOrder(['Second', 'First', ''], $is_string_option);
-    $page->pressButton('Save');
+    $page->pressButton('Save settings');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', 'Second', 'First']);
