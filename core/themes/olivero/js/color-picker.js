@@ -28,6 +28,31 @@
   }
 
   /**
+   * Formats hexcode to full 6-character string for HTMLColorInput.
+   *
+   * @param {string} hex The hex code input
+   * @returns {string} The same hex code, formatted
+   */
+  function formatHex(hex) {
+    // Temporarily remove hash
+    if (hex.startsWith('#')) {
+      hex = hex.substring(1);
+    }
+
+    // Convert "abc" to "aabbcc".
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .flatMap((character) => [character, character])
+        .join('');
+    }
+
+    hex = `#${hex}`;
+
+    return hex;
+  }
+
+  /**
    * `input` event callback to keep text & color inputs in sync.
    *
    * @param {HTMLElement} changedInput input element changed by user
@@ -36,8 +61,14 @@
   function synchronizeInputs(changedInput, inputToSync) {
     inputToSync.value = formatHex(changedInput.value);
 
-    changedInput.setAttribute('data-olivero-custom-color', formatHex(changedInput.value));
-    inputToSync.setAttribute('data-olivero-custom-color', formatHex(changedInput.value));
+    changedInput.setAttribute(
+      'data-olivero-custom-color',
+      formatHex(changedInput.value),
+    );
+    inputToSync.setAttribute(
+      'data-olivero-custom-color',
+      formatHex(changedInput.value),
+    );
 
     const colorSchemeSelect = document.querySelector(
       '[data-drupal-selector="edit-color-scheme"]',
@@ -157,28 +188,6 @@
     colorInput.addEventListener('input', () => {
       synchronizeInputs(colorInput, textInput);
     });
-  }
-
-  /**
-   * Formats hexcode to full 6-character string for HTMLColorInput.
-   *
-   * @param {string} hex The hex code input
-   * @returns {string} The same hex code, formatted
-   */
-  function formatHex(hex) {
-    // Temporarily remove hash
-    if (hex.startsWith('#')) {
-      hex = hex.substring(1);
-    }
-
-    // Convert "abc" to "aabbcc".
-    if (hex.length === 3) {
-      hex = hex.split('').flatMap(character => [character, character]).join('');
-    }
-
-    hex = `#${hex}`;
-
-    return hex;
   }
 
   /**
