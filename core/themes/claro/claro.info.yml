@@ -72,6 +72,17 @@ libraries-override:
       theme:
         assets/vendor/jquery.ui/themes/base/theme.css: false
 
+  # The jquery.ui.dialog library is deprecated in Drupal 9.2.x. However, modules
+  # that depend on this library don't want these assets. Once Drupal 10.0.x is
+  # released, this override can be removed because no modules can use the
+  # library anymore.
+  core/jquery.ui.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+
   user/drupal.user:
     css:
       component:
