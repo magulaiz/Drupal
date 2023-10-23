@@ -203,7 +203,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     $actual_scopes = $calculated_permissions->getScopes();
 
     // The calculated permissions should only contain items for the given scope.
-    if (count($actual_scopes) !== 1 || reset($actual_scopes) !== $scope) {
+    if (!empty($actual_scopes) && (count($actual_scopes) > 1 || reset($actual_scopes) !== $scope)) {
       return FALSE;
     }
 
