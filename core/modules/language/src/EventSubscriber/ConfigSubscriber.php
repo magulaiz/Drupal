@@ -94,26 +94,26 @@ class ConfigSubscriber implements EventSubscriberInterface {
         $this->languageDefault->set(new Language($default_language->get()));
         $this->languageManager->reset();
 
-        // Directly update language negotiation settings instead of calling
-        // language_negotiation_url_prefixes_update() to ensure that the code
-        // obeys the hook_update_N() restrictions.
-        $negotiation_config = $this->configFactory->getEditable('language.negotiation');
-        $negotiation_changed = FALSE;
-        $url_prefixes = $negotiation_config->get('url.prefixes');
-        $old_default_langcode = $saved_config->getOriginal('default_langcode');
-        if (empty($url_prefixes[$old_default_langcode])) {
-          if ($old_default_langcode === NULL) {
-            throw new \Exception('\Drupal\language\EventSubscriber\ConfigSubscriber::onConfigSave');
+        // Do not do secondary writes to configuration during config sync.
+        if (!\Drupal::isConfigSyncing()) {
+          // Directly update language negotiation settings instead of calling
+          // language_negotiation_url_prefixes_update() to ensure that the code
+          // obeys the hook_update_N() restrictions.
+          $negotiation_config = $this->configFactory->getEditable('language.negotiation');
+          $negotiation_changed = FALSE;
+          $url_prefixes = $negotiation_config->get('url.prefixes');
+          $old_default_langcode = $saved_config->getOriginal('default_langcode');
+          if (empty($url_prefixes[$old_default_langcode])) {
+            $negotiation_config->set('url.prefixes.' . $old_default_langcode, $old_default_langcode);
+            $negotiation_changed = TRUE;
           }
-          $negotiation_config->set('url.prefixes.' . $old_default_langcode, $old_default_langcode);
-          $negotiation_changed = TRUE;
-        }
-        if (empty($url_prefixes[$new_default_langcode])) {
-          $negotiation_config->set('url.prefixes.' . $new_default_langcode, '');
-          $negotiation_changed = TRUE;
-        }
-        if ($negotiation_changed) {
-          $negotiation_config->save(TRUE);
+          if (empty($url_prefixes[$new_default_langcode])) {
+            $negotiation_config->set('url.prefixes.' . $new_default_langcode, '');
+            $negotiation_changed = TRUE;
+          }
+          if ($negotiation_changed) {
+            $negotiation_config->save(TRUE);
+          }
         }
       }
       // Trigger a container rebuild on the next request by invalidating it.
