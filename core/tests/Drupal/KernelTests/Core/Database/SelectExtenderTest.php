@@ -38,42 +38,42 @@ class SelectExtenderTest extends KernelTestBase {
     return [
       [
         'Drupal\Core\Database\Query\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\corefake\Driver\Database\CoreFake',
         PagerSelectExtender::class,
       ],
       [
         'Drupal\Core\Database\Query\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         '\Drupal\Core\Database\Query\PagerSelectExtender',
       ],
       [
         'Drupal\Core\Database\Query\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\corefake\Driver\Database\CoreFake',
         TableSortExtender::class,
       ],
       [
         'Drupal\Core\Database\Query\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         '\Drupal\Core\Database\Query\TableSortExtender',
       ],
       [
         'Drupal\search\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\corefake\Driver\Database\CoreFake',
         SearchQuery::class,
       ],
       [
         'Drupal\search\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         '\Drupal\search\SearchQuery',
       ],
       [
         'Drupal\search\ViewsSearchQuery',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\corefake\Driver\Database\CoreFake',
         ViewsSearchQuery::class,
       ],
       [
         'Drupal\search\ViewsSearchQuery',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         '\Drupal\search\ViewsSearchQuery',
       ],
     ];
@@ -91,43 +91,43 @@ class SelectExtenderTest extends KernelTestBase {
   public function providerExtendWithLocalClasses(): array {
     return [
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses\PagerSelectExtender',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses',
         PagerSelectExtender::class,
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\PagerSelectExtender',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\Core\Database\Query\PagerSelectExtender',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses\TableSortExtender',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses',
         TableSortExtender::class,
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\TableSortExtender',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\Core\Database\Query\TableSortExtender',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses\SearchQuery',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses',
         SearchQuery::class,
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\SearchQuery',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\search\SearchQuery',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\ViewsSearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses\ViewsSearchQuery',
+        'Drupal\corefake\Driver\Database\CoreFakeWithAllCustomClasses',
         ViewsSearchQuery::class,
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\ViewsSearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\ViewsSearchQuery',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\search\ViewsSearchQuery',
       ],
     ];
@@ -140,7 +140,7 @@ class SelectExtenderTest extends KernelTestBase {
    */
   public function testExtend(string $expected, string $namespace, string $extend): void {
     $additional_class_loader = new ClassLoader();
-    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
+    $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");
     $additional_class_loader->register(TRUE);
 
     $mock_pdo = $this->createMock(StubPDO::class);
@@ -166,11 +166,11 @@ class SelectExtenderTest extends KernelTestBase {
    * @group legacy
    */
   public function testExtendWithLocalClasses(string $expected, string $namespace, string $extend): void {
-    $this->expectDeprecation('Invoking Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\%A outside of a backend overridable service is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Include the driver class in a backend overridable service instead. See https://www.drupal.org/node/3217534');
+    $this->expectDeprecation('Invoking Drupal\\corefake\\Driver\\Database\\CoreFakeWithAllCustomClasses\\%A outside of a backend overridable service is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Include the driver class in a backend overridable service instead. See https://www.drupal.org/node/3217534');
     $this->expectDeprecation('Calling %A::__construct without the %A argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001');
 
     $additional_class_loader = new ClassLoader();
-    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");
+    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\CoreFakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");
     $additional_class_loader->register(TRUE);
 
     $mock_pdo = $this->createMock(StubPDO::class);

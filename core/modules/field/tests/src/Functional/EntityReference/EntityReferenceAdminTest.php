@@ -4,6 +4,7 @@ namespace Drupal\Tests\field\Functional\EntityReference;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -117,9 +118,9 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Set to unlimited.
     $edit = [
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'field_storage[subform][cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Update settings');
 
     // Add the view to the test field.
     $edit = [
@@ -131,6 +132,8 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'settings[handler_settings][view][view_and_display]' => 'node_test_view:entity_reference_1',
     ];
     $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->statusMessageContains("Saved Test Entity Reference Field configuration.", MessengerInterface::TYPE_STATUS);
+    $this->assertFieldExistsOnOverview('Test Entity Reference Field');
 
     // Create nodes.
     $node1 = Node::create([
@@ -201,12 +204,11 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     Vocabulary::create(['vid' => 'tags', 'name' => 'tags'])->save();
     $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', ['tags']);
     $field_path = 'node.' . $this->type . '.field_' . $taxonomy_term_field_name;
-    $this->drupalGet($bundle_path . '/fields/' . $field_path . '/storage');
-    $edit = [
-      'cardinality' => -1,
-    ];
-    $this->submitForm($edit, 'Save field settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
+    $edit = [
+      'field_storage[subform][cardinality]' => -1,
+    ];
+    $this->submitForm($edit, 'Update settings');
     $term_name = $this->randomString();
     $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('name', $term_name)
@@ -219,6 +221,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'settings[handler_settings][auto_create]' => 1,
     ];
     $this->submitForm($edit, 'Save settings');
+    $this->assertFieldExistsOnOverview($taxonomy_term_field_name);
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $edit = [
       'set_default_value' => '1',
@@ -226,6 +229,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
     ];
     $this->submitForm($edit, 'Save settings');
+    $this->assertFieldExistsOnOverview($taxonomy_term_field_name);
     // The term should now exist.
     $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('name', $term_name)
@@ -382,7 +386,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }
 
-    $this->fieldUIAddNewField($bundle_path, $field_name, NULL, 'entity_reference', $storage_edit, $field_edit);
+    $this->fieldUIAddNewField($bundle_path, $field_name, $field_name, 'entity_reference', $storage_edit, $field_edit);
 
     // Returns the generated field name.
     return $field_name;

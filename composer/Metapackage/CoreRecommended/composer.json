@@ -7,7 +7,7 @@
         "webflo/drupal-core-strict": "*"
     },
     "require": {
-        "drupal/core": "10.2.x-dev",
+        "drupal/core": "11.x-dev",
         "asm89/stack-cors": "~v2.1.1",
         "composer/semver": "~3.3.2",
         "doctrine/annotations": "~1.14.3",
@@ -39,6 +39,7 @@
         "symfony/event-dispatcher-contracts": "~v3.3.0",
         "symfony/http-foundation": "~v6.3.0",
         "symfony/http-kernel": "~v6.3.0",
+        "symfony/mailer": "~v6.3.5",
         "symfony/mime": "~v6.3.0",
         "symfony/polyfill-ctype": "~v1.27.0",
         "symfony/polyfill-iconv": "~v1.27.0",
