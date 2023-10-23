@@ -235,14 +235,6 @@ class FieldStorageAddForm extends FormBase {
     }
     uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
     $form['add']['new_storage_type'] = $field_type_options_radios;
-    // Place the 'translatable' property as an explicit value so that contrib
-    // modules can form_alter() the value for newly created fields. By default
-    // we create field storage as translatable so it will be possible to enable
-    // translation at field level.
-    $form['translatable'] = [
-      '#type' => 'value',
-      '#value' => TRUE,
-    ];
     $form['#attached']['library'] = [
       'field_ui/drupal.field_ui',
       'field_ui/drupal.field_ui.manage_fields',

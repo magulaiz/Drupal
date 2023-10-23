@@ -3,10 +3,10 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -37,7 +37,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldConfigEditForm extends EntityForm {
 
   use FieldStorageCreationTrait;
-  use AjaxFormHelperTrait;
 
   /**
    * The entity being used by this form.
@@ -167,19 +166,12 @@ class FieldConfigEditForm extends EntityForm {
 
     if ($field_storage->isLocked()) {
       $form['locked'] = [
-        '#markup' => $this->t('The field is locked and cannot be edited.'),
+        '#markup' => $this->t('The field %field is locked and cannot be edited.', ['%field' => $this->entity->getLabel()]),
       ];
       return $form;
     }
 
     // Field label and field_name.
-    $form['new_storage_wrapper'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['field-ui-new-storage-wrapper'],
-      ],
-      '#weight' => -20,
-    ];
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -420,7 +412,11 @@ class FieldConfigEditForm extends EntityForm {
         '#url' => $url,
         '#access' => $this->entity->access('delete'),
         '#attributes' => [
-          'class' => ['button', 'button--danger'],
+          'class' => ['button', 'button--danger', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '1100',
+          ]),
         ],
       ];
     }
@@ -429,12 +425,51 @@ class FieldConfigEditForm extends EntityForm {
   }
 
   /**
-   * @todo .
+   * Submit form #ajax callback.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response that display validation error messages or represents a
+   *   successful submission.
+   *
+   * @see \Drupal\Core\Ajax\AjaxFormHelperTrait
+   */
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+    if ($form_state->hasAnyErrors()) {
+      $form['status_messages'] = [
+        '#type' => 'status_messages',
+        '#weight' => -1000,
+      ];
+      $form['#sorted'] = FALSE;
+      $response = new AjaxResponse();
+      $response->addCommand(new ReplaceCommand('#field-combined', $form));
+    }
+    else {
+      $response = $this->successfulAjaxSubmit($form, $form_state);
+    }
+    return $response;
+  }
+
+  /**
+   * Respond to a successful AJAX submission.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response.
    */
   public function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
     $response->addCommand(new CloseModalDialogCommand());
     $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
+
     return $response;
   }
 
