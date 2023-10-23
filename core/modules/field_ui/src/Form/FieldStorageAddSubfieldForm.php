@@ -40,20 +40,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
   protected $controllerResolver;
 
   /**
-   * The name of the selected field type.
-   *
-   * @var string
-   */
-  protected $selectedFieldType;
-
-  /**
-   * The name of the selected field type.
-   *
-   * @var string
-   */
-  protected $selectedFieldStorageType;
-
-  /**
    * The name of the entity type.
    *
    * @var string
@@ -173,6 +159,9 @@ class FieldStorageAddSubfieldForm extends FormBase {
     if (!$form_state->get('bundle')) {
       $form_state->set('bundle', $bundle);
     }
+    if (!$form_state->get('field_type')) {
+      $form_state->set('field_type', $selected_field_type);
+    }
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
 
@@ -241,7 +230,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
     // Set the selected field to the form state by checking
     // the checked attribute.
     if (isset($selected_field_type)) {
-      $this->selectedFieldType = $selected_field_type;
       $group_display = $field_type_options_radios[$selected_field_type]['#data']['#group_display'];
       if ($group_display) {
         $form['group_field_options_wrapper']['label'] = [
@@ -288,15 +276,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
         }
         uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
         $form['group_field_options_wrapper']['fields'] += $group_field_options;
-
-        // Set the variable as the currently checked option.
-        foreach ($group_field_options as $option) {
-          if ($option['#attributes']['checked']) {
-            $selected_field_storage_type = $option['#return_value'];
-            $this->selectedFieldStorageType = $selected_field_storage_type;
-            break;
-          }
-        }
       }
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
@@ -409,7 +388,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $field_storage_type = $this->selectedFieldStorageType ?? $this->selectedFieldType;
+    $field_storage_type = $form_state->getValue('group_field_options_wrapper') ?? $form_state->get('field_type');
     $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
     $form_state->setRedirectUrl($this->getRedirectUrl($form_state->getValue('field_name')));
   }
