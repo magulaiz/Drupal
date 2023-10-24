@@ -52,6 +52,7 @@ abstract class UpdaterFormTestBase extends AutoUpdatesFunctionalTestBase {
       'access site in maintenance mode',
       'administer modules',
       'access site reports',
+      'access help pages',
     ];
     // Check for permission that was added in Drupal core 9.4.x.
     $available_permissions = array_keys($this->container->get('user.permissions')->getPermissions());

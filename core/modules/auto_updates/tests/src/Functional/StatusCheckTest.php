@@ -74,6 +74,7 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
     $this->reportViewerUser = $this->createUser([
       'administer site configuration',
       'access administration pages',
+      'administer blocks',
     ]);
     $this->checkerRunnerUser = $this->createUser([
       'administer site configuration',
