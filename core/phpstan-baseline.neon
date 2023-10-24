@@ -198,11 +198,6 @@ parameters:
 			path: lib/Drupal/Core/Access/CsrfRequestHeaderAccessCheck.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Executable\\\\ExecutableInterface\\:\\:execute\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Action/ActionBase.php
-
-		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Action/ActionManager.php

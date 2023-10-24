@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -20,14 +21,14 @@ class BlockUser extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($account = NULL) {
+  public function execute(EntityInterface $entity): void {
     // Skip blocking user if they are already blocked.
-    if ($account !== FALSE && $account->isActive()) {
+    if ($entity->isActive()) {
       // For efficiency manually save the original account before applying any
       // changes.
-      $account->original = clone $account;
-      $account->block();
-      $account->save();
+      $entity->original = clone $entity;
+      $entity->block();
+      $entity->save();
     }
   }
 

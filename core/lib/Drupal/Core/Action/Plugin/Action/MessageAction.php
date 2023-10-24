@@ -5,6 +5,7 @@ namespace Drupal\Core\Action\Plugin\Action;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -79,7 +80,7 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute(EntityInterface $entity): void {
     if (empty($this->configuration['node'])) {
       $this->configuration['node'] = $entity;
     }

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -71,7 +72,7 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function execute($object = NULL) {
+  public function execute(EntityInterface $entity): void {
     $url = $this->configuration['url'];
     // Leave external URLs unchanged, and assemble others as absolute URLs
     // relative to the site's base URL.

@@ -5,6 +5,7 @@ namespace Drupal\action_test\Plugin\Action;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -20,7 +21,7 @@ class NoType extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute(EntityInterface $entity): void {
   }
 
   /**

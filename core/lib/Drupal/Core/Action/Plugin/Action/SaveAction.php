@@ -5,6 +5,7 @@ namespace Drupal\Core\Action\Plugin\Action;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -62,7 +63,7 @@ class SaveAction extends EntityActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute(EntityInterface $entity): void {
     $entity->setChangedTime($this->time->getRequestTime())->save();
   }
 

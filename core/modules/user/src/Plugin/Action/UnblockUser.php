@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -20,11 +21,11 @@ class UnblockUser extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($account = NULL) {
+  public function execute(EntityInterface $entity): void {
     // Skip unblocking user if they are already unblocked.
-    if ($account !== FALSE && $account->isBlocked()) {
-      $account->activate();
-      $account->save();
+    if ($entity->isBlocked()) {
+      $entity->activate();
+      $entity->save();
     }
   }
 

@@ -5,6 +5,7 @@ namespace Drupal\user_batch_action_test\Plugin\Action;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -48,7 +49,7 @@ class BatchUserAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute(EntityInterface $entity): void {
     assert($entity instanceof ContentEntityInterface);
     $this->executeMultiple([$entity]);
   }

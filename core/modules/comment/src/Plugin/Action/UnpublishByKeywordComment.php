@@ -5,6 +5,7 @@ namespace Drupal\comment\Plugin\Action;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -74,13 +75,13 @@ class UnpublishByKeywordComment extends ConfigurableActionBase implements Contai
   /**
    * {@inheritdoc}
    */
-  public function execute($comment = NULL) {
-    $build = $this->viewBuilder->view($comment);
+  public function execute(EntityInterface $entity): void {
+    $build = $this->viewBuilder->view($entity);
     $text = $this->renderer->renderPlain($build);
     foreach ($this->configuration['keywords'] as $keyword) {
       if (str_contains($text, $keyword)) {
-        $comment->setUnpublished();
-        $comment->save();
+        $entity->setUnpublished();
+        $entity->save();
         break;
       }
     }

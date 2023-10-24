@@ -5,6 +5,7 @@ namespace Drupal\node\Plugin\Action;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -59,8 +60,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
-    /** @var \Drupal\node\NodeInterface $entity */
+  public function execute(EntityInterface $entity): void {
     $entity->setOwnerId($this->configuration['owner_uid'])->save();
   }
 

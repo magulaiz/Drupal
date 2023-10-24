@@ -4,6 +4,7 @@ namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -75,7 +76,6 @@ class DeleteAction extends EntityActionBase {
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-    /** @var \Drupal\Core\Entity\EntityInterface[] $entities */
     $selection = [];
     foreach ($entities as $entity) {
       $langcode = $entity->language()->getId();
@@ -87,8 +87,8 @@ class DeleteAction extends EntityActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($object = NULL) {
-    $this->executeMultiple([$object]);
+  public function execute(EntityInterface $entity): void {
+    $this->executeMultiple([$entity]);
   }
 
   /**
