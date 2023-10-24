@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace Drupal\auto_updates;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Mail\MailManagerInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
@@ -84,8 +84,8 @@ class ConsoleUpdateStage extends UpdateStage {
    *   The stager service.
    * @param \PhpTuf\ComposerStager\API\Core\CommitterInterface $committer
    *   The committer service.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
+   * @param \Drupal\Core\Queue\QueueFactory $queueFactory
+   *   The queue factory.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher service.
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempStoreFactory
@@ -109,14 +109,14 @@ class ConsoleUpdateStage extends UpdateStage {
     BeginnerInterface $beginner,
     StagerInterface $stager,
     CommitterInterface $committer,
-    FileSystemInterface $fileSystem,
+    QueueFactory $queueFactory,
     EventDispatcherInterface $eventDispatcher,
     SharedTempStoreFactory $tempStoreFactory,
     TimeInterface $time,
     PathFactoryInterface $pathFactory,
     FailureMarker $failureMarker,
   ) {
-    parent::__construct($composerInspector, $pathLocator, $beginner, $stager, $committer, $fileSystem, $eventDispatcher, $tempStoreFactory, $time, $pathFactory, $failureMarker);
+    parent::__construct($composerInspector, $pathLocator, $beginner, $stager, $committer, $queueFactory, $eventDispatcher, $tempStoreFactory, $time, $pathFactory, $failureMarker);
     $this->output = new NullOutput();
   }
 

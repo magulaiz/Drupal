@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\package_manager_test_api;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Url;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
@@ -67,7 +68,7 @@ class ApiController extends ControllerBase {
       $container->get(BeginnerInterface::class),
       $container->get(StagerInterface::class),
       $container->get(CommitterInterface::class),
-      $container->get('file_system'),
+      $container->get(QueueFactory::class),
       $container->get('event_dispatcher'),
       $container->get('tempstore.shared'),
       $container->get('datetime.time'),

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\package_manager;
 
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
@@ -35,7 +36,7 @@ final class PackageManagerUninstallValidator implements ModuleUninstallValidator
       $this->container->get(BeginnerInterface::class),
       $this->container->get(StagerInterface::class),
       $this->container->get(CommitterInterface::class),
-      $this->container->get('file_system'),
+      $this->container->get(QueueFactory::class),
       $this->container->get('event_dispatcher'),
       $this->container->get('tempstore.shared'),
       $this->container->get('datetime.time'),

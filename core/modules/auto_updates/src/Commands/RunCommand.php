@@ -3,6 +3,7 @@
 namespace Drupal\auto_updates\Commands;
 
 use Drupal\auto_updates\CronUpdateRunner;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,7 +61,47 @@ final class RunCommand extends AutoUpdatesCommandBase {
       $this->io->info((string) $this->t('There is no Drupal core update available.'));
       $this->runStatusChecks();
     }
+
+    $this->processCleanupQueue();
     return static::SUCCESS;
+  }
+
+  /**
+   * Processes the queue to delete defunct stage directories.
+   */
+  private function processCleanupQueue(): void {
+    $verbose = $this->io->isVerbose();
+    if ($verbose) {
+      $this->io->writeln((string) $this->t('Deleting unused stage directories...'));
+    }
+
+    /** @var \Drupal\Core\Queue\QueueInterface $queue */
+    $queue = $this->container->get(QueueFactory::class)
+      ->get('package_manager_cleanup');
+    $worker = $this->container->get('plugin.manager.queue_worker')
+      ->createInstance('package_manager_cleanup');
+
+    $items_processed = 0;
+    while ($items_processed < 3 && ($item = $queue->claimItem())) {
+      $items_processed++;
+
+      try {
+        $worker->processItem($item->data);
+        $queue->deleteItem($item);
+        if ($verbose) {
+          $message = (string) $this->t('Unused stage directory deleted: @dir', ['@dir' => $item->data]);
+          $this->io->writeln($message);
+        }
+      }
+      catch (\Throwable $e) {
+        $queue->releaseItem($item);
+        $message = (string) $this->t('Could not delete unused stage directory @dir due to exception: @message', [
+          '@dir' => $item->data,
+          '@message' => $e->getMessage(),
+        ]);
+        $this->io->warning($message);
+      }
+    }
   }
 
 }

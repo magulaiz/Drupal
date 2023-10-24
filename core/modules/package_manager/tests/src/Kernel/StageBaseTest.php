@@ -732,6 +732,27 @@ class StageBaseTest extends PackageManagerKernelTestBase {
     $this->assertTrue($stage->stageDirectoryExists());
   }
 
+  /**
+   * Tests that destroyed stage directories are actually deleted during cron.
+   *
+   * @covers ::destroy
+   * @covers \Drupal\package_manager\Plugin\QueueWorker\Cleaner
+   */
+  public function testStageDirectoryDeletedDuringCron(): void {
+    $stage = $this->createStage();
+    $stage->create();
+    $dir = $stage->getStageDirectory();
+    $this->assertDirectoryExists($dir);
+    $stage->destroy();
+    // The stage directory should still exist, but the stage should be
+    // available.
+    $this->assertTrue($stage->isAvailable());
+    $this->assertDirectoryExists($dir);
+
+    $this->container->get('cron')->run();
+    $this->assertDirectoryDoesNotExist($dir);
+  }
+
 }
 
 /**

@@ -60,6 +60,7 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
    */
   protected static $modules = [
     'package_manager_test_validation',
+    'block',
   ];
 
   /**
@@ -80,6 +81,7 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
       'access administration pages',
       'access site in maintenance mode',
       'administer modules',
+      'administer blocks',
     ]);
     $this->drupalLogin($this->reportViewerUser);
   }
@@ -100,6 +102,9 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
     $page = $this->getSession()->getPage();
     $page->checkField('modules[auto_updates][enable]');
     $page->pressButton('Install');
+    if ($page->hasButton('Continue')) {
+      $page->pressButton('Continue');
+    }
 
     // Cron Updates will always be disabled on installation as per
     // auto_updates.settings.yml .
@@ -254,7 +259,6 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
    */
   public function testStatusChecksOnAdminPages(string $admin_route): void {
     $assert = $this->assertSession();
-    $messages_section_selector = '[data-drupal-messages]';
 
     $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test']);
 
@@ -282,8 +286,7 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
     // on another admin page.
     $this->drupalLogin($this->checkerRunnerUser);
     $this->drupalGet(Url::fromRoute($admin_route));
-    $assert->elementExists('css', $messages_section_selector);
-    $assert->pageTextContainsOnce('Your site has not recently run an update readiness check. Rerun readiness checks now.');
+    $assert->statusMessageContains('Your site has not recently run an update readiness check. Rerun readiness checks now.');
     $this->clickLink('Rerun readiness checks now.');
     $assert->addressEquals(Url::fromRoute($admin_route));
     $assert->pageTextContainsOnce($expected_results[0]->summary);

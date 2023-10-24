@@ -418,6 +418,36 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
+   * Tests that the commit hash of a dev snapshot package is ignored.
+   */
+  public function testPackageDevSnapshotCommitHashIsRemoved(): void {
+    $inspector = new class (
+      $this->container->get(ComposerProcessRunnerInterface::class),
+      $this->container->get(ComposerIsAvailableInterface::class),
+      $this->container->get(PathFactoryInterface::class),
+    ) extends ComposerInspector {
+
+      /**
+       * {@inheritdoc}
+       */
+      protected function show(string $working_dir): array {
+        return [
+          'test/package' => [
+            'name' => 'test/package',
+            'path' => __DIR__,
+            'version' => '1.0.x-dev 0a1b2c3d',
+          ],
+        ];
+      }
+
+    };
+    $project_root = $this->container->get(PathLocator::class)
+      ->getProjectRoot();
+    $list = $inspector->getInstalledPackagesList($project_root);
+    $this->assertSame('1.0.x-dev', $list['test/package']->version);
+  }
+
+  /**
    * Data provider for ::testAllowedPlugins().
    *
    * @return array[]

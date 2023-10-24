@@ -315,6 +315,15 @@ class ComposerInspector implements LoggerAwareInterface {
     foreach ($packages_data as $name => $package) {
       $path = $package['path'];
 
+      // For packages installed as dev snapshots from certain version control
+      // systems, `composer show` displays the version like `1.0.x-dev 0a1b2c`,
+      // which will cause an exception if we try to parse it as a legitimate
+      // semantic version. Since we don't need the abbreviated commit hash, just
+      // remove it.
+      if (str_contains($package['version'], '-dev ')) {
+        $packages_data[$name]['version'] = explode(' ', $package['version'], 2)[0];
+      }
+
       // We expect Composer to report that metapackages' install paths are the
       // same as the working directory, in which case InstalledPackage::$path
       // should be NULL. For all other package types, we consider it invalid
