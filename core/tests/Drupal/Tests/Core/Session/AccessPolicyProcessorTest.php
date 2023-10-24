@@ -24,7 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Tests the AccessPolicyProcessor service.
  *
- * @coversDefaultClass \Drupal\Core\Session\AccessPolicyProcessor
+ * @covers \Drupal\Core\Session\AccessPolicyBase
+ * @covers \Drupal\Core\Session\AccessPolicyProcessor
  * @group Session
  */
 class AccessPolicyProcessorTest extends UnitTestCase {
@@ -45,9 +46,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that access policies are properly processed.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testCalculatePermissions() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -63,9 +61,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that access policies that do not apply are not processed.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testCalculatePermissionsNoApply() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -82,9 +77,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that access policies can alter the final result.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testAlterPermissions() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -103,9 +95,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that alters that do not apply are not processed.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testAlterPermissionsNoApply() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -121,9 +110,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that access policies which do nothing are properly processed.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testEmptyCalculator() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -140,8 +126,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that everything works if no access policies are present.
-   *
-   * @covers ::processAccessPolicies
    */
   public function testNoCalculators() {
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -155,9 +139,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests the wrong scope exception.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testWrongScopeException() {
     $processor = $this->setUpAccessPolicyProcessor();
@@ -170,9 +151,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests the multiple scopes exception.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testMultipleScopeException() {
     $processor = $this->setUpAccessPolicyProcessor();
@@ -186,9 +164,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests the multiple scopes exception.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testMultipleScopeAlterException() {
     $processor = $this->setUpAccessPolicyProcessor();
@@ -210,8 +185,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    * @param bool $should_call_switcher
    *   Whether the account switcher should be called.
    *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    * @dataProvider accountSwitcherProvider
    */
   public function testAccountSwitcher(bool $has_user_context, bool $is_current_user, bool $should_call_switcher) {
@@ -277,8 +250,6 @@ class AccessPolicyProcessorTest extends UnitTestCase {
   /**
    * Tests if the caches are called correctly.
    *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    * @dataProvider cachingProvider
    */
   public function testCaching(bool $db_cache_hit, bool $static_cache_hit) {
@@ -340,24 +311,54 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests that only the cache contexts for policies that apply are added.
-   *
-   * @covers ::addAccessPolicy
-   * @covers ::processAccessPolicies
    */
   public function testCacheContexts() {
     // BazAccessPolicy and BarAlterAccessPolicy shouldn't add any contexts.
     $initial_cacheability = (new CacheableMetadata())->addCacheContexts(['foo', 'bar']);
     $final_cacheability = (new CacheableMetadata())->addCacheContexts(['foo', 'bar'])->addCacheTags(['access_policies']);
 
-    $cache_db = $this->prophesize(VariationCacheInterface::class);
-    $cache_db->get(Argument::cetera())->willReturn(FALSE);
-    $cache_db->set(['access_policies', 'anything'], Argument::any(), $final_cacheability, $initial_cacheability)->shouldBeCalled();
-    $processor = $this->setUpAccessPolicyProcessor($cache_db->reveal());
+    $variation_cache = $this->prophesize(VariationCacheInterface::class);
+    $variation_cache->get(Argument::cetera())->willReturn(FALSE);
+    $variation_cache->set(['access_policies', 'anything'], Argument::any(), $final_cacheability, $initial_cacheability)->shouldBeCalled();
 
+    $cache_static = $this->prophesize(CacheBackendInterface::class);
+    $cache_static->get('access_policies:access_policy_processor:contexts:anything')->willReturn(FALSE);
+    $cache_static->set('access_policies:access_policy_processor:contexts:anything', ['foo', 'bar'])->shouldBeCalled();
+
+    $processor = $this->setUpAccessPolicyProcessor($variation_cache->reveal(), NULL, $cache_static->reveal());
     foreach ([new FooAccessPolicy(), new BarAccessPolicy(), new BazAccessPolicy(), new BarAlterAccessPolicy()] as $access_policy) {
       $processor->addAccessPolicy($access_policy);
     }
+    $processor->processAccessPolicies($this->prophesize(AccountInterface::class)->reveal(), 'anything');
+  }
 
+  /**
+   * Tests that the persistent cache contexts are added properly.
+   */
+  public function testCacheContextCaching() {
+    $cache_entry = new \stdClass();
+    $cache_entry->data = ['baz'];
+
+    $cache_static = $this->prophesize(CacheBackendInterface::class);
+    $cache_static->get('access_policies:access_policy_processor:contexts:anything')->willReturn($cache_entry);
+    $cache_static->set('access_policies:access_policy_processor:contexts:anything', Argument::any())->shouldNotBeCalled();
+
+    // Hard-coded to "baz" because of the above cache entry.
+    $initial_cacheability = (new CacheableMetadata())->addCacheContexts(['baz']);
+
+    // Still adds in "foo" and "bar" in calculatePermissions(). Under normal
+    // circumstances this would trigger an exception in VariationCache, but we
+    // deliberately poison the cache in this test to see if it's called.
+    $final_cacheability = (new CacheableMetadata())->addCacheContexts(['foo', 'bar'])->addCacheTags(['access_policies']);
+
+    $variation_cache = $this->prophesize(VariationCacheInterface::class);
+    $variation_cache->get(['access_policies', 'anything'], $initial_cacheability)->shouldBeCalled()->willReturn(FALSE);
+    $variation_cache->set(['access_policies', 'anything'], Argument::any(), $final_cacheability, $initial_cacheability)->shouldBeCalled();
+
+    $processor = $this->setUpAccessPolicyProcessor($variation_cache->reveal(), NULL, $cache_static->reveal());
+    foreach ([new FooAccessPolicy(), new BarAccessPolicy(), new BazAccessPolicy(), new BarAlterAccessPolicy()] as $access_policy) {
+      $processor->addAccessPolicy($access_policy);
+    }
     $processor->processAccessPolicies($this->prophesize(AccountInterface::class)->reveal(), 'anything');
   }
 

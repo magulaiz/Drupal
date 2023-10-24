@@ -10,19 +10,14 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the CalculatedPermissions value object.
  *
- * @coversDefaultClass \Drupal\Core\Session\CalculatedPermissions
+ * @covers \Drupal\Core\Session\CalculatedPermissions
+ * @covers \Drupal\Core\Session\CalculatedPermissionsTrait
  * @group Session
  */
 class CalculatedPermissionsTest extends UnitTestCase {
 
   /**
    * Tests that the object values were set in the constructor.
-   *
-   * @covers ::__construct
-   * @covers ::getItem
-   * @covers ::getItems
-   * @covers ::getScopes
-   * @covers ::getItemsByScope
    */
   public function testConstructor() {
     $item_a = new CalculatedPermissionsItem(['baz'], FALSE, 'scope_a', 'foo');

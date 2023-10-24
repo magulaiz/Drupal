@@ -12,16 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Tests the RefinableCalculatedPermissions class.
  *
- * @coversDefaultClass \Drupal\Core\Session\RefinableCalculatedPermissions
+ * @covers \Drupal\Core\Session\CalculatedPermissionsTrait
+ * @covers \Drupal\Core\Session\RefinableCalculatedPermissions
  * @group Session
  */
 class RefinableCalculatedPermissionsTest extends UnitTestCase {
 
   /**
    * Tests the addition of a calculated permissions item.
-   *
-   * @covers ::addItem
-   * @covers ::getItem
    */
   public function testAddItem() {
     $calculated_permissions = new RefinableCalculatedPermissions();
@@ -44,8 +42,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests the overwriting of a calculated permissions item.
    *
-   * @covers ::addItem
-   * @covers ::getItem
    * @depends testAddItem
    */
   public function testAddItemOverwrite() {
@@ -63,7 +59,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests the removal of a calculated permissions item.
    *
-   * @covers ::removeItem
    * @depends testAddItem
    */
   public function testRemoveItem() {
@@ -79,7 +74,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests the removal of all calculated permissions items.
    *
-   * @covers ::removeItems
    * @depends testAddItem
    */
   public function testRemoveItems() {
@@ -96,7 +90,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests the removal of calculated permissions items by scope.
    *
-   * @covers ::removeItemsByScope
    * @depends testAddItem
    */
   public function testRemoveItemsByScope() {
@@ -118,7 +111,6 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests merging in another CalculatedPermissions object.
    *
-   * @covers ::merge
    * @depends testAddItem
    */
   public function testMerge() {

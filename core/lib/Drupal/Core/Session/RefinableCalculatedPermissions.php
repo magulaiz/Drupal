@@ -70,20 +70,8 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    *
    * @return \Drupal\Core\Session\CalculatedPermissionsItemInterface
    *   A new item representing the merger of both items.
-   *
-   * @throws \LogicException
-   *   Exception thrown when someone somehow manages to call this method with
-   *   mismatching items.
    */
   protected function mergeItems(CalculatedPermissionsItemInterface $a, CalculatedPermissionsItemInterface $b): CalculatedPermissionsItemInterface {
-    if ($a->getScope() !== $b->getScope()) {
-      throw new \LogicException('Trying to merge two items of different scopes.');
-    }
-
-    if ($a->getIdentifier() != $b->getIdentifier()) {
-      throw new \LogicException('Trying to merge two items with different identifiers.');
-    }
-
     // If either of the items is admin, the new one is too.
     $is_admin = $a->isAdmin() || $b->isAdmin();
 
