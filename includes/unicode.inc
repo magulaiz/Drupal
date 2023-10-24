@@ -478,6 +478,7 @@ function decode_entities($text) {
  */
 function drupal_strlen($text) {
   global $multibyte;
+  $text = (string) $text;
   if ($multibyte == UNICODE_MULTIBYTE) {
     return mb_strlen($text);
   }
