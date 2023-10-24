@@ -165,7 +165,7 @@ class Connection extends BaseMySqlConnection {
    * {@inheritdoc}
    */
   public function quote($string, $parameter_type = \PDO::PARAM_STR) {
-    return "'" . $this->connection->escape_string($string) . "'";
+    return "'" . $this->connection->escape_string((string) $string) . "'";
   }
 
   /**
