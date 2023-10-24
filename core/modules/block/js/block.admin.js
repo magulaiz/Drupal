@@ -219,7 +219,7 @@
             );
           }
 
-          const regionEmptyMessage = el.nextElementSibling;
+          const regionEmptyMessage = el.nextElementSibling.nextElementSibling;
           let showEmptyRegion = false;
           if (total === 0) {
             linkButton.classList.remove('region-filter-control-opened');
@@ -289,14 +289,18 @@
         );
 
         // Update status of goto filtered element.
-        if (visibleItems.length === 0) {
-          gotoFiltered.textContent = Drupal.t(
-            'There are no blocks matching the filter conditions.',
-          );
-          gotoFiltered.style.display = 'block';
-        } else if (query !== '') {
-          gotoFiltered.textContent = Drupal.t('Go to items found.');
-          gotoFiltered.style.display = 'block';
+        if (query !== '') {
+          if (visibleItems.length === 0) {
+            gotoFiltered.textContent = Drupal.t(
+              'There are no blocks matching the filter conditions.',
+            );
+            gotoFiltered.style.display = 'block';
+            gotoFiltered.classList.remove('js-goto-enabled');
+          } else {
+            gotoFiltered.classList.add('js-goto-enabled');
+            gotoFiltered.textContent = Drupal.t('Go to items found.');
+            gotoFiltered.style.display = 'block';
+          }
         }
       };
 
@@ -304,6 +308,9 @@
       // to help users get there faster they can click on the link
       // below the input filter.
       gotoFiltered.addEventListener('click', (e) => {
+        if (!gotoFiltered.classList.contains('js-goto-enabled')) {
+          return;
+        }
         let firstVisibleRegion = null;
         // Highlight blocks matched filter before go to.
         document.querySelectorAll('.js-filter-block-visible').forEach((el) => {
@@ -401,7 +408,8 @@
 
       // Extend block table drag event adding the filter callback.
       document.querySelectorAll('.draggable').forEach((row) => {
-        row.addEventListener('blocksDropped', () => {
+        row.addEventListener('blocksDropped', (e) => {
+          toggleBlocksByRegion(e.detail.regionName, 'add');
           filterCallback();
         });
       });

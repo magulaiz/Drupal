@@ -273,23 +273,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ],
       ];
 
-      $form['region-' . $region . '-message'] = [
-        '#attributes' => [
-          'class' => [
-            'region-message',
-            'region-' . $region . '-message',
-            empty($blocks[$region]) ? 'region-empty' : 'region-populated',
-          ],
-          'data-region-message' => $region,
-        ],
-      ];
-      $form['region-' . $region . '-message']['message'] = [
-        '#markup' => '<em>' . $this->t('No blocks in this region') . '</em>',
-        '#wrapper_attributes' => [
-          'colspan' => 5,
-        ],
-      ];
-
       $form['region-' . $region . '-filter'] = [
         '#attributes' => [
           'class' => [
@@ -303,6 +286,23 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
       $form['region-' . $region . '-filter']['filter'] = [
         '#markup' => '<em data-drupal-selector="region-filtered-quantity-' . $region . '"></em>',
+        '#wrapper_attributes' => [
+          'colspan' => 5,
+        ],
+      ];
+
+      $form['region-' . $region . '-message'] = [
+        '#attributes' => [
+          'class' => [
+            'region-message',
+            'region-' . $region . '-message',
+            empty($blocks[$region]) ? 'region-empty' : 'region-populated',
+          ],
+          'data-region-message' => $region,
+        ],
+      ];
+      $form['region-' . $region . '-message']['message'] = [
+        '#markup' => '<em>' . $this->t('No blocks in this region') . '</em>',
         '#wrapper_attributes' => [
           'colspan' => 5,
         ],
