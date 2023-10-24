@@ -335,23 +335,9 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $this->validateAddNew($form, $form_state);
-  }
-
-  /**
-   * Validates the 'add new field' case.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @see \Drupal\field_ui\Form\FieldStorageAddForm::validateForm()
-   */
-  protected function validateAddNew(array $form, FormStateInterface $form_state) {
     // Missing subtype.
     if (!$form_state->getValue('group_field_options_wrapper') && isset($form['group_field_options_wrapper']['fields'])) {
-      $form_state->setErrorByName('storage type', $this->t('Add new field: you need to select a subtype.'));
+      $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to select a field type.'));
     }
 
     // Field name validation.
