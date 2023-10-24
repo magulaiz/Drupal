@@ -7,8 +7,7 @@ namespace Drupal\package_manager;
 use Composer\Semver\VersionParser;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TempStore\SharedTempStore;
@@ -170,8 +169,8 @@ abstract class StageBase implements LoggerAwareInterface {
    *   The stager service.
    * @param \PhpTuf\ComposerStager\API\Core\CommitterInterface $committer
    *   The committer service.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
+   * @param \Drupal\Core\Queue\QueueFactory $queueFactory
+   *   The queue factory.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher service.
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempStoreFactory
@@ -188,7 +187,7 @@ abstract class StageBase implements LoggerAwareInterface {
     protected readonly BeginnerInterface $beginner,
     protected readonly StagerInterface $stager,
     protected readonly CommitterInterface $committer,
-    protected readonly FileSystemInterface $fileSystem,
+    protected readonly QueueFactory $queueFactory,
     protected EventDispatcherInterface $eventDispatcher,
     protected readonly SharedTempStoreFactory $tempStoreFactory,
     protected readonly TimeInterface $time,
@@ -530,20 +529,12 @@ abstract class StageBase implements LoggerAwareInterface {
       throw new StageException($this, 'Cannot destroy the stage directory while it is being applied to the active directory.');
     }
 
-    $staging_root = $this->getStagingRoot();
-    // If the stage root directory exists, delete it and everything in it.
-    if (file_exists($staging_root)) {
-      try {
-        $this->fileSystem->deleteRecursive($staging_root, function (string $path): void {
-          $this->fileSystem->chmod($path, 0777);
-        });
-      }
-      catch (FileException) {
-        // Deliberately swallow the exception so that the stage will be marked
-        // as available, even if the stage directory can't actually be deleted.
-        // The file system service logs the exception, so we don't need to do
-        // anything else here.
-      }
+    // If the stage directory exists, queue it to be automatically cleaned up
+    // later by a queue (which may or may not happen during cron).
+    // @see \Drupal\package_manager\Plugin\QueueWorker\Cleaner
+    if ($this->stageDirectoryExists()) {
+      $this->queueFactory->get('package_manager_cleanup')
+        ->createItem($this->getStageDirectory());
     }
 
     $this->storeDestroyInfo($force, $message);

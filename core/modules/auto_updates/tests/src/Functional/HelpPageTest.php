@@ -4,14 +4,13 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\auto_updates\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 
 /**
  * @group auto_updates
  * @internal
  */
-class HelpPageTest extends BrowserTestBase {
+class HelpPageTest extends AutoUpdatesFunctionalTestBase {
 
   use AssertPreconditionsTrait;
 
@@ -34,6 +33,7 @@ class HelpPageTest extends BrowserTestBase {
   public function testHelpPage(): void {
     $user = $this->createUser([
       'access administration pages',
+      'access help pages',
     ]);
     $this->drupalLogin($user);
     $this->drupalGet('/admin/help/auto_updates');

@@ -8,6 +8,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Component\FileSystem\FileSystem as DrupalFileSystem;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\fixture_manipulator\StageFixtureManipulator;
 use Drupal\KernelTests\KernelTestBase;
@@ -185,7 +186,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
       $this->container->get(BeginnerInterface::class),
       $this->container->get(StagerInterface::class),
       $this->container->get(CommitterInterface::class),
-      $this->container->get('file_system'),
+      $this->container->get(QueueFactory::class),
       $this->container->get('event_dispatcher'),
       $this->container->get('tempstore.shared'),
       $this->container->get('datetime.time'),

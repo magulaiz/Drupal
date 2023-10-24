@@ -444,28 +444,39 @@ class CoreUpdateTest extends UpdateTestBase {
   public function testConsoleUpdate(): void {
     $this->createTestProject('RecommendedProject');
 
-    $dir = $this->getWorkspaceDirectory() . '/project';
-
     $command = [
       (new PhpExecutableFinder())->find(),
       $this->getWebRoot() . '/core/scripts/auto-update',
+      '--verbose',
     ];
-    $process = new Process($command, $dir);
-    // Give the update process as much time as it needs to run.
-    $process->setTimeout(NULL)->mustRun();
 
-    $output = $process->getOutput();
+    $process = (new Process($command))
+      ->setWorkingDirectory($this->getWorkspaceDirectory() . '/project')
+      // Give the update process as much time as it needs to run.
+      ->setTimeout(NULL);
+
+    $output = $process->mustRun()->getOutput();
     $this->assertStringContainsString('Updating Drupal core to 9.8.1. This may take a while.', $output);
     $this->assertStringContainsString('Running post-apply tasks and final clean-up...', $output);
     $this->assertStringContainsString('Drupal core was successfully updated to 9.8.1!', $output);
+    $this->assertStringContainsString('Deleting unused stage directories...', $output);
     $this->assertUpdateSuccessful('9.8.1');
     $this->assertExpectedStageEventsFired(ConsoleUpdateStage::class);
 
+    $pattern = '/^Unused stage directory deleted: (.+)$/m';
+    $matches = [];
+    preg_match($pattern, $output, $matches);
+    $this->assertCount(2, $matches);
+    $this->assertDirectoryDoesNotExist($matches[1]);
+
     // Rerunning the command should exit with a message that no newer version
     // is available.
-    $process = new Process($command, $process->getWorkingDirectory());
-    $process->mustRun();
-    $this->assertStringContainsString("There is no Drupal core update available.", $process->getOutput());
+    $output = $process->mustRun()->getOutput();
+    $this->assertStringContainsString("There is no Drupal core update available.", $output);
+    // Any defunct stage directories should still be cleaned up (even though
+    // there aren't any left).
+    $this->assertStringContainsString('Deleting unused stage directories...', $output);
+    $this->assertDoesNotMatchRegularExpression($pattern, $output);
   }
 
 }

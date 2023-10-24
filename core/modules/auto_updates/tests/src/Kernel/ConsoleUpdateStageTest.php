@@ -342,8 +342,7 @@ END;
     $original_stage_directory = $stage->getStageDirectory();
     $this->assertDirectoryExists($original_stage_directory);
 
-    $listener = function (PostRequireEvent $event) use (&$cron_stage_dir, $original_stage_directory): void {
-      $this->assertDirectoryDoesNotExist($original_stage_directory);
+    $listener = function (PostRequireEvent $event) use (&$cron_stage_dir): void {
       $cron_stage_dir = $this->container->get(StagerInterface::class)->getInvocationArguments()[0][1]->absolute();
       $this->assertSame($event->stage->getStageDirectory(), $cron_stage_dir);
       $this->assertDirectoryExists($cron_stage_dir);
@@ -354,7 +353,6 @@ END;
     $this->runConsoleUpdateStage();
     $this->assertIsString($cron_stage_dir);
     $this->assertNotEquals($original_stage_directory, $cron_stage_dir);
-    $this->assertDirectoryDoesNotExist($cron_stage_dir);
     $this->assertTrue($this->logger->hasRecord('The existing stage was not in the process of being applied, so it was destroyed to allow updating the site to a secure version during cron.', (string) RfcLogLevel::NOTICE));
     $stage2 = $this->createStage();
     $stage2->create();
