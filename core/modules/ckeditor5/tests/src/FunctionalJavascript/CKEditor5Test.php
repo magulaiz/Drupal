@@ -714,16 +714,17 @@ JS;
     $this->waitForEditor();
 
     $list_types = [
-      'ol' =>  [
+      'ol' => [
         'Lower-roman' => 'i',
         'Upper-roman' => 'I',
         'Lower-latin' => 'a',
-        'Upper-latin' => 'A'],
+        'Upper-latin' => 'A',
+      ],
       'ul' => [
         'Square' => 'square',
         'Disc' => 'disc',
         'Circle' => 'circle',
-        ],
+      ],
     ];
 
     foreach ($list_types as $list_tag => $types) {
@@ -734,13 +735,13 @@ JS;
         // Open the list type toolbar and choose a type.
         $list_button_tip_text = $list_tag === 'ol' ? 'Numbered List' : 'Bulleted List';
         $toolbar_selector = '[aria-label="' . str_replace(' L', ' l', $list_button_tip_text) . ' styles toolbar"]';
-        $button_selector = '[data-cke-tooltip-text="' .  $list_button_tip_text .'"]';
+        $button_selector = '[data-cke-tooltip-text="' . $list_button_tip_text .'"]';
         $page->find('css', '[aria-expanded="false"]' . $button_selector)->click();
         $open_splitbutton = $assert_session->waitForElementVisible('css', '[aria-expanded="true"]' . $button_selector);
         $this->assertNotNull($open_splitbutton, "$list_button_tip_text splitbutton is open");
         $toolbar = $assert_session->waitForElementVisible('css', $toolbar_selector);
         $this->assertNotNull($toolbar, "Toolbar for selecting $type is available at $toolbar_selector ");
-        $toolbar_with_tips = $assert_session->waitForElementVisible('css',  $toolbar_selector . ' [data-cke-tooltip-text]');
+        $toolbar_with_tips = $assert_session->waitForElementVisible('css', $toolbar_selector . ' [data-cke-tooltip-text]');
         $this->assertNotNull($toolbar_with_tips);
         $toolbar_buttons = $toolbar->findAll('css', 'button');
         // While this is a bit of an indirect way to find the correct button, it
@@ -754,7 +755,7 @@ JS;
         $this->assertNotNull($widget, "The widget exists at $widget_selector");
 
         // Confirm the style applied in-editor is for the type of list chosen.
-        $list_style_type = $this->getSession()->evaluateScript('window.getComputedStyle(document.querySelector(\''. $widget_selector . '\')).listStyleType');
+        $list_style_type = $this->getSession()->evaluateScript('window.getComputedStyle(document.querySelector(\'' . $widget_selector . '\')).listStyleType');
         $this->assertSame(str_replace('latin', 'alpha', strtolower($type)), $list_style_type, "The $list_style_type list should have the correct style.");
         $page->pressButton('Save');
 
