@@ -14,6 +14,8 @@ final class ConfigTarget {
    *
    * @var string
    *
+   * @see \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap()
+   * 
    * @internal
    *   This property is for internal use only.
    */
@@ -23,6 +25,8 @@ final class ConfigTarget {
    * The parents of the form element which maps to this config property.
    *
    * @var array
+   *
+   * @see \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap()
    *
    * @internal
    *   This property is for internal use only.
