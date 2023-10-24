@@ -83,75 +83,80 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       }
     }
 
-    // Retrieve the permissions from the static cache if available.
-    $static_cache_hit = FALSE;
-    $persistent_cache_hit = FALSE;
-    if ($static_cache = $this->variationStatic->get($cache_keys, $initial_cacheability)) {
-      $static_cache_hit = TRUE;
-      $calculated_permissions = $static_cache->data;
-    }
-    // Retrieve the permissions from the persistent cache if available.
-    elseif ($cache = $this->variationCache->get($cache_keys, $initial_cacheability)) {
-      $persistent_cache_hit = TRUE;
-      $calculated_permissions = $cache->data;
-    }
-    // Otherwise build the permissions from scratch.
-    else {
-      // Build mode, allow all access policies to add initial data.
-      $calculated_permissions = new RefinableCalculatedPermissions();
-      foreach ($this->accessPolicies as $access_policy) {
-        if (!$access_policy->applies($scope)) {
-          continue;
+    // Wrap the whole cache retrieval and calculation in a try-statement so that
+    // we can switch back to the original account even if something goes wrong.
+    try {
+      // Retrieve the permissions from the static cache if available.
+      $static_cache_hit = FALSE;
+      $persistent_cache_hit = FALSE;
+      if ($static_cache = $this->variationStatic->get($cache_keys, $initial_cacheability)) {
+        $static_cache_hit = TRUE;
+        $calculated_permissions = $static_cache->data;
+      }
+      // Retrieve the permissions from the persistent cache if available.
+      elseif ($cache = $this->variationCache->get($cache_keys, $initial_cacheability)) {
+        $persistent_cache_hit = TRUE;
+        $calculated_permissions = $cache->data;
+      }
+      // Otherwise build the permissions from scratch.
+      else {
+        // Build mode, allow all access policies to add initial data.
+        $calculated_permissions = new RefinableCalculatedPermissions();
+        foreach ($this->accessPolicies as $access_policy) {
+          if (!$access_policy->applies($scope)) {
+            continue;
+          }
+
+          $policy_permissions = $access_policy->calculatePermissions($account, $scope);
+          if (!$this->validateScope($scope, $policy_permissions)) {
+            throw new AccessPolicyScopeException(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', get_class($access_policy), $scope));
+          }
+
+          $calculated_permissions = $calculated_permissions->merge($policy_permissions);
         }
 
-        $policy_permissions = $access_policy->calculatePermissions($account, $scope);
-        if (!$this->validateScope($scope, $policy_permissions)) {
-          throw new AccessPolicyScopeException(sprintf('The access policy "%s" returned permissions for scopes other than "%s".', get_class($access_policy), $scope));
+        // Alter mode, allow all access policies to alter the complete build.
+        foreach ($this->accessPolicies as $access_policy) {
+          if (!$access_policy->applies($scope)) {
+            continue;
+          }
+
+          $access_policy->alterPermissions($account, $scope, $calculated_permissions);
+          if (!$this->validateScope($scope, $calculated_permissions)) {
+            throw new AccessPolicyScopeException(sprintf('The access policy "%s" altered permissions in a scope other than "%s".', get_class($access_policy), $scope));
+          }
         }
 
-        $calculated_permissions = $calculated_permissions->merge($policy_permissions);
+        // Apply a cache tag to easily flush the calculated permissions.
+        $calculated_permissions->addCacheTags(['access_policies']);
       }
 
-      // Alter mode, allow all access policies to alter the complete build.
-      foreach ($this->accessPolicies as $access_policy) {
-        if (!$access_policy->applies($scope)) {
-          continue;
+      if (!$static_cache_hit) {
+        $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
+
+        // First store the actual calculated permissions in the persistent cache,
+        // along with the final cache contexts after all calculations have run. We
+        // need to store the RefinableCalculatedPermissions in the persistent
+        // cache so we can still get the final cacheability from it for when we
+        // run into a persistent cache hit but not a static one. At that point, if
+        // we had stored a CalculatedPermissions object, we would no longer be
+        // able to ask for its cache contexts.
+        if (!$persistent_cache_hit) {
+          $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
         }
 
-        $access_policy->alterPermissions($account, $scope, $calculated_permissions);
-        if (!$this->validateScope($scope, $calculated_permissions)) {
-          throw new AccessPolicyScopeException(sprintf('The access policy "%s" altered permissions in a scope other than "%s".', get_class($access_policy), $scope));
-        }
+        // Then convert the calculated permissions to an immutable value object
+        // and store it in the static cache so that we don't have to do the same
+        // conversion every time we call for the calculated permissions from a
+        // warm static cache.
+        $calculated_permissions = new CalculatedPermissions($calculated_permissions);
+        $this->variationStatic->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
       }
-
-      // Apply a cache tag to easily flush the calculated permissions.
-      $calculated_permissions->addCacheTags(['access_policies']);
     }
-
-    if (!$static_cache_hit) {
-      $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
-
-      // First store the actual calculated permissions in the persistent cache,
-      // along with the final cache contexts after all calculations have run. We
-      // need to store the RefinableCalculatedPermissions in the persistent
-      // cache so we can still get the final cacheability from it for when we
-      // run into a persistent cache hit but not a static one. At that point, if
-      // we had stored a CalculatedPermissions object, we would no longer be
-      // able to ask for its cache contexts.
-      if (!$persistent_cache_hit) {
-        $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
+    finally {
+      if ($switch_account) {
+        $this->accountSwitcher->switchBack();
       }
-
-      // Then convert the calculated permissions to an immutable value object
-      // and store it in the static cache so that we don't have to do the same
-      // conversion every time we call for the calculated permissions from a
-      // warm static cache.
-      $calculated_permissions = new CalculatedPermissions($calculated_permissions);
-      $this->variationStatic->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
-    }
-
-    if ($switch_account) {
-      $this->accountSwitcher->switchBack();
     }
 
     // Return the permissions as an immutable value object.
