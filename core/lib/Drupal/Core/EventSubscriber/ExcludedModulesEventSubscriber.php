@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
@@ -102,7 +103,8 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
     }
 
     // Sort the extensions.
-    $extension['module'] = module_config_sort($modules);
+    SortArray::sortByNumericValueAndKey($modules);
+    $extension['module'] = $modules;
     // Set the modified extension.
     $storage->write('core.extension', $extension);
   }
