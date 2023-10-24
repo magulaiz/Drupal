@@ -192,8 +192,11 @@ ul {
   margin-block: 0.25em;
   margin-inline: 1.5em 0;
   padding-inline-start: 0;
-  list-style-type: disc;
   list-style-image: none;
+}
+
+ul:not([type]) {
+  list-style-type: disc;
 }
 
 ol {

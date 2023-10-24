@@ -649,7 +649,8 @@
             [...sheet.cssRules].forEach((rule, ruleIndex) => {
               if (
                 rule?.selectorText &&
-                rule.selectorText.includes(' ol') &&
+                (rule.selectorText.includes(' ol') ||
+                  rule.selectorText.includes(' ul')) &&
                 !rule.selectorText.includes('type')
               ) {
                 sheet.cssRules[ruleIndex].style['list-style-type'] = null;
