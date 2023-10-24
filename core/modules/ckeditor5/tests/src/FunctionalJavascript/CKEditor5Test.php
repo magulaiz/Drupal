@@ -735,7 +735,7 @@ JS;
         // Open the list type toolbar and choose a type.
         $list_button_tip_text = $list_tag === 'ol' ? 'Numbered List' : 'Bulleted List';
         $toolbar_selector = '[aria-label="' . str_replace(' L', ' l', $list_button_tip_text) . ' styles toolbar"]';
-        $button_selector = '[data-cke-tooltip-text="' . $list_button_tip_text .'"]';
+        $button_selector = '[data-cke-tooltip-text="' . $list_button_tip_text . '"]';
         $page->find('css', '[aria-expanded="false"]' . $button_selector)->click();
         $open_splitbutton = $assert_session->waitForElementVisible('css', '[aria-expanded="true"]' . $button_selector);
         $this->assertNotNull($open_splitbutton, "$list_button_tip_text splitbutton is open");
