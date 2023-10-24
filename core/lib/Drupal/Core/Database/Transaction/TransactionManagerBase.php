@@ -233,6 +233,9 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
       assert(isset($this->voidedItems[$id]), "Transaction {$id}/{$name} was out of sequence.");
       unset($this->voidedItems[$id]);
+      if ($this->stack() === [] && $this->voidedItems === [] && $this->getConnectionTransactionState() === ClientConnectionTransactionState::Voided) {
+        $this->processPostTransactionCallbacks();
+      }
       return;
     }
 
@@ -496,7 +499,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $this->voidStackItem((string) $i);
     }
     $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-    $this->processPostTransactionCallbacks();
   }
 
 }
