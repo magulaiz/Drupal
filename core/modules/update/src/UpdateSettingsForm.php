@@ -57,8 +57,8 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#config_target' => new ConfigTarget(
         'update.settings',
         'notification.emails',
-        static::class . '::loadEmailsFromConfig',
-        static::class . '::transformEmailsForConfigStorage',
+        static::class . '::arrayToMultiLineString',
+        static::class . '::multiLineStringToArray',
       ),
       '#description' => $this->t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
@@ -122,7 +122,7 @@ class UpdateSettingsForm extends ConfigFormBase {
    * @return array
    *   The value to be stored in config.
    */
-  public static function transformEmailsForConfigStorage(string $value): array {
+  public static function multiLineStringToArray(string $value): array {
     return array_map('trim', explode("\n", trim($value)));
   }
 
@@ -135,7 +135,7 @@ class UpdateSettingsForm extends ConfigFormBase {
    * @return string
    *   The value of the form element.
    */
-  public static function loadEmailsFromConfig(array $value): string {
+  public static function arrayToMultiLineString(array $value): string {
     return implode("\n", $value);
   }
 
