@@ -28,7 +28,7 @@ services:
   system.admin_path.route_subscriber:
     class: Drupal\system\EventSubscriber\AdminRouteSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   theme.negotiator.system.batch:
     class: Drupal\system\Theme\BatchNegotiator
     arguments: ['@batch.storage', '@request_stack']
@@ -43,22 +43,22 @@ services:
     class: Drupal\system\SystemConfigSubscriber
     arguments: ['@router.builder']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   system.config_cache_tag:
     class: Drupal\system\EventSubscriber\ConfigCacheTag
     arguments: ['@theme_handler', '@cache_tags.invalidator', '@theme.registry']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   system.timezone_resolver:
     class: Drupal\system\TimeZoneResolver
     arguments: ['@current_user', '@config.factory']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   system.file_event.subscriber:
     class: Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
     arguments: ['@config.factory']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   logger.channel.system:
     parent: logger.channel_base
     arguments: ['system']
@@ -70,12 +70,12 @@ services:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
     arguments: ['@system.sa_fetcher']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   system.menus.route_subscriber:
     class: Drupal\system\Routing\MenuLinksetRoutes
     arguments: ['%authentication_providers%', '@config.factory', '@router.builder']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   Drupal\system\ModuleAdminLinksHelper: '@system.module_admin_links_helper'
   system.module_admin_links_helper:
     class: Drupal\system\ModuleAdminLinksHelper

@@ -28,7 +28,7 @@ class AutoconfigurationTest extends KernelTestBase {
           if (is_array($service) && isset($service['tags'])) {
             foreach ($service['tags'] as $tag) {
               $tag_name = is_string($tag) ? $tag : $tag['name'];
-              $this->assertNotEquals('event_subscriber', $tag_name, "Service '$id' in $filename should not be tagged with 'event_subscriber'.");
+              $this->assertNotEquals('kernel.event_subscriber', $tag_name, "Service '$id' in $filename should not be tagged with 'kernel.event_subscriber'.");
             }
           }
         }

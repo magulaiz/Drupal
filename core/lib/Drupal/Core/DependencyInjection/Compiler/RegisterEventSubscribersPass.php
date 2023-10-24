@@ -2,11 +2,19 @@
 
 namespace Drupal\Core\DependencyInjection\Compiler;
 
+@trigger_error('The ' . __NAMESPACE__ . '\RegisterEventSubscribersPass is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass instead. See https://www.drupal.org/node/3376090', E_USER_DEPRECATED);
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
  * Registers all event subscribers to the event dispatcher.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3376090
  */
 class RegisterEventSubscribersPass implements CompilerPassInterface {
 

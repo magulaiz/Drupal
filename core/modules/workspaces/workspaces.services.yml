@@ -14,7 +14,7 @@ services:
     arguments: ['@database', '@entity_type.manager', '@workspaces.repository', '@logger.channel.workspaces']
     tags:
       - { name: backend_overridable }
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
@@ -42,12 +42,12 @@ services:
     class: Drupal\workspaces\EventSubscriber\EntitySchemaSubscriber
     arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.manager']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: kernel.event_subscriber }
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
     arguments: ['@path_alias.manager', '@path.current', '@router.route_provider', '@workspaces.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext

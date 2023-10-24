@@ -27,7 +27,7 @@ services:
     class: Drupal\ckeditor5\EventSubscriber\CKEditor5CacheTag
     arguments: ['@cache_tags.invalidator']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   logger.channel.ckeditor5:
     parent: logger.channel_base
     arguments: [ 'ckeditor5' ]

@@ -16,14 +16,14 @@ services:
     class: Drupal\content_moderation\EventSubscriber\ConfigImportSubscriber
     arguments: ['@config.manager', '@entity_type.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   content_moderation.route_subscriber:
     class: Drupal\content_moderation\Routing\ContentModerationRouteSubscriber
     arguments: ['@entity_type.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   content_moderation.workspace_subscriber:
     class: Drupal\content_moderation\EventSubscriber\WorkspaceSubscriber
     arguments: ['@entity_type.manager', '@?workspaces.association']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }

@@ -6,28 +6,29 @@ use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
+use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
-use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
-use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
-use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
-use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
-use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
-use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
-use Drupal\Core\DependencyInjection\ServiceModifierInterface;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
-use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
-use Drupal\Core\DependencyInjection\Compiler\RegisterEventSubscribersPass;
+use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
+use Drupal\Core\DependencyInjection\Compiler\RenameTagsPass;
+use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
+use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
+use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
+use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceModifierInterface;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -80,8 +81,11 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new RegisterStreamWrappersPass());
     $container->addCompilerPass(new TwigExtensionPass());
 
+    // Rename a tag.
+    $container->addCompilerPass(new RenameTagsPass('event_subscriber', 'kernel.event_subscriber'));
+
     // Add a compiler pass for registering event subscribers.
-    $container->addCompilerPass(new RegisterEventSubscribersPass(), PassConfig::TYPE_AFTER_REMOVING);
+    $container->addCompilerPass(new RegisterListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
 
     $container->addCompilerPass(new RegisterAccessChecksPass());
 
@@ -100,7 +104,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new DeprecatedServicePass());
 
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
-      ->addTag('event_subscriber');
+      ->addTag('kernel.event_subscriber');
   }
 
   /**

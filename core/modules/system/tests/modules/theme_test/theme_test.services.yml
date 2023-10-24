@@ -3,7 +3,7 @@ services:
     class: Drupal\theme_test\EventSubscriber\ThemeTestSubscriber
     arguments: ['@current_route_match', '@renderer']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
 
   theme.negotiator.test_custom_theme:
     class: Drupal\theme_test\Theme\CustomThemeNegotiator

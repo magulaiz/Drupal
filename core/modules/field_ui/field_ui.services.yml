@@ -3,7 +3,7 @@ services:
     class: Drupal\field_ui\Routing\RouteSubscriber
     arguments: ['@entity_type.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     arguments: ['@entity_type.manager']

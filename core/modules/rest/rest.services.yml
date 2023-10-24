@@ -12,7 +12,7 @@ services:
     class: Drupal\rest\Routing\ResourceRoutes
     arguments: ['@plugin.manager.rest', '@entity_type.manager', '@logger.channel.rest']
     tags:
-      - { name: 'event_subscriber' }
+      - { name: kernel.event_subscriber }
   logger.channel.rest:
     parent: logger.channel_base
     arguments: ['rest']
@@ -21,10 +21,10 @@ services:
   rest.resource_response.subscriber:
     class: Drupal\rest\EventSubscriber\ResourceResponseSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
     arguments: ['@serializer', '@renderer', '@current_route_match']
   rest.resource.entity.post_route.subscriber:
     class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
     arguments: ['@entity_type.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }

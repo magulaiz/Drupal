@@ -2,7 +2,7 @@ services:
   session_test.subscriber:
     class: Drupal\session_test\EventSubscriber\SessionTestSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   session_test.session_handler.test_proxy:
     class: Drupal\session_test\Session\TestSessionHandlerProxy
     tags:

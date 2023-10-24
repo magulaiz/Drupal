@@ -22,7 +22,7 @@ class NodeServiceProvider implements ServiceProviderInterface {
     $modules = $container->getParameter('container.modules');
     if (isset($modules['migrate']) && isset($modules['language'])) {
       $container->register('node.node_translation_migrate', NodeTranslationMigrateSubscriber::class)
-        ->addTag('event_subscriber')
+        ->addTag('kernel.event_subscriber')
         ->addArgument(new Reference('keyvalue'))
         ->addArgument(new Reference('state'));
     }
@@ -31,7 +31,7 @@ class NodeServiceProvider implements ServiceProviderInterface {
     // the language module is enabled.
     if (isset($modules['language'])) {
       $container->register('node.node_translation_exception', NodeTranslationExceptionSubscriber::class)
-        ->addTag('event_subscriber')
+        ->addTag('kernel.event_subscriber')
         ->addArgument(new Reference('keyvalue'))
         ->addArgument(new Reference('language_manager'))
         ->addArgument(new Reference('url_generator'))

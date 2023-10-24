@@ -13,7 +13,7 @@ services:
     class: Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber
     arguments: ['@dynamic_page_cache_request_policy', '@dynamic_page_cache_response_policy', '@variation_cache.dynamic_page_cache', '@cache_contexts_manager', '%renderer.config%']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
 
   # Request & response policies.
   dynamic_page_cache_request_policy:

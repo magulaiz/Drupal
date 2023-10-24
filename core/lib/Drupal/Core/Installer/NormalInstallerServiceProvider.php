@@ -64,7 +64,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
         ->setDecoratedService('router.route_provider')
         ->addArgument(new Reference('router.route_provider.installer.inner'))
         ->addArgument(new Reference('router.builder'))
-        ->addTag('event_subscriber');
+        ->addTag('kernel.event_subscriber');
     }
 
     $pass_config = $container->getCompilerPassConfig();

@@ -22,4 +22,4 @@ services:
     class: Drupal\media\EventSubscriber\MediaConfigSubscriber
     arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }

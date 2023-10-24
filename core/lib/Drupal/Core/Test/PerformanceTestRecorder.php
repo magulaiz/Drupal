@@ -107,7 +107,7 @@ class PerformanceTestRecorder implements EventSubscriberInterface {
     $services['services']['core.performance.test.recorder'] = [
       'class' => PerformanceTestRecorder::class,
       'arguments' => [$persistent, $persistent ? '@state' : NULL],
-      'tags' => [['name' => 'event_subscriber']],
+      'tags' => [['name' => 'kernel.event_subscriber']],
     ];
     file_put_contents($services_file, Yaml::dump($services));
   }

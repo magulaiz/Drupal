@@ -6,7 +6,7 @@ services:
   media_library.route_subscriber:
     class: Drupal\media_library\Routing\RouteSubscriber
     tags:
-      - { name: event_subscriber }
+      - { name: kernel.event_subscriber }
   media_library.opener_resolver:
     class: Drupal\media_library\OpenerResolver
     calls:
