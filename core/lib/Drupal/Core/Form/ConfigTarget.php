@@ -15,7 +15,7 @@ final class ConfigTarget {
    * @var string
    *
    * @see \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap()
-   * 
+   *
    * @internal
    *   This property is for internal use only.
    */
