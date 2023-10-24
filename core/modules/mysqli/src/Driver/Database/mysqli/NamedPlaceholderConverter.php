@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
 // cspell:ignore DBAL MULTICHAR

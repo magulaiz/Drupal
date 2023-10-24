@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\mysqli\Driver\Database\mysqli\Install;
 
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks as BaseInstallTasks;
