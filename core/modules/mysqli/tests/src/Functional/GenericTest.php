@@ -19,7 +19,6 @@ class GenericTest extends GenericModuleTestBase {
     $module = $this->getModule();
     \Drupal::service('module_installer')->install([$module]);
     $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-    dump($info);
     $this->assertTrue($info['hidden']);
     $this->assertSame(ExtensionLifecycle::EXPERIMENTAL, $info['lifecycle']);
   }
