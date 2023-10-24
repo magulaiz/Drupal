@@ -172,7 +172,7 @@ class Connection extends BaseMySqlConnection {
    * {@inheritdoc}
    */
   public function lastInsertId(?string $name = NULL): string {
-    return $this->connection->insert_id;
+    return (string) $this->connection->insert_id;
   }
 
   /**
