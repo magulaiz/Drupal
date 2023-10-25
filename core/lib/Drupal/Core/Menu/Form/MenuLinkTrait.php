@@ -12,7 +12,7 @@ trait MenuLinkTrait {
   /**
    * Helper function to the list of parent link select list.
    */
-  public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) {
+  public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) : array {
     $menu_of_selected_type = [];
     foreach ($all_menu_links as $key => $value) {
       if (strpos($key, $selected_menu) === 0) {
@@ -25,7 +25,7 @@ trait MenuLinkTrait {
   /**
    * Submit handler for the non-JS case.
    */
-  public function updateParentLinksNonJs(array $form, FormStateInterface $form_state) {
+  public function updateParentLinksNonJs(array $form, FormStateInterface $form_state) : void {
     $selected_menu = $form_state->getValue('menu_parent_menu');
 
     $menu_of_selected_type = $this->getParentLinkSelectList($form_state->getValue('all_menu_links'), $selected_menu);
@@ -36,7 +36,7 @@ trait MenuLinkTrait {
   /**
    * Callback function for updating the parent link select list.
    */
-  public function updateParentLinks(array $form, FormStateInterface $form_state) {
+  public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
 
     $menu_of_selected_type = $form_state->get('updated_child_list');
     $form['menu_parent']['#options'] = $menu_of_selected_type;
@@ -46,7 +46,7 @@ trait MenuLinkTrait {
   /**
    * Helper function to build the select form elements.
    */
-  protected function buildMenuFormElements(array $form, FormStateInterface $form_state, array $all_menu_links, string $menu_parent) {
+  protected function buildMenuFormElements(array $form, FormStateInterface $form_state, array $all_menu_links, string $menu_parent) : array {
     $parent_menu_links = [];
     foreach ($all_menu_links as $key => $value) {
       if (explode(':', $key, 2)[1] === '') {
