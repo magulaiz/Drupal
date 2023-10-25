@@ -142,7 +142,7 @@ class IdConflictForm extends MigrateUpgradeFormBase {
    */
   protected function i18nWarningForm(array &$form, array $conflicts) {
     $form['i18n'] = [
-      '#title' => $this->t('Please check if you have translated content of these types:'),
+      '#title' => $this->t('Check if you have translated content of these types:'),
       '#theme' => 'item_list',
       '#items' => $this->formatConflicts($conflicts),
     ];
