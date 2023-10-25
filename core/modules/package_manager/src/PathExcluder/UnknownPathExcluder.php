@@ -79,8 +79,25 @@ final class UnknownPathExcluder implements EventSubscriberInterface {
 
     $vendor_dir = $this->pathLocator->getVendorDirectory();
     $scaffold_files_paths = $this->getScaffoldFiles();
-    // Search for all files (including hidden ones) in project root.
-    $paths_in_project_root = glob("$project_root/{,.}*", GLOB_BRACE);
+
+    // Search for all files (including hidden ones) in the project root. We need
+    // to use readdir() and friends here, rather than glob(), since certain
+    // glob() flags aren't supported on all systems. We also can't use
+    // \Drupal\Core\File\FileSystemInterface::scanDirectory(), because it
+    // unconditionally ignores hidden files and directories.
+    $paths_in_project_root = [];
+    $handle = opendir($project_root);
+    if (empty($handle)) {
+      throw new \RuntimeException("Could not scan for files in the project root.");
+    }
+    while (($entry = readdir($handle)) !== FALSE) {
+      if ($entry === '.' || $entry === '..') {
+        continue;
+      }
+      $paths_in_project_root[] = $project_root . DIRECTORY_SEPARATOR . $entry;
+    }
+    closedir($handle);
+
     $paths = [];
     $known_paths = array_merge([$vendor_dir, $web_root, "$project_root/composer.json", "$project_root/composer.lock"], $scaffold_files_paths);
     foreach ($paths_in_project_root as $path_in_project_root) {
