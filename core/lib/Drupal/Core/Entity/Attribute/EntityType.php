@@ -55,7 +55,6 @@ class EntityType extends Plugin {
     public readonly array $list_cache_tags = [],
     public readonly array $constraints = [],
     public readonly array $additional = [],
-
   ) {
 
   }
@@ -68,14 +67,13 @@ class EntityType extends Plugin {
     $class = $this->entity_type_class;
 
     $values = array_filter(get_object_vars($this) + [
-        'class' => $this->getClass(),
-        'provider' => $this->getProvider(),
-      ], function ($value, $key) {
+      'class' => $this->getClass(),
+      'provider' => $this->getProvider(),
+    ], function ($value, $key) {
       return !($value === NULL && ($key === 'deriver' || $key === 'provider' || $key == 'entity_type_class'));
     }, ARRAY_FILTER_USE_BOTH);
 
     return new $class($values);
   }
-
 
 }

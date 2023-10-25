@@ -36,7 +36,7 @@ use Drupal\user\EntityOwnerTrait;
       'default' => 'Drupal\node\NodeForm',
       'delete' => 'Drupal\node\Form\NodeDeleteForm',
       'edit' => 'Drupal\node\NodeForm',
-      'delete-multiple-confirm' => 'Drupal\node\Form\DeleteMultiple'
+      'delete-multiple-confirm' => 'Drupal\node\Form\DeleteMultiple',
     ],
     'route_provider' => [
       'html' => 'Drupal\node\Entity\NodeRouteProvider',
