@@ -191,7 +191,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Add new field: you need to select a subtype.');
     $assert_session->elementExists('css', '[name="label"].error');
     // basically checks the presence of error class.
-//    $assert_session->elementExists('css', '[data-drupal-selector="field-click-to-select"].error');
+    // $assert_session->elementExists('css', '[data-drupal-selector="field-click-to-select"].error');
     $page->fillField('label', $field_name);
     $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
     $assert_session->assertWaitOnAjaxRequest();
