@@ -231,8 +231,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->optionExists('default_value_input[field_test_string_list]', 'second');
     $page->selectFieldOption('default_value_input[field_test_string_list]', 'second');
-    $page->pressButton('Save settings');
-    $assert_session->pageTextContains('Saved Test string list configuration.');
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+    $this->assertTrue($assert_session->waitForText('Saved Test string list configuration.'));
 
     // Create a field of type list:integer.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
@@ -247,8 +247,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // value field.
     $this->assertSession()->optionExists('default_value_input[field_test_int_list]', 'first');
     $page->selectFieldOption('default_value_input[field_test_int_list]', 'first');
-    $page->pressButton('Save settings');
-    $assert_session->pageTextContains('Saved Test int list configuration.');
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+    $this->assertTrue($assert_session->waitForText('Saved Test int list configuration.'));
   }
 
   /**
