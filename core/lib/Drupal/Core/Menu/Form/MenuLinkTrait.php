@@ -15,7 +15,12 @@ trait MenuLinkTrait {
   use StringTranslationTrait;
 
   /**
-   * Helper function to the list of parent link select list.
+   * Helper function to list the parent link select list.
+   *
+   * @param array $all_menu_links
+   *   An array containing list of all menu links.
+   * @param string $selected_menu
+   *   The selected parent menu.
    */
   public function getParentLinkSelectList(array $all_menu_links, string $selected_menu) : array {
     $menu_of_selected_type = [];
@@ -29,6 +34,11 @@ trait MenuLinkTrait {
 
   /**
    * Submit handler for the non-JS case.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function updateParentLinksNonJs(array $form, FormStateInterface $form_state) : void {
     $selected_menu = $form_state->getValue('menu_parent_menu');
@@ -40,9 +50,13 @@ trait MenuLinkTrait {
 
   /**
    * Callback function for updating the parent link select list.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
-
     $menu_of_selected_type = $form_state->get('updated_child_list');
     $form['menu_parent']['#options'] = $menu_of_selected_type;
     return $form['menu_parent'];
@@ -50,10 +64,20 @@ trait MenuLinkTrait {
 
   /**
    * Helper function to build the select form elements.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $all_menu_links
+   *   An array containing list of all menu links.
+   * @param string $menu_parent
+   *   The selected parent menu.
    */
   protected function buildMenuFormElements(array $form, FormStateInterface $form_state, array $all_menu_links, string $menu_parent) : array {
     $parent_menu_links = [];
     foreach ($all_menu_links as $key => $value) {
+      // Building the list of parent menus.
       if (explode(':', $key, 2)[1] === '') {
         $parent_menu_links[$key] = $value;
       }
