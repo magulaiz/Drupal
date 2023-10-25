@@ -434,7 +434,6 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $response->addCommand(new CloseModalDialogCommand());
     $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
 
     return $response;

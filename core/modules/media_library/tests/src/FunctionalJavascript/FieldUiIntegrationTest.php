@@ -80,7 +80,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_two]"][checked="checked"]');
     $page->checkField('settings[handler_settings][target_bundles][type_three]');
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_three]"][checked="checked"]');
-    $this->submitForm([], 'Save');
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Saved Shatner configuration.');
 
