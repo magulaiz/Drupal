@@ -8,13 +8,11 @@ use Drupal\auto_updates\CronUpdateRunner;
 use Drupal\auto_updates\CommandExecutor;
 use Drupal\auto_updates\UpdateStage;
 use Drupal\fixture_manipulator\StageFixtureManipulator;
-use Drupal\package_manager\PathLocator;
+use Drupal\Tests\auto_updates\Traits\TestSetUpTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 use Drupal\Tests\package_manager\Traits\ComposerStagerTestTrait;
 use Drupal\Tests\package_manager\Traits\FixtureManipulatorTrait;
-use Drupal\Tests\package_manager\Traits\FixtureUtilityTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for functional tests of the Automatic Updates module.
@@ -26,7 +24,7 @@ abstract class AutoUpdatesFunctionalTestBase extends BrowserTestBase {
   use AssertPreconditionsTrait;
   use ComposerStagerTestTrait;
   use FixtureManipulatorTrait;
-  use FixtureUtilityTrait;
+  use TestSetUpTrait;
 
   /**
    * {@inheritdoc}
@@ -41,28 +39,11 @@ abstract class AutoUpdatesFunctionalTestBase extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->useFixtureDirectoryAsActive(__DIR__ . '/../../../../package_manager/tests/fixtures/fake_site');
     // @todo Remove in https://www.drupal.org/project/auto_updates/issues/3284443
     $this->config('auto_updates.settings')
       ->set('unattended.level', CronUpdateRunner::SECURITY)
       ->save();
     $this->mockActiveCoreVersion('9.8.0');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function installModulesFromClassProperty(ContainerInterface $container): void {
-    $container->get('module_installer')->install([
-      'package_manager_test_release_history',
-    ]);
-    $this->container = $container->get('kernel')->getContainer();
-
-    // To prevent tests from making real requests to the Internet, use fake
-    // release metadata that exposes a pretend Drupal 9.8.2 release.
-    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.2.xml');
-
-    parent::installModulesFromClassProperty($container);
   }
 
   /**
@@ -99,30 +80,6 @@ abstract class AutoUpdatesFunctionalTestBase extends BrowserTestBase {
   }
 
   /**
-   * Sets the release metadata file to use when fetching available updates.
-   *
-   * @todo Remove this function with use of the trait from the Update module in
-   *   https://drupal.org/i/3348234.
-   *
-   * @param string $file
-   *   The path of the XML metadata file to use.
-   */
-  protected function setReleaseMetadata(string $file): void {
-    $this->assertFileIsReadable($file);
-
-    $this->config('update.settings')
-      ->set('fetch.url', $this->baseUrl . '/test-release-history')
-      ->save();
-
-    [$project] = explode('.', basename($file, '.xml'), 2);
-    $xml_map = $this->config('update_test.settings')->get('xml_map') ?? [];
-    $xml_map[$project] = $file;
-    $this->config('update_test.settings')
-      ->set('xml_map', $xml_map)
-      ->save();
-  }
-
-  /**
    * Checks for available updates.
    *
    * Assumes that a user with appropriate permissions is logged in.
@@ -145,36 +102,6 @@ abstract class AutoUpdatesFunctionalTestBase extends BrowserTestBase {
     $assert_session->pageTextContainsOnce('Drupal core will be updated to ' . $target_version);
     $button = $assert_session->buttonExists("Continue");
     $this->assertTrue($button->hasClass('button--primary'));
-  }
-
-  /**
-   * Copies a fixture directory to a temporary directory.
-   *
-   * @param string $fixture_directory
-   *   The fixture directory.
-   *
-   * @return string
-   *   The temporary directory.
-   */
-  protected function copyFixtureToTempDirectory(string $fixture_directory): string {
-    $temp_directory = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . DIRECTORY_SEPARATOR . $this->randomMachineName(20);
-    static::copyFixtureFilesTo($fixture_directory, $temp_directory);
-    return $temp_directory;
-  }
-
-  /**
-   * Sets a fixture directory to use as the active directory.
-   *
-   * @param string $fixture_directory
-   *   The fixture directory.
-   */
-  protected function useFixtureDirectoryAsActive(string $fixture_directory): void {
-    // Create a temporary directory from our fixture directory that will be
-    // unique for each test run. This will enable changing files in the
-    // directory and not affect other tests.
-    $active_dir = $this->copyFixtureToTempDirectory($fixture_directory);
-    $this->container->get(PathLocator::class)
-      ->setPaths($active_dir, $active_dir . '/vendor', '', NULL);
   }
 
   /**

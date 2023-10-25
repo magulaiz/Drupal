@@ -45,21 +45,16 @@ abstract class UpdaterFormTestBase extends AutoUpdatesFunctionalTestBase {
     parent::setUp();
 
     $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.1-security.xml');
-    $permissions = [
+    $user = $this->createUser([
       'administer site configuration',
       'administer software updates',
       'access administration pages',
       'access site in maintenance mode',
       'administer modules',
       'access site reports',
+      'view update notifications',
       'access help pages',
-    ];
-    // Check for permission that was added in Drupal core 9.4.x.
-    $available_permissions = array_keys($this->container->get('user.permissions')->getPermissions());
-    if (in_array('view update notifications', $available_permissions, TRUE)) {
-      array_push($permissions, 'view update notifications');
-    }
-    $user = $this->createUser($permissions);
+    ]);
     $this->drupalLogin($user);
     $this->checkForUpdates();
   }
