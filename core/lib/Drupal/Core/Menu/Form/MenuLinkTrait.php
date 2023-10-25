@@ -5,6 +5,11 @@ namespace Drupal\Core\Menu\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
+/**
+ * Provides a helper to build select elements for menu link forms.
+ *
+ * @internal
+ */
 trait MenuLinkTrait {
 
   use StringTranslationTrait;
