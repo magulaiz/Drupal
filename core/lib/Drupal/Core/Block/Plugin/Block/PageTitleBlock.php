@@ -126,7 +126,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
         1 => $this->t('Section page title'),
       ],
       '#default_value' => (int) $this->configuration['base_route_title'],
-      '#description' => $this->t('Choose whether to display the title of the current page or the current section. Displaying the section title is often preferred in admin interfaces.'),
+      '#description' => $this->t('Choose whether to display the title of the current page or the current section. The section page title is preferred if the title is displayed before local tasks and if it is displayed after local tasks then the current page title is preferred.'),
     ];
     return $form;
   }

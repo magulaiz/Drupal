@@ -62,6 +62,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     protected RequestGenerator $requestGenerator,
   ) {
     $this->config = $config_factory->get('system.site');
+    if ($this->requestGenerator === NULL) {
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $requestGenerator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      $this->requestGenerator = \Drupal::service('request_generator');
+    }
   }
 
   /**
