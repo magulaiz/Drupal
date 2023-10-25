@@ -23,7 +23,7 @@ use Drupal\user\EntityOwnerTrait;
   label_plural: new TranslatableMarkup('content items'),
   label_count: [
     'singular' => '@count content item',
-    'plural' => '@count content items'
+    'plural' => '@count content items',
   ],
   bundle_label: new TranslatableMarkup('Content type'),
   handlers: [
@@ -42,7 +42,7 @@ use Drupal\user\EntityOwnerTrait;
       'html' => 'Drupal\node\Entity\NodeRouteProvider',
     ],
     'list_builder' => 'Drupal\node\NodeListBuilder',
-    'translation' => 'Drupal\node\NodeTranslationHandler'
+    'translation' => 'Drupal\node\NodeTranslationHandler',
   ],
   base_table: 'node',
   data_table: 'node_field_data',
@@ -66,7 +66,7 @@ use Drupal\user\EntityOwnerTrait;
   revision_metadata_keys: [
     'revision_user' => 'revision_uid',
     'revision_created' => 'revision_timestamp',
-    'revision_log_message' => 'revision_log'
+    'revision_log_message' => 'revision_log',
   ],
   bundle_entity_type: 'node_type',
   field_ui_base_route: 'entity.node_type.edit_form',
