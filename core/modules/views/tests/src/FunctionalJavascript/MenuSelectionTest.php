@@ -22,18 +22,10 @@ class MenuSelectionTest extends WebDriverTestBase {
   protected $defaultTheme = 'starterkit_theme';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->drupalLogin($this->rootUser);
-  }
-
-  /**
    * Tests the rendering of parent link selection list based on selected menu.
    */
-  public function testSelectLists() {
+  public function testSelectLists() : void {
+    $this->drupalLogin($this->rootUser);
 
     // Visit the edit form to test the menu link.
     $this->drupalGet('admin/structure/menu/manage/account');
@@ -43,7 +35,6 @@ class MenuSelectionTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->optionExists('Parent link', '-- Compose tips (disabled)');
     $this->assertSession()->optionExists('Parent link', '<Tools>');
-
   }
 
 }
