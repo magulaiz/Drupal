@@ -12,7 +12,6 @@ use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -304,14 +303,27 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
+   *
+   * @see \Symfony\Component\HttpFoundation\Response::prepare()
+   * @see https://www.rfc-editor.org/rfc/rfc9110.html#name-content-length
    */
   public function setContentLengthHeader(ResponseEvent $event): void {
     $response = $event->getResponse();
-    if ($response instanceof StreamedResponse) {
+
+    if ($response->isInformational() || $response->isServerError() || $response->isEmpty()) {
       return;
     }
 
-    $response->headers->set('Content-Length', strlen($response->getContent()), TRUE);
+    if ($response->headers->has('Transfer-Encoding')) {
+      return;
+    }
+
+    $content = $response->getContent();
+    if ($content === FALSE) {
+      return;
+    }
+
+    $response->headers->set('Content-Length', strlen($content), TRUE);
   }
 
   /**
