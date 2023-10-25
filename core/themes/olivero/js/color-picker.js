@@ -30,8 +30,8 @@
   /**
    * Formats hexcode to full 6-character string for HTMLColorInput.
    *
-   * @param {string} hex The hex code input
-   * @returns {string} The same hex code, formatted
+   * @param {string} hex The hex code input.
+   * @returns {string} The same hex code, formatted.
    */
   function formatHex(hex) {
     // Temporarily remove hash
