@@ -84,6 +84,7 @@ abstract class SourceEditingTestBase extends CKEditor5TestBase {
           'ckeditor5_list' => [
             'reversed' => FALSE,
             'startIndex' => FALSE,
+            'styles' => FALSE,
           ],
         ],
       ],

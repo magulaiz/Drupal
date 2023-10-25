@@ -83,6 +83,7 @@ class MediaTest extends MediaTestBase {
     $settings['plugins']['ckeditor5_list'] = [
       'reversed' => FALSE,
       'startIndex' => FALSE,
+      'styles' => FALSE,
     ];
     $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], ['bulletedList', 'numberedList']);
     $editor->setSettings($settings);

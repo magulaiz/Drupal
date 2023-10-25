@@ -188,6 +188,7 @@ JS;
           'ckeditor5_list' => [
             'reversed' => FALSE,
             'startIndex' => FALSE,
+            'styles' => FALSE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
