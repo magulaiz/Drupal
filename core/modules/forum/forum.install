@@ -215,8 +215,8 @@ function forum_update_10101(&$sandbox = NULL): PluralTranslatableMarkup {
     ->fields('fi', ['nid', 'tid'])
     ->groupBy('nid')
     ->groupBy('tid');
-  $alias = $query->addExpression('count(*)', 'count');
-  $query->having(sprintf('%s > 1', $alias));
+  $query->addExpression('count(*)', 'count');
+  $query->having('count(*) > 1');
   $results = $query->execute();
   $nids_to_rebuild = [];
   foreach ($results as $row) {
