@@ -53,7 +53,6 @@ class CKEditor5UpdateListTypeTest extends UpdatePathTestBase {
     $this->assertTrue($settings['plugins']['ckeditor5_list']['styles']);
     $this->assertNotContains('<ul type>', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
     $this->assertNotContains('<ol type>', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
-    var_dump($settings['plugins']['ckeditor5_sourceEditing']);
 
     // Basic HTML after: new "styles" setting enabled, and Source Editing
     // configuration is unchanged.
