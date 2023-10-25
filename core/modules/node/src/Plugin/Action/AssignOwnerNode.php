@@ -61,6 +61,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function execute(EntityInterface $entity): void {
+    /** @var \Drupal\node\NodeInterface $entity */
     $entity->setOwnerId($this->configuration['owner_uid'])->save();
   }
 

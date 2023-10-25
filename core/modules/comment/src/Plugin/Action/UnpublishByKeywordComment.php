@@ -76,6 +76,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase implements Contai
    * {@inheritdoc}
    */
   public function execute(EntityInterface $entity): void {
+    /** @var \Drupal\comment\CommentInterface $entity */
     $build = $this->viewBuilder->view($entity);
     $text = $this->renderer->renderPlain($build);
     foreach ($this->configuration['keywords'] as $keyword) {

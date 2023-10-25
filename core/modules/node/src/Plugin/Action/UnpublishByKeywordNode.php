@@ -24,6 +24,7 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute(EntityInterface $entity): void {
+    /** @var \Drupal\node\NodeInterface $entity */
     $elements = \Drupal::entityTypeManager()
       ->getViewBuilder('node')
       ->view(clone $entity);

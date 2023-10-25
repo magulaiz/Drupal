@@ -23,6 +23,7 @@ class UnblockUser extends ActionBase {
    */
   public function execute(EntityInterface $entity): void {
     // Skip unblocking user if they are already unblocked.
+    /** @var \Drupal\user\UserInterface $entity */
     if ($entity->isBlocked()) {
       $entity->activate();
       $entity->save();

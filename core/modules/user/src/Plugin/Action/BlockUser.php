@@ -23,6 +23,7 @@ class BlockUser extends ActionBase {
    */
   public function execute(EntityInterface $entity): void {
     // Skip blocking user if they are already blocked.
+    /** @var \Drupal\user\UserInterface $entity */
     if ($entity->isActive()) {
       // For efficiency manually save the original account before applying any
       // changes.

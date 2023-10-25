@@ -20,6 +20,7 @@ class AddRoleUser extends ChangeUserRoleBase {
    * {@inheritdoc}
    */
   public function execute(EntityInterface $entity): void {
+    /** @var \Drupal\user\UserInterface $entity */
     $rid = $this->configuration['rid'];
     // Skip adding the role to the user if they already have it.
     if (!$entity->hasRole($rid)) {

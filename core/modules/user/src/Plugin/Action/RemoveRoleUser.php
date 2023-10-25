@@ -22,6 +22,7 @@ class RemoveRoleUser extends ChangeUserRoleBase {
   public function execute(EntityInterface $entity): void {
     $rid = $this->configuration['rid'];
     // Skip removing the role from the user if they already don't have it.
+    /** @var \Drupal\user\UserInterface $entity */
     if ($entity->hasRole($rid)) {
       // For efficiency manually save the original account before applying
       // any changes.
