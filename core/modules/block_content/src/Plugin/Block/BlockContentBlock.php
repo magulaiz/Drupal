@@ -177,10 +177,11 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   protected function blockAccess(AccountInterface $account) {
     if ($this->getEntity()) {
       $blockContent = $this->getEntity();
-      if (!$blockContent->get('status')->value && !$blockContent->access('view', $account)) {
+      $access = $blockContent->access('view', $account, TRUE);
+      if (!$blockContent->get('status')->value && !$access->isAllowed()) {
         return AccessResult::forbidden();
       }
-      return $blockContent->access('view', $account, TRUE);
+      return $access;
     }
     return AccessResult::forbidden();
   }
