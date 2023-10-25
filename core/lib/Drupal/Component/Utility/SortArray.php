@@ -132,7 +132,7 @@ class SortArray {
    *   An associative array containing:
    *   - key: A string.
    *   - value: A numeric value. Recommended to use integer values, floats will
-   *     work but not supported
+   *     work but are not supported.
    */
   public static function sortByNumericValueAndKey(array &$array): void {
     array_multisort(array_values($array), SORT_ASC, SORT_NUMERIC, array_keys($array), SORT_ASC, SORT_NATURAL, $array);
