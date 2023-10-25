@@ -50,7 +50,7 @@ class CKEditor5UpdateListTypeTest extends UpdatePathTestBase {
     $editor_basic = Editor::load('basic_html');
     $settings = $editor_basic->getSettings();
     $this->assertArrayHasKey('styles', $settings['plugins']['ckeditor5_list']);
-    $this->assertSame(TRUE, $settings['plugins']['ckeditor5_list']['styles']);
+    $this->assertTrue($settings['plugins']['ckeditor5_list']['styles']);
     $this->assertNotContains('<ul type>', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
     $this->assertNotContains('<ol type>', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
@@ -59,7 +59,7 @@ class CKEditor5UpdateListTypeTest extends UpdatePathTestBase {
     $editor_full = Editor::load('full_html');
     $settings = $editor_full->getSettings();
     $this->assertArrayHasKey('styles', $settings['plugins']['ckeditor5_list']);
-    $this->assertSame(TRUE, $settings['plugins']['ckeditor5_list']['styles']);
+    $this->assertTrue($settings['plugins']['ckeditor5_list']['styles']);
     $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
   }
 
