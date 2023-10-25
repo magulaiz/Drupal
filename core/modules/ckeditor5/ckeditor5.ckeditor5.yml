@@ -400,6 +400,8 @@ ckeditor5_list:
       - <ol>
       - <ol reversed start>
       - <li>
+      - <ol type>
+      - <ul type>
 
 ckeditor5_horizontalLine:
   ckeditor5:
