@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class ContentEntityType extends EntityType {
 
   public function __construct(
-    public readonly array $revision_metadata_keys,
+    public readonly array $revision_metadata_keys = [],
     ...$base,
   ) {
 
