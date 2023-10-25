@@ -12,48 +12,48 @@ use Drupal\node\NodeTypeInterface;
  * Defines the Node type configuration entity.
  */
 #[ConfigEntityType(
-  id: "node_type",
-  label: new TranslatableMarkup("Content type"),
-  label_collection: new TranslatableMarkup("Content types"),
-  label_singular: new TranslatableMarkup("content type"),
-  label_plural: new TranslatableMarkup("content types"),
+  id: 'node_type',
+  label: new TranslatableMarkup('Content type'),
+  label_collection: new TranslatableMarkup('Content types'),
+  label_singular: new TranslatableMarkup('content type'),
+  label_plural: new TranslatableMarkup('content types'),
   label_count: [
-    'singular' => "@count content type",
-    'plural' => "@count content types",
+    'singular' => '@count content type',
+    'plural' => '@count content types',
   ],
   handlers: [
-    "access" => "Drupal\node\NodeTypeAccessControlHandler",
-    "form" => [
-      "add" => "Drupal\node\NodeTypeForm",
-      "edit" => "Drupal\node\NodeTypeForm",
-      "delete" => "Drupal\node\Form\NodeTypeDeleteConfirm",
+    'access' => 'Drupal\node\NodeTypeAccessControlHandler',
+    'form' => [
+      'add' => 'Drupal\node\NodeTypeForm',
+      'edit' => 'Drupal\node\NodeTypeForm',
+      'delete' => 'Drupal\node\Form\NodeTypeDeleteConfirm',
     ],
-    "route_provider" => [
-      "permissions" => "Drupal\user\Entity\EntityPermissionsRouteProvider",
+    'route_provider' => [
+      'permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider',
     ],
-    "list_builder" => "Drupal\node\NodeTypeListBuilder",
+    'list_builder' => 'Drupal\node\NodeTypeListBuilder',
   ],
-  admin_permission: "administer content types",
-  config_prefix: "type",
-  bundle_of: "node",
+  admin_permission: 'administer content types',
+  config_prefix: 'type',
+  bundle_of: 'node',
   entity_keys: [
-    "id" => "type",
-    "label" => "name",
+    'id' => 'type',
+    'label' => 'name',
   ],
   links: [
-    "edit-form" => "/admin/structure/types/manage/{node_type}",
-    "delete-form" => "/admin/structure/types/manage/{node_type}/delete",
-    "entity-permissions-form" => "/admin/structure/types/manage/{node_type}/permissions",
-    "collection" => "/admin/structure/types",
+    'edit-form' => '/admin/structure/types/manage/{node_type}',
+    'delete-form' => '/admin/structure/types/manage/{node_type}/delete',
+    'entity-permissions-form' => '/admin/structure/types/manage/{node_type}/permissions',
+    'collection' => '/admin/structure/types',
   ],
   config_export: [
-    "name",
-    "type",
-    "description",
-    "help",
-    "new_revision",
-    "prview_mode",
-    "display_submitted",
+    'name',
+    'type',
+    'description',
+    'help',
+    'new_revision',
+    'prview_mode',
+    'display_submitted',
   ]
 )]
 class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
