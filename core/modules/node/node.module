@@ -681,7 +681,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
       /** @var \Drupal\node\NodeStorageInterface $nodeStorage */
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
-      $query =  \Drupal::database()->select('node_field_revision', 'n');
+      $query = \Drupal::database()->select('node_field_revision', 'n');
       $query->fields('n', ['langcode']);
       $query->addExpression('GROUP_CONCAT(vid)', 'revisions');
       $query->condition('uid', $account->id());
