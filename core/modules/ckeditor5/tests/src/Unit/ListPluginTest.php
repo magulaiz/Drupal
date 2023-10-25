@@ -20,19 +20,37 @@ class ListPluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public function providerGetDynamicPluginConfig(): array {
+    $styles_true_allow = [
+      [
+        'name' => 'ul',
+        'attributes' => ['type' => TRUE],
+        'classes' => TRUE,
+        'styles' => TRUE,
+      ],
+      [
+        'name' => 'ol',
+        'attributes' => ['type' => TRUE],
+        'classes' => TRUE,
+        'styles' => TRUE,
+      ],
+    ];
     return [
       'startIndex is false' => [
         [
           'reversed' => TRUE,
           'startIndex' => FALSE,
+          'styles' => TRUE,
         ],
         [
           'list' => [
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => FALSE,
-              'styles' => FALSE,
+              'styles' => [
+                'useAttribute' => TRUE,
+              ],
             ],
+            'allow' => $styles_true_allow,
           ],
         ],
       ],
@@ -46,15 +64,35 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => FALSE,
               'startIndex' => TRUE,
+              'styles' => [
+                'useAttribute' => TRUE,
+              ],
+            ],
+            'allow' => $styles_true_allow,
+          ],
+        ],
+      ],
+      'styles is false' => [
+        [
+          'reversed' => TRUE,
+          'startIndex' => TRUE,
+          'styles' => FALSE,
+        ],
+        [
+          'list' => [
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
               'styles' => FALSE,
             ],
           ],
         ],
       ],
-      'both disabled' => [
+      'all disabled' => [
         [
           'reversed' => FALSE,
           'startIndex' => FALSE,
+          'styles' => FALSE,
         ],
         [
           'list' => [
@@ -66,18 +104,22 @@ class ListPluginTest extends UnitTestCase {
           ],
         ],
       ],
-      'both enabled' => [
+      'all enabled' => [
         [
           'reversed' => TRUE,
           'startIndex' => TRUE,
+          'styles' => TRUE,
         ],
         [
           'list' => [
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => TRUE,
-              'styles' => FALSE,
+              'styles' => [
+                'useAttribute' => TRUE,
+              ],
             ],
+            'allow' => $styles_true_allow,
           ],
         ],
       ],
