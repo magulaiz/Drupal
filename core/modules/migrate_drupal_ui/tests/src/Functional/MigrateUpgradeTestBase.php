@@ -188,7 +188,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $session->pageTextContains($label);
     }
     $session->pageTextContainsOnce('content items');
-    $session->pageTextContains('There is translated content of these types:');
+    $session->pageTextContains('Check if you have translated content of these types:');
   }
 
   /**
