@@ -424,7 +424,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     $is_view_configurable_non_extra_field = $field_definition && $field_definition->isDisplayConfigurable('view') && isset($options['type']);
     if ($is_view_configurable_non_extra_field || isset($extra_fields['display'][$name])) {
       $configuration = [
-        'label_display' => '0',
+        'label_display' => FALSE,
         'context_mapping' => ['entity' => 'layout_builder.entity'],
       ];
       if ($is_view_configurable_non_extra_field) {

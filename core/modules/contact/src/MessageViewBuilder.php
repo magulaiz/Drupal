@@ -36,7 +36,7 @@ class MessageViewBuilder extends EntityViewBuilder {
         if (isset($build[$key]['#label_display']) && $build[$key]['#label_display'] == 'above') {
           $build[$key] += ['#prefix' => ''];
           $build[$key]['#prefix'] = $build[$key]['#title'] . ":\n";
-          $build[$key]['#label_display'] = 'hidden';
+          $build[$key]['#label_display'] = FALSE;
         }
       }
     }

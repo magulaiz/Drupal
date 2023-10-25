@@ -72,7 +72,7 @@ function help_post_update_help_topics_search() {
         'settings' => [
           'id' => 'search_form_block',
           'label' => 'Search help',
-          'label_display' => 'visible',
+          'label_display' => TRUE,
           'provider' => 'search',
           'page_id' => 'help_search',
         ],

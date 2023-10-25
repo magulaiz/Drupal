@@ -77,7 +77,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    *   The block weight.
    * @param string $label
    *   The block label.
-   * @param string $label_display
+   * @param bool $label_display
    *   The block label display setting.
    * @param bool $status
    *   Whether the block is expected to be enabled or disabled.
