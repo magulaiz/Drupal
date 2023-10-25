@@ -77,14 +77,30 @@
             "https://www.drupal.org/node/2718229"
         ],
         "installer-paths": {
-            "core": ["type:drupal-core"],
-            "libraries/{$name}": ["type:drupal-library"],
-            "modules/contrib/{$name}": ["type:drupal-module"],
-            "profiles/contrib/{$name}": ["type:drupal-profile"],
-            "themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
-            "modules/custom/{$name}": ["type:drupal-custom-module"],
-            "themes/custom/{$name}": ["type:drupal-custom-theme"]
+            "core": [
+                "type:drupal-core"
+            ],
+            "libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ]
         },
         "drupal-core-project-message": {
             "post-install-cmd-message": [
@@ -120,22 +136,30 @@
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --"
     },
-    "repositories": [
-        {
+    "repositories": {
+        "legacy-project": {
+            "type": "path",
+            "url": "composer/Template/LegacyProject"
+        },
+        "recommended-project": {
+            "type": "path",
+            "url": "composer/Template/RecommendedProject"
+        },
+        "0": {
             "type": "path",
             "url": "core"
         },
-        {
+        "1": {
             "type": "path",
             "url": "composer/Plugin/ProjectMessage"
         },
-        {
+        "2": {
             "type": "path",
             "url": "composer/Plugin/VendorHardening"
         },
-        {
+        "3": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         }
-    ]
+    }
 }
