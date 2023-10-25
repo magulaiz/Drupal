@@ -283,6 +283,13 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       ->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['langcode' => 'es']));
     $this->assertSession()->pageTextContains('First version of the content es.');
 
+    // Check that the revision number is right.
+    $this->assertUserNodeCount($web_user->id(), 1, 'en', 'node_field_data');
+    $this->assertUserNodeCount($second_web_user->id(), 1, 'es', 'node_field_data');
+
+    $this->assertUserNodeCount($web_user->id(), 2, 'en', 'node_field_revision');
+    $this->assertUserNodeCount($second_web_user->id(), 1, 'es', 'node_field_revision');
+
     // Cancel "web_user" account.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('user/' . $web_user->id() . '/cancel');
@@ -291,6 +298,15 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     // Confirm user deletion.
     $this->assertSession()
       ->pageTextContains("Account {$web_user->getAccountName()} has been deleted.");
+
+    // Check that the revision of first user was assigned to the anonymous user.
+    $this->assertUserNodeCount($web_user->id(), 0, 'en', 'node_field_data');
+    $this->assertUserNodeCount(0, 1, 'en', 'node_field_data');
+    $this->assertUserNodeCount($second_web_user->id(), 1, 'es', 'node_field_data');
+
+    $this->assertUserNodeCount($web_user->id(), 0, 'en', 'node_field_revision');
+    $this->assertUserNodeCount(0, 2, 'en', 'node_field_revision');
+    $this->assertUserNodeCount($second_web_user->id(), 1, 'es', 'node_field_revision');
 
     // Check content as anonymous.
     $this->drupalLogout();
@@ -314,6 +330,21 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->assertSession()->pageTextContains('First version of the content es.');
     $this->assertEquals('First version of the content es.', $translation->title->value);
     $this->assertEquals($second_web_user->id(), $translation->uid->entity->id(), 'Check user on translation.');
+  }
+
+  /**
+   * Asser count by langcode and uid.
+   */
+  private function assertUserNodeCount(int $uid, int $count, string $langcode, string $table) {
+    $query = \Drupal::database()->select($table, 'n');
+    $result = $query
+      ->fields('n')
+      ->condition('uid', $uid)
+      ->condition('langcode', $langcode)
+      ->countQuery()
+      ->execute();
+
+    $this->assertEquals($count, $result->fetchField(), 'User with uid ' . $uid . 'should have ' . $count . ' rows on table ' . $table . ' and language ' . $langcode);
   }
 
 }
