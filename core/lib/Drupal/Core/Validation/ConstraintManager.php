@@ -150,11 +150,6 @@ class ConstraintManager extends DefaultPluginManager {
       'class' => CardScheme::class,
       'type' => FALSE,
     ]);
-    $this->getDiscovery()->setDefinition('Cidr', [
-      'label' => new TranslatableMarkup('CIDR range'),
-      'class' => Cidr::class,
-      'type' => FALSE,
-    ]);
     $this->getDiscovery()->setDefinition('CssColor', [
       'label' => new TranslatableMarkup('CSS color'),
       'class' => CssColor::class,
@@ -175,21 +170,6 @@ class ConstraintManager extends DefaultPluginManager {
       'class' => DateTime::class,
       'type' => FALSE,
     ]);
-    $this->getDiscovery()->setDefinition('DivisibleBy', [
-      'label' => new TranslatableMarkup('Divisible by'),
-      'class' => DivisibleBy::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('GreaterThan', [
-      'label' => new TranslatableMarkup('Greater than'),
-      'class' => GreaterThan::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('GreaterThanOrEqual', [
-      'label' => new TranslatableMarkup('Greater than or equal'),
-      'class' => GreaterThanOrEqual::class,
-      'type' => FALSE,
-    ]);
     $this->getDiscovery()->setDefinition('Hostname', [
       'label' => new TranslatableMarkup('Hostname'),
       'class' => Hostname::class,
@@ -198,16 +178,6 @@ class ConstraintManager extends DefaultPluginManager {
     $this->getDiscovery()->setDefinition('Iban', [
       'label' => new TranslatableMarkup('IBAN'),
       'class' => Iban::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('IdenticalTo', [
-      'label' => new TranslatableMarkup('Identical to'),
-      'class' => IdenticalTo::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('Image', [
-      'label' => new TranslatableMarkup('Image'),
-      'class' => Image::class,
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('Ip', [
@@ -250,16 +220,6 @@ class ConstraintManager extends DefaultPluginManager {
       'class' => Language::class,
       'type' => 'string',
     ]);
-    $this->getDiscovery()->setDefinition('LessThan', [
-      'label' => new TranslatableMarkup('Less than'),
-      'class' => LessThan::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('LessThanOrEqual', [
-      'label' => new TranslatableMarkup('Less than or equal'),
-      'class' => LessThanOrEqual::class,
-      'type' => FALSE,
-    ]);
     $this->getDiscovery()->setDefinition('Locale', [
       'label' => new TranslatableMarkup('Locale'),
       'class' => Locale::class,
@@ -283,11 +243,6 @@ class ConstraintManager extends DefaultPluginManager {
     $this->getDiscovery()->setDefinition('NotBlank', [
       'label' => new TranslatableMarkup('Not blank'),
       'class' => NotBlank::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('NotEqualTo', [
-      'label' => new TranslatableMarkup('Not equal to'),
-      'class' => NotEqualTo::class,
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('NotIdenticalTo', [
@@ -323,11 +278,6 @@ class ConstraintManager extends DefaultPluginManager {
     $this->getDiscovery()->setDefinition('Timezone', [
       'label' => new TranslatableMarkup('Timezone'),
       'class' => Timezone::class,
-      'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('Type', [
-      'label' => new TranslatableMarkup('Type'),
-      'class' => Type::class,
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('Ulid', [
