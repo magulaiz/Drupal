@@ -8,11 +8,5 @@ dblog.settings:
       type: integer
       label: 'Database log messages to keep'
       constraints:
-        Choice:
-          # All (no limit)
-          - 0
-          - 100
-          - 1000
-          - 10000
-          - 100000
-          - 1000000
+        Range:
+          min: 0
