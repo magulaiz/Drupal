@@ -103,10 +103,8 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
     $page = $this->getSession()->getPage();
     $page->checkField('modules[auto_updates][enable]');
     $page->pressButton('Install');
-    if ($page->hasButton('Continue')) {
-      $page->pressButton('Continue');
-    }
-
+    // Confirm installing the experimental module.
+    $page->pressButton('Continue');
     // Cron Updates will always be disabled on installation as per
     // auto_updates.settings.yml .
     $session = $this->assertSession();

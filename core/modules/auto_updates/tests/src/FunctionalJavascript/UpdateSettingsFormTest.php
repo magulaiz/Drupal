@@ -4,11 +4,14 @@ namespace Drupal\Tests\auto_updates\FunctionalJavascript;
 
 use Drupal\auto_updates\CronUpdateRunner;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\auto_updates\Traits\TestSetUpTrait;
 
 /**
  * @group auto_updates
  */
 class UpdateSettingsFormTest extends WebDriverTestBase {
+
+  use TestSetUpTrait;
 
   /**
    * {@inheritdoc}

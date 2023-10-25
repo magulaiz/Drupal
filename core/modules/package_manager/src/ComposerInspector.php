@@ -328,22 +328,11 @@ class ComposerInspector implements LoggerAwareInterface {
       // same as the working directory, in which case InstalledPackage::$path
       // should be NULL. For all other package types, we consider it invalid
       // if the install path is the same as the working directory.
-      // @todo Remove this handling of metapackage paths when Composer 2.5.7 or
-      //   later is required, in https://drupal.org/i/3365133.
       if (isset($package['type']) && $package['type'] === 'metapackage') {
-        // TRICKY: until Composer 2.5.6, metapackages returned the current
-        // working directory instead of NULL.
-        // @see https://github.com/composer/composer/commit/3a48e393756e8b0387925aa327f45a30128b4556
-        $packages_data[$name]['path'] = NULL;
-        // @todo Remove the if-branch when the minimum Composer version is raised to >=2.5.6.
-        if (Semver::satisfies($this->getVersion(), '<2.5.6')) {
-          if ($path !== $working_dir) {
-            throw new \UnexpectedValueException("Metapackage '$name' is installed at unexpected path: '$path', expected '$working_dir'");
-          }
-        }
-        elseif ($path !== NULL) {
+        if ($path !== NULL) {
           throw new \UnexpectedValueException("Metapackage '$name' is installed at unexpected path: '$path', expected NULL");
         }
+        $packages_data[$name]['path'] = $path;
       }
       elseif ($path === $working_dir) {
         throw new \UnexpectedValueException("Package '$name' cannot be installed at path: '$path'");
