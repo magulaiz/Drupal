@@ -104,3 +104,49 @@ function ckeditor5_post_update_code_block(&$sandbox = []) {
     return in_array('codeBlock', $settings['toolbar']['items'], TRUE);
   });
 }
+
+/**
+ * Updates Text Editors using CKEditor 5 to native List "type" functionality.
+ */
+function ckeditor5_post_update_list_type(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+    $settings = $editor->getSettings();
+
+    // Nothing to do if the List plugin is not enabled.
+    if (!array_key_exists('ckeditor5_list', $settings['plugins'])) {
+      return FALSE;
+    }
+
+    // Nothing to do if the Source Editing plugin is not enabled.
+    if (!array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
+      return FALSE;
+    }
+
+    $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
+    $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
+
+    // If neither <ol type> or <ul type> are allowed through Source Editing (the
+    // only way it could possibly be supported until now), and it is not an
+    // unrestricted text format (such as "Full HTML"), then set the new "styles"
+    // setting for the List plugin to false.
+    $new_list_ui_functionality = HTMLRestrictions::fromString('<ul type> <ol type>');
+    if ($source_edited->intersect($new_list_ui_functionality)->allowsNothing() && !$format_restrictions->isUnrestricted()) {
+      $settings['plugins']['ckeditor5_list']['styles'] = FALSE;
+    }
+    // Otherwise, if this is a restricted text format and either <ol type> or
+    // <ul type> is allowed through Source Editing, remove them from the Source
+    // Editing configuration and instead enable the native UI functionality.
+    else {
+      $settings['plugins']['ckeditor5_list']['styles'] = TRUE;
+      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited->diff($new_list_ui_functionality)->toCKEditor5ElementsArray();
+    }
+    $editor->setSettings($settings);
+
+    return TRUE;
+  });
+}
