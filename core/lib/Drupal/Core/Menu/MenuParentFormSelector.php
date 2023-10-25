@@ -57,7 +57,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
     $options = [];
     $depth_limit = $this->getParentDepthLimit($id);
     foreach ($menus as $menu_name => $menu_title) {
-      $options[$menu_name . ':'] =  $menu_title ;
+      $options[$menu_name . ':'] = $menu_title;
 
       $parameters = new MenuTreeParameters();
       $parameters->setMaxDepth($depth_limit);
