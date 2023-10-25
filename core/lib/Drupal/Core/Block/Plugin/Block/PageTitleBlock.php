@@ -145,7 +145,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The title based on base route.
    */
   private function getTitleBasedOnBaseRoute(): array|string|null|\Stringable {
-    $controller_title = $this->titleResolver->getTitle(\Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch()->getRouteObject());
+    $controller_title = $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
 
     // Controller render arrays using `#title` take precedent over the title
     // resolvers.
@@ -153,7 +153,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       return $this->title;
     }
 
-    $base_route_title = $this->baseRouteTitleResolver->getTitle(\Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch()->getRouteObject());
+    $base_route_title = $this->baseRouteTitleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
     if (!is_null($base_route_title)) {
       // If the titles are equal, return the original title.
       if ((string) $this->titleToString($base_route_title) === (string) $this->titleToString($this->title)) {
