@@ -20,8 +20,8 @@ class ConfigEntityType extends EntityType {
 
   public function __construct(
     public readonly string $config_prefix,
-    public readonly array $lookup_keys,
-    public readonly array $config_export,
+    public readonly array $lookup_keys = [],
+    public readonly array $config_export = [],
     ...$base
   ) {
 
