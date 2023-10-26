@@ -191,21 +191,28 @@ class AutowireTest extends KernelTestBase {
       }
     }
 
-    $autowirable = [];
+    $autowire = [];
     foreach ($services as $id => $service) {
       if (!method_exists($service['class'], '__construct')) {
         continue;
       }
+
       $constructor = new \ReflectionMethod($service['class'], '__construct');
-      foreach ($constructor->getParameters() as $parameter) {
-        if (!isset($aliases[(string) $parameter->getType()])) {
+      foreach ($constructor->getParameters() as $pos => $parameter) {
+        $interface = (string) $parameter->getType();
+        if (!isset($aliases[$interface])) {
+          // There is no service to autowire.
+          continue 2;
+        }
+        if ($aliases[$interface] !== substr($service['arguments'][$pos], 1)) {
+          // The service is different.
           continue 2;
         }
       }
-      $autowirable[] = $id;
+      $autowire[] = $id;
     }
 
-    $this->assertEmpty($autowirable, 'The following core services can be autowired. Remove their arguments from the services.yml file:' . PHP_EOL . implode(PHP_EOL, $autowirable));
+    $this->assertEmpty($autowire, 'The following core services can be autowired. Remove their arguments from the services.yml file:' . PHP_EOL . implode(PHP_EOL, $autowire));
   }
 
   /**
