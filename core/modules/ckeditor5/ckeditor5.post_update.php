@@ -9,6 +9,8 @@ use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\editor\Entity\Editor;
 
+// cspell:ignore multiblock
+
 /**
  * Implements hook_removed_post_updates().
  */
