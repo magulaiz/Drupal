@@ -209,7 +209,8 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Choose an option below');
     $assert_session->elementExists('css', '[name="label"]');
-    $this->assertSession()->buttonExists('Change field type')->press();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Change field type');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->clickLink('Plain text');
@@ -221,7 +222,8 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
-    $this->assertSession()->buttonExists('Continue')->press();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Ensure the default value is reloaded when the field storage settings
@@ -264,34 +266,41 @@ class ManageFieldsTest extends WebDriverTestBase {
     // Set a default value that is under the new limit.
     $default_input_1->setValue('Five!');
 
-    $page->pressButton('Save settings');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('string', $field_storage->getType());
 
     // Try adding a field using a non-grouped field type.
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
-    $field_name = 'test_field_2';
-    $page->fillField('label', $field_name);
-
+    $this->drupalGet('admin/structure/types/manage/article/fields');
+    $this->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]')->getParent());
     $number_field->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
     $assert_session->pageTextContains('Choose an option below');
     $this->assertNotEmpty($number_integer = $page->find('xpath', '//*[text() = "Number (integer)"]')->getParent());
     $number_integer->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="integer"]')->isSelected());
 
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Change field type');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($test_field = $page->find('xpath', '//*[text() = "Test field"]')->getParent());
     $test_field->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
+    $field_name = 'test_field_2';
+    $page->fillField('label', $field_name);
     $assert_session->pageTextNotContains('Choose an option below');
 
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
-    $page->pressButton('Save settings');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('test_field', $field_storage->getType());
