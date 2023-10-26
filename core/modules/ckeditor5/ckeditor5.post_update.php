@@ -136,7 +136,7 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     // for the List plugin to false.
     $ol_start = HTMLRestrictions::fromString('<ol start>');
     $settings['plugins']['ckeditor5_list']['startIndex'] = $ol_start->diff($source_edited)->allowsNothing() || $format_restrictions->isUnrestricted();
-    // Idem dito for <ol reversed> and "reversed".
+    // Same for <ol reversed> and "reversed".
     $ol_reversed = HTMLRestrictions::fromString('<ol reversed>');
     $settings['plugins']['ckeditor5_list']['reversed'] = $ol_reversed->diff($source_edited)->allowsNothing() || $format_restrictions->isUnrestricted();
 
