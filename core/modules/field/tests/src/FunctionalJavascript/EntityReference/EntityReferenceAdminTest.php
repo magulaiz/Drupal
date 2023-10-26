@@ -262,6 +262,10 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->getSession()->resizeWindow(1200, 1500);
     $this->assertSession()->assertWaitOnAjaxRequest();
 
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+
+    $assert_session->waitForText('Saved Test configuration.');
+
     // Check that the field appears in the overview form.
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");
 
@@ -269,7 +273,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // field is required.
     // The first 'Edit' link is for the Body field.
     $this->clickLink('Edit', 1);
-    $this->submitForm([], 'Save settings');
+    $this->assertTrue($assert_session->waitForText('Test settings'));
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save settings');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Switch the target type to 'taxonomy_term' and check that the settings
@@ -317,7 +322,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
 
     $this->submitForm([], 'Save settings');
     // If no eligible view is available we should see a message.
-    $assert_session->pageTextContains('The views entity selection mode requires a view.');
+    $this->assertTrue($assert_session->waitForText('The views entity selection mode requires a view.'));
 
     // Enable the entity_reference_test module which creates an eligible view.
     $this->container->get('module_installer')
@@ -329,7 +334,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       ->waitForField('settings[handler_settings][view][view_and_display]')
       ->setValue('test_entity_reference:entity_reference_1');
     $this->submitForm([], 'Save settings');
-    $assert_session->pageTextContains('Saved Test configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'entity_test'.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
@@ -343,7 +348,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'required' => FALSE,
     ];
     $this->submitForm($edit, 'Save settings');
-    $assert_session->pageTextContains('Saved Test configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
   }
 
   /**
