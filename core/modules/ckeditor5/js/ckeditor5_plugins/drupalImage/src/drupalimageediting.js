@@ -724,13 +724,12 @@ export default class DrupalImageEditing extends Plugin {
             consumable.consume(data.item, 'attribute:width');
 
             return null;
-          } else {
-            // There is no resizedWidth so downcast natural width to the attribute in data.
-            return {
-              key: 'width',
-              value: attributeValue,
-            };
           }
+          // There is no resizedWidth so downcast natural width to the attribute in data.
+          return {
+            key: 'width',
+            value: attributeValue,
+          };
         },
         converterPriority: 'high',
       })
@@ -745,13 +744,12 @@ export default class DrupalImageEditing extends Plugin {
             consumable.consume(data.item, 'attribute:width');
 
             return null;
-          } else {
-            // There is no resizedWidth so downcast natural width to the attribute in data.
-            return {
-              key: 'width',
-              value: attributeValue,
-            };
           }
+          // There is no resizedWidth so downcast natural width to the attribute in data.
+          return {
+            key: 'width',
+            value: attributeValue,
+          };
         },
         converterPriority: 'high',
       })
@@ -777,13 +775,12 @@ export default class DrupalImageEditing extends Plugin {
               key: 'height',
               value: `${Math.round(resizedWidth / aspectRatio)}`,
             };
-          } else {
-            // There is no resizedWidth so using natural height attribute.
-            return {
-              key: 'height',
-              value: attributeValue,
-            };
           }
+          // There is no resizedWidth so using natural height attribute.
+          return {
+            key: 'height',
+            value: attributeValue,
+          };
         },
         converterPriority: 'high',
       })
@@ -807,13 +804,12 @@ export default class DrupalImageEditing extends Plugin {
               key: 'height',
               value: `${Math.round(resizedWidth / aspectRatio)}`,
             };
-          } else {
-            // There is no resizedWidth so using natural height attribute.
-            return {
-              key: 'height',
-              value: attributeValue,
-            };
           }
+          // There is no resizedWidth so using natural height attribute.
+          return {
+            key: 'height',
+            value: attributeValue,
+          };
         },
         converterPriority: 'high',
       });
