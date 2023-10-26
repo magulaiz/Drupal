@@ -302,40 +302,6 @@ function modelImageStyleToDataAttribute() {
 }
 
 /**
- * Generates a callback that saves the height value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageHeightToAttribute() {
-  return (dispatcher) => {
-    // In Drupal, the natural height does not need to be stored.
-    dispatcher.on('attribute:height:imageInline', ignoredDuringDowncast, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:height:imageBlock', ignoredDuringDowncast, {
-      priority: 'high',
-    });
-    // In Drupal, only the resized height must be stored.
-    // TRICKY: CKEditor 5 does not generate a `resizedHeight` attribute, presumably it uses this only if the aspect
-    // ratio is not respected!
-    dispatcher.on(
-      'attribute:resizedHeight:imageInline',
-      ignoredDuringDowncast,
-      {
-        priority: 'high',
-      },
-    );
-    dispatcher.on('attribute:resizedHeight:imageBlock', ignoredDuringDowncast, {
-      priority: 'high',
-    });
-  };
-}
-
-/**
  * Generates a callback that handles the data downcast for the img element.
  *
  * @return {function}
