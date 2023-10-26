@@ -186,22 +186,24 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->pageTextContains('Choose an option below');
-    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->pageTextContains('Label field is required.');
     $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementExists('css', '[name="label"].error');
-    // basically checks the presence of error class.
-    // $assert_session->elementExists('css', '[data-drupal-selector="field-click-to-select"].error');
+    $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
     $page->fillField('label', $field_name);
-    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->pageTextContains('Add new field: you need to select a subtype.');
+    $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementNotExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
-    $this->assertSession()->buttonExists('Change field type')->press();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Change field type');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Try adding a field using a grouped field type.

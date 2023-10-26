@@ -247,7 +247,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
         foreach ($unique_definitions[$selected_field_type] as $option_key => $option) {
           $radio_element = [
             '#type' => 'radio',
-            '#required' => TRUE,
             '#theme_wrappers' => ['form_element__new_storage_type'],
             '#title' => $option['label'],
             '#description' => [
