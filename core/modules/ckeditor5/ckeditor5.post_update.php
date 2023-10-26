@@ -134,8 +134,9 @@ function ckeditor5_post_update_list_type(&$sandbox = []) {
     // only way it could possibly be supported until now), and it is not an
     // unrestricted text format (such as "Full HTML"), then set the new "styles"
     // setting for the List plugin to false.
-    $new_list_ui_functionality = HTMLRestrictions::fromString('<ul type> <ol type>');
-    if ($source_edited->intersect($new_list_ui_functionality)->allowsNothing() && !$format_restrictions->isUnrestricted()) {
+    $ol_type = HTMLRestrictions::fromString('<ol type>');
+    $ul_type = HTMLRestrictions::fromString('<ul type>');
+    if (!$ol_type->diff($source_edited)->allowsNothing() && !$ul_type->diff($source_edited)->allowsNothing() && !$format_restrictions->isUnrestricted()) {
       $settings['plugins']['ckeditor5_list']['styles'] = FALSE;
     }
     // Otherwise, if this is a restricted text format and either <ol type> or
@@ -143,7 +144,10 @@ function ckeditor5_post_update_list_type(&$sandbox = []) {
     // Editing configuration and instead enable the native UI functionality.
     else {
       $settings['plugins']['ckeditor5_list']['styles'] = TRUE;
-      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited->diff($new_list_ui_functionality)->toCKEditor5ElementsArray();
+      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
+        ->diff($ol_type)
+        ->diff($ul_type)
+        ->toCKEditor5ElementsArray();
     }
     $editor->setSettings($settings);
 
