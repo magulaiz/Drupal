@@ -1,7 +1,8 @@
 services:
+  _defaults:
+    autowire: true
   access_check.update.manager_access:
     class: Drupal\update\Access\UpdateManagerAccessCheck
-    arguments: ['@settings']
     tags:
       - { name: access_check, applies_to: _access_update_manager }
   update.manager:
