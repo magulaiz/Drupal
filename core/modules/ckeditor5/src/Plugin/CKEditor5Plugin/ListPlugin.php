@@ -44,7 +44,8 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
     ];
     $form['styles'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow the user to use style attribute'),
+      '#title' => $this->t('Allow the user to choose a list style type'),
+      '#description' => $this->t('Available list style types for ordered lists: letters and Roman numerals instead of only numbers. Available list style types for unordered lists: circles and squares instead of only discs.'),
       '#default_value' => $this->configuration['styles'],
     ];
 
@@ -81,8 +82,8 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
       $this->getConfiguration()
     );
 
-    // Add proper configuration to use type attribute based list styles on ul
-    // and ol elements.
+    // Generate configuration to use `type` attribute-based list styles on <ul>
+    // and <ol> elements.
     if ($this->configuration["styles"]) {
       $static_plugin_config["list"]["properties"]["styles"] = [];
       $static_plugin_config["list"]["properties"]["styles"]['useAttribute'] = TRUE;

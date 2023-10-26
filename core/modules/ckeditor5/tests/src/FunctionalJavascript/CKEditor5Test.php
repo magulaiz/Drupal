@@ -704,7 +704,7 @@ JS;
     $assert_session->elementTextEquals('css', $reversed_order_button_selector, 'Reversed order');
     $assert_session->elementExists('css', $start_index_element_selector);
 
-    // Enable list styles
+    // Enable list style types.
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
     $settings['plugins']['ckeditor5_list']['styles'] = TRUE;
