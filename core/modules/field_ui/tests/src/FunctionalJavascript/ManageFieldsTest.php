@@ -312,16 +312,15 @@ class ManageFieldsTest extends WebDriverTestBase {
    * Tests the order in which the field types appear in the form.
    */
   public function testFieldTypeOrder() {
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
-    $page = $this->getSession()->getPage();
     $field_type_categories = [
-      'selection_list',
-      'number',
+      'Selection list',
+      'Number',
     ];
     foreach ($field_type_categories as $field_type_category) {
+      $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+      $page = $this->getSession()->getPage();
       // Select the group card.
-      $group_field_card = $page->find('css', "[name='new_storage_type'][value='$field_type_category']")->getParent();
-      $group_field_card->click();
+      $this->clickLink($field_type_category);
       $this->assertSession()->assertWaitOnAjaxRequest();
       $field_types = $page->findAll('css', '.subfield-option .option');
       $field_type_labels = [];
@@ -329,12 +328,12 @@ class ManageFieldsTest extends WebDriverTestBase {
         $field_type_labels[] = $field_type->getText();
       }
       $expected_field_types = match ($field_type_category) {
-        'selection_list' => [
+        'Selection list' => [
           'List (text)',
           'List (integer)',
           'List (float)',
         ],
-        'number' => [
+        'Number' => [
           'Number (integer)',
           'Number (decimal)',
           'Number (float)',
