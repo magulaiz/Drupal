@@ -3,6 +3,7 @@
 namespace Drupal\block_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\PathChangedHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -75,9 +76,14 @@ class BlockContentController extends ControllerBase {
    *   A render array for a list of the block types that can be added or
    *   if there is only one block type defined for the site, the function
    *   returns the content block add page for that block type.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   EntityController::addPage() instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3346394
    */
   public function add(Request $request) {
-    // @todo deprecate see https://www.drupal.org/project/drupal/issues/3346394.
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use EntityController::addPage() instead. See https://www.drupal.org/project/drupal/issues/3346394', E_USER_DEPRECATED);
     $types = [];
     // Only use block types the user has access to.
     foreach ($this->blockContentTypeStorage->loadMultiple() as $type) {

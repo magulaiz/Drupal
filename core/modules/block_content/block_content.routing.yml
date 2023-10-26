@@ -1,7 +1,7 @@
 block_content.add_page:
   path: '/block/add'
   defaults:
-    _controller: '\Drupal\block_content\Controller\BlockContentController::add'
+    _controller: '\Drupal\Core\Entity\Controller\EntityController::addPage'
     _title: 'Add content block'
   options:
     _admin_route: TRUE
