@@ -2,7 +2,7 @@
 // cspell:ignore datafilter downcasted linkimageediting emptyelement downcastdispatcher
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
-
+import ImageLoadObserver from '@ckeditor/ckeditor5-image/src/image/imageloadobserver';
 /**
  * @typedef {function} converterHandler
  *
@@ -298,76 +298,6 @@ function modelImageStyleToDataAttribute() {
 
   return (dispatcher) => {
     dispatcher.on('attribute:imageStyle', converter, { priority: 'high' });
-  };
-}
-
-// The official CKEditor 5 image plugin stores the natural width and height in the `width` and `height attributes.
-// This is unnecessary for Drupal, because it never allowed resizing to not respect the aspect ratio.
-// @see https://github.com/ckeditor/ckeditor5/commit/58e9c88ae6a9d192cc559e429b999a32a03a2dca
-function ignoredDuringDowncast(event, data, conversionApi) {
-  const { item } = data;
-  const { consumable } = conversionApi;
-  consumable.consume(item, event.name);
-}
-
-/**
- * Generates a callback that saves the width value to an attribute on
- * data downcast.
- *
- * @return {function}
- *  Callback that binds an event to its parameter.
- *
- * @private
- */
-function modelImageWidthToAttribute() {
-  /**
-   * Callback for the attribute:width event.
-   *
-   * Saves the width value to the width attribute.
-   *
-   * @type {converterHandler}
-   */
-  function converter(event, data, conversionApi) {
-    const { item } = data;
-    const { consumable, writer } = conversionApi;
-
-    if (!consumable.consume(item, event.name)) {
-      return;
-    }
-
-    const viewElement = conversionApi.mapper.toViewElement(item);
-    const imageInFigure = Array.from(viewElement.getChildren()).find(
-      (child) => child.name === 'img',
-    );
-
-    writer.setAttribute(
-      'width',
-      data.attributeNewValue.replace('px', ''),
-      imageInFigure || viewElement,
-    );
-    writer.setAttribute(
-      'height',
-      // @todo figure out how to get the natural height, which requires accessing the <img> DOM element.
-      '',
-      imageInFigure || viewElement,
-    );
-  }
-
-  return (dispatcher) => {
-    // In Drupal, the natural width does not need to be stored.
-    dispatcher.on('attribute:width:imageInline', ignoredDuringDowncast, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:width:imageBlock', ignoredDuringDowncast, {
-      priority: 'high',
-    });
-    // In Drupal, only the resized width must be stored.
-    dispatcher.on('attribute:resizedWidth:imageInline', converter, {
-      priority: 'high',
-    });
-    dispatcher.on('attribute:resizedWidth:imageBlock', converter, {
-      priority: 'high',
-    });
   };
 }
 
@@ -706,7 +636,35 @@ export default class DrupalImageEditing extends Plugin {
     }
 
     // Conversion.
-    conversion.for('upcast').add(viewImageToModelImage(editor));
+    conversion
+      .for('upcast')
+      .add(viewImageToModelImage(editor))
+      // The width attribute to resizedWidth conversion.
+      .attributeToAttribute({
+        view: {
+          name: 'img',
+          key: 'width',
+        },
+        model: {
+          key: 'resizedWidth',
+          value: (viewElement) => {
+            return `${parseInt(viewElement.getAttribute('width'))}px`;
+          },
+        },
+      })
+      // The height attribute to resizedHeight conversion.
+      .attributeToAttribute({
+        view: {
+          name: 'img',
+          key: 'height',
+        },
+        model: {
+          key: 'resizedHeight',
+          value: (viewElement) => {
+            return `${parseInt(viewElement.getAttribute('height'))}px`;
+          },
+        },
+      });
 
     if (editor.plugins.has('DataFilter')) {
       const dataFilter = editor.plugins.get('DataFilter');
@@ -736,8 +694,191 @@ export default class DrupalImageEditing extends Plugin {
         converterPriority: 'high',
       })
       .add(modelImageStyleToDataAttribute())
-      .add(modelImageWidthToAttribute())
-      .add(modelImageHeightToAttribute())
-      .add(downcastBlockImageLink());
+      .add(downcastBlockImageLink())
+
+      // ⚠️ Everything below this point is copy/pasted directly from https://github.com/ckeditor/ckeditor5/pull/15222, to continue to use the `width` and `height` attributes to indicate resized width and height. This is necessary since CKEditor 5 v40.0.0.
+      // @see https://github.com/ckeditor/ckeditor5/releases/tag/v40.0.0
+      // There is a resizedWidth so use it as a width attribute in data.
+      .attributeToAttribute({
+        model: {
+          name: 'imageBlock',
+          key: 'resizedWidth',
+        },
+        view: (attributeValue) => ({
+          key: 'width',
+          value: `${parseInt(attributeValue)}`,
+        }),
+        converterPriority: 'high',
+      })
+      .attributeToAttribute({
+        model: {
+          name: 'imageInline',
+          key: 'resizedWidth',
+        },
+        view: (attributeValue) => ({
+          key: 'width',
+          value: `${parseInt(attributeValue)}`,
+        }),
+        converterPriority: 'high',
+      })
+
+      // There is a resizedHeight so use it as a height attribute in data.
+      .attributeToAttribute({
+        model: {
+          name: 'imageBlock',
+          key: 'resizedHeight',
+        },
+        view: (attributeValue) => ({
+          key: 'height',
+          value: `${parseInt(attributeValue)}`,
+        }),
+        converterPriority: 'high',
+      })
+      .attributeToAttribute({
+        model: {
+          name: 'imageInline',
+          key: 'resizedHeight',
+        },
+        view: (attributeValue) => ({
+          key: 'height',
+          value: `${parseInt(attributeValue)}`,
+        }),
+        converterPriority: 'high',
+      })
+
+      // Natural width should be used only if resizedWidth is not specified (is equal to natural width).
+      .attributeToAttribute({
+        model: {
+          name: 'imageBlock',
+          key: 'width',
+        },
+        view: (attributeValue, { consumable }, data) => {
+          if (data.item.hasAttribute('resizedWidth')) {
+            // Natural width consumed and not down-casted (because resizedWidth was used to downcast to the width attribute).
+            consumable.consume(data.item, 'attribute:width');
+
+            return null;
+          } else {
+            // There is no resizedWidth so downcast natural width to the attribute in data.
+            return {
+              key: 'width',
+              value: attributeValue,
+            };
+          }
+        },
+        converterPriority: 'high',
+      })
+      .attributeToAttribute({
+        model: {
+          name: 'imageInline',
+          key: 'width',
+        },
+        view: (attributeValue, { consumable }, data) => {
+          if (data.item.hasAttribute('resizedWidth')) {
+            // Natural width consumed and not down-casted (because resizedWidth was used to downcast to the width attribute).
+            consumable.consume(data.item, 'attribute:width');
+
+            return null;
+          } else {
+            // There is no resizedWidth so downcast natural width to the attribute in data.
+            return {
+              key: 'width',
+              value: attributeValue,
+            };
+          }
+        },
+        converterPriority: 'high',
+      })
+
+      // Natural height converted to resized height attribute (based on aspect ratio and resized width if available).
+      .attributeToAttribute({
+        model: {
+          name: 'imageBlock',
+          key: 'height',
+        },
+        view: (attributeValue, conversionApi, data) => {
+          if (data.item.hasAttribute('resizedWidth')) {
+            // The resizedWidth is present so calculate height from aspect ratio.
+            const resizedWidth = parseInt(
+              data.item.getAttribute('resizedWidth'),
+            );
+            const naturalWidth = parseInt(data.item.getAttribute('width'));
+            const naturalHeight = parseInt(attributeValue);
+            const aspectRatio = naturalWidth / naturalHeight;
+
+            return {
+              key: 'height',
+              value: `${Math.round(resizedWidth / aspectRatio)}`,
+            };
+          } else {
+            // There is no resizedWidth so using natural height attribute.
+            return {
+              key: 'height',
+              value: attributeValue,
+            };
+          }
+        },
+        converterPriority: 'high',
+      })
+      .attributeToAttribute({
+        model: {
+          name: 'imageInline',
+          key: 'height',
+        },
+        view: (attributeValue, conversionApi, data) => {
+          if (data.item.hasAttribute('resizedWidth')) {
+            // The resizedWidth is present so calculate height from aspect ratio.
+            const resizedWidth = parseInt(
+              data.item.getAttribute('resizedWidth'),
+            );
+            const naturalWidth = parseInt(data.item.getAttribute('width'));
+            const naturalHeight = parseInt(attributeValue);
+            const aspectRatio = naturalWidth / naturalHeight;
+
+            return {
+              key: 'height',
+              value: `${Math.round(resizedWidth / aspectRatio)}`,
+            };
+          } else {
+            // There is no resizedWidth so using natural height attribute.
+            return {
+              key: 'height',
+              value: attributeValue,
+            };
+          }
+        },
+        converterPriority: 'high',
+      });
+
+    // Waiting for any new images loaded, so we can set their natural width and height.
+    // @see https://github.com/ckeditor/ckeditor5/pull/15222
+    editor.editing.view.addObserver(ImageLoadObserver);
+    const imageUtils = editor.plugins.get('ImageUtils');
+    editor.editing.view.document.on('imageLoaded', (evt, domEvent) => {
+      const imgViewElement = editor.editing.view.domConverter.mapDomToView(
+        domEvent.target,
+      );
+
+      if (!imgViewElement) {
+        return;
+      }
+
+      const viewElement =
+        imageUtils.getImageWidgetFromImageView(imgViewElement);
+
+      if (!viewElement) {
+        return;
+      }
+
+      const modelElement = editor.editing.mapper.toModelElement(viewElement);
+
+      if (!modelElement) {
+        return;
+      }
+
+      editor.model.enqueueChange({ isUndoable: false }, () => {
+        imageUtils.setImageNaturalSizeAttributes(modelElement);
+      });
+    });
   }
 }
