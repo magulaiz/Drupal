@@ -614,7 +614,7 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'resizedWidth',
           value: (viewElement) => {
-            return `${parseInt(viewElement.getAttribute('width'))}px`;
+            return `${parseInt(viewElement.getAttribute('width'), 10)}px`;
           },
         },
       })
@@ -627,7 +627,7 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'resizedHeight',
           value: (viewElement) => {
-            return `${parseInt(viewElement.getAttribute('height'))}px`;
+            return `${parseInt(viewElement.getAttribute('height'), 10)}px`;
           },
         },
       });
@@ -672,7 +672,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'width',
-          value: `${parseInt(attributeValue)}`,
+          value: `${parseInt(attributeValue, 10)}`,
         }),
         converterPriority: 'high',
       })
@@ -683,7 +683,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'width',
-          value: `${parseInt(attributeValue)}`,
+          value: `${parseInt(attributeValue, 10)}`,
         }),
         converterPriority: 'high',
       })
@@ -696,7 +696,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'height',
-          value: `${parseInt(attributeValue)}`,
+          value: `${parseInt(attributeValue, 10)}`,
         }),
         converterPriority: 'high',
       })
@@ -707,7 +707,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'height',
-          value: `${parseInt(attributeValue)}`,
+          value: `${parseInt(attributeValue, 10)}`,
         }),
         converterPriority: 'high',
       })
@@ -767,9 +767,10 @@ export default class DrupalImageEditing extends Plugin {
             // The resizedWidth is present so calculate height from aspect ratio.
             const resizedWidth = parseInt(
               data.item.getAttribute('resizedWidth'),
+              10,
             );
-            const naturalWidth = parseInt(data.item.getAttribute('width'));
-            const naturalHeight = parseInt(attributeValue);
+            const naturalWidth = parseInt(data.item.getAttribute('width'), 10);
+            const naturalHeight = parseInt(attributeValue, 10);
             const aspectRatio = naturalWidth / naturalHeight;
 
             return {
@@ -796,9 +797,10 @@ export default class DrupalImageEditing extends Plugin {
             // The resizedWidth is present so calculate height from aspect ratio.
             const resizedWidth = parseInt(
               data.item.getAttribute('resizedWidth'),
+              10,
             );
-            const naturalWidth = parseInt(data.item.getAttribute('width'));
-            const naturalHeight = parseInt(attributeValue);
+            const naturalWidth = parseInt(data.item.getAttribute('width'), 10);
+            const naturalHeight = parseInt(attributeValue, 10);
             const aspectRatio = naturalWidth / naturalHeight;
 
             return {
