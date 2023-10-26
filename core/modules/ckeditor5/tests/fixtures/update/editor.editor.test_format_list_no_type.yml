@@ -1,0 +1,22 @@
+uuid: f962b8c7-4c74-4100-b6de-08e6a65ff43e
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.test_format_list_no_type
+  module:
+    - ckeditor5
+format: test_format_list_no_type
+editor: ckeditor5
+settings:
+  toolbar:
+    items:
+      - bulletedList
+      - sourceEditing
+  plugins:
+    ckeditor5_list:
+      reversed: false
+      startIndex: false
+    ckeditor5_sourceEditing:
+      allowed_tags: {  }
+image_upload: {  }
