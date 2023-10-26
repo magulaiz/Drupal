@@ -5,7 +5,6 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\language\Entity\ConfigurableLanguage;
-use ReflectionClass;
 
 /**
  * Tests the Entity Validation API.
@@ -99,7 +98,7 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     // Use the protected property on the cache_clearer first to check whether
     // the constraint manager is added there.
-    $reflectionClass = new ReflectionClass(\Drupal::service('plugin.cache_clearer'));
+    $reflectionClass = new \ReflectionClass(\Drupal::service('plugin.cache_clearer'));
     $cached_discoveries = $reflectionClass->getProperty('cachedDiscoveries')->getValue(\Drupal::service('plugin.cache_clearer'));
     $cached_discovery_classes = [];
     foreach ($cached_discoveries as $cached_discovery) {
