@@ -47,7 +47,7 @@ settings:
         - '<a hreflang>'
         - '<blockquote cite>'
         - '<ul type>'
-        - '<ol start type>'
+        - '<ol type>'
         - '<h2 id>'
         - '<h3 id>'
         - '<h4 id>'
