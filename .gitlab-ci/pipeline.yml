@@ -246,3 +246,19 @@ stages:
       junit: ./nightwatch_output/*.xml
     paths:
       - ./nightwatch_output
+.run-random-tests: &run-random-tests
+  script:
+    # Determine DB driver.
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html $GROUP
+
+'Random tests':
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-random-tests, *default-job-settings ]
+  parallel: 100
+  when: manual
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Functional
+    GROUP: "--class '\\Drupal\\Tests\\ckeditor5\\FunctionalJavascript\\MediaLinkabilityTest'"
+    CONCURRENCY: "$CONCURRENCY"
+  services:
+    - <<: *with-database
