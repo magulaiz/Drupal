@@ -57,7 +57,7 @@ class CKEditor5UpdateListTypeTest extends UpdatePathTestBase {
     // Editing.
     $settings = $before['test_format_list_ol_type']->getSettings();
     $this->assertArrayNotHasKey('styles', $settings['plugins']['ckeditor5_list']);
-    $this->assertSame(['<ol type>'], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
+    $this->assertSame(['<ol type foo>'], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
     // test_format_list_no_type before: neither <ol type> nor <ul type> editable
     // via Source Editing.
@@ -96,7 +96,7 @@ class CKEditor5UpdateListTypeTest extends UpdatePathTestBase {
     $settings = $after['test_format_list_ol_type']->getSettings();
     $this->assertArrayHasKey('styles', $settings['plugins']['ckeditor5_list']);
     $this->assertTrue($settings['plugins']['ckeditor5_list']['styles']);
-    $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
+    $this->assertSame(['<ol foo>'], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
     // test_format_list_no_type after: new "styles" setting added, but disabled.
     $settings = $after['test_format_list_no_type']->getSettings();

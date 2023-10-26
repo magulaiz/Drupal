@@ -19,5 +19,5 @@ settings:
       startIndex: false
     ckeditor5_sourceEditing:
       allowed_tags:
-        - '<ol type>'
+        - '<ol type foo>'
 image_upload: {  }
