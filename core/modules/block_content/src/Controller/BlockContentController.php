@@ -3,7 +3,6 @@
 namespace Drupal\block_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\PathChangedHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
