@@ -175,7 +175,7 @@ class AutowireTest extends KernelTestBase {
   }
 
   /**
-   * Tests that core services have aliases correctly defined where possible.
+   * Tests that core services are autowired where possible.
    */
   public function testCoreAutowiring(): void {
     $services = [];
