@@ -35,11 +35,6 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected $entityFieldText;
 
   /**
-   * @var array
-   */
-  protected array $cachedDiscoveries;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -105,12 +100,7 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     // Ensure that the proxy class is initialized, which has the necessary
     // method calls attached.
-    $plugin_cache_clearer = \Drupal::service('plugin.cache_clearer');
-    $get_cached_discoveries = function () {
-      return $this->cachedDiscoveries;
-    };
-    $get_cached_discoveries = $get_cached_discoveries->bindTo($plugin_cache_clearer, $plugin_cache_clearer);
-    $cached_discoveries = $get_cached_discoveries();
+    $cached_discoveries = \Drupal::service('plugin.cache_clearer')->cachedDiscoveries;
     $cached_discovery_classes = [];
     foreach ($cached_discoveries as $cached_discovery) {
       $cached_discovery_classes[] = get_class($cached_discovery);
