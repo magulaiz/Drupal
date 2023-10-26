@@ -262,7 +262,6 @@ stages:
 'Random tests':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-random-tests, *default-job-settings ]
   parallel: 100
-  when: manual
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
