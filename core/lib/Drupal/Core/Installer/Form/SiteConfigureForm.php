@@ -153,7 +153,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#attributes' => ['class' => ['username']],
     ];
     $form['admin_account']['account']['pass'] = [
-      '#type' => 'password_confirm',
+      '#type' => 'password_unmask',
       '#required' => TRUE,
       '#size' => 25,
     ];
