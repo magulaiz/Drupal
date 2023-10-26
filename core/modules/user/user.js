@@ -130,6 +130,7 @@
 
           password.$suggestions.hide();
           $mainInputParent.append($passwordStrength);
+          $mainInputParent.append(password.$suggestions);
         }
 
         /**
