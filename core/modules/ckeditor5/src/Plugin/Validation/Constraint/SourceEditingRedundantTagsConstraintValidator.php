@@ -86,21 +86,6 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         $overlap_tag = array_keys($overlap->getAllowedElements(FALSE))[0];
         $is_attr_overlap = self::tagHasAttributeRestrictions($overlap, $overlap_tag);
 
-        // If the entirety (so not just the tag but also the attributes, and not
-        // just some of the attribute values, but all of them) of the HTML
-        // elements being configured to be edited via the Source Editing plugin
-        // is supported by a CKEditor 5 plugin, complain. But if some attribute
-        // or some attribute value is still not yet supported, do not generate a
-        // violation message.
-        // If there is overlap, but some attribute/attribute value is still not
-        // supported, exit this iteration without generating a violation
-        // message. Essentially: when assessing a particular value
-        // (for example `<foo bar baz>`), only CKEditor 5 plugins providing an
-        // exact match (`<foo bar baz>`) or a superset (`<foo bar baz qux>`) can
-        // trigger a violation, not subsets (`<foo bar>`).
-        if ($is_attr_overlap && !$source_enabled_element->diff($overlap)->allowsNothing()) {
-          continue;
-        }
         // If there is overlap, but the plain tag is not supported in the
         // overlap, exit this iteration without generating a violation message.
         // Essentially when assessing a particular value (for example `<span>`),

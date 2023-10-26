@@ -3,9 +3,9 @@
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
 _phpunit_testgroups_to_execute: &testgroups
   # Default: all of Drupal core's test suite runs.
-  #testgroups: '--all'
+  testgroups: '--all'
   # Alternative: run only the tests for one particular module.
-  testgroups: '--module ckeditor5'
+  # testgroups: '--module ckeditor5'
 build:
   assessment:
     testing:
