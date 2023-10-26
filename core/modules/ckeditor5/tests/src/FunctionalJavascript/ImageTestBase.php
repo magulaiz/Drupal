@@ -542,6 +542,12 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    // Despite the absence of a `height` attribute on the `<img>`, CKEditor 5
+    // should generate an appropriate `height`, matching with the aspect ratio
+    // of the image.
+    $ratio = $width / (int) $this->imageAttributes()['width'];
+    $expected_computed_height = (string) (int) round($ratio * (int) $this->imageAttributes()['height']);
+
     // Add image to the host body.
     $this->host->body->value = sprintf('<img data-foo="bar" alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' width="%s" />', $width);
     $this->host->save();
@@ -552,16 +558,19 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     // Ensure that the image is upcast as expected. In the editing view, the
     // width attribute should downcast to an inline style on the container
     // element.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.image[style] img'));
+    $assert_session->waitForElementVisible('css', ".ck-widget.image");
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', ".ck-widget.image[style] img"));
 
     // Ensure that the width attribute is retained on downcast.
     $editor_data = $this->getEditorDataAsDom();
-    $width_from_editor = $editor_data->getElementsByTagName('img')->item(0)->getAttribute('width');
-    $this->assertSame($width, $width_from_editor);
+    $img_in_editor = $editor_data->getElementsByTagName('img')->item(0);
+    $this->assertSame($width, $img_in_editor->getAttribute('width'));
+    $this->assertSame($expected_computed_height, $img_in_editor->getAttribute('height'));
 
-    // Save the node and ensure that the width attribute is retained.
+    // Save the node and ensure that the width attribute is retained, and ensure
+    // that a natural image ratio-respecting height attribute has been added.
     $page->pressButton('Save');
-    $this->assertNotEmpty($assert_session->waitForElement('css', "img[width='$width']"));
+    $this->assertNotEmpty($assert_session->waitForElement('css', "img[width='$width'][height='$expected_computed_height']"));
   }
 
   /**
