@@ -600,7 +600,9 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page->pressButton('Save');
 
     $src = $this->imageAttributes()['src'];
-    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">', Node::load(1)->get('body')->value);
+    $expected ='<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">';
+    $expected_dom = Html::load($expected);
+    $this->assertEquals($expected_dom->getElementsByTagName('body')->item(0)->C14N(), $editor_dom->getElementsByTagName('body')->item(0)->C14N());
     $assert_session->elementExists('xpath', '//figure/img[@src="' . $src . '" and not(@data-caption)]');
     $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute<br>really!</figcaption>');
   }
