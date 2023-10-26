@@ -7,3 +7,6 @@ automated_cron.settings:
     interval:
       type: integer
       label: 'Run cron every'
+      constraints:
+        Range:
+          min: 0
