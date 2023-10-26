@@ -77,10 +77,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $static_plugin_config['list']['properties'] = array_merge(
-      $static_plugin_config['list']['properties'],
-      $this->getConfiguration()
-    );
+    $static_plugin_config['list']['properties'] = $this->getConfiguration();
 
     // Generate configuration to use `type` attribute-based list styles on <ul>
     // and <ol> elements.
