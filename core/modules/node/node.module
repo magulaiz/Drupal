@@ -690,6 +690,7 @@ function node_user_predelete($account) {
 function node_get_recent($number = 10) {
   $account = \Drupal::currentUser();
   $query = \Drupal::entityQuery('node');
+  $query->accessCheck(FALSE);
 
   if (!$account->hasPermission('bypass node access')) {
     // If the user is able to view their own unpublished nodes, allow them
