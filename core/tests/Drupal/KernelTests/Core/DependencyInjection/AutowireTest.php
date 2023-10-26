@@ -51,7 +51,9 @@ class AutowireTest extends KernelTestBase {
     $services = [];
     $aliases = [];
 
-    foreach ($this->getCoreServiceFiles() as $filename) {
+    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
+    $filenames[] = 'core/core.services.yml';
+    foreach (array_filter($filenames, 'file_exists') as $filename) {
       foreach (Yaml::decode(file_get_contents($filename))['services'] as $id => $service) {
         if (is_string($service)) {
           $aliases[$id] = substr($service, 1);
@@ -126,15 +128,12 @@ class AutowireTest extends KernelTestBase {
   public function testCoreAutowiring(): void {
     $services = [];
     $aliases = [];
-    // @todo Convert all core modules.
-    foreach (['core/core.services.yml'] as $filename) {
-      foreach (Yaml::decode(file_get_contents($filename))['services'] as $id => $service) {
-        if (is_string($service)) {
-          $aliases[$id] = substr($service, 1);
-        }
-        elseif (isset($service['class']) && isset($service['arguments'])) {
-          $services[$id] = $service;
-        }
+    foreach (Yaml::decode(file_get_contents('core/core.services.yml'))['services'] as $id => $service) {
+      if (is_string($service)) {
+        $aliases[$id] = substr($service, 1);
+      }
+      elseif (isset($service['class']) && isset($service['arguments'])) {
+        $services[$id] = $service;
       }
     }
 
@@ -165,18 +164,6 @@ class AutowireTest extends KernelTestBase {
     }
 
     $this->assertEmpty($autowire, 'The following core services can be autowired. Remove their arguments from the services.yml file:' . PHP_EOL . implode(PHP_EOL, $autowire));
-  }
-
-  /**
-   * Return a list of core service YAML files.
-   *
-   * @return string[]
-   *   An array of filenames.
-   */
-  private function getCoreServiceFiles() {
-    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
-    $filenames[] = 'core/core.services.yml';
-    return array_filter($filenames, 'file_exists');
   }
 
 }
