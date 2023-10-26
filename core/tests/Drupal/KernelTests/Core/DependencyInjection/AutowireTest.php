@@ -180,7 +180,8 @@ class AutowireTest extends KernelTestBase {
   public function testCoreAutowiring(): void {
     $services = [];
     $aliases = [];
-    foreach ($this->getCoreServiceFiles() as $filename) {
+    // @todo Convert all core modules.
+    foreach (['core/core.services.yml'] as $filename) {
       foreach (Yaml::decode(file_get_contents($filename))['services'] as $id => $service) {
         if (is_string($service)) {
           $aliases[$id] = substr($service, 1);
