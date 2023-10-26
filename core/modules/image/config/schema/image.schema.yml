@@ -88,7 +88,7 @@ image.settings:
       type: string
       label: 'Preview image'
       constraints:
-        Image: {}
+        FileIsImage: {}
     allow_insecure_derivatives:
       type: boolean
       label: 'Allow insecure image derivatives'
