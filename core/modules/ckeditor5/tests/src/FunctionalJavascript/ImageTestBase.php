@@ -5,7 +5,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
@@ -600,7 +599,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page->pressButton('Save');
 
     $src = $this->imageAttributes()['src'];
-    $expected ='<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">';
+    $expected = '<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">';
     $expected_dom = Html::load($expected);
     $this->assertEquals($expected_dom->getElementsByTagName('body')->item(0)->C14N(), $editor_dom->getElementsByTagName('body')->item(0)->C14N());
     $assert_session->elementExists('xpath', '//figure/img[@src="' . $src . '" and not(@data-caption)]');
