@@ -4,6 +4,12 @@ namespace Drupal\Component\ProxyBuilder;
 
 /**
  * Generates the string representation of the proxy service.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Symfony's
+ *  own Lazy Services are now being used, and there is no need for Drupal proxy
+ *  classes anymore.
+ *
+ * @see https://www.drupal.org/node/123123
  */
 class ProxyBuilder {
 

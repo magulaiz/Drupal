@@ -916,6 +916,16 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
 
 		-
+			message: """
+				#^Class Drupal\\\\Core\\\\ProxyBuilder\\\\ProxyBuilder extends deprecated class Drupal\\\\Component\\\\ProxyBuilder\\\\ProxyBuilder\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Symfony's
+				 own Lazy Services are now being used, and there is no need for Drupal proxy
+				 classes anymore\\.$#
+			"""
+			count: 1
+			path: lib/Drupal/Core/ProxyBuilder/ProxyBuilder.php
+
+		-
 			message: "#^Constructor of class Drupal\\\\Core\\\\Queue\\\\Memory has an unused parameter \\$name\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Queue/Memory.php
@@ -3048,6 +3058,26 @@ parameters:
 			message: "#^Variable \\$structured_content might not be defined\\.$#"
 			count: 1
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
+
+		-
+			message: """
+				#^Instantiation of deprecated class Drupal\\\\Core\\\\Command\\\\GenerateProxyClassApplication\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Symfony's
+				  own Lazy Services are now being used, and there is no need for Drupal proxy
+				  classes anymore\\.$#
+			"""
+			count: 1
+			path: scripts/generate-proxy-class.php
+
+		-
+			message: """
+				#^Instantiation of deprecated class Drupal\\\\Core\\\\ProxyBuilder\\\\ProxyBuilder\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Symfony's
+				 own Lazy Services are now being used, and there is no need for Drupal proxy
+				 classes anymore\\.$#
+			"""
+			count: 1
+			path: scripts/generate-proxy-class.php
 
 		-
 			message: "#^Variable \\$project_stabilities might not be defined\\.$#"

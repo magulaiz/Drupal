@@ -13,6 +13,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\ProxyBuilder\ProxyBuilder
  * @group proxy_builder
+ * @group legacy
  */
 class ProxyBuilderTest extends UnitTestCase {
 

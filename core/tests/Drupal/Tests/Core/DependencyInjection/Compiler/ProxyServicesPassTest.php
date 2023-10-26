@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass
  * @group DependencyInjection
+ * @group legacy
  */
 class ProxyServicesPassTest extends UnitTestCase {
 
