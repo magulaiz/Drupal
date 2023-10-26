@@ -146,7 +146,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       // The user must enter their current password to change to a new one.
       if ($user->id() == $account->id()) {
         $form['account']['current_pass'] = [
-          '#type' => 'password',
+          '#type' => 'password_unmask',
           '#title' => $this->t('Current password'),
           '#size' => 25,
           '#access' => !$form_state->get('user_pass_reset'),
