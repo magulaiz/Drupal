@@ -57,7 +57,7 @@ abstract class ConfigTestResourceTestBase extends ConfigEntityResourceTestBase {
       'style' => NULL,
       'size' => NULL,
       'size_value' => NULL,
-      'protected_property' => NULL,
+      'protected_property' => 'Default',
     ];
 
     return $normalization;

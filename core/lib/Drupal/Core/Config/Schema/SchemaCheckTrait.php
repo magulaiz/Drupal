@@ -34,14 +34,17 @@ trait SchemaCheckTrait {
    *
    * Allow ignoring specific config schema types (top-level keys, require an
    * exact match to one of the top-level entries in *.schema.yml files) by
-   * allowing one or more partial property path matches.
+   * allowing one or more partial property path matches and one or more ignored
+   * constraint violation messages:
+   * - Top-level keys must be an exact match for a Config object's schema type.
+   * - Second-level keys must be must be wildcard matches for property paths,
+   *   where any property path segment can use a wildcard (`*`) to indicate any
+   *   value for that segment should be accepted for this property path to be
+   *   ignored.
+   * - Values of second-level keys must be regular expressions to match
+   *   constraint violation messages of those property paths against.
    *
-   * Keys must be an exact match for a Config object's schema type.
-   * Values must be wildcard matches for property paths, where any property
-   * path segment can use a wildcard (`*`) to indicate any value for that
-   * segment should be accepted for this property path to be ignored.
-   *
-   * @var \string[][]
+   * @var \string[][][]
    */
   protected static array $ignoredPropertyPaths = [
     'search.page.*' => [
@@ -50,6 +53,363 @@ trait SchemaCheckTrait {
       // @see search.schema.yml
       'label' => [
         'This value should not be blank.',
+        'This value should not be null.',
+      ],
+      'path' => [
+        'This value should not be null.',
+      ],
+    ],
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3379725
+    'block.block.*' => [
+      'weight' => [
+        'This value should not be null.',
+      ],
+      'provider' => [
+        'This value should not be null.',
+      ],
+    ],
+    'block_content.type.*' => [
+      // @todo Fix config or tweak schema of `type: block_content.type.*`.
+      // @see block_content.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+      'revision' => [
+        'This value should not be null.',
+      ],
+    ],
+    'comment.type.*' => [
+      // @todo Fix config or tweak schema of `type: comment.type.*`.
+      // @see comment.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'contact.form.*' => [
+      // @todo Fix config or tweak schema of `type: contact.form.*`.
+      // @see contact.schema.yml
+      'message' => [
+        'This value should not be null.',
+      ],
+      'redirect' => [
+        'This value should not be null.',
+      ],
+    ],
+    'contact.settings' => [
+      // @todo Fix config or tweak schema of `type: contact.settings`.
+      // @see contact.schema.yml
+      'default_form' => [
+        'This value should not be null.',
+      ],
+    ],
+    'core.base_field_override.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.base_field_override.*.*.*`.
+      // @see core.data_types.schema.yml
+      'label' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: field.field_settings.integer`.
+      // @see core.data_types.schema.yml
+      'settings.min' => [
+        'This value should not be null.',
+      ],
+      'settings.max' => [
+        'This value should not be null.',
+      ],
+    ],
+    'core.date_format.*' => [
+      // @todo Fix config or tweak schema of `type: core.date_format.*`.
+      // @see core.data_types.schema.yml
+      'label' => [
+        'This value should not be null.',
+      ],
+      'pattern' => [
+        'This value should not be null.',
+      ],
+    ],
+    'core.entity_form_mode.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_form_mode.*.*`.
+      // @see core.entity.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'core.entity_view_mode.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_view_mode.*.*`.
+      // @see core.entity.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'core.entity_form_display.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_form_display.*.*.*`.
+      // @see core.entity.schema.yml
+      'status' => [
+        'This value should not be null.',
+      ],
+      'content.*.type' => [
+        'This value should not be null.',
+      ],
+    ],
+    'core.entity_view_display.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: core.entity_view_display.*.*.*`.
+      // @see core.entity.schema.yml
+      'status' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: field.formatter.settings.link`.
+      // @see link.schema.yml
+      'content.*.settings.trim_length' => [
+        'This value should not be null.',
+      ],
+      'content.*.settings.rel' => [
+        'This value should not be null.',
+      ],
+      'content.*.settings.target' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: inline_block`.
+      // @see layout_builder.schema.yml
+      'third_party_settings.layout_builder.sections.*.components.*.configuration.block_serialized' => [
+        'This value should not be null.',
+      ],
+    ],
+    'views.view.*' => [
+      // Values may be
+      // @todo Fix config or tweak schema of `type: views_pager_sql`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.pager.options.total_pages' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.pager.options.items_per_page' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: views_filter`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.filters.*.expose.description' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: views_handler`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.fields.*.entity_type' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.fields.*.entity_field' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: views_filter`.
+      // @see views.data_types.schema.yml
+      'display.*.display_options.filters.bundle.group_info.description' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `views.filter.numeric`.
+      'display.*.display_options.filters.*.expose.min_placeholder' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.filters.*.expose.max_placeholder' => [
+        'This value should not be null.',
+      ],
+      'display.*.display_options.filters.*.expose.placeholder' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: views.view.*`.
+      // @see views.schema.yml
+      'display.*.position' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'entity_test.entity_test_bundle.*' => [
+      // @todo Fix config or tweak schema of `type: entity_test.entity_test_bundle.*`.
+      // @see entity_test.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'field.field.*.*.*' => [
+      // @todo Fix config or tweak schema of `type: field.value.comment`.
+      // @see comment.schema.yml
+      'default_value.*.last_comment_name' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: field.field_settings.images`.
+      // @see image.schema.yml
+      'settings.default_image.uuid' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.width' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.height' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: field.field_settings.integer`.
+      // @see core.data_types.schema.yml
+      'settings.min' => [
+        'This value should not be null.',
+      ],
+      'settings.max' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: entity_reference_selection.default`.
+      // @see core.data_types.schema.yml
+      'settings.handler_settings.auto_create_bundle' => [
+        'This value should not be null.',
+      ],
+    ],
+    'field.storage.*.*' => [
+      // @todo Fix config or tweak schema of `type: field.storage_settings.image`.
+      // @see image.schema.yml
+      'settings.default_image.uuid' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.width' => [
+        'This value should not be null.',
+      ],
+      'settings.default_image.height' => [
+        'This value should not be null.',
+      ],
+    ],
+    'image.style.*' => [
+      // @todo Fix config or tweak schema of `type: image.effect.image_rotate`.
+      // @see image.schema.yml
+      'effects.*.data.bgcolor' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: image.effect.image_scale`.
+      // @see image.schema.yml
+      'effects.*.data.height' => [
+        'This value should not be null.',
+      ],
+      'effects.*.data.width' => [
+        'This value should not be null.',
+      ],
+      // @todo Fix config or tweak schema of `type: image.style.*`.
+      // @see image.schema.yml
+      'effects.*.weight' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'language.entity.*' => [
+      // @todo Fix config or tweak schema of `type: language.entity.*`.
+      // @see language.schema.yml
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'language.negotiation' => [
+      // @todo Fix config or tweak schema of `type: language.negotiation`.
+      // @see language.schema.yml
+      'url.prefixes' => [
+        'This value should not be null.',
+      ],
+    ],
+    'media.type.*' => [
+      // @todo Fix config or tweak schema of `type: media.type.*`.
+      // @see media.schema.yml
+      'label' => [
+        'This value should not be null.',
+      ],
+      'description' => [
+        'This value should not be null.',
+      ],
+    ],
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3379731
+    'node.type.*' => [
+      'name' => [
+        'This value should not be null.',
+      ],
+      'description' => [
+        'This value should not be null.',
+      ],
+      'help' => [
+        'This value should not be null.',
+      ],
+    ],
+    'system.action.*' => [
+      // @todo Fix config or tweak schema of `type: system.action.*`.
+      // @see system.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+      'type' => [
+        'This value should not be null.',
+      ],
+    ],
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3379734
+    'system.date' => [
+      'timezone.default' => [
+        'This value should not be null.',
+      ],
+    ],
+    'system.menu.*' => [
+      // @todo Fix config or tweak schema of `type: system.menu.*`.
+      // @see system.schema.yml
+      'description' => [
+        'This value should not be null.',
+      ],
+      'label' => [
+        'This value should not be null.',
+      ],
+    ],
+    'taxonomy.vocabulary.*' => [
+      // @todo Fix config or tweak schema of `type: taxonomy.vocabulary.*`.
+      // @see taxonomy.schema.yml
+      'name' => [
+        'This value should not be null.',
+      ],
+      'description' => [
+        'This value should not be null.',
+      ],
+    ],
+    'user.role.*' => [
+      // @todo Fix config or tweak schema of `type: user.role.*`.
+      // @see user.schema.yml
+      'is_admin' => [
+        'This value should not be null.',
+      ],
+      'weight' => [
+        'This value should not be null.',
+      ],
+    ],
+    'user.settings' => [
+      // @todo Fix config or tweak schema of `type: user.settings`.
+      // @see user.schema.yml
+      'cancel_method' => [
+        'This value should not be null.',
+      ],
+      'register' => [
+        'This value should not be null.',
+      ],
+    ],
+    'workflows.workflow.*' => [
+      // @todo Fix config or tweak schema of `type: workflows.workflow.*`.
+      // @see workflows.schema.yml
+      'label' => [
+        'This value should not be null.',
       ],
     ],
   ];

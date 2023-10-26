@@ -9,16 +9,21 @@ config_test_dynamic:
     label:
       type: label
       label: 'Label'
+      # This is a config entity type without an admin UI: it exists only for testing. Labels are irrelevant.
+      nullable: true
     weight:
       type: integer
       label: 'Weight'
     style:
+      nullable: true
       type: string
       label: 'style'
     size:
+      nullable: true
       type: string
       label: 'Size'
     size_value:
+      nullable: true
       type: string
       label: 'Size value'
     protected_property:
@@ -48,6 +53,8 @@ config_test.query.*:
     label:
       type: label
       label: 'Label'
+      # This is a config entity type without an admin UI: it exists only for testing. Labels are irrelevant.
+      nullable: true
     array:
       type: sequence
       label: 'Array level 1'
@@ -98,6 +105,50 @@ config_test.types:
     string_int:
       type: string
       label: 'String integer'
+    # All the above types, but now nullable.
+    nullable_array:
+      type: sequence
+      label: 'Nullable array'
+      nullable: true
+      sequence:
+        type: string
+        label: 'Item'
+    nullable_boolean:
+      type: boolean
+      label: 'Nullable boolean'
+      nullable: true
+    nullable_exp:
+      type: float
+      label: 'Nullable exponential'
+      nullable: true
+    nullable_float:
+      type: float
+      label: 'Nullable float'
+      nullable: true
+    nullable_float_as_integer:
+      type: float
+      label: 'Float'
+      nullable: true
+    nullable_hex:
+      type: integer
+      label: 'Nullable hexadecimal'
+      nullable: true
+    nullable_int:
+      type: integer
+      label: 'Nullable integer'
+      nullable: true
+    nullable_octal:
+      type: integer
+      label: 'Nullable octal'
+      nullable: true
+    nullable_string:
+      type: string
+      label: 'Nullable string'
+      nullable: true
+    nullable_string_int:
+      type: string
+      label: 'Nullable string integer'
+      nullable: true
 
 config_test.no_status.default:
   type: config_object

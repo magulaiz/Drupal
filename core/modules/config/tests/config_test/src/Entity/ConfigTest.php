@@ -81,7 +81,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
    *
    * @var string
    */
-  protected $protected_property;
+  protected $protected_property = 'Default';
 
   /**
    * {@inheritdoc}
