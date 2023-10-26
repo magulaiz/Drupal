@@ -94,7 +94,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // For example:
         // - value `<ol start foo>` triggers a violation because `<ol start>` is
         //   supported by the `ckeditor5_list` plugin
-        // - value `<img data-*>` does NOT trigger a violation because only only
+        // - value `<img data-*>` does NOT trigger a violation because only
         //   concrete `data-`-attributes are supported by the
         //   `ckeditor5_imageUpload`, `ckeditor5_imageCaption` and
         //   `ckeditor5_imageAlign` plugins
