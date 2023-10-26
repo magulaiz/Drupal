@@ -105,8 +105,7 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     // Ensure that the proxy class is initialized, which has the necessary
     // method calls attached.
-    \Drupal::service('plugin.cache_clearer');
-    $plugin_cache_clearer = \Drupal::service('drupal.proxy_original_service.plugin.cache_clearer');
+    $plugin_cache_clearer = \Drupal::service('plugin.cache_clearer');
     $get_cached_discoveries = function () {
       return $this->cachedDiscoveries;
     };
