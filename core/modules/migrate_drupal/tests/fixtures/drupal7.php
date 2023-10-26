@@ -65678,7 +65678,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'image_style_preview_image',
-  'value' => 's:33:"core/modules/image/testsample.png";',
+  'value' => 's:29:"core/modules/image/sample.png";',
 ))
 ->values(array(
   'name' => 'image_toolkit',
