@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autowire: true
   plugin.manager.rest:
     class: Drupal\rest\Plugin\Type\ResourcePluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
@@ -25,6 +27,5 @@ services:
     arguments: ['@serializer', '@renderer', '@current_route_match']
   rest.resource.entity.post_route.subscriber:
     class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
-    arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }

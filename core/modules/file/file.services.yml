@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autowire: true
   file.event.subscriber:
     class: Drupal\file\EventSubscriber\FileEventSubscriber
     arguments: ['@config.factory', '@transliteration', '@language_manager']
@@ -19,7 +21,6 @@ services:
   Drupal\file\FileRepositoryInterface: '@file.repository'
   file.recursive_validator_factory:
     class: Drupal\file\Validation\RecursiveValidatorFactory
-    arguments: ['@class_resolver', '@typed_data_manager']
   Drupal\file\Validation\RecursiveValidatorFactory: '@file.recursive_validator_factory'
   file.recursive_validator:
     class: Symfony\Component\Validator\Validator\ValidatorInterface
@@ -30,5 +31,4 @@ services:
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
   file.uploaded_file_validator:
     class: Drupal\file\Validation\UploadedFileValidator
-    arguments: ['@validation.basic_recursive_validator_factory']
   Drupal\file\Validation\UploadedFileValidatorInterface: '@file.uploaded_file_validator'

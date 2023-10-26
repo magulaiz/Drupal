@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autowire: true
   plugin.manager.views.access:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [access, '@container.namespaces', '@cache.discovery', '@module_handler']
@@ -64,19 +66,15 @@ services:
   Drupal\views\ViewsData: '@views.views_data'
   views.views_data_helper:
     class: Drupal\views\ViewsDataHelper
-    arguments: ['@views.views_data']
   Drupal\views\ViewsDataHelper: '@views.views_data_helper'
   views.executable:
     class: Drupal\views\ViewExecutableFactory
-    arguments: ['@current_user', '@request_stack', '@views.views_data', '@router.route_provider']
   Drupal\views\ViewExecutableFactory: '@views.executable'
   views.analyzer:
     class: Drupal\views\Analyzer
-    arguments: ['@module_handler']
   Drupal\views\Analyzer: '@views.analyzer'
   views.route_subscriber:
     class: Drupal\views\EventSubscriber\RouteSubscriber
-    arguments: ['@entity_type.manager', '@state']
     tags:
       - { name: 'event_subscriber' }
   views.exposed_form_cache:
@@ -89,16 +87,13 @@ services:
       - { name: 'event_subscriber' }
   views.date_sql:
     class: Drupal\views\Plugin\views\query\MysqlDateSql
-    arguments: ['@database']
     tags:
       - { name: backend_overridable }
   pgsql.views.date_sql:
     class: Drupal\views\Plugin\views\query\PostgresqlDateSql
-    arguments: ['@database']
     public: false
   sqlite.views.date_sql:
     class: Drupal\views\Plugin\views\query\SqliteDateSql
-    arguments: ['@database']
     public: false
   views.cast_sql:
     class: Drupal\views\Plugin\views\query\CastSql

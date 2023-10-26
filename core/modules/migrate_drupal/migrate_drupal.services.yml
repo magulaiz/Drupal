@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autowire: true
   plugin.manager.migrate.field:
     class: Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager
     arguments:
@@ -20,5 +22,4 @@ services:
   Drupal\migrate_drupal\FieldDiscoveryInterface: '@migrate_drupal.field_discovery'
   migrate_drupal.migration_state:
     class: Drupal\migrate_drupal\MigrationState
-    arguments: ['@plugin.manager.migrate.field', '@module_handler', '@messenger', '@string_translation']
   Drupal\migrate_drupal\MigrationState: '@migrate_drupal.migration_state'

@@ -1,7 +1,8 @@
 services:
+  _defaults:
+    autowire: true
   ban.ip_manager:
     class: Drupal\ban\BanIpManager
-    arguments: ['@database']
     tags:
       - { name: backend_overridable }
   Drupal\ban\BanIpManagerInterface: '@ban.ip_manager'
