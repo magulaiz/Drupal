@@ -259,7 +259,7 @@ stages:
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
-    GROUP: "--class '\Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest'"
+    GROUP: "--class '\\Drupal\\Tests\\ckeditor5\\FunctionalJavascripti\\MediaLinkabilityTest'"
     CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
