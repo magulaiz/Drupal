@@ -97,9 +97,9 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @param \Drupal\Core\Utility\RequestGenerator|\Drupal\Core\Session\AccountInterface $request_generator
    *   The request generator.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
-   *    The current path.
+   *   The current path.
    * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher_old
-   *    The path matcher service.
+   *   The path matcher service.
    */
   public function __construct(
     RequestContext $context,
@@ -126,7 +126,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     else {
       $this->titleResolver = $title_resolver;
     }
-    $this->currentUser = $current_user instanceof AccountInterface? $current_user : $request_generator;
+    $this->currentUser = $current_user instanceof AccountInterface ? $current_user : $request_generator;
     if ($request_generator instanceof AccountInterface) {
       @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
       $this->requestGenerator = \Drupal::service('request_generator');
