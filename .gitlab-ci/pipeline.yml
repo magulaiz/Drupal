@@ -246,6 +246,7 @@ stages:
       junit: ./nightwatch_output/*.xml
     paths:
       - ./nightwatch_output
+
 .run-random-tests: &run-random-tests
   script:
     # Determine DB driver.
@@ -257,7 +258,7 @@ stages:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - echo "Running: $GROUP"
+    - echo "Running: ${GROUP}"
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html $GROUP
 
 'Random tests':
