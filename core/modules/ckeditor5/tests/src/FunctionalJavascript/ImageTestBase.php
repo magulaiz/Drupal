@@ -368,7 +368,11 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     }
 
     // Make the test content has a block image and an inline image.
-    $img_tag = '<img ' . $this->imageAttributesAsString() . ' width="500" />';
+    $img_tag = preg_replace(
+      '/width="\d+" height="\d+"/',
+      'width="500"',
+      '<img ' . $this->imageAttributesAsString() . ' />'
+    );
     $this->host->body->value .= $img_tag . "<p>$img_tag</p>";
     $this->host->save();
 
