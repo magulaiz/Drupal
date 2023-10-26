@@ -20,20 +20,6 @@ class ListPluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public function providerGetDynamicPluginConfig(): array {
-    $styles_true_allow = [
-      [
-        'name' => 'ul',
-        'attributes' => ['type' => TRUE],
-        'classes' => TRUE,
-        'styles' => TRUE,
-      ],
-      [
-        'name' => 'ol',
-        'attributes' => ['type' => TRUE],
-        'classes' => TRUE,
-        'styles' => TRUE,
-      ],
-    ];
     return [
       'startIndex is false' => [
         [
@@ -50,7 +36,6 @@ class ListPluginTest extends UnitTestCase {
                 'useAttribute' => TRUE,
               ],
             ],
-            'allow' => $styles_true_allow,
           ],
         ],
       ],
@@ -68,7 +53,6 @@ class ListPluginTest extends UnitTestCase {
                 'useAttribute' => TRUE,
               ],
             ],
-            'allow' => $styles_true_allow,
           ],
         ],
       ],
@@ -119,7 +103,6 @@ class ListPluginTest extends UnitTestCase {
                 'useAttribute' => TRUE,
               ],
             ],
-            'allow' => $styles_true_allow,
           ],
         ],
       ],
