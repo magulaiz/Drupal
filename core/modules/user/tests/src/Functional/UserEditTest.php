@@ -125,7 +125,6 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('edit-status-1');
 
     // Test editing the user with a password_unmask field.
-    $config->set('password_type_reveal', TRUE)->save();
     $config->set('password_strength', TRUE)->save();
 
     $this->drupalGet("user/" . $admin_user->id() . "/edit");
