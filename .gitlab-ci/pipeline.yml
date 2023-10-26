@@ -255,7 +255,7 @@ stages:
   when: manual
   variables:
     <<: *test-variables
-    TESTSUITE: PHPUnit-Functional
+    TESTSUITE: PHPUnit-FunctionalJavascript
     GROUP: "--class '\\Drupal\\Tests\\ckeditor5\\FunctionalJavascript\\MediaLinkabilityTest'"
     CONCURRENCY: "$CONCURRENCY"
   services:
