@@ -45,8 +45,9 @@ variables:
   COMPOSER: composer.json
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
-  CONCURRENCY: 32
+  CONCURRENCY: 24
   GIT_DEPTH: "3"
+  PARENT_PIPELINE_ID: $CI_PIPELINE_ID
 
 
 #############
@@ -64,6 +65,14 @@ stages:
 .default-job-settings: &default-job-settings-lint
   interruptible: true
   allow_failure: false
+  retry:
+    max: 2
+    when:
+      - unknown_failure
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+      - scheduler_failure
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
@@ -71,37 +80,16 @@ stages:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-.composer-cache: &composer-cache
-  key:
-    files:
-      - ./composer.json
-      - ./composer.lock
-  paths:
-    - ./vendor
-
-.yarn-cache: &yarn-cache
-  key:
-    files:
-      - ./core/package.json
-      - ./core/yarn.lock
-  paths:
-    - ./core/node_modules
-
-.with-composer-cache: &with-composer-cache
-  cache:
-    policy: pull
-    <<: *composer-cache
+.with-composer: &with-composer
   needs:
     - '📦️ Composer'
 
-.with-yarn-cache: &with-yarn-cache
+.with-yarn: &with-yarn
   needs:
     - '📦️ Yarn'
-  cache:
-    policy: pull
-    <<: *yarn-cache
 
 .junit-artifacts: &junit-artifacts
   artifacts:
@@ -220,7 +208,12 @@ stages:
   <<: *default-job-settings-lint
   stage: 🏗️ Build
   cache:
-    <<: *composer-cache
+    key:
+      files:
+        - ./composer.json
+        - ./composer.lock
+    paths:
+      - ./vendor
   artifacts:
     expire_in: 1 week
     expose_as: 'web-vendor'
@@ -234,7 +227,12 @@ stages:
   <<: *default-job-settings-lint
   stage: 🏗️ Build
   cache:
-    <<: *yarn-cache
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
   artifacts:
     expire_in: 1 week
     expose_as: 'yarn-vendor'
@@ -248,7 +246,7 @@ stages:
 ################
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
@@ -257,7 +255,7 @@ stages:
       codequality: phpstan-quality-report.json
 
 '🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
@@ -265,8 +263,17 @@ stages:
     reports:
       codequality: phpcs-quality-report.json
 
+'🧹 JavaScript linting (eslint)':
+  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+  artifacts:
+    reports:
+      codequality: eslint-quality-report.json
+
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
@@ -275,23 +282,14 @@ stages:
       codequality: stylelint-quality-report.json
 
 '🧹 Compilation check':
-  <<: [ *with-yarn-cache, *default-job-settings-lint ]
+  <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
     - yarn run --cwd=./core build:css --check
     - cd core && yarn run -s check:ckeditor5
 
-'🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
-  artifacts:
-    reports:
-      codequality: eslint-quality-report.json
-
 '📔 Spell-checking':
-  <<: [ *with-yarn-cache, *default-job-settings-lint ]
+  <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
