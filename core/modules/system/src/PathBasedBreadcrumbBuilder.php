@@ -10,6 +10,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -17,6 +18,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\RequestGenerator;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 /**
  * Defines a class to build path-based breadcrumbs.
@@ -41,13 +43,13 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The router request context.
    * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access check service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface|\Symfony\Component\Routing\Matcher\RequestMatcherInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
+   * @param \Drupal\Core\Controller\TitleResolverInterface|\Drupal\Core\PathProcessor\InboundPathProcessorInterface $titleResolver
    *   The title resolver service.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   * @param \Drupal\Core\Session\AccountInterface|\Drupal\Core\Config\ConfigFactoryInterface $currentUser
    *   The current user object.
-   * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
+   * @param \Drupal\Core\Path\PathMatcherInterface|\Drupal\Core\Controller\TitleResolverInterface $pathMatcher
    *   The path matcher service.
    * @param \Drupal\Core\Utility\RequestGenerator $requestGenerator
    *   The request generator.
@@ -55,13 +57,25 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function __construct(
     protected RequestContext $context,
     protected AccessManagerInterface $accessManager,
-    ConfigFactoryInterface $config_factory,
-    protected TitleResolverInterface $titleResolver,
-    protected AccountInterface $currentUser,
-    protected PathMatcherInterface $pathMatcher,
+    ConfigFactoryInterface|RequestMatcherInterface $config_factory,
+    protected TitleResolverInterface|InboundPathProcessorInterface $titleResolver,
+    protected AccountInterface|ConfigFactoryInterface $currentUser,
+    protected PathMatcherInterface|TitleResolverInterface $pathMatcher,
     protected RequestGenerator $requestGenerator,
   ) {
     $this->config = $config_factory->get('system.site');
+    if ($config_factory instanceof RequestMatcherInterface){
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      $this->config = $this->currentUser;
+    }
+    if ($this->titleResolver instanceof InboundPathProcessorInterface){
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $path_processor argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      $this->titleResolver = $this->pathMatcher;
+    }
+    if ($this->pathMatcher === NULL){
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $pathMatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      $this->pathMatcher = \Drupal::service('path.matcher');
+    }
     if ($this->requestGenerator === NULL) {
       @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $requestGenerator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
       $this->requestGenerator = \Drupal::service('request_generator');
