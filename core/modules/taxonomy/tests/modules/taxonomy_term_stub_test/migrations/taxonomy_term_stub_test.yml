@@ -24,9 +24,7 @@ process:
     source: parent
 destination:
   plugin: entity:taxonomy_term
-migration_dependencies:
-  required:
-    - vocabularies
+migration_dependencies: {  }
 provider:
   - migrate_drupal
   - taxonomy

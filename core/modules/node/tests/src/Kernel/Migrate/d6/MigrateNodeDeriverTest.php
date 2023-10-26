@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
@@ -30,9 +31,8 @@ class MigrateNodeDeriverTest extends MigrateDrupal6TestBase {
    */
   public function testNoTranslations() {
     // Without content_translation, there should be no translation migrations.
-    $migrations = $this->pluginManager->createInstances('d6_node_translation');
-    $this->assertSame([], $migrations,
-      "No node translation migrations without content_translation");
+    $this->expectException(PluginNotFoundException::class);
+    $this->pluginManager->createInstances('d6_node_translation');
   }
 
   /**
