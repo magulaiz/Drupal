@@ -1,6 +1,4 @@
 services:
-  _defaults:
-    autowire: true
   theme.negotiator.block.admin_demo:
     class: Drupal\block\Theme\AdminDemoNegotiator
     tags:
@@ -11,4 +9,5 @@ services:
       - { name: event_subscriber }
   block.repository:
     class: Drupal\block\BlockRepository
+    arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
   Drupal\block\BlockRepositoryInterface: '@block.repository'

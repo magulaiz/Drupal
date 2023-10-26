@@ -1,6 +1,4 @@
 services:
-  _defaults:
-    autowire: true
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
     arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
@@ -36,20 +34,24 @@ services:
 
   access_check.workspaces.active_workspace:
     class: Drupal\workspaces\Access\ActiveWorkspaceCheck
+    arguments: ['@workspaces.manager']
     tags:
       - { name: access_check, applies_to: _has_active_workspace }
 
   workspaces.entity_schema_listener:
     class: Drupal\workspaces\EventSubscriber\EntitySchemaSubscriber
+    arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.manager']
     tags:
       - { name: 'event_subscriber' }
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
+    arguments: ['@path_alias.manager', '@path.current', '@router.route_provider', '@workspaces.manager']
     tags:
       - { name: event_subscriber }
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext
+    arguments: ['@workspaces.manager']
     tags:
       - { name: cache.context }
   logger.channel.workspaces:
@@ -59,6 +61,7 @@ services:
   workspaces.entity.query.sql:
     decorates: entity.query.sql
     class: Drupal\workspaces\EntityQuery\QueryFactory
+    arguments: ['@database', '@workspaces.manager']
     public: false
     decoration_priority: 50
     tags:
@@ -66,6 +69,7 @@ services:
   pgsql.workspaces.entity.query.sql:
     decorates: pgsql.entity.query.sql
     class: Drupal\workspaces\EntityQuery\PgsqlQueryFactory
+    arguments: ['@database', '@workspaces.manager']
     public: false
     decoration_priority: 50
 

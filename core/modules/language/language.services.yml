@@ -1,6 +1,4 @@
 services:
-  _defaults:
-    autowire: true
   plugin.manager.language_negotiation_method:
     class: Drupal\language\LanguageNegotiationMethodManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
@@ -12,6 +10,7 @@ services:
   Drupal\language\LanguageNegotiatorInterface: '@language_negotiator'
   language.config_subscriber:
     class: Drupal\language\EventSubscriber\ConfigSubscriber
+    arguments: ['@language_manager', '@language.default', '@config.factory', '@language_negotiator']
     tags:
       - { name: event_subscriber }
   language.config_factory_override:
@@ -24,6 +23,7 @@ services:
   Drupal\Core\Config\ConfigFactoryOverrideInterface: '@language.config_factory_override'
   language_converter:
     class: Drupal\language\LanguageConverter
+    arguments: ['@language_manager']
     tags:
       - { name: paramconverter }
     lazy: true
