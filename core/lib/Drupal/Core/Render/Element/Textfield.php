@@ -52,7 +52,6 @@ class Textfield extends FormElement {
     return [
       '#input' => TRUE,
       '#size' => 60,
-      '#maxlength' => 128,
       '#autocomplete_route_name' => FALSE,
       '#process' => [
         [$class, 'processAutocomplete'],
