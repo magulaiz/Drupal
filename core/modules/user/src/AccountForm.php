@@ -174,7 +174,8 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         '#type' => 'password_unmask',
         '#size' => 25,
         '#title' => $this->t('Password'),
-        '#description' => $this->t('To change the current user password, enter the new password.'),
+        '#description' => $this->t('Provide a password for the new account.'),
+        '#required' => TRUE,
       ];
     }
 
