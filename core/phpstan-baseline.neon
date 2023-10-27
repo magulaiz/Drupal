@@ -918,9 +918,9 @@ parameters:
 		-
 			message: """
 				#^Class Drupal\\\\Core\\\\ProxyBuilder\\\\ProxyBuilder extends deprecated class Drupal\\\\Component\\\\ProxyBuilder\\\\ProxyBuilder\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Symfony's
-				 own Lazy Services are now being used, and there is no need for Drupal proxy
-				 classes anymore\\.$#
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. The native
+				  lazy services from Symfony are now being used\\. Therefore, there is no need
+				  for Drupal proxy classes anymore\\. There is no replacement\\.$#
 			"""
 			count: 1
 			path: lib/Drupal/Core/ProxyBuilder/ProxyBuilder.php
@@ -3062,9 +3062,9 @@ parameters:
 		-
 			message: """
 				#^Instantiation of deprecated class Drupal\\\\Core\\\\Command\\\\GenerateProxyClassApplication\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Symfony's
-				  own Lazy Services are now being used, and there is no need for Drupal proxy
-				  classes anymore\\.$#
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. The native
+				  lazy services from Symfony are now being used\\. Therefore, there is no need
+				  for Drupal proxy classes anymore\\. There is no replacement\\.$#
 			"""
 			count: 1
 			path: scripts/generate-proxy-class.php
@@ -3072,9 +3072,9 @@ parameters:
 		-
 			message: """
 				#^Instantiation of deprecated class Drupal\\\\Core\\\\ProxyBuilder\\\\ProxyBuilder\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Symfony's
-				 own Lazy Services are now being used, and there is no need for Drupal proxy
-				 classes anymore\\.$#
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. The native
+				  lazy services from Symfony are now being used\\. Therefore, there is no need
+				  for Drupal proxy classes anymore\\. There is no replacement\\.$#
 			"""
 			count: 1
 			path: scripts/generate-proxy-class.php
