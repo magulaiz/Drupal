@@ -162,4 +162,44 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
     return $menu_link;
   }
 
+  /**
+   * Tests the rendering of parent link selection list based on selected menu.
+   */
+  public function testSelectLists() : void {
+    $this->drupalLogin($this->rootUser);
+    $page = $this->getSession()->getpage();
+
+    // Visit the edit form to test the menu link.
+    $this->drupalGet('admin/structure/menu/link/user.page/edit');
+    // Select the tools option from the menu list.
+    $page->findField('menu')->selectOption('Tools');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->optionExists('Parent link', '-- Test front page link');
+
+    // Create a custom menu.
+    $custom_menu = $this->addCustomMenu();
+    // Hierarchy
+    // <$menu_name>
+    // -- link1
+    // ---- link2
+    // ------ link4
+    // ---- link3
+    $link_1 = $this->addMenuLink('', '/', $custom_menu->id());
+    $link_2 = $this->addMenuLink($link_1->getPluginId(), '/', $custom_menu->id());
+    $link_3 = $this->addMenuLink($link_1->getPluginId(), '/', $custom_menu->id());
+    $link_4 = $this->addMenuLink($link_2->getPluginId(), '/', $custom_menu->id());
+    $this->drupalGet('admin/structure/menu/link/user.page/edit');
+    $this->getSession()->getPage()->findField('menu')->selectOption($custom_menu->label());
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $options = $this->assertSession()->selectExists('menu_parent')->findAll('css', 'option');
+    $options = array_map(function ($item) {
+      return $item->getText();
+    }, $options);
+    $this->assertContains($custom_menu->label(), $options);
+    $this->assertContains('-- ' . $link_1->label(), $options);
+    $this->assertContains('---- ' . $link_2->label(), $options);
+    $this->assertContains('------ ' . $link_4->label(), $options);
+    $this->assertContains('---- ' . $link_3->label(), $options);
+  }
+
 }
