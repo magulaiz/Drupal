@@ -73,4 +73,27 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
     }
   }
 
+  /**
+   * Get a default Finder object for a Drupal codebase including /vendor.
+   *
+   * Method override to avoid excluding vendor from the copied files, so that
+   * tests calling composer commands don't re-download packages.
+   *
+   * @return \Symfony\Component\Finder\Finder
+   *   A Finder object ready to iterate over core codebase.
+   */
+  public function getCodebaseFinder() {
+    $finder = new Finder();
+    $finder->files()
+      ->ignoreUnreadableDirs()
+      ->in($this->getDrupalRoot())
+      ->notPath('#^sites/default/files#')
+      ->notPath('#^sites/simpletest#')
+      ->notPath('#^core/node_modules#')
+      ->notPath('#^sites/default/settings\..*php#')
+      ->ignoreDotFiles(FALSE)
+      ->ignoreVCS(FALSE);
+    return $finder;
+  }
+
 }
