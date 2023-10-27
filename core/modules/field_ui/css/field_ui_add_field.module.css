@@ -112,6 +112,10 @@
   margin-inline: 0;
 }
 
+.subfield-option .item-list {
+  padding-left: 1.4rem;
+}
+
 .field-option,
 .subfield-option {
   cursor: pointer;
