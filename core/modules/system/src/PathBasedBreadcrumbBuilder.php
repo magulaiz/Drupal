@@ -129,8 +129,8 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->context = $context;
     $this->accessManager = $access_manager;
     if ($config_factory instanceof RequestMatcherInterface) {
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router, $path_processor, $current_path arguments is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router, $path_processor, $current_path arguments is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3397213', E_USER_DEPRECATED);
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3397213', E_USER_DEPRECATED);
       $this->router = $config_factory;
       $config_factory = $current_user;
       $this->pathProcessor = $title_resolver;
