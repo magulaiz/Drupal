@@ -231,8 +231,7 @@ trait PerformanceTestTrait {
       // Since chrome timestamps are since OS start, we take the first network
       // request and response, determine the wall times of each, then calculate
       // offsets from those for everything else.
-      if ($first_response_timestamp === NULL
-        && $message['method'] === 'Tracing.dataCollected'
+      if ($message['method'] === 'Tracing.dataCollected'
         && isset($message['params']['name'])
         && $message['params']['name'] === 'ResourceReceiveResponse') {
         $first_response_timestamp = (int) ($message['params']['ts'] * $nanoseconds_per_microsecond);
@@ -247,7 +246,11 @@ trait PerformanceTestTrait {
         // By subtracting the request timestamp from the response wall time we
         // get the request wall time.
         $request_wall_time = ($response_wall_time - ($first_response_timestamp - $first_request_timestamp));
+        break;
       }
+    }
+    if ($first_response_timestamp === NULL) {
+      dump($message);
     }
 
     // @todo: get commit hash from an environment variable and add this as an
