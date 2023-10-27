@@ -250,7 +250,9 @@ trait PerformanceTestTrait {
       }
     }
     if ($first_response_timestamp === NULL) {
-      dump($messages);
+      // If the $first_response_timestamp is null, this means we got an
+      // incomplete log from chromedriver, mark the test as skipped.
+      $this->markTestSkipped('Incomplete log from chromedriver, giving up.');
     }
 
     // @todo: get commit hash from an environment variable and add this as an
