@@ -2,9 +2,12 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -15,6 +18,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  */
 class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The menu link tree service.
@@ -49,6 +53,21 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
+  public function getMenuSelectOptions(array $menus = NULL) {
+    if (!isset($menus)) {
+      $menus = $this->getMenuOptions();
+    }
+
+    $options = [];
+    foreach ($menus as $menu_name => $menu_title) {
+      $options[$menu_name . ':'] = $menu_title;
+    }
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL) {
     if (!isset($menus)) {
       $menus = $this->getMenuOptions();
@@ -76,6 +95,45 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
+  public function menuSelectElement($menu_id, array $menus = NULL) {
+    $options = $this->getMenuSelectOptions($menus);
+    if ($options) {
+      $elements['menu'] = [
+        '#title' => $this->t('Menu'),
+        '#type' => 'select',
+        '#options' => $options,
+        '#attributes' => ['class' => ['menu-title-select']],
+        '#ajax' => [
+          'callback' => [$this, 'updateParentLinks'],
+          'wrapper' => 'menu-parent-wrapper',
+          'trigger_as' => ['name' => 'update_parent_links'],
+          'event' => 'change',
+        ],
+      ];
+      $menu = $menu_id . ':';
+      if (isset($options[$menu])) {
+        // Only provide the default value if it is valid among the options.
+        $elements['menu'] += ['#default_value' => $menu];
+      }
+      $elements['menu_submit'] = [
+        '#type' => 'submit',
+        '#name' => 'update_parent_links',
+        '#value' => $this->t('Change menu'),
+        '#submit' => [[$this, 'updateParentLinksSubmit']],
+        '#attributes' => ['class' => ['js-hide']],
+        '#ajax' => [
+          'callback' => [$this, 'updateParentLinks'],
+          'wrapper' => 'menu-parent-wrapper',
+        ],
+      ];
+      return $elements;
+    }
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function parentSelectElement($menu_parent, $id = '', array $menus = NULL) {
     $options_cacheability = new CacheableMetadata();
     $options = $this->getParentSelectOptions($id, $menus, $options_cacheability);
@@ -84,6 +142,8 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $element = [
         '#type' => 'select',
         '#options' => $options,
+        '#prefix' => '<div id= "' . Html::getUniqueId('menu-parent-wrapper') . '" >',
+        '#suffix' => '</div>',
       ];
       if (!isset($options[$menu_parent])) {
         // The requested menu parent cannot be found in the menu anymore. Try
@@ -99,6 +159,22 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       return $element;
     }
     return [];
+  }
+
+  /**
+   * AJAX callback for updating menu parent options.
+   */
+  public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
+    return $form['menu_parent'];
+  }
+
+  /**
+   * Submit handler for the 'Change menu' element.
+   */
+  public function updateParentLinksSubmit(array $form, FormStateInterface $form_state) : void {
+    $menu_name = rtrim($form_state->getValue('menu'), ':');
+    $form_state->setValue('menus', $this->getMenuOptions([$menu_name]));
+    $form_state->setRebuild();
   }
 
   /**

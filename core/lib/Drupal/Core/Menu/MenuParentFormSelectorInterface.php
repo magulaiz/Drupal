@@ -29,6 +29,19 @@ interface MenuParentFormSelectorInterface {
   public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL);
 
   /**
+   * Gets the options for a select element to choose a menu.
+   *
+   * @param array|null $menus
+   *   Optional array of menu names as keys and titles as values to limit
+   *   the select options.  If NULL, all menus will be included.
+   *
+   * @return array
+   *   Keyed array where the keys are menu names and values are menu name or
+   *   link title.
+   */
+  public function getMenuSelectOptions(array $menus = NULL);
+
+  /**
    * Gets a form element to choose a menu and parent.
    *
    * The specific type of form element will vary depending on the
@@ -52,5 +65,21 @@ interface MenuParentFormSelectorInterface {
    *   by a ':' character.
    */
   public function parentSelectElement($menu_parent, $id = '', array $menus = NULL);
+
+  /**
+   * Gets a form element to choose a menu.
+   *
+   * @param string $menu_id
+   *   The default menu ID.
+   * @param array|null $menus
+   *   (optional) Array of menu names as keys and titles as values to limit
+   *   the values that may be selected. If NULL, all menus will be included.
+   *
+   * @return array
+   *   A form element to choose a menu, or an empty array if no possible
+   *   menu exist for the given parameters. The resulting form value will be
+   *   a single string containing the chosen menu name.
+   */
+  public function menuSelectElement($menu_id, array $menus = NULL);
 
 }

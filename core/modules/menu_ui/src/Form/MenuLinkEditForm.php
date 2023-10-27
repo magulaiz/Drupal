@@ -5,7 +5,6 @@ namespace Drupal\menu_ui\Form;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Menu\Form\MenuLinkTrait;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,7 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class MenuLinkEditForm extends FormBase {
 
-  use MenuLinkTrait;
   /**
    * The class resolver.
    *
