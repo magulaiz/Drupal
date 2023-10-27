@@ -48,7 +48,6 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  REPEAT_CLASS_TEST: 'Drupal\Tests\Foo\Bar'
 
 
 #############
