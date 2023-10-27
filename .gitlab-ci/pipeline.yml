@@ -255,10 +255,7 @@ stages:
   when: manual
   variables:
     <<: *test-variables
-    CLASS: "$REPEAT_CLASS_TEST"
+    CLASS: "\Drupal\Tests\Change\Me"
     CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-    - if: $REPEAT_CLASS_TEST != "Drupal\Tests\Foo\Bar"
