@@ -116,7 +116,9 @@ stages:
     - echo "ℹ️ Running class ${REPEAT_TEST_CLASS}"
     - |
       if [[ $REPEAT_TEST_CLASS == "Drupal\Tests\Change\Me" ]]; then
-        echo '❗ You need to change the class to an existing one before running the job. ie: Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest';
+        echo '❗ You need to change the REPEAT_TEST_CLASS variable to an existing class before running the job.'
+        echo '   You just need to click on the job that you want to run (do not press the play button straight away) and then set the following:'
+        echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
         exit 1;
       else
         sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
