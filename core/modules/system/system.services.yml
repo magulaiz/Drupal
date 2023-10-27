@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autowire: true
   access_check.cron:
     class: Drupal\system\Access\CronAccessCheck
     tags:
