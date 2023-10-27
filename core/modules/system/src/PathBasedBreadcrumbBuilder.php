@@ -121,13 +121,13 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $this->titleResolver = $path_matcher_new;
       $this->currentUser = $request_generator;
       $this->requestGenerator = \Drupal::service('request_generator');
-      $this->pathMatcher = $path_matcher_old;
+      $this->pathMatcher = $path_matcher_old ?: \Drupal::service('path.matcher');
     }
     else {
       $this->titleResolver = $title_resolver;
       $this->currentUser = $current_user;
       $this->requestGenerator = $request_generator;
-      $this->pathMatcher = $path_matcher_old ?: \Drupal::service('path.matcher');
+      $this->pathMatcher = $path_matcher_new;
     }
     $this->config = $config_factory->get('system.site');
   }
