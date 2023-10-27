@@ -577,6 +577,7 @@ abstract class BuildTestBase extends TestCase {
       ->in($this->getDrupalRoot())
       ->notPath('#^sites/default/files#')
       ->notPath('#^sites/simpletest#')
+      ->notPath('#^vendor#')
       ->notPath('#^core/node_modules#')
       ->notPath('#^sites/default/settings\..*php#')
       ->ignoreDotFiles(FALSE)
