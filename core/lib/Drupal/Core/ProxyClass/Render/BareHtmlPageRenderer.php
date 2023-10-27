@@ -3,12 +3,6 @@
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Render\BareHtmlPageRenderer' "core/lib/Drupal/Core".
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The native
- *   lazy services from Symfony are now being used. Therefore, there is no need
- *   for Drupal proxy classes anymore. There is no replacement.
- *
- * @see https://www.drupal.org/node/3397076
  */
 
 namespace Drupal\Core\ProxyClass\Render {
@@ -17,6 +11,12 @@ namespace Drupal\Core\ProxyClass\Render {
      * Provides a proxy class for \Drupal\Core\Render\BareHtmlPageRenderer.
      *
      * @see \Drupal\Component\ProxyBuilder
+     *
+     * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The
+     *   native lazy services from Symfony are now being used. Therefore, there
+     *   is no need for Drupal proxy classes anymore. There is no replacement.
+     *
+     * @see https://www.drupal.org/node/3397076
      */
     class BareHtmlPageRenderer implements \Drupal\Core\Render\BareHtmlPageRendererInterface
     {
