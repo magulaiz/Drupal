@@ -326,7 +326,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $translation = $node->getTranslation('es');
 
     // Check translation.
-    $this->drupalGet('/es/' . $node->toUrl()->toString());
+    $this->drupalGet('es/node/' . $node->id());
     $this->assertSession()->pageTextContains('First version of the content es.');
     $this->assertEquals('First version of the content es.', $translation->title->value);
     $this->assertEquals($second_web_user->id(), $translation->uid->entity->id(), 'Check user on translation.');
