@@ -65,6 +65,11 @@
   color: unset;
 }
 
+.group-field-options {
+  display: table;
+  min-width: 100%;
+}
+
 .field-option__item {
   display: grid;
   grid-template-rows: auto 2fr;
