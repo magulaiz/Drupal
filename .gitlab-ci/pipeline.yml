@@ -261,7 +261,7 @@ stages:
   when: manual
   variables:
     <<: *test-variables
-    CLASS: "Drupal\Tests\Change\Me"
+    CLASS: 'Drupal\Tests\Change\Me'
     CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
