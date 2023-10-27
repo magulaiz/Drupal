@@ -43,25 +43,32 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
+   * @param \Drupal\Core\Controller\TitleResolverInterface|null $titleResolver
    *   The title resolver.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   * @param \Drupal\Core\Routing\RouteMatchInterface|null $routeMatch
    *   The route match.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Controller\TitleResolverInterface $baseRouteTitleResolver
+   * @param \Drupal\Core\Controller\TitleResolverInterface|null $baseRouteTitleResolver
    *   The base route title resolver.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    protected TitleResolverInterface $titleResolver,
-    protected RouteMatchInterface $routeMatch,
-    protected RequestStack $requestStack,
-    protected TitleResolverInterface $baseRouteTitleResolver,
+    protected ?TitleResolverInterface $titleResolver,
+    protected ?RouteMatchInterface $routeMatch,
+    protected ?RequestStack $requestStack,
+    protected ?TitleResolverInterface $baseRouteTitleResolver,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if (!$this->titleResolver || !$this->routeMatch || !$this->requestStack || !$this->baseRouteTitleResolver) {
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $titleResolver, $routeMatch, $requestStack, and $baseRouteTitleResolver arguments is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3397210', E_USER_DEPRECATED);
+      $this->titleResolver = \Drupal::service('title_resolver');
+      $this->routeMatch = \Drupal::service('current_route_match');
+      $this->requestStack = \Drupal::service('request_stack');
+      $this->baseRouteTitleResolver = \Drupal::service('base_route_title_resolver');
+    }
   }
 
   /**
