@@ -109,6 +109,13 @@ function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $fo
     '#description' => t('The maximum number of messages to keep in the database log. Requires a <a href=":cron">cron maintenance task</a>.', [':cron' => Url::fromRoute('system.status')->toString()]),
   ];
 
+  $form['dblog_logging_paused'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Logging paused'),
+    '#default_value' => \Drupal::configFactory()->getEditable('dblog.settings')->get('logging_paused'),
+    '#description' => t('By selecting this checkbox you will pause logging.'),
+  ];
+
   $form['#submit'][] = 'dblog_logging_settings_submit';
 }
 
@@ -119,6 +126,7 @@ function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $fo
  */
 function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::configFactory()->getEditable('dblog.settings')->set('row_limit', $form_state->getValue('dblog_row_limit'))->save();
+  \Drupal::configFactory()->getEditable('dblog.settings')->set('logging_paused', $form_state->getValue('dblog_logging_paused'))->save();
 }
 
 /**
@@ -127,5 +135,15 @@ function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
 function dblog_views_pre_render(ViewExecutable $view) {
   if (isset($view) && ($view->storage->get('base_table') == 'watchdog')) {
     $view->element['#attached']['library'][] = 'dblog/drupal.dblog';
+  }
+}
+
+function dblog_requirements(string $phase) {
+  if ($phase == 'runtime') {
+    if (\Drupal::configFactory()
+      ->getEditable('dblog.settings')
+      ->get('logging_paused')) {
+      \Drupal::messenger()->addWarning(t('Logging is paused.'), TRUE);
+    }
   }
 }
