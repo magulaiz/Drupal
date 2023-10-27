@@ -17,3 +17,8 @@ function module_handler_test_hook_info() {
 function module_handler_test_hook($arg) {
   return $arg;
 }
+
+function module_handler_test_byref(array &$values): string {
+  $values[] = __FUNCTION__;
+  return '';
+}

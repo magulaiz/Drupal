@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations.
+ */
+
+/**
+ * Implements hook_merge().
+ */
+function module_handler_test_attr_merge(): array {
+  return [__FUNCTION__];
+}
+
+/**
+ * Implements hook_byref().
+ */
+function module_handler_test_attr_byref(array &$values): void {
+  $values[] = __FUNCTION__;
+}
