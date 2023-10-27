@@ -548,8 +548,11 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     // Despite the absence of a `height` attribute on the `<img>`, CKEditor 5
     // should generate an appropriate `height`, matching with the aspect ratio
     // of the image.
-    $ratio = $width / (int) $this->imageAttributes()['width'];
-    $expected_computed_height = (string) (int) round($ratio * (int) $this->imageAttributes()['height']);
+    $expected_computed_height = $width;
+    if (!str_ends_with($width, '%')) {
+      $ratio = $width / (int) $this->imageAttributes()['width'];
+      $expected_computed_height = (string) (int) round($ratio * (int) $this->imageAttributes()['height']);
+    }
 
     // Add image to the host body.
     $this->host->body->value = sprintf('<img data-foo="bar" alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' width="%s" />', $width);

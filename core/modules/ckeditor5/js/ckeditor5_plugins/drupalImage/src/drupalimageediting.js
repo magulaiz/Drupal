@@ -49,6 +49,26 @@ function isNumberString(value) {
 }
 
 /**
+ * Downcasts a string that may use a %-based value.
+ *
+ * @param {string} value
+ *  A string ending with `px` or `%`.
+ *
+ * @return {string}
+ *  The given value if it ends with '%', otherwise the parsed integer value.
+ *
+ * @private
+ */
+function downcastPxOrPct(value) {
+  // In one specific case, override the default behavior.
+  if (typeof value === 'string' && value.endsWith('%')) {
+    return value;
+  }
+  // This matches the upstream behavior.
+  return `${parseInt(value, 10)}`;
+}
+
+/**
  * Generates a callback that saves the entity UUID to an attribute on data
  * downcast.
  *
@@ -614,7 +634,11 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'resizedWidth',
           value: (viewElement) => {
-            return `${parseInt(viewElement.getAttribute('width'), 10)}px`;
+            // Support resizing using pixels and (the HTML 4.01-only) percentages.
+            if (isNumberString(viewElement.getAttribute('width'))) {
+              return `${parseInt(viewElement.getAttribute('width'), 10)}px`;
+            }
+            return viewElement.getAttribute('width').trim();
           },
         },
       })
@@ -627,7 +651,11 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'resizedHeight',
           value: (viewElement) => {
-            return `${parseInt(viewElement.getAttribute('height'), 10)}px`;
+            // Support resizing using pixels and (the HTML 4.01-only) percentages.
+            if (isNumberString(viewElement.getAttribute('height'))) {
+              return `${parseInt(viewElement.getAttribute('height'), 10)}px`;
+            }
+            return viewElement.getAttribute('height').trim();
           },
         },
       });
@@ -662,8 +690,13 @@ export default class DrupalImageEditing extends Plugin {
       .add(modelImageStyleToDataAttribute())
       .add(downcastBlockImageLink())
 
-      // ⚠️ Everything below this point is copy/pasted directly from https://github.com/ckeditor/ckeditor5/pull/15222, to continue to use the `width` and `height` attributes to indicate resized width and height. This is necessary since CKEditor 5 v40.0.0.
+      // ⚠️ Everything below this point is copy/pasted directly from https://github.com/ckeditor/ckeditor5/pull/15222,
+      // to continue to use the `width` and `height` attributes to indicate resized width and height. This is necessary
+      // since CKEditor 5 v40.0.0.
       // @see https://github.com/ckeditor/ckeditor5/releases/tag/v40.0.0
+      // Exceptions are:
+      // - reformatting to comply with Drupal's eslint-enforced coding standards
+      // - support for %-based image resizes
       // There is a resizedWidth so use it as a width attribute in data.
       .attributeToAttribute({
         model: {
@@ -672,7 +705,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'width',
-          value: `${parseInt(attributeValue, 10)}`,
+          value: downcastPxOrPct(attributeValue),
         }),
         converterPriority: 'high',
       })
@@ -683,7 +716,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'width',
-          value: `${parseInt(attributeValue, 10)}`,
+          value: downcastPxOrPct(attributeValue),
         }),
         converterPriority: 'high',
       })
@@ -696,7 +729,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'height',
-          value: `${parseInt(attributeValue, 10)}`,
+          value: downcastPxOrPct(attributeValue),
         }),
         converterPriority: 'high',
       })
@@ -707,7 +740,7 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue) => ({
           key: 'height',
-          value: `${parseInt(attributeValue, 10)}`,
+          value: downcastPxOrPct(attributeValue),
         }),
         converterPriority: 'high',
       })
@@ -762,6 +795,15 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue, conversionApi, data) => {
           if (data.item.hasAttribute('resizedWidth')) {
+            // TRICKY: Drupal must continue to support %-based image resizes.
+            // @see https://www.drupal.org/project/drupal/issues/3249592
+            // @see https://www.drupal.org/project/drupal/issues/3348603
+            if (data.item.getAttribute('resizedWidth').endsWith('%')) {
+              return {
+                key: 'height',
+                value: data.item.getAttribute('resizedWidth'),
+              };
+            }
             // The resizedWidth is present so calculate height from aspect ratio.
             const resizedWidth = parseInt(
               data.item.getAttribute('resizedWidth'),
@@ -791,6 +833,15 @@ export default class DrupalImageEditing extends Plugin {
         },
         view: (attributeValue, conversionApi, data) => {
           if (data.item.hasAttribute('resizedWidth')) {
+            // TRICKY: Drupal must continue to support %-based image resizes.
+            // @see https://www.drupal.org/project/drupal/issues/3249592
+            // @see https://www.drupal.org/project/drupal/issues/3348603
+            if (data.item.getAttribute('resizedWidth').endsWith('%')) {
+              return {
+                key: 'height',
+                value: data.item.getAttribute('resizedWidth'),
+              };
+            }
             // The resizedWidth is present so calculate height from aspect ratio.
             const resizedWidth = parseInt(
               data.item.getAttribute('resizedWidth'),
