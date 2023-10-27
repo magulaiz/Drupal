@@ -44,6 +44,20 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $accessManager;
 
   /**
+   * The dynamic router service.
+   *
+   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface|null
+   */
+  protected $router;
+
+  /**
+   * The inbound path processor.
+   *
+   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|null
+   */
+  protected $pathProcessor;
+
+  /**
    * Site config object.
    *
    * @var \Drupal\Core\Config\Config
@@ -63,6 +77,13 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
+
+  /**
+   * The current path service.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack|null
+   */
+  protected $currentPath;
 
   /**
    * The patch matcher service.
@@ -91,12 +112,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The title resolver service.
    * @param \Drupal\Core\Session\AccountInterface|\Drupal\Core\Config\ConfigFactoryInterface $current_user
    *   The current user object.
-   * @param \Drupal\Core\Path\PathMatcherInterface|\Drupal\Core\Controller\TitleResolverInterface $path_matcher_new
+   * @param \Drupal\Core\Path\PathMatcherInterface|\Drupal\Core\Controller\TitleResolverInterface $path_matcher
    *   The path matcher service.
    * @param \Drupal\Core\Utility\RequestGenerator|\Drupal\Core\Session\AccountInterface $request_generator
    *   The request generator.
-   * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher_old
-   *   The path matcher service.
    */
   public function __construct(
     RequestContext $context,
@@ -104,26 +123,28 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     ConfigFactoryInterface|RequestMatcherInterface $config_factory,
     TitleResolverInterface|InboundPathProcessorInterface $title_resolver,
     AccountInterface|ConfigFactoryInterface $current_user,
-    PathMatcherInterface|TitleResolverInterface $path_matcher_new,
+    PathMatcherInterface|TitleResolverInterface $path_matcher,
     RequestGenerator|AccountInterface $request_generator,
-    PathMatcherInterface $path_matcher_old = NULL,
   ) {
     $this->context = $context;
     $this->accessManager = $access_manager;
     if ($config_factory instanceof RequestMatcherInterface) {
       @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router, $path_processor, $current_path arguments is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
       @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      $this->router = $config_factory;
       $config_factory = $current_user;
-      $this->titleResolver = $path_matcher_new;
+      $this->pathProcessor = $title_resolver;
+      $this->titleResolver = $path_matcher;
       $this->currentUser = $request_generator;
       $this->requestGenerator = \Drupal::service('request_generator');
-      $this->pathMatcher = $path_matcher_old ?: \Drupal::service('path.matcher');
+      $this->currentPath = func_get_arg(7);
+      $this->pathMatcher = func_get_arg(8) ?: \Drupal::service('path.matcher');
     }
     else {
       $this->titleResolver = $title_resolver;
       $this->currentUser = $current_user;
       $this->requestGenerator = $request_generator;
-      $this->pathMatcher = $path_matcher_new;
+      $this->pathMatcher = $path_matcher;
     }
     $this->config = $config_factory->get('system.site');
   }
