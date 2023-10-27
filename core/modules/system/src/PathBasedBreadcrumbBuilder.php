@@ -8,6 +8,7 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Link;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
@@ -28,6 +29,18 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * Defines deprecated injected properties.
+   *
+   * @var array
+   */
+  protected array $deprecatedProperties = [
+    'router' => 'router',
+    'pathProcessor' => 'path_processor_manager',
+    'currentPath' => 'path.current',
+  ];
 
   /**
    * The router request context.
@@ -42,20 +55,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
-
-  /**
-   * The dynamic router service.
-   *
-   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface|null
-   */
-  protected $router;
-
-  /**
-   * The inbound path processor.
-   *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|null
-   */
-  protected $pathProcessor;
 
   /**
    * Site config object.
@@ -77,13 +76,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
-
-  /**
-   * The current path service.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack|null
-   */
-  protected $currentPath;
 
   /**
    * The patch matcher service.
@@ -131,13 +123,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     if ($config_factory instanceof RequestMatcherInterface) {
       @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router, $path_processor, $current_path arguments is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3397213', E_USER_DEPRECATED);
       @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3397213', E_USER_DEPRECATED);
-      $this->router = $config_factory;
       $config_factory = $current_user;
-      $this->pathProcessor = $title_resolver;
       $this->titleResolver = $path_matcher;
       $this->currentUser = $request_generator;
       $this->requestGenerator = \Drupal::service('request_generator');
-      $this->currentPath = func_get_arg(7);
       $this->pathMatcher = func_get_arg(8) ?: \Drupal::service('path.matcher');
     }
     else {
