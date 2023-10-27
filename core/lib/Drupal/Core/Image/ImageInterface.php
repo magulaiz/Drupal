@@ -13,7 +13,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE if the image object contains a valid image, FALSE otherwise.
    */
-  public function isValid();
+  public function isValid(): bool;
 
   /**
    * Returns the height of the image.
@@ -21,7 +21,7 @@ interface ImageInterface {
    * @return int|null
    *   The height of the image, or NULL if the image is invalid.
    */
-  public function getHeight();
+  public function getHeight(): ?int;
 
   /**
    * Returns the width of the image.
@@ -29,7 +29,7 @@ interface ImageInterface {
    * @return int|null
    *   The width of the image, or NULL if the image is invalid.
    */
-  public function getWidth();
+  public function getWidth(): ?int;
 
   /**
    * Returns the size of the image file.
@@ -37,7 +37,7 @@ interface ImageInterface {
    * @return int|null
    *   The size of the file in bytes, or NULL if the image is invalid.
    */
-  public function getFileSize();
+  public function getFileSize(): ?int;
 
   /**
    * Returns the MIME type of the image file.
@@ -46,7 +46,7 @@ interface ImageInterface {
    *   The MIME type of the image file, or an empty string if the image is
    *   invalid.
    */
-  public function getMimeType();
+  public function getMimeType(): string;
 
   /**
    * Retrieves the source path of the image file.
@@ -55,7 +55,7 @@ interface ImageInterface {
    *   The source path of the image file. An empty string if the source is
    *   not set.
    */
-  public function getSource();
+  public function getSource(): string;
 
   /**
    * Returns the image toolkit used for this image file.
@@ -63,7 +63,7 @@ interface ImageInterface {
    * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
    *   The image toolkit.
    */
-  public function getToolkit();
+  public function getToolkit(): object;
 
   /**
    * Returns the ID of the image toolkit used for this image file.
@@ -71,7 +71,7 @@ interface ImageInterface {
    * @return string
    *   The ID of the image toolkit.
    */
-  public function getToolkitId();
+  public function getToolkitId(): string;
 
   /**
    * Applies a toolkit operation to the image.
@@ -91,7 +91,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function apply($operation, array $arguments = []);
+  public function apply($operation, array $arguments = []): bool;
 
   /**
    * Closes the image and saves the changes to a file.
@@ -105,7 +105,7 @@ interface ImageInterface {
    *
    * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::save()
    */
-  public function save($destination = NULL);
+  public function save($destination = NULL): bool;
 
   /**
    * Prepares a new image, without loading it from a file.
@@ -128,7 +128,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff');
+  public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff'): bool;
 
   /**
    * Scales an image while maintaining aspect ratio.
@@ -148,7 +148,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function scale($width, $height = NULL, $upscale = FALSE);
+  public function scale($width, $height = NULL, $upscale = FALSE): bool;
 
   /**
    * Scales an image to the exact width and height given.
@@ -167,7 +167,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function scaleAndCrop($width, $height);
+  public function scaleAndCrop($width, $height): bool;
 
   /**
    * Converts an image to the format specified by the extension.
@@ -181,7 +181,7 @@ interface ImageInterface {
    *
    * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::getSupportedExtensions()
    */
-  public function convert($extension);
+  public function convert($extension): bool;
 
   /**
    * Crops an image to a rectangle specified by the given dimensions.
@@ -198,7 +198,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function crop($x, $y, $width, $height = NULL);
+  public function crop($x, $y, $width, $height = NULL): bool;
 
   /**
    * Resizes an image to the given dimensions (ignoring aspect ratio).
@@ -211,7 +211,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function resize($width, $height);
+  public function resize($width, $height): bool;
 
   /**
    * Converts an image to grayscale.
@@ -219,7 +219,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function desaturate();
+  public function desaturate(): bool;
 
   /**
    * Rotates an image by the given number of degrees.
@@ -236,6 +236,6 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function rotate($degrees, $background = NULL);
+  public function rotate($degrees, $background = NULL): bool;
 
 }

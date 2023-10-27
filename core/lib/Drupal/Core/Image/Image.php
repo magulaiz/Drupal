@@ -59,63 +59,63 @@ class Image implements ImageInterface {
   /**
    * {@inheritdoc}
    */
-  public function isValid() {
+  public function isValid(): bool {
     return $this->getToolkit()->isValid();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getHeight() {
+  public function getHeight(): ?int {
     return $this->getToolkit()->getHeight();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getWidth() {
+  public function getWidth(): ?int {
     return $this->getToolkit()->getWidth();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFileSize() {
+  public function getFileSize(): ?int {
     return $this->fileSize;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMimeType() {
+  public function getMimeType(): string {
     return $this->getToolkit()->getMimeType();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSource() {
+  public function getSource(): string {
     return $this->source;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getToolkitId() {
+  public function getToolkitId(): string {
     return $this->getToolkit()->getPluginId();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getToolkit() {
+  public function getToolkit(): object {
     return $this->toolkit;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function save($destination = NULL) {
+  public function save($destination = NULL): bool {
     // Return immediately if the image is not valid.
     if (!$this->isValid()) {
       return FALSE;
@@ -138,63 +138,63 @@ class Image implements ImageInterface {
   /**
    * {@inheritdoc}
    */
-  public function apply($operation, array $arguments = []) {
+  public function apply($operation, array $arguments = []): bool {
     return $this->getToolkit()->apply($operation, $arguments);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff') {
+  public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff'): bool {
     return $this->apply('create_new', ['width' => $width, 'height' => $height, 'extension' => $extension, 'transparent_color' => $transparent_color]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function convert($extension) {
+  public function convert($extension): bool {
     return $this->apply('convert', ['extension' => $extension]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function crop($x, $y, $width, $height = NULL) {
+  public function crop($x, $y, $width, $height = NULL): bool {
     return $this->apply('crop', ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function desaturate() {
+  public function desaturate(): bool {
     return $this->apply('desaturate', []);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function resize($width, $height) {
+  public function resize($width, $height): bool {
     return $this->apply('resize', ['width' => $width, 'height' => $height]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rotate($degrees, $background = NULL) {
+  public function rotate($degrees, $background = NULL): bool {
     return $this->apply('rotate', ['degrees' => $degrees, 'background' => $background]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function scaleAndCrop($width, $height) {
+  public function scaleAndCrop($width, $height): bool {
     return $this->apply('scale_and_crop', ['width' => $width, 'height' => $height]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function scale($width, $height = NULL, $upscale = FALSE) {
+  public function scale($width, $height = NULL, $upscale = FALSE): bool {
     return $this->apply('scale', ['width' => $width, 'height' => $height, 'upscale' => $upscale]);
   }
 
