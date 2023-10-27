@@ -113,8 +113,14 @@ stages:
   script:
     - *set-simpletest-db
     - *set-directory-settings
-    - echo "Running class ${CLASS}"
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $CLASS
+    - echo "ℹ️ Running class ${CLASS}"
+    - |
+      if [[ $CLASS == "Drupal\Tests\Change\Me" ]]; then
+        echo "⚠️ You need to change the class before running the job.";
+        exit 1;
+      else
+        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $CLASS
+      fi
 
 ################
 # Jobs
@@ -255,7 +261,7 @@ stages:
   when: manual
   variables:
     <<: *test-variables
-    CLASS: "\Drupal\Tests\Change\Me"
+    CLASS: "Drupal\Tests\Change\Me"
     CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
