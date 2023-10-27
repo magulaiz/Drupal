@@ -114,35 +114,27 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   ) {
     $this->context = $context;
     $this->accessManager = $access_manager;
-    if ($config_factory instanceof RequestMatcherInterface) {
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+    if ($config_factory instanceof RequestMatcherInterface
+      && $title_resolver instanceof InboundPathProcessorInterface
+      && $current_user instanceof ConfigFactoryInterface
+      && $path_matcher_new instanceof TitleResolverInterface
+      && $request_generator instanceof AccountInterface
+      && $current_path !== NULL
+      && $path_matcher_old !== NULL) {
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router, $path_processor, $current_path arguments and without $request_generator arguments is deprecated in drupal:10.2.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
       $config_factory = $current_user;
-    }
-    $this->config = $config_factory->get('system.site');
-    if ($title_resolver instanceof InboundPathProcessorInterface) {
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $path_processor argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
       $this->titleResolver = $path_matcher_new;
-    }
-    else {
-      $this->titleResolver = $title_resolver;
-    }
-    $this->currentUser = $current_user instanceof AccountInterface ? $current_user : $request_generator;
-    if ($request_generator instanceof AccountInterface) {
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
+      $this->currentUser = $request_generator;
       $this->requestGenerator = \Drupal::service('request_generator');
-    }
-    else {
-      $this->requestGenerator = $request_generator;
-    }
-    if ($current_path !== NULL) {
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $current_path argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3370946', E_USER_DEPRECATED);
-    }
-    if ($path_matcher_old !== NULL) {
       $this->pathMatcher = $path_matcher_old;
     }
     else {
+      $this->titleResolver = $title_resolver;
+      $this->currentUser = $current_user;
+      $this->requestGenerator = $request_generator;
       $this->pathMatcher = $path_matcher_new;
     }
+    $this->config = $config_factory->get('system.site');
   }
 
   /**
