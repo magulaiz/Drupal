@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\field_ui\Controller;
 
-use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
@@ -17,7 +16,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @internal
  */
 final class FieldConfigAddController extends ControllerBase {
-  use AjaxHelperTrait;
   /**
    * The field type plugin manager.
    *

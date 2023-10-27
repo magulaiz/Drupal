@@ -113,18 +113,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
     $this->configFactory = $config_factory;
     $this->entityFieldManager = $entity_field_manager;
     $this->controllerResolver = $controller_resolver;
-    if ($this->tempStore === NULL) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
-      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
-    if ($this->fieldTypeCategoryManager === NULL) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
-      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
-    }
-    if ($this->controllerResolver === NULL) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() without the $controller_resolver argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
-      $this->controllerResolver = \Drupal::service('controller_resolver');
-    }
   }
 
   /**
@@ -508,7 +496,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
   }
 
   /**
-   * Creates a dummy field to set in temp store in order to build the edit form.
+   * Store field information in temp store in order to build the edit form.
    */
   public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name, $translatable) {
     $field_values = [
