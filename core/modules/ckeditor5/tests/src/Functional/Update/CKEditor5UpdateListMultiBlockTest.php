@@ -7,6 +7,8 @@ namespace Drupal\Tests\ckeditor5\Functional\Update;
 use Drupal\editor\Entity\Editor;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
+// cspell:ignore multiblock
+
 /**
  * @covers ckeditor5_post_update_list_multiblock
  * @group Update
