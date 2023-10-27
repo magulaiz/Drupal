@@ -96,8 +96,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The path matcher service.
    * @param \Drupal\Core\Utility\RequestGenerator|\Drupal\Core\Session\AccountInterface $request_generator
    *   The request generator.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
-   *   The current path.
    * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher_old
    *   The path matcher service.
    */
@@ -109,7 +107,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     AccountInterface|ConfigFactoryInterface $current_user,
     PathMatcherInterface|TitleResolverInterface $path_matcher_new,
     RequestGenerator|AccountInterface $request_generator,
-    CurrentPathStack $current_path = NULL,
     PathMatcherInterface $path_matcher_old = NULL,
   ) {
     $this->context = $context;
