@@ -272,6 +272,13 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       }
     }
 
+    // Error if no users found with provided name or mail.
+    $this->logger->error('Unable to send password reset email for unrecognized username or email address %identifier.', [
+      '%identifier' => $identifier,
+    ]);
+    return new Response();
+  }
+
   /**
    * Changes a user password.
    *
