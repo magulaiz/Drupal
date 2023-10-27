@@ -2,23 +2,23 @@
 // phpcs:ignoreFile
 
 /**
- * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Plugin\CachedDiscoveryClearer' "core/lib/Drupal/Core".
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Batch\BatchStorage' "core/lib/Drupal/Core".
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The native
- *   lazy services from Symfony are now being used. Therefore, there is no need
- *   for Drupal proxy classes anymore. There is no replacement.
+ *    lazy services from Symfony are now being used. Therefore, there is no need
+ *    for Drupal proxy classes anymore. There is no replacement.
  *
  * @see https://www.drupal.org/node/3397076
  */
 
-namespace Drupal\Core\ProxyClass\Plugin {
+namespace Drupal\Core\ProxyClass\Batch {
 
     /**
-     * Provides a proxy class for \Drupal\Core\Plugin\CachedDiscoveryClearer.
+     * Provides a proxy class for \Drupal\Core\Batch\BatchStorage.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class CachedDiscoveryClearer implements \Drupal\Core\Plugin\CachedDiscoveryClearerInterface
+    class BatchStorage implements \Drupal\Core\Batch\BatchStorageInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -33,7 +33,7 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * The real proxied service, after it was lazy loaded.
          *
-         * @var \Drupal\Core\Plugin\CachedDiscoveryClearer
+         * @var \Drupal\Core\Batch\BatchStorage
          */
         protected $service;
 
@@ -76,17 +76,57 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * {@inheritdoc}
          */
-        public function addCachedDiscovery(\Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface $cached_discovery)
+        public function load($id)
         {
-            return $this->lazyLoadItself()->addCachedDiscovery($cached_discovery);
+            return $this->lazyLoadItself()->load($id);
         }
 
         /**
          * {@inheritdoc}
          */
-        public function clearCachedDefinitions()
+        public function delete($id)
         {
-            return $this->lazyLoadItself()->clearCachedDefinitions();
+            return $this->lazyLoadItself()->delete($id);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function update(array $batch)
+        {
+            return $this->lazyLoadItself()->update($batch);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function cleanup()
+        {
+            return $this->lazyLoadItself()->cleanup();
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function create(array $batch)
+        {
+            return $this->lazyLoadItself()->create($batch);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getId(): int
+        {
+            return $this->lazyLoadItself()->getId();
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function schemaDefinition()
+        {
+            return $this->lazyLoadItself()->schemaDefinition();
         }
 
     }

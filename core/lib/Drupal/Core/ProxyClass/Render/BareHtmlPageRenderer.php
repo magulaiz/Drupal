@@ -2,23 +2,23 @@
 // phpcs:ignoreFile
 
 /**
- * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Plugin\CachedDiscoveryClearer' "core/lib/Drupal/Core".
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Render\BareHtmlPageRenderer' "core/lib/Drupal/Core".
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The native
- *   lazy services from Symfony are now being used. Therefore, there is no need
- *   for Drupal proxy classes anymore. There is no replacement.
+ *     lazy services from Symfony are now being used. Therefore, there is no need
+ *     for Drupal proxy classes anymore. There is no replacement.
  *
  * @see https://www.drupal.org/node/3397076
  */
 
-namespace Drupal\Core\ProxyClass\Plugin {
+namespace Drupal\Core\ProxyClass\Render {
 
     /**
-     * Provides a proxy class for \Drupal\Core\Plugin\CachedDiscoveryClearer.
+     * Provides a proxy class for \Drupal\Core\Render\BareHtmlPageRenderer.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class CachedDiscoveryClearer implements \Drupal\Core\Plugin\CachedDiscoveryClearerInterface
+    class BareHtmlPageRenderer implements \Drupal\Core\Render\BareHtmlPageRendererInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -33,7 +33,7 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * The real proxied service, after it was lazy loaded.
          *
-         * @var \Drupal\Core\Plugin\CachedDiscoveryClearer
+         * @var \Drupal\Core\Render\BareHtmlPageRenderer
          */
         protected $service;
 
@@ -76,17 +76,10 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * {@inheritdoc}
          */
-        public function addCachedDiscovery(\Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface $cached_discovery)
+        public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = array (
+        ))
         {
-            return $this->lazyLoadItself()->addCachedDiscovery($cached_discovery);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function clearCachedDefinitions()
-        {
-            return $this->lazyLoadItself()->clearCachedDefinitions();
+            return $this->lazyLoadItself()->renderBarePage($content, $title, $page_theme_property, $page_additions);
         }
 
     }

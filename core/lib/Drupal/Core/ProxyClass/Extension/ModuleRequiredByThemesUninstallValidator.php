@@ -2,23 +2,23 @@
 // phpcs:ignoreFile
 
 /**
- * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Plugin\CachedDiscoveryClearer' "core/lib/Drupal/Core".
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator' "core/lib/Drupal/Core".
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The native
- *   lazy services from Symfony are now being used. Therefore, there is no need
- *   for Drupal proxy classes anymore. There is no replacement.
+ *     lazy services from Symfony are now being used. Therefore, there is no need
+ *     for Drupal proxy classes anymore. There is no replacement.
  *
  * @see https://www.drupal.org/node/3397076
  */
 
-namespace Drupal\Core\ProxyClass\Plugin {
+namespace Drupal\Core\ProxyClass\Extension {
 
     /**
-     * Provides a proxy class for \Drupal\Core\Plugin\CachedDiscoveryClearer.
+     * Provides a proxy class for \Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class CachedDiscoveryClearer implements \Drupal\Core\Plugin\CachedDiscoveryClearerInterface
+    class ModuleRequiredByThemesUninstallValidator implements \Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -33,7 +33,7 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * The real proxied service, after it was lazy loaded.
          *
-         * @var \Drupal\Core\Plugin\CachedDiscoveryClearer
+         * @var \Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator
          */
         protected $service;
 
@@ -76,17 +76,25 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * {@inheritdoc}
          */
-        public function addCachedDiscovery(\Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface $cached_discovery)
+        public function validate($module)
         {
-            return $this->lazyLoadItself()->addCachedDiscovery($cached_discovery);
+            return $this->lazyLoadItself()->validate($module);
         }
 
         /**
          * {@inheritdoc}
          */
-        public function clearCachedDefinitions()
+        public function validateConfigImport(string $module, \Drupal\Core\Config\StorageInterface $source_storage): array
         {
-            return $this->lazyLoadItself()->clearCachedDefinitions();
+            return $this->lazyLoadItself()->validateConfigImport($module, $source_storage);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function setStringTranslation(\Drupal\Core\StringTranslation\TranslationInterface $translation)
+        {
+            return $this->lazyLoadItself()->setStringTranslation($translation);
         }
 
     }

@@ -2,23 +2,23 @@
 // phpcs:ignoreFile
 
 /**
- * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Plugin\CachedDiscoveryClearer' "core/lib/Drupal/Core".
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser' "core/lib/Drupal/Core".
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The native
- *   lazy services from Symfony are now being used. Therefore, there is no need
- *   for Drupal proxy classes anymore. There is no replacement.
+ *     lazy services from Symfony are now being used. Therefore, there is no need
+ *     for Drupal proxy classes anymore. There is no replacement.
  *
  * @see https://www.drupal.org/node/3397076
  */
 
-namespace Drupal\Core\ProxyClass\Plugin {
+namespace Drupal\Core\ProxyClass\File\MimeType {
 
     /**
-     * Provides a proxy class for \Drupal\Core\Plugin\CachedDiscoveryClearer.
+     * Provides a proxy class for \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class CachedDiscoveryClearer implements \Drupal\Core\Plugin\CachedDiscoveryClearerInterface
+    class ExtensionMimeTypeGuesser implements \Symfony\Component\Mime\MimeTypeGuesserInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -33,7 +33,7 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * The real proxied service, after it was lazy loaded.
          *
-         * @var \Drupal\Core\Plugin\CachedDiscoveryClearer
+         * @var \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
          */
         protected $service;
 
@@ -76,17 +76,25 @@ namespace Drupal\Core\ProxyClass\Plugin {
         /**
          * {@inheritdoc}
          */
-        public function addCachedDiscovery(\Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface $cached_discovery)
+        public function guessMimeType($path): ?string
         {
-            return $this->lazyLoadItself()->addCachedDiscovery($cached_discovery);
+            return $this->lazyLoadItself()->guessMimeType($path);
         }
 
         /**
          * {@inheritdoc}
          */
-        public function clearCachedDefinitions()
+        public function setMapping(?array $mapping = NULL)
         {
-            return $this->lazyLoadItself()->clearCachedDefinitions();
+            return $this->lazyLoadItself()->setMapping($mapping);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function isGuesserSupported(): bool
+        {
+            return $this->lazyLoadItself()->isGuesserSupported();
         }
 
     }
