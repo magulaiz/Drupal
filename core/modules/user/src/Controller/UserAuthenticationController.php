@@ -307,15 +307,12 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $account = reset($users);
     if ($account && $account->id()) {
       if ($this->userIsBlocked($account->getAccountName())) {
-        $this->logger->error('Unable to send password reset email for blocked or not yet activated user %identifier.', [
+        $this->logger->error('Unable to change password for blocked or not yet activated user %identifier.', [
           '%identifier' => $identifier,
         ]);
         return new Response();
       }
 
-      if (!$account->isAuthenticated()) {
-        throw new BadRequestHttpException('Authentication is required to change your password.');
-      }
       // Set existing password.
       $current_pass = trim($credentials['current_pass']);
       $new_pass = trim($credentials['pass']);
