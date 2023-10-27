@@ -4,6 +4,7 @@ namespace Drupal\BuildTests\Composer\Component;
 
 use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Demonstrate that the Component generator responds to release tagging.
@@ -49,7 +50,7 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
 
     // Emulate the release script.
     // @see https://github.com/xjm/drupal_core_release/blob/main/tag.sh
-    $this->executeCommand("COMPOSER_ROOT_VERSION=\"$tag\" composer update --lock");
+    $this->executeCommand("COMPOSER_ROOT_VERSION=\"$tag\" composer update drupal/core*");
     $this->assertCommandSuccessful();
     $this->assertErrorOutputContains('generateComponentPackages');
 
