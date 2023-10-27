@@ -12,6 +12,7 @@ use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -271,8 +272,81 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       }
     }
 
+  /**
+   * Changes a user password.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
+   */
+  public function changePassword(Request $request) {
+    $format = $this->getRequestFormat($request);
+
+    $content = $request->getContent();
+    $credentials = $this->serializer->decode($content, $format);
+
+    // Check if a name or mail is provided.
+    if (!isset($credentials['name']) && !isset($credentials['mail'])) {
+      throw new BadRequestHttpException('Missing credentials.name or credentials.mail');
+    }
+
+    // Load by name if provided.
+    $identifier = '';
+    if (isset($credentials['name'])) {
+      $identifier = $credentials['name'];
+      $users = $this->userStorage->loadByProperties(['name' => trim($identifier)]);
+    }
+    elseif (isset($credentials['mail'])) {
+      $identifier = $credentials['mail'];
+      $users = $this->userStorage->loadByProperties(['mail' => trim($identifier)]);
+    }
+
+    /** @var \Drupal\Core\Session\AccountInterface $account */
+    $account = reset($users);
+    if ($account && $account->id()) {
+      if ($this->userIsBlocked($account->getAccountName())) {
+        $this->logger->error('Unable to send password reset email for blocked or not yet activated user %identifier.', [
+          '%identifier' => $identifier,
+        ]);
+        return new Response();
+      }
+
+      if (!$account->isAuthenticated()) {
+        throw new BadRequestHttpException('Authentication is required to change your password.');
+      }
+      // Set existing password.
+      $current_pass = trim($credentials['current_pass']);
+      $new_pass = trim($credentials['pass']);
+      /** @var \Drupal\user\UserInterface $account */
+      if (strlen($current_pass) > 0) {
+        $account->setExistingPassword($current_pass);
+      }
+      $account->setPassword($new_pass);
+      // Skip the protected user field constraint if the user came from the
+      // password recovery page.
+      $account->_skipProtectedUserFieldConstraint = $credentials['user_pass_reset'];
+      $violations = $account->validate();
+      $errorMessages = [];
+      // Iterate over the list of violations.
+      foreach ($violations as $violation) {
+        // Get the error message for the violation.
+        $errorMessage = $violation->getMessage();
+        // Add the error message to the array.
+        $errorMessages[] = $errorMessage;
+      }
+      if ($errorMessages) {
+        return new JsonResponse(['errors' => $errorMessages], 400);
+      }
+      else {
+        $account->save();
+        return new Response();
+      }
+    }
+
     // Error if no users found with provided name or mail.
-    $this->logger->error('Unable to send password reset email for unrecognized username or email address %identifier.', [
+    $this->logger->error('Unable to change password for unrecognized username or email address %identifier.', [
       '%identifier' => $identifier,
     ]);
     return new Response();
