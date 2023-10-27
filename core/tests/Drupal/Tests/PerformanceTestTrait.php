@@ -250,7 +250,7 @@ trait PerformanceTestTrait {
       }
     }
     if ($first_response_timestamp === NULL) {
-      dump($message);
+      dump($messages);
     }
 
     // @todo: get commit hash from an environment variable and add this as an
