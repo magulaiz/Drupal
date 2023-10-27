@@ -2550,6 +2550,9 @@ function hook_validation_constraint_alter(array &$definitions) {
  * used in exceptional cases. This would make the class dependent on the
  * expensive service and all the expensive service's dependencies.
  *
+ * Making the expensive service lazy means that the class is only dependent on
+ * the lazy ghost object, and not on all the dependencies of the lazy service.
+ *
  * To define a service as lazy, add @code lazy: true @endcode to the service
  * definition.
  *
