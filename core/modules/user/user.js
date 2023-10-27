@@ -222,6 +222,14 @@
             }
             // Update the strength indication text.
             password.$strengthTextWrapper.html(result.indicatorText);
+
+            // Check the value in the confirm input and show results.
+            if ($confirmInput[0].value) {
+              passwordCheckMatch($confirmInput[0].value);
+              $passwordConfirmMessage[0].style.visibility = 'visible';
+            } else {
+              $passwordConfirmMessage[0].style.visibility = 'hidden';
+            }
             // Adjust the length of the strength indicator.
             if (result.strength > -30) {
               password.$strengthBar[0].style.width = `${result.strength}%`;
@@ -245,6 +253,7 @@
 
         // Monitor input events.
         $mainInput.on('input', passwordCheck);
+        $confirmInput.on('input', passwordCheck);
       });
     },
   };
