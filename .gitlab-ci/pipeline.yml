@@ -264,6 +264,6 @@ stages:
     CONCURRENCY: "$CONCURRENCY"
     REPEAT_TEST_CLASS:
       value: 'Drupal\Tests\Change\Me'
-      description: "Change this value to an existing class to run a test repeated times just for that class. ie: Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest."
+      description: 'Change this value to an existing class to run a test repeated times just for that class. ie: Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest.'
   services:
     - <<: *with-database
