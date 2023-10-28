@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @coversDefaultClass \Drupal\Component\ProxyBuilder\ProxyBuilder
  * @group proxy_builder
+ * @group legacy
  */
 class ProxyBuilderTest extends TestCase {
 

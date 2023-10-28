@@ -12,6 +12,12 @@ use Symfony\Component\Console\Input\InputInterface;
  *
  * @see lazy_services
  * @see core/scripts/generate-proxy.sh
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The native
+ *   lazy services from Symfony are now being used. Therefore, there is no need
+ *   for Drupal proxy classes anymore. There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3397076
  */
 class GenerateProxyClassApplication extends Application {
 

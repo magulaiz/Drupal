@@ -2539,24 +2539,24 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Lazy services overview
  *
  * A service can be declared as lazy in order to improve performance. Classes
- * that inject a lazy service receive a proxy class instead, and when a method
- * on the lazy service is called, the proxy class gets the service from the
- * container and forwards the method call. This means that the lazy service is
+ * that inject a lazy service receive a lazy ghost object with the same
+ * signature of the class representing the service instead. A lazy ghost object
+ * is an object that is created empty and that is able to initialize itself when
+ * being accessed for the first time. This means that the lazy service is
  * only instantiated when it is needed.
  *
  * This is useful because some classes may inject a service which is expensive
  * to instantiate (because it has multiple dependencies of its own), but is only
  * used in exceptional cases. This would make the class dependent on the
- * expensive service and all of the expensive service's dependencies.
+ * expensive service and all the expensive service's dependencies.
  *
  * Making the expensive service lazy means that the class is only dependent on
- * the proxy service, and not on all the dependencies of the lazy service.
+ * the lazy ghost object, and not on all the dependencies of the lazy service.
  *
  * To define a service as lazy, add @code lazy: true @endcode to the service
- * definition, and use the @code core/scripts/generate-proxy.sh @endcode script
- * to generate the proxy class.
+ * definition.
  *
- * @see core/scripts/generate-proxy.sh
+ * @see https://symfony.com/doc/current/service_container/lazy_services.html
  */
 
 /**
