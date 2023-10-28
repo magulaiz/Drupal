@@ -17,6 +17,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Tests the Field UI "Manage display" and "Manage form display" screens.
  *
  * @group field_ui
+ * @group #slow
  */
 class ManageDisplayTest extends BrowserTestBase {
 
@@ -245,12 +246,12 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->assertOrderInPage(['RSS', 'Teaser']);
 
     $edit = [
-      'label' => 'Breezer',
+      'label' => 'Breezier',
     ];
     $this->drupalGet('admin/structure/display-modes/view/manage/node.teaser');
     $this->submitForm($edit, 'Save');
 
-    $this->assertOrderInPage(['Breezer', 'RSS']);
+    $this->assertOrderInPage(['Breezier', 'RSS']);
   }
 
   /**
