@@ -175,6 +175,8 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
       // The property path of this data object is the parent's path appended
       // by this object's name.
       $prefix = $this->parent->getPropertyPath();
+      // Variables in double quotes used to leverage fast string concatenation.
+      // In PHP 7+ concatenation with variable inside string is the fastest.
       return $prefix !== '' ? "{$prefix}.{$this->name}" : $this->name;
     }
     // If no parent is set, this is the root of the data tree. Thus the property
