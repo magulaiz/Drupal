@@ -4,13 +4,14 @@ namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\ComputedFieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 
 /**
  * Represents a configurable entity path field.
  */
-class PathFieldItemList extends FieldItemList {
+class PathFieldItemList extends FieldItemList implements \IteratorAggregate, ComputedFieldItemListInterface {
 
   use ComputedItemListTrait;
 

@@ -107,6 +107,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'config:block.block.olivero_primary_admin_actions',
       'config:block.block.olivero_page_title',
       'node_view',
+      'render_cache_form',
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
       'config:filter.format.basic_html',
@@ -146,6 +147,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'config:block.block.olivero_primary_admin_actions',
       'config:block.block.olivero_page_title',
       'node_view',
+      'render_cache_form',
       'node:' . $node_2->id(),
       'user:' . $author_2->id(),
       'config:filter.format.full_html',
@@ -160,6 +162,9 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // 'user.permissions' cache context for anonymous users.
       'config:user.role.anonymous',
     ]);
+
+    $node_1->__sleep();
+    $node_2->__sleep();
   }
 
 }
