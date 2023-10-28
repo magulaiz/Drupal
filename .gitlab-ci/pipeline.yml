@@ -259,7 +259,6 @@ stages:
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-repeat-class-test, *default-job-settings ]
-  parallel: 20
   when: manual
   variables:
     <<: *test-variables
