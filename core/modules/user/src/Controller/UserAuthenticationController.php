@@ -242,6 +242,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
 
     // Load by name if provided.
     $identifier = '';
+    $users = NULL;
     if (isset($credentials['name'])) {
       $identifier = $credentials['name'];
       $users = $this->userStorage->loadByProperties(['name' => trim($identifier)]);
