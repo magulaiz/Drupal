@@ -176,7 +176,7 @@ for FILE in $FILES; do
     CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" ]]; then
+  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" || $FILE == "core/.cspell.json" ]] || grep -q cspell $FILE; then
     CSPELL_DICTIONARY_FILE_CHANGED=1;
   fi
 done
@@ -217,8 +217,16 @@ fi
 
 # Check all files for spelling in one go for better performance.
 if [[ $CSPELL_DICTIONARY_FILE_CHANGED == "1" ]] ; then
-  printf "\nRunning spellcheck on *all* files.\n"
+  printf "\nRebuilding the dictionary.\n"
   yarn run -s spellcheck:core --no-must-find-files --no-progress
+  CHANGED=$($GIT ls-files --other --modified --exclude-standard --exclude=vendor misc/cspell/dictionary.txt)
+  if [[ "$CHANGED" == "" ]]; then
+    printf "\nRunning spellcheck on *all* files.\n"
+    yarn run -s spellcheck:core --no-must-find-files --no-progress
+  else
+    printf "\nThe dictionary changed.\n"
+    false
+  fi
 else
   # Check all files for spelling in one go for better performance. We pipe the
   # list files in so we obey the globs set on the spellcheck:core command in
