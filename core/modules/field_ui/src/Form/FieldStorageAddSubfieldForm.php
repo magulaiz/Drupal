@@ -47,61 +47,30 @@ class FieldStorageAddSubfieldForm extends FormBase {
   protected $bundle;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypePluginManager;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a new FieldStorageAddForm object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypePluginManager
    *   The field type plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   (optional) The entity field manager.
-   * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
+   * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
-   * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
+   * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface $fieldTypeCategoryManager
    *   The field type category plugin manager.
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
-    FieldTypePluginManagerInterface $field_type_plugin_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected FieldTypePluginManagerInterface $fieldTypePluginManager,
     ConfigFactoryInterface $config_factory,
-    EntityFieldManagerInterface $entity_field_manager,
-    protected ?PrivateTempStore $tempStore = NULL,
-    protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected PrivateTempStore $tempStore,
+    protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
   ) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
-    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**

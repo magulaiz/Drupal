@@ -17,7 +17,10 @@ class OpenModalDialogWithUrl implements CommandInterface {
    * @param array $settings
    *   The dialog settings.
    */
-  public function __construct(protected string $url, protected array $settings) {}
+  public function __construct(
+    protected string $url,
+    protected array $settings
+  ) {}
 
   /**
    * {@inheritdoc}
