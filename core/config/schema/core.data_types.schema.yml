@@ -120,6 +120,8 @@ date_format:
   label: 'Date format'
   translatable: true
   translation context: 'PHP date format'
+  constraints:
+    NotNull: {}
 
 # HTML color value.
 color_hex:
@@ -534,6 +536,8 @@ core_date_format_pattern.0:
 core_date_format_pattern.1:
   type: string
   label: 'Date format'
+  constraints:
+    NotNull: {}
 
 # Generic field settings schemas.
 
