@@ -52,6 +52,7 @@ class AttributeLegacyTest extends UnitTestCase {
         string $name,
         private array $value,
       ) {
+        // @phpstan-ignore-next-line
         parent::__construct($name);
       }
 
