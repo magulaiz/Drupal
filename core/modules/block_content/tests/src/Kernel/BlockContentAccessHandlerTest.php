@@ -59,7 +59,6 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('block_content');
@@ -92,8 +91,8 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
     ])->save();
 
     $this->role = Role::create([
-      'id' => 'roly',
-      'label' => 'roly poly',
+      'id' => 'test',
+      'label' => 'test role',
     ]);
     $this->role->save();
     $this->accessControlHandler = new BlockContentAccessControlHandler(\Drupal::entityTypeManager()->getDefinition('block_content'), \Drupal::service('event_dispatcher'));

@@ -526,7 +526,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for testGet().
    *
-   * @returns
+   * @return array
    *   - Expected output from get().
    *   - Field name parameter to get().
    *   - Language code for $activeLanguage.
@@ -573,12 +573,10 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
     // Poke in activeLangcode.
     $ref_langcode = new \ReflectionProperty($mock_base, 'activeLangcode');
-    $ref_langcode->setAccessible(TRUE);
     $ref_langcode->setValue($mock_base, $active_langcode);
 
     // Poke in fields.
     $ref_fields = new \ReflectionProperty($mock_base, 'fields');
-    $ref_fields->setAccessible(TRUE);
     $ref_fields->setValue($mock_base, $fields);
 
     // Exercise get().
@@ -588,7 +586,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for testGetFields().
    *
-   * @returns array
+   * @return array
    *   - Expected output from getFields().
    *   - $include_computed value to pass to getFields().
    *   - Value to mock from all field definitions for isComputed().
