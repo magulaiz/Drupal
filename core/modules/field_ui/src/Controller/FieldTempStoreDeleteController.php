@@ -40,10 +40,6 @@ final class FieldTempStoreDeleteController extends ControllerBase {
     FieldTypePluginManagerInterface $field_type_plugin_manager,
   ) {
     $this->fieldTypePluginManager = $field_type_plugin_manager;
-    if ($this->tempStore === NULL) {
-      @trigger_error('Calling FieldTempStoreController::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
-      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
   }
 
   /**
