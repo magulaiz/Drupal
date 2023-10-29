@@ -35,6 +35,8 @@ node.type.*:
     preview_mode:
       type: integer
       label: 'Preview before submitting'
+      constraints:
+        Choice: [0, 1, 2]
     display_submitted:
       type: boolean
       label: 'Display setting for author and date Submitted by post information'
