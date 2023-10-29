@@ -84,4 +84,12 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function setWeight($weight);
 
+  /**
+   * Whether the term has a parent.
+   *
+   * @return bool
+   *   True or false.
+   */
+  public function hasParent(): bool;
+
 }

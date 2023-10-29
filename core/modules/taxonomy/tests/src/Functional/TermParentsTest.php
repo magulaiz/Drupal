@@ -70,12 +70,14 @@ class TermParentsTest extends BrowserTestBase {
     $term_1 = $this->submitAddTermForm('Test term 1');
     $expected = [['target_id' => 0]];
     $this->assertEquals($expected, $term_1->get('parent')->getValue());
+    $this->assertFalse($term_1->hasParent());
 
     // Explicitly selecting <root> should have the same effect as not selecting
     // anything.
     $page->selectFieldOption('Parent terms', '<root>');
     $term_2 = $this->submitAddTermForm('Test term 2');
     $this->assertEquals($expected, $term_2->get('parent')->getValue());
+    $this->assertFalse($term_2->hasParent());
 
     // Create two terms with the previously created ones as parents,
     // respectively.
@@ -83,10 +85,12 @@ class TermParentsTest extends BrowserTestBase {
     $term_3 = $this->submitAddTermForm('Test term 3');
     $expected = [['target_id' => $term_1->id()]];
     $this->assertEquals($expected, $term_3->get('parent')->getValue());
+    $this->assertTrue($term_3->hasParent());
     $page->selectFieldOption('Parent terms', 'Test term 2');
     $term_4 = $this->submitAddTermForm('Test term 4');
     $expected = [['target_id' => $term_2->id()]];
     $this->assertEquals($expected, $term_4->get('parent')->getValue());
+    $this->assertTrue($term_4->hasParent());
 
     // Create a term with term 3 as parent.
     $page->selectFieldOption('Parent terms', '-Test term 3');

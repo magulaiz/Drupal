@@ -279,4 +279,11 @@ class Term extends EditorialContentEntityBase implements TermInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasParent(): bool {
+    return !empty($this->parent->target_id);
+  }
+
 }
