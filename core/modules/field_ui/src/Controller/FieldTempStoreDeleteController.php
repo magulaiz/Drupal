@@ -8,7 +8,6 @@ use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\field_ui\Form\FieldStorageAddForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,28 +18,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 final class FieldTempStoreDeleteController extends ControllerBase {
+
   use AjaxHelperTrait;
-  /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected FieldTypePluginManagerInterface $fieldTypePluginManager;
 
   /**
    * FieldTempStorageController constructor.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
-   *   The field type plugin manager.
    */
   public function __construct(
     protected PrivateTempStore $tempStore,
-    FieldTypePluginManagerInterface $field_type_plugin_manager,
-  ) {
-    $this->fieldTypePluginManager = $field_type_plugin_manager;
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -48,7 +37,6 @@ final class FieldTempStoreDeleteController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('tempstore.private')->get('field_ui'),
-      $container->get('plugin.manager.field.field_type'),
     );
   }
 

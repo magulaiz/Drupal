@@ -10,7 +10,6 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
@@ -30,14 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddSubfieldForm extends FormBase {
-  use AjaxHelperTrait;
 
-  /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
+  use AjaxHelperTrait;
 
   /**
    * The name of the entity type.
@@ -96,8 +89,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
    *   The private tempstore.
    * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
    *   The field type category plugin manager.
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -106,13 +97,11 @@ class FieldStorageAddSubfieldForm extends FormBase {
     EntityFieldManagerInterface $entity_field_manager,
     protected ?PrivateTempStore $tempStore = NULL,
     protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL,
-    ?ControllerResolverInterface $controller_resolver = NULL
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
     $this->entityFieldManager = $entity_field_manager;
-    $this->controllerResolver = $controller_resolver;
   }
 
   /**
@@ -133,7 +122,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
       $container->get('entity_field.manager'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
-      $container->get('controller_resolver'),
     );
   }
 
