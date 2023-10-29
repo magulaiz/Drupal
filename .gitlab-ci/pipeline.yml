@@ -115,11 +115,11 @@ stages:
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  parallel: 7
+  parallel: 10
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "$CONCURRENCY"
+    CONCURRENCY: 16
   services:
     - <<: *with-database
 
