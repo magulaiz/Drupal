@@ -479,7 +479,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
     ];
 
     try {
-      $field_storage_entity = \Drupal::entityTypeManager()->getStorage('field_storage_config')->create($field_storage_values);
+      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('There was a problem creating field %label: @message'));
