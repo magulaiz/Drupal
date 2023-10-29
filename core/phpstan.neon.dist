@@ -41,6 +41,6 @@ parameters:
     - "#^Class .* extends @internal class#"
 
     # Ignore Attribute deprecation errors while conversion happening.
-    - "#Instantiation of deprecated class Drupal\\Core\\Template\\Attribute#"
-    - "#Return type of method .* has typehint with deprecated class Drupal\\Core\\Template\\Attribute#"
-    - "#Fetching class constant class of deprecated class Drupal\\Core\\Template\\Attribute.*#"
+    - "#Instantiation of deprecated class Drupal.Core.Template.Attribute#"
+    - "#Return type of method .* has typehint with deprecated class Drupal.Core.Template.Attribute#"
+    - "#Fetching class constant class of deprecated class Drupal.Core.Template.Attribute.*#"
