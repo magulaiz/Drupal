@@ -61,8 +61,8 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
    *   An array containing the following message parameters:
    *   - '@original_dynamic_type': original dynamic type
    *   - '@resolved_dynamic_type': resolved dynamic type
-   *   - '@condition_property_path': (relative) property path of the condition
-   *   - '@condition_property_value': value of the condition
+   *   - '@dynamic_type_property_path': (relative) property path of the condition
+   *   - '@dynamic_type_property_value': value of the condition
    *
    * @todo Figure out how to share this with ValidKeysConstraintValidator. Trait? New utility class? Or maybe Mapping itself?
    */

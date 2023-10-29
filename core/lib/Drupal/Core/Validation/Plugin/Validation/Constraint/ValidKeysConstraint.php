@@ -28,7 +28,7 @@ class ValidKeysConstraint extends Constraint {
    *
    * @var string
    */
-  public string $dynamicInvalidKeyMessage = "'@key' is an unknown key because @condition_property_path is @condition_property_value (see config schema type @resolved_dynamic_type).";
+  public string $dynamicInvalidKeyMessage = "'@key' is an unknown key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * The error message if the array being validated is a list.
