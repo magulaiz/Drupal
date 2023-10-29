@@ -244,6 +244,7 @@ class WorkspaceManager implements WorkspaceManagerInterface, CronInterface {
    */
   public function run() {
     $this->purgeDeletedWorkspacesBatch();
+    return TRUE;
   }
 
 }
