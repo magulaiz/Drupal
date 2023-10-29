@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
@@ -53,8 +52,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypePluginManager
    *   The field type plugin manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   (optional) The entity field manager.
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
@@ -65,13 +62,10 @@ class FieldStorageAddSubfieldForm extends FormBase {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
-    ConfigFactoryInterface $config_factory,
     protected EntityFieldManagerInterface $entityFieldManager,
     protected PrivateTempStore $tempStore,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
-  ) {
-    $this->configFactory = $config_factory;
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -87,7 +81,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('config.factory'),
       $container->get('entity_field.manager'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
@@ -289,7 +282,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
       $field_name = $form_state->getValue('field_name');
 
       // Add the field prefix.
-      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
+      $field_name = $this->config('field_ui.settings')->get('field_prefix') . $field_name;
       $form_state->setValueForElement($form['field_name'], $field_name);
     }
   }
@@ -309,7 +302,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    */
   public function fieldNameExists($value, $element, FormStateInterface $form_state) {
     // Add the field prefix.
-    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
+    $field_name = $this->config('field_ui.settings')->get('field_prefix') . $value;
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     return isset($field_storage_definitions[$field_name]);
