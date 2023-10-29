@@ -97,12 +97,15 @@ class TermParentsTest extends BrowserTestBase {
     $term_5 = $this->submitAddTermForm('Test term 5');
     $expected = [['target_id' => $term_3->id()]];
     $this->assertEquals($expected, $term_5->get('parent')->getValue());
+    $this->assertTrue($term_5->hasParent());
 
-    // Create a term with multiple parents.
-    $page->selectFieldOption('Parent terms', '--Test term 5');
+    // Create a term with multiple parents, including root.
+    $page->selectFieldOption('Parent terms', '<root>');
+    $page->selectFieldOption('Parent terms', '--Test term 5', TRUE);
     $page->selectFieldOption('Parent terms', '-Test term 4', TRUE);
     $term_6 = $this->submitAddTermForm('Test term 6');
     $expected = [
+      ['target_id' => 0],
       ['target_id' => $term_5->id()],
       ['target_id' => $term_4->id()],
     ];

@@ -283,7 +283,8 @@ class Term extends EditorialContentEntityBase implements TermInterface {
    * {@inheritdoc}
    */
   public function hasParent(): bool {
-    return !empty($this->parent->target_id);
+    $tids = array_column($this->parent->getValue(), 'target_id');
+    return !empty(array_filter($tids));
   }
 
 }
