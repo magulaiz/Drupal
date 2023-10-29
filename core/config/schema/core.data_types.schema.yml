@@ -513,7 +513,7 @@ core.date_format.*:
   label: 'Date format'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: required_label
