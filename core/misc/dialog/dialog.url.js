@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides a simple method to open a URL in a modal dialog.
+ */
+
 (function (Drupal) {
   /**
    * Ajax command to open URL in a modal dialog.
@@ -9,7 +14,7 @@
    * @param {string} [status]
    *   The XHR status code.
    */
-  Drupal.AjaxCommands.prototype.fieldUiOpenModalWithUrl = function (
+  Drupal.AjaxCommands.prototype.openDialogWithUrl = function (
     ajax,
     response,
     status,

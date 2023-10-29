@@ -27,7 +27,7 @@ class OpenModalDialogWithUrl implements CommandInterface {
    */
   public function render() {
     return [
-      'command' => 'fieldUiOpenModalWithUrl',
+      'command' => 'openDialogWithUrl',
       'url' => $this->url,
       'dialogOptions' => $this->settings,
     ];
