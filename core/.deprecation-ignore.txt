@@ -29,7 +29,7 @@
 # Drupal 11.
 %Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
 %Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
-%\\Drupal\\Core\\Template\\Attribute.* is deprecated in drupal:10\.1\.0 and is removed from drupal:11\.0\.0\. Use \\Drupal\\Component\\HtmlAttribute\\HtmlAttributeCollection instead\. See https:\/\/www\.drupal\.org\/node\/3070485%
+%\\Drupal\\Core\\Template\\Attribute.* is deprecated in drupal:.* and is removed from drupal:11\.0\.0\. Use \\Drupal\\Component\\HtmlAttribute\\HtmlAttributeCollection instead\. See https:\/\/www\.drupal\.org\/node\/3070485%
 
 # PHPUnit 9.
 %"PHPUnit\\Framework\\TestListener".*is deprecated%
