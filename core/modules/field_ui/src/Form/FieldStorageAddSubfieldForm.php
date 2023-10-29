@@ -3,7 +3,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\field_ui\Ajax\OpenModalDialogWithUrl;
+use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;

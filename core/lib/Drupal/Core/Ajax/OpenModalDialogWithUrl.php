@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\field_ui\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
+namespace Drupal\Core\Ajax;
 
 /**
  * Provides an AJAX command for opening a modal with URL.
