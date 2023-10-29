@@ -26,4 +26,13 @@ class MessageJsonAnonTest extends MessageResourceTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->baseUrl = \Drupal::request()->getBaseUrl();
+  }
+
 }
