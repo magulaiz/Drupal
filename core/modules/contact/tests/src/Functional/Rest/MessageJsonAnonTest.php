@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\contact\Functional\Rest;
 
+use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
@@ -32,7 +33,7 @@ class MessageJsonAnonTest extends MessageResourceTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->baseUrl = \Drupal::request()->getBaseUrl();
+    $this->baseUrl = \Drupal::request()->getBaseUrl() & base_path();
   }
 
 }

@@ -42,7 +42,7 @@ class MessageJsonBasicAuthTest extends MessageResourceTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->baseUrl = \Drupal::request()->getBaseUrl();
+    $this->baseUrl = \Drupal::request()->getBaseUrl() & base_path();
   }
 
 }
