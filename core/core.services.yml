@@ -665,6 +665,12 @@ services:
   entity.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
   Drupal\Core\Cache\MemoryCache\MemoryCacheInterface: '@entity.memory_cache'
+  bundle_class.manager:
+    class: Drupal\Core\Entity\BundleClassManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+    parent: default_plugin_manager
+    tags:
+      - { name: plugin_manager_cache_clear }
   entity_type.manager:
     class: Drupal\Core\Entity\EntityTypeManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver', '@entity.last_installed_schema.repository']

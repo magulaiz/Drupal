@@ -1175,6 +1175,26 @@ function system_entity_type_build(array &$entity_types) {
 }
 
 /**
+ * Implements hook_entity_bundle_info_alter().
+ *
+ * @todo move this to right place.
+ */
+function system_entity_bundle_info_alter(&$bundles): void {
+  /** @var \Drupal\Core\Entity\BundleClassManager $manager */
+  $manager = \Drupal::service('bundle_class.manager');
+  foreach ($manager->getDefinitions() as $definition) {
+    $entityType = $definition['entityType'];
+    $bundle = $definition['bundle'];
+    if (isset($bundles[$entityType][$bundle])) {
+      $bundles[$entityType][$bundle]['class'] = $definition['class'];
+      $bundles[$entityType][$bundle]['label'] = $definition['label']
+        ?? $bundles[$entityType][$bundle]['label']
+        ?? $definition['class'];
+    }
+  }
+}
+
+/**
  * Implements hook_block_view_BASE_BLOCK_ID_alter().
  */
 function system_block_view_system_main_block_alter(array &$build, BlockPluginInterface $block) {
