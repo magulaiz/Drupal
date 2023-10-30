@@ -24,6 +24,8 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  *   providing responsive tables.  Defaults to TRUE.
  * - #sticky: Indicates whether to add the drupal.tableheader library that makes
  *   table headers always visible at the top of the page. Defaults to FALSE.
+ * - #footer: Table footer rows, in the same format as the rows variable.
+ * - #caption: A localized string for the <caption> tag.
  *
  * Usage example:
  * @code
