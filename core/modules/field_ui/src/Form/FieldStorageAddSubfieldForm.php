@@ -440,8 +440,21 @@ class FieldStorageAddSubfieldForm extends FormBase {
 
   /**
    * Store field information in temp store in order to build the edit form.
+   *
+   * @param string $entity_type
+   *   The name of the entity type.
+   * @param string $field_storage_type
+   *   The machine name of the field storage.
+   * @param string $bundle
+   *   The entity bundle.
+   * @param string $field_label
+   *   The label of the field.
+   * @param string $field_machine_name
+   *   The machine name of the field.
+   * @param bool $translatable
+   *   TRUE if the field is translatable.
    */
-  public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name, $translatable): void {
+  public function setTempStore(string $entity_type, string $field_storage_type, string $bundle, string $field_label, string $field_machine_name, bool $translatable): void {
     $field_values = [
       'entity_type' => $entity_type,
       'bundle' => $bundle,
