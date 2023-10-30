@@ -161,8 +161,8 @@ class FieldStorageAddSubfieldForm extends FormBase {
     ];
 
     // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
-    $form['group_field_options_wrapper'] = [
-      '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
+    $form['field_options_wrapper'] = [
+      '#prefix' => '<div id="field_options_wrapper" class="field_options_wrapper">',
       '#suffix' => '</div>',
     ];
     // Set the selected field to the form state by checking
@@ -170,12 +170,12 @@ class FieldStorageAddSubfieldForm extends FormBase {
     if (isset($selected_field_type)) {
       $group_display = $field_type_options_radios[$selected_field_type]['#data']['#group_display'];
       if ($group_display) {
-        $form['group_field_options_wrapper']['label'] = [
+        $form['field_options_wrapper']['label'] = [
           '#type' => 'label',
           '#title' => $this->t('Choose an option below'),
           '#required' => TRUE,
         ];
-        $form['group_field_options_wrapper']['fields'] = [
+        $form['field_options_wrapper']['fields'] = [
           '#type' => 'container',
           '#attributes' => [
             'class' => ['group-field-options'],
@@ -194,11 +194,11 @@ class FieldStorageAddSubfieldForm extends FormBase {
             // @todo Try removing id.
             '#id' => Html::getClass($option['unique_identifier']),
             '#weight' => $option['weight'],
-            '#parents' => ['group_field_options_wrapper'],
+            '#parents' => ['field_options_wrapper'],
             '#attributes' => [
               'class' => ['field-option-radio'],
               'data-once' => 'field-click-to-select',
-              'checked' => $this->getRequest()->request->get('group_field_options_wrapper') !== NULL && $this->getRequest()->request->get('group_field_options_wrapper') == $option_key,
+              'checked' => $this->getRequest()->request->get('field_options_wrapper') !== NULL && $this->getRequest()->request->get('field_options_wrapper') == $option_key,
             ],
             '#wrapper_attributes' => [
               'class' => ['js-click-to-select', 'subfield-option'],
@@ -213,7 +213,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
           $group_field_options[$option['unique_identifier']] = $radio_element;
         }
         uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
-        $form['group_field_options_wrapper']['fields'] += $group_field_options;
+        $form['field_options_wrapper']['fields'] += $group_field_options;
       }
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
@@ -273,8 +273,8 @@ class FieldStorageAddSubfieldForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Missing subtype.
-    if (!$form_state->getValue('group_field_options_wrapper') && isset($form['group_field_options_wrapper']['fields'])) {
-      $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to select a field type.'));
+    if (!$form_state->getValue('field_options_wrapper') && isset($form['field_options_wrapper']['fields'])) {
+      $form_state->setErrorByName('field_options_wrapper', $this->t('You need to select a field type.'));
     }
 
     // Field name validation.
@@ -312,7 +312,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $field_storage_type = $form_state->getValue('group_field_options_wrapper') ?? $form_state->get('field_type');
+    $field_storage_type = $form_state->getValue('field_options_wrapper') ?? $form_state->get('field_type');
     $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
     $form_state->setRedirectUrl($this->getRedirectUrl($form_state->getValue('field_name')));
   }

@@ -129,8 +129,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->clickLink('Reference');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Choose an option below');
-    $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:node']");
-    $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:user']");
+    $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:node']");
+    $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:user']");
 
     $this->assertSession()->buttonExists('Change field type')->press();
     $this->assertSession()->assertWaitOnAjaxRequest();

@@ -55,8 +55,8 @@ trait FieldUiJSTestTrait {
       $link->click();
       $this->assertSession()->assertWaitOnAjaxRequest();
 
-      if ($this->getSession()->getPage()->hasField('group_field_options_wrapper')) {
-        $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
+      if ($this->getSession()->getPage()->hasField('field_options_wrapper')) {
+        $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
       }
     }
     // If the element could not be found then it is probably in a group.
@@ -65,7 +65,7 @@ trait FieldUiJSTestTrait {
       $field_group = $this->getFieldFromGroup($field_type);
       $this->clickLink($field_group);
       $this->assertSession()->assertWaitOnAjaxRequest();
-      $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
+      $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
     }
 
     $field_label = $page->findField('label');

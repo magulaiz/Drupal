@@ -57,8 +57,8 @@ trait FieldUiTestTrait {
       $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$field_type_label']]");
       $link->click();
 
-      if ($this->getSession()->getPage()->hasField('group_field_options_wrapper')) {
-        $initial_edit['group_field_options_wrapper'] = $field_type;
+      if ($this->getSession()->getPage()->hasField('field_options_wrapper')) {
+        $initial_edit['field_options_wrapper'] = $field_type;
       }
     }
     // If the element could not be found then it is probably in a group.
@@ -66,7 +66,7 @@ trait FieldUiTestTrait {
       // Call the helper function to confirm it is in a group.
       $field_group = $this->getFieldFromGroup($field_type);
       $this->clickLink($field_group);
-      $initial_edit['group_field_options_wrapper'] = $field_type;
+      $initial_edit['field_options_wrapper'] = $field_type;
     }
     $this->submitForm($initial_edit, 'Continue');
 

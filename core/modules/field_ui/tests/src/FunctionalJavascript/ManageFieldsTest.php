@@ -193,7 +193,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Label field is required.');
     $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementExists('css', '[name="label"].error');
-    $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
+    $assert_session->elementExists('css', '[name="field_options_wrapper"].error');
     $page->fillField('label', $field_name);
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
@@ -201,7 +201,7 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementNotExists('css', '[name="label"].error');
-    $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
+    $assert_session->elementExists('css', '[name="field_options_wrapper"].error');
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Change field type');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -223,7 +223,7 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
     $text_plain->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
+    $this->assertTrue($assert_session->elementExists('css', '[name="field_options_wrapper"][value="string"]')->isSelected());
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -285,7 +285,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Choose an option below');
     $this->assertNotEmpty($number_integer = $page->find('xpath', '//*[text() = "Number (integer)"]')->getParent());
     $number_integer->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="integer"]')->isSelected());
+    $this->assertTrue($assert_session->elementExists('css', '[name="field_options_wrapper"][value="integer"]')->isSelected());
 
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Change field type');

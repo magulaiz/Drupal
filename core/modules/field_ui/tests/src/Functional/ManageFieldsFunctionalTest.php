@@ -225,7 +225,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
             $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$group']]");
             $link->click();
             $this->assertSession()
-              ->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
+              ->elementExists('css', "[name='field_options_wrapper'][value='$field_type']");
           }
         }
       }
