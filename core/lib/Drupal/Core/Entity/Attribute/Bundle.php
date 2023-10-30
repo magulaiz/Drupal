@@ -21,7 +21,7 @@ class Bundle extends Plugin {
    * @param string|null $bundle
    *   (optional) The bundle ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
-   *   (optional) the bundle label.
+   *   (optional) The bundle label.
    */
   public function __construct(
     public readonly string $entityType,
