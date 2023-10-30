@@ -23,7 +23,7 @@ use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a form for the "field storage" add page.
+ * Provides a form for the "field storage" add subform.
  *
  * @internal
  */
@@ -172,7 +172,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
       if ($group_display) {
         $form['group_field_options_wrapper']['label'] = [
           '#type' => 'label',
-          '#title' => t('Choose an option below'),
+          '#title' => $this->t('Choose an option below'),
           '#required' => TRUE,
         ];
         $form['group_field_options_wrapper']['fields'] = [
@@ -300,7 +300,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * @return bool
    *   Whether or not the field machine name is taken.
    */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
+  public function fieldNameExists(string $value, array $element, FormStateInterface $form_state): bool {
     // Add the field prefix.
     $field_name = $this->config('field_ui.settings')->get('field_prefix') . $value;
 
@@ -357,7 +357,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    *
    * @see \Drupal\Core\Ajax\AjaxFormHelperTrait
    */
-  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state): AjaxResponse {
     if ($form_state->hasAnyErrors()) {
       $form['status_messages'] = [
         '#type' => 'status_messages',
@@ -384,7 +384,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An AJAX response.
    */
-  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     $response = new AjaxResponse();
     $response->addCommand(new OpenModalDialogWithUrl($this->getRedirectUrl($form_state->getValue('field_name'))->toString(), []));
     return $response;
@@ -448,7 +448,7 @@ class FieldStorageAddSubfieldForm extends FormBase {
   /**
    * Store field information in temp store in order to build the edit form.
    */
-  public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name, $translatable) {
+  public function setTempStore($entity_type, $field_storage_type, $bundle, $field_label, $field_machine_name, $translatable): void {
     $field_values = [
       'entity_type' => $entity_type,
       'bundle' => $bundle,
