@@ -534,7 +534,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     // @todo: This override should be removed once we require a version of MySQL
     // that has that bug fixed.
     try {
-      $this->connection->queryRange("SELECT $column FROM {" . $table . "}", 0, 1);
+      $this->connection->queryRange('SELECT `' . $column . '` FROM {' . $table . '}', 0, 1);
       return TRUE;
     }
     catch (Exception $e) {
