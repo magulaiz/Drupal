@@ -54,7 +54,6 @@ class TimestampItem extends FieldItemBase {
       'columns' => [
         'value' => [
           'type' => 'int',
-          'size' => 'big',
         ],
       ],
     ];
