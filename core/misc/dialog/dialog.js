@@ -68,7 +68,15 @@
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      $(window).trigger('dialog:beforecreate', [dialog, element, settings]);
+      element.dispatchEvent(
+        new CustomEvent('dialogBeforecreate', {
+          bubbles: true,
+          detail: {
+            dialog,
+            settings,
+          },
+        }),
+      );
       $element.dialog(settings);
       dialog.open = true;
 
