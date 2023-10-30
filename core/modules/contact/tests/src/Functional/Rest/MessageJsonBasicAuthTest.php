@@ -36,13 +36,4 @@ class MessageJsonBasicAuthTest extends MessageResourceTestBase {
    */
   protected static $auth = 'basic_auth';
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->baseUrl = \Drupal::request()->getBaseUrl() & base_path();
-  }
-
 }
