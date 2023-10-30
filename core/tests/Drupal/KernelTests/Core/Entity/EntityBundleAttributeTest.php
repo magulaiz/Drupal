@@ -24,7 +24,6 @@ class EntityBundleAttributeTest extends KernelTestBase {
    */
   protected static $modules = [
     'entity_test',
-    'system',
     'user',
     'bundle_attribute_test',
   ];
