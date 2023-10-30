@@ -167,7 +167,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
    */
   public function testSelectLists() : void {
     $this->drupalLogin($this->rootUser);
-    $page = $this->getSession()->getpage();
+    $page = $this->getSession()->getPage();
 
     // Visit the edit form to test the menu link.
     $this->drupalGet('admin/structure/menu/link/user.page/edit');
@@ -189,7 +189,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
     $link_3 = $this->addMenuLink($link_1->getPluginId(), '/', $custom_menu->id());
     $link_4 = $this->addMenuLink($link_2->getPluginId(), '/', $custom_menu->id());
     $this->drupalGet('admin/structure/menu/link/user.page/edit');
-    $this->getSession()->getPage()->findField('menu')->selectOption($custom_menu->label());
+    $page->findField('menu')->selectOption($custom_menu->label());
     $this->assertSession()->assertWaitOnAjaxRequest();
     $options = $this->assertSession()->selectExists('menu_parent')->findAll('css', 'option');
     $options = array_map(function ($item) {
