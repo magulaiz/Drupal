@@ -65,9 +65,8 @@ class KeyValueEntityStorage extends EntityStorageBase {
    *   The memory cache.
    */
   public function __construct(EntityTypeInterface $entity_type, KeyValueStoreInterface $key_value_store, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache) {
-    parent::__construct($entity_type, $memory_cache);
+    parent::__construct($entity_type, $memory_cache, $uuid_service);
     $this->keyValueStore = $key_value_store;
-    $this->uuidService = $uuid_service;
     $this->languageManager = $language_manager;
 
     // Check if the entity type supports UUIDs.
