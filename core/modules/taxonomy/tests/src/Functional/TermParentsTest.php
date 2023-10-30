@@ -110,6 +110,7 @@ class TermParentsTest extends BrowserTestBase {
       ['target_id' => $term_4->id()],
     ];
     $this->assertEquals($expected, $term_6->get('parent')->getValue());
+    $this->assertTrue($term_6->hasParent());
   }
 
   /**
