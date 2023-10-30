@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\contact\Functional\Rest;
 
-use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
