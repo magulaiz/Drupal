@@ -11,6 +11,7 @@ use Drupal\Tests\UpdatePathTestTrait;
  *
  * @group system
  * @covers \update_post_update_set_blank_fetch_url_to_null
+ * @covers \update_post_update_day_of_week
  */
 class UpdateSettingsDefaultFetchUrlUpdateTest extends UpdatePathTestBase {
 
@@ -105,6 +106,19 @@ class UpdateSettingsDefaultFetchUrlUpdateTest extends UpdatePathTestBase {
 
     $fetch_url_after = $this->config('update.settings')->get('fetch.url');
     $this->assertNull($fetch_url_after);
+  }
+
+  /**
+   * Tests update of update.settings:check.update_day.
+   */
+  public function testUpdateDay() {
+    $update_day_before = $this->config('update.settings')->get('check.update_day');
+    $this->assertNull($update_day_before);
+
+    $this->runUpdates();
+
+    $update_day_after = $this->config('update.settings')->get('check.update_day');
+    $this->assertSame('Thursday', $update_day_after);
   }
 
 }

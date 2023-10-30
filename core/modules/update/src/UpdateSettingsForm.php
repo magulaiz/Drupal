@@ -4,9 +4,9 @@ namespace Drupal\update;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure update settings for this site.
@@ -44,6 +44,46 @@ class UpdateSettingsForm extends ConfigFormBase {
         '7' => $this->t('Weekly'),
       ],
       '#description' => $this->t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
+    ];
+
+    $user = \Drupal::currentUser();
+    // Calculate the SAs time according to user's timezone.
+    $user_timezone = new \DateTimeZone($user->getTimeZone());
+
+    // Calculate the upcoming Wednesday in UTC.
+    $today = new \DateTime('now', new \DateTimeZone('UTC'));
+    $nextWednesday = $today->modify('next Wednesday');
+
+    // Set the time to 6 PM. Which is the time for SAs.
+    $nextWednesday->setTime(18, 0, 0);
+
+    // Convert to the user's timezone.
+    $nextWednesday->setTimezone($user_timezone);
+    $day_of_week = $nextWednesday->format('l');
+    $time = $nextWednesday->format('H:i');
+
+    $form['update_day_of_week'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Day of update check'),
+      '#default_value' => $config->get('check.update_day'),
+      '#options' => [
+        'Sunday' => $this->t('Sunday'),
+        'Monday' => $this->t('Monday'),
+        'Tuesday' => $this->t('Tuesday'),
+        'Wednesday' => $this->t('Wednesday'),
+        'Thursday' => $this->t('Thursday'),
+        'Friday' => $this->t('Friday'),
+        'Saturday' => $this->t('Saturday'),
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="update_check_frequency"]' => ['value' => 7],
+        ],
+      ],
+      '#description' => $this->t('Select the day you want to automatically check for new releases of your currently installed modules and themes. Drupal SAs are usually released from @time on @day_of_week.', [
+        '@time' => $time,
+        '@day_of_week' => $day_of_week,
+      ]),
     ];
 
     $form['update_check_disabled'] = [
@@ -91,6 +131,7 @@ class UpdateSettingsForm extends ConfigFormBase {
         $config
           ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
           ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
+          ->set('check.update_day', $form_state->getValue('update_day_of_week'))
           ->set('notification.emails', array_map('trim', explode("\n", trim($form_state->getValue('update_notify_emails', '')))))
           ->set('notification.threshold', $form_state->getValue('update_notification_threshold'));
         break;
@@ -112,6 +153,7 @@ class UpdateSettingsForm extends ConfigFormBase {
         return match ($key) {
         'check.disabled_extensions' => 'update_check_disabled',
           'check.interval_days' => 'update_check_frequency',
+          'check.update_day' => 'update_day_of_week',
           'notification.emails' => 'update_notify_emails',
           'notification.threshold' => 'update_notification_threshold',
           default => self::defaultMapConfigKeyToFormElementName($config_name, $key),

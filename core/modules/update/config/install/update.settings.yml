@@ -1,6 +1,7 @@
 check:
   disabled_extensions: false
   interval_days: 1
+  update_day: 'Thursday'
 fetch:
   url: ~
   max_attempts: 2
