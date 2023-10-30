@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- *
+ * Tests the form validation for allowed values.
  *
  * @group datetime
  */
@@ -56,9 +56,9 @@ class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
   }
 
   /**
-   * Test of viewing announcements by a user with appropriate permission.
+   * Tests the form validation for allowed values.
    */
-  public function testAnnounceFirstLogin() {
+  public function testAllowedValuesFormValidation() {
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_date');
     $page = $this->getSession()->getPage();
     $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
