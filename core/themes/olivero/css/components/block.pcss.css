@@ -22,8 +22,8 @@
 }
 
 #block-olivero-primary-admin-actions .button-action {
-  padding: var(--sp0-75) var(--sp);
   height: auto;
-  font-size: var(--font-size-base);
+  padding: var(--sp0-75) var(--sp);
   border-width: 0.1em;
+  font-size: var(--font-size-base);
 }
