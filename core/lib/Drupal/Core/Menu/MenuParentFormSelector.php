@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -110,10 +109,9 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
           'event' => 'change',
         ],
       ];
-      $menu = $menu_id . ':';
-      if (isset($options[$menu])) {
+      if (isset($options[$menu_id])) {
         // Only provide the default value if it is valid among the options.
-        $elements['menu'] += ['#default_value' => $menu];
+        $elements['menu'] += ['#default_value' => $menu_id];
       }
       $elements['menu_submit'] = [
         '#type' => 'submit',
@@ -142,7 +140,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $element = [
         '#type' => 'select',
         '#options' => $options,
-        '#prefix' => '<div id= "' . Html::getUniqueId('menu-parent-wrapper') . '" >',
+        '#prefix' => '<div id= "menu-parent-wrapper" >',
         '#suffix' => '</div>',
       ];
       if (!isset($options[$menu_parent])) {

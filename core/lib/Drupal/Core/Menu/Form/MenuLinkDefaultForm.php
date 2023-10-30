@@ -141,7 +141,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $default_menu_id = $this->menuLink->getMenuName();
     $default_menu = $this->entityTypeManager->getStorage('menu')->load($default_menu_id);
-    $form['menu'] = $this->menuParentSelector->menuSelectElement($default_menu_id);
+    $form += $this->menuParentSelector->menuSelectElement($form_state->getValue('menu') ?: $default_menu_id . ':');
 
     $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $menu_parent, $this->menuLink->getPluginId(), $form_state->getValue('menus') ?: [$default_menu_id => $default_menu->label()]);
     $form['menu_parent']['#title'] = $this->t('Parent link');

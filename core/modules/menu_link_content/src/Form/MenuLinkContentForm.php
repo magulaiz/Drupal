@@ -100,7 +100,7 @@ class MenuLinkContentForm extends ContentEntityForm {
       ]);
     }
     else {
-      $form['menu'] = $this->menuParentSelector->menuSelectElement($menu_id);
+      $form += $this->menuParentSelector->menuSelectElement($form_state->getValue('menu') ?: $menu_id . ':');
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default, $id, $form_state->getValue('menus') ?: [$menu_id => $menu->label()]);
     }
     $form['menu_parent']['#weight'] = 10;
