@@ -73,7 +73,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Test that other menus are available when editing existing menu link.
-    $this->assertSession()->optionExists('edit-menu-parent-menu', 'main:');
+    $this->assertSession()->optionExists('menu', 'main:');
 
     $this->drupalLogin($this->basicUser);
 
