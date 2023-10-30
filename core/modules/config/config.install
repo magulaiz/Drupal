@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Config module.
+ */
+
+/**
+ * Adds default value for the mail_notification config parameter.
+ */
+function config_update_10100() {
+  $configFactory = \Drupal::configFactory();
+  $config = $configFactory->getEditable('system.site');
+  $config->set('mail_notification', NULL)->save();
+}
