@@ -27,7 +27,7 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * - #footer: Table footer rows, in the same format as the rows variable.
  * - #caption: A localized string for the <caption> tag.
  *
-  * Usage example 1: A simple form with an additional information table which
+ * Usage example 1: A simple form with an additional information table which
  * doesn't include any other form field.
  * @code
  * // Table header.
