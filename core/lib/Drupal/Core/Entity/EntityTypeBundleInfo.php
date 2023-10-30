@@ -71,6 +71,8 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
    *   The typed data manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
+   * @param \Drupal\Core\Entity\BundleClassManager $bundle_class_manager
+   *   The bundle class manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, CacheBackendInterface $cache_backend, BundleClassManager $bundle_class_manager) {
     $this->entityTypeManager = $entity_type_manager;

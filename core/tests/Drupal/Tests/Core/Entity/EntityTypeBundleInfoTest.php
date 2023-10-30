@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Entity\BundleClassManager;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -73,6 +74,13 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
   protected $entityTypeBundleInfo;
 
   /**
+   * The bundle class manager.
+   *
+   * @var \Drupal\Core\Entity\BundleClassManager;
+   */
+  protected $bundleClassManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -84,6 +92,9 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
     $this->cacheBackend = $this->prophesize(CacheBackendInterface::class);
 
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+
+    $this->bundleClassManager = $this->prophesize(BundleClassManager::class);
+    $this->bundleClassManager->getDefinitions()->willReturn([]);
 
     $this->cacheTagsInvalidator = $this->prophesize(CacheTagsInvalidatorInterface::class);
 
@@ -101,7 +112,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
     // $container->get('typed_data_manager')->willReturn($this->typedDataManager->reveal());
     \Drupal::setContainer($container->reveal());
 
-    $this->entityTypeBundleInfo = new EntityTypeBundleInfo($this->entityTypeManager->reveal(), $this->languageManager->reveal(), $this->moduleHandler->reveal(), $this->typedDataManager->reveal(), $this->cacheBackend->reveal());
+    $this->entityTypeBundleInfo = new EntityTypeBundleInfo($this->entityTypeManager->reveal(), $this->languageManager->reveal(), $this->moduleHandler->reveal(), $this->typedDataManager->reveal(), $this->cacheBackend->reveal(), $this->bundleClassManager->reveal());
   }
 
   /**
