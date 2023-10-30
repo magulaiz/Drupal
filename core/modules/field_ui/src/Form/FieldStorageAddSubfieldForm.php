@@ -337,13 +337,6 @@ class FieldStorageAddSubfieldForm extends FormBase {
   }
 
   /**
-   * Callback for displaying fields after a group has been selected.
-   */
-  public function showFieldsCallback($form, FormStateInterface &$form_state) {
-    return $form['group_field_options_wrapper'];
-  }
-
-  /**
    * Submit form #ajax callback.
    *
    * @param array $form
