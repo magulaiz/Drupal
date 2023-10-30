@@ -160,9 +160,8 @@ class FieldStorageAddSubfieldForm extends FormBase {
       '#required' => TRUE,
     ];
 
-    // @todo Maybe rename this since the 'Continue' button lives in here now and its not just group fields.
     $form['field_options_wrapper'] = [
-      '#prefix' => '<div id="field_options_wrapper" class="field_options_wrapper">',
+      '#prefix' => '<div id="field-options-wrapper" class="field-options-wrapper">',
       '#suffix' => '</div>',
     ];
     // Set the selected field to the form state by checking
