@@ -7,7 +7,6 @@ use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\field_ui\Controller\FieldConfigAddController;
 use Drupal\field_ui\Controller\FieldTempStoreDeleteController;
-use Drupal\field_ui\Form\FieldStorageAddSubfieldForm;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
