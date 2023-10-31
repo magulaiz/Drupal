@@ -11,5 +11,8 @@
 function config_update_10100() {
   $configFactory = \Drupal::configFactory();
   $config = $configFactory->getEditable('system.site');
-  $config->set('mail_notification', NULL)->save();
+  // If the value doesn't exist it always returns NULL.
+  if (is_null($config->get('mail_notification'))) {
+    $config->set('mail_notification', NULL)->save();
+  }
 }
