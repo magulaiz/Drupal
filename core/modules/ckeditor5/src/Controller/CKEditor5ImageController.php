@@ -76,27 +76,27 @@ class CKEditor5ImageController extends ControllerBase {
   /**
    * Constructs a new CKEditor5ImageController.
    *
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The currently authenticated user.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mimeTypeGuesser
    *   The MIME type guesser.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManager $pluginManager
    *   The CKEditor 5 plugin manager.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, protected CKEditor5PluginManagerInterface $pluginManager) {
-    $this->fileSystem = $file_system;
-    $this->currentUser = $current_user;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-    $this->lock = $lock;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->pluginManager = $pluginManager;
-  }
+  public function __construct(
+    protected FileSystemInterface $fileSystem,
+    protected AccountInterface $currentUser,
+    protected MimeTypeGuesserInterface $mimeTypeGuesser,
+    protected LockBackendInterface $lock,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected CKEditor5PluginManagerInterface $pluginManager
+  ) {}
 
   /**
    * {@inheritdoc}
