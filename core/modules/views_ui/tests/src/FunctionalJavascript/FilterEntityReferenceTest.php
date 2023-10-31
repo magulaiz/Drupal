@@ -262,7 +262,6 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
       ->selectFieldOption('options[sub_handler]', 'default:node_type');
     $this->htmlOutput($page->getHtml());
 
-
     // Choose the default handler using the select widget with article type
     // checked.
     $page->selectFieldOption('options[widget]', 'select');
