@@ -260,6 +260,8 @@ stages:
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-repeat-class-test, *default-job-settings ]
   when: manual
+  interruptible: true
+  allow_failure: true
   variables:
     <<: *test-variables
     CONCURRENCY: "$CONCURRENCY"
