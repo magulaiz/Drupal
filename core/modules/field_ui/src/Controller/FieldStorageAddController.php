@@ -187,7 +187,7 @@ final class FieldStorageAddController extends ControllerBase {
 
 
   public function OpenModalForm($entity_type_id = NULL, $bundle = NULL) {
-    $form['#attributes']['class'][0] = "field-ui-field-storage-add-form";
+    $form = [];
     $form = $this->buildForm($form, $entity_type_id, $bundle);
     $response = new AjaxResponse();
     $dialog_options['modal'] = TRUE;

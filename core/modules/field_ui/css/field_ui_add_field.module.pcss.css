@@ -2,7 +2,7 @@
  * @file field_ui_add_field.module.css
  */
 
-.field-ui-field-storage-add-form {
+.add-field-container {
   --thumb-size: 72px;
   --color-focus: #26a769;
   --color-gray: #232429;
