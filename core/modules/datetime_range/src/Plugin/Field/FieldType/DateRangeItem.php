@@ -27,10 +27,10 @@ class DateRangeItem extends DateTimeItem {
   /**
    * {@inheritdoc}
    */
-  public static function defaultStorageSettings() {
+  public static function defaultFieldSettings() {
     return [
       'optional_end_date' => FALSE,
-    ] + parent::defaultStorageSettings();
+    ] + parent::defaultFieldSettings();
   }
 
   /**
@@ -87,11 +87,8 @@ class DateRangeItem extends DateTimeItem {
   /**
    * {@inheritdoc}
    */
-  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element = parent::storageSettingsForm($form, $form_state, $has_data);
-
-    $element['datetime_type']['#options'][static::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
-
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $element = [];
     $element['optional_end_date'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Optional end date'),

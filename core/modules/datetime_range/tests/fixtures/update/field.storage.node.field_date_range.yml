@@ -1,12 +1,12 @@
-uuid: 64ba7be7-c4ec-41d6-abfd-49ab1098f66b
+uuid: 53143354-3150-4676-b705-caf94f1b7aa6
 langcode: en
 status: true
 dependencies:
   module:
     - datetime_range
     - node
-id: node.field_daterange
-field_name: field_daterange
+id: node.field_date_range
+field_name: field_date_range
 entity_type: node
 type: daterange
 settings:

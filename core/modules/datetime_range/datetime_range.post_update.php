@@ -16,21 +16,21 @@ function datetime_range_removed_post_updates() {
 }
 
 /**
- * Adds optional_end_date config in daterange field storage settings.
+ * Adds optional_end_date config in daterange field settings.
  */
 function datetime_range_post_update_add_optional_end_date() {
   $config_factory = \Drupal::configFactory();
-  foreach ($config_factory->listAll('field.storage.') as $field_storage) {
-    $field_storage_settings = $config_factory->getEditable($field_storage);
-    if ($field_storage_settings->get('type') != 'daterange') {
+  foreach ($config_factory->listAll('field.field.node.') as $field_settings) {
+    $field_config = $config_factory->getEditable($field_settings);
+    if ($field_config->get('field_type') != 'daterange') {
       continue;
     }
-    $settings = $field_storage_settings->get('settings');
+    $settings = $field_config->get('settings');
     $settings['optional_end_date'] = FALSE;
-    $field_storage_settings->set('settings', $settings);
+    $field_config->set('settings', $settings);
 
     // Mark the resulting configuration as trusted data. This avoids issues with
     // future schema changes.
-    $field_storage_settings->save(TRUE);
+    $field_config->save(TRUE);
   }
 }
