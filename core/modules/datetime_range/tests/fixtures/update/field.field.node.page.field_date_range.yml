@@ -12,10 +12,10 @@ field_name: field_date_range
 entity_type: node
 bundle: page
 label: date_range
-description:
+description: ''
 required: true
 translatable: false
 default_value: {  }
-default_value_callback:
+default_value_callback: ''
 settings: {  }
 field_type: daterange
