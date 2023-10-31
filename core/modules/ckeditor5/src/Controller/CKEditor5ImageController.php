@@ -151,7 +151,7 @@ class CKEditor5ImageController extends ControllerBase {
     }
 
     $plugin_definitions = $this->pluginManager->getDefinitions();
-    $mimetypes = new MimeTypes();
+    $mimetypes = MimeTypes::getDefault();
     $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray();
     $extensions = [];
     foreach ($imageUploadPlugin['ckeditor5']['config']['image']['upload']['types'] as $mime_type) {
