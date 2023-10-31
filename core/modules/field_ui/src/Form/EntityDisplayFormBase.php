@@ -232,7 +232,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
       $form['modes'] = [
         '#type' => 'details',
-        '#title' => $this->t('Enable more display modes'),
+        '#title' => $this->t('Enable view modes'),
       ];
       // Prepare default values for the 'Custom display settings' checkboxes.
       $default = [];
