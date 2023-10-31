@@ -67,7 +67,7 @@ class DateRangeWidgetTest extends DateTestBase {
       ])
       ->save();
 
-    //Add node with start date only.
+    // Add node with start date only.
     $this->drupalGet('node/add/daterange_content');
     $value = '2012-12-31 00:00:00';
     $start_date = new DrupalDateTime($value, timezone_open(date_default_timezone_get()));
@@ -82,7 +82,7 @@ class DateRangeWidgetTest extends DateTestBase {
     $this->assertSession()->pageTextContains('daterange_content ' . $title . ' has been created.');
     $node = $this->drupalGetNodeByTitle($title);
 
-    //Assert correct start date and end date is stored.
+    // Assert correct start date and end date is stored.
     $this->assertEquals($start_date->format($date_format), $node->get($field_name)->offsetGet(0)->value);
     $this->assertEquals(NULL, $node->get($field_name)->offsetGet(0)->end_value);
   }
