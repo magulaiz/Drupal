@@ -192,7 +192,7 @@ final class FieldStorageAddController extends ControllerBase {
     $response = new AjaxResponse();
     $dialog_options['modal'] = TRUE;
     $dialog_options['width'] = 1100;
-    $response->addCommand(new OpenModalDialogCommand('Field settings', $form, $dialog_options));
+    $response->addCommand(new OpenModalDialogCommand('Add field', $form, $dialog_options));
     return $response;
   }
 
