@@ -23,6 +23,24 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
   /**
    * {@inheritdoc}
    */
+  public function referencedIds(): array {
+    if ($this->isEmpty()) {
+      return [];
+    }
+
+    $ids = [];
+    foreach ($this->list as $delta => $item) {
+      if ($item->target_id !== NULL) {
+        $ids[$delta] = $item->target_id;
+      }
+    }
+
+    return $ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function referencedEntities() {
     if ($this->isEmpty()) {
       return [];
