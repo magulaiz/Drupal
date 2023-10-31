@@ -104,6 +104,30 @@ trait FilterEntityReferenceTrait {
     $this->hostEntities = [
       $node->id() => $node,
     ];
+
+    $field_storage = FieldStorageConfig::create([
+      'entity_type' => 'node',
+      'field_name' => 'field_test_config',
+      'type' => 'entity_reference',
+      'settings' => [
+        'target_type' => 'node_type',
+      ],
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ]);
+    $field_storage->save();
+
+    $field = FieldConfig::create([
+      'entity_type' => 'node',
+      'field_name' => 'field_test_config',
+      'bundle' => $this->hostEntityType->id(),
+      'settings' => [
+        'handler' => 'default',
+        'handler_settings' => [
+          'sort' => ['field' => '_none'],
+        ],
+      ],
+    ]);
+    $field->save();
   }
 
 }

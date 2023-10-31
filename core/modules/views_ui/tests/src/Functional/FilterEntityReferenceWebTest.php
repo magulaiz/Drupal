@@ -108,4 +108,15 @@ class FilterEntityReferenceWebTest extends UITestBase {
     return $options;
   }
 
+  /**
+   * Tests the filter UI for config reference.
+   */
+  public function testFilterConfigUi(): void {
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_config_target_id_reference');
+
+    $options = $this->getUiOptions();
+    // We should the content types defined as options.
+    $this->assertEquals(['article', 'page'], array_column($options, 'label'));
+  }
+
 }
