@@ -328,10 +328,13 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       if (strlen($current_pass) > 0) {
         $account->setExistingPassword($current_pass);
       }
-      $account->setPassword($new_pass);
       // Skip the protected user field constraint if the user came from the
-      // password recovery page.
-      $account->_skipProtectedUserFieldConstraint = $credentials['user_pass_reset'];
+      // password recovery URL. This has to be called before setting the new
+      // password.
+      if ($credentials['pass-reset-token'] && $credentials['timestamp']) {
+        $account->_skipProtectedUserFieldConstraint = $this->validatePathParameters($account, $credentials['timestamp'], $credentials['pass-reset-token']);
+      }
+      $account->setPassword($new_pass);
       $violations = $account->validate();
       $errorMessages = [];
       // Iterate over the list of violations.
@@ -490,6 +493,27 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       return $identifier;
     }
     return '';
+  }
+
+  /**
+   * Validates hash and timestamp.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   User requesting reset.
+   * @param int $timestamp
+   *   The timestamp.
+   * @param string $hash
+   *   Login link hash.
+   * @param int $timeout
+   *   Link expiration timeout.
+   *
+   * @return bool
+   *   Whether the provided data are valid.
+   */
+  protected function validatePathParameters(UserInterface $user, int $timestamp, string $hash, int $timeout = 0): bool {
+    $current = \Drupal::time()->getRequestTime();
+    $timeout_valid = ((!empty($timeout) && $current - $timestamp < $timeout) || empty($timeout));
+    return ($timestamp >= $user->getLastLoginTime()) && $timestamp <= $current && $timeout_valid && hash_equals($hash, user_pass_rehash($user, $timestamp));
   }
 
 }
