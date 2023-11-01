@@ -4,15 +4,6 @@ stages:
   - 🗜️ Test
   - 📦️ Artifacts
 
-package-artifacts:
-  stage: 📦️ Artifacts
-  script:
-    - echo "Packaging all statistics artifacts"
-  artifacts:
-    paths:
-      - statistics-*.txt
-    expire_in: "1 year"
-
 
 #############
 # Templates #
@@ -148,6 +139,16 @@ package-artifacts:
 #
 # Documentation: https://docs.gitlab.com/ee/ci/jobs/
 ################
+
+
+package-artifacts:
+  stage: 📦️ Artifacts
+  script:
+    - echo "Packaging all statistics artifacts"
+  artifacts:
+    paths:
+      - statistics-*.txt
+    expire_in: "1 year"
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
