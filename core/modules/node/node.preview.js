@@ -31,10 +31,10 @@
           !event.shiftKey
         ) {
           event.preventDefault();
-          const $previewDialog = $(
-            `<div>${Drupal.theme('nodePreviewModal')}</div>`,
-          ).appendTo('body');
-          Drupal.dialog($previewDialog, {
+
+          const previewDialog = document.createElement('div');
+          previewDialog.innerHTML = Drupal.theme('nodePreviewModal');
+          Drupal.dialog(previewDialog, {
             title: Drupal.t('Leave preview?'),
             buttons: [
               {
