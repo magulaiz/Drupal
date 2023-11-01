@@ -1,25 +1,24 @@
 <?php
 
-namespace Drupal\Tests\datetime\FunctionalJavascript;
+namespace Drupal\Tests\datetime\Functional;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the form validation for allowed values.
  *
  * @group datetime
  */
-class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
+class AllowedValuesForDateFieldTypeTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'field_ui',
-    'toolbar',
     'node',
     'datetime',
     'field',
@@ -60,9 +59,11 @@ class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
    */
   public function testAllowedValuesFormValidation() {
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_date');
-    $page = $this->getSession()->getPage();
-    $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
-    $page->findButton('Save settings')->click();
+    $edit = [
+      'label' => 'test',
+      'field_storage[subform][cardinality_number]' => -1,
+    ];
+    $this->submitForm($edit, 'Save settings');
 
     $this->assertSession()->pageTextContains('Limit must be higher than or equal to 1.');
   }
