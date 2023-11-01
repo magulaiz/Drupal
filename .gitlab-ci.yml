@@ -237,6 +237,7 @@ stages:
     expose_as: 'web-vendor'
     paths:
       - vendor/
+      - ./statistics-$CI_JOB_NAME_SLUG.txt
   script:
       - composer validate
       - sudo apt update && sudo apt install time
@@ -257,6 +258,7 @@ stages:
     expose_as: 'yarn-vendor'
     paths:
       - core/node_modules/
+      - ./statistics-$CI_JOB_NAME_SLUG.txt
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn --cwd ./core install
