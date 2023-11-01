@@ -174,6 +174,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     // Article checkbox should be checked by default as the form is opened from
     // article content type.
     $this->assertNotEmpty($assert_session->waitForText('Enable this ' . $display_mode . ' mode for the following Content types'));
+    $assert_session->assertWaitOnAjaxRequest();
     $checkbox = $page->find('css', '[data-drupal-selector="edit-bundles-by-entity-article"]');
     $this->assertTrue($checkbox->isChecked());
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
