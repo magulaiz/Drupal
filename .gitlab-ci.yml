@@ -57,6 +57,17 @@ stages:
   - 🏗️ Build
   - 🪄 Lint
   - 🗜️ Test
+  - 📦️ Artifacts
+
+
+package-artifacts:
+  stage: 📦️ Artifacts
+  script:
+    - echo "Packaging all statistics artifacts"
+  artifacts:
+    paths:
+      - statistics-*.txt
+    expire_in: "1 year"
 
 #############
 # Templates #
