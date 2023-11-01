@@ -382,7 +382,7 @@
       if (!once('media-library-selection-info', 'html').length) {
         return;
       }
-      $(window).on('dialog:aftercreate', () => {
+      window.addEventListener('dialogAftercreate', () => {
         // Since the dialog HTML is not part of the context, we can't use
         // context here.
         const $buttonPane = $(
@@ -410,7 +410,7 @@
       if (!once('media-library-clear-selection', 'html').length) {
         return;
       }
-      $(window).on('dialog:afterclose', () => {
+      window.addEventListener('dialogAfterclose', () => {
         Drupal.MediaLibrary.currentSelection = [];
       });
     },
