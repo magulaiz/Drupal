@@ -25,7 +25,11 @@ class Connection extends BaseMySqlConnection {
    */
   private string $serverVersion;
 
-  public function __construct(\mysqli $connection, array $connection_options) {
+  public function __construct(
+    protected \mysqli $connection,
+    protected $connectionOptions = [],
+  ) {
+    assert(is_array($this->connectionOptions));
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
     // combination mode), then MySQL doesn't interpret a double quote as an
     // identifier quote, in which case use the non-ANSI-standard backtick.
@@ -36,13 +40,15 @@ class Connection extends BaseMySqlConnection {
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
     $is_ansi_quotes_mode = FALSE;
-    foreach ($ansi_quotes_modes as $mode) {
-      // None of the modes in $ansi_quotes_modes are substrings of other modes
-      // that are not in $ansi_quotes_modes, so a simple stripos() does not
-      // return false positives.
-      if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
-        $is_ansi_quotes_mode = TRUE;
-        break;
+    if (isset($$this->connectionOptions['init_commands']['sql_mode'])) {
+      foreach ($ansi_quotes_modes as $mode) {
+        // None of the modes in $ansi_quotes_modes are substrings of other modes
+        // that are not in $ansi_quotes_modes, so a simple stripos() does not
+        // return false positives.
+        if (stripos($this->connectionOptions['init_commands']['sql_mode'], $mode) !== FALSE) {
+          $is_ansi_quotes_mode = TRUE;
+          break;
+        }
       }
     }
     if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
@@ -50,18 +56,13 @@ class Connection extends BaseMySqlConnection {
     }
 
     // Manage the table prefix.
-    $connection_options['prefix'] = $connection_options['prefix'] ?? '';
-    $this->setPrefix($connection_options['prefix']);
+    $this->connectionOptions['prefix'] ??= '';
+    $this->setPrefix($this->connectionOptions['prefix']);
 
-    // Work out the database driver namespace if none is provided. This normally
-    // written to setting.php by installer or set by
+    // Work out the database driver namespace if none is provided. This is
+    // normally written to setting.php by installer or set by
     // \Drupal\Core\Database\Database::parseConnectionInfo().
-    if (empty($connection_options['namespace'])) {
-      $connection_options['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
-    }
-
-    $this->connection = $connection;
-    $this->connectionOptions = $connection_options;
+    $this->connectionOptions['namespace'] ??= (new \ReflectionObject($this))->getNamespaceName();
   }
 
   /**
@@ -138,6 +139,11 @@ class Connection extends BaseMySqlConnection {
     $connection_options['init_commands'] += [
       'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
+    if (!empty($connection_options['isolation_level'])) {
+      $connection_options['init_commands'] += [
+        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
+      ];
+    }
 
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
