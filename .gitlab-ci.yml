@@ -84,9 +84,6 @@ package-artifacts:
       - stuck_or_timeout_failure
       - runner_system_failure
       - scheduler_failure
-  variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
@@ -235,6 +232,11 @@ package-artifacts:
 
 '📦️ Composer':
   <<: *default-job-settings-lint
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
   stage: 🏗️ Build
   cache:
     key:
@@ -256,6 +258,11 @@ package-artifacts:
 
 '📦️ Yarn':
   <<: *default-job-settings-lint
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
   stage: 🏗️ Build
   cache:
     key:
@@ -281,6 +288,11 @@ package-artifacts:
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
+    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
@@ -294,6 +306,11 @@ package-artifacts:
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
+    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
@@ -307,6 +324,9 @@ package-artifacts:
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn --cwd=./core run -s lint:core-js-passing --format gitlab
@@ -320,6 +340,9 @@ package-artifacts:
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
@@ -332,6 +355,9 @@ package-artifacts:
 '🧹 Compilation check':
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
   script:
     - sudo apt update && sudo apt install time
     - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-css.txt yarn run --cwd=./core build:css --check
@@ -345,6 +371,9 @@ package-artifacts:
 '📔 Spell-checking':
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
