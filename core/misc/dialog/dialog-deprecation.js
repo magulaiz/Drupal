@@ -17,14 +17,20 @@
           // Here we listen new customEvent dialogBeforecreate.
           // Trigger old event and deprecation message.
           doc.addEventListener('dialogBeforecreate', (e) => {
-            $(window).trigger('dialog:beforecreate', [
-              e.detail.dialog,
-              e.currentTarget,
-              e.detail.settings,
-            ]);
-            Drupal.deprecationError({
-              message: 'Jquery event dialog:beforecreate will deprecated soon',
-            });
+            // We trigger jQuery Event ONLY if something listens it.
+            // EG: $.event.global?.['dialog:beforecreate'].
+
+            if ($.event.global?.['dialog:beforecreate']) {
+              $(window).trigger('dialog:beforecreate', [
+                e.detail.dialog,
+                e.currentTarget,
+                e.detail.settings,
+              ]);
+              Drupal.deprecationError({
+                message:
+                  'Jquery event dialog:beforecreate will deprecated soon',
+              });
+            }
           });
         }
       }
