@@ -49,6 +49,9 @@ variables:
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
 
+.default-lint-variables: &default-lint-variables
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
 
 #############
 # Stages    #
@@ -222,8 +225,7 @@ stages:
 '📦️ Composer':
   <<: *default-job-settings-lint
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "1"
   stage: 🏗️ Build
   cache:
@@ -245,8 +247,7 @@ stages:
 '📦️ Yarn':
   <<: *default-job-settings-lint
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   stage: 🏗️ Build
   cache:
@@ -272,8 +273,7 @@ stages:
   <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "16"
   script:
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
@@ -285,8 +285,7 @@ stages:
   <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "16"
   script:
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
