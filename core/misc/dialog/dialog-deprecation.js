@@ -14,7 +14,6 @@
           document.documentElement,
         )?.shift();
         if (doc) {
-
           const eventsMapping = {
             dialogBeforecreate: 'dialog:beforecreate',
             dialogAftercreate: 'dialog:aftercreate',
