@@ -21,6 +21,10 @@ class ExceptionHandler extends BaseExceptionHandler {
    * {@inheritdoc}
    */
   public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): void {
+
+    // Close the client statement to release handles.
+    $statement->getClientStatement()->close();
+
     if (!($exception instanceof \mysqli_sql_exception)) {
       throw $exception;
     }
