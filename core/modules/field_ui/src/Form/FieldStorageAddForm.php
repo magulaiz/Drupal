@@ -180,7 +180,7 @@ class FieldStorageAddForm extends FormBase {
       if ($group_display) {
         $form['field_options_wrapper']['label'] = [
           '#type' => 'label',
-          '#title' => $this->t('Choose an option below'),
+          '#title' => $this->t('Choose a subfield type'),
           '#required' => TRUE,
         ];
         $form['field_options_wrapper']['fields'] = [
@@ -282,7 +282,7 @@ class FieldStorageAddForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Missing subtype.
     if (!$form_state->getValue('field_options_wrapper') && isset($form['field_options_wrapper']['fields'])) {
-      $form_state->setErrorByName('field_options_wrapper', $this->t('You need to select a field type.'));
+      $form_state->setErrorByName('field_options_wrapper', $this->t('You need to select a subfield type.'));
     }
 
     // Field name validation.

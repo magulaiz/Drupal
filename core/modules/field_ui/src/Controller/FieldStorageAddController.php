@@ -16,12 +16,10 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Controller for building the field instance form.
