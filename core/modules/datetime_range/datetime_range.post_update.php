@@ -20,7 +20,7 @@ function datetime_range_removed_post_updates() {
  */
 function datetime_range_post_update_add_optional_end_date() {
   $config_factory = \Drupal::configFactory();
-  foreach ($config_factory->listAll('field.field.node.') as $field_settings) {
+  foreach ($config_factory->listAll('field.field.') as $field_settings) {
     $field_config = $config_factory->getEditable($field_settings);
     if ($field_config->get('field_type') != 'daterange') {
       continue;
