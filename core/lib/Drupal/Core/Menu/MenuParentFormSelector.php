@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -97,6 +98,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   public function menuSelectElement($menu_id, array $menus = NULL) {
     $options = $this->getMenuSelectOptions($menus);
     if ($options) {
+      $menu_parent_wrapper = Html::getUniqueId('menu-parent-wrapper');
       $elements['menu'] = [
         '#title' => $this->t('Menu'),
         '#type' => 'select',
@@ -104,7 +106,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         '#attributes' => ['class' => ['menu-title-select']],
         '#ajax' => [
           'callback' => [$this, 'updateParentLinks'],
-          'wrapper' => 'menu-parent-wrapper',
+          'wrapper' => $menu_parent_wrapper,
           'trigger_as' => ['name' => 'update_parent_links'],
           'event' => 'change',
         ],
@@ -121,8 +123,12 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         '#attributes' => ['class' => ['js-hide']],
         '#ajax' => [
           'callback' => [$this, 'updateParentLinks'],
-          'wrapper' => 'menu-parent-wrapper',
+          'wrapper' => $menu_parent_wrapper,
         ],
+      ];
+      $elements['menu_parent'] = [
+        '#prefix' => '<div id= "' . $menu_parent_wrapper . '" >',
+        '#suffix' => '</div>',
       ];
       return $elements;
     }
@@ -140,8 +146,6 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $element = [
         '#type' => 'select',
         '#options' => $options,
-        '#prefix' => '<div id= "menu-parent-wrapper" >',
-        '#suffix' => '</div>',
       ];
       if (!isset($options[$menu_parent])) {
         // The requested menu parent cannot be found in the menu anymore. Try
