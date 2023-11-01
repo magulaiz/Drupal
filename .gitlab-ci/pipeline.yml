@@ -212,7 +212,7 @@ package-artifacts:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
     CONCURRENCY: "$CONCURRENCY"
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "8"
   services:
     - <<: *with-database
 
@@ -248,7 +248,7 @@ package-artifacts:
     <<: *test-variables
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$CONCURRENCY"
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "8"
 
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
