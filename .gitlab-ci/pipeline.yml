@@ -84,7 +84,7 @@ stages:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
       - ./sites/simpletest/browser_output
-
+      - ./statistics-*.txt
 .setup-webroot: &setup-webserver
   before_script:
     - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
@@ -109,10 +109,7 @@ stages:
     - *set-directory-settings
     # Need to pass this along directly.
     - sudo apt update && sudo apt install time
-    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG.txt sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
-  artifacts:
-    paths:
-       - ./statistics-$CI_JOB_NAME_SLUG.txt
+    - /usr/bin/time -v --output=./statistics-$CI_JOB_NAME_SLUG-$CI_PARALLEL_NODE_INDEX.txt sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 .run-repeat-class-test: &run-repeat-class-test
   script:
