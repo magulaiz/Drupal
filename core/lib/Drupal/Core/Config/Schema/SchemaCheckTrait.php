@@ -47,11 +47,6 @@ trait SchemaCheckTrait {
    * @var \string[][][]
    */
   protected static array $ignoredPropertyPaths = [
-    'system.mail' => [
-      '' => [
-        "'mailer_dsn' is a required key.",
-      ],
-    ],
     'search.page.*' => [
       // @todo Fix config or tweak schema of `type: search.page.*` in
       //   https://drupal.org/i/3380475.
