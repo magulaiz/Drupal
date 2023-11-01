@@ -59,9 +59,9 @@ class DateRangeFormatterTest extends DateTestBase {
       'type' => 'daterange_default',
       'label' => 'hidden',
       'settings' => [
-          'timezone_override' => '',
-          'separator' => $separator,
-        ]
+        'timezone_override' => '',
+        'separator' => $separator,
+      ],
     ];
     \Drupal::service('entity_display.repository')->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $display_options)
