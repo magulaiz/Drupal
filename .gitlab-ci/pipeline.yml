@@ -141,7 +141,7 @@ stages:
 
 
 package-artifacts:
-  stage: 🗜️ Test
+  <<: [ *default-job-settings ]
   script:
     - echo "Packaging all statistics artifacts"
   artifacts:
