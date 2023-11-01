@@ -41,7 +41,9 @@
         }
         // Use jQuery selector instead of a native selector for
         // backwards compatibility.
-        once('drupal-ajax', $(context).find(elementSettings.selector)).forEach((el) => {
+        once(
+          'drupal-ajax', $(context).find(elementSettings.selector),
+        ).forEach((el) => {
           elementSettings.element = el;
           elementSettings.base = base;
           Drupal.ajax(elementSettings);
