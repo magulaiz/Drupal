@@ -24,10 +24,12 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $form = parent::buildForm($form, $form_state, $entity_type_id);
-
-    $form['actions']['submit']['#ajax'] = [
-      'callback' => '::ajaxSubmit',
-    ];
+    // Add an ajax callback when the form is loaded from respective field UI's.
+    if (!str_contains($this->getRedirectDestination()->get(), 'display-modes')) {
+      $form['actions']['submit']['#ajax'] = [
+        'callback' => '::ajaxSubmit',
+      ];
+    }
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
@@ -96,6 +98,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     if ($this->getRequest()->query->has('destination') && $destination = $this->getRedirectDestination()->get()) {
       return Url::fromUri('base:' . $destination);
     }
+    return NULL;
   }
 
   /**
