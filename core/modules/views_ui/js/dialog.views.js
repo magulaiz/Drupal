@@ -78,11 +78,10 @@
    *   The event triggered.
    * @param {Drupal.dialog~dialogDefinition} dialog
    *   The dialog instance.
-   * @param {HTMLElement} element
-   *   The dialog element.
+   * @param {jQuery} $element
+   *   The jQuery collection of the dialog element.
    */
-  $(window).on('dialog:aftercreate', (e, dialog, element) => {
-    const $element = $(element);
+  $(window).on('dialog:aftercreate', (e, dialog, $element) => {
     const $scroll = $element.find('.scroll');
     if ($scroll.length) {
       bodyScrollLock.unlock($element.get(0));

@@ -23,12 +23,28 @@
             if ($.event.global?.['dialog:beforecreate']) {
               $(window).trigger('dialog:beforecreate', [
                 e.detail.dialog,
-                e.currentTarget,
+                $(e.currentTarget),
                 e.detail.settings,
               ]);
               Drupal.deprecationError({
                 message:
                   'Jquery event dialog:beforecreate will deprecated soon',
+              });
+            }
+          });
+
+          doc.addEventListener('dialogAftercreate', (e) => {
+            // We trigger jQuery Event ONLY if something listens it.
+            // EG: $.event.global?.['dialog:aftercreate'].
+
+            if ($.event.global?.['dialog:aftercreate']) {
+              $(window).trigger('dialog:aftercreate', [
+                e.detail.dialog,
+                $(e.currentTarget),
+                e.detail.settings,
+              ]);
+              Drupal.deprecationError({
+                message: 'Jquery event dialog:aftercreate will deprecated soon',
               });
             }
           });

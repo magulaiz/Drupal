@@ -114,8 +114,7 @@
   }
 
   $(window).on({
-    'dialog:aftercreate': function (event, dialog, element, settings) {
-      const $element = $(element);
+    'dialog:aftercreate': function (event, dialog, $element, settings) {
       const autoResize = debounce(resetSize, 20);
       const eventData = { settings, $element };
       if (settings.autoResize === true || settings.autoResize === 'true') {
@@ -133,7 +132,7 @@
         );
       }
     },
-    'dialog:beforeclose': function () {
+    'dialog:beforeclose': function (event, dialog, $element) {
       $(window).off('.dialogResize');
       $(document).off('.dialogResize');
     },

@@ -86,7 +86,15 @@
         bodyScrollLock.lock(element);
       }
 
-      $(window).trigger('dialog:aftercreate', [dialog, element, settings]);
+      element.dispatchEvent(
+        new CustomEvent('dialogAftercreate', {
+          bubbles: true,
+          detail: {
+            dialog,
+            settings,
+          },
+        }),
+      );
     }
 
     function closeDialog(value) {

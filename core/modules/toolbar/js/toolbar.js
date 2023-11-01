@@ -206,8 +206,7 @@
         }
 
         $(window).on({
-          'dialog:aftercreate': (event, dialog, element, settings) => {
-            const $element = $(element);
+          'dialog:aftercreate': (event, dialog, $element, settings) => {
             const toolbarBar = document.getElementById('toolbar-bar');
             if (toolbarBar) {
               toolbarBar.style.marginTop = '0';
