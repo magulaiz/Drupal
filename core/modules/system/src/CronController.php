@@ -30,13 +30,6 @@ class CronController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('cron'));
-  }
-
-  /**
    * Run Cron once.
    *
    * @return \Symfony\Component\HttpFoundation\Response

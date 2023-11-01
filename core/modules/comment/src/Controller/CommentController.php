@@ -79,19 +79,6 @@ class CommentController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('http_kernel'),
-      $container->get('comment.manager'),
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('entity.repository')
-    );
-  }
-
-  /**
    * Publishes the specified comment.
    *
    * @param \Drupal\comment\CommentInterface $comment

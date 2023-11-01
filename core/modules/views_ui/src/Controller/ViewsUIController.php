@@ -41,15 +41,6 @@ class ViewsUIController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('views.views_data')
-    );
-  }
-
-  /**
    * Lists all instances of fields on any views.
    *
    * @return array

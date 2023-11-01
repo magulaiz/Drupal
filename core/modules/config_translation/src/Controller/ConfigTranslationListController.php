@@ -30,15 +30,6 @@ class ConfigTranslationListController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.config_translation.mapper')
-    );
-  }
-
-  /**
    * Provides the listing page for any entity type.
    *
    * @param string $mapper_id

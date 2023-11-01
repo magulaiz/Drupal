@@ -61,18 +61,6 @@ class ThemeController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('theme_handler'),
-      $container->get('extension.list.theme'),
-      $container->get('config.factory'),
-      $container->get('theme_installer')
-    );
-  }
-
-  /**
    * Uninstalls a theme.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

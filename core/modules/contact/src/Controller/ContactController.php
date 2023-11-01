@@ -33,15 +33,6 @@ class ContactController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('renderer')
-    );
-  }
-
-  /**
    * Presents the site-wide contact form.
    *
    * @param \Drupal\contact\ContactFormInterface $contact_form

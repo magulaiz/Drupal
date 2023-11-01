@@ -46,16 +46,6 @@ class UpdateController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('update.manager'),
-      $container->get('renderer')
-    );
-  }
-
-  /**
    * Returns a page about the update status of projects.
    *
    * @return array

@@ -33,15 +33,6 @@ class FileDownloadController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('stream_wrapper_manager')
-    );
-  }
-
-  /**
    * Handles private file transfers.
    *
    * Call modules that implement hook_file_download() to find out if a file is

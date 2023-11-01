@@ -66,17 +66,6 @@ class CKEditor5MediaController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('current_user'),
-      $container->get('entity.repository'),
-      $container->get('request_stack')
-    );
-  }
-
-  /**
    * Returns JSON response containing metadata about media entity.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

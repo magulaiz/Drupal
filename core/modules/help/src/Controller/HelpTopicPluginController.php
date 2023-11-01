@@ -30,16 +30,6 @@ class HelpTopicPluginController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.help_topic'),
-      $container->get('renderer')
-    );
-  }
-
-  /**
    * Displays a help topic page.
    *
    * @param string $id

@@ -32,15 +32,6 @@ class BlockController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('theme_handler')
-    );
-  }
-
-  /**
    * Calls a method on a block and reloads the listing page.
    *
    * @param \Drupal\block\BlockInterface $block

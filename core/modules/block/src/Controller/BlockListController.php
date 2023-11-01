@@ -31,15 +31,6 @@ class BlockListController extends EntityListController {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('theme_handler')
-    );
-  }
-
-  /**
    * Shows the block administration page.
    *
    * @param string|null $theme

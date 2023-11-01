@@ -49,18 +49,6 @@ class DbLogController extends ControllerBase {
   protected $userStorage;
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database'),
-      $container->get('module_handler'),
-      $container->get('date.formatter'),
-      $container->get('form_builder')
-    );
-  }
-
-  /**
    * Constructs a DbLogController object.
    *
    * @param \Drupal\Core\Database\Connection $database

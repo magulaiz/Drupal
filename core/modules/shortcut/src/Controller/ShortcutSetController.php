@@ -32,13 +32,6 @@ class ShortcutSetController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('path.validator'));
-  }
-
-  /**
    * Creates a new link in the provided shortcut set.
    *
    * @param \Drupal\shortcut\ShortcutSetInterface $shortcut_set

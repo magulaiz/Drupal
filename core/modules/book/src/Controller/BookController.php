@@ -57,17 +57,6 @@ class BookController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('book.manager'),
-      $container->get('book.export'),
-      $container->get('renderer')
-    );
-  }
-
-  /**
    * Returns an administrative overview of all books.
    *
    * @return array

@@ -52,16 +52,6 @@ class SearchController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('search.search_page_repository'),
-      $container->get('renderer')
-    );
-  }
-
-  /**
    * Creates a render array for the search page.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

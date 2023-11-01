@@ -33,13 +33,6 @@ class MenuController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('menu.parent_form_selector'));
-  }
-
-  /**
    * Gets all the available menus and menu items as a JavaScript array.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

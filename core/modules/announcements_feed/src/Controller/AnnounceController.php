@@ -29,15 +29,6 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): AnnounceController {
-    return new static(
-      $container->get('announcements_feed.renderer'),
-    );
-  }
-
-  /**
    * Returns the list of Announcements.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
