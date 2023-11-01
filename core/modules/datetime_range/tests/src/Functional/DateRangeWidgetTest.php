@@ -7,6 +7,7 @@ use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\datetime\Functional\DateTestBase;
 
 /**
  * Tests Daterange widgets functionality.
