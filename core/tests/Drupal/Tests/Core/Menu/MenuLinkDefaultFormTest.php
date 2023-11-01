@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Menu\Form\MenuLinkDefaultForm;
@@ -24,7 +25,8 @@ class MenuLinkDefaultFormTest extends UnitTestCase {
     $menu_link_manager = $this->prophesize(MenuLinkManagerInterface::class);
     $menu_parent_form_selector = $this->prophesize(MenuParentFormSelectorInterface::class);
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $menu_link_form = new MenuLinkDefaultForm($menu_link_manager->reveal(), $menu_parent_form_selector->reveal(), $this->getStringTranslationStub(), $module_handler->reveal());
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $menu_link_form = new MenuLinkDefaultForm($menu_link_manager->reveal(), $menu_parent_form_selector->reveal(), $this->getStringTranslationStub(), $module_handler->reveal(), $entity_type_manager->reveal());
 
     $static_override = $this->prophesize(StaticMenuLinkOverridesInterface::class);
     $menu_link = new MenuLinkDefault([], 'my_plugin_id', [], $static_override->reveal());
