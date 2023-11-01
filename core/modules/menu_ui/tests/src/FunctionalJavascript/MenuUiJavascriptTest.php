@@ -200,6 +200,11 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
     $this->assertContains('---- ' . $link_2->label(), $options);
     $this->assertContains('------ ' . $link_4->label(), $options);
     $this->assertContains('---- ' . $link_3->label(), $options);
+
+    // Change menu again.
+    $page->findField('menu')->selectOption('Tools');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->optionExists('Parent link', '-- Test front page link');
   }
 
 }
