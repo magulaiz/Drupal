@@ -190,6 +190,7 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
 
@@ -200,6 +201,7 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
+    KUBERNETES_CPU_REQUEST: "8"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -210,6 +212,7 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "2"
   services:
     - <<: *with-database
 
@@ -223,11 +226,13 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "16"
 
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
   variables:
     <<: *test-variables
+    KUBERNETES_CPU_REQUEST: "3"
   services:
     - <<: *with-database
     - <<: *with-chrome
