@@ -19,7 +19,6 @@ class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'field_ui',
-    'toolbar',
     'node',
     'datetime',
     'field',
