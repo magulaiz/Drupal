@@ -26,9 +26,10 @@ class Connection extends BaseMySqlConnection {
   private string $serverVersion;
 
   public function __construct(
-    protected \mysqli $connection,
+    protected $connection,
     protected $connectionOptions = [],
   ) {
+    assert($this->connection instanceof \mysqli));
     assert(is_array($this->connectionOptions));
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
     // combination mode), then MySQL doesn't interpret a double quote as an
