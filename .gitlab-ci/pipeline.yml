@@ -2,7 +2,6 @@
 
 stages:
   - 🗜️ Test
-  - 📦️ Artifacts
 
 
 #############
@@ -142,13 +141,23 @@ stages:
 
 
 package-artifacts:
-  stage: 📦️ Artifacts
+  stage: 🗜️ Test
   script:
     - echo "Packaging all statistics artifacts"
   artifacts:
     paths:
       - statistics-*.txt
     expire_in: "1 year"
+  needs:
+    - '🌐️️ PHPUnit Functional'
+    - '⚙️️ PHPUnit Kernel'
+    - '🖱️️️ PHPUnit Functional Javascript'
+    - '👷️️️ PHPUnit Build'
+    - '⚡️ PHPUnit Unit'
+    - '🦉️️️ Nightwatch'
+
+
+
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
