@@ -141,7 +141,7 @@ stages:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
     CONCURRENCY: "$CONCURRENCY"
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "18"
   services:
     - <<: *with-database
 
