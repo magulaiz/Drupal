@@ -13,8 +13,7 @@ use Drupal\Tests\datetime\Functional\DateTestBase;
  *
  * @group datetime
  */
-class DateRangeFormatterTest extends DateTestBase
-{
+class DateRangeFormatterTest extends DateTestBase {
   /**
    * Modules to enable.
    *
@@ -61,7 +60,7 @@ class DateRangeFormatterTest extends DateTestBase
       'label' => 'hidden',
       'settings' => [
           'timezone_override' => '',
-          'separator' => $separator
+          'separator' => $separator,
         ]
     ];
     \Drupal::service('entity_display.repository')->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
@@ -74,4 +73,5 @@ class DateRangeFormatterTest extends DateTestBase
     $this->assertStringContainsString($expected, $output);
     $this->assertStringNotContainsString($separator, $output);
   }
+
 }
