@@ -41,7 +41,7 @@ class Connection extends BaseMySqlConnection {
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
     $is_ansi_quotes_mode = FALSE;
-    if (isset($$this->connectionOptions['init_commands']['sql_mode'])) {
+    if (isset($this->connectionOptions['init_commands']['sql_mode'])) {
       foreach ($ansi_quotes_modes as $mode) {
         // None of the modes in $ansi_quotes_modes are substrings of other modes
         // that are not in $ansi_quotes_modes, so a simple stripos() does not
