@@ -114,7 +114,6 @@
         const password = {};
 
         // If the password strength indicator is enabled, add its markup.
-        // console.log();
         if (
           settings.password.showStrengthIndicator &&
           value.hasAttribute('data-drupal-strength-indicator')
