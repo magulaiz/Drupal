@@ -76,8 +76,6 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
     $this->clickLink("Add new $display_mode mode");
     $this->assertEquals("Add new Content $display_mode mode", $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
-    $target_field = $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-label"]');
-    $target_field->focus();
 
     $modal_content = $page->find('css', '.ui-dialog .ui-dialog-content');
     $this->assertTrue($modal_content->isVisible());
