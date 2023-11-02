@@ -46,7 +46,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $action_label = $this->randomMachineName();
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
-    $edit['owner_uid'] = $user->id();
+    $edit['owner_uid'] = $user->getDisplayName() . ' (' . $user->id() . ')';
     $this->drupalGet('admin/config/system/actions/add/node_assign_owner_action');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -67,7 +67,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit = [];
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
-    $edit['owner_uid'] = $user->id();
+    $edit['owner_uid'] = $user->getDisplayName() . ' (' . $user->id() . ')';
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -105,13 +105,6 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
    * Tests the autocomplete field when configuring the AssignOwnerNode action.
    */
   public function testAssignOwnerNodeActionAutocomplete() {
-    // Create 200 users to force the action's configuration page to use an
-    // autocomplete field instead of a select field. See
-    // \Drupal\node\Plugin\Action\AssignOwnerNode::buildConfigurationForm().
-    for ($i = 0; $i < 200; $i++) {
-      $this->drupalCreateUser();
-    }
-
     // Create a user with permission to view the actions administration pages
     // and additionally permission to administer users. Otherwise the user would
     // not be able to reference the anonymous user.
