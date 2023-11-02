@@ -75,15 +75,14 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
     $this->clickLink("Add new $display_mode mode");
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertEquals("Add new Content $display_mode mode", $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
 
-    $page->find('css', '[data-drupal-selector="edit-label"]')->setValue("test-$display_mode");
+    $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-label"]')->setValue("Test $display_mode");
     $this->htmlOutput();
     // Article checkbox should be checked by default as the form is opened from
     // article content type.
     $this->assertNotEmpty($assert_session->waitForText('Enable this ' . $display_mode . ' mode for the following Content types'));
-    $assert_session->assertWaitOnAjaxRequest();
-    $checkbox = $page->find('css', '[data-drupal-selector="edit-bundles-by-entity-article"]');
+    $checkbox = $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-bundles-by-entity-article"]');
     $this->htmlOutput();
     $this->assertTrue($checkbox->isChecked());
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
