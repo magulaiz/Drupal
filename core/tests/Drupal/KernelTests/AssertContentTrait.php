@@ -123,16 +123,7 @@ trait AssertContentTrait {
   protected function parse() {
     if (!isset($this->elements)) {
       $content = $this->getRawContent();
-
-      // This is an XML document.
-      if (stripos(ltrim($content), '<?xml') === 0) {
-        $dom = new \DOMDocument();
-        $dom->loadXML($content);
-      }
-      else {
-        $dom = Html::load($content);
-      }
-
+      $dom = Html::load($content);
       if ($dom) {
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
