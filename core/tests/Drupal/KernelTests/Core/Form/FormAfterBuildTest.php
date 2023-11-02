@@ -8,11 +8,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests form after build doesn't add #parents.
+ * Tests forms with an #after_build callback.
  *
  * @group Form
  */
-class FormAfterBuildNotice extends KernelTestBase implements FormInterface {
+class FormAfterBuildTest extends KernelTestBase implements FormInterface {
 
   /**
    * {@inheritdoc}
