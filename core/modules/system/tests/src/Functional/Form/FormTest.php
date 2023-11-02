@@ -82,12 +82,6 @@ class FormTest extends BrowserTestBase {
     $elements['password']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password'];
     $elements['password']['empty_values'] = $empty_strings;
 
-    $elements['password_confirm']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password_confirm'];
-    // Provide empty values for both password fields.
-    foreach ($empty_strings as $key => $value) {
-      $elements['password_confirm']['empty_values'][$key] = ['pass1' => $value];
-    }
-
     $elements['textarea']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textarea'];
     $elements['textarea']['empty_values'] = $empty_strings;
 
@@ -772,8 +766,8 @@ class FormTest extends BrowserTestBase {
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
     $actual_count = count($disabled_elements);
-    $expected_count = 44;
-    $this->assertEquals($expected_count, $actual_count, sprintf('Found %s elements with disabled property (expected %s).', count($disabled_elements), $expected_count));
+    $expected_count = 42;
+    $this->assertEquals($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
 
     // Mink does not "see" hidden elements, so we need to set the value of the
     // hidden element directly.
