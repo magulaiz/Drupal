@@ -10,6 +10,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Base class for the 'options_*' widgets.
@@ -191,7 +192,14 @@ abstract class OptionsWidgetBase extends WidgetBase {
       }
     }
 
-    return $selected_options;
+    $default_values = [];
+    $field_definition = $items->getFieldDefinition();
+
+    if ($field_definition instanceof FieldConfig) {
+      $default_values = array_column($field_definition->get('default_value'), 'value');
+    }
+
+    return empty($selected_options) && !empty($default_values) ? $default_values : $selected_options;
   }
 
   /**
