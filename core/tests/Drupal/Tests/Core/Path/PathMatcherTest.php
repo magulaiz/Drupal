@@ -150,6 +150,26 @@ class PathMatcherTest extends UnitTestCase {
           '[^/]+?/[0-9]' => TRUE,
         ],
       ],
+      [
+        // Test spaces.
+        '/example/1 ',
+        [
+          '/example/1' => TRUE,
+          '/example/2' => FALSE,
+          '/example/with%20a%20space' => FALSE,
+          '/test ' => FALSE,
+        ],
+      ],
+      [
+        // Test spaces in different parts.
+        ' /example/with a space ',
+        [
+          '/example/with%20a%20space' => TRUE,
+          ' /example/with%20a%20space ' => FALSE,
+          '%20/example/with%20a%20space%20' => FALSE,
+          '%20/example/with a space%20' => FALSE,
+        ],
+      ],
     ];
   }
 
