@@ -565,13 +565,16 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    *
    * @dataProvider providerImageCaption
    */
-  public function testImageCaption(string $original_attributes, string $expected_caption, string $expected_attributes) {
+  public function testImageCaption(string $original_attributes, string $expected_caption, string $expected_attributes, bool $wrap_in_link) {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     // The foo attribute is added to be removed later by CKEditor 5 to make sure
     // CKEditor 5 was able to downcast data.
     $img_tag = '<img ' . $this->imageAttributesAsString() . " $original_attributes >";
+    if ($wrap_in_link) {
+      $img_tag = '<a href="https://www.drupal.org">' . $img_tag . '</a>';
+    }
     $this->host->body->value = $img_tag;
     $this->host->save();
 
@@ -605,6 +608,13 @@ abstract class ImageTestBase extends CKEditor5TestBase {
         'original attributes' => 'alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!" foo="bar"',
         'expected caption' => 'Alpacas <em>are</em> cute<br>really!',
         'expected attributes' => 'alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!"',
+        'wrap in link' => FALSE,
+      ],
+      'Linked image' => [
+        'original attributes' => 'data-caption="This is not a link."',
+        'expected caption' => 'This is not a link.',
+        'expected attributes' => 'data-caption="This is not a link."',
+        'wrap in link' => TRUE,
       ],
     ];
   }
