@@ -78,12 +78,16 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $this->assertEquals("Add new Content $display_mode mode", $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
     $target_field = $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-label"]');
     $target_field->focus();
-    $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-label"]')->setValue("Test $display_mode");
-    $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-description"]')->setValue("Test $display_mode description.");
+
+    $modal_content = $page->find('css', '.ui-dialog .ui-dialog-content');
+    $this->assertTrue($modal_content->isVisible());
+    $modal_label = $page->find('css', '[data-drupal-selector="edit-label"]');
+    $modal_label->setValue("Test $display_mode");
+
     // Article checkbox should be checked by default as the form is opened from
     // article content type.
     $this->assertNotEmpty($assert_session->waitForText('Enable this ' . $display_mode . ' mode for the following Content types'));
-    $checkbox = $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-bundles-by-entity-article"]');
+    $checkbox = $modal_content->find('css', '[data-drupal-selector="edit-bundles-by-entity-article"]');
     $this->assertTrue($checkbox->isChecked());
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
     $assert_session->assertWaitOnAjaxRequest();
