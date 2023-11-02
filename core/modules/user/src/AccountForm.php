@@ -130,6 +130,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         '#size' => 25,
         '#title' => $this->t('Password'),
         '#description' => $this->t('To change the current user password, enter the new password.'),
+        '#attributes' => [
+          'data-drupal-strength-indicator' => TRUE,
+        ],
       ];
 
       // To skip the current password field, the user must have logged in via a
@@ -154,7 +157,11 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
           // Do not let web browsers remember this password, since we are
           // trying to confirm that the person submitting the form actually
           // knows the current one.
-          '#attributes' => ['autocomplete' => 'off'],
+          '#attributes' => [
+            'autocomplete' => 'off',
+            'data-drupal-strength-indicator' => FALSE,
+          ],
+
         ];
         $form_state->set('user', $account);
 
@@ -176,6 +183,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         '#title' => $this->t('Password'),
         '#description' => $this->t('Provide a password for the new account.'),
         '#required' => TRUE,
+        '#attributes' => [
+          'data-drupal-strength-indicator' => TRUE,
+        ],
       ];
     }
 
