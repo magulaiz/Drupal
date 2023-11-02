@@ -190,3 +190,9 @@ drupal.node.preview:
   css:
     theme:
       css/components/content/node-preview.css: {}
+
+splitbutton:
+  version: VERSION
+  css:
+    theme:
+      css/components/forms/splitbutton.css: {}

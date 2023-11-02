@@ -1,0 +1,23 @@
+/**
+ * @file
+ * Styles for splitbutton.
+ */
+
+.splitbutton {
+  --splitbutton-main-background-primary: #008068;
+  --splitbutton-main-background-danger: #cc2a00;
+}
+
+.splitbutton__item > * {
+  font-family: "Scope One", Georgia, serif;
+}
+
+.splitbutton__item > *:hover,
+.splitbutton__item > *:active,
+.splitbutton__item > *:focus {
+  transition: background-color 0.5s ease;
+  color: #000;
+  background-color: #e6eee0
+}
+
+

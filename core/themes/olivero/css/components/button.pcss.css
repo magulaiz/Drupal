@@ -82,6 +82,14 @@
   line-height: normal;
 }
 
+.button--extrasmall {
+  height: var(--sp2);
+  padding-block: calc((var(--sp2) - var(--line-height-s)) / 2);
+  padding-inline: var(--sp);
+  font-size: var(--font-size-base);
+  line-height: normal;
+}
+
 .button--primary {
   color: var(--color--white);
   border-color: var(--color--primary-40);

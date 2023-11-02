@@ -1,0 +1,8 @@
+[data-drupal-selector="splitbutton-item-list"] {
+  position: static !important;
+  display: block !important;
+}
+
+[data-drupal-selector="splitbutton-trigger"] {
+  display: none !important;
+}

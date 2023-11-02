@@ -49,6 +49,8 @@ libraries-extend:
     - umami/user
   node/drupal.node.preview:
     - umami/drupal.node.preview
+  core/drupal.splitbutton:
+    - umami/splitbutton
 
 regions:
   pre_header: Pre-header

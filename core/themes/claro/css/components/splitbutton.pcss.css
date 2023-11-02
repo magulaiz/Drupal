@@ -1,0 +1,63 @@
+/**
+ * @file
+ * General styles for splitbuttons.
+ */
+
+.splitbutton {
+  --splitbutton-icon-width: 14px;
+  --splitbutton-border-radius: var(--base-border-radius);
+  --splitbutton-dropdown-background-color: var(--color-white);
+  --splitbutton-dropdown-border-color: var(--color-gray-200);
+  --splitbutton-dropdown-link-color: var(--color-gray-800);
+  --splitbutton-dropdown-link-hover-color: var(--color-text);
+  --splitbutton-main-background: var(--button-bg-color);
+  --splitbutton-main-background-primary: var(--button-bg-color--primary);
+  --splitbutton-main-background-danger: var(--button-bg-color--danger);
+  --splitbutton-trigger-chevron-dark: url(../../images/icons/000f33/chevron-down.svg);
+  --splitbutton-trigger-chevron-light: url(../../images/icons/ffffff/chevron-down.svg);
+}
+
+.splitbutton__main :is(button, a, .button):not(:focus) {
+  box-shadow: none;
+}
+
+.splitbutton__trigger {
+  &::after {
+    background-color: transparent;
+    background-image: var(--splitbutton-trigger-chevron-dark);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    clip-path: none;
+  }
+
+  :where(.splitbutton--primary, .splitbutton--danger) &::after {
+    background-image: var(--splitbutton-trigger-chevron-light);
+  }
+
+  @media (forced-colors: active) {
+    &::after {
+      mask: var(--splitbutton-trigger-chevron-dark) no-repeat center;
+      background: buttonText;
+    }
+  }
+}
+
+.splitbutton__list {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.splitbutton__item  :is(button, a, .button) {
+  background: transparent;
+  box-shadow: none;
+
+  &:hover {
+    text-decoration: none;
+    background: var(--color-gray-050);
+  }
+
+  &:focus {
+    outline: solid var(--focus-border-size) var(--color-focus);
+    outline-offset: calc(-1 * var(--focus-border-offset-size));
+  }
+}
