@@ -158,7 +158,7 @@ JS;
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p class="highlighted interesting"> <br> <a href class="reliable"> <blockquote class="famous"> <h2 class="red-heading"> <ul class="items"> <ol class="steps"> <li> <table class="data-analysis"> <tr> <td rowspan colspan> <th rowspan colspan> <thead> <tbody> <tfoot> <caption class="caution"> <div class="deep-dive">',
+            'allowed_html' => '<p class="highlighted interesting"> <br class="literary"> <a href class="reliable"> <blockquote class="famous"> <h2 class="red-heading"> <ul class="items"> <ol class="steps"> <li> <table class="data-analysis"> <tr> <td rowspan colspan> <th rowspan colspan> <thead> <tbody> <tfoot> <caption class="caution"> <div class="deep-dive">',
           ],
         ],
       ],
@@ -232,6 +232,10 @@ JS;
                 'label' => 'Caution caption',
                 'element' => '<caption class="caution">',
               ],
+              [
+                'label' => 'Literary line break',
+                'element' => '<br class="literary">',
+              ],
             ],
           ],
         ],
@@ -255,7 +259,7 @@ JS;
       'type' => 'page',
       'title' => 'A selection of the history of Drupal',
       'body' => [
-        'value' => '<h2>Upgrades</h2><p class="history">Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p> — <a href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p><div><ul><li>Update Drupal core using Composer</li><li>Update Drupal core manually</li><li>Update Drupal core using Drush</li></ul><ol><li>Back up your files and database</li><li>Put your site into maintenance mode</li><li>Update the code and apply changes</li><li>Deactivate maintenance mode</li></ol><table><caption>Drupal upgrades are now easy, with a few caveats.</caption><tbody><tr><td>First</td><td>Second</td></tr><tr><td>Data value 1</td><td>Data value 2</td></tr></tbody></table></div>',
+        'value' => '<h2>Upgrades</h2><p class="history">Drupal has historically been difficult to upgrade from one major version to the next.<br class="literary">Very difficult.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p> — <a href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p><div><ul><li>Update Drupal core using Composer</li><li>Update Drupal core manually</li><li>Update Drupal core using Drush</li></ul><ol><li>Back up your files and database</li><li>Put your site into maintenance mode</li><li>Update the code and apply changes</li><li>Deactivate maintenance mode</li></ol><table><caption>Drupal upgrades are now easy, with a few caveats.</caption><tbody><tr><td>First</td><td>Second</td></tr><tr><td>Data value 1</td><td>Data value 2</td></tr></tbody></table></div>',
         'format' => 'test_format',
       ],
     ]);
@@ -284,7 +288,7 @@ JS;
     // Click the dropdown, check the available styles.
     $style_dropdown->click();
     $buttons = $style_dropdown->findAll('css', '.ck-dropdown__panel button');
-    $this->assertCount(9, $buttons);
+    $this->assertCount(10, $buttons);
 
     $this->assertSame('Highlighted & interesting', $buttons[0]->find('css', '.ck-button__label')->getText());
     $this->assertSame('Red heading', $buttons[1]->find('css', '.ck-button__label')->getText());
@@ -301,12 +305,13 @@ JS;
       $this->assertSame('Block styles', $style_group->find('css', 'label')->getText());
     }
     // And then all text styles.
-    for ($i = 8; $i <= 8; $i++) {
+    for ($i = 8; $i <= 9; $i++) {
       $style_group = $buttons[$i]->getParent()->getParent();
       $this->assertTrue($style_group->hasClass('ck-style-panel__style-group'));
       $this->assertSame('Text styles', $style_group->find('css', 'label')->getText());
     }
     $this->assertSame('Reliable source', $buttons[8]->find('css', '.ck-button__label')->getText());
+    $this->assertSame('Literary line break', $buttons[9]->find('css', '.ck-button__label')->getText());
 
     $this->assertSame('true', $buttons[0]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[1]->hasAttribute('aria-disabled'));
@@ -316,6 +321,8 @@ JS;
     $this->assertSame('true', $buttons[5]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[6]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[7]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[8]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[9]->getAttribute('aria-disabled'));
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
@@ -324,6 +331,8 @@ JS;
     $this->assertTrue($buttons[5]->hasClass('ck-off'));
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
+    $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
 
     // Apply the "Red heading" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main h2:not(.red-heading)');
@@ -338,6 +347,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Red heading', $style_dropdown->getText());
 
     // Select the first paragraph and observe changes in:
@@ -355,6 +365,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
@@ -382,6 +393,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     // TRICKY: the blockquote contains a paragraph.
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
@@ -409,6 +421,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     // TRICKY: the contents of the list item can be converted to a paragraph.
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
@@ -435,6 +448,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Items', $style_dropdown->getText());
 
     // Select the <ol> and check the available styles
@@ -450,6 +464,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     // TRICKY: the contents of the list item can be converted to a paragraph.
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
@@ -462,6 +477,7 @@ JS;
     $this->assertFalse($buttons[6]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[7]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[8]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[9]->getAttribute('aria-disabled'));
 
     // Apply the "Steps" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main ol:not(.steps)');
@@ -476,6 +492,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Steps', $style_dropdown->getText());
 
     // Select the table and check the available styles
@@ -491,6 +508,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     // TRICKY: the contents of the table cell can be converted to a paragraph.
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
@@ -501,6 +519,7 @@ JS;
     $this->assertSame('true', $buttons[6]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[7]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[8]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[9]->getAttribute('aria-disabled'));
 
     // Apply the "Data analysis" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main table:not(.data-analysis)');
@@ -515,6 +534,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Data analysis', $style_dropdown->getText());
 
     // Select the link, assert that no style is active currently.
@@ -530,6 +550,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     // TRICKY: the link is inside a paragraph.
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
@@ -540,6 +561,7 @@ JS;
     $this->assertSame('true', $buttons[6]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[7]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[8]->hasAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[9]->getAttribute('aria-disabled'));
 
     // Apply the "Reliable source" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main a:not(.reliable)');
@@ -554,6 +576,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-on'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Reliable source', $style_dropdown->getText());
 
     // Because we cannot select the <div> directly (it's not a visible element),
@@ -572,6 +595,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     // TRICKY: the contents of the list item can be converted to a paragraph.
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
@@ -584,6 +608,7 @@ JS;
     $this->assertFalse($buttons[6]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[7]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[8]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[9]->getAttribute('aria-disabled'));
 
     // Apply the "Truly deep dive" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main div:not(.deep-dive)');
@@ -598,6 +623,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-on'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Multiple styles', $style_dropdown->getText());
 
     // Select the table caption, assert that no style is active currently.
@@ -615,6 +641,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-off'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('true', $buttons[0]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
@@ -626,6 +653,7 @@ JS;
     $this->assertSame('true', $buttons[6]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[7]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[8]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[9]->getAttribute('aria-disabled'));
 
     // Apply the "Caution caption" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main figure.table > figcaption:not(.caution)');
@@ -640,6 +668,7 @@ JS;
     $this->assertTrue($buttons[6]->hasClass('ck-off'));
     $this->assertTrue($buttons[7]->hasClass('ck-on'));
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
+    $this->assertTrue($buttons[9]->hasClass('ck-off'));
     $this->assertSame('Multiple styles', $style_dropdown->getText());
 
     // The resulting markup should be identical to the starting markup, with
@@ -654,7 +683,7 @@ JS;
     // 6. the `reliable` class has been added to the `<a>`
     // 7. The `deep-dive` class has been added to the `<div>`
     // 8. The `caution` class has been added to the `<caption>`
-    $this->assertSame('<h2 class="red-heading">Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p>— <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p><div class="deep-dive"><ul class="items"><li>Update Drupal core using Composer</li><li>Update Drupal core manually</li><li>Update Drupal core using Drush</li></ul><ol class="steps"><li>Back up your files and database</li><li>Put your site into maintenance mode</li><li>Update the code and apply changes</li><li>Deactivate maintenance mode</li></ol><table class="data-analysis"><caption class="caution">Drupal upgrades are now easy, with a few caveats.</caption><tbody><tr><td>First</td><td>Second</td></tr><tr><td>Data value 1</td><td>Data value 2</td></tr></tbody></table></div>', $this->getEditorDataAsHtmlString());
+    $this->assertSame('<h2 class="red-heading">Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.<br class="literary">Very difficult.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p>— <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p><div class="deep-dive"><ul class="items"><li>Update Drupal core using Composer</li><li>Update Drupal core manually</li><li>Update Drupal core using Drush</li></ul><ol class="steps"><li>Back up your files and database</li><li>Put your site into maintenance mode</li><li>Update the code and apply changes</li><li>Deactivate maintenance mode</li></ol><table class="data-analysis"><caption class="caution">Drupal upgrades are now easy, with a few caveats.</caption><tbody><tr><td>First</td><td>Second</td></tr><tr><td>Data value 1</td><td>Data value 2</td></tr></tbody></table></div>', $this->getEditorDataAsHtmlString());
   }
 
 }
