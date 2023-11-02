@@ -81,6 +81,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     $modal_content = $page->find('css', '.ui-dialog .ui-dialog-content');
     $this->assertTrue($modal_content->isVisible());
+    $assert_session->elementExists('css', '[name="label"]');
     $modal_content->fillField('label', "Test $display_mode");
 
     // Article checkbox should be checked by default as the form is opened from
