@@ -51,7 +51,7 @@ final class FieldTempStoreDeleteController extends ControllerBase {
     $response = call_user_func_array($callback,
       [$entity_type, $bundle]);
     // Delete stored field data in case user changes field type.
-    $this->tempStore->delete($entity_type . ":" . $field_name);
+    $this->tempStore->delete("$entity_type:$field_name");
     return $response;
   }
 
