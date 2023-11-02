@@ -20,7 +20,7 @@ class ImageFilePathConstraint extends Image {
    * {@inheritdoc}
    */
   public function validatedBy() {
-      return ImageValidator::class;
+    return ImageValidator::class;
   }
 
 }
