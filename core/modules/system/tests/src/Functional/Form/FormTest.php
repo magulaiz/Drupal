@@ -85,7 +85,7 @@ class FormTest extends BrowserTestBase {
     $elements['password_confirm']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password_confirm'];
     // Provide empty values for both password fields.
     foreach ($empty_strings as $key => $value) {
-      $elements['password_confirm']['empty_values'][$key] = ['pass1' => $value, 'pass2' => $value];
+      $elements['password_confirm']['empty_values'][$key] = ['pass1' => $value];
     }
 
     $elements['textarea']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textarea'];
