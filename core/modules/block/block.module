@@ -211,7 +211,6 @@ function block_theme_suggestions_block(array $variables) {
   return $suggestions;
 }
 
-
 /**
  * Implements hook_ENTITY_TYPE_delete() for user_role entities.
  *
