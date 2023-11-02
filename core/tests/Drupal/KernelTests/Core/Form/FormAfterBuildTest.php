@@ -60,21 +60,20 @@ class FormAfterBuildTest extends KernelTestBase implements FormInterface {
   }
 
   /**
-   * Triggers a notice/error on #after_build when new elements are added.
+   * Tests a form with an #after_build that adds an element with no '#parents'.
    */
   public function testUndefinedParentsInAfterBuild() {
-    set_error_handler(self::class . '::errorHandler');
     $form_state = new FormState();
     $form_builder = $this->container->get('form_builder');
-    $form_builder->submitForm($this, $form_state);
-    $this->assertEmpty(self::$caughtErrors);
-  }
+    $error_message = NULL;
+    try {
+      $form_builder->submitForm($this, $form_state);
+    }
+    catch (\Throwable $e) {
+      $error_message = $e->getMessage();
+    }
 
-  /**
-   * Error handler to catch notices and warnings during test.
-   */
-  public static function errorHandler($number, $error, $file, $line) {
-    self::$caughtErrors[] = $error;
+    $this->assertTrue(empty($error_message), "The following error occurred during the form submission: {$error_message}");
   }
 
 }
