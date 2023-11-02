@@ -250,17 +250,17 @@ class ToggletipForm extends FormBase {
       'a_trigger' => [
         '#type' => 'container',
         '#allowed_tags' => ['button'],
-        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" type="button" popovertarget="very_unical_id">This is tooltip trigger(can be any trigger)</button>',
+        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" type="button" popoverTarget="very_unique_id">This is tooltip trigger(can be any trigger)</button>',
       ],
       'a_trigger_with_placement' => [
         '#type' => 'container',
         '#allowed_tags' => ['button'],
-        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" data-drupal-tooltip-placement="bottom" type="button" popovertarget="very_very_unical_id">And this places tooltip on bottom</button>',
+        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" data-drupal-tooltip-placement="bottom" type="button" popoverTarget="very_very_unique_id">And this places tooltip on bottom</button>',
       ],
       'a_trigger_with_hover' => [
         '#type' => 'container',
         '#allowed_tags' => ['button'],
-        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" data-drupal-tooltip-on-hover="true" type="button" popovertarget="very_very_very_unical_id">And this one works on hover</button>',
+        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" data-drupal-tooltip-on-hover="true" type="button" popoverTarget="very_very_very_unique_id">And this one works on hover</button>',
       ],
     ];
   }
