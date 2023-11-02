@@ -156,6 +156,9 @@ class SiteConfigureForm extends ConfigFormBase {
       '#type' => 'password_unmask',
       '#required' => TRUE,
       '#size' => 25,
+      '#attributes' => [
+        'data-drupal-strength-indicator' => TRUE,
+      ],
     ];
     $form['admin_account']['account']['#tree'] = TRUE;
     $form['admin_account']['account']['mail'] = [
