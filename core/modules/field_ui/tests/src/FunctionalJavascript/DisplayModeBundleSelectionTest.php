@@ -77,7 +77,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $this->clickLink("Add new $display_mode mode");
     $this->assertEquals("Add new Content $display_mode mode", $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
 
-    $assert_session->waitForElementVisible('css', '.ui-dialog');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ui-dialog'));
     $assert_session->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content');
     $assert_session->elementExists('css', '[name="label"]');
     $page->fillField('label', "Test $display_mode");
