@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui\Form;
 
+use _PHPStan_adbc35a1c\Nette\Neon\Exception;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Component\Serialization\Json;
@@ -292,6 +293,15 @@ class FieldStorageAddForm extends FormBase {
       // Add the field prefix.
       $field_name = $this->config('field_ui.settings')->get('field_prefix') . $field_name;
       $form_state->setValueForElement($form['field_name'], $field_name);
+      // Set the temp store here, so we can actually see the error oon the modal.
+      $field_storage_type = $form_state->getValue('field_options_wrapper') ?? $form_state->get('field_type');
+      $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
+      if(!empty($this->messenger()->messagesByType('error'))) {
+        $label = $form_state->getValue('label');
+        $message = explode(':',$this->messenger()->messagesByType('error')[0])[1];
+        $form_state->setErrorByName('drupal-modal', $this->t("There was a problem creating field $label: $message"));
+        $this->messenger()->deleteAll();
+      }
     }
   }
 
@@ -320,9 +330,7 @@ class FieldStorageAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $field_storage_type = $form_state->getValue('field_options_wrapper') ?? $form_state->get('field_type');
-    $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
-    $form_state->setRedirectUrl($this->getRedirectUrl($form_state->getValue('field_name')));
+   // nothing to do here.
   }
 
   /**
@@ -496,8 +504,8 @@ class FieldStorageAddForm extends FormBase {
       $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
     }
     catch (\Exception $e) {
-      $this->messenger()->addError($this->t('There was a problem creating field %label: @message'));
-      exit;
+      $message = $e->getMessage();
+      $this->messenger()->addError($this->t("There was a problem creating field :$message"));
     }
 
     // Save field and field storage values in tempstore.
