@@ -19,11 +19,13 @@
    * @param {string} settings.title
    *   The text inside the toggle link element. This text is hidden
    *   from visual UAs.
+   * @param {number} index
+   *   Index of the dropbutton in the list, used to create unique ids.
    */
-  function DropButton(dropbutton, settings) {
+  function DropButton(dropbutton, settings, index) {
     // Merge defaults with settings.
     const options = $.extend(
-      { title: Drupal.t('List additional actions') },
+      { title: Drupal.t('Show additional actions') },
       settings,
     );
     const $dropbutton = $(dropbutton);
@@ -47,41 +49,25 @@
 
     // Add the special dropdown only if there are hidden actions.
     if (this.$actions.length > 1) {
+      this.$dropbutton.addClass('dropbutton-multiple');
       // Identify the first element of the collection.
       const $primary = this.$actions.slice(0, 1);
       // Identify the secondary actions.
       const $secondary = this.$actions.slice(1);
-      $secondary.addClass('secondary-action');
-      // Add toggle link.
-      $primary.after(Drupal.theme('dropbuttonToggle', options));
-      // Bind mouse events.
-      this.$dropbutton.addClass('dropbutton-multiple').on({
-        /**
-         * Adds a timeout to close the dropdown on mouseleave.
-         *
-         * @ignore
-         */
-        'mouseleave.dropbutton': this.hoverOut.bind(this),
-
-        /**
-         * Clears timeout when mouseout of the dropdown.
-         *
-         * @ignore
-         */
-        'mouseenter.dropbutton': this.hoverIn.bind(this),
-
-        /**
-         * Similar to mouseleave/mouseenter, but for keyboard navigation.
-         *
-         * @ignore
-         */
-        'focusout.dropbutton': this.focusOut.bind(this),
-
-        /**
-         * @ignore
-         */
-        'focusin.dropbutton': this.focusIn.bind(this),
+      const ids = [];
+      $secondary.each((actionIndex, action) => {
+        action.classList.add('secondary-action');
+        // Add a unique id for aria-controls.
+        const id = `secondary-action-${index}-${actionIndex}`;
+        ids.push(id);
+        action.setAttribute('id', id);
       });
+      // Add toggle link.
+      const $toggle = $(Drupal.theme('dropbuttonToggle', options)).insertAfter(
+        $primary,
+      );
+      $toggle.find('button').attr('aria-expanded', 'false');
+      $toggle.find('button').attr('aria-controls', ids.toString());
     } else {
       this.$dropbutton.addClass('dropbutton-single');
     }
@@ -97,7 +83,16 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+    const $wrapper = $(e.target).closest('.dropbutton-wrapper');
+    const $buttonText = $(e.target).find('.visually-hidden');
+    $wrapper.toggleClass('open');
+    if ($wrapper.hasClass('open')) {
+      $buttonText.html('Hide additional actions');
+      $(e.target).attr('aria-expanded', 'true');
+    } else {
+      $buttonText.html('Show additional actions');
+      $(e.target).attr('aria-expanded', 'false');
+    }
   }
 
   /**
@@ -118,9 +113,9 @@
           $(body).on('click', '.dropbutton-toggle', dropbuttonClickHandler);
         }
         // Initialize all buttons.
-        dropbuttons.forEach((dropbutton) => {
+        dropbuttons.forEach((dropbutton, index) => {
           DropButton.dropbuttons.push(
-            new DropButton(dropbutton, settings.dropbutton),
+            new DropButton(dropbutton, settings.dropbutton, index),
           );
         });
       }
@@ -164,24 +159,6 @@
       /**
        * @method
        */
-      hoverIn() {
-        // Clear any previous timer we were using.
-        if (this.timerID) {
-          window.clearTimeout(this.timerID);
-        }
-      },
-
-      /**
-       * @method
-       */
-      hoverOut() {
-        // Wait half a second before closing.
-        this.timerID = window.setTimeout(this.close.bind(this), 500);
-      },
-
-      /**
-       * @method
-       */
       open() {
         this.toggle(true);
       },
@@ -191,22 +168,6 @@
        */
       close() {
         this.toggle(false);
-      },
-
-      /**
-       * @param {jQuery.Event} e
-       *   The event triggered.
-       */
-      focusOut(e) {
-        this.hoverOut.call(this, e);
-      },
-
-      /**
-       * @param {jQuery.Event} e
-       *   The event triggered.
-       */
-      focusIn(e) {
-        this.hoverIn.call(this, e);
       },
     },
   );
