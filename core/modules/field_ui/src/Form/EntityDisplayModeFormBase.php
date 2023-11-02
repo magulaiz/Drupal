@@ -127,7 +127,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       }
     }
 
-    $default_checkbox = [];
+    $default_checkbox = NULL;
     if ($this->getRequest()->query->has('destination') && $destination = $this->getRedirectDestination()->get()) {
       $default_checkbox = explode('/', $destination)[5];
     }
@@ -136,7 +136,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       '#title' => $this->t('Enable this @display-mode for the following @bundle-label types:', ['@display-mode' => $this->entityType->getSingularLabel(), '@bundle-label' => $definition->getLabel()]),
       '#description' => $this->t('This @display-mode will still be available for the rest of the @bundle-label types if not checked here, but it will not be enabled by default.', ['@bundle-label' => $definition->getLabel(), '@display-mode' => $this->entityType->getSingularLabel()]),
       '#options' => $bundles_by_entity,
-      '#default_value' => empty($default_checkbox) ? $defaults : [$default_checkbox],
+      '#default_value' => $default_checkbox ? [$default_checkbox] : $defaults,
     ];
 
     return $form;
