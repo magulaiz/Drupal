@@ -257,11 +257,6 @@ class ToggletipForm extends FormBase {
         '#allowed_tags' => ['button'],
         '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" data-drupal-tooltip-placement="bottom" type="button" popoverTarget="very_very_unique_id">And this places tooltip on bottom</button>',
       ],
-      'a_trigger_with_hover' => [
-        '#type' => 'container',
-        '#allowed_tags' => ['button'],
-        '#markup' => '<button data-drupal-tooltip-toggle-button="Tooltip Text" data-drupal-tooltip-on-hover="true" type="button" popoverTarget="very_very_very_unique_id">And this one works on hover</button>',
-      ],
     ];
   }
 

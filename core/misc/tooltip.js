@@ -38,16 +38,6 @@
           config.placement = tooltipTrigger.dataset.drupalTooltipPlacement;
         }
 
-        // [data-drupal-tooltip-on-hover]
-        if (tooltipTrigger.dataset.drupalTooltipOnHover) {
-          tooltipTrigger.addEventListener('mouseenter', () => {
-            tip.showPopover();
-          });
-          tooltipTrigger.addEventListener('mouseleave', () => {
-            tip.hidePopover();
-          });
-        }
-
         // Create the arrow that points to the tip's disclosure button.
         const tipArrow = Drupal.theme.tooltipArrow(tip);
 
