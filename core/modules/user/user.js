@@ -114,7 +114,11 @@
         const password = {};
 
         // If the password strength indicator is enabled, add its markup.
-        if (settings.password.showStrengthIndicator) {
+        // console.log();
+        if (
+          settings.password.showStrengthIndicator &&
+          value.hasAttribute('data-drupal-strength-indicator')
+        ) {
           const $passwordStrength = $(
             Drupal.theme('passwordStrength', settings.password),
           );
