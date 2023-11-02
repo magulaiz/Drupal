@@ -103,6 +103,7 @@ function ckeditor5_post_update_code_block(&$sandbox = []) {
       return FALSE;
     }
     $settings = $editor->getSettings();
+    // @see ckeditor5_editor_presave()
     return in_array('codeBlock', $settings['toolbar']['items'], TRUE);
   });
 }
@@ -118,19 +119,7 @@ function ckeditor5_post_update_list_multiblock(&$sandbox = []) {
       return FALSE;
     }
     $settings = $editor->getSettings();
-
-    // Nothing to do if this Text Editor does not use the list plugin.
-    if (!array_key_exists('ckeditor5_list', $settings['plugins'])) {
-      return FALSE;
-    }
-
-    // Update to the new config structure.
-    $settings['plugins']['ckeditor5_list'] = [
-      'properties' => $settings['plugins']['ckeditor5_list'],
-      'multiBlock' => TRUE,
-    ];
-    $editor->setSettings($settings);
-
-    return TRUE;
+    // @see ckeditor5_editor_presave()
+    return array_key_exists('ckeditor5_list', $settings['plugins']);
   });
 }
