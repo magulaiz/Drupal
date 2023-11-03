@@ -281,6 +281,7 @@ stages:
     - if: $PERFORMANCE_TEST == "1"
   variables:
     <<: *test-variables
+    KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
     - <<: *with-chrome
