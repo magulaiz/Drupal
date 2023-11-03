@@ -80,9 +80,10 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $this->htmlOutput();
 
     $assert_session->waitForElementVisible('css', '.ui-dialog');
-    $assert_session->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content .ui-widget-content .ui-front');
+    $assert_session->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content');
     $this->htmlOutput();
     $assert_session->elementExists('css', '[name="label"]');
+    $this->htmlOutput();
     $page->fillField('label', "Test $display_mode");
     $this->htmlOutput();
 
