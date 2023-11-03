@@ -65,7 +65,7 @@ stages:
 # Templates #
 #############
 
-.default-job-settings: &default-job-settings-lint
+.default-job-settings: &default-job-settings
   interruptible: true
   allow_failure: false
   retry:
@@ -87,9 +87,10 @@ stages:
   needs:
     - '📦️ Yarn'
 
-.no-performance: &no-performance
+.default-job-settings-lint: &default-job-settings-lint
+  <<: [*default-job-settings]
   rules:
-    - if: $PERFORMANCE_TEST == null
+    - if: $PERFORMANCE_TEST != 1
 
 .junit-artifacts: &junit-artifacts
   artifacts:
@@ -226,7 +227,7 @@ stages:
 ################
 
 '📦️ Composer':
-  <<: *default-job-settings-lint
+  <<: *default-job-settings
   variables:
     <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "1"
@@ -248,7 +249,7 @@ stages:
       - composer install
 
 '📦️ Yarn':
-  <<: *default-job-settings-lint
+  <<: *default-job-settings
   variables:
     <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
@@ -273,7 +274,7 @@ stages:
 ################
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint, *no-performance ]
+  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     <<: *default-lint-variables
@@ -285,7 +286,7 @@ stages:
       codequality: phpstan-quality-report.json
 
 '🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint, *no-performance ]
+  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     <<: *default-lint-variables
@@ -297,7 +298,7 @@ stages:
       codequality: phpcs-quality-report.json
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint, *no-performance ]
+  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -308,7 +309,7 @@ stages:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint, *no-performance ]
+  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -319,7 +320,7 @@ stages:
       codequality: stylelint-quality-report.json
 
 '🧹 Compilation check':
-  <<: [ *with-yarn, *default-job-settings-lint, *no-performance ]
+  <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -328,7 +329,7 @@ stages:
     - cd core && yarn run -s check:ckeditor5
 
 '📔 Spell-checking':
-  <<: [ *with-yarn, *default-job-settings-lint, *no-performance ]
+  <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
