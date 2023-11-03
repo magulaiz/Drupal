@@ -105,8 +105,12 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
     // Workaround for if there is no formats for a DELETE call:
     // make the response formats match the format of the request
     if ($request->getMethod() === 'DELETE') {
-      if (empty($acceptable_request_formats)) $acceptable_request_formats = [$requested_format];
-      if (empty($acceptable_formats)) $acceptable_formats = [$requested_format];
+      if (empty($acceptable_request_formats)) {
+        $acceptable_request_formats = [$requested_format];
+      }
+      if (empty($acceptable_formats)) {
+        $acceptable_formats = [$requested_format];
+      }
     }
 
     // If an acceptable response format is requested, then use that. Otherwise,
