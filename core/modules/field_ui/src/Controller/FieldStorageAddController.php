@@ -10,7 +10,6 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -29,7 +28,6 @@ final class FieldStorageAddController extends ControllerBase {
    * FieldConfigAddController constructor.
    */
   public function __construct(
-    protected EntityTypeManagerInterface $entityTypeManager,
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
   ) {}
@@ -39,7 +37,6 @@ final class FieldStorageAddController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.field_type_category'),
     );
@@ -85,7 +82,7 @@ final class FieldStorageAddController extends ControllerBase {
     foreach ($field_type_options as $id => $field_type) {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
       $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
-      $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+      $entity_type = $this->entityTypeManager()->getDefinition($this->entityTypeId);
       $route_parameters = [
         'entity_type' => $this->entityTypeId,
         'bundle' => $this->bundle,
