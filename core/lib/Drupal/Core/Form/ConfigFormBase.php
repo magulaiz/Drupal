@@ -192,6 +192,14 @@ abstract class ConfigFormBase extends FormBase {
           // will not have the sequence index in it.
           $property_path = rtrim($property_path, '0123456789.');
         }
+        // Allow for composite form elements that target multiple deeper config
+        // property paths but present a simpler UI: if the property path is not
+        // found in the map, check the property path's parent instead.
+        while (!array_key_exists("$config_name:$property_path", $map) && str_contains($property_path, '.')) {
+          $parts = explode('.', $property_path);
+          array_pop($parts);
+          $property_path = implode('.', $parts);
+        }
         $form_element_name = $map["$config_name:$property_path"]->elementName;
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
