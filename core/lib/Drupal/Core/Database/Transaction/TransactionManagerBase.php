@@ -167,7 +167,9 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   protected function voidStackItem(string $id): void {
     // The item should be removed from $stack and added to $voidedItems for
     // later processing.
-    $this->voidedItems[$id] = $this->stack[$id];
+    if (isset($this->stack[$id])) {
+      $this->voidedItems[$id] = $this->stack[$id];
+    }
     $this->removeStackItem($id);
   }
 
