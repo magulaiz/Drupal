@@ -85,7 +85,7 @@ class Transaction {
 
   public function __destruct() {
     if ($this->connection->transactionManager()) {
-      $this->connection->transactionManager()->unpile($this->name, $this->id);
+      $this->connection->transactionManager()->unpile($this->name, $this->id, TRUE);
       return;
     }
     // Start of BC layer.
@@ -106,14 +106,27 @@ class Transaction {
   }
 
   /**
-   * Rolls back the current transaction.
+   * Commits the transaction.
    *
-   * This is just a wrapper method to rollback whatever transaction stack we are
-   * currently in, which is managed by the connection object itself. Note that
-   * logging needs to happen after a transaction has been rolled back or the log
-   * messages will be rolled back too.
+   * Depending on the state of the transaction stack, this leads to a COMMIT
+   * operation (if this transaction is a root one), or to a RELEASE SAVEPOINT
+   * operation (if this transaction is a savepoint one).
+   */
+  public function commit(): void {
+    // Start of BC layer.
+    if (!$this->connection->transactionManager()) {
+      throw new TransactionException('Can not commit a Transaction object when no TransactionManager is available');
+    }
+    // End of BC layer.
+    $this->connection->transactionManager()->unpile($this->name, $this->id, FALSE);
+  }
+
+  /**
+   * Rolls back the transaction.
    *
-   * @see \Drupal\Core\Database\Connection::rollBack()
+   * Depending on the state of the transaction stack, this leads to a ROLLBACK
+   * operation (if this transaction is a root one), or to a ROLLBACK TO
+   * SAVEPOINT operation (if this transaction is a savepoint one).
    */
   public function rollBack() {
     if ($this->connection->transactionManager()) {

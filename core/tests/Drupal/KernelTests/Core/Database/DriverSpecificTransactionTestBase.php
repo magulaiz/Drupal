@@ -244,7 +244,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('Syd');
 
     // Commit root. Corresponds to 'COMMIT' on the database.
-    unset($transaction);
+    $transaction->commit();
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
     $this->assertRowPresent('Syd');
@@ -328,7 +328,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->connection->startTransaction();
     $this->insertRow('row');
     $this->executeDDLStatement();
-    unset($transaction);
+    $transaction->commit();
     $this->assertRowPresent('row');
 
     // Even in different order.
@@ -336,7 +336,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->connection->startTransaction();
     $this->executeDDLStatement();
     $this->insertRow('row');
-    unset($transaction);
+    $transaction->commit();
     $this->assertRowPresent('row');
 
     // Even with stacking.
@@ -344,11 +344,11 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->connection->startTransaction();
     $transaction2 = $this->connection->startTransaction();
     $this->executeDDLStatement();
-    unset($transaction2);
+    $transaction2->commit();
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
-    unset($transaction3);
-    unset($transaction);
+    $transaction3->commit();
+    $transaction->commit();
     $this->assertRowPresent('row');
 
     // A transaction after a DDL statement should still work the same.
@@ -356,12 +356,12 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->connection->startTransaction();
     $transaction2 = $this->connection->startTransaction();
     $this->executeDDLStatement();
-    unset($transaction2);
+    $transaction2->commit();
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->rollBack();
-    unset($transaction3);
-    unset($transaction);
+    $transaction3->commit();
+    $transaction->commit();
     $this->assertRowAbsent('row');
 
     // The behavior of a rollback depends on the type of database server.
@@ -373,7 +373,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('row');
       $this->executeDDLStatement();
       $transaction->rollBack();
-      unset($transaction);
+      $transaction->commit();
       $this->assertRowAbsent('row');
 
       // Including with stacking.
@@ -381,12 +381,12 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $transaction = $this->connection->startTransaction();
       $transaction2 = $this->connection->startTransaction();
       $this->executeDDLStatement();
-      unset($transaction2);
+      $transaction2->commit();
       $transaction3 = $this->connection->startTransaction();
       $this->insertRow('row');
-      unset($transaction3);
+      $transaction3->commit();
       $transaction->rollBack();
-      unset($transaction);
+      $transaction->commit();
       $this->assertRowAbsent('row');
     }
     else {
@@ -406,7 +406,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       catch (Warning $warning) {
         $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
       }
-      unset($transaction);
+      $transaction->commit();
       $this->assertRowPresent('row');
     }
   }
@@ -489,10 +489,10 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction2 = $this->connection->startTransaction();
     $this->insertRow('inner');
     // Pop the inner transaction.
-    unset($transaction2);
+    $transaction2->commit();
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the inner transaction');
     // Pop the outer transaction.
-    unset($transaction);
+    $transaction->commit();
     $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the outer transaction');
     $this->assertRowPresent('outer');
     $this->assertRowPresent('inner');
@@ -505,11 +505,11 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('inner');
     // Now rollback the inner transaction.
     $transaction2->rollBack();
-    unset($transaction2);
+    $transaction2->commit();
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
     $this->insertRow('outer-after-inner-rollback');
-    unset($transaction);
+    $transaction->commit();
     $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
     $this->assertRowAbsent('inner');
@@ -628,7 +628,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       ->execute();
 
     // Commit the transaction.
-    unset($transaction);
+    $transaction->commit();
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
     $this->assertEquals('24', $saved_age);
@@ -661,18 +661,18 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     $this->insertRow('row');
 
-    // Unsets a savepoint transaction. Corresponds to 'RELEASE SAVEPOINT
+    // Commit a savepoint transaction. Corresponds to 'RELEASE SAVEPOINT
     // savepoint_2' on the database.
-    unset($savepoint2);
+    $savepoint2->commit();
     // Since we have committed an intermediate savepoint Transaction object,
     // the savepoints created later have been dropped by the database already.
     $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     $this->assertRowPresent('row');
 
-    // Unsets the remaining Transaction objects. The client transaction is
+    // Commit the remaining Transaction objects. The client transaction is
     // eventually committed.
-    unset($savepoint1);
-    unset($transaction);
+    $savepoint1->commit();
+    $transaction->commit();
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
   }
@@ -696,8 +696,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     $this->insertRow('row');
 
-    // Unsets the root transaction. Corresponds to 'COMMIT' on the database.
-    unset($transaction);
+    // Commit the root transaction. Corresponds to 'COMMIT' on the database.
+    $transaction->commit();
     // Since we have committed the outer (root) Transaction object, the inner
     // (savepoint) ones have been dropped by the database already, and we are
     // no longer in an active transaction state.
@@ -707,7 +707,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // Unpile the inner (savepoint) Transaction object, it should be a no-op
     // anyway given it was dropped by the database already, and removed from
     // our transaction stack.
-    unset($savepoint2);
+    $savepoint2->commit();
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
@@ -745,7 +745,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
-    unset($transaction);
+    $transaction->commit();
     $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
     $this->assertRowPresent('row');
     $this->assertRowPresent('rtcCommit');
@@ -762,7 +762,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertNull($this->postTransactionCallbackAction);
     $transaction->rollBack();
     $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
-    unset($transaction);
+    $transaction->commit();
     $this->assertRowAbsent('row');
     // The row insert should be missing since the client rollback occurs after
     // the processing of the callbacks.
