@@ -348,7 +348,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->commit();
-    $transaction->commit();
+    unset($transaction);
     $this->assertRowPresent('row');
 
     // A transaction after a DDL statement should still work the same.
@@ -361,7 +361,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('row');
     $transaction3->rollBack();
     $transaction3->commit();
-    $transaction->commit();
+    unset($transaction);
     $this->assertRowAbsent('row');
 
     // The behavior of a rollback depends on the type of database server.
@@ -373,7 +373,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('row');
       $this->executeDDLStatement();
       $transaction->rollBack();
-      $transaction->commit();
+      unset($transaction);
       $this->assertRowAbsent('row');
 
       // Including with stacking.
@@ -386,7 +386,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('row');
       $transaction3->commit();
       $transaction->rollBack();
-      $transaction->commit();
+      unset($transaction);
       $this->assertRowAbsent('row');
     }
     else {
@@ -406,7 +406,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       catch (Warning $warning) {
         $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
       }
-      $transaction->commit();
+      unset($transaction);
       $this->assertRowPresent('row');
     }
   }
@@ -707,7 +707,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // Unpile the inner (savepoint) Transaction object, it should be a no-op
     // anyway given it was dropped by the database already, and removed from
     // our transaction stack.
-    $savepoint2->commit();
+    unset($savepoint2);
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
@@ -762,7 +762,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertNull($this->postTransactionCallbackAction);
     $transaction->rollBack();
     $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
-    $transaction->commit();
+    unset($transaction);
     $this->assertRowAbsent('row');
     // The row insert should be missing since the client rollback occurs after
     // the processing of the callbacks.
