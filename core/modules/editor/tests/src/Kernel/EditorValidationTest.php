@@ -143,6 +143,14 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
         "'max_dimensions' is an unknown key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
       ],
     ]);
+
+    // Remove the values that the messages said are unknown.
+    $this->entity->setImageUploadSettings(['status' => FALSE]);
+    $this->assertValidationErrors([]);
+
+    // Note how this is the same as the initial value. This proves that `status`
+    // being FALSE prevents any meaningless key-value pairs to be present, and
+    // `status` being TRUE requires those then meaningful pairs to be present.
   }
 
 }
