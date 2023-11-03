@@ -505,6 +505,7 @@ class FieldStorageAddForm extends FormBase {
     catch (\Exception $e) {
       $message = $e->getMessage();
       $this->messenger()->addError($this->t("There was a problem creating field :$message"));
+      return;
     }
 
     // Save field and field storage values in tempstore.
