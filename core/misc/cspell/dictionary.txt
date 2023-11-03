@@ -1057,6 +1057,8 @@ titlebar
 tlds
 tmpfs
 toggleable
+toggletip
+toggletips
 togglewrap
 tongatapu
 toolkits

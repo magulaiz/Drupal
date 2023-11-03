@@ -1,0 +1,7 @@
+name: 'Toggletip Test'
+type: module
+description: 'Tests toggletip render element.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:off_canvas_test
