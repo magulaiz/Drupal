@@ -172,6 +172,13 @@ class RequiredKeysConstraintValidatorTest extends KernelTestBase {
     $this->config = $this->container->get('config.typed')
       ->createFromNameAndData('block.block.branding', $data);
 
+    // Ensure this is testing ONLY the `RequiredKeys` constraint.
+    // @see setUp()
+    $this->assertSame(
+      ['RequiredKeys' => '<infer>'],
+      $this->config->get('settings')->getDataDefinition()->getConstraints()
+    );
+
     // Now 3 validation errors should be triggered: one for each of the settings
     // that exist in the "branding" block but not the "powered by" block.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
