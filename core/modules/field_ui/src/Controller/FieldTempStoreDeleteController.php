@@ -24,6 +24,8 @@ final class FieldTempStoreDeleteController extends ControllerBase {
    *
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
+   *   The controller resolver service.
    */
   public function __construct(
     protected PrivateTempStore $tempStore,
@@ -42,6 +44,13 @@ final class FieldTempStoreDeleteController extends ControllerBase {
 
   /**
    * Creates a dummy field to set in temp store in order to build the edit form.
+   *
+   * @param string $entity_type
+   *   The name of the entity type.
+   * @param string $field_name
+   *   The field name.
+   * @param string $bundle
+   *   The entity bundle.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The field instance edit form.
