@@ -344,7 +344,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->connection->startTransaction();
     $transaction2 = $this->connection->startTransaction();
     $this->executeDDLStatement();
-    $transaction2->commit();
+    unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->commit();
@@ -356,11 +356,11 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->connection->startTransaction();
     $transaction2 = $this->connection->startTransaction();
     $this->executeDDLStatement();
-    $transaction2->commit();
+    unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->rollBack();
-    $transaction3->commit();
+    unset($transaction3);
     unset($transaction);
     $this->assertRowAbsent('row');
 
