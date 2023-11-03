@@ -562,14 +562,19 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
   /**
    * Ensures that images can have caption set.
+   *
+   * @dataProvider providerImageCaption
    */
-  public function testImageCaption() {
+  public function testImageCaption(string $original_attributes, string $expected_caption, string $expected_attributes, bool $wrap_in_link) {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     // The foo attribute is added to be removed later by CKEditor 5 to make sure
     // CKEditor 5 was able to downcast data.
-    $img_tag = '<img ' . $this->imageAttributesAsString() . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!" foo="bar">';
+    $img_tag = '<img ' . $this->imageAttributesAsString() . " $original_attributes >";
+    if ($wrap_in_link) {
+      $img_tag = '<a href="https://www.drupal.org">' . $img_tag . '</a>';
+    }
     $this->host->body->value = $img_tag;
     $this->host->save();
 
@@ -578,18 +583,40 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.image figcaption'));
-    $this->assertSame('Alpacas <em>are</em> cute<br>really!', $figcaption->getHtml());
+    $this->assertSame($expected_caption, $figcaption->getHtml());
     $page->pressButton('Source');
     $editor_dom = $this->getEditorDataAsDom();
     $data_caption = $editor_dom->getElementsByTagName('img')->item(0)->getAttribute('data-caption');
-    $this->assertSame('Alpacas <em>are</em> cute<br>really!', $data_caption);
+    $this->assertSame($expected_caption, $data_caption);
 
     $page->pressButton('Save');
 
     $src = $this->imageAttributes()['src'];
-    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">', Node::load(1)->get('body')->value);
+    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . " $expected_attributes>", Node::load(1)->get('body')->value);
     $assert_session->elementExists('xpath', '//figure/img[@src="' . $src . '" and not(@data-caption)]');
-    $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute<br>really!</figcaption>');
+    $assert_session->responseContains("<figcaption>$expected_caption</figcaption>");
+  }
+
+  /**
+   * Data provider for ::testImageCaption().
+   *
+   * @return string[][]
+   */
+  public function providerImageCaption(): array {
+    return [
+      'Simple image with disallowed additional "foo" attribute' => [
+        'original attributes' => 'alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!" foo="bar"',
+        'expected caption' => 'Alpacas <em>are</em> cute<br>really!',
+        'expected attributes' => 'alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!"',
+        'wrap in link' => FALSE,
+      ],
+      'Linked image' => [
+        'original attributes' => 'data-caption="This is not a link."',
+        'expected caption' => 'This is not a link.',
+        'expected attributes' => 'data-caption="This is not a link."',
+        'wrap in link' => TRUE,
+      ],
+    ];
   }
 
   /**
