@@ -88,7 +88,8 @@ class FileSystemForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['system.file'];
+    // This form uses #config_target instead.
+    return [];
   }
 
   /**

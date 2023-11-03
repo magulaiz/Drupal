@@ -23,7 +23,8 @@ class LoggingForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['system.logging'];
+    // This form uses #config_target instead.
+    return [];
   }
 
   /**

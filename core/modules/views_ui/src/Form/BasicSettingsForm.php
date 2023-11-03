@@ -61,7 +61,8 @@ class BasicSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['views.settings'];
+    // This form uses #config_target instead.
+    return [];
   }
 
   /**
