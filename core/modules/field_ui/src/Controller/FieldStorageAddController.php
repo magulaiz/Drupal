@@ -35,21 +35,13 @@ final class FieldStorageAddController extends ControllerBase {
    *   The private tempstore.
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, protected ?PrivateTempStore $tempStore = NULL, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL
-  ) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->fieldTypePluginManager = $field_type_plugin_manager;
-    $this->configFactory = $config_factory;
-    $this->entityFieldManager = $entity_field_manager;
-    if ($this->tempStore === NULL) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
-      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
-    if ($this->fieldTypeCategoryManager === NULL) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
-      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
-    }
-  }
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected FieldTypePluginManagerInterface $fieldTypePluginManager,
+    protected ConfigFactoryInterface $configFactory,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected PrivateTempStore $tempStore,
+    protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
+  ) {}
 
   /**
    * {@inheritdoc}
