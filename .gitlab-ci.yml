@@ -90,7 +90,7 @@ stages:
 .default-job-settings-lint: &default-job-settings-lint
   <<: [*default-job-settings]
   rules:
-    - if: $PERFORMANCE_TEST != 1
+    - if: $PERFORMANCE_TEST != "1"
 
 .junit-artifacts: &junit-artifacts
   artifacts:
