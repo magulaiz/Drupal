@@ -102,6 +102,13 @@
           }
           adjustedOptions[option] = adjustedValue;
         }
+        if (
+          option === 'width' &&
+          parseInt(optionValue, 10) > $(window).width()
+        ) {
+          adjustedValue = $(window).width() - 40;
+          adjustedOptions[option] = adjustedValue;
+        }
       }
     }
     // Offset the dialog center to be at the center of Drupal.displace.offsets.
