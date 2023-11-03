@@ -23,24 +23,10 @@ use Drupal\Core\Render\Attribute\FormElement;
  * ];
  * @endcode
  *
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
- *
- * @see https://www.drupal.org/node/3394247
-
- *
  * @see \Drupal\Core\Render\Element\Password
  */
 #[FormElement('password_confirm')]
 class PasswordConfirm extends FormElementBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct() {
-    @trigger_error('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3394247', E_USER_DEPRECATED);
-  }
-
 
   /**
    * {@inheritdoc}
