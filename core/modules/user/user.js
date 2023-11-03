@@ -71,6 +71,10 @@
         const $passwordWidget = $mainInput.closest(
           '.js-form-type-password-unmask',
         );
+        const $passwordWidgetConfirm = $mainInput.closest(
+          '.js-form-type-password-confirm',
+        );
+        const $confirmInput = $passwordWidget.find('input.js-password-confirm');
 
         const $passwordConfirmMessage = $(
           Drupal.theme('passwordConfirmMessage', settings.password),
@@ -80,6 +84,10 @@
           .find('[data-drupal-selector="password-match-status-text"]')
           .first();
 
+        const $confirmInputParent = $confirmInput
+          .parent()
+          .addClass('confirm-parent')
+          .append($passwordConfirmMessage);
         // List of classes to be removed from the strength bar on a state
         // change.
         const passwordStrengthBarClassesToRemove = [
@@ -133,6 +141,7 @@
 
           password.$suggestions.hide();
           $mainInputParent.append($passwordStrength);
+          $confirmInputParent.after(password.$suggestions);
           $mainInputParent.append(password.$suggestions);
         }
 
@@ -145,6 +154,13 @@
               ? cssClasses.passwordFilled
               : cssClasses.passwordEmpty,
           );
+          if ($passwordWidgetConfirm && $confirmInput[0]) {
+            $passwordWidgetConfirm.addClass(
+              $confirmInput[0].value
+                ? cssClasses.confirmFilled
+                : cssClasses.confirmEmpty,
+            );
+          }
         };
 
         /**
@@ -195,29 +211,39 @@
             );
 
             // Update the suggestions for how to improve the password if needed.
-            if (
-              password.$suggestions.html() !==
-              $currentPasswordSuggestions.html()
-            ) {
-              password.$suggestions.replaceWith($currentPasswordSuggestions);
-              password.$suggestions = $currentPasswordSuggestions.toggle(
-                // Only show the description box if a weakness exists in the
-                // password.
-                result.strength !== 100,
-              );
-            }
+            if (value.hasAttribute('data-drupal-strength-indicator')) {
+              if (
+                password.$suggestions.html() !==
+                $currentPasswordSuggestions.html()
+              ) {
+                password.$suggestions.replaceWith($currentPasswordSuggestions);
+                password.$suggestions = $currentPasswordSuggestions.toggle(
+                  // Only show the description box if a weakness exists in the
+                  // password.
+                  result.strength !== 100,
+                );
+              }
+              if (passwordStrengthBarClassesToRemove) {
+                password.$strengthBar.removeClass(
+                  passwordStrengthBarClassesToRemove,
+                );
+              }
+              // Adjust the length of the strength indicator.
+              password.$strengthBar[0].style.width = `${result.strength}%`;
+              password.$strengthBar.addClass(result.indicatorClass);
 
-            if (passwordStrengthBarClassesToRemove) {
-              password.$strengthBar.removeClass(
-                passwordStrengthBarClassesToRemove,
-              );
+              // Update the strength indication text.
+              password.$strengthTextWrapper.html(result.indicatorText);
             }
-            // Adjust the length of the strength indicator.
-            password.$strengthBar[0].style.width = `${result.strength}%`;
-            password.$strengthBar.addClass(result.indicatorClass);
-
-            // Update the strength indication text.
-            password.$strengthTextWrapper.html(result.indicatorText);
+          }
+          if ($confirmInput[0]) {
+            // Check the value in the confirm input and show results.
+            if ($confirmInput[0].value) {
+              passwordCheckMatch($confirmInput[0].value);
+              $passwordConfirmMessage[0].style.visibility = 'visible';
+            } else {
+              $passwordConfirmMessage[0].style.visibility = 'hidden';
+            }
           }
 
           if (widgetClassesToRemove) {
@@ -231,6 +257,9 @@
         }
 
         // Monitor input events.
+        if ($confirmInput) {
+          $confirmInput.on('input', passwordCheck);
+        }
         $mainInput.on('input', passwordCheck);
       });
     },
