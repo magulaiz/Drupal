@@ -16,12 +16,23 @@
     );
     trigger.textContent =
       element.getAttribute('type') === 'password' ? showPass : hidePass;
+    trigger.setAttribute(
+      'aria-checked',
+      element.getAttribute('type') === 'password' ? 'true' : 'false',
+    );
+    trigger.setAttribute('aria-label', 'make password visible');
   };
   const unmaskButton = function unmaskButton(element) {
     const trigger = document.createElement('button');
     trigger.setAttribute('type', 'button');
     trigger.setAttribute('class', 'link toggle-password');
     trigger.setAttribute('aria-pressed', 'false');
+    trigger.setAttribute(
+      'aria-checked',
+      element.getAttribute('type') === 'password' ? 'true' : 'false',
+    );
+    trigger.setAttribute('aria-label', 'make password visible');
+    trigger.setAttribute('role', 'switch');
     trigger.textContent = showPass;
     element.insertAdjacentElement('afterend', trigger);
     trigger.addEventListener('click', () => {
