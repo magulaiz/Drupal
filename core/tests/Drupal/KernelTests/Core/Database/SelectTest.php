@@ -641,4 +641,56 @@ class SelectTest extends DatabaseTestBase {
       ->execute();
   }
 
+  /**
+   * Data provider for testConditionCompareInvalidQueryException().
+   *
+   * @return array[]
+   *   Array of non array compatible operators and if an exception should be
+   *   thrown.
+   */
+  public function providerConditionCompareInvalidQueryException() {
+    return [
+      '=' => ['=', FALSE],
+      '<' => ['<', FALSE],
+      '>' => ['>', FALSE],
+      '<=' => ['<=', FALSE],
+      '>=' => ['>=', FALSE],
+      '<>' => ['<>', FALSE],
+      'between' => ['BETWEEN', TRUE],
+      'not between' => ['NOT BETWEEN', TRUE],
+      'in' => ['IN', TRUE],
+      'not in' => ['NOT IN', TRUE],
+      'is null' => ['IS NULL', TRUE],
+      'is not null' => ['IS NOT NULL', TRUE],
+      'like' => ['LIKE', TRUE],
+      'not like' => ['NOT LIKE', TRUE],
+      'exists' => ['EXISTS', TRUE],
+      'not exists' => ['NOT EXISTS', TRUE],
+    ];
+  }
+
+  /**
+   * Tests thrown exception for condition compare method operator parameter.
+   *
+   * @dataProvider providerConditionCompareInvalidQueryException
+   */
+  public function testConditionCompareInvalidQueryException($operator, $exception) {
+    if ($exception) {
+      $this->expectException(InvalidQueryException::class);
+      $this->expectExceptionMessage("In a query compare 'some_field " . $operator . " other_field' the operator must be one of the following: '=', '<', '>', '>=', '<=', '<>'.");
+    }
+    $this->connection->condition('AND')->compare('some_field', 'other_field', $operator);
+  }
+
+  /**
+   * Tests deprecation message for joins with a string condition.
+   *
+   * @group legacy
+   */
+  public function testJoinWithStringConditionDeprecated() {
+    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::addJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
+    $query = $this->connection->select('test_task', 't');
+    $query->addJoin('INNER', 'test', 'p', 't.pid = p.id');
+  }
+
 }

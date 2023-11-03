@@ -631,6 +631,10 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (!empty($condition) && !$condition instanceof ConditionInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678', E_USER_DEPRECATED);
+    }
+
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
         $alias = 'subquery';
@@ -647,8 +651,13 @@ class Select extends Query implements SelectInterface {
     }
     $alias = $alias_candidate;
 
+    // Start of BC layer.
     if (is_string($condition)) {
       $condition = str_replace('%alias', $alias, $condition);
+    }
+    // End of BC layer.
+    if ($condition instanceof ConditionInterface) {
+      $condition->updateAliasPlaceholder('%alias', $alias);
     }
 
     $this->tables[$alias] = [

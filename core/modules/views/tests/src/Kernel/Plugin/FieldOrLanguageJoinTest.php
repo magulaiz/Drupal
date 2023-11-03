@@ -72,7 +72,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $this->assertSame($join_info['join type'], 'LEFT');
     $this->assertSame($join_info['table'], $configuration['table']);
     $this->assertSame($join_info['alias'], 'users_field_data');
-    $this->assertSame($join_info['condition'], 'views_test_data.uid = users_field_data.uid');
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertSame($condition->__toString(), '"views_test_data"."uid" = "users_field_data"."uid"');
 
     // Set a different alias and make sure table info is as expected.
     $join_info = $this->buildJoin($view, $configuration, 'users1');
@@ -98,10 +100,12 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       ],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'users3');
-    $this->assertStringContainsString('views_test_data.uid = users3.uid', $join_info['condition']);
-    $this->assertStringContainsString('users3.name = :views_join_condition_0', $join_info['condition']);
-    $this->assertStringContainsString('users3.name <> :views_join_condition_1', $join_info['condition']);
-    $this->assertSame(array_values($join_info['arguments']), [$random_name_1, $random_name_2]);
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertStringContainsString('"views_test_data"."uid" = "users3"."uid"', $condition->__toString());
+    $this->assertStringContainsString('"users3"."name" = :db_condition_placeholder_0', $condition->__toString());
+    $this->assertStringContainsString('"users3"."name" <> :db_condition_placeholder_1', $condition->__toString());
+    $this->assertSame(array_values($condition->arguments()), [$random_name_1, $random_name_2]);
 
     // Test that 'IN' conditions are properly built.
     $random_name_1 = $this->randomMachineName();
@@ -119,10 +123,12 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       ],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'users4');
-    $this->assertStringContainsString('views_test_data.uid = users4.uid', $join_info['condition']);
-    $this->assertStringContainsString('users4.name = :views_join_condition_0', $join_info['condition']);
-    $this->assertStringContainsString('users4.name IN ( :views_join_condition_1[] )', $join_info['condition']);
-    $this->assertSame($join_info['arguments'][':views_join_condition_1[]'], [$random_name_2, $random_name_3, $random_name_4]);
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertStringContainsString('"views_test_data"."uid" = "users4"."uid"', $condition->__toString());
+    $this->assertStringContainsString('"users4"."name" = :db_condition_placeholder_0', $condition->__toString());
+    $this->assertStringContainsString('"users4"."name" IN (:db_condition_placeholder_1, :db_condition_placeholder_2, :db_condition_placeholder_3)', $condition->__toString());
+    $this->assertSame(array_values($condition->arguments()), [$random_name_1, $random_name_2, $random_name_3, $random_name_4]);
   }
 
   /**
@@ -149,7 +155,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       ],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertStringContainsString('AND (node__field_tags.langcode = views_test_data.langcode)', $join_info['condition']);
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertStringContainsString('AND ("node__field_tags"."langcode" = "views_test_data"."langcode")', $condition->__toString());
 
     array_unshift($configuration['extra'], [
       'field' => 'deleted',
@@ -157,7 +165,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'numeric' => TRUE,
     ]);
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertStringContainsString('AND (node__field_tags.langcode = views_test_data.langcode)', $join_info['condition']);
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertStringContainsString('AND ("node__field_tags"."langcode" = "views_test_data"."langcode")', $condition->__toString());
 
     // Replace the language condition with a bundle condition.
     $configuration['extra'][1] = [
@@ -165,7 +175,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'value' => ['page'],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertStringContainsString('AND (node__field_tags.bundle = :views_join_condition_1)', $join_info['condition']);
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertStringContainsString('AND ("node__field_tags"."bundle" = :db_condition_placeholder_1)', $condition->__toString());
 
     // Now re-add a language condition to make sure the bundle and language
     // conditions are combined with an OR.
@@ -174,7 +186,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'field' => 'langcode',
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertStringContainsString('AND (node__field_tags.bundle = :views_join_condition_1 OR node__field_tags.langcode = views_test_data.langcode)', $join_info['condition']);
+    $condition = $join_info['condition'];
+    $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
+    $this->assertStringContainsString('AND (("node__field_tags"."bundle" = :db_condition_placeholder_1) OR ("node__field_tags"."langcode" = "views_test_data"."langcode"))', $condition->__toString());
   }
 
   /**

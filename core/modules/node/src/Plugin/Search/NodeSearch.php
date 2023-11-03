@@ -264,7 +264,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       ->select('search_index', 'i')
       ->extend(SearchQuery::class)
       ->extend(PagerSelectExtender::class);
-    $query->join('node_field_data', 'n', '[n].[nid] = [i].[sid] AND [n].[langcode] = [i].[langcode]');
+    $query->join('node_field_data', 'n', $this->databaseReplica->condition('AND')->compare('n.nid', 'i.sid')->compare('n.langcode', 'i.langcode'));
     $query->condition('n.status', 1)
       ->addTag('node_access')
       ->searchExpression($keys, $this->getPluginId());
@@ -301,7 +301,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         }
         $query->condition($where);
         if (!empty($info['join'])) {
-          $query->join($info['join']['table'], $info['join']['alias'], $info['join']['condition']);
+          $condition = $this->database->condition('AND')->where($info['join']['condition']);
+          $query->join($info['join']['table'], $info['join']['alias'], $condition);
         }
       }
     }
@@ -444,7 +445,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
           $node_rank = $this->configuration['rankings'][$rank];
           // If the table defined in the ranking isn't already joined, then add it.
           if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
-            $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $values['join']['on']);
+            $condition = $this->database->condition('AND')->where($values['join']['on']);
+            $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $condition);
           }
           $arguments = $values['arguments'] ?? [];
           $query->addScore($values['score'], $arguments, $node_rank);
@@ -463,7 +465,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     $query = $this->databaseReplica->select('node', 'n');
     $query->addField('n', 'nid');
-    $query->leftJoin('search_dataset', 'sd', '[sd].[sid] = [n].[nid] AND [sd].[type] = :type', [':type' => $this->getPluginId()]);
+    $query->leftJoin('search_dataset', 'sd', $this->databaseReplica->condition('AND')->compare('sd.sid', 'n.nid')->condition('sd.type', $this->getPluginId()));
     $query->addExpression('CASE MAX([sd].[reindex]) WHEN NULL THEN 0 ELSE 1 END', 'ex');
     $query->addExpression('MAX([sd].[reindex])', 'ex2');
     $query->condition(

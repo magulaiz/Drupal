@@ -6,6 +6,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
 use Drupal\views\Entity\View;
+use Drupal\Core\Database\Query\ConditionInterface;
 
 /**
  * The relationship handler for groupwise maximum queries.
@@ -327,16 +328,43 @@ class GroupwiseMax extends RelationshipPluginBase {
    * Turns 'foo.bar' into '"foo_NAMESPACE".bar'.
    * PostgreSQL doesn't support mixed-cased identifiers unless quoted, so we
    * need to quote each single part to prevent from query exceptions.
+   *
+   * @param Drupal\Core\Database\Query\ConditionInterface|string $join_condition
+   *   The condition.
    */
-  protected function conditionNamespace($string) {
-    $parts = explode(' = ', $string);
-    foreach ($parts as &$part) {
-      if (str_contains($part, '.')) {
-        $part = '"' . str_replace('.', $this->subquery_namespace . '".', $part);
+  protected function conditionNamespace($join_condition) {
+    if (is_string($join_condition)) {
+      $parts = explode(' = ', $join_condition);
+      foreach ($parts as &$part) {
+        if (str_contains($part, '.')) {
+          $part = '"' . str_replace('.', $this->subquery_namespace . '".', $part);
+        }
       }
-    }
 
-    return implode(' = ', $parts);
+      return implode(' = ', $parts);
+    }
+    elseif ($join_condition instanceof ConditionInterface) {
+      foreach ($join_condition->conditions() as &$condition) {
+        if (isset($condition['field'])) {
+          if ($condition['field'] instanceof ConditionInterface) {
+            $condition['field'] = $this->conditionNamespace($condition['field']);
+          }
+          elseif (str_contains($condition['field'], '.')) {
+            $condition['field'] = '"' . str_replace('.', $this->subquery_namespace . '".', $condition['field']);
+          }
+        }
+        if (isset($condition['field2'])) {
+          if ($condition['field2'] instanceof ConditionInterface) {
+            $condition['field2'] = $this->conditionNamespace($condition['field2']);
+          }
+          elseif (str_contains($condition['field2'], '.')) {
+            $condition['field2'] = '"' . str_replace('.', $this->subquery_namespace . '".', $condition['field2']);
+          }
+        }
+      }
+
+      return $join_condition;
+    }
   }
 
   /**

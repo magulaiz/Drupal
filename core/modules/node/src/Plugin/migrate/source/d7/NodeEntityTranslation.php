@@ -64,8 +64,8 @@ class NodeEntityTranslation extends FieldableEntity {
 
     $query->addField('nr', 'uid', 'revision_uid');
 
-    $query->innerJoin('node', 'n', '[n].[nid] = [et].[entity_id]');
-    $query->innerJoin('node_revision', 'nr', '[nr].[vid] = [et].[revision_id]');
+    $query->innerJoin('node', 'n', $this->database->condition('AND')->compare('n.nid', 'et.entity_id'));
+    $query->innerJoin('node_revision', 'nr', $this->database->condition('AND')->compare('nr.vid', 'et.revision_id'));
 
     if (isset($this->configuration['node_type'])) {
       $query->condition('n.type', (array) $this->configuration['node_type'], 'IN');
