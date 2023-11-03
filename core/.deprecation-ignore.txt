@@ -26,3 +26,7 @@
 
 # PHPUnit 10.
 %The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%
+
+# Removed node routes.
+%The 'node.add_page' route is deprecated in drupal:11.0.0 and is removed in drupal:11.0.0. Use the 'entity.node.add_page' route instead. See https://www.drupal.org/node/2940083%
+%The 'node.add' route is deprecated in drupal:11.0.0 and is removed in drupal:11.0.0. Use the 'entity.node.add_form' route instead. See https://www.drupal.org/node/2940083%
