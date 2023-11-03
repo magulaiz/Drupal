@@ -25,6 +25,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class FieldStorageAddController extends ControllerBase {
 
   /**
+   * The name of the entity type.
+   *
+   * @var string
+   */
+  protected $entityTypeId;
+
+  /**
+   * The entity bundle.
+   *
+   * @var string
+   */
+  protected $bundle;
+
+  /**
    * FieldConfigAddController constructor.
    */
   public function __construct(
