@@ -9,14 +9,11 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,16 +27,10 @@ final class FieldStorageAddController extends ControllerBase {
 
   /**
    * FieldConfigAddController constructor.
-   *
-   * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
-   *   The private tempstore.
    */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
-    protected ConfigFactoryInterface $configFactory,
-    protected EntityFieldManagerInterface $entityFieldManager,
-    protected PrivateTempStore $tempStore,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
   ) {}
 
@@ -50,9 +41,6 @@ final class FieldStorageAddController extends ControllerBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('config.factory'),
-      $container->get('entity_field.manager'),
-      $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
     );
   }
