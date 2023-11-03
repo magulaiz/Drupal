@@ -92,7 +92,7 @@ class DateRangeItem extends DateTimeItem {
     $element['optional_end_date'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Optional end date'),
-      '#description' => $this->t('Allow end date to be optional opposed to the default behaviour where end date is required.'),
+      '#description' => $this->t('Allow end date to be optional opposed to the default behaviour where end date is required when "Required field" is checked.'),
       '#default_value' => $this->getSetting('optional_end_date'),
     ];
 
@@ -149,9 +149,10 @@ class DateRangeItem extends DateTimeItem {
   public function getConstraints() {
     $constraint_manager = \Drupal::typedDataManager()
       ->getValidationConstraintManager();
+    $constraints = parent::getConstraints();
 
     if (!empty($this->getSetting('optional_end_date'))) {
-      return parent::getConstraints();
+      return $constraints;
     }
 
     $label = $this->getFieldDefinition()->getLabel();

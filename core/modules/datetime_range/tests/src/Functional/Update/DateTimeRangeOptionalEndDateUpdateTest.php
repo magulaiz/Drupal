@@ -12,15 +12,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @covers \datetime_range_post_update_add_optional_end_date
  */
 class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase {
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['node'];
 
   /**
    * {@inheritdoc}

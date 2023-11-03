@@ -11,7 +11,7 @@ use Drupal\Tests\datetime\Functional\DateTestBase;
 /**
  * Tests the daterange field rendering.
  *
- * @group datetime
+ * @group datetime_range
  */
 class DateRangeFormatterTest extends DateTestBase {
   /**

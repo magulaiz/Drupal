@@ -26,7 +26,9 @@ function datetime_range_post_update_add_optional_end_date() {
       continue;
     }
     $settings = $field_config->get('settings');
-    $settings['optional_end_date'] = FALSE;
+    if (!isset($settings['optional_end_date'])) {
+      $settings['optional_end_date'] = FALSE;
+    }
     $field_config->set('settings', $settings);
 
     // Mark the resulting configuration as trusted data. This avoids issues with

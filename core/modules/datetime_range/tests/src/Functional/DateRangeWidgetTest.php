@@ -12,7 +12,7 @@ use Drupal\Tests\datetime\Functional\DateTestBase;
 /**
  * Tests Daterange widgets functionality.
  *
- * @group datetime
+ * @group datetime_range
  */
 class DateRangeWidgetTest extends DateTestBase {
 
