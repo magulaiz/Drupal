@@ -247,7 +247,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function unpile(string $name, string $id): void {
+  public function unpile(string $name, string $id, bool $onDestruct): void {
     // If the $id does not correspond to the one in the stack for that $name,
     // we are facing an orphaned Transaction object (for example in case of a
     // DDL statement breaking an active transaction). That should be listed in
@@ -283,7 +283,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       }
 
       // Remove the transaction from the stack.
-      $this->removeStackItem($id);
+      match ($onDestruct) {
+        TRUE => $this->removeStackItem($id),
+        FALSE => $this->voidStackItem($id),
+      };
+
       return;
     }
 

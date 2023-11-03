@@ -62,13 +62,16 @@ interface TransactionManagerInterface {
    *   The name of the transaction.
    * @param string $id
    *   The id of the transaction.
+   * @param bool $onDestruct
+   *   Indicates if the method is being called from Transaction::__destruct or
+   *   not.
    *
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    *   If a Drupal Transaction with the specified name does not exist.
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
    *   If the commit of the root transaction failed.
    */
-  public function unpile(string $name, string $id): void;
+  public function unpile(string $name, string $id, bool $onDestruct): void;
 
   /**
    * Rolls back a Drupal transaction.
