@@ -2,7 +2,6 @@
 
 namespace Drupal\field_ui\Form;
 
-use _PHPStan_adbc35a1c\Nette\Neon\Exception;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Component\Serialization\Json;
