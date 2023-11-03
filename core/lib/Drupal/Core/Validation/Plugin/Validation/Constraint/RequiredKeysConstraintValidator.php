@@ -36,14 +36,14 @@ class RequiredKeysConstraintValidator extends ConstraintValidator {
     $required_keys = $mapping->getRequiredKeys();
     $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
 
-    // Unconditionally required: required here and not conditionally valid.
+    // Statically required: required here and not dynamically valid.
     $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
     $missing_keys = array_diff($statically_required_keys, array_keys($value));
     foreach ($missing_keys as $key) {
       $this->context->addViolation($constraint->message, ['@key' => $key]);
     }
 
-    // Conditionally required: required here and conditionally valid.
+    // Dynamically required: required here but not for all resolved types.
     $conditional = array_intersect($required_keys, $dynamically_valid_keys);
     $missing_conditional_keys = array_diff($conditional, array_keys($value));
     foreach ($missing_conditional_keys as $key) {

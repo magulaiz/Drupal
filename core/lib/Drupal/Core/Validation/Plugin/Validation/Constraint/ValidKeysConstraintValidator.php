@@ -45,7 +45,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
         $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
       }
 
-      // Dynamically valid: not valid here but valid elsewhere.
+      // Dynamically valid: not valid here but valid for some resolved types.
       $dynamic_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
       foreach ($dynamic_invalid_keys as $key) {
         $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + RequiredKeysConstraintValidator::getDynamicMessageParameters($mapping));

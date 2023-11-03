@@ -17,14 +17,14 @@ use Symfony\Component\Validator\Constraint;
 class ValidKeysConstraint extends Constraint {
 
   /**
-   * The error message if an (unconditional) invalid key appears.
+   * The error message if a key is invalid.
    *
    * @var string
    */
   public string $invalidKeyMessage = "'@key' is not a supported key.";
 
   /**
-   * The error message if an (conditional) invalid key appears.
+   * The error message if a key is valid but unknown for the resolved type.
    *
    * @var string
    */
