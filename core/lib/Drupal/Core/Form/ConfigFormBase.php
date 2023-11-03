@@ -196,9 +196,8 @@ abstract class ConfigFormBase extends FormBase {
         // property paths but present a simpler UI: if the property path is not
         // found in the map, check the property path's parent instead.
         while (!array_key_exists("$config_name:$property_path", $map) && str_contains($property_path, '.')) {
-          $parts = explode('.', $property_path);
-          array_pop($parts);
-          $property_path = implode('.', $parts);
+          // Remove the final piece of the property path.
+          $property_path = implode('.', array_slice(explode('.', $property_path), 0, -1));
         }
         $form_element_name = $map["$config_name:$property_path"]->elementName;
         $violations_per_form_element[$form_element_name][$index] = $violation;

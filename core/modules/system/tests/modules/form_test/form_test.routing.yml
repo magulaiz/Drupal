@@ -528,3 +528,10 @@ form_test.javascript_states_form:
     _form: '\Drupal\form_test\Form\JavascriptStatesForm'
   requirements:
     _access: 'TRUE'
+
+form_test.nested_config_target:
+  path: '/form-test/nested-config-target'
+  defaults:
+    _form: '\Drupal\form_test\Form\NestedConfigTargetForm'
+  requirements:
+    _access: 'TRUE'
