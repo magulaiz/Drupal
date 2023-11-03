@@ -145,7 +145,7 @@ class FieldConfigEditForm extends EntityForm {
       return $form;
     }
 
-    // Field label and field_name.
+    // Build the configurable field values.
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -445,7 +445,6 @@ class FieldConfigEditForm extends EntityForm {
     parent::validateForm($form, $form_state);
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
-    // Pass in new entity here.
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
     $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
     $field_storage_form->validateForm($form['field_storage']['subform'], $subform_state);
@@ -469,6 +468,7 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
+
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());
     $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
