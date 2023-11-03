@@ -192,7 +192,7 @@ abstract class ConfigFormBase extends FormBase {
           // will not have the sequence index in it.
           $property_path = rtrim($property_path, '0123456789.');
         }
-        $form_element_name = $map["$config_name:$property_path"]->elementName;
+        $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
