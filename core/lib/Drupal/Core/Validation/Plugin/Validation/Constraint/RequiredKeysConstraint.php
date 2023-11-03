@@ -21,14 +21,14 @@ class RequiredKeysConstraint extends Constraint {
    *
    * @var string
    */
-  public string $message = "'@key' is a required key.";
+  public string $requiredKeyMessage = "'@key' is a required key.";
 
   /**
    * The error message if a dynamically required key is missing.
    *
    * @var string
    */
-  public string $dynamicMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
+  public string $dynamicRequiredKeyMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * Keys which are required — only `<infer>` supported currently.
