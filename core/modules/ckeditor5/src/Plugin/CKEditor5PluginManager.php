@@ -4,7 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin;
 
-use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
+use Drupal\ckeditor5\Annotation\CKEditor5Plugin as CKEditor5PluginAnnotation;
+use Drupal\ckeditor5\Attribute\CKEditor5Plugin as CKEditor5PluginAttribute;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Assertion\Inspector;
@@ -46,7 +47,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/CKEditor5Plugin', $namespaces, $module_handler, CKEditor5PluginInterface::class, CKEditor5Plugin::class);
+    parent::__construct('Plugin/CKEditor5Plugin', $namespaces, $module_handler, CKEditor5PluginInterface::class, CKEditor5PluginAttribute::class, CKEditor5PluginAnnotation::class);
 
     $this->alterInfo('ckeditor5_plugin_info');
     $this->setCacheBackend($cache_backend, 'ckeditor5_plugins');
