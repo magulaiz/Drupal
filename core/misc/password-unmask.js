@@ -10,10 +10,6 @@
       'type',
       element.getAttribute('type') === 'password' ? 'text' : 'password',
     );
-    trigger.setAttribute(
-      'aria-pressed',
-      element.getAttribute('type') === 'password' ? 'false' : 'true',
-    );
     trigger.textContent =
       element.getAttribute('type') === 'password' ? showPass : hidePass;
     trigger.setAttribute(
@@ -26,7 +22,6 @@
     const trigger = document.createElement('button');
     trigger.setAttribute('type', 'button');
     trigger.setAttribute('class', 'link toggle-password');
-    trigger.setAttribute('aria-pressed', 'false');
     trigger.setAttribute(
       'aria-checked',
       element.getAttribute('type') === 'password' ? 'true' : 'false',
