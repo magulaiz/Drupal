@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Row;
+
 /**
  * Provides destination plugin for field_storage_config configuration entities.
  *
@@ -81,6 +83,19 @@ class EntityFieldStorageConfig extends EntityConfigBase {
       $destination_identifier = [implode('.', $destination_identifier)];
     }
     parent::rollback($destination_identifier);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntity(Row $row, array $old_destination_id_values) {
+    // The parent::getEntity() method uses the first part of the id to load the
+    // destination entity.
+    if ($old_destination_id_values[1] ?? NULL) {
+      [$entity_type, $field_name] = $old_destination_id_values;
+      $old_destination_id_values = ["$entity_type.$field_name"];
+    }
+    return parent::getEntity($row, $old_destination_id_values);
   }
 
 }

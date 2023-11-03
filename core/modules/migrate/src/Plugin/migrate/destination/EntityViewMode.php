@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Row;
+
 /**
  * Provides entity view mode destination plugin.
  *
@@ -45,6 +47,19 @@ class EntityViewMode extends EntityConfigBase {
   public function rollback(array $destination_identifier) {
     $destination_identifier = implode('.', $destination_identifier);
     parent::rollback([$destination_identifier]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntity(Row $row, array $old_destination_id_values) {
+    // The parent::getEntity() method uses the first part of the id to load the
+    // destination entity.
+    if ($old_destination_id_values[1] ?? NULL) {
+      [$entity_type, $mode] = $old_destination_id_values;
+      $old_destination_id_values = ["$entity_type.$mode"];
+    }
+    return parent::getEntity($row, $old_destination_id_values);
   }
 
 }
