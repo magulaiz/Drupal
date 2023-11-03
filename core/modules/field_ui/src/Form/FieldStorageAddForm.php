@@ -295,9 +295,9 @@ class FieldStorageAddForm extends FormBase {
       // Set the temp store here, so we can actually see the error oon the modal.
       $field_storage_type = $form_state->getValue('field_options_wrapper') ?? $form_state->get('field_type');
       $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
-      if(!empty($this->messenger()->messagesByType('error'))) {
+      if (!empty($this->messenger()->messagesByType('error'))) {
         $label = $form_state->getValue('label');
-        $message = explode(':',$this->messenger()->messagesByType('error')[0])[1];
+        $message = explode(':', $this->messenger()->messagesByType('error')[0])[1];
         $form_state->setErrorByName('drupal-modal', $this->t("There was a problem creating field $label: $message"));
         $this->messenger()->deleteAll();
       }
@@ -329,7 +329,7 @@ class FieldStorageAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-   // nothing to do here.
+    // nothing to do here.
   }
 
   /**

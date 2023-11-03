@@ -48,7 +48,7 @@ final class FieldStorageAddController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-     $container->get('entity_type.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('config.factory'),
       $container->get('entity_field.manager'),
@@ -57,8 +57,7 @@ final class FieldStorageAddController extends ControllerBase {
     );
   }
 
-
-    /**
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, $entity_type_id = NULL, $bundle = NULL) {
@@ -174,7 +173,6 @@ final class FieldStorageAddController extends ControllerBase {
     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     return $form;
   }
-
 
   public function OpenModalForm($entity_type_id = NULL, $bundle = NULL) {
     $form = [];
