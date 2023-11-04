@@ -4079,10 +4079,10 @@ nightwatch-axe-verbose@2.0.3:
   dependencies:
     axe-core "^4.4.3"
 
-nightwatch@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/nightwatch/-/nightwatch-2.5.0.tgz#2e6223391d0668894e6cb339eb7636043ebd7812"
-  integrity sha512-Y3TkvOLl/KM/j6pjeOD6CR5beCzjupDjAzFRGt0peumt0HTP2d2d4QydB+VXTxGyO0UJX9OmkusGUnKGZt604Q==
+nightwatch@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/nightwatch/-/nightwatch-2.4.2.tgz#50700bce2a6eddc32d5e36693743c0d27e717190"
+  integrity sha512-3kDVPT3Na/4yRA2q+/zSTwYUijTmsn+5L4AaqDebWbv1kGHVzv84AFxNIf4hGaCIB79AyhiFnkSj3L065OZZ7w==
   dependencies:
     "@nightwatch/chai" "5.0.2"
     ansi-to-html "0.7.2"
@@ -4108,11 +4108,10 @@ nightwatch@2.5.0:
     nightwatch-axe-verbose "2.0.3"
     open "8.4.0"
     ora "5.4.1"
-    selenium-webdriver "4.5.0"
+    selenium-webdriver "4.3.1"
     semver "7.3.5"
     stacktrace-parser "0.1.10"
     strip-ansi "6.0.1"
-    untildify "^4.0.0"
     uuid "8.3.2"
 
 node-fetch@^2.7.0:
@@ -5020,10 +5019,10 @@ schema-utils@^3.1.1, schema-utils@^3.2.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-selenium-webdriver@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.5.0.tgz#7e20d0fc038177970dad81159950c12f7411ac0d"
-  integrity sha512-9mSFii+lRwcnT2KUAB1kqvx6+mMiiQHH60Y0VUtr3kxxi3oZ3CV3B8e2nuJ7T4SPb+Q6VA0swswe7rYpez07Bg==
+selenium-webdriver@4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.3.1.tgz#5e9c6c4adee65e57776b5bd4c07c59b65b8f056d"
+  integrity sha512-TjH/ls1WKRQoFEHcqtn6UtwcLnA3yvx08v9cSSFYvyhp8hJWRtbe9ae2I8uXPisEZ2EaGKKoxBZ4EHv0BJM15g==
   dependencies:
     jszip "^3.10.0"
     tmp "^0.2.1"
