@@ -43,7 +43,7 @@ class AliasRepository implements AliasRepositoryInterface {
       $select->condition($conditions);
     }
 
-    $this->addLanguageFallback($select, $langcode);
+    $this->addLanguageFallback($select, $langcode, FALSE);
 
     // We order by ID ASC so that fetchAllKeyed() returns the most recently
     // created alias for each source. Subsequent queries using fetchField() must
@@ -120,8 +120,13 @@ class AliasRepository implements AliasRepositoryInterface {
    * @param string $langcode
    *   Language code to search the path with. If there's no path defined for
    *   that language it will search paths without language.
+   * @param boolean $prefer_first_results
+   *   If the caller is going to use an operation like fetchAssoc on the result
+   *   set and only take the first result, set this to TRUE, otherwise if the
+   *   caller will fetch all the results and de-dupe by source path, then pass
+   *   in FALSE.
    */
-  protected function addLanguageFallback(SelectInterface $query, $langcode) {
+  protected function addLanguageFallback(SelectInterface $query, $langcode, $prefer_first_results = TRUE) {
     // Always get the language-specific alias before the language-neutral one.
     // For example 'de' is less than 'und' so the order needs to be ASC, while
     // 'xx-lolspeak' is more than 'und' so the order needs to be DESC.
@@ -130,10 +135,10 @@ class AliasRepository implements AliasRepositoryInterface {
       array_pop($langcode_list);
     }
     elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $query->orderBy('base_table.langcode', 'DESC');
+      $query->orderBy('base_table.langcode', $prefer_first_results ? 'DESC' : 'ASC');
     }
     else {
-      $query->orderBy('base_table.langcode', 'ASC');
+      $query->orderBy('base_table.langcode', $prefer_first_results ? 'ASC' : 'DESC');
     }
     $query->condition('base_table.langcode', $langcode_list, 'IN');
   }
