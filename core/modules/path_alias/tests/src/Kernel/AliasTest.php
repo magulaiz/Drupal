@@ -44,7 +44,7 @@ class AliasTest extends KernelTestBase {
   public function testPreloadPathAlias() {
     $path_alias_repository = $this->container->get('path_alias.repository');
 
-     // Every interesting language combination:
+    // Every interesting language combination:
     // Just unspecified.
     $this->createPathAlias('/und/src', '/und/alias', LanguageInterface::LANGCODE_NOT_SPECIFIED);
     // Just a single language.

@@ -120,7 +120,7 @@ class AliasRepository implements AliasRepositoryInterface {
    * @param string $langcode
    *   Language code to search the path with. If there's no path defined for
    *   that language it will search paths without language.
-   * @param boolean $prefer_first_results
+   * @param bool $prefer_first_results
    *   If the caller is going to use an operation like fetchAssoc on the result
    *   set and only take the first result, set this to TRUE, otherwise if the
    *   caller will fetch all the results and de-dupe by source path, then pass
