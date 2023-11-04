@@ -82,6 +82,7 @@ final class FieldStorageAddController extends ControllerBase {
     $form['add-label'] = [
       '#type' => 'label',
       '#title' => t('Choose a type of field'),
+      '#title_display' => 'before',
       '#required' => TRUE,
     ];
 
