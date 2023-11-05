@@ -9,10 +9,8 @@ adminforms
 afterclose
 aftercreate
 ahah
-aiufyfh
 ajaxcallback
 ajaxing
-akiko
 allwords
 alphadecimal
 alternatif
@@ -27,7 +25,6 @@ anyall
 applix
 archiver
 archivers
-arctor
 arrakis
 arrayx
 arrowrefresh
@@ -38,7 +35,6 @@ arrowthick
 arrowthickstop
 arrr
 assertable
-asterix
 attrval
 attrvals
 authless
@@ -73,7 +69,6 @@ backlink
 backlinks
 backreferences
 bakeware
-bangpow
 barbar
 barchart
 barqux
@@ -82,7 +77,6 @@ basefield
 basepath
 basestrings
 basetheme
-basicpage
 bazbaz
 beatle
 bebebe
@@ -102,6 +96,7 @@ bkslshv
 blockarticles
 blockbasic
 blockcontent
+blockfooter
 blocknodebundle
 blockpromoted
 blockquotes
@@ -113,9 +108,7 @@ bodyless
 bodyvalue
 boing
 bomofo
-bonacieux
 bovigo
-breezer
 brion
 brotli
 browserkit
@@ -170,7 +163,6 @@ cidhash
 cids
 cillum
 circlesmall
-cjds
 ckeditor
 classloader
 classmap
@@ -217,14 +209,11 @@ createuser
 crema
 crossout
 crème
-cscript
 csrftoken
 cssidentifier
 csslintrc
 csstools
 ctags
-ctes
-ctund
 cucurbitaceae
 curle
 curlopt
@@ -246,14 +235,11 @@ dblog
 dbtng
 dburl
 dealerdirect
-deckard
 deconstructor
 defaultable
 defgroup
 delayable
 deletedline
-deletee
-deleter
 delsp
 denormalizable
 denormalization
@@ -263,7 +249,6 @@ denormalizer
 denormalizers
 denormalizes
 denormalizing
-depcn
 dependee
 dependee's
 dependees
@@ -298,8 +283,6 @@ dotenv
 downcasting
 doxygen
 dragtable
-dramallama
-dramallamas
 drei
 drillable
 drivernumber
@@ -354,18 +337,15 @@ enregistrer
 entit
 entitytype
 entityviewedit
-eridani
 errmode
 errrf
 espagnol
-estraven
 etag
 eurozone
 evenodd
 eventhandler
 exampleurl
 exitcode
-exoshbm
 expirable
 extlink
 extraday
@@ -435,7 +415,6 @@ gloop
 gnumeric
 googleapis
 gotit
-grayskull
 greeking
 gripsmall
 groupable
@@ -455,8 +434,6 @@ hexcode
 hilited
 hinode
 hippopotamidae
-hisu
-hisue
 hmac
 hoglet
 hola
@@ -485,7 +462,6 @@ imagetextalternative
 indexname
 inited
 inno
-insidekeyword
 instaclick
 instantiator
 interactable
@@ -494,7 +470,6 @@ introspectable
 invalidators
 invalididentifier
 invokable
-iopt
 isam
 isinstallable
 itoa
@@ -503,7 +478,6 @@ ized
 jamo
 javascripts
 jessebeach
-jnoub
 johansson
 johndoe
 jqueryui
@@ -649,9 +623,7 @@ mystarterkit
 nameofbin
 namespacing
 navs
-nbaz
 ndocs
-nearbykeyword
 necolas
 negotiatiors
 newcol
@@ -682,10 +654,8 @@ nomask
 nonconfigurable
 nonoptional
 noquotes
-noschema
 nosniff
 nostart
-notag
 notexisting
 notnull
 notsimpletest
@@ -724,7 +694,6 @@ overrider
 overrider's
 overriders
 owasp
-oypa
 pagecache
 pagetop
 pagina
@@ -737,7 +706,6 @@ pathauto
 pathnames
 pcre
 pcss
-pdma
 peast
 percona
 permissionless
@@ -826,7 +794,6 @@ qvalue
 qvalues
 qwer
 qwerqwer
-qzzz
 ragdoll
 ralouphie
 rasterizable
@@ -900,7 +867,6 @@ scorewords
 scriptable
 scrollbars
 sebastianbergmann
-sebe
 seld
 selectbox
 sess
@@ -926,9 +892,6 @@ smacss
 smalldatetime
 somecompany
 somelinks
-somemodule
-someschema
-somethinggeneric
 sortablejs
 sourceediting
 spacebar
@@ -974,7 +937,6 @@ subelements
 subform
 subform's
 subforms
-subjectkeyword
 subkey
 subkeys
 suboption
@@ -1007,10 +969,8 @@ sunz
 sunzzzzzzz
 supercede
 svgz
-sxto
 synchronizable
 syrop
-szwr
 tabbingmanager
 tabledrag
 tableheader
@@ -1022,7 +982,6 @@ tablesort's
 tablesorts
 tabset
 tabwidth
-takeshita
 tappable
 tarz
 taskless
@@ -1204,7 +1163,6 @@ uploaders
 uploadprogress
 upscaling
 urandom
-urlalias
 usecase
 userid
 userinfo
@@ -1233,18 +1191,15 @@ webservers
 webtest
 whitespaces
 widthx
-wmet
 wmlscript
 wordprocessingml
 wordsafe
 wordword
-workspaceswitcher
 writeln
 wwwrun
 xbap
 xbitmap
 xfbml
-xjkm
 xmlhttp
 xmlhttprequest
 xoxo
@@ -1252,7 +1207,6 @@ xpsdocument
 xsiemax
 xtmpl
 xxgroup
-xyabz
 yamls
 yarhar
 yarr
@@ -1262,19 +1216,15 @@ yottabyte
 yottabytes
 yourmodule
 yowser
-yqpr
-yuqk
 yygroup
 zartan
 zettabyte
 zettabytes
 zipf's
-zomg
 zoneinfo
 zoomin
 zoomout
 zwei
-zwjhek
 zxvf
 zzgroup
 åwesome
