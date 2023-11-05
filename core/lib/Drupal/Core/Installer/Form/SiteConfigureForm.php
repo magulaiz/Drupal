@@ -208,7 +208,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
       '#default_value' => $default_timezone,
-      '#options' => TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
+      '#options' => TimeZoneFormHelper::getOptionsListByRegion(),
       '#weight' => 5,
       '#attributes' => ['class' => ['timezone-detect']],
       '#access' => empty($install_state['config_install_path']),
@@ -293,7 +293,7 @@ class SiteConfigureForm extends ConfigFormBase {
       }
     }
 
-    // We precreated user 1 with placeholder values. Let's save the real values.
+    // We created user 1 with placeholder values. Let's save the real values.
     $account = $this->userStorage->load(1);
     $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();

@@ -11,7 +11,11 @@ use Drupal\Tests\system\Functional\Module\ModuleTestBase;
 /**
  * Tests the largest configuration import possible with all available modules.
  *
+ * Note that the use of SchemaCheckTestTrait means that the schema conformance
+ * of all default configuration is also tested.
+ *
  * @group config
+ * @group #slow
  */
 class ConfigImportAllTest extends ModuleTestBase {
 

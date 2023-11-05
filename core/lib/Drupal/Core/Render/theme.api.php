@@ -68,6 +68,23 @@
  * rendered by the Twig template; the processed variables that the Twig template
  * receives are documented in the header of the default Twig template file.
  *
+ * Theme hooks can declare a variable deprecated using the reserved
+ * 'deprecations' variable. For example:
+ * @code
+ *  search_result' => [
+ *   'variables' => [
+ *     'result' => NULL,
+ *     'new_result' => NULL,
+ *     'plugin_id' => NULL,
+ *     'deprecations' => [
+ *       'result' => "'result' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_result' instead. See https://www.example.com."
+ *     ]
+ *   ],
+ * ],
+ * @endcode
+ * Template engines should trigger a deprecation error if a deprecated
+ * variable is used in a template.
+ *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
  * it is more common for themes to override default implementations provided by
@@ -547,7 +564,7 @@ function hook_preprocess(&$variables, $hook) {
   }
 
   if (!isset($hooks)) {
-    $hooks = theme_get_registry();
+    $hooks = \Drupal::service('theme.registry')->get();
   }
 
   // Determine the primary theme function argument.
@@ -687,9 +704,6 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   then $hook will be 'node', not 'node__article'. The specific hook called
  *   (in this case 'node__article') is available in
  *   $variables['theme_hook_original'].
- *
- * @return array
- *   An array of theme suggestions.
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
@@ -857,8 +871,7 @@ function hook_element_plugin_alter(array &$definitions) {
 }
 
 /**
- * Perform necessary alterations to the JavaScript before it is presented on
- * the page.
+ * Alters JavaScript before it is presented on the page.
  *
  * @param $javascript
  *   An array of all JavaScript being presented on the page.
@@ -891,31 +904,31 @@ function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface 
 function hook_library_info_build() {
   $libraries = [];
   // Add a library whose information changes depending on certain conditions.
-  $libraries['mymodule.zombie'] = [
+  $libraries['zombie'] = [
     'dependencies' => [
       'core/once',
     ],
   ];
   if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {
-    $libraries['mymodule.zombie'] += [
+    $libraries['zombie'] += [
       'js' => [
-        'mymodule.zombie.min.js' => [],
+        'zombie.min.js' => [],
       ],
       'css' => [
         'base' => [
-          'mymodule.zombie.min.css' => [],
+          'zombie.min.css' => [],
         ],
       ],
     ];
   }
   else {
-    $libraries['mymodule.zombie'] += [
+    $libraries['zombie'] += [
       'js' => [
-        'mymodule.zombie.js' => [],
+        'zombie.js' => [],
       ],
       'css' => [
         'base' => [
-          'mymodule.zombie.css' => [],
+          'zombie.css' => [],
         ],
       ],
     ];
@@ -927,7 +940,7 @@ function hook_library_info_build() {
   // the library (of course) not be loaded but no notices or errors will be
   // triggered.
   if (Drupal::moduleHandler()->moduleExists('vampirize')) {
-    $libraries['mymodule.vampire'] = [
+    $libraries['vampire'] = [
       'js' => [
         'js/vampire.js' => [],
       ],
@@ -996,8 +1009,14 @@ function hook_js_settings_alter(array &$settings, \Drupal\Core\Asset\AttachedAss
  * and themes that may be using the library.
  *
  * @param array $libraries
- *   An associative array of libraries registered by $extension. Keyed by
- *   internal library name and passed by reference.
+ *   An associative array of libraries, passed by reference. The array key
+ *   for any particular library will be the name registered in *.libraries.yml.
+ *   In the example below, the array key would be $libraries['foo'].
+ *   @code
+ *   foo:
+ *     js:
+ *       .......
+ *   @endcode
  * @param string $extension
  *   Can either be 'core' or the machine name of the extension that registered
  *   the libraries.
@@ -1220,13 +1239,15 @@ function hook_page_bottom(array &$page_bottom) {
  *     the standard preprocess functions to run. This can be used to give a
  *     theme FULL control over how variables are set. For example, if a theme
  *     wants total control over how certain variables in the page.html.twig are
- *     set, this can be set to true. Please keep in mind that when this is used
- *     by a theme, that theme becomes responsible for making sure necessary
- *     variables are set.
+ *     set, this can be set to true. Keep in mind that when this is used by a
+ *     theme, that theme becomes responsible for making sure necessary variables
+ *     are set.
  *   - type: (automatically derived) Where the theme hook is defined:
  *     'module', 'theme_engine', or 'theme'.
  *   - theme path: The directory path of the theme or module. If not defined,
  *     it is determined during the registry process.
+ *   - deprecated: The deprecated key marks a twig template as deprecated with
+ *     a custom message.
  *
  * @see themeable
  * @see hook_theme_registry_alter()

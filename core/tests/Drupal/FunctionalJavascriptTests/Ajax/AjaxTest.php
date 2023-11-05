@@ -14,7 +14,7 @@ class AjaxTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['ajax_test'];
+  protected static $modules = ['ajax_test', 'ajax_forms_test'];
 
   /**
    * {@inheritdoc}
@@ -249,6 +249,92 @@ JS;
       $content = str_replace([' class="processed"', ' processed', ' style=""'], '', $page->getContent());
       return stripos($content, $expected) !== FALSE;
     }), "Page contains expected value: $expected");
+  }
+
+  /**
+   * Tests that Ajax errors are visible in the UI.
+   */
+  public function testUiAjaxException() {
+    $themes = [
+      'olivero',
+      'claro',
+      'stark',
+    ];
+    \Drupal::service('theme_installer')->install($themes);
+
+    foreach ($themes as $theme) {
+      $theme_config = \Drupal::configFactory()->getEditable('system.theme');
+      $theme_config->set('default', $theme);
+      $theme_config->save();
+      \Drupal::service('router.builder')->rebuildIfNeeded();
+
+      $this->drupalGet('ajax-test/exception-link');
+      $page = $this->getSession()->getPage();
+      // We don't want the test to error out because of an expected Javascript
+      // console error.
+      $this->failOnJavascriptConsoleErrors = FALSE;
+      // Click on the AJAX link.
+      $this->clickLink('Ajax Exception');
+      $this->assertSession()
+        ->statusMessageContainsAfterWait("Oops, something went wrong. Check your browser's developer console for more details.", 'error');
+
+      if ($theme === 'olivero') {
+        // Check that the message can be closed.
+        $this->click('.messages__close');
+        $this->assertTrue($page->find('css', '.messages--error')
+          ->hasClass('hidden'));
+      }
+    }
+
+    // This is needed to avoid an unfinished AJAX request error from tearDown()
+    // because this test intentionally does not complete all AJAX requests.
+    $this->getSession()->executeScript("delete window.jQuery");
+  }
+
+  /**
+   * Tests ajax focus handling.
+   */
+  public function testAjaxFocus() {
+    $this->drupalGet('/ajax_forms_test_get_form');
+
+    $this->assertNotNull($select = $this->assertSession()->elementExists('css', '#edit-select'));
+    $select->setValue('green');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-select', $has_focus_id);
+
+    $this->assertNotNull($checkbox = $this->assertSession()->elementExists('css', '#edit-checkbox'));
+    $checkbox->check();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-checkbox', $has_focus_id);
+
+    $this->assertNotNull($textfield1 = $this->assertSession()->elementExists('css', '#edit-textfield'));
+    $this->assertNotNull($textfield2 = $this->assertSession()->elementExists('css', '#edit-textfield-2'));
+    $this->assertNotNull($textfield3 = $this->assertSession()->elementExists('css', '#edit-textfield-3'));
+
+    // Test textfield with 'blur' event listener.
+    $textfield1->setValue('Kittens say purr');
+    $textfield2->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-textfield-2', $has_focus_id);
+
+    // Test textfield with 'change' event listener with refocus-blur set to
+    // FALSE.
+    $textfield2->setValue('Llamas say yarhar');
+    $textfield3->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-textfield-2', $has_focus_id);
+
+    // Test textfield with 'change' event.
+    $textfield3->focus();
+    $textfield3->setValue('Wasps buzz');
+    $textfield3->blur();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-textfield-3', $has_focus_id);
   }
 
 }

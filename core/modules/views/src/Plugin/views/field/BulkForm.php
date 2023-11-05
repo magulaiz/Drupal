@@ -289,17 +289,24 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
       // Render checkboxes for all rows.
       $form[$this->options['id']]['#tree'] = TRUE;
       foreach ($this->view->result as $row_index => $row) {
-        $entity = $this->getEntityTranslationByRelationship($this->getEntity($row), $row);
+        $entity = $this->getEntity($row);
+        if ($entity !== NULL) {
+          $entity = $this->getEntityTranslationByRelationship($entity, $row);
 
-        $form[$this->options['id']][$row_index] = [
-          '#type' => 'checkbox',
-          // We are not able to determine a main "title" for each row, so we can
-          // only output a generic label.
-          '#title' => $this->t('Update this item'),
-          '#title_display' => 'invisible',
-          '#default_value' => !empty($form_state->getValue($this->options['id'])[$row_index]) ? 1 : NULL,
-          '#return_value' => $this->calculateEntityBulkFormKey($entity, $use_revision),
-        ];
+          $form[$this->options['id']][$row_index] = [
+            '#type' => 'checkbox',
+            // We are not able to determine a main "title" for each row, so we
+            // can only output a generic label.
+            '#title' => $this->t('Update this item'),
+            '#title_display' => 'invisible',
+            '#default_value' => !empty($form_state->getValue($this->options['id'])[$row_index]) ? 1 : NULL,
+            '#return_value' => $this->calculateEntityBulkFormKey($entity, $use_revision),
+          ];
+        }
+        else {
+          $form[$this->options['id']][$row_index] = [];
+        }
+
       }
 
       // Replace the form submit button label.
@@ -544,7 +551,13 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
     // Load the entity or a specific revision depending on the given key.
     $storage = $this->entityTypeManager->getStorage($this->getEntityType());
-    $entity = $revision_id ? $storage->loadRevision($revision_id) : $storage->load($id);
+    if ($revision_id) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+      $entity = $storage->loadRevision($revision_id);
+    }
+    else {
+      $entity = $storage->load($id);
+    }
 
     if ($entity instanceof TranslatableInterface) {
       $entity = $entity->getTranslation($langcode);

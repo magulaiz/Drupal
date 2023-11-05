@@ -531,6 +531,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setContainer(ContainerInterface $container = NULL) {
     if (isset($this->container)) {
@@ -670,6 +673,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function terminate(Request $request, Response $response) {
     // Only run terminate() when essential services have been set up properly
@@ -1051,11 +1057,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // error information into HTTP response headers that are consumed by
         // the internal browser.
         define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
-
-        // Web tests are to be conducted with runtime assertions active.
-        assert_options(ASSERT_ACTIVE, TRUE);
-        // Force assertion failures to be thrown as exceptions.
-        assert_options(ASSERT_EXCEPTION, TRUE);
 
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);

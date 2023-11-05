@@ -39,6 +39,8 @@ class ViewPageControllerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->pageController = new ViewPageController();
   }
 
@@ -186,7 +188,7 @@ namespace Drupal\views\Routing;
 
 if (!function_exists('views_add_contextual_links')) {
 
-  function views_add_contextual_links() {
+  function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
   }
 
 }

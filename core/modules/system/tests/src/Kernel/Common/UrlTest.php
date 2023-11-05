@@ -12,11 +12,10 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Confirm that \Drupal\Core\Url,
- * \Drupal\Component\Utility\UrlHelper::filterQueryParameters(),
- * \Drupal\Component\Utility\UrlHelper::buildQuery(), and
- * \Drupal\Core\Utility\LinkGeneratorInterface::generate()
- * work correctly with various input.
+ * Tests the Url object.
+ *
+ * @covers \Drupal\Component\Utility\UrlHelper::filterQueryParameters
+ * @covers \Drupal\Core\Utility\LinkGenerator::generate
  *
  * @group Common
  */
@@ -31,7 +30,7 @@ class UrlTest extends KernelTestBase {
     // Test link generator.
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
-    $encoded_path = "3CSCRIPT%3Ealert%28%27XSS%27%29%3C/SCRIPT%3E";
+    $encoded_path = "%3CSCRIPT%3Ealert%28%27XSS%27%29%3C/SCRIPT%3E";
 
     $link = Link::fromTextAndUrl($text, Url::fromUserInput('/' . $path))->toString();
     $this->assertStringContainsString($encoded_path, $link, new FormattableMarkup('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));

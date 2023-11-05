@@ -7,7 +7,7 @@ const postcssUrl = require('postcss-url');
 const postcssPresetEnv = require('postcss-preset-env');
 // cspell:ignore pxtorem
 const postcssPixelsToRem = require('postcss-pxtorem');
-const stylelint = require('stylelint');
+const prettier = require('prettier');
 const removeUnwantedComments = require('./remove-unwanted-comments');
 
 module.exports = (filePath, callback) => {
@@ -68,15 +68,11 @@ module.exports = (filePath, callback) => {
       })
     ])
     .process(css, { from: filePath })
-    .then(result => {
-        return stylelint.lint({
-          code: result.css,
-          fix: true
-        });
-    })
-    .then(result => {
-      callback(result.output);
-    })
+    .then(result => prettier.format(result.css, {
+      parser: 'css',
+      printWidth: 10000,
+    }))
+    .then(callback)
     .catch(error => {
       log(error);
       process.exitCode = 1;

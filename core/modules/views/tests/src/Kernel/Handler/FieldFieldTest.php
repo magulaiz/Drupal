@@ -18,6 +18,7 @@ use Drupal\views\Views;
  *
  * @see \Drupal\views\Plugin\views\field\EntityField
  * @group views
+ * @group #slow
  */
 class FieldFieldTest extends ViewsKernelTestBase {
 
@@ -488,6 +489,19 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->assertEquals('4', $executable->getStyle()->getField(3, 'revision_id'));
     $this->assertEquals('4', $executable->getStyle()->getField(3, 'field_test'));
     $this->assertEquals('next entity value', $executable->getStyle()->getField(3, 'name'));
+  }
+
+  /**
+   * Tests the token replacement for revision fields.
+   */
+  public function testRevisionTokenRender() {
+    $view = Views::getView('test_field_field_revision_test');
+    $this->executeView($view);
+
+    $this->assertEquals('Replace: 1', $view->getStyle()->getField(0, 'field_test__revision_id_1'));
+    $this->assertEquals('Replace: 2', $view->getStyle()->getField(1, 'field_test__revision_id_1'));
+    $this->assertEquals('Replace: 3', $view->getStyle()->getField(2, 'field_test__revision_id_1'));
+    $this->assertEquals('Replace: 4', $view->getStyle()->getField(3, 'field_test__revision_id_1'));
   }
 
   /**

@@ -173,6 +173,7 @@ class DateTest extends UnitTestCase {
 
     // Removed characters related to timezone 'e' and 'T', as test does not have
     // timezone set.
+    // cspell:disable-next-line
     $date_characters = 'dDjlNSwzWFmMntLoYyaABgGhHisuIOPZcrU';
     $date_chars = str_split($date_characters);
 
@@ -192,7 +193,7 @@ class DateTest extends UnitTestCase {
     $timestamp = $this->createTimestamp('2013-12-11 10:09:09');
     $options = [];
 
-    // Mocks the formatDiff function of the dateformatter object.
+    // Mocks the formatDiff function of the DateFormatter object.
     $this->dateFormatterStub
       ->expects($this->exactly(2))
       ->method('formatDiff')
@@ -225,7 +226,7 @@ class DateTest extends UnitTestCase {
     $request_time = $this->createTimestamp('2013-12-11 10:09:08');
     $options = [];
 
-    // Mocks the formatDiff function of the dateformatter object.
+    // Mocks the formatDiff function of the DateFormatter object.
     $this->dateFormatterStub
       ->expects($this->exactly(2))
       ->method('formatDiff')
@@ -443,11 +444,11 @@ class DateTest extends UnitTestCase {
   }
 
   /**
-   * Creates a UNIX timestamp given a date and time string in the format
-   * year-month-day hour:minute:seconds (e.g. 2013-12-11 10:09:08).
+   * Creates a UNIX timestamp given a date and time string.
    *
    * @param string $dateTimeString
-   *   The formatted date and time string.
+   *   The formatted date and time string. The format is year-month-day
+   *   hour:minute:seconds (e.g. 2013-12-11 10:09:08).
    *
    * @return int
    *   The UNIX timestamp.

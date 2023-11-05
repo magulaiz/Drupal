@@ -48,7 +48,8 @@ use Drupal\field\FieldConfigInterface;
  *   constraints = {
  *     "RequiredConfigDependencies" = {
  *       "field_storage_config"
- *     }
+ *     },
+ *     "ImmutableProperties" = {"id", "entity_type", "field_name", "bundle", "field_type"},
  *   }
  * )
  */
@@ -262,7 +263,6 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     $link_templates = parent::linkTemplates();
     if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
       $link_templates["{$this->entity_type}-field-edit-form"] = 'entity.field_config.' . $this->entity_type . '_field_edit_form';
-      $link_templates["{$this->entity_type}-storage-edit-form"] = 'entity.field_config.' . $this->entity_type . '_storage_edit_form';
       $link_templates["{$this->entity_type}-field-delete-form"] = 'entity.field_config.' . $this->entity_type . '_field_delete_form';
 
       if (isset($link_templates['config-translation-overview'])) {
@@ -370,7 +370,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * @param string $field_name
    *   Name of the field.
    *
-   * @return Drupal\field\FieldConfigInterface|null
+   * @return \Drupal\field\FieldConfigInterface|null
    *   The field config entity if one exists for the provided field
    *   name, otherwise NULL.
    */
