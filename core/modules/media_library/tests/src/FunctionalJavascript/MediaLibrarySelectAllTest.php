@@ -2,6 +2,11 @@
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+/**
+ * Tests Media Library's select all javascript.
+ *
+ * @group media_library
+ */
 class MediaLibrarySelectAllTest extends MediaLibraryTestBase {
 
   protected $defaultTheme = 'stark';
