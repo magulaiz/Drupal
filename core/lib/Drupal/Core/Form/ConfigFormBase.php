@@ -191,7 +191,7 @@ abstract class ConfigFormBase extends FormBase {
           $property_path = rtrim($property_path, '0123456789.');
         }
         $config_target = ConfigTarget::fromForm($map["$config_name:$property_path"], $form);
-        $form_element_name = implode('][', $config_target->elementParents);
+        $form_element_name = $config_target->elementName;
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
