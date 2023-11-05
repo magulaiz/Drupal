@@ -22,7 +22,7 @@ class MediaLibrarySelectAllTest extends MediaLibraryTestBase {
   }
 
   /**
-   * Tests that the 'Select all media' checkbox works correctle.
+   * Tests that the 'Select all media' checkbox works correctly.
    */
   public function testSelectAll(): void {
     $page = $this->getSession()->getPage();
