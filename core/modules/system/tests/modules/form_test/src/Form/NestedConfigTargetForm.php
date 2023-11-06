@@ -3,7 +3,6 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Config\Config;
-use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 class NestedConfigTargetForm extends TreeConfigTargetForm {
