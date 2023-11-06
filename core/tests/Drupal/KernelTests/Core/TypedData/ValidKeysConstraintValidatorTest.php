@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\block\Entity\Block;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
