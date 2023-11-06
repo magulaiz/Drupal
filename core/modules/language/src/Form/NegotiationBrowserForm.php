@@ -2,7 +2,6 @@
 
 namespace Drupal\language\Form;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -189,14 +188,15 @@ class NegotiationBrowserForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    parent::copyFormValuesToConfig($config, $form_state);
-
-    assert($config->getName() === 'language.mappings');
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $mappings = $form_state->get('mappings');
     if (!empty($mappings)) {
+      $config = $this->config('language.mappings');
       $config->setData(['map' => $mappings]);
+      $config->save();
     }
+
+    parent::submitForm($form, $form_state);
   }
 
   /**
