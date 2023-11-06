@@ -192,11 +192,6 @@ abstract class ConfigFormBase extends FormBase {
           $property_path = rtrim($property_path, '0123456789.');
         }
 
-        if ($property_path === '' && $violation->getConstraint() instanceof ValidKeysConstraint) {
-          // There is a map to a non-existing config key. Try to work backwards.
-          $property_path = $violation->getParameters()['@key'] ?? '';
-        }
-
         if (isset($map["$config_name:$property_path"])) {
           $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
         }
