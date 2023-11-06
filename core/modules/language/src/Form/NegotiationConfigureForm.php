@@ -3,7 +3,6 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Block\BlockManagerInterface;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -161,13 +160,10 @@ class NegotiationConfigureForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    parent::copyFormValuesToConfig($config, $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $configurable_types = $form['#language_types'];
 
-    assert($config->getName() === 'language.types');
-    $configurable_types = $form_state->getCompleteForm()['#language_types'];
-
-    $stored_values = $config->get('configurable');
+    $stored_values = $this->languageTypes->get('configurable');
     $customized = [];
     $method_weights_type = [];
 
@@ -188,15 +184,8 @@ class NegotiationConfigureForm extends ConfigFormBase {
       }
 
       $method_weights_type[$type] = $method_weights;
-      $config->set('negotiation.' . $type . '.method_weights', $method_weights_input);
+      $this->languageTypes->set('negotiation.' . $type . '.method_weights', $method_weights_input)->save();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
 
     // Update non-configurable language types and the related language
     // negotiation configuration.
