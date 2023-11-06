@@ -177,12 +177,25 @@ final class FieldStorageAddController extends ControllerBase {
     return $form;
   }
 
-  public function OpenModalForm($entity_type = NULL, $bundle = NULL, $field_name = NULL) {
+  /**
+   * Creates a dummy field to set in temp store in order to build the edit form.
+   *
+   * @param string|null $entity_type_id
+   *   The name of the entity type.
+   * @param string|null $bundle
+   *   The entity bundle.
+   * @param string|null $field_name
+   *   The field name.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The field instance edit form.
+   */
+  public function OpenModalForm(string $entity_type_id = NULL, string $bundle = NULL, string $field_name = NULL) {
     $form = [];
     if(!empty($field_name)) {
-      $this->tempStore->delete("$entity_type:$field_name");
+      $this->tempStore->delete("$entity_type_id:$field_name");
     }
-    $form = $this->buildForm($form, $entity_type, $bundle);
+    $form = $this->buildForm($form, $entity_type_id, $bundle);
     $response = new AjaxResponse();
     $dialog_options['modal'] = TRUE;
     $dialog_options['width'] = 1100;

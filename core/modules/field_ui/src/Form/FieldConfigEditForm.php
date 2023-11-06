@@ -356,7 +356,7 @@ class FieldConfigEditForm extends EntityForm {
             'width' => '1100',
           ]),
         ],
-        '#url' => Url::fromRoute("field_ui.field_reset_$entity_type", $route_parameters),
+        '#url' => Url::fromRoute("field_ui.field_storage_config_reset_add_$entity_type", $route_parameters),
       ];
     }
 

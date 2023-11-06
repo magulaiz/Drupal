@@ -94,6 +94,17 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("entity.{$entity_type_id}.field_ui_fields", $route);
 
         $route = new Route(
+          "$path/fields/reset-add-field/{field_name}",
+          [
+            '_controller' => FieldStorageAddController::class . '::OpenModalForm',
+            '_title' => 'Add field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_storage_config_reset_add_$entity_type_id", $route);
+
+        $route = new Route(
           "$path/fields/add-field",
           [
             '_controller' => FieldStorageAddController::class . '::OpenModalForm',
