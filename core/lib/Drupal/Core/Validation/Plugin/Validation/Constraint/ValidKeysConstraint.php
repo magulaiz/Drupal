@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraint;
  * @Constraint(
  *   id = "ValidKeys",
  *   label = @Translation("Valid mapping keys", context = "Validation"),
+ *   type = { "mapping" },
  * )
  */
 class ValidKeysConstraint extends Constraint {

@@ -59,8 +59,6 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
 
     $mapping = $this->context->getObject();
     assert($mapping instanceof Mapping);
-
-    // First: valid keys.
     $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
     $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
 
@@ -69,25 +67,21 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     foreach ($invalid_keys as $key) {
       $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
     }
-
     // Dynamically valid: not valid here but valid for some resolved types.
-    $dynamic_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
-    foreach ($dynamic_invalid_keys as $key) {
+    $dynamically_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
+    foreach ($dynamically_invalid_keys as $key) {
       $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
     }
-
-    // Second: required keys.
     // Statically required: required here and not dynamically valid.
     $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
     $missing_keys = array_diff($statically_required_keys, array_keys($value));
     foreach ($missing_keys as $key) {
       $this->context->addViolation($constraint->requiredKeyMessage, ['@key' => $key]);
     }
-
     // Dynamically required: required here but not for all resolved types.
-    $conditional = array_intersect($required_keys, $dynamically_valid_keys);
-    $missing_conditional_keys = array_diff($conditional, array_keys($value));
-    foreach ($missing_conditional_keys as $key) {
+    $dynamically_required_keys = array_intersect($required_keys, $dynamically_valid_keys);
+    $missing_dynamically_required_keys = array_diff($dynamically_required_keys, array_keys($value));
+    foreach ($missing_dynamically_required_keys as $key) {
       $this->context->addViolation($constraint->dynamicRequiredKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
     }
   }
