@@ -137,7 +137,6 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
-      $target->elementName = $element['#name'];
       $target->elementParents = $element['#parents'];
       $map[$target->configName . ':' . $target->propertyPath] = $target;
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
@@ -199,7 +198,7 @@ abstract class ConfigFormBase extends FormBase {
           // Remove the final piece of the property path.
           $property_path = implode('.', array_slice(explode('.', $property_path), 0, -1));
         }
-        $form_element_name = $map["$config_name:$property_path"]->elementName;
+        $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
