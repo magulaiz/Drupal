@@ -63,7 +63,6 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/browser');
     $this->submitForm($edit, 'Save configuration');
-    print_r($this->getSession()->getPage()->getContent());
     $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
     $this->assertSession()->fieldValueEquals('edit-mappings-xx-browser-langcode', 'xx');
     $this->assertSession()->fieldValueEquals('edit-mappings-xx-drupal-langcode', 'en');
