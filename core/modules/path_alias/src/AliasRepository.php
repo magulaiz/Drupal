@@ -43,14 +43,23 @@ class AliasRepository implements AliasRepositoryInterface {
       $select->condition($conditions);
     }
 
-    $this->addLanguageFallback($select, $langcode, FALSE);
+    $this->addLanguageFallback($select, $langcode);
 
-    // We order by ID ASC so that fetchAllKeyed() returns the most recently
-    // created alias for each source. Subsequent queries using fetchField() must
-    // use ID DESC to have the same effect.
-    $select->orderBy('base_table.id', 'ASC');
+    $select->orderBy('base_table.id', 'DESC');
 
-    return $select->execute()->fetchAllKeyed();
+    // We want the most recently created alias for each source, however that
+    // will be at the start of the result-set, so fetch everything and reverse
+    // it. Note that it would not be sufficient to reverse the ordering of the
+    // 'base_table.id' column, as that would not guarantee other conditions
+    // added to the query, such as those in ::addLanguageFallback, would be
+    // reversed.
+    $results = $select->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $aliases = [];
+    foreach (array_reverse($results) as $result) {
+      $aliases[$result['path']] = $result['alias'];
+    }
+
+    return $aliases;
   }
 
   /**
@@ -120,13 +129,8 @@ class AliasRepository implements AliasRepositoryInterface {
    * @param string $langcode
    *   Language code to search the path with. If there's no path defined for
    *   that language it will search paths without language.
-   * @param bool $prefer_first_results
-   *   If the caller is going to use an operation like fetchAssoc on the result
-   *   set and only take the first result, set this to TRUE, otherwise if the
-   *   caller will fetch all the results and de-dupe by source path, then pass
-   *   in FALSE.
    */
-  protected function addLanguageFallback(SelectInterface $query, $langcode, $prefer_first_results = TRUE) {
+  protected function addLanguageFallback(SelectInterface $query, $langcode) {
     // Always get the language-specific alias before the language-neutral one.
     // For example 'de' is less than 'und' so the order needs to be ASC, while
     // 'xx-lolspeak' is more than 'und' so the order needs to be DESC.
@@ -135,10 +139,10 @@ class AliasRepository implements AliasRepositoryInterface {
       array_pop($langcode_list);
     }
     elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $query->orderBy('base_table.langcode', $prefer_first_results ? 'DESC' : 'ASC');
+      $query->orderBy('base_table.langcode', 'DESC');
     }
     else {
-      $query->orderBy('base_table.langcode', $prefer_first_results ? 'ASC' : 'DESC');
+      $query->orderBy('base_table.langcode', 'ASC');
     }
     $query->condition('base_table.langcode', $langcode_list, 'IN');
   }
