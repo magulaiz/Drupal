@@ -1,7 +1,7 @@
 <?php
+
 namespace Drupal\performance_test;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
