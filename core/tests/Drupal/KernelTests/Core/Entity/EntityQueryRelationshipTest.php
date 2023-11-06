@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_reference_basefield_test\Entity\EntityTestMultiplePropertyReference;
+use Drupal\file\Entity\File;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
@@ -22,7 +24,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy', 'entity_reference_basefield_test', 'file'];
 
   /**
    * Term entities.
@@ -63,6 +65,9 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('file');
+    $this->installSchema('file', ['file_usage']);
+    $this->installEntitySchema('entity_with_reference');
 
     // We want an entity reference field. It needs a vocabulary, terms, a field
     // storage and a field. First, create the vocabulary.
@@ -217,6 +222,34 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
       ->accessCheck(FALSE)
       ->condition('langcode.language.foo', 'bar')
       ->execute();
+  }
+
+  /**
+   * Test to ensure that entity query allows relationship specifier for base
+   * fields.
+   */
+  public function testBaseEntityReferenceFields() {
+    $reference_file = File::create([
+      'uri' => 'public://example.png',
+      'filename' => 'example.png',
+    ]);
+    $reference_file->save();
+
+    $entity1 = EntityTestMultiplePropertyReference::create(['type' => 'test_bundle']);
+    $entity1->name->value = $this->randomMachineName();
+    $entity1->save();
+
+    $entity = EntityTestMultiplePropertyReference::create(['type' => 'test_bundle']);
+    $entity->name->value = $this->randomMachineName();
+    $entity->reference->target_id = $reference_file->id();
+    $entity->reference->description = 'example png';
+    $entity->save();
+
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_with_reference');
+    $query = $storage->getQuery()
+      ->condition("reference.entity:file.fid", $reference_file->id());
+    $count = $query->count()->execute();
+    $this->assertEquals(1, $count);
   }
 
   /**

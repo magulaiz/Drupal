@@ -250,6 +250,11 @@ class Tables implements TablesInterface {
             // Do not process it again.
             $key++;
           }
+          // If this is a relationship specifier.
+          elseif (strpos($next, ':') !== FALSE) {
+            $next = $field_storage->getMainPropertyName();
+            $sql_column = $table_mapping->getFieldColumnName($field_storage, $next);
+          }
         }
         // If there are no additional specifiers but the field has a main
         // property, use that to look up the column name.
