@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation for contact personal emails.
+ *
+ * Variables:
+ * - message: The body of the message sent.
+ * - subject: The subject of the message sent.
+ * - site_name: Site name.
+ * - sender_name: The sender name.
+ * - sender_url: The sender URL.
+ * - recipient_name: The recipient name.
+ * - recipient_edit_url: The recipient URL.
+ *
+ * @see Drupal\contact\Plugin\EmailBuilder\ContactUserEmailBuilder
+ *
+ * @ingroup themeable
+ */
+#}
+
+<p class="contact-email-intro">
+  {% trans %}Hello {{ recipient_name }},{% endtrans %}<br>
+  {% trans %}<a href="{{ sender_url }}">{{ sender_name }}</a> has sent you a message via your form at {{ site_name }}.{% endtrans %}
+  {% trans %}If you don't want to receive such emails, you can <a href="{{ recipient_edit_url }}">change your settings</a>.{% endtrans %}
+</p>
+<hr>
+{{ message }}

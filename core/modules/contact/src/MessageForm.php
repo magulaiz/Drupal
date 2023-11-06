@@ -220,7 +220,8 @@ class MessageForm extends ContentEntityForm {
     // implement message storage, this will make the task of swapping in a real
     // storage controller straight-forward.
     $message->save();
-    $this->mailHandler->sendMailMessages($message, $user);
+    $type = $message->isPersonal() ? 'contact__user' : 'contact__page';
+    $this->mailer->get($type)->sendMailMessages($message, $user);
     $contact_form = $message->getContactForm();
 
     $this->flood->register('contact', $this->config('contact.settings')->get('flood.interval'));

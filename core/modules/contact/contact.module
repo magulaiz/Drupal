@@ -113,6 +113,9 @@ function contact_menu_local_tasks_alter(&$data, $route_name) {
 
 /**
  * Implements hook_mail().
+ *
+ * This is only used for sending with the old mailer API and will eventually be
+ * deprecated and removed.
  */
 function contact_mail($key, &$message, $params) {
   $contact_message = $params['contact_message'];
