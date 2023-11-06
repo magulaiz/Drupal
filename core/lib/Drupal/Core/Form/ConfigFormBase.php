@@ -99,7 +99,7 @@ abstract class ConfigFormBase extends FormBase {
 
       $value = $this->config($target->configName)->get($target->propertyPath);
       if ($target->fromConfig) {
-        $value = call_user_func($target->fromConfig, $value);
+        $value = ($target->fromConfig)($value);
       }
       $element['#default_value'] = $value;
     }
@@ -298,7 +298,7 @@ abstract class ConfigFormBase extends FormBase {
       if ($target->configName === $config->getName()) {
         $value = $form_state->getValue($target->elementParents);
         if ($target->toConfig) {
-          $value = call_user_func($target->toConfig, $value);
+          $value = ($target->toConfig)($value);
         }
         $config->set($target->propertyPath, $value);
       }

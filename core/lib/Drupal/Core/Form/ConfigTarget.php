@@ -114,14 +114,14 @@ final class ConfigTarget {
   public static function fromForm(array $array_parents, array $form): self {
     $element = NestedArray::getValue($form, $array_parents);
     if (!isset($element['#config_target'])) {
-      throw new \LogicException();
+      throw new \LogicException('The form element [' . implode('][', $array_parents) . '] does not have #config_target property set');
     }
     $target = $element['#config_target'];
     if (is_string($target)) {
       $target = ConfigTarget::fromString($target);
     }
     if (!$target instanceof ConfigTarget) {
-      throw new \LogicException();
+      throw new \LogicException('The form element [' . implode('][', $array_parents) . '] #config_target property is not a string or a ConfigTarget object');
     }
 
     // Add the element information to the config target object.
