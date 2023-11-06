@@ -89,7 +89,6 @@ class PerformanceData {
     return $this->queryCount;
   }
 
-
   /**
    * Sets the original return value.
    *
