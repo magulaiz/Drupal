@@ -111,22 +111,19 @@ class LocaleSettingsForm extends ConfigFormBase {
       case LOCALE_TRANSLATION_OVERWRITE_ALL:
         $config
           ->set('translation.overwrite_customized', TRUE)
-          ->set('translation.overwrite_not_customized', TRUE)
-          ->save();
+          ->set('translation.overwrite_not_customized', TRUE);
         break;
 
       case LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED:
         $config
           ->set('translation.overwrite_customized', FALSE)
-          ->set('translation.overwrite_not_customized', TRUE)
-          ->save();
+          ->set('translation.overwrite_not_customized', TRUE);
         break;
 
       case LOCALE_TRANSLATION_OVERWRITE_NONE:
         $config
           ->set('translation.overwrite_customized', FALSE)
-          ->set('translation.overwrite_not_customized', FALSE)
-          ->save();
+          ->set('translation.overwrite_not_customized', FALSE);
         break;
     }
   }
