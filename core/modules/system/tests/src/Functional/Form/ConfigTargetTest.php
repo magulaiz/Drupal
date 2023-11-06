@@ -51,15 +51,32 @@ class ConfigTargetTest extends BrowserTestBase {
    * Tests #config_target where there is not a 1:1 property to element.
    */
   public function testNested(): void {
+    $most_favorite_fruit = 'Apple';
+    $nemesis_vegetable = 'Cauliflower';
+
     $this->drupalGet('/form-test/nested-config-target');
     $page = $this->getSession()->getPage();
     $page->fillField('First choice', '');
+    $page->fillField('Nemesis', $nemesis_vegetable);
     $page->pressButton('Save configuration');
     $assert_session = $this->assertSession();
     $assert_session->statusMessageContains('This value should not be blank.', 'error');
     $assert_session->elementAttributeNotExists('css', '#edit-favorites', 'aria-invalid');
     $assert_session->elementAttributeExists('named', ['field', 'First choice'], 'aria-invalid');
     $assert_session->elementAttributeNotExists('named', ['field', 'Second choice'], 'aria-invalid');
+
+    $page->fillField('First choice', $most_favorite_fruit);
+    $page->pressButton('Save configuration');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
+
+    $this->assertSame([
+      'favorite_fruits' => [
+        $most_favorite_fruit,
+        'Orange',
+      ],
+      'favorite_vegetable' => 'Potato',
+      'nemesis_vegetable' => $nemesis_vegetable,
+    ], $this->config('form_test.object')->getRawData());
   }
 
 }

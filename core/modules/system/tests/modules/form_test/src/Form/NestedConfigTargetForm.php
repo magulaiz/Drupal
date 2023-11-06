@@ -6,7 +6,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-class NestedConfigTargetForm extends ConfigFormBase {
+class NestedConfigTargetForm extends TreeConfigTargetForm {
 
   /**
    * {@inheritdoc}
@@ -50,7 +50,7 @@ class NestedConfigTargetForm extends ConfigFormBase {
    */
   protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
     // The 1:1 things can be handled by the base class.
-//    parent::copyFormValuesToConfig($config, $form_state);
+    parent::copyFormValuesToConfig($config, $form_state);
 
     // Not every config property is mapped 1:1 to a form element.
     $config->set('favorite_fruits', [
