@@ -187,12 +187,21 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
    * Tests the ValidKeys constraint validator.
    */
   public function testValidation(): void {
+    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_data */
+    $typed_data = $this->container->get('config.typed');
     // Create a data definition that specifies certain allowed keys.
-    $definition = DataDefinition::create('any')
-      ->addConstraint('ValidKeys', ['north', 'south', 'west']);
-
-    /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
-    $typed_data = $this->container->get('typed_data_manager');
+    $config_schema_type = $typed_data->getDefinition('mapping');
+    // Define a mapping with 4 key-value pairs of strings.
+    $config_schema_type['mapping'] = array_fill_keys(
+      ['north', 'east', 'south', 'west'],
+      ['type' => 'string', 'requiredKey' => FALSE],
+    );
+    // But then only allow 3.
+    $config_schema_type['constraints']['ValidKeys'] = ['north', 'south', 'west'];
+    // Use NULL as the value. The value is only important for dynamic typing,
+    // which is not tested by this method.
+    // @see \Drupal\Core\Config\TypedConfigManager::createFromNameAndData
+    $definition = $typed_data->buildDataDefinition($config_schema_type, NULL);
 
     // Passing a non-array value should raise an exception.
     try {
