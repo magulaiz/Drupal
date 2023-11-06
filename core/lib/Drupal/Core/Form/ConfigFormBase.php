@@ -190,8 +190,21 @@ abstract class ConfigFormBase extends FormBase {
           // will not have the sequence index in it.
           $property_path = rtrim($property_path, '0123456789.');
         }
-        $config_target = ConfigTarget::fromForm($map["$config_name:$property_path"], $form);
-        $form_element_name = $config_target->elementName;
+
+        if ($property_path === '') {
+          // There is a map to a non-existing config key. Try to work backwards.
+          $property_path = $violation->getParameters()['@key'] ?? '';
+        }
+
+        if (isset($map["$config_name:$property_path"])) {
+          $config_target = ConfigTarget::fromForm($map["$config_name:$property_path"], $form);
+          $form_element_name = implode('][', $config_target->elementParents);
+        }
+        else {
+          // We cannot determine where to place the violation. The only option
+          // is the entire form.
+          $form_element_name = '';
+        }
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
