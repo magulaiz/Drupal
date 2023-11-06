@@ -192,7 +192,7 @@ final class FieldStorageAddController extends ControllerBase {
    */
   public function OpenModalForm(string $entity_type_id = NULL, string $bundle = NULL, string $field_name = NULL) {
     $form = [];
-    if(!empty($field_name)) {
+    if (!empty($field_name)) {
       $this->tempStore->delete("$entity_type_id:$field_name");
     }
     $form = $this->buildForm($form, $entity_type_id, $bundle);
