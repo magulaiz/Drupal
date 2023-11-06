@@ -339,7 +339,7 @@ abstract class ConfigFormBase extends FormBase {
    *   The corresponding form element name.
    */
   protected static function mapConfigKeyToFormElementName(string $config_name, string $key) : string {
-    throw new \BadMethodCallException('Not implemented. Must be implemented by subclasses');
+    throw new \BadMethodCallException(__METHOD__ . '() must be implemented by subclasses');
   }
 
 }
