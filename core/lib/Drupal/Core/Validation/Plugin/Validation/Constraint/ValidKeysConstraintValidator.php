@@ -34,53 +34,61 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       return;
     }
 
+    $mapping = $this->context->getObject();
+    assert($mapping instanceof Mapping);
+
     if ($constraint->allowedKeys === '<infer>') {
-      $mapping = $this->context->getObject();
-      assert($mapping instanceof Mapping);
-
-      // First: valid keys.
       $valid_keys = $mapping->getValidKeys();
-      $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
-      $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
-
-      // Statically valid: valid here and not dynamically valid.
-      $invalid_keys = array_diff(array_keys($value), $valid_keys, $other_type_valid_keys);
-      foreach ($invalid_keys as $key) {
-        $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
-      }
-
-      // Dynamically valid: not valid here but valid for some resolved types.
-      $dynamic_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
-      foreach ($dynamic_invalid_keys as $key) {
-        $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
-      }
-
-      // Second: required keys.
       $required_keys = $mapping->getRequiredKeys();
-      $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
-
-      // Statically required: required here and not dynamically valid.
-      $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
-      $missing_keys = array_diff($statically_required_keys, array_keys($value));
-      foreach ($missing_keys as $key) {
-        $this->context->addViolation($constraint->requiredKeyMessage, ['@key' => $key]);
-      }
-
-      // Dynamically required: required here but not for all resolved types.
-      $conditional = array_intersect($required_keys, $dynamically_valid_keys);
-      $missing_conditional_keys = array_diff($conditional, array_keys($value));
-      foreach ($missing_conditional_keys as $key) {
-        $this->context->addViolation($constraint->dynamicRequiredKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
-      }
     }
     elseif (is_array($constraint->allowedKeys)) {
-      $invalid_keys = array_diff(array_keys($value), $constraint->allowedKeys);
-      foreach ($invalid_keys as $key) {
-        $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
+      if (!empty(array_diff($constraint->allowedKeys, $mapping->getValidKeys()))) {
+        throw new \InvalidArgumentException(sprintf(
+          'The type \'%s\' explicitly specifies the allowed keys (%s), but they are not a subset of the statically defined mapping keys in the schema (%s).',
+          $this->context->getObject()->getDataDefinition()->getDataType(),
+          implode(', ', $constraint->allowedKeys),
+          implode(', ', $mapping->getValidKeys())
+        ));
       }
+      $valid_keys = array_intersect($mapping->getValidKeys(), $constraint->allowedKeys);
+      $required_keys = array_intersect($mapping->getRequiredKeys(), $constraint->allowedKeys);
     }
     else {
       throw new InvalidArgumentException("'$constraint->allowedKeys' is not a valid set of allowed keys.");
+    }
+
+    $mapping = $this->context->getObject();
+    assert($mapping instanceof Mapping);
+
+    // First: valid keys.
+    $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
+    $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
+
+    // Statically valid: valid here and not dynamically valid.
+    $invalid_keys = array_diff(array_keys($value), $valid_keys, $other_type_valid_keys);
+    foreach ($invalid_keys as $key) {
+      $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
+    }
+
+    // Dynamically valid: not valid here but valid for some resolved types.
+    $dynamic_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
+    foreach ($dynamic_invalid_keys as $key) {
+      $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
+    }
+
+    // Second: required keys.
+    // Statically required: required here and not dynamically valid.
+    $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
+    $missing_keys = array_diff($statically_required_keys, array_keys($value));
+    foreach ($missing_keys as $key) {
+      $this->context->addViolation($constraint->requiredKeyMessage, ['@key' => $key]);
+    }
+
+    // Dynamically required: required here but not for all resolved types.
+    $conditional = array_intersect($required_keys, $dynamically_valid_keys);
+    $missing_conditional_keys = array_diff($conditional, array_keys($value));
+    foreach ($missing_conditional_keys as $key) {
+      $this->context->addViolation($constraint->dynamicRequiredKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
     }
   }
 
