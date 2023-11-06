@@ -112,7 +112,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
           'contexts' => [],
           'max-age' => 0,
         ],
-        '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', $args],
+        '#lazy_builder' => [[PlaceholdersTest::class, 'callback'], $args],
       ],
     ];
     // Note the absence of '#create_placeholder', presence of high cardinality
@@ -625,6 +625,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     $token = Crypt::hashBase64(serialize($expected_placeholder_render_array));
     $placeholder_callback = $expected_placeholder_render_array['#lazy_builder'][0];
+    if (is_array($placeholder_callback)) {
+      $placeholder_callback = implode('::', $placeholder_callback);
+    }
     $expected_placeholder_markup = '<drupal-render-placeholder callback="' . $placeholder_callback . '" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>';
     $this->assertSame($expected_placeholder_markup, Html::normalize($expected_placeholder_markup), 'Placeholder unaltered by Html::normalize() which is used by FilterHtmlCorrector.');
 

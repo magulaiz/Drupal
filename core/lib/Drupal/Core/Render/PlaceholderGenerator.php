@@ -92,6 +92,9 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
     // and its arguments are put in the placeholder markup solely to simplify<<<
     // debugging.
     $callback = $placeholder_render_array['#lazy_builder'][0];
+    if (is_array($callback)) {
+      $callback = implode('::', $callback);
+    }
     $arguments = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
     $token = Crypt::hashBase64(serialize($placeholder_render_array));
     $placeholder_markup = '<drupal-render-placeholder callback="' . Html::escape($callback) . '" arguments="' . Html::escape($arguments) . '" token="' . Html::escape($token) . '"></drupal-render-placeholder>';
