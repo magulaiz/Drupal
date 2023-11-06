@@ -93,12 +93,20 @@ trait PerformanceTestTrait {
    *   A PerformanceData value object.
    */
   public function collectPerformanceData(callable $callable, ?string $service_name = NULL): PerformanceData {
+    // Clear all existing performance logs before collecting new data.
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
+    $collection = \Drupal::keyValue('performance_test');
+    $collection->deleteAll();
     $return = $callable();
     $performance_data = $this->processChromeDriverPerformanceLogs($service_name);
     if (isset($return)) {
-      $performance_data->setReturnValue($performance_data);
+      $performance_data->setReturnValue($return);
+    }
+
+    $performance_test_data = $collection->get('performance_test_data');
+    if ($performance_test_data) {
+      $performance_data->setQueryCount(count($performance_test_data['database_events']));
     }
 
     return $performance_data;

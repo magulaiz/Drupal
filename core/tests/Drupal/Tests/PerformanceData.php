@@ -20,6 +20,11 @@ class PerformanceData {
   protected int $scriptCount = 0;
 
   /**
+   * The number of database queries recorded.
+   */
+  protected int $queryCount = 0;
+
+  /**
    * The original return value.
    */
   protected $returnValue;
@@ -63,6 +68,27 @@ class PerformanceData {
   public function getScriptCount(): int {
     return $this->scriptCount;
   }
+
+  /**
+   * Sets the query count.
+   *
+   * @param int $count
+   *   The number of database queries recorded.
+   */
+  public function setQueryCount(int $count) {
+    $this->queryCount = $count;
+  }
+
+  /**
+   * Gets the query count.
+   *
+   * @return int
+   *   The number of database queries recorded.
+   */
+  public function getQueryCount(): int {
+    return $this->queryCount;
+  }
+
 
   /**
    * Sets the original return value.
