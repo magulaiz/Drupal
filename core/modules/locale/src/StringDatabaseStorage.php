@@ -377,12 +377,16 @@ class StringDatabaseStorage implements StringStorageInterface {
     if ($join) {
       if (isset($conditions['language'])) {
         // If we've got a language condition, we use it for the join.
-        $query->$join('locales_target', 't', $query->getConnection()->condition('AND')->compare('t.lid', 's.lid')->condition('t.language', $conditions['language']));
+        $query->$join('locales_target', 't',
+          $query->joinCondition()
+            ->compare('t.lid', 's.lid')
+            ->condition('t.language', $conditions['language'])
+        );
         unset($conditions['language']);
       }
       else {
         // Since we don't have a language, join with locale id only.
-        $query->$join('locales_target', 't', $query->getConnection()->condition('AND')->compare('t.lid', 's.lid'));
+        $query->$join('locales_target', 't', $query->joinCondition()->compare('t.lid', 's.lid'));
       }
       if (!empty($options['translation'])) {
         // We cannot just add all fields because 'lid' may get null values.

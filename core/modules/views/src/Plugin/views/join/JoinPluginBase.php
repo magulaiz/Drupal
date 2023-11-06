@@ -314,10 +314,10 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
 
     $arguments = [];
     if ($this->leftFormula || is_null($this->leftTable)) {
-      $condition = $select_query->getConnection()->condition('AND')->where("$left_field " . $this->configuration['operator'] . " $table[alias].$this->field");
+      $condition = $select_query->joinCondition()->where("$left_field " . $this->configuration['operator'] . " $table[alias].$this->field");
     }
     else {
-      $condition = $select_query->getConnection()->condition('AND')->compare($left_field, "$table[alias].$this->field", $this->configuration['operator']);
+      $condition = $select_query->joinCondition()->compare($left_field, "$table[alias].$this->field", $this->configuration['operator']);
     }
 
     // Tack on the extra.

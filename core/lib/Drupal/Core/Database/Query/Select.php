@@ -683,6 +683,19 @@ class Select extends Query implements SelectInterface {
     return $alias;
   }
 
+  /*
+   * Helper method for generation join conditions.
+   *
+   * @param string $conjunction
+   *   The operator to use to combine conditions: 'AND' or 'OR'.
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
+   */
+  public function joinCondition(string $conjunction = 'AND') {
+    return $this->connection->condition($conjunction);
+  }
+
   /**
    * {@inheritdoc}
    */

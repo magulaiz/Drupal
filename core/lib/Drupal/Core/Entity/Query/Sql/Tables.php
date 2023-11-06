@@ -362,7 +362,7 @@ class Tables implements TablesInterface {
         // each join gets a separate alias.
         $key = $index_prefix . ($base_table === 'base_table' ? $table : $base_table);
         if (!isset($this->entityTables[$key])) {
-          $this->entityTables[$key] = $this->addJoin($type, $table, $this->sqlQuery->getConnection()->condition('AND')->compare("%alias.$id_field", "$base_table.$id_field"), $langcode);
+          $this->entityTables[$key] = $this->addJoin($type, $table, $this->sqlQuery->joinCondition()->compare("%alias.$id_field", "$base_table.$id_field"), $langcode);
         }
         return $this->entityTables[$key];
       }
@@ -408,7 +408,7 @@ class Tables implements TablesInterface {
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
-      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, $this->sqlQuery->getConnection()->condition('AND')->compare("%alias.$field_id_field", "$base_table.$entity_id_field"), $langcode, $delta);
+      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, $this->sqlQuery->joinCondition()->compare("%alias.$field_id_field", "$base_table.$entity_id_field"), $langcode, $delta);
     }
     return $this->fieldTables[$index_prefix . $field_name];
   }
@@ -511,7 +511,7 @@ class Tables implements TablesInterface {
    *   The alias of the next entity table joined in.
    */
   protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
-    $join_condition = $this->sqlQuery->getConnection()->condition('AND')->compare('%alias.' . $entity_type->getKey('id'), "$table.$sql_column");
+    $join_condition = $this->sqlQuery->joinCondition()->compare('%alias.' . $entity_type->getKey('id'), "$table.$sql_column");
     return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
   }
 

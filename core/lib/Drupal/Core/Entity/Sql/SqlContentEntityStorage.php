@@ -552,7 +552,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $all_fields = $revisioned_fields;
         if ($data_fields) {
           $all_fields = array_merge($revisioned_fields, $data_fields);
-          $query->leftJoin($this->dataTable, 'data', $this->database->condition('AND')->compare("revision.$this->idKey", "data.$this->idKey")->compare("revision.$this->langcodeKey", "data.$this->langcodeKey"));
+          $query->leftJoin($this->dataTable, 'data',
+            $query->joinCondition()
+              ->compare("revision.$this->idKey", "data.$this->idKey")
+              ->compare("revision.$this->langcodeKey", "data.$this->langcodeKey")
+          );
           $column_names = [];
           // Some fields can have more then one columns in the data table so
           // column names are needed.

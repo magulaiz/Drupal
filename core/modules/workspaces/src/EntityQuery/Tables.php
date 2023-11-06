@@ -115,7 +115,7 @@ class Tables extends BaseTables {
         if ($id_field === $revision_key || $id_field === 'revision_id') {
           $workspace_association_table = $this->contentWorkspaceTables[$base_table];
           if ($join_condition instanceof ConditionInterface) {
-            $join_condition = $this->sqlQuery->getConnection()->condition('AND')->where("$field = COALESCE($workspace_association_table.target_entity_revision_id, $field2)");
+            $join_condition = $this->sqlQuery->joinCondition()->where("$field = COALESCE($workspace_association_table.target_entity_revision_id, $field2)");
           }
           // Start of BC layer.
           else {
@@ -166,7 +166,11 @@ class Tables extends BaseTables {
 
       // LEFT join the Workspace association entity's table so we can properly
       // include live content along with a possible workspace-specific revision.
-      $this->contentWorkspaceTables[$base_table_alias] = $this->sqlQuery->leftJoin('workspace_association', NULL, $this->sqlQuery->getConnection()->condition('AND')->condition("%alias.target_entity_type_id", $entity_type_id)->compare("%alias.target_entity_id", "$base_table_alias.$id_field")->condition("%alias.workspace", $active_workspace_id));
+      $this->contentWorkspaceTables[$base_table_alias] = $this->sqlQuery->leftJoin('workspace_association', NULL,
+        $this->sqlQuery->joinCondition()
+          ->condition("%alias.target_entity_type_id", $entity_type_id)
+          ->compare("%alias.target_entity_id", "$base_table_alias.$id_field")->condition("%alias.workspace", $active_workspace_id)
+      );
 
       $this->baseTablesEntityType[$base_table_alias] = $entity_type->id();
     }
