@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests the password unmask functionality.
  *
  * @group javascript
+ * @group legacy
  */
 class PasswordUnmaskTest extends WebDriverTestBase {
 
@@ -74,6 +75,15 @@ class PasswordUnmaskTest extends WebDriverTestBase {
     return [
       'password_one_field' => ['password_one_field', '.form-item-password-one button', 'edit-password-one', '[data-drupal-selector="edit-password-one"]'],
     ];
+  }
+
+  /**
+   * Test that password_confirm is deprecated .
+   */
+  public function testDepricationMessage() {
+    $this->expectDeprecation('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Core/Render/Element/PasswordUnmask instead. See https://www.drupal.org/node/3394247');
+    $this->drupalGet('/form-test/password-reveal');
+
   }
 
 }

@@ -36,10 +36,10 @@ class PasswordConfirm extends FormElementBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     @trigger_error('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Core/Render/Element/PasswordUnmask instead. See https://www.drupal.org/node/3394247', E_USER_DEPRECATED);
   }
-
   /**
    * {@inheritdoc}
    */
