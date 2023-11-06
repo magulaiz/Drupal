@@ -29,11 +29,6 @@ class FormTestPasswordUnmask extends FormBase {
         'data-drupal-strength-indicator' => TRUE,
       ],
     ];
-    $form['password_two'] = [
-      '#title' => $this->t('Password two'),
-      '#type' => 'password_confirm',
-      '#size' => 25,
-    ];
     return $form;
   }
 
