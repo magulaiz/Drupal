@@ -49,6 +49,9 @@ variables:
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
 
+.default-lint-variables: &default-lint-variables
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
 
 #############
 # Stages    #
@@ -62,7 +65,7 @@ stages:
 # Templates #
 #############
 
-.default-job-settings: &default-job-settings-lint
+.default-job-settings: &default-job-settings
   interruptible: true
   allow_failure: false
   retry:
@@ -73,15 +76,8 @@ stages:
       - stuck_or_timeout_failure
       - runner_system_failure
       - scheduler_failure
-  variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 .with-composer: &with-composer
   needs:
@@ -90,6 +86,11 @@ stages:
 .with-yarn: &with-yarn
   needs:
     - '📦️ Yarn'
+
+.default-job-settings-lint: &default-job-settings-lint
+  <<: [*default-job-settings]
+  rules:
+    - if: $PERFORMANCE_TEST != "1"
 
 .junit-artifacts: &junit-artifacts
   artifacts:
@@ -128,7 +129,7 @@ stages:
 
 .run-daily: &run-daily
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
       allow_failure: true
@@ -139,9 +140,12 @@ stages:
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "mysql-8"
+    PERFORMANCE_TEST: $PERFORMANCE_TEST
+    OTEL_COLLECTOR: $OTEL_COLLECTOR
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $PERFORMANCE_TEST == "1"
 
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':
@@ -172,6 +176,24 @@ stages:
   <<: [ *default-stage, *run-on-commit ]
   variables:
     _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
+
+'PHP 8.3 MySQL 8':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "mysql-8"
+
+'PHP 8.3 PostgreSQL 16':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "pgsql-16"
+
+'PHP 8.3 SQLite 3':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.3"
     _TARGET_DB: "sqlite-3"
 
 # Run daily, or manually.
@@ -205,7 +227,10 @@ stages:
 ################
 
 '📦️ Composer':
-  <<: *default-job-settings-lint
+  <<: *default-job-settings
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "1"
   stage: 🏗️ Build
   cache:
     key:
@@ -224,7 +249,10 @@ stages:
       - composer install
 
 '📦️ Yarn':
-  <<: *default-job-settings-lint
+  <<: *default-job-settings
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "2"
   stage: 🏗️ Build
   cache:
     key:
@@ -248,6 +276,9 @@ stages:
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "16"
   script:
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
   artifacts:
@@ -257,6 +288,9 @@ stages:
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "16"
   script:
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
@@ -266,6 +300,8 @@ stages:
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
@@ -275,6 +311,8 @@ stages:
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
@@ -284,6 +322,8 @@ stages:
 '🧹 Compilation check':
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core build:css --check
     - cd core && yarn run -s check:ckeditor5
@@ -291,6 +331,8 @@ stages:
 '📔 Spell-checking':
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
