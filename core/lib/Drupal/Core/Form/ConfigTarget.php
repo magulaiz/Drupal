@@ -113,7 +113,6 @@ final class ConfigTarget {
     }
 
     // Add the element information to the config target object.
-    $target->elementName = $element['#name'];
     $target->elementParents = $element['#parents'];
     return $target;
   }
