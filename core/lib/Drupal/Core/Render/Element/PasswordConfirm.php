@@ -23,10 +23,22 @@ use Drupal\Core\Render\Attribute\FormElement;
  * ];
  * @endcode
  *
- * @see \Drupal\Core\Render\Element\Password
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   Core/Render/Element/PasswordUnmask instead.
+ *
+ * @see https://www.drupal.org/node/3394247
+ *
+ * @FormElement("password_confirm")
  */
 #[FormElement('password_confirm')]
 class PasswordConfirm extends FormElementBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct() {
+    @trigger_error('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Core/Render/Element/PasswordUnmask instead. See https://www.drupal.org/node/3394247', E_USER_DEPRECATED);
+  }
 
   /**
    * {@inheritdoc}
@@ -47,6 +59,7 @@ class PasswordConfirm extends FormElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    trigger_error('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Core/Render/Element/PasswordUnmask instead. See https://www.drupal.org/node/3394247', E_USER_DEPRECATED);
     if ($input === FALSE) {
       $element += ['#default_value' => []];
       return $element['#default_value'] + ['pass1' => '', 'pass2' => ''];
