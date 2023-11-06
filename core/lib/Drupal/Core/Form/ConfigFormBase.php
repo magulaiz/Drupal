@@ -207,10 +207,18 @@ abstract class ConfigFormBase extends FormBase {
         if (isset($map["$config_name:$property_path"])) {
           $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
         }
+        // Not all config forms have 1:1 mappings between form elements and
+        // config property paths. Using #config_target is then impossible. They
+        // may instead choose to override mapConfigKeyToFormElementName().
         else {
-          // We cannot determine where to place the violation. The only option
-          // is the entire form.
-          $form_element_name = '';
+          try {
+            $form_element_name = static::mapConfigKeyToFormElementName($config_name, $violation->getPropertyPath());
+          }
+          catch (\BadMethodCallException) {
+            // We cannot determine where to place the violation. The only option
+            // is the entire form.
+            $form_element_name = '';
+          }
         }
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
@@ -302,7 +310,7 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
-  private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
+  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP);
     // If there's no map of config keys to form elements, this form does not
     // yet support config validation.
@@ -321,6 +329,24 @@ abstract class ConfigFormBase extends FormBase {
         $config->set($target->propertyPath, $value);
       }
     }
+  }
+
+  /**
+   * Maps the given Config key to a form element name.
+   *
+   * Only called for property paths not found in the collected #config_targets.
+   *
+   * @param string $config_name
+   *   The name of the Config whose value triggered a validation error.
+   * @param string $key
+   *   The Config key that triggered a validation error (which corresponds to a
+   *   property path on the validation constraint violation).
+   *
+   * @return string
+   *   The corresponding form element name.
+   */
+  protected static function mapConfigKeyToFormElementName(string $config_name, string $key) : string {
+    throw new \BadMethodCallException('Not implemented. Must be implemented by subclasses');
   }
 
 }
