@@ -3,7 +3,7 @@
  * User behaviors.
  */
 
-(($, Drupal, drupalSettings) => {
+(($, Drupal) => {
   /**
    * An object containing CSS classes used for password widget.
    *
@@ -69,10 +69,9 @@
           .parent()
           .addClass(cssClasses.passwordParent);
         const $passwordWidget = $mainInput.closest(
-          '.js-form-type-password-confirm',
+          '.js-form-type-password-unmask',
         );
-        const $confirmInput = $passwordWidget.find('input.js-password-confirm');
-        const showPasswordEnabled = drupalSettings.show_password_enabled;
+
         const $passwordConfirmMessage = $(
           Drupal.theme('passwordConfirmMessage', settings.password),
         );
@@ -80,11 +79,6 @@
         const $passwordMatchStatus = $passwordConfirmMessage
           .find('[data-drupal-selector="password-match-status-text"]')
           .first();
-
-        const $confirmInputParent = $confirmInput
-          .parent()
-          .addClass('confirm-parent')
-          .append($passwordConfirmMessage);
 
         // List of classes to be removed from the strength bar on a state
         // change.
@@ -136,7 +130,6 @@
 
           password.$suggestions.hide();
           $mainInputParent.append($passwordStrength);
-          $confirmInputParent.after(password.$suggestions);
         }
 
         /**
@@ -148,13 +141,6 @@
               ? cssClasses.passwordFilled
               : cssClasses.passwordEmpty,
           );
-          if (!showPasswordEnabled) {
-            $passwordWidget.addClass(
-              $confirmInput[0].value
-                ? cssClasses.confirmFilled
-                : cssClasses.confirmEmpty,
-            );
-          }
         };
 
         /**
@@ -230,16 +216,6 @@
             password.$strengthTextWrapper.html(result.indicatorText);
           }
 
-          if (!showPasswordEnabled) {
-            // Check the value in the confirm input and show results.
-            if ($confirmInput[0].value) {
-              passwordCheckMatch($confirmInput[0].value);
-              $passwordConfirmMessage[0].style.visibility = 'visible';
-            } else {
-              $passwordConfirmMessage[0].style.visibility = 'hidden';
-            }
-          }
-
           if (widgetClassesToRemove) {
             $passwordWidget.removeClass(widgetClassesToRemove);
             addWidgetClasses();
@@ -252,7 +228,6 @@
 
         // Monitor input events.
         $mainInput.on('input', passwordCheck);
-        $confirmInput.on('input', passwordCheck);
       });
     },
   };
@@ -370,4 +345,4 @@
       messageTips,
     };
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal);

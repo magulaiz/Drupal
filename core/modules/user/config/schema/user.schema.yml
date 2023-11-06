@@ -50,9 +50,6 @@ user.settings:
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
-    password_type_reveal:
-      type: boolean
-      label: 'Use password reveal on account form'
 
 user.mail:
   type: config_object

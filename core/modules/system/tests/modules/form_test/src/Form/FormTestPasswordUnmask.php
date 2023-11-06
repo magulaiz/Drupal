@@ -26,11 +26,6 @@ class FormTestPasswordUnmask extends FormBase {
       '#type' => 'password_unmask',
       '#size' => 25,
     ];
-    $form['password_two'] = [
-      '#title' => $this->t('Password Two'),
-      '#type' => 'password_unmask',
-      '#size' => 25,
-    ];
     return $form;
   }
 

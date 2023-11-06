@@ -36,9 +36,6 @@ class PasswordUnmaskTest extends WebDriverTestBase {
    * @dataProvider providerPasswordFieldSelector
    */
   public function testPasswordRevealFormElement($label, $selector, $password_field_id, $data_selector) {
-    $this->drupalGet('/admin/config/people/accounts');
-    $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-user-password-type-reveal"]')->check();
-    $this->submitForm([], 'Save configuration');
 
     $this->drupalGet('/form-test/password-reveal');
     $page = $this->getSession()->getPage();
@@ -76,8 +73,6 @@ class PasswordUnmaskTest extends WebDriverTestBase {
   public function providerPasswordFieldSelector() {
     return [
       'password_one_field' => ['password_one_field', '.form-item-password-one button', 'edit-password-one', '[data-drupal-selector="edit-password-one"]'],
-      'password_two_field' => ['password_two_field', '.form-item-password-two button', 'edit-password-two', '[data-drupal-selector="edit-password-two"]'],
-
     ];
   }
 

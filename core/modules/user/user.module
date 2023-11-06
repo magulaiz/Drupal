@@ -963,9 +963,6 @@ function _user_mail_notify($op, AccountInterface $account) {
  * Implements hook_element_info_alter().
  */
 function user_element_info_alter(array &$types) {
-  if (isset($types['password_confirm'])) {
-    $types['password_confirm']['#process'][] = 'user_form_process_password_confirm';
-  }
   if (isset($types['password_unmask'])) {
     $types['password_unmask']['#process'][] = 'user_form_process_password_unmask';
   }
@@ -1015,11 +1012,6 @@ function user_form_process_password_unmask($element) {
 
   $element['#attached']['library'][] = 'user/drupal.user';
   $element['#attached']['drupalSettings']['password'] = $password_settings;
-  if (\Drupal::configFactory()->getEditable('user.settings')->get('password_type_reveal')) {
-    $element['#attached']['drupalSettings']['show_password_enabled'] = \Drupal::configFactory()
-      ->getEditable('user.settings')
-      ->get('password_type_reveal');
-  }
 
   return $element;
 }

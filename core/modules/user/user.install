@@ -125,10 +125,3 @@ function user_requirements($phase): array {
 function user_update_last_removed() {
   return 10000;
 }
-
-/**
- * Add the configuration setting for password_type_reveal.
- */
-function user_update_10001() {
-  \Drupal::configFactory()->getEditable('user.settings')->set('password_type_reveal', TRUE)->save(TRUE);
-}
