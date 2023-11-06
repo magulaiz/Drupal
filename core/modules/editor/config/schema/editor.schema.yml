@@ -17,30 +17,37 @@ editor.editor.*:
     settings:
       type: editor.settings.[%parent.editor]
     image_upload:
+      type: editor.image_upload_settings.[status]
+
+editor.image_upload_settings.*:
+  type: mapping
+  label: 'Image upload settings'
+  mapping:
+    status:
+      type: boolean
+      label: 'Status'
+
+editor.image_upload_settings.1:
+  type: editor.image_upload_settings.*
+  mapping:
+    scheme:
+      type: string
+      label: 'File storage'
+    directory:
+      type: string
+      label: 'Upload directory'
+    max_size:
+      type: string
+      label: 'Maximum file size'
+    max_dimensions:
       type: mapping
-      label: 'Image upload settings'
+      label: 'Maximum dimensions'
       mapping:
-        status:
-          type: boolean
-          label: 'Status'
-        scheme:
-          type: string
-          label: 'File storage'
-        directory:
-          type: string
-          label: 'Upload directory'
-        max_size:
-          type: string
-          label: 'Maximum file size'
-        max_dimensions:
-          type: mapping
-          label: 'Maximum dimensions'
-          mapping:
-            width:
-              type: integer
-              nullable: true
-              label: 'Maximum width'
-            height:
-              type: integer
-              nullable: true
-              label: 'Maximum height'
+        width:
+          type: integer
+          nullable: true
+          label: 'Maximum width'
+        height:
+          type: integer
+          nullable: true
+          label: 'Maximum height'

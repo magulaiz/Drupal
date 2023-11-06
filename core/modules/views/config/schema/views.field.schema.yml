@@ -1,5 +1,6 @@
 # Schema for the views field plugins.
 
+# Specify defaults.
 views.field.*:
   type: views_field
   label: 'Default field'

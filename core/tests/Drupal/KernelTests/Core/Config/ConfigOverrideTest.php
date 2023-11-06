@@ -128,6 +128,7 @@ class ConfigOverrideTest extends KernelTestBase {
     $config_raw
       ->set('key', 'raw')
       ->set('new_key', 'new_value')
+      ->set('uuid', $this->container->get('uuid')->generate())
       ->save();
     // Ensure override is preserved but all other data has been updated
     // accordingly.

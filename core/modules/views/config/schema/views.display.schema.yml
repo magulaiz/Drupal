@@ -1,5 +1,9 @@
 # Schema for the views display plugins.
 
+# Specify defaults.
+views.display.*:
+  type: views_display
+
 views.display.default:
   type: views_display
   label: 'Default display options'

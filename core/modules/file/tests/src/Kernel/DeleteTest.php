@@ -13,6 +13,14 @@ use Drupal\file\Entity\File;
 class DeleteTest extends FileManagedUnitTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig('file');
+  }
+
+  /**
    * Tries deleting a normal file (as opposed to a directory, symlink, etc).
    */
   public function testUnused() {

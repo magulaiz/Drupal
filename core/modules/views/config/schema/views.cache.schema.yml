@@ -1,5 +1,9 @@
 # Schema for the views cache.
 
+# Specify defaults.
+views.cache.*:
+  type: views_cache
+
 views.cache.none:
   type: views_cache
   label: 'No caching'

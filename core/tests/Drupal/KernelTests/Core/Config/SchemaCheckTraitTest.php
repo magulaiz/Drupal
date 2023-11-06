@@ -68,6 +68,23 @@ class SchemaCheckTraitTest extends KernelTestBase {
       '2' => '[boolean] This value should be of the correct primitive type.',
     ];
     $this->assertEquals($expected, $ret);
+
+    // Omit all data, this should trigger validation errors for required keys
+    // missing.
+    $config_data = [];
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
+    $expected = [
+      "[] 'array' is a required key.",
+      "[] 'boolean' is a required key.",
+      "[] 'exp' is a required key.",
+      "[] 'float' is a required key.",
+      "[] 'float_as_integer' is a required key.",
+      "[] 'hex' is a required key.",
+      "[] 'int' is a required key.",
+      "[] 'string' is a required key.",
+      "[] 'string_int' is a required key.",
+    ];
+    $this->assertEquals($expected, $ret);
   }
 
 }

@@ -33,6 +33,9 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = Editor::create([
       'format' => $format->id(),
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $this->entity->save();
   }
@@ -77,6 +80,69 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     // @todo Remove this override in https://www.drupal.org/i/3231354. The label of Editor entities is dynamically computed: it's retrieved from the associated FilterFormat entity. That issue will change this.
     // @see \Drupal\editor\Entity\Editor::label()
     $this->markTestSkipped();
+  }
+
+  /**
+   * Tests validating an editor with an unknown plugin ID.
+   */
+  public function testImageUploadSettingsAreConditionallyRequired(): void {
+    // When image uploads are disabled, no other key-value pairs are needed.
+    $this->entity->setImageUploadSettings(['status' => FALSE]);
+    $this->assertValidationErrors([]);
+
+    // But when they are enabled, many others are needed.
+    $this->entity->setImageUploadSettings(['status' => TRUE]);
+    $this->assertValidationErrors([
+      'image_upload' => [
+        "'scheme' is a required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+        "'directory' is a required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+        "'max_size' is a required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+        "'max_dimensions' is a required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1).",
+      ],
+    ]);
+
+    // Specify all required keys, but forget one.
+    $this->entity->setImageUploadSettings([
+      'status' => TRUE,
+      'scheme' => 'public',
+      'directory' => 'uploaded-images',
+      'max_size' => '5 MB',
+    ]);
+    $this->assertValidationErrors(['image_upload' => "'max_dimensions' is a required key because image_upload.status is 1 (see config schema type editor.image_upload_settings.1)."]);
+
+    // Specify all required keys.
+    $this->entity->setImageUploadSettings([
+      'status' => TRUE,
+      'scheme' => 'public',
+      'directory' => 'uploaded-images',
+      'max_size' => '5 MB',
+      'max_dimensions' => [
+        'width' => 10000,
+        'height' => 10000,
+      ],
+    ]);
+    $this->assertValidationErrors([]);
+
+    // Specify all required keys … but now disable image uploads again. This
+    // should trigger a validation error from the ValidKeys constraint.
+    $this->entity->setImageUploadSettings([
+      'status' => FALSE,
+      'scheme' => 'public',
+      'directory' => 'uploaded-images',
+      'max_size' => '5 MB',
+      'max_dimensions' => [
+        'width' => 10000,
+        'height' => 10000,
+      ],
+    ]);
+    $this->assertValidationErrors([
+      'image_upload' => [
+        "'scheme' is an unknown key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+        "'directory' is an unknown key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+        "'max_size' is an unknown key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+        "'max_dimensions' is an unknown key because image_upload.status is 0 (see config schema type editor.image_upload_settings.*).",
+      ],
+    ]);
   }
 
 }

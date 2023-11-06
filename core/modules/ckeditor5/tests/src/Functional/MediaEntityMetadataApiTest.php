@@ -147,6 +147,9 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
           ],
         ],
       ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $this->editor->save();
     $filtered_html_format->setFilterConfig('media_embed', [

@@ -90,6 +90,12 @@ config_test.types:
       type: integer
       label: 'Integer'
     octal:
+      # Symfony 5.1's YAML parser issues a deprecation when reading octal with a
+      # leading zero, to comply with YAML 1.2. However PECL YAML is still YAML 1.1
+      # compliant.
+      # @see core/modules/config/tests/config_test/config/install/config_test.types.yml
+      # @todo Mark as required again in https://www.drupal.org/project/drupal/issues/3205480
+      requiredKey: false
       type: integer
       label: 'Octal'
     string:
@@ -121,6 +127,11 @@ config_test.system:
       type: string
       label: 'Foo'
     baz:
+      # This is not part of any real `config_test.system` config, it's used only for testing configuration system
+      # functionality.
+      # @see \Drupal\Tests\config\Functional\ConfigImportUITest::testImportDiff()
+      # @see \Drupal\KernelTests\Core\Config\ConfigOverrideTest::testConfOverride()
+      requiredKey: false
       type: string
       label: 'Baz'
     '404':
@@ -132,9 +143,19 @@ config_test.new:
   label: 'Configuration test'
   mapping:
     key:
+      # This is not part of any real `config_test.new` config, it's used only
+      # for testing configuration system functionality.
+      # @see \Drupal\KernelTests\Core\Config\ConfigImportRenameValidationTest::testRenameSimpleConfigValidation()
+      # @see \Drupal\KernelTests\Core\Config\ConfigOverrideTest::testConfOverride()
+      requiredKey: false
       type: string
       label: 'Test setting'
     new_key:
+      # This is not part of any real `config_test.new` config, it's used only
+      # for testing configuration system functionality.
+      # @see \Drupal\KernelTests\Core\Config\ConfigImportRenameValidationTest::testRenameSimpleConfigValidation()
+      # @see \Drupal\KernelTests\Core\Config\ConfigOverrideTest::testConfOverride()
+      requiredKey: false
       type: string
       label: 'Test setting'
     uuid:
@@ -152,6 +173,10 @@ config_test.foo:
       label: 'Value'
       mapping:
         key:
+          # This is not part of any real `config_test.foo` config, it's used
+          # only for testing configuration system functionality.
+          # @see \Drupal\KernelTests\Core\Config\ConfigLanguageOverrideTest::testConfigLanguageOverride()
+          requiredKey: false
           type: string
           label: 'Key'
     label:

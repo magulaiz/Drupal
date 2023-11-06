@@ -86,7 +86,9 @@ class ValidatorsTest extends KernelTestBase {
       'format' => 'dummy',
       'editor' => 'ckeditor5',
       'settings' => $ckeditor5_settings,
-      'image_upload' => [],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
 
     $typed_config = $this->typedConfig->createFromNameAndData(
@@ -182,7 +184,10 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_language' => 'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
+        'settings.plugins.ckeditor5_language' => [
+          'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
+          "'language_list' is a required key.",
+        ],
       ],
     ];
     $data['valid language plugin configuration: un'] = [
@@ -968,7 +973,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
       ],
       'filters' => [],
       'violations' => [
@@ -1014,7 +1019,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
       ],
       'filters' => [],
       'violations' => [
@@ -1075,8 +1080,15 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image' => [
+      'image_upload' => [
         'status' => TRUE,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+        'max_size' => '',
+        'max_dimensions' => [
+          'width' => 0,
+          'height' => 0,
+        ],
       ],
       'filters' => [],
       'violations' => [],
@@ -1509,6 +1521,7 @@ class ValidatorsTest extends KernelTestBase {
           'id' => 'filter_test_restrict_tags_and_attributes',
           'provider' => 'filter_test',
           'status' => TRUE,
+          'weight' => 0,
           'settings' => [
             'restrictions' => [
               'allowed' => [
@@ -1533,7 +1546,9 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [],
       ],
-      'image_upload' => [],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
 
     $this->assertSame([], $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));

@@ -252,6 +252,15 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
     if ($settings = $form_state->getValue(['editor', 'settings'])) {
       $editor->setSettings($settings);
     }
+    // The schema for image upload settings has been tightened: if image uploads
+    // are disabled (status = FALSE), no other keys are allowed to be present.
+    // @see editor.image_upload_settings.*
+    // @see editor.image_upload_settings.1
+    $image_upload_settings = $editor->getImageUploadSettings();
+    if (!$image_upload_settings['status']) {
+      $image_upload_settings = array_intersect_key($image_upload_settings, ['status' => TRUE]);
+      $editor->setImageUploadSettings($image_upload_settings);
+    }
     $editor->save();
   }
 }

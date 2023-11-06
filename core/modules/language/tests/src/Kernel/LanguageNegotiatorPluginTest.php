@@ -31,6 +31,7 @@ class LanguageNegotiatorPluginTest extends KernelTestBase {
       ->with('language')
       ->willReturn($logger);
     $this->container->set('logger.factory', $logger_factory);
+    $this->installConfig('language');
     $this->installEntitySchema('user');
 
     // Test unavailable plugin.

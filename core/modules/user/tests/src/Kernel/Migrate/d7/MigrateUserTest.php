@@ -40,6 +40,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('user');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
     $this->executeMigration('language');

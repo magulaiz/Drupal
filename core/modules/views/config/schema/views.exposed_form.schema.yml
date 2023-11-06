@@ -1,5 +1,9 @@
 # Schema for the views exposed form.
 
+# Specify defaults.
+views.exposed_form.*:
+  type: views_exposed_form
+
 views.exposed_form.basic:
   type: views_exposed_form
   label: 'Basic'

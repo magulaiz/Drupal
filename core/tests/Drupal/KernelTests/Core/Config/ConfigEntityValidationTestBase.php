@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\TypedData\Plugin\DataType\LanguageReference;
@@ -17,6 +18,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group Validation
  */
 abstract class ConfigEntityValidationTestBase extends KernelTestBase {
+
+  use SchemaCheckTrait;
 
   /**
    * {@inheritdoc}
@@ -356,6 +359,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     $actual_messages = [];
     foreach ($violations as $violation) {
+      if (static::isViolationForIgnoredPropertyPath($violation)) {
+        continue;
+      }
+
       $property_path = $violation->getPropertyPath();
 
       if (!isset($actual_messages[$property_path])) {
@@ -431,17 +438,29 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    *   (optional) The values to set for the immutable properties, keyed by name.
    *   This should be used if the immutable properties can only accept certain
    *   values, e.g. valid plugin IDs.
+   * @param mixed[] $indirect_consequences
+   *   (optional) The additional validation error messages to expect for other
+   *   property paths, as indirect consequences of changing an immutable
+   *   property.
    */
-  public function testImmutableProperties(array $valid_values = []): void {
+  public function testImmutableProperties(array $valid_values = [], array $indirect_consequences = []): void {
     $constraints = $this->entity->getEntityType()->getConstraints();
     $this->assertNotEmpty($constraints['ImmutableProperties'], 'All config entities should have at least one immutable ID property.');
 
     foreach ($constraints['ImmutableProperties'] as $property_name) {
       $original_value = $this->entity->get($property_name);
-      $this->entity->set($property_name, $valid_values[$property_name] ?? $this->randomMachineName());
-      $this->assertValidationErrors([
+      $random = $this->randomMachineName();
+      $this->entity->set($property_name, $valid_values[$property_name] ?? $random);
+      $expected = [
         '' => "The '$property_name' property cannot be changed.",
-      ]);
+      ];
+      if (array_key_exists($property_name, $indirect_consequences)) {
+        $expected += array_map(
+          fn (array $messages) => str_replace('<RANDOM>', $random, $messages),
+          $indirect_consequences[$property_name]
+        );
+      }
+      $this->assertValidationErrors($expected);
       $this->entity->set($property_name, $original_value);
     }
   }

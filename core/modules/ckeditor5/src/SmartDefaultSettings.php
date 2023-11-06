@@ -152,6 +152,10 @@ final class SmartDefaultSettings {
     if ($old_editor) {
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
     }
+    else {
+      // Default to no image uploads allowed.
+      $editor->setImageUploadSettings(['status' => FALSE]);
+    }
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);

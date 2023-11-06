@@ -1,5 +1,6 @@
 # Schema for the views area plugins.
 
+# Specify defaults.
 views.area.*:
   type: views_area
   label: 'Default area'

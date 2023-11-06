@@ -44,6 +44,8 @@ class LanguageTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig('system');
+    $this->container->get('theme_installer')->install(['stark']);
     $this->ckeditor5 = $this->container->get('plugin.manager.editor')->createInstance('ckeditor5');
 
     FilterFormat::create(
@@ -52,6 +54,9 @@ class LanguageTest extends KernelTestBase {
     Editor::create([
       'format' => 'basic_html',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
 
     $this->installConfig(['language']);
