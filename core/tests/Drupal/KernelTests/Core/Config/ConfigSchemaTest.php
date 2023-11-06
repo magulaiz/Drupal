@@ -76,10 +76,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'config_schema_test.some_schema';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for configuration with only some schema.');
 
     // Check type detection on elements with undefined types.
@@ -126,10 +123,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'system.maintenance';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for system.maintenance');
 
     // Mixed schema with ignore elements.
@@ -161,10 +155,7 @@ class ConfigSchemaTest extends KernelTestBase {
     ];
     $expected['type'] = 'config_schema_test.ignore';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition);
 
@@ -211,10 +202,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['type'] = 'image.style.*';
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition);
 
@@ -233,10 +221,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['upscale']['type'] = 'boolean';
     $expected['mapping']['upscale']['label'] = 'Upscale';
     $expected['type'] = 'image.effect.image_scale';
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for image.effect.image_scale');
 
@@ -260,10 +245,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'integer' => ['type' => 'integer'],
       'string' => ['type' => 'string'],
     ];
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for config_test.dynamic.third_party:third_party_settings.config_schema_test');
 
     // More complex, several level deep test.
@@ -282,10 +264,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'config_schema_test.some_schema.some_module.*.*';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for config_schema_test.some_schema.some_module.section_one.subsection');
 
@@ -558,10 +537,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['testdescription']['type'] = 'text';
     $expected['mapping']['testdescription']['label'] = 'Description';
     $expected['type'] = 'config_schema_test.wildcard_fallback.*';
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'RequiredKeys' => '<infer>',
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for config_schema_test.wildcard_fallback.something');
 
