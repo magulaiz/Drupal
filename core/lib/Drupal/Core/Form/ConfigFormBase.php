@@ -284,7 +284,7 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
-  private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array &$form): void {
+  private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $form): void {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP);
     // If there's no map of config keys to form elements, this form does not
     // yet support config validation.
