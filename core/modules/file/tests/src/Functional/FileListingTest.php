@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Core\Url;
+use Drupal\KernelTests\AssertContentTrait;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\entity_test\Entity\EntityTestConstraints;
@@ -13,6 +15,8 @@ use Drupal\user\Entity\Role;
  * @group file
  */
 class FileListingTest extends FileFieldTestBase {
+
+  use AssertContentTrait;
 
   /**
    * Modules to enable.
@@ -166,6 +170,27 @@ class FileListingTest extends FileFieldTestBase {
       }
       $this->assertSession()->linkByHrefExists('node/' . $node->id(), 0, 'Link to registering entity found on usage page.');
     }
+
+    // Delete both the files to check bulk form.
+    $edit = [
+      'action' => 'file_delete_action',
+      'file_bulk_form[0]' => 1,
+      'file_bulk_form[1]' => 1,
+    ];
+    $this->drupalGet('admin/content/files');
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->addressEquals(Url::fromRoute('file.multiple_delete_confirm', [], [
+      'query' => [
+        'destination' => Url::fromRoute('view.files.page_1')->toString(),
+      ],
+    ]));
+    $this->assertLinkByHref('admin/content/files');
+    $this->clickLink(t('Cancel'));
+    $this->assertSession()->addressEquals('admin/content/files');
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertText('Are you sure you want to delete these items?');
+    $this->submitForm([], 'Delete');
+    $this->assertText('Deleted 2 files.');
 
     // Log in as another user that has access to the file list but cannot delete
     // files.
