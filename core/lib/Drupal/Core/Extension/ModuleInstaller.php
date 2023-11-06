@@ -249,6 +249,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Update the kernel to include it.
         $this->updateKernel($module_filenames);
+        // Since services were just rebuilt, reset the config installer.
+        $config_installer = \Drupal::service('config.installer');
+        if ($sync_status) {
+          $config_installer
+            ->setSyncing(TRUE)
+            ->setSourceStorage($source_storage);
+        }
 
         // Load the module's .module and .install files.
         $this->moduleHandler->load($module);
@@ -325,13 +332,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
 
         // Install default configuration of the module.
-        $config_installer = \Drupal::service('config.installer');
-        if ($sync_status) {
-          $config_installer
-            ->setSyncing(TRUE)
-            ->setSourceStorage($source_storage);
-        }
-        \Drupal::service('config.installer')->installDefaultConfig('module', $module);
+        $config_installer->installDefaultConfig('module', $module);
 
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
@@ -604,7 +605,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * Updates the kernel module list.
    *
-   * @param string $module_filenames
+   * @param array $module_filenames
    *   The list of installed modules.
    */
   protected function updateKernel($module_filenames) {

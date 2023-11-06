@@ -829,6 +829,24 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertTrue($state['entity_state::predelete'], 'ConfigEntity::isSyncing() returns TRUE');
     $this->assertTrue($state['global_state::delete'], '\Drupal::isConfigSyncing() returns TRUE');
     $this->assertTrue($state['entity_state::delete'], 'ConfigEntity::isSyncing() returns TRUE');
+
+    // Test that isSyncing is TRUE in hook_module_preinstall() when installing
+    // module via config import.
+    $extensions = $sync->read('core.extension');
+    // First, install system_test so that its hook_module_preinstall() will run
+    // when module_test is installed.
+    $this->container->get('module_installer')->install(['system_test']);
+    // Add module_test and system_test to the enabled modules to be imported,
+    // so that module_test gets installed on import and system_test does not get
+    // uninstalled.
+    $extensions['module']['module_test'] = 0;
+    $extensions['module']['system_test'] = 0;
+    $extensions['module'] = module_config_sort($extensions['module']);
+    $sync->write('core.extension', $extensions);
+    $this->configImporter->reset()->import();
+    // The syncing value should be stored in state by
+    // system_test_module_preinstall() as module_test is being installed.
+    $this->assertTrue(\Drupal::state()->get('system_test_preinstall_module_syncing'), '\Drupal::isConfigSyncing() returns TRUE');
   }
 
   /**

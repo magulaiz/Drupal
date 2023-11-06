@@ -135,6 +135,10 @@ function system_test_filetransfer_info() {
 function system_test_module_preinstall($module) {
   \Drupal::messenger()->addStatus('system_test_preinstall_module called');
   \Drupal::state()->set('system_test_preinstall_module', $module);
+
+  // Save the config.installer isSyncing() value to state to check that it is
+  // correctly set when installing module during config import.
+  \Drupal::state()->set('system_test_preinstall_module_syncing', \Drupal::service('config.installer')->isSyncing());
 }
 
 /**
