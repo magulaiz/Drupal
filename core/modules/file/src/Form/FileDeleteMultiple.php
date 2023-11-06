@@ -4,6 +4,7 @@ namespace Drupal\file\Form;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
@@ -45,6 +46,13 @@ class FileDeleteMultiple extends ConfirmFormBase {
   protected $currentUser;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a DeleteMultiple form object.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
@@ -53,11 +61,14 @@ class FileDeleteMultiple extends ConfirmFormBase {
    *   The entity manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MessengerInterface $messenger) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->fileStorage = $entity_type_manager->getStorage('file');
     $this->currentUser = $current_user;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -67,7 +78,8 @@ class FileDeleteMultiple extends ConfirmFormBase {
     return new static(
       $container->get('tempstore.private'),
       $container->get('entity_type.manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('messenger')
     );
   }
 
@@ -139,7 +151,7 @@ class FileDeleteMultiple extends ConfirmFormBase {
       $count = count($this->files);
       $this->logger('file')
         ->notice('Deleted @count posts.', ['@count' => $count]);
-      drupal_set_message($this->formatPlural($count, 'Deleted 1 file.', 'Deleted @count files.'));
+      $this->messenger->addStatus($this->formatPlural($count, 'Deleted 1 file.', 'Deleted @count files.'));
     }
     $form_state->setRedirect('view.files.page_1');
   }
