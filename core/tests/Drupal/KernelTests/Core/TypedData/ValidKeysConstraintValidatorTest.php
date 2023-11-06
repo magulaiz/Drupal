@@ -61,6 +61,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
   /**
    * Tests ValidKeys constraint validator detecting missing required keys.
+   *
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$requiredKeyMessage
    */
   public function testRequiredKeys(): void {
     // Start from the valid config.
@@ -73,9 +75,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       ->createFromNameAndData('block.block.branding', $data);
 
     // Now 1 validation error should be triggered: one for the missing
-    // (unconditionally) required key. It is only required because all block
-    // plugins are required to set it: see `type: block_settings`.
-    // all block plugins support this key in their configuration.
+    // (statically) required key. It is only required because all block plugins
+    // are required to set it: see `type: block_settings`.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
     $this->assertSame(
@@ -90,42 +91,11 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests ValidKeys detecting missing required keys.
-   *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMessage
-   */
-  public function testConditionallyRequiredKeys(): void {
-    // Start from the valid config.
-    $this->assertEmpty($this->config->validate());
-
-    // Then modify only one thing: remove the `use_site_name` setting.
-    $data = $this->config->toArray();
-    unset($data['settings']['use_site_name']);
-    $this->config = $this->container->get('config.typed')
-      ->createFromNameAndData('block.block.branding', $data);
-
-    // Now 1 validation error should be triggered: one for the missing
-    // required key. It is only conditionally required because not
-    // all block plugins support this key in their configuration.
-    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
-    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
-      [
-        "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
-      ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
-    );
-  }
-
-  /**
    * Tests ValidKeys constraint validator detecting unknown keys.
    *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$unknownMessage
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
    */
-  public function testExtraneousKeys(): void {
+  public function testUnknownKeys(): void {
     // Start from the valid config.
     $this->assertEmpty($this->config->validate());
 
@@ -144,6 +114,37 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
         "'use_site_logo' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
         "'use_site_name' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
         "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+      ],
+      array_map(
+        fn (ConstraintViolation $v) => (string) $v->getMessage(),
+        iterator_to_array($this->config->validate()),
+      )
+    );
+  }
+
+  /**
+   * Tests ValidKeys detecting missing dynamically required keys.
+   *
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicRequiredKeyMessage
+   */
+  public function testDynamicallyRequiredKeys(): void {
+    // Start from the valid config.
+    $this->assertEmpty($this->config->validate());
+
+    // Then modify only one thing: remove the `use_site_name` setting.
+    $data = $this->config->toArray();
+    unset($data['settings']['use_site_name']);
+    $this->config = $this->container->get('config.typed')
+      ->createFromNameAndData('block.block.branding', $data);
+
+    // Now 1 validation error should be triggered: one for the missing
+    // required key. It is only dynamically required because not
+    // all block plugins support this key in their configuration.
+    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
+    $this->assertSame(
+      [
+        "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
       ],
       array_map(
         fn (ConstraintViolation $v) => (string) $v->getMessage(),
