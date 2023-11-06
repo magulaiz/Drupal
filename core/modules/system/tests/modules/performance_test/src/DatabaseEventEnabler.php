@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\performance_test;
 
 use Drupal\Core\Database\Connection;
