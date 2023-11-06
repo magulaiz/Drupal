@@ -60,6 +60,36 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Tests ValidKeys constraint validator detecting unsupported keys.
+   *
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$invalidKeyMessage
+   */
+  public function testSupportedKeys(): void {
+    // Start from the valid config.
+    $this->assertEmpty($this->config->validate());
+
+    // Then modify only one thing: generate a non-existent `label_display`
+    // setting.
+    $data = $this->config->toArray();
+    $data['settings']['foobar'] = TRUE;
+    $this->config = $this->container->get('config.typed')
+      ->createFromNameAndData('block.block.branding', $data);
+
+    // Now 1 validation error should be triggered: one for the unsupported key.
+    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
+    $this->assertSame(
+      [
+        "'foobar' is not a supported key.",
+      ],
+      array_map(
+        fn (ConstraintViolation $v) => (string) $v->getMessage(),
+        iterator_to_array($this->config->validate()),
+      )
+    );
+  }
+
+  /**
    * Tests ValidKeys constraint validator detecting missing required keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$requiredKeyMessage
@@ -200,6 +230,22 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     ];
     $violations = $typed_data->create($definition, $value)->validate();
     $this->assertCount(0, $violations);
+
+    // If in the mapping definition some keys that do NOT have
+    // `requiredKey: false` set, then they MUST be set.
+    // First test without changing the value: no error should occur because all
+    // keys passed to the ValidKeys constraint have a value.
+    unset($config_schema_type['mapping']['south']['requiredKey']);
+    unset($config_schema_type['mapping']['east']['requiredKey']);
+    $definition = $typed_data->buildDataDefinition($config_schema_type, NULL);
+    $violations = $typed_data->create($definition, $value)->validate();
+    $this->assertCount(0, $violations);
+    // Then remove the required key-value pair: this must trigger an error.
+    unset($value['south']);
+    $definition = $typed_data->buildDataDefinition($config_schema_type, NULL);
+    $violations = $typed_data->create($definition, $value)->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("'south' is a required key.", (string) $violations->get(0)->getMessage());
   }
 
   /**
