@@ -329,7 +329,7 @@ abstract class ConfigFormBase extends FormBase {
         $config->set($target->propertyPath, $value);
       }
     }
-    }
+  }
 
   /**
    * Maps the given Config key to a form element name.

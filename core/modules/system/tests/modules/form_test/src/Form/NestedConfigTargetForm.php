@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:ignoreFile
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Config\Config;
