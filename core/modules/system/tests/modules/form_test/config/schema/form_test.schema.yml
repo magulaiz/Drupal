@@ -5,9 +5,15 @@ form_test.object:
     bananas:
       type: string
       label: 'Bananas'
-    favorite_fruit:
+    favorite_fruits:
+      type: sequence
+      label: 'Favorite fruits'
+      sequence:
+        type: required_label
+        label: 'Fruit'
+    favorite_vegetable:
       type: required_label
-      label: 'Favorite fruit'
-    nemesis_fruit:
+      label: 'Favorite vegetable'
+    nemesis_vegetable:
       type: required_label
-      label: 'Nemesis fruit'
+      label: 'Nemesis vegetable'
