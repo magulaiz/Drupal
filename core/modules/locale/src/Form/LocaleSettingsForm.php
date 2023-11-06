@@ -2,6 +2,7 @@
 
 namespace Drupal\locale\Form;
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -36,7 +37,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     $form['update_interval_days'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
-      '#default_value' => $config->get('translation.update_interval_days'),
+      '#config_target' => 'locale.settings:translation.update_interval_days',
       '#options' => [
         '0' => $this->t('Never (manually)'),
         '7' => $this->t('Weekly'),
@@ -55,7 +56,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     $form['use_source'] = [
       '#type' => 'radios',
       '#title' => $this->t('Translation source'),
-      '#default_value' => $config->get('translation.use_source'),
+      '#config_target' => 'locale.settings:translation.use_source',
       '#options' => [
         LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL => $this->t('Drupal translation server and local files'),
         LOCALE_TRANSLATION_USE_SOURCE_LOCAL => $this->t('Local files only'),
@@ -101,14 +102,12 @@ class LocaleSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state->getValues();
+  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
+    parent::copyFormValuesToConfig($config, $form_state);
 
-    $config = $this->config('locale.settings');
-    $config->set('translation.update_interval_days', $values['update_interval_days'])->save();
-    $config->set('translation.use_source', $values['use_source'])->save();
+    assert($config->getName() === 'locale.settings');
 
-    switch ($values['overwrite']) {
+    switch ($form_state->getValue('overwrite')) {
       case LOCALE_TRANSLATION_OVERWRITE_ALL:
         $config
           ->set('translation.overwrite_customized', TRUE)
@@ -130,7 +129,12 @@ class LocaleSettingsForm extends ConfigFormBase {
           ->save();
         break;
     }
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Invalidate the cached translation status when the configuration setting
     // of 'use_source' changes.
     if ($form['use_source']['#default_value'] != $form_state->getValue('use_source')) {
