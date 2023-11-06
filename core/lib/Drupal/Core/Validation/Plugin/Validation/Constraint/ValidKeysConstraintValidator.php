@@ -170,8 +170,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
     $val = is_bool($val) ? (int) $val : $val;
     return $message_parameters + [
-        '@dynamic_type_property_value' => $val,
-      ];
+      '@dynamic_type_property_value' => $val,
+    ];
   }
 
 }
