@@ -151,6 +151,125 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   }
 
   /**
+   * Tests how the migrate_lookup plugin selects which migration to stub.
+   *
+   * This test configures prophecies for all of the migrations in the data
+   * source, sets them all to fail a map lookup, and sets the expected
+   * migration's destination plugin prophecy to return 'success!' on a
+   * triggered import.
+   *
+   * @param array $configuration
+   *   The process plugin configuration.
+   * @param string|null $expected_migration_id
+   *   The expected selected migration id.
+   *
+   * @dataProvider stubSelectionDataProvider
+   */
+  public function testStubSelection(array $configuration, ?string $expected_migration_id) {
+    // Configure the various interface prophecies.
+    $migration = $this->prophesize(MigrationInterface::class);
+    $migration->id()->willReturn('self_migration');
+
+    $migration_ids = (array) $configuration['migration'];
+
+    // Configure the migration stub prophecies.
+    foreach ($migration_ids as $migration_id) {
+      if ($migration_id == $expected_migration_id) {
+        // Return the correct stub ID if used.
+        $this->migrateStub->createStub($migration_id, ['test_value'], [], FALSE)->willReturn(['success!']);
+      }
+      else {
+        // Return the wrong stub ID if used.
+        $this->migrateStub->createStub($migration_id, ['test_value'], [], FALSE)->willReturn(['wrong!']);
+      }
+    }
+
+    // Finally, run the plugin.
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration->reveal());
+    $result = $migration->transform('test_value', $this->migrateExecutable, $this->row, 'destination');
+
+    if ($expected_migration_id === NULL) {
+      // There is no expected migration. So the lookup should also return NULL.
+      $this->assertNull($result);
+    }
+    else {
+      $this->assertEquals('success!', $result);
+    }
+  }
+
+  /**
+   * Provides data for the stub selection test.
+   *
+   * @return array
+   *   The data for the stub selection test.
+   */
+  public function stubSelectionDataProvider() {
+    return [
+      'Single Migration' => [
+        'lookup_configuration' => [
+          'migration' => 'migration_to_stub',
+        ],
+        'expected_migration' => 'migration_to_stub',
+      ],
+      'Single Migration With Self' => [
+        'lookup_configuration' => [
+          'migration' => 'self_migration',
+        ],
+        'expected_migration' => 'self_migration',
+      ],
+      'Single Migration With Self And Stub Id' => [
+        'lookup_configuration' => [
+          'migration' => 'migration_to_stub',
+        ],
+        'stub_id' => 'migration_to_stub',
+        'expected_migration' => 'migration_to_stub',
+      ],
+      'Multiple Migration' => [
+        'lookup_configuration' => [
+          'migration' => [
+            'migration_to_stub',
+            'second_migration',
+            'other_migration',
+          ],
+        ],
+        'expected_migration' => NULL,
+      ],
+      'Multiple Migrations Including Self' => [
+        'lookup_configuration' => [
+          'migration' => [
+            'migration_to_stub',
+            'second_migration',
+            'self_migration',
+          ],
+        ],
+        'expected_migration' => NULL,
+      ],
+      'Multiple Migrations With Stub Id' => [
+        'lookup_configuration' => [
+          'migration' => [
+            'migration_to_stub',
+            'second_migration',
+            'other_migration',
+          ],
+          'stub_id' => 'second_migration',
+        ],
+        'expected_migration' => 'second_migration',
+      ],
+      'Multiple Migrations With Self And Stub Id' => [
+        'lookup_configuration' => [
+          'migration' => [
+            'migration_to_stub',
+            'second_migration',
+            'self_migration',
+          ],
+          'stub_id' => 'second_migration',
+        ],
+        'expected_migration' => 'second_migration',
+      ],
+    ];
+  }
+
+  /**
    * Tests a successful lookup.
    *
    * @param array $source_id_values
