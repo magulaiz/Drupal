@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

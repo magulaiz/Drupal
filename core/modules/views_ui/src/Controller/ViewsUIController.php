@@ -11,7 +11,6 @@ use Drupal\views\ViewEntityInterface;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsData;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Ajax\AjaxResponse;

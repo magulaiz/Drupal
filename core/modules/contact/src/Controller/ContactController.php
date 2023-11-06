@@ -7,7 +7,6 @@ use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

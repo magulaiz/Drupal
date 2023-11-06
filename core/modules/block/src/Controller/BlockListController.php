@@ -4,7 +4,6 @@ namespace Drupal\block\Controller;
 
 use Drupal\Core\Entity\Controller\EntityListController;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

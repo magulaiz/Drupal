@@ -4,7 +4,6 @@ namespace Drupal\system;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;

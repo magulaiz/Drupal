@@ -4,7 +4,6 @@ namespace Drupal\system;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\CronInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

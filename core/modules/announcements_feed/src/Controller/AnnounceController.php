@@ -7,7 +7,6 @@ namespace Drupal\announcements_feed\Controller;
 use Drupal\announcements_feed\AnnounceRenderer;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

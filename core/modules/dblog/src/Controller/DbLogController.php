@@ -17,7 +17,6 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Link;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

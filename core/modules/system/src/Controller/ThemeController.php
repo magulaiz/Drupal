@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\system\Form\ThemeExperimentalConfirmForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 

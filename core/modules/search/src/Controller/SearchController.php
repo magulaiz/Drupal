@@ -8,7 +8,6 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\search\Form\SearchPageForm;
 use Drupal\search\SearchPageInterface;
 use Drupal\search\SearchPageRepositoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

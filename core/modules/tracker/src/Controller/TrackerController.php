@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for tracker pages.

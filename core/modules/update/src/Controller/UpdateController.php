@@ -9,7 +9,6 @@ use Drupal\Core\Routing\PathChangedHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
