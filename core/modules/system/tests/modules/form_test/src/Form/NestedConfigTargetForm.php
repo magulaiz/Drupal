@@ -25,22 +25,23 @@ class NestedConfigTargetForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['favorites'] = [
+    $form['fruits'] = [
       '#type' => 'details',
       '#tree' => TRUE,
       '#input' => TRUE,
-      '#title' => t('Favorite fruits'),
-      '#config_target' => 'form_test.object:favorites',
+      '#title' => t('Fruit preferences'),
     ];
-    $form['favorites'][0] = [
+    $form['fruits']['favorite'] = [
       '#type' => 'textfield',
-      '#title' => t('First choice'),
+      '#title' => t('Favorite'),
       '#default_value' => 'Mango',
+      '#config_target' => 'form_test.object:favorite_fruit',
     ];
-    $form['favorites'][1] = [
+    $form['fruits']['nemesis'] = [
       '#type' => 'textfield',
-      '#title' => t('Second choice'),
+      '#title' => t('Nemesis'),
       '#default_value' => 'Orange',
+      '#config_target' => 'form_test.object:nemesis_fruit',
     ];
     return parent::buildForm($form, $form_state);
   }

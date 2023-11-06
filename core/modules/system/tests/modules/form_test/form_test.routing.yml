@@ -535,3 +535,10 @@ form_test.nested_config_target:
     _form: '\Drupal\form_test\Form\NestedConfigTargetForm'
   requirements:
     _access: 'TRUE'
+
+form_test.incorrect_config_target:
+  path: '/form-test/incorrect-config-target'
+  defaults:
+    _form: '\Drupal\form_test\Form\IncorrectConfigTargetForm'
+  requirements:
+    _access: 'TRUE'

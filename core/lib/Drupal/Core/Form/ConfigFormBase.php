@@ -198,7 +198,20 @@ abstract class ConfigFormBase extends FormBase {
           // Remove the final piece of the property path.
           $property_path = implode('.', array_slice(explode('.', $property_path), 0, -1));
         }
-        $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
+
+        if ($property_path === '') {
+          // There is a map to a non-existing config key. Try to work backwards.
+          $property_path = $violation->getParameters()['@key'] ?? '';
+        }
+
+        if (isset($map["$config_name:$property_path"])) {
+          $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
+        }
+        else {
+          // We cannot determine where to place the violation. The only option
+          // is the entire form.
+          $form_element_name = '';
+        }
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
 
