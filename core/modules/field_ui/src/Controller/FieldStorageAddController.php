@@ -13,6 +13,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,6 +45,7 @@ final class FieldStorageAddController extends ControllerBase {
   public function __construct(
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
+    protected PrivateTempStore $tempStore,
   ) {}
 
   /**
@@ -53,6 +55,7 @@ final class FieldStorageAddController extends ControllerBase {
     return new static(
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.field_type_category'),
+      $container->get('tempstore.private')->get('field_ui'),
     );
   }
 
@@ -174,9 +177,12 @@ final class FieldStorageAddController extends ControllerBase {
     return $form;
   }
 
-  public function OpenModalForm($entity_type_id = NULL, $bundle = NULL) {
+  public function OpenModalForm($entity_type = NULL, $bundle = NULL, $field_name = NULL) {
     $form = [];
-    $form = $this->buildForm($form, $entity_type_id, $bundle);
+    if(!empty($field_name)) {
+      $this->tempStore->delete("$entity_type:$field_name");
+    }
+    $form = $this->buildForm($form, $entity_type, $bundle);
     $response = new AjaxResponse();
     $dialog_options['modal'] = TRUE;
     $dialog_options['width'] = 1100;
