@@ -57,12 +57,9 @@ class ConfigTargetTest extends BrowserTestBase {
     $page->pressButton('Save configuration');
     $assert_session = $this->assertSession();
     $assert_session->statusMessageContains('This value should not be blank.', 'error');
-    // The parent element should be marked as invalid, along with its children.
-    // @todo This is wrong behavior - only the invalid element should be
-    //   marked invalid. But at least now we have the beginnings of a test.
-    $assert_session->elementAttributeExists('css', '#edit-favorites', 'aria-invalid');
+    $assert_session->elementAttributeNotExists('css', '#edit-favorites', 'aria-invalid');
     $assert_session->elementAttributeExists('named', ['field', 'First choice'], 'aria-invalid');
-    $assert_session->elementAttributeExists('named', ['field', 'Second choice'], 'aria-invalid');
+    $assert_session->elementAttributeNotExists('named', ['field', 'Second choice'], 'aria-invalid');
   }
 
 }
