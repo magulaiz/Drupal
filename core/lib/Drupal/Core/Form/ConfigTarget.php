@@ -114,7 +114,7 @@ final class ConfigTarget {
   public static function fromForm(array $array_parents, array $form): self {
     $element = NestedArray::getValue($form, $array_parents);
     if (!isset($element['#config_target'])) {
-      throw new \LogicException('The form element [' . implode('][', $array_parents) . '] does not have #config_target property set');
+      throw new \LogicException('The form element [' . implode('][', $array_parents) . '] does not have the #config_target property set');
     }
     $target = $element['#config_target'];
     if (is_string($target)) {
