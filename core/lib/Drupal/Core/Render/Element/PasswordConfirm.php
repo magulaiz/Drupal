@@ -59,7 +59,6 @@ class PasswordConfirm extends FormElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    trigger_error('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Core/Render/Element/PasswordUnmask instead. See https://www.drupal.org/node/3394247', E_USER_DEPRECATED);
     if ($input === FALSE) {
       $element += ['#default_value' => []];
       return $element['#default_value'] + ['pass1' => '', 'pass2' => ''];
