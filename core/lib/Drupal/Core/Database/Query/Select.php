@@ -683,7 +683,7 @@ class Select extends Query implements SelectInterface {
     return $alias;
   }
 
-  /*
+  /**
    * Helper method for generation join conditions.
    *
    * @param string $conjunction
