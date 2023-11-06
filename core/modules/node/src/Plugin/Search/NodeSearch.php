@@ -301,7 +301,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         }
         $query->condition($where);
         if (!empty($info['join'])) {
-          $condition = $this->database->condition('AND')->where($info['join']['condition']);
+          $condition = $query->joinCondition()->where($info['join']['condition']);
           $query->join($info['join']['table'], $info['join']['alias'], $condition);
         }
       }
@@ -445,7 +445,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
           $node_rank = $this->configuration['rankings'][$rank];
           // If the table defined in the ranking isn't already joined, then add it.
           if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
-            $condition = $this->database->condition('AND')->where($values['join']['on']);
+            $condition = $query->joinCondition()->where($values['join']['on']);
             $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $condition);
           }
           $arguments = $values['arguments'] ?? [];

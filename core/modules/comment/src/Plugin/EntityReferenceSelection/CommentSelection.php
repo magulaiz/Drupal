@@ -95,7 +95,7 @@ class CommentSelection extends DefaultSelection {
     if (!isset($tables['comment_field_data']['alias'])) {
       // If no conditions join against the comment data table, it should be
       // joined manually to allow node access processing.
-      $condition = $query->getConnection()->condition('AND')->compare('base_table.cid', "$data_table.cid")->condition("$data_table.default_langcode", 1);
+      $condition = $query->joinCondition()->compare('base_table.cid', "$data_table.cid")->condition("$data_table.default_langcode", 1);
       $query->innerJoin($data_table, NULL, $condition);
     }
 
@@ -121,7 +121,7 @@ class CommentSelection extends DefaultSelection {
 
         // The Comment module doesn't implement per-comment access, so it
         // checks instead that the user has access to the host entity.
-        $condition = $query->getConnection()->condition('AND')->compare("%alias.$id_key", "$data_table.entity_id")->condition("$data_table.entity_type", $host_entity_type_id);
+        $condition = $query->joinCondition()->compare("%alias.$id_key", "$data_table.entity_id")->condition("$data_table.entity_type", $host_entity_type_id);
         $entity_alias = $query->innerJoin($host_entity_field_data_table, 'n', $condition);
         // Pass the query to the entity access control.
         $this->reAlterQuery($query, $host_entity_type_id . '_access', $entity_alias);

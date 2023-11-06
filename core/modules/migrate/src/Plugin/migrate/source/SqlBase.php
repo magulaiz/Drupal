@@ -279,7 +279,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         // Build the join to the map table. Because the source key could have
         // multiple fields, we need to build things up.
         $count = 1;
-        $map_join = $this->database->condition('AND');
+        $map_join = $this->query->joinCondition();
         foreach ($this->getIds() as $field_name => $field_schema) {
           if (isset($field_schema['alias'])) {
             $field_name = $field_schema['alias'] . '.' . $this->query->escapeField($field_name);

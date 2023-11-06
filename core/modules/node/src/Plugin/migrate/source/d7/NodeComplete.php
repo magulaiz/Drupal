@@ -43,7 +43,11 @@ class NodeComplete extends NodeRevision {
     // Get any entity translation revision data.
     if ($this->getDatabase()->schema()
       ->tableExists('entity_translation_revision')) {
-      $query->leftJoin('entity_translation_revision', 'etr', $this->database->condition('AND')->compare('nr.nid', 'etr.entity_id')->compare('nr.vid', 'etr.revision_id'));
+      $query->leftJoin('entity_translation_revision', 'etr',
+        $query->joinCondition()
+          ->compare('nr.nid', 'etr.entity_id')
+          ->compare('nr.vid', 'etr.revision_id')
+      );
       $query->fields('etr', [
         'entity_type',
         'entity_id',

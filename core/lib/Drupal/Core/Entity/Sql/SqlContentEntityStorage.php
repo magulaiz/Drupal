@@ -702,10 +702,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $query->addTag($this->entityTypeId . '_load_multiple');
 
     if ($revision_ids) {
-      $query->join($this->revisionTable, 'revision', $this->database->condition('AND')->compare("revision.{$this->idKey}", "base.{$this->idKey}")->condition("revision.{$this->revisionKey}", $revision_ids, 'IN'));
+      $query->join($this->revisionTable, 'revision',
+        $query->joinCondition()
+          ->compare("revision.{$this->idKey}", "base.{$this->idKey}")
+          ->condition("revision.{$this->revisionKey}", $revision_ids, 'IN')
+      );
     }
     elseif ($this->revisionTable) {
-      $query->join($this->revisionTable, 'revision', $this->database->condition('AND')->compare("revision.{$this->revisionKey}", "base.{$this->revisionKey}"));
+      $query->join($this->revisionTable, 'revision', $query->joinCondition()->compare("revision.{$this->revisionKey}", "base.{$this->revisionKey}"));
     }
 
     // Add fields from the {entity} table.

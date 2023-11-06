@@ -118,7 +118,7 @@ class Node extends DrupalSqlBase {
     }
     else {
       // End of BC layer.
-      $condition = $this->getDatabase()->condition('AND');
+      $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {
           $condition->compare($join['field'], $join['field2'], $join['operator']);
@@ -160,7 +160,7 @@ class Node extends DrupalSqlBase {
     // If the content_translation module is enabled, get the source langcode
     // to fill the content_translation_source field.
     if ($this->moduleHandler->moduleExists('content_translation')) {
-      $query->leftJoin('node', 'nt', $this->getDatabase()->condition('AND')->compare('n.tnid', 'nt.nid'));
+      $query->leftJoin('node', 'nt', $query->joinCondition()->compare('n.tnid', 'nt.nid'));
       $query->addField('nt', 'language', 'source_langcode');
     }
 
@@ -261,7 +261,7 @@ class Node extends DrupalSqlBase {
 
       // Query the database directly for all field info.
       $query = $this->select('content_node_field_instance', 'cnfi');
-      $query->join('content_node_field', 'cnf', $this->getDatabase()->condition('AND')->compare('cnf.field_name', 'cnfi.field_name'));
+      $query->join('content_node_field', 'cnf', $query->joinCondition()->compare('cnf.field_name', 'cnfi.field_name'));
       $query->fields('cnfi');
       $query->fields('cnf');
 

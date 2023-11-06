@@ -165,7 +165,7 @@ class DbLogController extends ControllerBase {
       'variables',
       'link',
     ]);
-    $query->leftJoin('users_field_data', 'ufd', $this->database->condition('AND')->compare('w.uid', 'ufd.uid'));
+    $query->leftJoin('users_field_data', 'ufd', $query->joinCondition()->compare('w.uid', 'ufd.uid'));
 
     if (!empty($filter['where'])) {
       $query->where($filter['where'], $filter['args']);

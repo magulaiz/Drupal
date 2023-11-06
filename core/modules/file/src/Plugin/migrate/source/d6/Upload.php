@@ -50,7 +50,7 @@ class Upload extends DrupalSqlBase {
     }
     else {
       // End of BC layer.
-      $condition = $this->getDatabase()->condition('AND');
+      $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {
           $condition->compare($join['field'], $join['field2'], $join['operator']);
@@ -81,7 +81,7 @@ class Upload extends DrupalSqlBase {
     }
     else {
       // End of BC layer.
-      $condition = $this->getDatabase()->condition('AND');
+      $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {
           $condition->compare($join['field'], $join['field2'], $join['operator']);

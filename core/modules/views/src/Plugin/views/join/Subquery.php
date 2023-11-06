@@ -52,7 +52,10 @@ class Subquery extends JoinPluginBase {
     }
 
     // Add our join condition, using a subquery on the left instead of a field.
-    $condition = $select_query->getConnection()->condition('AND')->where("($this->left_query) = $table[alias].$this->field");
+    $condition = $select_query->joinCondition()
+      ->compare('%alias.id', 'entity_test.id')
+      ->where("($this->left_query) = $table[alias].$this->field");
+
     $arguments = [];
 
     // Tack on the extra.

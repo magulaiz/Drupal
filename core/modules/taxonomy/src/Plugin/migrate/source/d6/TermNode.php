@@ -57,7 +57,11 @@ class TermNode extends DrupalSqlBase {
       ->fields('tn', ['nid', 'vid'])
       ->fields('n', ['type']);
     // Because this is an inner join it enforces the current revision.
-    $query->innerJoin('term_data', 'td', $this->getDatabase()->condition('AND')->compare('td.tid', 'tn.tid')->condition('td.vid', $this->configuration['vid']));
+    $query->innerJoin('term_data', 'td',
+      $query->joinCondition()
+        ->compare('td.tid', 'tn.tid')
+        ->condition('td.vid', $this->configuration['vid'])
+    );
 
     // Start of BC layer.
     if (is_string(static::JOIN)) {
@@ -65,7 +69,7 @@ class TermNode extends DrupalSqlBase {
     }
     else {
       // End of BC layer.
-      $condition = $this->getDatabase()->condition('AND');
+      $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {
           $condition->compare($join['field'], $join['field2'], $join['operator']);
@@ -105,7 +109,7 @@ class TermNode extends DrupalSqlBase {
     }
     else {
       // End of BC layer.
-      $condition = $this->getDatabase()->condition('AND');
+      $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {
           $condition->compare($join['field'], $join['field2'], $join['operator']);
@@ -116,7 +120,11 @@ class TermNode extends DrupalSqlBase {
       }
       $query->join('node', 'n', $condition);
     }
-    $query->innerJoin('term_data', 'td', $this->getDatabase()->condition('AND')->compare('td.tid', 'tn.tid')->condition('td.vid', $this->configuration['vid']));
+    $query->innerJoin('term_data', 'td',
+      $query->joinCondition()
+        ->compare('td.tid', 'tn.tid')
+        ->condition('td.vid', $this->configuration['vid'])
+    );
     $row->setSourceProperty('tid', $query->execute()->fetchCol());
     return parent::prepareRow($row);
   }

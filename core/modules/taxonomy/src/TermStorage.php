@@ -231,7 +231,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $this->treeParents[$vid] = [];
         $this->treeTerms[$vid] = [];
         $query = $this->database->select($this->getDataTable(), 't');
-        $query->join('taxonomy_term__parent', 'p', $this->database->condition('AND')->compare('t.tid', 'p.entity_id'));
+        $query->join('taxonomy_term__parent', 'p', $query->joinCondition()->compare('t.tid', 'p.entity_id'));
         $query->addExpression('[parent_target_id]', 'parent');
         $result = $query
           ->addTag('taxonomy_term_access')
@@ -324,7 +324,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   public function nodeCount($vid) {
     $query = $this->database->select('taxonomy_index', 'ti');
     $query->addExpression('COUNT(DISTINCT [ti].[nid])');
-    $query->leftJoin($this->getBaseTable(), 'td', $this->database->condition('AND')->compare('ti.tid', 'td.tid'));
+    $query->leftJoin($this->getBaseTable(), 'td', $query->joinCondition()->compare('ti.tid', 'td.tid'));
     $query->condition('td.vid', $vid);
     $query->addTag('vocabulary_node_count');
     return $query->execute()->fetchField();
@@ -345,7 +345,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function getNodeTerms(array $nids, array $vids = [], $langcode = NULL) {
     $query = $this->database->select($this->getDataTable(), 'td');
-    $query->innerJoin('taxonomy_index', 'tn', $this->database->condition('AND')->compare('td.tid', 'tn.tid'));
+    $query->innerJoin('taxonomy_index', 'tn', $query->joinCondition()->compare('td.tid', 'tn.tid'));
     $query->fields('td', ['tid']);
     $query->addField('tn', 'nid', 'node_nid');
     $query->orderby('td.weight');

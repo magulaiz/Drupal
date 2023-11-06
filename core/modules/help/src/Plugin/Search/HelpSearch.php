@@ -220,7 +220,11 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
       ->condition('i.langcode', $this->languageManager->getCurrentLanguage()->getId())
       ->extend(SearchQuery::class)
       ->extend(PagerSelectExtender::class);
-    $query->innerJoin('help_search_items', 'hsi', $this->database->condition('AND')->compare('i.sid', 'hsi.sid')->condition('i.type', $this->getType()));
+    $query->innerJoin('help_search_items', 'hsi',
+      $query->joinCondition()
+        ->compare('i.sid', 'hsi.sid')
+        ->condition('i.type', $this->getType())
+    );
     if ($denied_permissions) {
       $query->condition('hsi.permission', $denied_permissions, 'NOT IN');
     }
@@ -316,7 +320,11 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
 
     $query = $this->database->select('help_search_items', 'hsi');
     $query->fields('hsi', ['sid', 'section_plugin_id', 'topic_id']);
-    $query->leftJoin('search_dataset', 'sd', $this->database->condition('AND')->compare('sd.sid', 'hsi.sid')->condition('sd.type', $this->getType()));
+    $query->leftJoin('search_dataset', 'sd',
+      $query->joinCondition()
+        ->compare('sd.sid', 'hsi.sid')
+        ->condition('sd.type', $this->getType())
+    );
     $query->where('[sd].[sid] IS NULL');
     $query->groupBy('hsi.sid')
       ->groupBy('hsi.section_plugin_id')
@@ -329,7 +337,11 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     if (count($items) < $limit) {
       $query = $this->database->select('help_search_items', 'hsi');
       $query->fields('hsi', ['sid', 'section_plugin_id', 'topic_id']);
-      $query->leftJoin('search_dataset', 'sd', $this->database->condition('AND')->compare('sd.sid', 'hsi.sid')->condition('sd.type', $this->getType()));
+      $query->leftJoin('search_dataset', 'sd',
+        $query->joinCondition()
+          ->compare('sd.sid', 'hsi.sid')
+          ->condition('sd.type', $this->getType())
+      );
       $query->condition('sd.reindex', 0, '<>');
       $query->groupBy('hsi.sid')
         ->groupBy('hsi.section_plugin_id')
@@ -444,7 +456,11 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
   public function updateIndexState() {
     $query = $this->database->select('help_search_items', 'hsi');
     $query->addExpression('COUNT(DISTINCT([hsi].[sid]))');
-    $query->leftJoin('search_dataset', 'sd', $this->database->condition('AND')->compare('hsi.sid', 'sd.sid')->condition('sd.type', $this->getType()));
+    $query->leftJoin('search_dataset', 'sd',
+      $query->joinCondition()
+        ->compare('hsi.sid', 'sd.sid')
+        ->condition('sd.type', $this->getType())
+    );
     $query->isNull('sd.sid');
     $never_indexed = $query->execute()->fetchField();
     $this->state->set('help_search_unindexed_count', $never_indexed);
@@ -470,7 +486,11 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
 
     $query = $this->database->select('help_search_items', 'hsi');
     $query->addExpression('COUNT(DISTINCT([hsi].[sid]))');
-    $query->leftJoin('search_dataset', 'sd', $this->database->condition('AND')->compare('hsi.sid', 'sd.sid')->condition('sd.type', $this->getType()));
+    $query->leftJoin('search_dataset', 'sd',
+      $query->joinCondition()
+        ->compare('hsi.sid', 'sd.sid')
+        ->condition('sd.type', $this->getType())
+    );
     $condition = $this->database->condition('OR');
     $condition->condition('sd.reindex', 0, '<>')
       ->isNull('sd.sid');
