@@ -66,8 +66,14 @@ function module_load_include($type, $module, $name = NULL) {
  *   The name of the module (without the .module extension).
  * @param int $weight
  *   An integer representing the weight of the module.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead set
+ *   'core.extension' config directly.
+ *
+ * @see https://www.drupal.org/node/3359527
  */
 function module_set_weight($module, $weight) {
+  @trigger_error(__FUNCTION__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead set 'core.extension' config directly. See https://www.drupal.org/project/drupal/issues/3359527", E_USER_DEPRECATED);
   $extension_config = \Drupal::configFactory()->getEditable('core.extension');
   if ($extension_config->get("module.$module") !== NULL) {
     // Pre-cast the $weight to an integer so that we can save this without using

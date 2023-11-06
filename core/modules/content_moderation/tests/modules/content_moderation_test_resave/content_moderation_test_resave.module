@@ -28,3 +28,13 @@ function content_moderation_test_resave_entity_insert(EntityInterface $entity) {
     \Drupal::state()->set('content_moderation_test_resave', TRUE);
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function content_moderation_test_resave_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'entity_insert') {
+    $group = $implementations['content_moderation_test_resave'];
+    $implementations = ['content_moderation_test_resave' => $group] + $implementations;
+  }
+}

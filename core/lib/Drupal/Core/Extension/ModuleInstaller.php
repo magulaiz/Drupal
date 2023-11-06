@@ -225,6 +225,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $current_module_filenames = $this->moduleHandler->getModuleList();
         $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
         $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+        // Move the profile to end.
+        $profile = $extension_config->get('profile');
+        if (isset($current_modules[$profile])) {
+          unset($current_modules[$profile]);
+          // When module weight no longer exists the entire list should be
+          // dependency ordered.
+          $current_modules[$profile] = 1000;
+        }
         $module_filenames = [];
         foreach ($current_modules as $name => $weight) {
           if (isset($current_module_filenames[$name])) {

@@ -34,9 +34,10 @@ class EntityUpdateTest extends EntityKernelTestBase {
 
     // Set editor_test module weight to be lower than editor module's weight so
     // that editor_test_entity_update() is called before editor_entity_update().
-    $extension_config = \Drupal::configFactory()->get('core.extension');
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
     $editor_module_weight = $extension_config->get('module.editor');
-    module_set_weight('editor_test', $editor_module_weight - 1);
+    $extension_config->set('module.editor_test', $editor_module_weight - 1)
+      ->save();
   }
 
   /**

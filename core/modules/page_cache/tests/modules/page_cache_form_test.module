@@ -33,6 +33,14 @@ function page_cache_form_test_form_page_cache_form_test_process($form, FormState
  * Implements hook_module_implements_alter().
  */
 function page_cache_form_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'form_page_cache_form_test_alter') {
+    // Ensure that the form alter hook is always called after
+    // page_cache_form_alter().
+    $group = $implementations['page_cache_form_test'];
+    unset($implementations['page_cache_form_test']);
+    $implementations['page_cache_form_test'] = $group;
+  }
+
   if ($hook === 'form_alter' && \Drupal::state()->get('page_cache_bypass_form_immutability', FALSE)) {
     // Disable system_form_alter
     unset($implementations['system']);

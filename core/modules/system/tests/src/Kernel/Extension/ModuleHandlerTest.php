@@ -40,14 +40,6 @@ class ModuleHandlerTest extends KernelTestBase {
     sort($module_list);
     $this->assertModuleList($module_list, 'After adding a module');
 
-    // Try to mess with the module weights.
-    module_set_weight('ban', 20);
-
-    // Move ban to the end of the array.
-    unset($module_list[array_search('ban', $module_list)]);
-    $module_list[] = 'ban';
-    $this->assertModuleList($module_list, 'After changing weights');
-
     // Test the fixed list feature.
     $fixed_list = [
       'system' => 'core/modules/system/system.module',
