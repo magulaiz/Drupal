@@ -77,7 +77,7 @@ class ConfigTargetTest extends UnitTestCase {
           ],
         ],
         ['test'],
-        'The form element [test] does not have #config_target property set',
+        'The form element [test] does not have the #config_target property set',
       ],
       'No #config_target nested' => [
         [
@@ -90,7 +90,7 @@ class ConfigTargetTest extends UnitTestCase {
           ],
         ],
         ['group', 'test'],
-        'The form element [group][test] does not have #config_target property set',
+        'The form element [group][test] does not have the #config_target property set',
       ],
       'Boolean #config_target nested' => [
         [
