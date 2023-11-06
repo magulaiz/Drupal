@@ -1,0 +1,27 @@
+<?php
+
+namespace Drupal\Tests\user\Kernel;
+
+use Drupal\Core\Render\Element\PasswordConfirm;
+use Drupal\KernelTests\KernelTestBase;
+
+/**
+ * Tests the deprecation of password_confirm.
+ *
+ * @group legacy
+ */
+class PasswordConfirmDeprecationTest extends KernelTestBase {
+
+  /**
+   * Tests the deprecation of password_confirm element.
+   */
+  public function testPasswordConfirmDeprecation(): void {
+    $this->expectDeprecation('\Drupal\Core\Render\Element\PasswordConfirm is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Core/Render/Element/PasswordUnmask instead. See https://www.drupal.org/node/3394247');
+    new PasswordConfirm([], 'password_confirm',[
+      'id' => 'password_confirm',
+      'class' => 'Drupal\Core\Render\Element\PasswordConfirm',
+      'provider' => 'core',
+    ]);
+  }
+
+}
