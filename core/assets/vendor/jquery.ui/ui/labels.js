@@ -10,7 +10,7 @@
 //>>label: labels
 //>>group: Core
 //>>description: Find all the labels associated with a given input
-//>>docs: http://api.jqueryui.com/labels/
+//>>docs: https://api.jqueryui.com/labels/
 
 ( function( factory ) {
 	"use strict";

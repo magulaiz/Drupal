@@ -540,7 +540,7 @@
         let checked = false;
         this.each(function () {
           // Use prop() here as we want a boolean of the checkbox state.
-          // @see http://api.jquery.com/prop/
+          // @see https://api.jquery.com/prop/
           checked = $(this).prop('checked');
           // Break the each() loop if this is checked.
           return !checked;

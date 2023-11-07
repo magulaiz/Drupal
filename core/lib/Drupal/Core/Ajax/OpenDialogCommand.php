@@ -41,7 +41,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *
    * Any jQuery UI option can be used.
    *
-   * @see http://api.jqueryui.com/dialog.
+   * @see https://api.jqueryui.com/dialog.
    *
    * @var array
    */
@@ -66,7 +66,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   or an HTML string.
    * @param array $dialog_options
    *   (optional) Options to be passed to the dialog implementation. Any
-   *   jQuery UI option can be used. See http://api.jqueryui.com/dialog.
+   *   jQuery UI option can be used. See https://api.jqueryui.com/dialog.
    * @param array|null $settings
    *   (optional) Custom settings that will be passed to the Drupal behaviors
    *   on the content of the dialog. If left empty, the settings will be
@@ -95,7 +95,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *
    * @param array $dialog_options
    *   Options to be passed to the dialog implementation. Any jQuery UI option
-   *   can be used. See http://api.jqueryui.com/dialog.
+   *   can be used. See https://api.jqueryui.com/dialog.
    */
   public function setDialogOptions($dialog_options) {
     $this->dialogOptions = $dialog_options;
@@ -106,7 +106,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *
    * @param string $key
    *   Key of the dialog option. Any jQuery UI option can be used.
-   *   See http://api.jqueryui.com/dialog.
+   *   See https://api.jqueryui.com/dialog.
    * @param mixed $value
    *   Option to be passed to the dialog implementation.
    */

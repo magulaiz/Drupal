@@ -10,7 +10,7 @@
 //>>label: Form Reset Mixin
 //>>group: Core
 //>>description: Refresh input widgets when their form is reset
-//>>docs: http://api.jqueryui.com/form-reset-mixin/
+//>>docs: https://api.jqueryui.com/form-reset-mixin/
 
 ( function( factory ) {
 	"use strict";

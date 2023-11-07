@@ -10,7 +10,7 @@
 //>>label: uniqueId
 //>>group: Core
 //>>description: Functions to generate and remove uniqueId's
-//>>docs: http://api.jqueryui.com/uniqueId/
+//>>docs: https://api.jqueryui.com/uniqueId/
 
 ( function( factory ) {
 	"use strict";

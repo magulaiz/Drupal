@@ -10,7 +10,7 @@
 //>>label: Checkboxradio
 //>>group: Widgets
 //>>description: Enhances a form with multiple themeable checkboxes or radio buttons.
-//>>docs: http://api.jqueryui.com/checkboxradio/
+//>>docs: https://api.jqueryui.com/checkboxradio/
 //>>demos: http://jqueryui.com/checkboxradio/
 //>>css.structure: ../../themes/base/core.css
 //>>css.structure: ../../themes/base/button.css

@@ -2364,7 +2364,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * - method: The jQuery method for placing the new content (used with
  *   'wrapper'). Valid options are 'replaceWith' (default), 'append', 'prepend',
  *   'before', 'after', or 'html'. See
- *   http://api.jquery.com/category/manipulation/ for more information on these
+ *   https://api.jquery.com/category/manipulation/ for more information on these
  *   methods.
  * - effect: The jQuery effect to use when placing the new HTML (used with
  *   'wrapper'). Valid options are 'none' (default), 'slide', or 'fade'.

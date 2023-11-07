@@ -10,7 +10,7 @@
 //>>label: Resizable
 //>>group: Interactions
 //>>description: Enables resize functionality for any element.
-//>>docs: http://api.jqueryui.com/resizable/
+//>>docs: https://api.jqueryui.com/resizable/
 //>>demos: http://jqueryui.com/resizable/
 //>>css.structure: ../../themes/base/core.css
 //>>css.structure: ../../themes/base/resizable.css

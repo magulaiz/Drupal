@@ -38,7 +38,7 @@ class SetDialogOptionCommand implements CommandInterface {
    *   value, the default modal dialog will be selected.
    * @param string $option_name
    *   The name of the option to set. May be any jQuery UI dialog option.
-   *   See http://api.jqueryui.com/dialog.
+   *   See https://api.jqueryui.com/dialog.
    * @param mixed $option_value
    *   The value of the option to be passed to the dialog.
    */

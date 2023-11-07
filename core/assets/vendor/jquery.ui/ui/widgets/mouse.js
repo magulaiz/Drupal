@@ -10,7 +10,7 @@
 //>>label: Mouse
 //>>group: Widgets
 //>>description: Abstracts mouse-based interactions to assist in creating certain widgets.
-//>>docs: http://api.jqueryui.com/mouse/
+//>>docs: https://api.jqueryui.com/mouse/
 
 ( function( factory ) {
 	"use strict";
