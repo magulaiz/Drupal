@@ -390,6 +390,13 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
+  public function joinCondition(string $conjunction = 'AND') {
+    return $this->query->joinCondition($conjunction);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function orderBy($field, $direction = 'ASC') {
     $this->query->orderBy($field, $direction);
     return $this;
