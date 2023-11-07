@@ -108,11 +108,12 @@
    *
    */
   Drupal.behaviors.ajaxDisableSubmit = {
-    attach() {
+    attach(context) {
       // Override the beforeSend method to disable the submit button.
       const originalAjaxBeforeSend = Drupal.Ajax.prototype.beforeSend;
       // eslint-disable-next-line func-names
       Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
+        console.log($('.field-config-edit-form [data-drupal-selector="edit-submit"]'));
         // Disable the submit button on ajax request initiation.
         $('.field-config-edit-form [data-drupal-selector="edit-submit"]').prop(
           'disabled',
@@ -127,6 +128,7 @@
         return originalAjaxBeforeSend.apply(this, arguments);
       };
       // Re-enable the submit button after Ajax request is completed.
+      // eslint-disable-next-line
       $(document).on('ajaxComplete', () => {
         $('.field-config-edit-form [data-drupal-selector="edit-submit"]').prop(
           'disabled',
