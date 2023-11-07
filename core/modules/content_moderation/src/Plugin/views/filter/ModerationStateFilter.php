@@ -156,7 +156,7 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
           $entity_base_table_alias = $this->query->addRelationship($entity_base_table, $join, $entity_revision_base_table);
         }
 
-        $bundle_condition = $this->view->query->joinCondition();
+        $bundle_condition = $this->view->query->getConnection()->condition('AND');
         $bundle_condition->condition("$entity_base_table_alias.{$entity_type->getKey('bundle')}", $moderated_bundles, 'IN');
       }
       // Otherwise, force the query to return an empty result.
@@ -179,7 +179,7 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
     foreach ((array) $this->value as $value) {
       [$workflow_id, $state_id] = explode('-', $value, 2);
 
-      $and = $this->view->query->joinCondition();
+      $and = $this->view->query->getConnection()->condition('AND');
       $and
         ->condition("$this->tableAlias.workflow", $workflow_id, '=')
         ->condition("$this->tableAlias.$this->realField", $state_id, $operator);

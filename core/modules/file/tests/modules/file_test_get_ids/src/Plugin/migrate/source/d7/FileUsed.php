@@ -20,9 +20,8 @@ class FileUsed extends File {
   public function query() {
     $query = parent::query();
 
-    $condition = \Drupal::database()->condition('AND');
     // Join on file_usage table to only migrate used files.
-    $query->innerJoin('file_usage', 'fu', $condition->compare('f.fid', 'fu.fid'));
+    $query->innerJoin('file_usage', 'fu', $query->joinCondition()->compare('f.fid', 'fu.fid'));
 
     return $query;
   }

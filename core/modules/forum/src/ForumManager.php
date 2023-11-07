@@ -192,7 +192,12 @@ class ForumManager implements ForumManagerInterface {
         ->extend(TableSortExtender::class);
       $query->fields('n', ['nid']);
 
-      $query->join('comment_entity_statistics', 'ces', $this->connection->condition('AND')->compare('n.nid', 'ces.entity_id')->condition('ces.field_name', 'comment_forum')->condition('ces.entity_type', 'node'));
+      $query->join('comment_entity_statistics', 'ces',
+        $query->joinCondition()
+          ->compare('n.nid', 'ces.entity_id')
+          ->condition('ces.field_name', 'comment_forum')
+          ->condition('ces.entity_type', 'node')
+      );
       $query->fields('ces', [
         'cid',
         'last_comment_uid',
@@ -200,13 +205,21 @@ class ForumManager implements ForumManagerInterface {
         'comment_count',
       ]);
 
-      $query->join('forum_index', 'f', $this->connection->condition('AND')->compare('f.nid', 'n.nid'));
+      $query->join('forum_index', 'f', $query->joinCondition()->compare('f.nid', 'n.nid'));
       $query->addField('f', 'tid', 'forum_tid');
 
-      $query->join('users_field_data', 'u', $this->connection->condition('AND')->compare('n.uid', 'u.uid')->condition('u.default_langcode', 1));
+      $query->join('users_field_data', 'u',
+        $query->joinCondition()
+          ->compare('n.uid', 'u.uid')
+          ->condition('u.default_langcode', 1)
+      );
       $query->addField('u', 'name');
 
-      $query->join('users_field_data', 'u2', $this->connection->condition('AND')->compare('ces.last_comment_uid', 'u2.uid')->condition('u.default_langcode', 1));
+      $query->join('users_field_data', 'u2',
+        $query->joinCondition()
+          ->compare('ces.last_comment_uid', 'u2.uid')
+          ->condition('u.default_langcode', 1)
+      );
 
       $query->addExpression('CASE [ces].[last_comment_uid] WHEN 0 THEN [ces].[last_comment_name] ELSE [u2].[name] END', 'last_comment_name');
 
@@ -347,9 +360,22 @@ class ForumManager implements ForumManagerInterface {
     }
     // Query "Last Post" information for this forum.
     $query = $this->connection->select('node_field_data', 'n');
-    $query->join('forum', 'f', $this->connection->condition('AND')->compare('n.vid', 'f.vid')->condition('f.tid', $tid));
-    $query->join('comment_entity_statistics', 'ces', $this->connection->condition('AND')->compare('n.nid', 'ces.entity_id')->condition('ces.field_name', 'comment_forum')->condition('ces.entity_type', 'node'));
-    $query->join('users_field_data', 'u', $this->connection->condition('AND')->compare('ces.last_comment_uid', 'u.uid')->condition('u.default_langcode', 1));
+    $query->join('forum', 'f',
+      $query->joinCondition()
+        ->compare('n.vid', 'f.vid')
+        ->condition('f.tid', $tid)
+    );
+    $query->join('comment_entity_statistics', 'ces',
+      $query->joinCondition()
+        ->compare('n.nid', 'ces.entity_id')
+        ->condition('ces.field_name', 'comment_forum')
+        ->condition('ces.entity_type', 'node')
+    );
+    $query->join('users_field_data', 'u',
+      $query->joinCondition()
+        ->compare('ces.last_comment_uid', 'u.uid')
+        ->condition('u.default_langcode', 1)
+    );
     $query->addExpression('CASE [ces].[last_comment_uid] WHEN 0 THEN [ces].[last_comment_name] ELSE [u].[name] END', 'last_comment_name');
 
     $topic = $query
@@ -481,8 +507,16 @@ class ForumManager implements ForumManagerInterface {
    */
   public function unreadTopics($term, $uid) {
     $query = $this->connection->select('node_field_data', 'n');
-    $query->join('forum', 'f', $this->connection->condition('AND')->compare('n.vid', 'f.vid')->condition('f.tid', $term));
-    $query->leftJoin('history', 'h', $this->connection->condition('AND')->compare('n.nid', 'h.nid')->condition('h.uid', $uid));
+    $query->join('forum', 'f',
+      $query->joinCondition()
+        ->compare('n.vid', 'f.vid')
+        ->condition('f.tid', $term)
+    );
+    $query->leftJoin('history', 'h',
+      $query->joinCondition()
+        ->compare('n.nid', 'h.nid')
+        ->condition('h.uid', $uid)
+    );
     $query->addExpression('COUNT([n].[nid])', 'count');
     return $query
       ->condition('status', 1)

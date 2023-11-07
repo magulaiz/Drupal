@@ -305,7 +305,7 @@ EOF;
   protected function assertTranslation($source, $translation, $langcode, $message = '') {
     $connection = Database::getConnection();
     $query = $connection->select('locales_target', 'lt');
-    $query->innerJoin('locales_source', 'ls', $connection->condition('AND')->compare('ls.lid', 'lt.lid'));
+    $query->innerJoin('locales_source', 'ls', $query->joinCondition()->compare('ls.lid', 'lt.lid'));
     $db_translation = $query->fields('lt', ['translation'])
       ->condition('ls.source', $source)
       ->condition('lt.language', $langcode)

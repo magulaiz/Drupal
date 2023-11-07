@@ -391,7 +391,11 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $query->fields('tfr', [$id_field]);
     $query->addExpression("MAX([tfr].[$revision_field])", $revision_field);
 
-    $query->join($this->getRevisionTable(), 'tr', $this->database->condition('AND')->compare("tfr.$revision_field", "tr.$revision_field")->condition("tr.$revision_default_field", 0));
+    $query->join($this->getRevisionTable(), 'tr',
+      $query->joinCondition()
+        ->compare("tfr.$revision_field", "tr.$revision_field")
+        ->condition("tr.$revision_default_field", 0)
+    );
 
     $inner_select = $this->database->select($this->getRevisionDataTable(), 't');
     $inner_select->condition("t.$rta_field", '1');
@@ -401,7 +405,11 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       ->groupBy("t.$id_field")
       ->groupBy("t.$langcode_field");
 
-    $query->join($inner_select, 'mr', $this->database->condition('AND')->compare("tfr.$revision_field", "mr.$revision_field")->compare("tfr.$langcode_field", "mr.$langcode_field"));
+    $query->join($inner_select, 'mr',
+      $query->joinCondition()
+        ->compare("tfr.$revision_field", "mr.$revision_field")
+        ->compare("tfr.$langcode_field", "mr.$langcode_field")
+    );
 
     $query->groupBy("tfr.$id_field");
 
