@@ -12,7 +12,7 @@ namespace Drupal\Core\Ajax;
  * This command is implemented by Drupal.AjaxCommands.prototype.remove()
  * defined in misc/ajax.js.
  *
- * @see http://docs.jquery.com/Manipulation/remove#expr
+ * @see https://docs.jquery.com/Manipulation/remove#expr
  *
  * @ingroup ajax
  */

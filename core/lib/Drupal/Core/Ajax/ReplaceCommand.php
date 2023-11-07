@@ -13,7 +13,7 @@ namespace Drupal\Core\Ajax;
  * defined in misc/ajax.js.
  *
  * See
- * @link http://docs.jquery.com/Manipulation/replaceWith#content jQuery replaceWith command @endlink
+ * @link https://docs.jquery.com/Manipulation/replaceWith#content jQuery replaceWith command @endlink
  *
  * @ingroup ajax
  */

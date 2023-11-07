@@ -11,7 +11,7 @@ namespace Drupal\Core\Ajax;
  * This command is implemented by Drupal.AjaxCommands.prototype.css() defined
  * in misc/ajax.js.
  *
- * @see http://docs.jquery.com/CSS/css#properties
+ * @see https://docs.jquery.com/CSS/css#properties
  *
  * @ingroup ajax
  */
