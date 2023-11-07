@@ -97,10 +97,21 @@ abstract class ConfigFormBase extends FormBase {
         $target = ConfigTarget::fromString($target);
       }
 
-      $value = $this->config($target->configName)->get($target->propertyPath);
-      if ($target->fromConfig) {
-        $value = call_user_func($target->fromConfig, $value);
+      $config = $this->config($target->configName);
+      if ($target instanceof ConfigMultiTarget) {
+        $arguments = [];
+        foreach ($target->propertyPaths as $property_path) {
+          $arguments[] = $config->get($property_path);
+        }
+        $value = call_user_func_array($target->fromConfig, $arguments);
       }
+      else {
+        $value = $config->get($target->propertyPath);
+        if ($target->fromConfig) {
+          $value = call_user_func($target->fromConfig, $value);
+        }
+      }
+
       $element['#default_value'] = $value;
     }
 
@@ -138,7 +149,14 @@ abstract class ConfigFormBase extends FormBase {
         $target = ConfigTarget::fromString($target);
       }
       $target->elementParents = $element['#parents'];
-      $map[$target->configName . ':' . $target->propertyPath] = $target;
+      if ($target instanceof ConfigMultiTarget) {
+        foreach ($target->propertyPaths as $property_path) {
+          $map[$target->configName . ':' . $property_path] = $target;
+        }
+      }
+      else {
+        $map[$target->configName . ':' . $target->propertyPath] = $target;
+      }
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -331,7 +349,17 @@ abstract class ConfigFormBase extends FormBase {
             }
             $value = call_user_func_array($target->toConfig, $arguments);
           }
-          $config->set($target->propertyPath, $value);
+          if ($target instanceof ConfigMultiTarget) {
+            if (array_keys($value) != $target->propertyPaths) {
+              throw new \LogicException('A ConfigMultiTarget must always return a value for each of the property paths it targets.');
+            }
+            foreach ($target->propertyPaths as $property_path) {
+              $config->set($property_path, $value[$property_path]);
+            }
+          }
+          else {
+            $config->set($target->propertyPath, $value);
+          }
         }
         catch (\OutOfBoundsException) {
           // The "toConfig" callable indicated that this form value does not
