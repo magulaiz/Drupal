@@ -51,12 +51,16 @@ class NoJavaScriptAnonymousTest extends PerformanceTestBase {
       $this->drupalGet('');
     });
     $this->assertNoJavaScript($performance_data);
+    $this->assertGreaterThanOrEqual(487, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(488, $performance_data->getQueryCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     });
     $this->assertNoJavaScript($performance_data);
+    $this->assertGreaterThanOrEqual(178, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(182, $performance_data->getQueryCount());
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
@@ -64,6 +68,8 @@ class NoJavaScriptAnonymousTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $user->id());
     });
     $this->assertNoJavaScript($performance_data);
+    $this->assertGreaterThanOrEqual(137, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(138, $performance_data->getQueryCount());
   }
 
   /**

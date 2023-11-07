@@ -2205,7 +2205,7 @@ abstract class Connection {
    *   The debug backtrace.
    */
   protected function getDebugBacktrace(): array {
-    return debug_backtrace();
+    return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   }
 
 }
