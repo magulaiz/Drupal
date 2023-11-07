@@ -26,6 +26,13 @@ class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
   ];
 
   /**
+   * The used field names.
+   *
+   * @var string[]
+   */
+  protected $fieldNames;
+
+  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
