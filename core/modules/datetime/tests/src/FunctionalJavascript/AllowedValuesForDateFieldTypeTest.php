@@ -22,7 +22,7 @@ class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
     'node',
     'datetime',
     'field',
-    'options'
+    'options',
   ];
 
   /**
@@ -87,7 +87,8 @@ class AllowedValuesForDateFieldTypeTest extends WebDriverTestBase {
     $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
     $page->findButton('Save settings')->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->pageTextContains('Value must be greater that or equal to 1.');
+    // This asserts that the form is not submitted.
+    $this->assertSession()->pageTextContains('The name will be used in displayed options and edit forms.');
   }
 
 }
