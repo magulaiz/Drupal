@@ -6,7 +6,7 @@ namespace Drupal\Component\Gettext;
  * Gettext PO header handler.
  *
  * Possible Gettext PO header elements are explained in
- * http://www.gnu.org/software/gettext/manual/gettext.html#Header-Entry,
+ * https://www.gnu.org/software/gettext/manual/gettext.html#Header-Entry,
  * but we only support a subset of these directly.
  *
  * Example header:

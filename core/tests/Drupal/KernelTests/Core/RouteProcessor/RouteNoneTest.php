@@ -54,7 +54,7 @@ class RouteNoneTest extends KernelTestBase {
     $server = [
       'SCRIPT_NAME' => '/subdir/index.php',
       'SCRIPT_FILENAME' => $this->root . '/index.php',
-      'SERVER_NAME' => 'http://www.example.com',
+      'SERVER_NAME' => 'https://www.example.com',
     ];
     $request = Request::create('/subdir', 'GET', [], [], [], $server);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');
@@ -71,7 +71,7 @@ class RouteNoneTest extends KernelTestBase {
     $server = [
       'SCRIPT_NAME' => '/subdir/index.php',
       'SCRIPT_FILENAME' => $this->root . '/index.php',
-      'SERVER_NAME' => 'http://www.example.com',
+      'SERVER_NAME' => 'https://www.example.com',
     ];
     $request = Request::create('/subdir/node/add', 'GET', [], [], [], $server);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');
@@ -88,7 +88,7 @@ class RouteNoneTest extends KernelTestBase {
     $server = [
       'SCRIPT_NAME' => '/index.php',
       'SCRIPT_FILENAME' => $this->root . '/index.php',
-      'SERVER_NAME' => 'http://www.example.com',
+      'SERVER_NAME' => 'https://www.example.com',
     ];
     $request = Request::create('/', 'GET', [], [], [], $server);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');
@@ -105,7 +105,7 @@ class RouteNoneTest extends KernelTestBase {
     $server = [
       'SCRIPT_NAME' => '/index.php',
       'SCRIPT_FILENAME' => $this->root . '/index.php',
-      'SERVER_NAME' => 'http://www.example.com',
+      'SERVER_NAME' => 'https://www.example.com',
     ];
     $request = Request::create('/node/add', 'GET', [], [], [], $server);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');

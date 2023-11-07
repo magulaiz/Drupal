@@ -56,22 +56,22 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
     $violation_1 = 'This value should be of the correct primitive type.';
     return [
       ['invalid://not-a-valid-protocol', [$violation_0]],
-      ['http://www.example.com/', []],
+      ['https://www.example.com/', []],
       // Strings within parenthesis without leading space char.
-      ['http://www.example.com/strings_(string_within_parenthesis)', []],
+      ['https://www.example.com/strings_(string_within_parenthesis)', []],
       // Numbers within parenthesis without leading space char.
-      ['http://www.example.com/numbers_(9999)', []],
-      ['http://www.example.com/?name=ferret&color=purple', []],
-      ['http://www.example.com/page?name=ferret&color=purple', []],
-      ['http://www.example.com?a=&b[]=c&d[]=e&d[]=f&h==', []],
-      ['http://www.example.com#colors', []],
+      ['https://www.example.com/numbers_(9999)', []],
+      ['https://www.example.com/?name=ferret&color=purple', []],
+      ['https://www.example.com/page?name=ferret&color=purple', []],
+      ['https://www.example.com?a=&b[]=c&d[]=e&d[]=f&h==', []],
+      ['https://www.example.com#colors', []],
       // Use list of valid URLS from],
       // https://cran.r-project.org/web/packages/rex/vignettes/url_parsing.html.
       ["http://foo.com/blah_blah", []],
       ["http://foo.com/blah_blah/", []],
       ["http://foo.com/blah_blah_(wikipedia)", []],
       ["http://foo.com/blah_blah_(wikipedia)_(again)", []],
-      ["http://www.example.com/wpstyle/?p=364", []],
+      ["https://www.example.com/wpstyle/?p=364", []],
       ["https://www.example.com/foo/?bar=baz&inga=42&quux", []],
       ["http://✪df.ws/123", []],
       ["http://userid:password@example.com:8080", []],

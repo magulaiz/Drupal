@@ -7,10 +7,10 @@ namespace Drupal\Component\Diff\Engine;
  *
  * The algorithm used here is mostly lifted from the perl module
  * Algorithm::Diff (version 1.06) by Ned Konz, which is available at:
- *   http://www.perl.com/CPAN/authors/id/N/NE/NEDKONZ/Algorithm-Diff-1.06.zip
+ *   https://www.perl.com/CPAN/authors/id/N/NE/NEDKONZ/Algorithm-Diff-1.06.zip
  *
  * More ideas are taken from:
- *   http://www.ics.uci.edu/~eppstein/161/960229.html
+ *   https://www.ics.uci.edu/~eppstein/161/960229.html
  *
  * Some ideas (and a bit of code) are from analyze.c, from GNU
  * diffutils-2.7, which can be found at:

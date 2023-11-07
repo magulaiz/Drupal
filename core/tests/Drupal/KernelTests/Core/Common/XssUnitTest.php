@@ -51,9 +51,9 @@ class XssUnitTest extends KernelTestBase {
     // HTML.
     // Ensure \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() can
     // be used to return a plain-text string stripped of harmful protocols.
-    $url = 'javascript:http://www.example.com/?x=1&y=2';
-    $expected_plain = 'http://www.example.com/?x=1&y=2';
-    $expected_html = 'http://www.example.com/?x=1&amp;y=2';
+    $url = 'javascript:https://www.example.com/?x=1&y=2';
+    $expected_plain = 'https://www.example.com/?x=1&y=2';
+    $expected_html = 'https://www.example.com/?x=1&amp;y=2';
     $this->assertSame($expected_html, UrlHelper::filterBadProtocol($url), '\\Drupal\\Component\\Utility\\UrlHelper::filterBadProtocol() filters a URL and encodes it for HTML.');
     $this->assertSame($expected_plain, UrlHelper::stripDangerousProtocols($url), '\\Drupal\\Component\\Utility\\UrlHelper::stripDangerousProtocols() filters a URL and returns plain text.');
 

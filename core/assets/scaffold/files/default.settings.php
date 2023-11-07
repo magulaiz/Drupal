@@ -754,7 +754,7 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * will allow the site to only run from www.example.com.
  *
  * If you are running multisite, or if you are running your site from
- * different domain names (eg, you don't redirect http://www.example.com to
+ * different domain names (eg, you don't redirect https://www.example.com to
  * http://example.com), you should specify all of the host patterns that are
  * allowed by your site.
  *

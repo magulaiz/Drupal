@@ -27,7 +27,7 @@ class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
     // multiple leading slashes. However if a form is added to the 404 page that
     // submits back to the same URI this presents an open redirect
     // vulnerability. Also, Drupal 7 renders the same page for
-    // http://www.example.org/foo and http://www.example.org////foo.
+    // https://www.example.org/foo and https://www.example.org////foo.
     if (str_contains($path, '//')) {
       $path = preg_replace('/\/+/', '/', $path);
       $qs = $request->getQueryString();

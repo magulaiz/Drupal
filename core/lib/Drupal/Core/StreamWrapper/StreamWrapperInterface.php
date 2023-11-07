@@ -17,7 +17,7 @@ namespace Drupal\Core\StreamWrapper;
  * delimiter is in general just ":", not "://".  Because of this PHP limitation
  * and for consistency Drupal will only accept URIs of form "scheme://target".
  *
- * @see http://www.faqs.org/rfcs/rfc3986.html
+ * @see https://www.faqs.org/rfcs/rfc3986.html
  * @see http://bugs.php.net/bug.php?id=47070
  */
 interface StreamWrapperInterface extends PhpStreamWrapperInterface {
@@ -144,7 +144,7 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    * This function should return a URL that can be embedded in a web page
    * and accessed from a browser. For example, the external URL of
    * "youtube://random_string" might be
-   * "http://www.youtube.com/watch?v=random_string".
+   * "https://www.youtube.com/watch?v=random_string".
    *
    * @return string
    *   Returns a string containing a web accessible URL for the resource.

@@ -21,7 +21,7 @@ namespace Drupal\Component\Transliteration;
  *
  * Some parts of this code were derived from the MediaWiki project's UtfNormal
  * class, Copyright © 2004 Brion Vibber <brion@pobox.com>,
- * http://www.mediawiki.org/
+ * https://www.mediawiki.org/
  */
 class PhpTransliteration implements TransliterationInterface {
 

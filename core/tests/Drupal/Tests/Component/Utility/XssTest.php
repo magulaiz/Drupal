@@ -167,27 +167,27 @@ class XssTest extends TestCase {
         'HTML tag stripping -- simple script without special characters.',
       ],
       [
-        '<script src="http://www.example.com" />',
+        '<script src="https://www.example.com" />',
         'script',
         'HTML tag stripping -- empty script with source.',
       ],
       [
-        '<ScRipt sRc=http://www.example.com/>',
+        '<ScRipt sRc=https://www.example.com/>',
         'script',
         'HTML tag stripping evasion -- varying case.',
       ],
       [
-        "<script\nsrc\n=\nhttp://www.example.com/\n>",
+        "<script\nsrc\n=\nhttps://www.example.com/\n>",
         'script',
         'HTML tag stripping evasion -- multiline tag.',
       ],
       [
-        '<script/a src=http://www.example.com/a.js></script>',
+        '<script/a src=https://www.example.com/a.js></script>',
         'script',
         'HTML tag stripping evasion -- non whitespace character after tag name.',
       ],
       [
-        '<script/src=http://www.example.com/a.js></script>',
+        '<script/src=https://www.example.com/a.js></script>',
         'script',
         'HTML tag stripping evasion -- no space between tag and attribute.',
       ],
@@ -198,7 +198,7 @@ class XssTest extends TestCase {
         'HTML tag stripping evasion -- breaking HTML with nulls.',
       ],
       [
-        "<scrscriptipt src=http://www.example.com/a.js>",
+        "<scrscriptipt src=https://www.example.com/a.js>",
         'script',
         'HTML tag stripping evasion -- filter just removing "script".',
       ],
@@ -208,7 +208,7 @@ class XssTest extends TestCase {
         'HTML tag stripping evasion -- double opening brackets.',
       ],
       [
-        '<script src=http://www.example.com/a.js?<b>',
+        '<script src=https://www.example.com/a.js?<b>',
         'script',
         'HTML tag stripping evasion -- no closing tag.',
       ],
@@ -225,12 +225,12 @@ class XssTest extends TestCase {
         'HTML tag stripping evasion -- no scheme or ending slash.',
       ],
       [
-        '<script src=http://www.example.com/.a',
+        '<script src=https://www.example.com/.a',
         'script',
         'HTML tag stripping evasion -- no closing bracket.',
       ],
       [
-        '<script src=http://www.example.com/ <',
+        '<script src=https://www.example.com/ <',
         'script',
         'HTML tag stripping evasion -- opening instead of closing bracket.',
       ],
@@ -263,7 +263,7 @@ class XssTest extends TestCase {
       ],
       // Dangerous attributes removal.
       [
-        '<p onmouseover="http://www.example.com/">',
+        '<p onmouseover="https://www.example.com/">',
         'onmouseover',
         'HTML filter attributes removal -- events, no evasion.',
         ['p'],

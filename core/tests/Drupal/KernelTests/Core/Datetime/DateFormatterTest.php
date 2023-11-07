@@ -115,7 +115,7 @@ class DateFormatterTest extends KernelTestBase {
   /**
    * Tests that an RFC2822 formatted date always returns an English string.
    *
-   * @see http://www.faqs.org/rfcs/rfc2822.html
+   * @see https://www.faqs.org/rfcs/rfc2822.html
    *
    * @covers ::format
    */

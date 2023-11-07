@@ -98,8 +98,8 @@ class SqliteDateSql implements DateSqlInterface {
     // above SQLite format tokens only produce integers. However, the given
     // $format may contain 'Y-m-d', which results in a string.
     // @see \Drupal\sqlite\Driver\Database\sqlite\Connection::expandArguments()
-    // @see http://www.sqlite.org/lang_datefunc.html
-    // @see http://www.sqlite.org/lang_expr.html#castexpr
+    // @see https://www.sqlite.org/lang_datefunc.html
+    // @see https://www.sqlite.org/lang_expr.html#castexpr
     if (preg_match('/^(?:%\w)+$/', $format)) {
       $expression = "CAST($expression AS NUMERIC)";
     }

@@ -129,7 +129,7 @@ class AjaxCommandsTest extends UnitTestCase {
    * @group legacy
    */
   public function testStringAddCssCommand() {
-    $this->expectDeprecation("The Drupal\Core\Ajax\AddCssCommand with a string argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See http://www.drupal.org/node/3154948");
+    $this->expectDeprecation("The Drupal\Core\Ajax\AddCssCommand with a string argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3154948");
 
     $command = new AddCssCommand('<style>p{ text-decoration:blink; }</style>');
 

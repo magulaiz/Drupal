@@ -597,19 +597,19 @@ class FilterKernelTest extends KernelTestBase {
 
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
-    $f = (string) $filter->process('<a href="http://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process('<a href="https://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent -- no evasion.');
 
-    $f = (string) $filter->process('<A href="http://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process('<A href="https://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- capital A.');
 
-    $f = (string) $filter->process("<a/href=\"http://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process("<a/href=\"https://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- non whitespace character after tag name.');
 
-    $f = (string) $filter->process("<\0a\0 href=\"http://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process("<\0a\0 href=\"https://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- some nulls.');
 
-    $f = (string) $filter->process('<a href="http://www.example.com/" rel="follow">text</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process('<a href="https://www.example.com/" rel="follow">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNoNormalized($f, 'rel="follow"', 'Spam deterrent evasion -- with rel set - rel="follow" removed.');
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- with rel set - rel="nofollow" added.');
   }
@@ -657,7 +657,7 @@ class FilterKernelTest extends KernelTestBase {
       // HTTP URLs.
       'http://example.com or www.example.com' => [
         '<a href="http://example.com">http://example.com</a>' => TRUE,
-        '<a href="http://www.example.com">www.example.com</a>' => TRUE,
+        '<a href="https://www.example.com">www.example.com</a>' => TRUE,
       ],
       // MAILTO URLs.
       'person@example.com or mailto:person2@example.com or ' . $email_with_plus_sign . ' or ' . $long_email . ' but not ' . $too_long_email => [
@@ -676,9 +676,9 @@ class FilterKernelTest extends KernelTestBase {
       sftp://user@nonstandardport:222/dir
       ssh://192.168.0.100/srv/git/drupal.git' => [
         '<a href="http://trailingslash.com/">http://trailingslash.com/</a>' => TRUE,
-        '<a href="http://www.trailingslash.com/">www.trailingslash.com/</a>' => TRUE,
+        '<a href="https://www.trailingslash.com/">www.trailingslash.com/</a>' => TRUE,
         '<a href="http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
-        '<a href="http://www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
+        '<a href="https://www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
         '<a href="http://twitter.com/#!/example/status/22376963142324226">http://twitter.com/#!/example/status/22376963142324226</a>' => TRUE,
         '<a href="http://example.com/@user/">http://example.com/@user/</a>' => TRUE,
         '<a href="ftp://user:pass@ftp.example.com/~home/dir1">ftp://user:pass@ftp.example.com/~home/dir1</a>' => TRUE,
@@ -710,9 +710,9 @@ class FilterKernelTest extends KernelTestBase {
       // Domain name length.
       'www.ex.ex or www.example.example or www.toolongdomainexampledomainexampledomainexampledomainexampledomain or
       me@me.tv' => [
-        '<a href="http://www.ex.ex">www.ex.ex</a>' => TRUE,
-        '<a href="http://www.example.example">www.example.example</a>' => TRUE,
-        'http://www.toolong' => FALSE,
+        '<a href="https://www.ex.ex">www.ex.ex</a>' => TRUE,
+        '<a href="https://www.example.example">www.example.example</a>' => TRUE,
+        'https://www.toolong' => FALSE,
         '<a href="mailto:me@me.tv">me@me.tv</a>' => TRUE,
       ],
       // Absolute URL protocols.
@@ -748,27 +748,27 @@ class FilterKernelTest extends KernelTestBase {
     $tests = [
       'Partial URL with trailing period www.partial.com.
       Email with trailing comma person@example.com,
-      Absolute URL with trailing question http://www.absolute.com?
+      Absolute URL with trailing question https://www.absolute.com?
       Query string with trailing exclamation www.query.com/index.php?a=!
       Partial URL with 3 trailing www.partial.periods...
       Email with 3 trailing exclamations@example.com!!!
-      Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
+      Absolute URL and query string with 2 different punctuation characters (https://www.example.com/q=abc).
       Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
       Absolute URL with square brackets in the URL as well as surrounded brackets [https://www.drupal.org/?class[]=1]
       Absolute URL with quotes "https://www.drupal.org/sample"' => [
-        'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
+        'period <a href="https://www.partial.com">www.partial.com</a>.' => TRUE,
         'comma <a href="mailto:person@example.com">person@example.com</a>,' => TRUE,
-        'question <a href="http://www.absolute.com">http://www.absolute.com</a>?' => TRUE,
-        'exclamation <a href="http://www.query.com/index.php?a=">www.query.com/index.php?a=</a>!' => TRUE,
-        'trailing <a href="http://www.partial.periods">www.partial.periods</a>...' => TRUE,
+        'question <a href="https://www.absolute.com">https://www.absolute.com</a>?' => TRUE,
+        'exclamation <a href="https://www.query.com/index.php?a=">www.query.com/index.php?a=</a>!' => TRUE,
+        'trailing <a href="https://www.partial.periods">www.partial.periods</a>...' => TRUE,
         'trailing <a href="mailto:exclamations@example.com">exclamations@example.com</a>!!!' => TRUE,
-        'characters (<a href="http://www.example.com/q=abc">http://www.example.com/q=abc</a>).' => TRUE,
-        'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
+        'characters (<a href="https://www.example.com/q=abc">https://www.example.com/q=abc</a>).' => TRUE,
+        'brackets (<a href="https://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
         'brackets [<a href="https://www.drupal.org/?class[]=1">https://www.drupal.org/?class[]=1</a>]' => TRUE,
         'quotes "<a href="https://www.drupal.org/sample">https://www.drupal.org/sample</a>"' => TRUE,
       ],
       '(www.parenthesis.com/dir?a=1&b=2#a)' => [
-        '(<a href="http://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
+        '(<a href="https://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);
@@ -781,17 +781,17 @@ class FilterKernelTest extends KernelTestBase {
       </p>' => [
         '<p xmlns="www.namespace.com" />' => TRUE,
         '<p xmlns="http://namespace.com">' => TRUE,
-        'href="http://www.namespace.com"' => FALSE,
+        'href="https://www.namespace.com"' => FALSE,
         'href="http://namespace.com"' => FALSE,
         'An <a href="http://example.com" title="Read more at www.example.info...">anchor</a>.' => TRUE,
       ],
       'Not <a href="foo">www.relative.com</a> or <a href="http://absolute.com">www.absolute.com</a>
-      but <strong>http://www.strong.net</strong> or <em>www.emphasis.info</em>' => [
+      but <strong>https://www.strong.net</strong> or <em>www.emphasis.info</em>' => [
         '<a href="foo">www.relative.com</a>' => TRUE,
-        'href="http://www.relative.com"' => FALSE,
+        'href="https://www.relative.com"' => FALSE,
         '<a href="http://absolute.com">www.absolute.com</a>' => TRUE,
-        '<strong><a href="http://www.strong.net">http://www.strong.net</a></strong>' => TRUE,
-        '<em><a href="http://www.emphasis.info">www.emphasis.info</a></em>' => TRUE,
+        '<strong><a href="https://www.strong.net">https://www.strong.net</a></strong>' => TRUE,
+        '<em><a href="https://www.emphasis.info">www.emphasis.info</a></em>' => TRUE,
       ],
       'Test <code>using www.example.com the code tag</code>.
       ' => [
@@ -805,35 +805,35 @@ class FilterKernelTest extends KernelTestBase {
 
       Outro.
       ' => [
-        'href="http://www.example.com"' => TRUE,
+        'href="https://www.example.com"' => TRUE,
         'href="mailto:person@example.com"' => TRUE,
         'href="http://origin.example.com"' => TRUE,
-        'http://www.usage.example.com' => FALSE,
-        'http://www.example.info' => FALSE,
+        'https://www.usage.example.com' => FALSE,
+        'https://www.example.info' => FALSE,
         'Intro.' => TRUE,
         'Outro.' => TRUE,
       ],
       'Unknown tag <x>containing x and www.example.com</x>? And a tag <pooh>beginning with p and containing www.example.pooh with p?</pooh>
       ' => [
-        'href="http://www.example.com"' => TRUE,
-        'href="http://www.example.pooh"' => TRUE,
+        'href="https://www.example.com"' => TRUE,
+        'href="https://www.example.pooh"' => TRUE,
       ],
-      '<p>Test &lt;br/&gt;: This is a www.example17.com example <strong>with</strong> various http://www.example18.com tags. *<br/>
-       It is important www.example19.com to *<br/>test different URLs and http://www.example20.com in the same paragraph. *<br>
-       HTML www.example21.com soup by person@example22.com can literally http://www.example23.com contain *img*<img> anything. Just a www.example24.com with http://www.example25.com thrown in. www.example26.com from person@example27.com with extra http://www.example28.com.
+      '<p>Test &lt;br/&gt;: This is a www.example17.com example <strong>with</strong> various https://www.example18.com tags. *<br/>
+       It is important www.example19.com to *<br/>test different URLs and https://www.example20.com in the same paragraph. *<br>
+       HTML www.example21.com soup by person@example22.com can literally https://www.example23.com contain *img*<img> anything. Just a www.example24.com with https://www.example25.com thrown in. www.example26.com from person@example27.com with extra https://www.example28.com.
       ' => [
-        'href="http://www.example17.com"' => TRUE,
-        'href="http://www.example18.com"' => TRUE,
-        'href="http://www.example19.com"' => TRUE,
-        'href="http://www.example20.com"' => TRUE,
-        'href="http://www.example21.com"' => TRUE,
+        'href="https://www.example17.com"' => TRUE,
+        'href="https://www.example18.com"' => TRUE,
+        'href="https://www.example19.com"' => TRUE,
+        'href="https://www.example20.com"' => TRUE,
+        'href="https://www.example21.com"' => TRUE,
         'href="mailto:person@example22.com"' => TRUE,
-        'href="http://www.example23.com"' => TRUE,
-        'href="http://www.example24.com"' => TRUE,
-        'href="http://www.example25.com"' => TRUE,
-        'href="http://www.example26.com"' => TRUE,
+        'href="https://www.example23.com"' => TRUE,
+        'href="https://www.example24.com"' => TRUE,
+        'href="https://www.example25.com"' => TRUE,
+        'href="https://www.example26.com"' => TRUE,
         'href="mailto:person@example27.com"' => TRUE,
-        'href="http://www.example28.com"' => TRUE,
+        'href="https://www.example28.com"' => TRUE,
       ],
       '<script>
       <!--
@@ -845,7 +845,7 @@ class FilterKernelTest extends KernelTestBase {
         var exampleurl = "http://example.net";
       //--><!]]>
       </script>' => [
-        'href="http://www.example.com"' => FALSE,
+        'href="https://www.example.com"' => FALSE,
         'href="http://example.net"' => FALSE,
       ],
       '<style>body {
@@ -868,13 +868,13 @@ class FilterKernelTest extends KernelTestBase {
       <dd>http://example.com</dd>
       <dd>person@example.com</dd>
       <dt>Check www.example.net</dt>
-      <dd>Some text around http://www.example.info by person@example.info?</dd>
+      <dd>Some text around https://www.example.info by person@example.info?</dd>
       </dl>' => [
-        'href="http://www.example.com"' => TRUE,
+        'href="https://www.example.com"' => TRUE,
         'href="http://example.com"' => TRUE,
         'href="mailto:person@example.com"' => TRUE,
-        'href="http://www.example.net"' => TRUE,
-        'href="http://www.example.info"' => TRUE,
+        'href="https://www.example.net"' => TRUE,
+        'href="https://www.example.info"' => TRUE,
         'href="mailto:person@example.info"' => TRUE,
       ],
       '<div>www.div.com</div>
@@ -882,9 +882,9 @@ class FilterKernelTest extends KernelTestBase {
       <li>http://listitem.com</li>
       <li class="odd">www.class.listitem.com</li>
       </ul>' => [
-        '<div><a href="http://www.div.com">www.div.com</a></div>' => TRUE,
+        '<div><a href="https://www.div.com">www.div.com</a></div>' => TRUE,
         '<li><a href="http://listitem.com">http://listitem.com</a></li>' => TRUE,
-        '<li class="odd"><a href="http://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
+        '<li class="odd"><a href="https://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);
@@ -897,7 +897,7 @@ class FilterKernelTest extends KernelTestBase {
     ]);
     $tests = [
       'www.trimmed.com/d/ff.ext?a=1&b=2#a1' => [
-        '<a href="http://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/f…</a>' => TRUE,
+        '<a href="https://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/f…</a>' => TRUE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);

@@ -25,22 +25,22 @@ class IFrameUrlHelperTest extends UnitTestCase {
     return [
       'no domain' => [
         '/path/to/media.php',
-        'http://www.example.com/',
+        'https://www.example.com/',
         FALSE,
       ],
       'no base URL domain' => [
-        'http://www.example.com/media.php',
+        'https://www.example.com/media.php',
         '/invalid/base/url',
         FALSE,
       ],
       'same domain' => [
-        'http://www.example.com/media.php',
-        'http://www.example.com/',
+        'https://www.example.com/media.php',
+        'https://www.example.com/',
         FALSE,
       ],
       'different domain' => [
-        'http://www.example.com/media.php',
-        'http://www.example-assets.com/',
+        'https://www.example.com/media.php',
+        'https://www.example-assets.com/',
         TRUE,
       ],
       'same subdomain' => [

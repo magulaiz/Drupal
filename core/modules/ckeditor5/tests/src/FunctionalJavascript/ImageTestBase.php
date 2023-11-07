@@ -265,7 +265,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
     $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text');
     // Fill in link form balloon's <input> and hit "Save".
-    $url_input->setValue('http://www.drupal.org/association');
+    $url_input->setValue('https://www.drupal.org/association');
     $balloon->pressButton('Save');
 
     // Assert the "editingDowncast" HTML after making changes. First assert the
@@ -283,12 +283,12 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // Assert the "dataDowncast" HTML after making changes.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $this->assertCount(1, $xpath->query('//a[@href="http://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
-    $this->assertEmpty($xpath->query('//a[@href="http://www.drupal.org/association" and @class="trusted"]'));
+    $this->assertCount(1, $xpath->query('//a[@href="https://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
+    $this->assertEmpty($xpath->query('//a[@href="https://www.drupal.org/association" and @class="trusted"]'));
 
     // Add `class="trusted"` to the link.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $this->assertEmpty($xpath->query('//a[@href="http://www.drupal.org/association" and @class="trusted"]'));
+    $this->assertEmpty($xpath->query('//a[@href="https://www.drupal.org/association" and @class="trusted"]'));
     $this->pressEditorButton('Source');
     $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
     $this->assertNotEmpty($source_text_area);
@@ -299,15 +299,15 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // When unrestricted, additional attributes on links should be retained.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $this->assertCount($unrestricted ? 1 : 0, $xpath->query('//a[@href="http://www.drupal.org/association" and @class="trusted"]'));
+    $this->assertCount($unrestricted ? 1 : 0, $xpath->query('//a[@href="https://www.drupal.org/association" and @class="trusted"]'));
 
     // Save the entity whose text field is being edited.
     $page->pressButton('Save');
 
     // Assert the HTML the end user sees.
     $assert_session->elementExists('css', $unrestricted
-      ? 'a[href="http://www.drupal.org/association"].trusted img[src*="' . $src . '"]'
-      : 'a[href="http://www.drupal.org/association"] img[src*="' . $src . '"]');
+      ? 'a[href="https://www.drupal.org/association"].trusted img[src*="' . $src . '"]'
+      : 'a[href="https://www.drupal.org/association"] img[src*="' . $src . '"]');
 
     // Go back to edit the now *linked* <drupal-media>. Everything from this
     // point onwards is effectively testing "upcasting" and proving there is no
@@ -318,9 +318,9 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     // Assert the "dataDowncast" HTML before making changes.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $this->assertNotEmpty($xpath->query('//img[@alt="drupalimage test image"]'));
-    $this->assertNotEmpty($xpath->query('//a[@href="http://www.drupal.org/association"]'));
-    $this->assertNotEmpty($xpath->query('//a[@href="http://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
-    $this->assertCount($unrestricted ? 1 : 0, $xpath->query('//a[@href="http://www.drupal.org/association" and @class="trusted"]'));
+    $this->assertNotEmpty($xpath->query('//a[@href="https://www.drupal.org/association"]'));
+    $this->assertNotEmpty($xpath->query('//a[@href="https://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
+    $this->assertCount($unrestricted ? 1 : 0, $xpath->query('//a[@href="https://www.drupal.org/association" and @class="trusted"]'));
 
     // Tests unlinking images.
     $drupalimage->click();
@@ -347,7 +347,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // Assert the "dataDowncast" HTML after making changes.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $this->assertCount(0, $xpath->query('//a[@href="http://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
+    $this->assertCount(0, $xpath->query('//a[@href="https://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
     $this->assertCount(1, $xpath->query('//img[@alt="drupalimage test image"]'));
     $this->assertCount(0, $xpath->query('//a'));
   }

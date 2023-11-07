@@ -273,8 +273,8 @@ EOT;
   public function testFootnoteReferences() {
     global $base_path, $base_url;
     $source = <<<EOT
-<a href="http://www.example.com/node/1">Host and path</a>
-<br /><a href="http://www.example.com">Host, no path</a>
+<a href="https://www.example.com/node/1">Host and path</a>
+<br /><a href="https://www.example.com">Host, no path</a>
 <br /><a href="{$base_path}node/1">Path, no host</a>
 <br /><a href="node/1">Relative path</a>
 EOT;
@@ -287,8 +287,8 @@ Host, no path [2]
 Path, no host [3]
 Relative path [4]
 
-[1] http://www.example.com/node/1
-[2] http://www.example.com
+[1] https://www.example.com/node/1
+[2] https://www.example.com
 [3] $base_url/node/1
 [4] node/1
 

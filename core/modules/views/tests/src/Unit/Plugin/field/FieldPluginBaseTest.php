@@ -289,7 +289,7 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     // External URL.
     $data[] = ['https://www.example.com', 'https://www.example.com'];
-    $data[] = ['http://www.example.com', 'http://www.example.com'];
+    $data[] = ['https://www.example.com', 'https://www.example.com'];
     $data[] = ['www.example.com', '/www.example.com'];
 
     return $data;
@@ -380,7 +380,7 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     // External URL.
     $data[] = ['https://www.example.com', [], [], '<a href="https://www.example.com">value</a>'];
-    $data[] = ['www.example.com', ['external' => TRUE], [], '<a href="http://www.example.com">value</a>'];
+    $data[] = ['www.example.com', ['external' => TRUE], [], '<a href="https://www.example.com">value</a>'];
     $data[] = ['', ['external' => TRUE], [], 'value'];
 
     return $data;
@@ -636,7 +636,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   public function providerTestRenderAsExternalLinkWithPathAndTokens() {
     $data = [];
 
-    $data[] = ['{{ foo }}', ['{{ foo }}' => 'http://www.example.com'], '<a href="http://www.example.com">value</a>', ['context_path' => 'http://www.example.com']];
+    $data[] = ['{{ foo }}', ['{{ foo }}' => 'https://www.example.com'], '<a href="https://www.example.com">value</a>', ['context_path' => 'https://www.example.com']];
     $data[] = ['{{ foo }}', ['{{ foo }}' => ''], 'value', ['context_path' => '']];
     $data[] = ['{{ foo }}', ['{{ foo }}' => ''], 'value', ['context_path' => '', 'alter' => ['external' => TRUE]]];
     $data[] = ['{{ foo }}', ['{{ foo }}' => '/test-path/123'], '<a href="/test-path/123">value</a>', ['context_path' => '/test-path/123']];

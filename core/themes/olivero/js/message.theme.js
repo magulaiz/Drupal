@@ -41,7 +41,7 @@
 
     if (['error', 'warning', 'status', 'info'].indexOf(type) > -1) {
       svg =
-        '<div class="messages__icon"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">';
+        '<div class="messages__icon"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="https://www.w3.org/2000/svg">';
     }
 
     if (type === 'error') {

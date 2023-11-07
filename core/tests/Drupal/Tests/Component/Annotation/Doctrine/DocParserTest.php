@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * This class is a near-copy of
  * Doctrine\Tests\Common\Annotations\DocParserTest, which is part of the
- * Doctrine project: <http://www.doctrine-project.org>.  It was copied from
+ * Doctrine project: <https://www.doctrine-project.org>.  It was copied from
  * version 1.2.7.
  *
  * The supporting test fixture classes in

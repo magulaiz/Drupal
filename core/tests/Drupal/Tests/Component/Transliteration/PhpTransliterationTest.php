@@ -110,10 +110,10 @@ class PhpTransliterationTest extends TestCase {
     // cSpell:disable-next-line
     $two_byte = 'Ä Ö Ü Å Ø äöüåøhello';
     // This is a Cyrillic character that looks something like a "u". See
-    // http://www.unicode.org/charts/PDF/U0400.pdf
+    // https://www.unicode.org/charts/PDF/U0400.pdf
     $three_byte = html_entity_decode('&#x446;', ENT_NOQUOTES, 'UTF-8');
     // This is a Canadian Aboriginal character like a triangle. See
-    // http://www.unicode.org/charts/PDF/U1400.pdf
+    // https://www.unicode.org/charts/PDF/U1400.pdf
     $four_byte = html_entity_decode('&#x1411;', ENT_NOQUOTES, 'UTF-8');
     // These are two Gothic alphabet letters. See
     // https://wikipedia.org/wiki/Gothic_alphabet

@@ -946,7 +946,7 @@ EOD;
     // Convert field type.
     // Usually, we do this via a simple typecast 'USING fieldname::type'. But
     // the typecast does not work for conversions to bytea.
-    // @see http://www.postgresql.org/docs/current/static/datatype-binary.html
+    // @see https://www.postgresql.org/docs/current/static/datatype-binary.html
     $table_information = $this->queryTableInformation($table);
     $is_bytea = !empty($table_information->blob_fields[$field]);
     if ($spec['pgsql_type'] != 'bytea') {

@@ -818,7 +818,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#type' => 'checkbox',
         '#title' => $this->t('External server URL'),
         '#default_value' => $this->options['alter']['external'],
-        '#description' => $this->t("Links to an external server using a full URL: e.g. 'http://www.example.com' or 'www.example.com'."),
+        '#description' => $this->t("Links to an external server using a full URL: e.g. 'https://www.example.com' or 'www.example.com'."),
         '#states' => [
           'visible' => [
             ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
@@ -1467,7 +1467,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // If no scheme is provided in the $path, assign the default 'http://'.
       // This allows a URL of 'www.example.com' to be converted to
-      // 'http://www.example.com'.
+      // 'https://www.example.com'.
       // Only do this when flag for external has been set, $path doesn't contain
       // a scheme and $path doesn't have a leading /.
       if ($alter['external'] && !parse_url($path, PHP_URL_SCHEME) && !str_starts_with($path, '/')) {
@@ -1509,7 +1509,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // If the path is empty do not build a link around the given text and return
     // it as is.
-    // http://www.example.com URLs will not have a $url['path'], so check host as well.
+    // https://www.example.com URLs will not have a $url['path'], so check host as well.
     if (empty($url['path']) && empty($url['host']) && empty($url['fragment']) && empty($url['url'])) {
       return $text;
     }

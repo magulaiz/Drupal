@@ -36,7 +36,7 @@ class Email extends FormElement {
    * addresses longer than 256 characters are not normally useful. Erratum
    * 1690 was then released which corrected this value to 254 characters.
    * @see http://tools.ietf.org/html/rfc3696#section-3
-   * @see http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
+   * @see https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
    */
   const EMAIL_MAX_LENGTH = 254;
 

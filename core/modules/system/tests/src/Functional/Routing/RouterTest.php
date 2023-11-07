@@ -340,7 +340,7 @@ class RouterTest extends BrowserTestBase {
 
     // Ensure that external URLs in destination query params are not redirected
     // to.
-    $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test&destination=http://www.example.com%5c@drupal8alt.test';
+    $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test&destination=https://www.example.com%5c@drupal8alt.test';
     $this->drupalGet($url);
     $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1') . '?qs=test');
   }

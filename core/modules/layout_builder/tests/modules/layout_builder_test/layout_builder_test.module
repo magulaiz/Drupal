@@ -160,7 +160,7 @@ function layout_builder_test_preprocess_layout__twocol_section(&$vars) {
  * Implements hook_system_breadcrumb_alter().
  */
 function layout_builder_test_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
-  $breadcrumb->addLink(Link::fromTextAndUrl('External link', Url::fromUri('http://www.example.com')));
+  $breadcrumb->addLink(Link::fromTextAndUrl('External link', Url::fromUri('https://www.example.com')));
 }
 
 /**

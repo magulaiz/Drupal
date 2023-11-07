@@ -279,17 +279,17 @@ class UrlHelperTest extends TestCase {
   public static function providerTestParse() {
     return [
       [
-        'http://www.example.com/my/path',
+        'https://www.example.com/my/path',
         [
-          'path' => 'http://www.example.com/my/path',
+          'path' => 'https://www.example.com/my/path',
           'query' => [],
           'fragment' => '',
         ],
       ],
       [
-        'http://www.example.com/my/path?destination=home#footer',
+        'https://www.example.com/my/path?destination=home#footer',
         [
-          'path' => 'http://www.example.com/my/path',
+          'path' => 'https://www.example.com/my/path',
           'query' => [
             'destination' => 'home',
           ],
@@ -297,9 +297,9 @@ class UrlHelperTest extends TestCase {
         ],
       ],
       'absolute fragment, no query' => [
-        'http://www.example.com/my/path#footer',
+        'https://www.example.com/my/path#footer',
         [
-          'path' => 'http://www.example.com/my/path',
+          'path' => 'https://www.example.com/my/path',
           'query' => [],
           'fragment' => 'footer',
         ],
@@ -339,37 +339,37 @@ class UrlHelperTest extends TestCase {
         ],
       ],
       'URL with two question marks, not encoded' => [
-        'http://www.example.com/my/path?destination=home&search=http://www.example.com/search?limit=10#footer',
+        'https://www.example.com/my/path?destination=home&search=https://www.example.com/search?limit=10#footer',
         [
-          'path' => 'http://www.example.com/my/path',
+          'path' => 'https://www.example.com/my/path',
           'query' => [
             'destination' => 'home',
-            'search' => 'http://www.example.com/search?limit=10',
+            'search' => 'https://www.example.com/search?limit=10',
           ],
           'fragment' => 'footer',
         ],
       ],
       'URL with three question marks, not encoded' => [
-        'http://www.example.com/my/path?destination=home&search=http://www.example.com/search?limit=10&referer=http://www.example.com/my/path?destination=home&other#footer',
+        'https://www.example.com/my/path?destination=home&search=https://www.example.com/search?limit=10&referer=https://www.example.com/my/path?destination=home&other#footer',
         [
-          'path' => 'http://www.example.com/my/path',
+          'path' => 'https://www.example.com/my/path',
           'query' => [
             'destination' => 'home',
-            'search' => 'http://www.example.com/search?limit=10',
-            'referer' => 'http://www.example.com/my/path?destination=home',
+            'search' => 'https://www.example.com/search?limit=10',
+            'referer' => 'https://www.example.com/my/path?destination=home',
             'other' => '',
           ],
           'fragment' => 'footer',
         ],
       ],
       'URL with three question marks, encoded' => [
-        'http://www.example.com/my/path?destination=home&search=http://www.example.com/search?limit=10&referer=http%3A%2F%2Fwww.example.com%2Fmy%2Fpath%3Fdestination%3Dhome%26other#footer',
+        'https://www.example.com/my/path?destination=home&search=https://www.example.com/search?limit=10&referer=http%3A%2F%2Fwww.example.com%2Fmy%2Fpath%3Fdestination%3Dhome%26other#footer',
         [
-          'path' => 'http://www.example.com/my/path',
+          'path' => 'https://www.example.com/my/path',
           'query' => [
             'destination' => 'home',
-            'search' => 'http://www.example.com/search?limit=10',
-            'referer' => 'http://www.example.com/my/path?destination=home&other',
+            'search' => 'https://www.example.com/search?limit=10',
+            'referer' => 'https://www.example.com/my/path?destination=home&other',
           ],
           'fragment' => 'footer',
         ],
@@ -617,9 +617,9 @@ class UrlHelperTest extends TestCase {
       ['http://example.com/foo/bar', 'http://example.com/foo', TRUE],
       ['http://example.com/foo/bar', 'http://example.com/foo/', TRUE],
       // Different sub-domain.
-      ['http://example.com', 'http://www.example.com/', FALSE],
-      ['http://example.com/', 'http://www.example.com/', FALSE],
-      ['http://example.com/foo', 'http://www.example.com/', FALSE],
+      ['http://example.com', 'https://www.example.com/', FALSE],
+      ['http://example.com/', 'https://www.example.com/', FALSE],
+      ['http://example.com/foo', 'https://www.example.com/', FALSE],
       // Different TLD.
       ['http://example.com', 'http://example.ca', FALSE],
       ['http://example.com', 'http://example.ca/', FALSE],
@@ -631,7 +631,7 @@ class UrlHelperTest extends TestCase {
       ['http://example.com', 'http://example.com/bar', FALSE],
       ['http://example.com/bar', 'http://example.com/bar/', FALSE],
       // Ensure \ is normalized to / since some browsers do that.
-      ['http://www.example.ca\@example.com', 'http://example.com', FALSE],
+      ['https://www.example.ca\@example.com', 'http://example.com', FALSE],
       // Some browsers ignore or strip leading control characters.
       ["\x00//www.example.ca", 'http://example.com', FALSE],
     ];

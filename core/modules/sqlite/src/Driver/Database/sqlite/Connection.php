@@ -208,7 +208,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // Only attach the database once.
     if (!isset($this->attachedDatabases[$database])) {
       // In memory database use ':memory:' as database name. According to
-      // http://www.sqlite.org/inmemorydb.html it will open a unique database so
+      // https://www.sqlite.org/inmemorydb.html it will open a unique database so
       // attaching it twice is not a problem.
       $database_file = $this->connectionOptions['database'] !== ':memory:' ? $this->connectionOptions['database'] . '-' . $database : $this->connectionOptions['database'];
       $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $database_file, ':database' => $database]);
@@ -330,7 +330,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    *
    * The REGEXP operator is natively known, but not implemented by default.
    *
-   * @see http://www.sqlite.org/lang_expr.html#regexp
+   * @see https://www.sqlite.org/lang_expr.html#regexp
    */
   public static function sqlFunctionRegexp($pattern, $subject) {
     // preg_quote() cannot be used here, since $pattern may contain reserved

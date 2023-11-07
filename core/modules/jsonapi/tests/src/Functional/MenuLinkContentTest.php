@@ -162,7 +162,7 @@ class MenuLinkContentTest extends ResourceTestBase {
         'attributes' => [
           'title' => 'Drama llama',
           'link' => [
-            'uri' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
+            'uri' => 'https://www.urbandictionary.com/define.php?term=drama%20llama',
           ],
         ],
       ],
