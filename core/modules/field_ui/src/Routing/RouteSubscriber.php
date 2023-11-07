@@ -95,7 +95,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/fields/reset-add-field/{field_name}",
           [
-            '_controller' => FieldStorageAddController::class . '::openModalForm',
+            '_controller' => FieldStorageAddController::class . '::getFieldSelectionForm',
             '_title' => 'Add field',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],
@@ -106,7 +106,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/fields/add-field",
           [
-            '_controller' => FieldStorageAddController::class . '::openModalForm',
+            '_controller' => FieldStorageAddController::class . '::getFieldSelectionForm',
             '_title' => 'Add field',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],
