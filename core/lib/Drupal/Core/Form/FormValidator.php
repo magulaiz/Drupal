@@ -201,21 +201,15 @@ class FormValidator implements FormValidatorInterface {
    *   The current state of the form.
    * @param string $form_id
    *   The unique string identifying the form.
-   *
-   * @throws \BadMethodCallException
-   *   Throws a BadMethodCallException if validation has been canceled. This
-   *   method should not be called, if validation has been canceled.
    */
   protected function finalizeValidation(&$form, FormStateInterface &$form_state, $form_id) {
-    if ($form_state->isValidationCanceled()) {
-      throw new \BadMethodCallException('finalizeValidation() should not be called if validation has been canceled.');
-    }
-
-    // Delegate handling of form errors to a service.
+    // Display error messages attached to the elements that they occurred in.
     $this->formErrorHandler->handleFormErrors($form, $form_state);
 
-    // Mark this form as validated.
-    $form_state->setValidationComplete();
+    // Mark this form as validated if not canceled.
+    if (!$form_state->isValidationCanceled()) {
+      $form_state->setValidationComplete();
+    }
   }
 
   /**
