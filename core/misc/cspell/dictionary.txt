@@ -83,7 +83,6 @@ bebebe
 beforeclose
 beforecreate
 behat
-behaviour
 bergmann
 berne
 bgblue
