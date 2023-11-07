@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Resizable 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
@@ -11,7 +11,7 @@
 //>>group: Interactions
 //>>description: Enables resize functionality for any element.
 //>>docs: https://api.jqueryui.com/resizable/
-//>>demos: http://jqueryui.com/resizable/
+//>>demos: https://jqueryui.com/resizable/
 //>>css.structure: ../../themes/base/core.css
 //>>css.structure: ../../themes/base/resizable.css
 //>>css.theme: ../../themes/base/theme.css

@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Button 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
@@ -11,7 +11,7 @@
 //>>group: Widgets
 //>>description: Enhances a form with themeable buttons.
 //>>docs: https://api.jqueryui.com/button/
-//>>demos: http://jqueryui.com/button/
+//>>demos: https://jqueryui.com/button/
 //>>css.structure: ../../themes/base/core.css
 //>>css.structure: ../../themes/base/button.css
 //>>css.theme: ../../themes/base/theme.css

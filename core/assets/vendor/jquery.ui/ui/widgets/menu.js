@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Menu 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
@@ -11,7 +11,7 @@
 //>>group: Widgets
 //>>description: Creates nestable menus.
 //>>docs: https://api.jqueryui.com/menu/
-//>>demos: http://jqueryui.com/menu/
+//>>demos: https://jqueryui.com/menu/
 //>>css.structure: ../../themes/base/core.css
 //>>css.structure: ../../themes/base/menu.css
 //>>css.theme: ../../themes/base/theme.css

@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Support for jQuery core 1.8.x and newer 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.

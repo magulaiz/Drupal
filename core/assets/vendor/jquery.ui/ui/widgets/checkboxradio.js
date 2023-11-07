@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Checkboxradio 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
@@ -11,7 +11,7 @@
 //>>group: Widgets
 //>>description: Enhances a form with multiple themeable checkboxes or radio buttons.
 //>>docs: https://api.jqueryui.com/checkboxradio/
-//>>demos: http://jqueryui.com/checkboxradio/
+//>>demos: https://jqueryui.com/checkboxradio/
 //>>css.structure: ../../themes/base/core.css
 //>>css.structure: ../../themes/base/button.css
 //>>css.structure: ../../themes/base/checkboxradio.css

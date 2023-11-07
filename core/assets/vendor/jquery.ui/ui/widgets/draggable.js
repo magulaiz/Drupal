@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Draggable 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
@@ -11,7 +11,7 @@
 //>>group: Interactions
 //>>description: Enables dragging functionality for any element.
 //>>docs: https://api.jqueryui.com/draggable/
-//>>demos: http://jqueryui.com/draggable/
+//>>demos: https://jqueryui.com/draggable/
 //>>css.structure: ../../themes/base/draggable.css
 
 ( function( factory ) {

@@ -1,6 +1,6 @@
 /*!
  * jQuery UI Widget 1.13.2
- * http://jqueryui.com
+ * https://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
@@ -11,7 +11,7 @@
 //>>group: Core
 //>>description: Provides a factory for creating stateful widgets with a common API.
 //>>docs: https://api.jqueryui.com/jQuery.widget/
-//>>demos: http://jqueryui.com/widget/
+//>>demos: https://jqueryui.com/widget/
 
 ( function( factory ) {
 	"use strict";
