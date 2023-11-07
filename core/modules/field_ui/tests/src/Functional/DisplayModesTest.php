@@ -61,7 +61,6 @@ class DisplayModesTest extends BrowserTestBase {
 
     $this->drupalGet("/admin/structure/types/manage/article/$path");
     $assert_session->pageTextContains('Enable view modes');
-    //    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
     $page->clickLink("Add new $display_mode mode");
 
     // Article checkbox should be checked by default as the form is opened from
