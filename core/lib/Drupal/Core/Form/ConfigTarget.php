@@ -94,7 +94,7 @@ final class ConfigTarget {
    * @param array $array_parents
    *   The array to locate the element in the form.
    * @param array $form
-   *   The form array
+   *   The form array.
    *
    * @return self
    *   A ConfigTarget instance.
