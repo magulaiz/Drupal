@@ -293,9 +293,9 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       );
     $normalized = $jsonapi_doc_object->getNormalization();
 
-    // @see http://jsonapi.org/format/#document-jsonapi-object
+    // @see https://jsonapi.org/format/#document-jsonapi-object
     $this->assertEquals('1.0', $normalized['jsonapi']['version']);
-    $this->assertEquals('http://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
+    $this->assertEquals('https://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
 
     $this->assertSame($normalized['data']['attributes']['title'], 'dummy_title');
     $this->assertEquals($normalized['data']['id'], $this->node->uuid());
