@@ -134,6 +134,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       // end up in pagers and tablesort URLs.
       // @todo Remove this parsing once these are removed from the request in
       //   https://www.drupal.org/node/2504709.
+      $existing_page_state = $request->get('ajax_page_state');
       foreach ([
         'view_name',
         'view_display_id',
@@ -142,6 +143,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         'view_dom_id',
         'pager_element',
         'view_base_path',
+        'ajax_page_state',
         AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
         FormBuilderInterface::AJAX_FORM_REQUEST,
         MainContentViewSubscriber::WRAPPER_FORMAT,
@@ -169,7 +171,6 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Add all POST data, because AJAX is sometimes a POST and many things,
         // such as tablesorts, exposed filters and paging assume GET.
         $param_union = $request_clone->request->all() + $request_clone->query->all();
-        unset($param_union['ajax_page_state']);
         $request_clone->query->replace($param_union);
 
         // Overwrite the destination.
@@ -194,6 +195,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $preview = $view->preview($display_id, $args);
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
+        $request->query->set('ajax_page_state', $existing_page_state);
 
         return $response;
       }
