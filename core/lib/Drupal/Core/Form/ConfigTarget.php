@@ -73,7 +73,7 @@ final class ConfigTarget {
     if (is_string($propertyPath)) {
       $propertyPath = [$propertyPath];
     }
-    elseif (empty($fromConfig) || empty($toConfig)) {
+    elseif (count($propertyPath) > 1 && (empty($fromConfig) || empty($toConfig))) {
       throw new \LogicException('The $fromConfig and $toConfig arguments must be passed to ' . __METHOD__ . '() if multiple property paths are targted.');
     }
     $this->propertyPaths = $propertyPath;

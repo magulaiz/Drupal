@@ -98,11 +98,13 @@ abstract class ConfigFormBase extends FormBase {
       }
 
       $config = $this->config($target->configName);
+      $value = array_map($config->get(...), $target->propertyPaths);
       if ($target->fromConfig) {
-        $arguments = array_map($config->get(...), $target->propertyPaths);
-        $value = ($target->fromConfig)(...$arguments);
+        $value = ($target->fromConfig)(...$value);
       }
-
+      if (count($target->propertyPaths) === 1) {
+        $value = reset($value);
+      }
       $element['#default_value'] = $value;
     }
 
