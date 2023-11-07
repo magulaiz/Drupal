@@ -57,9 +57,11 @@
               .removeAttribute('data-hidden');
           }
           // Toggle the li tag of the matching link.
-          textMatch
-            ? $link.parent()[0].removeAttribute('data-hidden')
-            : $link.parent()[0].setAttribute('data-hidden', true);
+          if (textMatch) {
+            $link.parent()[0].removeAttribute('data-hidden');
+          } else {
+            $link.parent()[0].setAttribute('data-hidden', true);
+          }
         };
 
         // Filter if the length of the query is at least 2 characters.
