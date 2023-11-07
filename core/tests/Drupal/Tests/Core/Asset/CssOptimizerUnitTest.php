@@ -291,7 +291,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       'weight' => 0.012,
       'media' => 'all',
       'preprocess' => TRUE,
-      'data' => 'http://example.com/foo.js',
+      'data' => 'https://example.com/foo.js',
     ];
     $this->optimizer->optimize($css_asset);
   }

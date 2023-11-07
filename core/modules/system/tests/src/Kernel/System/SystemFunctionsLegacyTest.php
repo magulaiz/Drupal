@@ -34,7 +34,7 @@ class SystemFunctionsLegacyTest extends KernelTestBase {
    */
   public function testSystemRetrieveFile() {
     $this->expectDeprecation('system_retrieve_file is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3223362');
-    $retrieved_file = system_retrieve_file('http://example.com/foo.txt');
+    $retrieved_file = system_retrieve_file('https://example.com/foo.txt');
     $this->assertFalse($retrieved_file);
   }
 

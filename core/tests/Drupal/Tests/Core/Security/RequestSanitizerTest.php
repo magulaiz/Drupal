@@ -334,7 +334,7 @@ class RequestSanitizerTest extends UnitTestCase {
     // External URL without scheme is not allowed.
     $data[] = ['//example.com/test'];
     // External URL is not allowed.
-    $data[] = ['http://example.com'];
+    $data[] = ['https://example.com'];
     return $data;
   }
 

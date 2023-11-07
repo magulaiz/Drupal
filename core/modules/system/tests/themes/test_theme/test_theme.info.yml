@@ -58,7 +58,7 @@ libraries-override:
   # Use an absolute URI.
   core/loadjs:
     js:
-      assets/vendor/loadjs/loadjs.min.js: http://example.com/my_theme/js/loadjs.min.js
+      assets/vendor/loadjs/loadjs.min.js: https://example.com/my_theme/js/loadjs.min.js
 
 regions:
   content: Content

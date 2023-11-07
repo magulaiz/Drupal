@@ -68,7 +68,7 @@ class FieldLinkTest extends UnitTestCase {
       ],
       'Absolute URL without explicit protocol (protocol-relative)' => [
         '//example.com',
-        'http://example.com',
+        'https://example.com',
       ],
       'Absolute URL with non-standard characters' => [
         'https://www.ßÀÑÐ¥ƒå¢ë.com',

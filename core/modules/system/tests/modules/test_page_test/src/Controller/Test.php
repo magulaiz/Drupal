@@ -129,7 +129,7 @@ class Test {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function renderPipeInLink() {
-    return ['#markup' => '<a href="http://example.com">foo|bar|baz</a>'];
+    return ['#markup' => '<a href="https://example.com">foo|bar|baz</a>'];
   }
 
   public function escapedCharacters() {

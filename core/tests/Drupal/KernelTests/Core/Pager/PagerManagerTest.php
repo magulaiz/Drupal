@@ -21,7 +21,7 @@ class PagerManagerTest extends KernelTestBase {
     $test_parameters = [
       'other' => 'arbitrary',
     ];
-    $request = Request::create('http://example.com', 'GET', $test_parameters);
+    $request = Request::create('https://example.com', 'GET', $test_parameters);
 
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');
@@ -42,7 +42,7 @@ class PagerManagerTest extends KernelTestBase {
    * @covers ::findPage
    */
   public function testFindPage() {
-    $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
+    $request = Request::create('https://example.com', 'GET', ['page' => '0,10']);
 
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');

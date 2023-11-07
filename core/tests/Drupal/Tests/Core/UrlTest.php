@@ -325,8 +325,8 @@ class UrlTest extends UnitTestCase {
    * @covers ::getUri
    */
   public function testGetUriForExternalUrl() {
-    $url = Url::fromUri('http://example.com/test');
-    $this->assertEquals('http://example.com/test', $url->getUri());
+    $url = Url::fromUri('https://example.com/test');
+    $this->assertEquals('https://example.com/test', $url->getUri());
   }
 
   /**
@@ -414,7 +414,7 @@ class UrlTest extends UnitTestCase {
    * @covers ::getRouteName
    */
   public function testGetRouteNameWithExternalUrl() {
-    $url = Url::fromUri('http://example.com');
+    $url = Url::fromUri('https://example.com');
     $this->expectException(\UnexpectedValueException::class);
     $url->getRouteName();
   }
@@ -441,7 +441,7 @@ class UrlTest extends UnitTestCase {
    * @covers ::getRouteParameters
    */
   public function testGetRouteParametersWithExternalUrl() {
-    $url = Url::fromUri('http://example.com');
+    $url = Url::fromUri('https://example.com');
     $this->expectException(\UnexpectedValueException::class);
     $url->getRouteParameters();
   }
@@ -792,7 +792,7 @@ class UrlTest extends UnitTestCase {
       'disallowed_hostname_chars0' => ['(:;2&+h^'],
       'disallowed_hostname_chars1' => ['AKI@&hO@'],
       // Leading slash with a domain.
-      'leading_slash_with_domain' => ['/http://example.com'],
+      'leading_slash_with_domain' => ['/https://example.com'],
     ];
   }
 

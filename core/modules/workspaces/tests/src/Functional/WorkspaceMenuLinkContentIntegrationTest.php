@@ -71,7 +71,7 @@ class WorkspaceMenuLinkContentIntegrationTest extends BrowserTestBase {
     $menu_link_content->save();
 
     $pending_title = 'pending';
-    $pending_link = 'http://example.com';
+    $pending_link = 'https://example.com';
     $this->switchToWorkspace($stage);
     $menu_link_content->set('title', $pending_title);
     $menu_link_content->set('link', [['uri' => $pending_link]]);

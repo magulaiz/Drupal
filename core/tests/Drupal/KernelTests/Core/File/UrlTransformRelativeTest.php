@@ -46,7 +46,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
         'example.com',
         80,
         '',
-        'http://example.com/page',
+        'https://example.com/page',
         '/page',
       ],
       'https' => [
@@ -74,15 +74,15 @@ class UrlTransformRelativeTest extends KernelTestBase {
         'example.com',
         80,
         '',
-        'http://exampleXcom/page',
-        'http://exampleXcom/page',
+        'https://exampleXcom/page',
+        'https://exampleXcom/page',
       ],
       'http files on different port than the web request' => [
         'example.com',
         80,
         '',
-        'http://example.com:9000/page',
-        'http://example.com:9000/page',
+        'https://example.com:9000/page',
+        'https://example.com:9000/page',
       ],
       'https files on different port than the web request' => [
         'example.com',

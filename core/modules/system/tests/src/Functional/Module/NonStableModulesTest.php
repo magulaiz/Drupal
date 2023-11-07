@@ -193,7 +193,7 @@ class NonStableModulesTest extends BrowserTestBase {
       'link',
       'The Deprecated module module is deprecated. (more information)',
     ]);
-    $this->assertEquals('http://example.com/deprecated', $more_information_link->getAttribute('href'));
+    $this->assertEquals('https://example.com/deprecated', $more_information_link->getAttribute('href'));
 
     // There should be a warning about enabling deprecated modules, but no
     // warnings about experimental modules.
@@ -261,7 +261,7 @@ class NonStableModulesTest extends BrowserTestBase {
       'link',
       'The Deprecated module with non deprecated dependency module is deprecated. (more information)',
     ]);
-    $this->assertEquals('http://example.com/deprecated', $more_information_link->getAttribute('href'));
+    $this->assertEquals('https://example.com/deprecated', $more_information_link->getAttribute('href'));
 
     // There should be a warning about enabling deprecated modules, but no
     // warnings about experimental modules.
@@ -369,7 +369,7 @@ class NonStableModulesTest extends BrowserTestBase {
       'link',
       'The Deprecated module module is deprecated. (more information)',
     ]);
-    $this->assertEquals('http://example.com/deprecated', $more_information_link->getAttribute('href'));
+    $this->assertEquals('https://example.com/deprecated', $more_information_link->getAttribute('href'));
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.

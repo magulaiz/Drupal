@@ -55,7 +55,7 @@ class IFrameUrlHelperTest extends UnitTestCase {
       ],
       'subdomain and top-level domain' => [
         'http://assets.example.com/media.php',
-        'http://example.com/',
+        'https://example.com/',
         TRUE,
       ],
     ];

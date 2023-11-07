@@ -563,10 +563,10 @@ class AjaxCommandsTest extends UnitTestCase {
    * @covers \Drupal\Core\Ajax\RedirectCommand
    */
   public function testRedirectCommand() {
-    $command = new RedirectCommand('http://example.com');
+    $command = new RedirectCommand('https://example.com');
     $expected = [
       'command' => 'redirect',
-      'url' => 'http://example.com',
+      'url' => 'https://example.com',
     ];
 
     $this->assertEquals($expected, $command->render());
