@@ -316,10 +316,28 @@ abstract class ConfigFormBase extends FormBase {
     foreach ($map as $target) {
       if ($target->configName === $config->getName()) {
         $value = $form_state->getValue($target->elementParents);
-        if ($target->toConfig) {
-          $value = call_user_func($target->toConfig, $value);
+        try {
+          if ($target->toConfig) {
+            $arguments = [$value];
+            // @todo expand and make it work for all possible callables
+            // @see https://github.com/technically-php/callable-reflection
+            if (is_string($target->toConfig) && str_contains($target->toConfig, '::')) {
+              [$class, $method] = explode('::', $target->toConfig);
+              $reflection = new \ReflectionMethod($class, $method);
+              // If the second parameter is a FormState object, pass it.
+              if (count($reflection->getParameters()) > 1 && $reflection->getParameters()[1]->getType()->getName() === FormStateInterface::class) {
+                $arguments[] = $form_state;
+              }
+            }
+            $value = call_user_func_array($target->toConfig, $arguments);
+          }
+          $config->set($target->propertyPath, $value);
         }
-        $config->set($target->propertyPath, $value);
+        catch (\OutOfBoundsException) {
+          // The "toConfig" callable indicated that this form value does not
+          // correspond to any value needing to be set. Typical use case: some
+          // property path must only be set conditionally.
+        }
       }
     }
   }
