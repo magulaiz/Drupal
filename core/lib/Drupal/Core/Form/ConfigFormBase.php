@@ -133,11 +133,12 @@ abstract class ConfigFormBase extends FormBase {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
+      /** @var \Drupal\Core\Form\ConfigTarget|string $target */
       $target = $element['#config_target'];
-      if ($target instanceof ConfigTarget) {
-        $target = $target->configName . ':' . $target->propertyPath;
+      if (!$target instanceof ConfigTarget) {
+        $target = ConfigTarget::fromString($target);
       }
-      $map[$target] = $element['#array_parents'];
+      $map[$target->configName][$target->propertyPath] = $element['#array_parents'];
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -153,12 +154,7 @@ abstract class ConfigFormBase extends FormBase {
     assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
 
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
-    $config_names = array_unique(array_map(function (string $map_key) {
-      [$configName] = explode(':', $map_key, 2);
-      return $configName;
-    }, array_keys($map)));
-
-    foreach ($config_names as $config_name) {
+    foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
       try {
         static::copyFormValuesToConfig($config, $form_state, $form);
@@ -195,8 +191,8 @@ abstract class ConfigFormBase extends FormBase {
           $property_path = rtrim($property_path, '0123456789.');
         }
 
-        if (isset($map["$config_name:$property_path"])) {
-          $config_target = ConfigTarget::fromForm($map["$config_name:$property_path"], $form);
+        if (isset($map[$config_name][$property_path])) {
+          $config_target = ConfigTarget::fromForm($$map[$config_name][$property_path], $form);
           $form_element_name = implode('][', $config_target->elementParents);
         }
         else {
@@ -266,12 +262,7 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
-    $config_names = array_unique(array_map(function (string $map_key) {
-      [$configName] = explode(':', $map_key, 2);
-      return $configName;
-    }, array_keys($map)));
-
-    foreach ($config_names as $config_name) {
+    foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
       try {
         static::copyFormValuesToConfig($config, $form_state, $form);
@@ -307,11 +298,11 @@ abstract class ConfigFormBase extends FormBase {
     // If there's no map of config keys to form elements, this form does not
     // yet support config validation.
     // @see ::validateForm()
-    if ($map === NULL) {
+    if (empty($map[$config->getName()])) {
       throw new \BadMethodCallException();
     }
 
-    foreach ($map as $element_parents) {
+    foreach ($map[$config->getName()] as $element_parents) {
       $target = ConfigTarget::fromForm($element_parents, $form);
       if ($target->configName === $config->getName()) {
         $value = $form_state->getValue($target->elementParents);
