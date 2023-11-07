@@ -125,11 +125,21 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     // Display password field only for existing users or when user is allowed to
     // assign a password during registration.
     if (!$register) {
-      $form['account']['pass'] = [
-        '#type' => 'password_confirm',
-        '#size' => 25,
-        '#description' => $this->t('To change the current user password, enter the new password in both fields.'),
-      ];
+      if ($config->get('password_type_reveal')) {
+        $form['account']['pass'] = [
+          '#type' => 'password_unmask',
+          '#size' => 25,
+          '#title' => $this->t('Password'),
+          '#description' => $this->t('To change the current user password, enter the new password.'),
+        ];
+      }
+      else {
+        $form['account']['pass'] = [
+          '#type' => 'password_confirm',
+          '#size' => 25,
+          '#description' => $this->t('To change the current user password, enter the new password in both fields.'),
+        ];
+      }
 
       // To skip the current password field, the user must have logged in via a
       // one-time link and have the token in the URL. Store this in $form_state
@@ -169,12 +179,23 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       }
     }
     elseif (!$config->get('verify_mail') || $admin_create) {
-      $form['account']['pass'] = [
-        '#type' => 'password_confirm',
-        '#size' => 25,
-        '#description' => $this->t('Provide a password for the new account in both fields.'),
-        '#required' => TRUE,
-      ];
+      if ($config->get('password_type_reveal')) {
+        $form['account']['pass'] = [
+          '#type' => 'password_unmask',
+          '#size' => 25,
+          '#title' => $this->t('Password'),
+          '#description' => $this->t('To change the current user password, enter the new password.'),
+          '#required' => TRUE,
+        ];
+      }
+      else {
+        $form['account']['pass'] = [
+          '#type' => 'password_confirm',
+          '#size' => 25,
+          '#description' => $this->t('Provide a password for the new account in both fields.'),
+          '#required' => TRUE,
+        ];
+      }
     }
 
     // When not building the user registration form, prevent web browsers from

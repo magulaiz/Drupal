@@ -19,3 +19,8 @@
 .password-confirm-match {
   visibility: hidden;
 }
+@media all and (min-width: 600px) {
+  .password-parent .toggle-password {
+    margin: 0 0.75em;
+  }
+}

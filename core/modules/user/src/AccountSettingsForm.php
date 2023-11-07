@@ -143,6 +143,12 @@ class AccountSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Enable password strength indicator'),
       '#config_target' => 'user.settings:password_strength',
     ];
+    $form['registration_cancellation']['user_password_type_reveal'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable show password button'),
+      '#description' => $this->t('New users will be able to unmask their password to reveal what they have typed. With this setting enabled, users will not be required to enter a password twice, in two separate fields, to confirm during registration.'),
+      '#default_value' => $config->get('password_type_reveal'),
+    ];
     $form['registration_cancellation']['user_cancel_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('When cancelling a user account'),
