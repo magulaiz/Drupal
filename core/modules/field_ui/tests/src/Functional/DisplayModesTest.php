@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
-use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Tests\BrowserTestBase;
 
 /**
