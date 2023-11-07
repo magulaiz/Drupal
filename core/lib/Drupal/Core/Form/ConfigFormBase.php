@@ -192,7 +192,7 @@ abstract class ConfigFormBase extends FormBase {
         }
 
         if (isset($map[$config_name][$property_path])) {
-          $config_target = ConfigTarget::fromForm($$map[$config_name][$property_path], $form);
+          $config_target = ConfigTarget::fromForm($map[$config_name][$property_path], $form);
           $form_element_name = implode('][', $config_target->elementParents);
         }
         else {
