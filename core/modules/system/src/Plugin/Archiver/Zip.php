@@ -7,7 +7,7 @@ use Drupal\Core\Archiver\Zip as BaseZip;
 /**
  * Defines an archiver implementation for .zip files.
  *
- * @link https://php.net/zip
+ * @link http://php.net/zip
  *
  * @Archiver(
  *   id = "Zip",

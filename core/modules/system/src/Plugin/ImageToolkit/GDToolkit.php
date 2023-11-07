@@ -50,7 +50,7 @@ class GDToolkit extends ImageToolkitBase {
    *
    * @see \Drupal\system\Plugin\ImageToolkit\GDToolkit::parseFile()
    * @see \Drupal\system\Plugin\ImageToolkit\GDToolkit::setImage()
-   * @see https://php.net/manual/function.getimagesize.php
+   * @see http://php.net/manual/function.getimagesize.php
    */
   protected $preLoadInfo = NULL;
 

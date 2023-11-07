@@ -668,7 +668,7 @@ $settings['update_free_access'] = FALSE;
  *
  * To see what PHP settings are possible, including whether they can be set at
  * runtime (by using ini_set()), read the PHP documentation:
- * https://php.net/manual/ini.list.php
+ * http://php.net/manual/ini.list.php
  * See \Drupal\Core\DrupalKernel::bootEnvironment() for required runtime
  * settings and the .htaccess file for non-runtime settings.
  * Settings defined there should not be duplicated here so as to avoid conflict
@@ -681,7 +681,7 @@ $settings['update_free_access'] = FALSE;
  * output filter may not have sufficient memory to process it.  If you
  * experience this issue, you may wish to uncomment the following two lines
  * and increase the limits of these variables.  For more information, see
- * https://php.net/manual/pcre.configuration.php.
+ * http://php.net/manual/pcre.configuration.php.
  */
 # ini_set('pcre.backtrack_limit', 200000);
 # ini_set('pcre.recursion_limit', 200000);

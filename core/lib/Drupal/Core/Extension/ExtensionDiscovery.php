@@ -52,7 +52,7 @@ class ExtensionDiscovery {
   /**
    * Regular expression to match PHP function names.
    *
-   * @see https://php.net/manual/functions.user-defined.php
+   * @see http://php.net/manual/functions.user-defined.php
    */
   const PHP_FUNCTION_PATTERN = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
 

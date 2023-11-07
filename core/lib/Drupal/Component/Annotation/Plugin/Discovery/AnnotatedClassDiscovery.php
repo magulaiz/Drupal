@@ -180,9 +180,10 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   }
 
   /**
-   * Gets an array of PSR-4 namespaces to search for plugin classes.
+   * Gets PSR-4 namespaces and directories to search for plugin classes.
    *
-   * @return string[]
+   * @return array
+   *   An associative array of directories keyed by namespace.
    */
   protected function getPluginNamespaces() {
     return $this->pluginNamespaces;

@@ -165,7 +165,7 @@
  *     service, the \Drupal::httpClient() method is available.
  *   - \Drupal\Component\Serialization\Json (JSON encoding and decoding).
  *   - PHP has functions and classes for parsing XML; see
- *     https://php.net/manual/refs.xml.php
+ *     http://php.net/manual/refs.xml.php
  * @}
  */
 
@@ -1178,7 +1178,7 @@
  *
  * A runtime assertion is a statement that is expected to always be true at
  * the point in the code it appears at. They are tested using PHP's internal
- * @link https://php.net/assert assert() @endlink statement. If an
+ * @link http://php.net/assert assert() @endlink statement. If an
  * assertion is ever FALSE it indicates an error in the code or in module or
  * theme configuration files. User-provided configuration files should be
  * verified with standard control structures at all times, not just checked in
@@ -1486,7 +1486,7 @@
  * PSR-4, namespaces, class naming, and other conventions.
  *
  * A lot of the PHP code in Drupal is object oriented (OO), making use of
- * @link https://php.net/manual/language.oop5.php PHP classes, interfaces, and traits @endlink
+ * @link http://php.net/manual/language.oop5.php PHP classes, interfaces, and traits @endlink
  * (which are loosely referred to as "classes" in the rest of this topic). The
  * following conventions and standards apply to this version of Drupal:
  * - Each class must be in its own file.
@@ -1521,7 +1521,7 @@
  * Introduction to classes
  *
  * A lot of the PHP code in Drupal is object oriented (OO), making use of
- * @link https://php.net/manual/language.oop5.php PHP classes, interfaces, and traits. @endlink
+ * @link http://php.net/manual/language.oop5.php PHP classes, interfaces, and traits. @endlink
  * See the
  * @link oo_conventions Objected-oriented programming conventions @endlink
  * for more information.
@@ -1537,7 +1537,7 @@
  * Introduction to namespaces
  *
  * PHP classes, interfaces, and traits in Drupal are
- * @link https://php.net/manual/language.namespaces.rationale.php namespaced. @endlink
+ * @link http://php.net/manual/language.namespaces.rationale.php namespaced. @endlink
  * See the
  * @link oo_conventions Objected-oriented programming conventions @endlink
  * for more information.

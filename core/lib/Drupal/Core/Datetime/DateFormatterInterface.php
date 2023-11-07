@@ -27,7 +27,7 @@ interface DateFormatterInterface {
    *   get interpreted as date format characters.
    * @param string|null $timezone
    *   (optional) Time zone identifier, as described at
-   *   https://php.net/manual/timezones.php Defaults to the time zone used to
+   *   http://php.net/manual/timezones.php Defaults to the time zone used to
    *   display the page.
    * @param string|null $langcode
    *   (optional) Language code to translate to. NULL (default) means to use

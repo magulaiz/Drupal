@@ -17,7 +17,7 @@ interface ChmodInterface {
    * @param bool $recursive
    *   Pass TRUE to recursively chmod the entire directory specified in $path.
    *
-   * @see https://php.net/chmod
+   * @see http://php.net/chmod
    */
   public function chmodJailed($path, $mode, $recursive);
 

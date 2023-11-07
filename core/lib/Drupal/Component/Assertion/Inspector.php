@@ -48,7 +48,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and $callable returns TRUE on
    *   all members.
    *
-   * @see https://php.net/manual/language.types.callable.php
+   * @see http://php.net/manual/language.types.callable.php
    */
   public static function assertAll(callable $callable, $traversable) {
     if (static::assertTraversable($traversable)) {
@@ -143,7 +143,7 @@ class Inspector {
    * @return bool
    *   TRUE if $traversable is a 0-indexed array.
    *
-   * @see https://php.net/manual/language.types.array.php
+   * @see http://php.net/manual/language.types.array.php
    */
   public static function assertStrictArray($array) {
     if (!is_array($array)) {
@@ -400,7 +400,7 @@ class Inspector {
           foreach ($args as $instance) {
             if ($member instanceof $instance) {
               // We're continuing to the next member on the outer loop.
-              // @see https://php.net/continue
+              // @see http://php.net/continue
               continue 2;
             }
           }

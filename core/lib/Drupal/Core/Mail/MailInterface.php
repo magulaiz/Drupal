@@ -49,7 +49,7 @@ interface MailInterface {
    *     'user_password_reset'.
    *   - to: The mail address or addresses where the message will be sent to.
    *     The formatting of this string will be validated with the
-   *     @link https://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
+   *     @link http://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
    *     Some examples:
    *     - user@example.com
    *     - user@example.com, anotheruser@example.com

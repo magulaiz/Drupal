@@ -8,7 +8,7 @@ use Drupal\Core\TypedData\PrimitiveInterface;
  * Interface for binary data.
  *
  * The plain value of binary data is a PHP file resource, see
- * https://php.net/manual/language.types.resource.php. For setting the value
+ * http://php.net/manual/language.types.resource.php. For setting the value
  * a PHP file resource or an (absolute) stream resource URI may be passed.
  *
  * @ingroup typed_data

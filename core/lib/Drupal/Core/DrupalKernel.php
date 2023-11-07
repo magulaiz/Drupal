@@ -837,7 +837,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // spl_object_hash's return can be recycled. This still is not a 100%
     // guarantee to be unique but makes collisions incredibly difficult and even
     // then the interface would be preserved.
-    // @see https://php.net/spl_object_hash#refsect1-function.spl-object-hash-notes
+    // @see http://php.net/spl_object_hash#refsect1-function.spl-object-hash-notes
     return hash('sha256', get_class($object) . spl_object_hash($object));
   }
 

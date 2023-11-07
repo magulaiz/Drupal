@@ -18,8 +18,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *
  * @see https://tools.ietf.org/html/rfc5424#section-6.2.1
  * @see http://bugs.php.net/bug.php?id=18090
- * @see https://php.net/manual/function.syslog.php
- * @see https://php.net/manual/network.constants.php
+ * @see http://php.net/manual/function.syslog.php
+ * @see http://php.net/manual/network.constants.php
  * @see \Drupal\Core\Logger\RfcLogLevel::getLevels()
  *
  * @}

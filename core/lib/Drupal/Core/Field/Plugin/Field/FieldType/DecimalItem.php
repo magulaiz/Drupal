@@ -135,7 +135,7 @@ class DecimalItem extends NumericItemBase {
     $scale = rand($decimal_digits, $scale);
 
     // @see "Example #1 Calculate a random floating-point number" in
-    // https://php.net/manual/function.mt-getrandmax.php
+    // http://php.net/manual/function.mt-getrandmax.php
     $random_decimal = $min + mt_rand() / mt_getrandmax() * ($max - $min);
     $values['value'] = self::truncateDecimal($random_decimal, $scale);
     return $values;

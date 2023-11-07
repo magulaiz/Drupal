@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Maps PHP error constants to watchdog severity levels.
  *
  * The error constants are documented at
- * https://php.net/manual/errorfunc.constants.php
+ * http://php.net/manual/errorfunc.constants.php
  *
  * @ingroup logging_severity_levels
  */

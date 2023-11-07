@@ -80,7 +80,7 @@ class PhpMail implements MailInterface {
    * @return bool
    *   TRUE if the mail was successfully accepted, otherwise FALSE.
    *
-   * @see https://php.net/manual/function.mail.php
+   * @see http://php.net/manual/function.mail.php
    * @see \Drupal\Core\Mail\MailManagerInterface::mail()
    */
   public function mail(array $message) {

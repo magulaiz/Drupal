@@ -198,7 +198,7 @@ class FieldWebTest extends ViewTestBase {
    * @return array|false
    *   The return value of the xpath search. For details on the xpath string
    *   format and return values see the SimpleXML documentation,
-   *   https://php.net/manual/function.simplexml-element-xpath.php.
+   *   http://php.net/manual/function.simplexml-element-xpath.php.
    */
   protected function xpathContent($content, $xpath, array $arguments = []) {
     if ($elements = $this->parseContent($content)) {

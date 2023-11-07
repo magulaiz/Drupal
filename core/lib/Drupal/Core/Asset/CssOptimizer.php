@@ -233,7 +233,7 @@ class CssOptimizer implements AssetOptimizerInterface {
       // Remove certain whitespace.
       // There are different conditions for removing leading and trailing
       // whitespace.
-      // @see https://php.net/manual/regexp.reference.subpatterns.php
+      // @see http://php.net/manual/regexp.reference.subpatterns.php
       $contents = preg_replace('<
         # Do not strip any space from within single or double quotes
           (' . $double_quot . '|' . $single_quot . ')

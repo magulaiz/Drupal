@@ -36,7 +36,7 @@ class JsonApiSpec {
    * A character class, for use in regular expressions.
    *
    * @see https://jsonapi.org/format/#document-member-names-allowed-characters
-   * @see https://php.net/manual/en/regexp.reference.character-classes.php
+   * @see http://php.net/manual/en/regexp.reference.character-classes.php
    */
   const MEMBER_NAME_GLOBALLY_ALLOWED_CHARACTER_CLASS = '[a-zA-Z0-9\x{80}-\x{10FFFF}]';
 
@@ -49,7 +49,7 @@ class JsonApiSpec {
    * A character class, for use in regular expressions.
    *
    * @see https://jsonapi.org/format/#document-member-names-allowed-characters
-   * @see https://php.net/manual/en/regexp.reference.character-classes.php
+   * @see http://php.net/manual/en/regexp.reference.character-classes.php
    */
   const MEMBER_NAME_INNER_ALLOWED_CHARACTERS = "[a-zA-Z0-9\x{80}-\x{10FFFF}\-_ ]";
 

@@ -392,7 +392,7 @@ function theme_render_and_autoescape($arg) {
       $return = (string) $arg;
     }
     // You can't throw exceptions in the magic PHP __toString methods, see
-    // https://php.net/manual/language.oop5.magic.php#object.tostring so
+    // http://php.net/manual/language.oop5.magic.php#object.tostring so
     // we also support a toString method.
     elseif (method_exists($arg, 'toString')) {
       $return = $arg->toString();
