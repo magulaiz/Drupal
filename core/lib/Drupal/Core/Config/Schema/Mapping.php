@@ -220,7 +220,7 @@ class Mapping extends ArrayElement {
     // present in each per-type array of valid keys.
     $valid_keys_some = array_diff_key($valid_keys_per_type, $valid_keys_everywhere);
     $valid_keys_some_processed = array_map(
-      fn (array $keys) => array_filter($keys, fn (string $key) => !in_array($key, $statically_required_keys, TRUE)),
+      fn (array $keys) => array_values(array_filter($keys, fn (string $key) => !in_array($key, $statically_required_keys, TRUE))),
       $valid_keys_some
     );
     return $valid_keys_some_processed;
@@ -233,7 +233,7 @@ class Mapping extends ArrayElement {
    *   A list of optional keys given the values in this mapping.
    */
   public function getOptionalKeys(): array {
-    return array_diff($this->getValidKeys(), $this->getRequiredKeys());
+    return array_values(array_diff($this->getValidKeys(), $this->getRequiredKeys()));
   }
 
   /**
