@@ -7,6 +7,7 @@ namespace Drupal\field_ui\Controller;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 final class FieldStorageAddController extends ControllerBase {
+  use AjaxHelperTrait;
 
   /**
    * The name of the entity type.
@@ -190,16 +192,22 @@ final class FieldStorageAddController extends ControllerBase {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The field instance edit form.
    */
-  public function OpenModalForm(string $entity_type_id = NULL, string $bundle = NULL, string $field_name = NULL) {
+  public function openModalForm(string $entity_type_id = NULL, string $bundle = NULL, string $field_name = NULL) {
     $form = [];
     if (!empty($field_name)) {
       $this->tempStore->delete("$entity_type_id:$field_name");
     }
     $form = $this->buildForm($form, $entity_type_id, $bundle);
-    $response = new AjaxResponse();
-    $dialog_options['modal'] = TRUE;
-    $dialog_options['width'] = 1100;
-    $response->addCommand(new OpenModalDialogCommand('Add field', $form, $dialog_options));
+    if ($this->isAjax()) {
+      $response = new AjaxResponse();
+      $dialog_options['modal'] = TRUE;
+      $dialog_options['width'] = 1100;
+      $response->addCommand(new OpenModalDialogCommand('Add field', $form, $dialog_options));
+    }
+    else {
+      $response = $form;
+    }
+
     return $response;
   }
 

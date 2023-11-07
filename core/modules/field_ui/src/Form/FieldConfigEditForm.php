@@ -150,7 +150,7 @@ class FieldConfigEditForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
-      '#required' => TRUE,
+//      '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
@@ -443,6 +443,10 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+    // Additional validation to work when JS is disabled.
+    if (!$form_state->getValue('label')) {
+      $form_state->setErrorByName('label', $this->t('Label field is required.'));
+    }
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());

@@ -2,13 +2,13 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogWithUrl;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
@@ -284,6 +284,13 @@ class FieldStorageAddForm extends FormBase {
     if (!$form_state->getValue('field_options_wrapper') && isset($form['field_options_wrapper']['fields'])) {
       $form_state->setErrorByName('field_options_wrapper', $this->t('You need to select a subfield type.'));
     }
+    // Additional validation to work when JS is disabled.
+    if (!$form_state->getValue('label')) {
+      $form_state->setErrorByName('label', $this->t('Label field is required.'));
+    }
+    if (!$form_state->getValue('field_name')) {
+      $form_state->setErrorByName('label', $this->t('Machine-readable name field is required.'));
+    }
 
     // Field name validation.
     else {
@@ -329,7 +336,7 @@ class FieldStorageAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // nothing to do here.
+    $form_state->setRedirectUrl($this->getRedirectUrl($form_state->getValue('field_name')));
   }
 
   /**
