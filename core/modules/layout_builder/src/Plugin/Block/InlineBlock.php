@@ -2,9 +2,9 @@
 
 namespace Drupal\layout_builder\Plugin\Block;
 
-use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -236,9 +236,6 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface {
           'type' => $this->getDerivativeId(),
           'reusable' => FALSE,
         ]);
-      }
-      if ($this->blockContent instanceof RefinableDependentAccessInterface && $dependee = $this->getAccessDependency()) {
-        $this->blockContent->setAccessDependency($dependee);
       }
     }
     return $this->blockContent;

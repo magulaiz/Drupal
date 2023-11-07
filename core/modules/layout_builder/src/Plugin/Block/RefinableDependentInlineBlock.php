@@ -15,4 +15,17 @@ class RefinableDependentInlineBlock extends InlineBlock implements RefinableDepe
 
   use RefinableDependentAccessTrait;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntity() {
+    if (!isset($this->blockContent)) {
+      $this->blockContent = parent::getEntity();
+      if ($this->blockContent instanceof RefinableDependentAccessInterface && $dependee = $this->getAccessDependency()) {
+        $this->blockContent->setAccessDependency($dependee);
+      }
+    }
+    return $this->blockContent;
+  }
+
 }
