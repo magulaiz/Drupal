@@ -615,6 +615,18 @@ drupal.form:
     - core/drupal.debounce
     - core/once
 
+drupal.list-filter:
+  version: VERSION
+  js:
+    misc/list-filter.js: { weight: -1 }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.debounce
+    - core/once
+    - core/transliteration
+
 drupal.machine-name:
   version: VERSION
   js:
