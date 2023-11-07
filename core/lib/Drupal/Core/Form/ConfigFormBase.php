@@ -302,8 +302,8 @@ abstract class ConfigFormBase extends FormBase {
       throw new \BadMethodCallException();
     }
 
-    foreach ($map[$config->getName()] as $element_parents) {
-      $target = ConfigTarget::fromForm($element_parents, $form);
+    foreach ($map[$config->getName()] as $array_parents) {
+      $target = ConfigTarget::fromForm($array_parents, $form);
       if ($target->configName === $config->getName()) {
         $value = $form_state->getValue($target->elementParents);
         if ($target->toConfig) {
