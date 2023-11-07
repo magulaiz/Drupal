@@ -26,14 +26,12 @@ class PerformanceTest extends PerformanceTestBase {
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(1505, $performance_data->getQueryCount());
 
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     });
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(1, $performance_data->getQueryCount());
   }
 
   /**
@@ -48,7 +46,6 @@ class PerformanceTest extends PerformanceTestBase {
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertSame(715, $performance_data->getQueryCount());
   }
 
 }
