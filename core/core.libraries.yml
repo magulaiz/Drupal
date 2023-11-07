@@ -790,6 +790,14 @@ jquery:
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
+  dependencies:
+    - core/drupal
+    - core/jquery.functions
+
+jquery.functions:
+  version: VERSION
+  js:
+    misc/jquery.functions.shim.js: {}
 
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.
