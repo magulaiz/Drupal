@@ -21,7 +21,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for EntityDisplay edit forms.
