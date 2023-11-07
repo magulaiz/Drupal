@@ -21,7 +21,7 @@
  * Usage:
  * php -S localhost:8888 .ht.router.php
  *
- * @see http://php.net/manual/en/features.commandline.webserver.php
+ * @see https://php.net/manual/en/features.commandline.webserver.php
  */
 
 if (PHP_SAPI !== 'cli-server') {

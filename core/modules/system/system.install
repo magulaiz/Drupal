@@ -310,7 +310,7 @@ function system_requirements($phase) {
 
   // Check if the PHP version is below what Drupal supports.
   if (version_compare($phpversion, $minimum_supported_php) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version. It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.',
+    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version. It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support. See <a href="https://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.',
       [
         '%version' => $minimum_supported_php,
         '%recommended' => \Drupal::RECOMMENDED_PHP,
@@ -333,7 +333,7 @@ function system_requirements($phase) {
   // inform users of what's recommended, allowing them to take action before it
   // becomes urgent.
   elseif ($phase === 'runtime' && version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
-    $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
+    $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="https://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
     $requirements['php']['severity'] = REQUIREMENT_INFO;
 
     // PHP 8.1.0 through 8.1.5 have a known OPcache bug that can cause fatal
@@ -341,7 +341,7 @@ function system_requirements($phase) {
     // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
     //   https://www.drupal.org/i/3305726.
     if (version_compare(\Drupal::MINIMUM_PHP, '8.1.6') < 0) {
-      $requirements['php']['description'] = t('PHP %version has <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. This can be fixed by upgrading to PHP 8.1.6 or later. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', [
+      $requirements['php']['description'] = t('PHP %version has <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. This can be fixed by upgrading to PHP 8.1.6 or later. See <a href="https://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', [
         '%version' => $phpversion,
         ':bug_url' => 'https://github.com/php/php-src/issues/8164',
         ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
@@ -409,7 +409,7 @@ function system_requirements($phase) {
       $requirements['php_opcache'] = [
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="http://php.net/manual/opcache.installation.php" target="_blank">OPcache</a> installed on your server.'),
+        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="https://php.net/manual/opcache.installation.php" target="_blank">OPcache</a> installed on your server.'),
       ];
     }
     else {
@@ -1287,11 +1287,11 @@ function system_requirements($phase) {
   ];
   switch ($failed_check) {
     case 'mb_strlen':
-      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="http://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
+      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="https://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
       break;
 
     case 'mbstring.encoding_translation':
-      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Refer to the <a href="https://php.net/mbstring">PHP mbstring documentation</a> for more information.');
       break;
   }
 

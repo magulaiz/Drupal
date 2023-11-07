@@ -204,7 +204,7 @@ trait AssertContentTrait {
    *   the xpath string format and return values see the SimpleXML
    *   documentation.
    *
-   * @see http://php.net/manual/function.simplexml-element-xpath.php
+   * @see https://php.net/manual/function.simplexml-element-xpath.php
    */
   protected function xpath($xpath, array $arguments = []) {
     if ($this->parse()) {

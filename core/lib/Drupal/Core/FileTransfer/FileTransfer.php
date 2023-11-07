@@ -192,7 +192,7 @@ abstract class FileTransfer {
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    *
-   * @see http://php.net/chmod
+   * @see https://php.net/chmod
    */
   final public function chmod($path, $mode, $recursive = FALSE) {
     if (!($this instanceof ChmodInterface)) {

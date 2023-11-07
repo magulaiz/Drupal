@@ -93,7 +93,7 @@ interface MailManagerInterface extends PluginManagerInterface {
    * @param string $to
    *   The email address or addresses where the message will be sent to. The
    *   formatting of this string will be validated with the
-   *   @link http://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
+   *   @link https://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
    *   Some examples are:
    *   - user@example.com
    *   - user@example.com, anotheruser@example.com

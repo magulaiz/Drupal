@@ -5,7 +5,7 @@ namespace Drupal\Core\Archiver;
 /**
  * Defines an archiver implementation for .zip files.
  *
- * @link http://php.net/zip
+ * @link https://php.net/zip
  */
 class Zip implements ArchiverInterface {
 

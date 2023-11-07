@@ -43,8 +43,8 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * since PHP 5.4.0. Float timestamps confuse most PHP functions
  * (including date_create()).
  *
- * @see http://php.net/manual/reserved.variables.server.php
- * @see http://php.net/manual/function.time.php
+ * @see https://php.net/manual/reserved.variables.server.php
+ * @see https://php.net/manual/function.time.php
  *
  * @deprecated in drupal:8.3.0 and is removed from drupal:11.0.0.
  *   Use \Drupal::time()->getRequestTime();
@@ -399,8 +399,8 @@ function drupal_maintenance_theme() {
  * However, the above line of code does not work, because PHP only allows static
  * variables to be initialized by literal values, and does not allow static
  * variables to be assigned to references.
- * - http://php.net/manual/language.variables.scope.php#language.variables.scope.static
- * - http://php.net/manual/language.variables.scope.php#language.variables.scope.references
+ * - https://php.net/manual/language.variables.scope.php#language.variables.scope.static
+ * - https://php.net/manual/language.variables.scope.php#language.variables.scope.references
  * The example below shows the syntax needed to work around both limitations.
  * For benchmarks and more information, see https://www.drupal.org/node/619666.
  *

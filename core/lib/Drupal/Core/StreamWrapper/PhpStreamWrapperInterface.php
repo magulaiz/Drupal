@@ -5,7 +5,7 @@ namespace Drupal\Core\StreamWrapper;
 /**
  * Defines a generic PHP stream wrapper interface.
  *
- * @see http://php.net/manual/class.streamwrapper.php
+ * @see https://php.net/manual/class.streamwrapper.php
  */
 interface PhpStreamWrapperInterface {
 
@@ -20,7 +20,7 @@ interface PhpStreamWrapperInterface {
    *   Returns TRUE on success or FALSE on failure.
    *
    * @see closedir()
-   * @see http://php.net/manual/en/streamwrapper.dir-closedir.php
+   * @see https://php.net/manual/en/streamwrapper.dir-closedir.php
    */
   public function dir_closedir();
 
@@ -38,7 +38,7 @@ interface PhpStreamWrapperInterface {
    *   Returns TRUE on success or FALSE on failure.
    *
    * @see opendir()
-   * @see http://php.net/manual/en/streamwrapper.dir-opendir.php
+   * @see https://php.net/manual/en/streamwrapper.dir-opendir.php
    */
   public function dir_opendir($path, $options);
 
@@ -52,7 +52,7 @@ interface PhpStreamWrapperInterface {
    *   is no next file. Note, the return value will be casted to string.
    *
    * @see readdir()
-   * @see http://php.net/manual/en/streamwrapper.dir-readdir.php
+   * @see https://php.net/manual/en/streamwrapper.dir-readdir.php
    */
   public function dir_readdir();
 
@@ -69,7 +69,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see rewinddir()
    * @see PhpStreamWrapperInterface::dir_readdir()
-   * @see http://php.net/manual/en/streamwrapper.dir-rewinddir.php
+   * @see https://php.net/manual/en/streamwrapper.dir-rewinddir.php
    */
   public function dir_rewinddir();
 
@@ -96,7 +96,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see mkdir()
    * @see PhpStreamWrapperInterface::rmdir()
-   * @see http://php.net/manual/en/streamwrapper.mkdir.php
+   * @see https://php.net/manual/en/streamwrapper.mkdir.php
    */
   public function mkdir($path, $mode, $options);
 
@@ -121,7 +121,7 @@ interface PhpStreamWrapperInterface {
    *   Returns TRUE on success or FALSE on failure.
    *
    * @see rename()
-   * @see http://php.net/manual/en/streamwrapper.rename.php
+   * @see https://php.net/manual/en/streamwrapper.rename.php
    */
   public function rename($path_from, $path_to);
 
@@ -147,7 +147,7 @@ interface PhpStreamWrapperInterface {
    * @see rmdir()
    * @see PhpStreamWrapperInterface::mkdir()
    * @see PhpStreamWrapperInterface::unlink()
-   * @see http://php.net/manual/en/streamwrapper.rmdir.php
+   * @see https://php.net/manual/en/streamwrapper.rmdir.php
    */
   public function rmdir($path, $options);
 
@@ -166,7 +166,7 @@ interface PhpStreamWrapperInterface {
    *   supported.
    *
    * @see stream_select()
-   * @see http://php.net/manual/streamwrapper.stream-cast.php
+   * @see https://php.net/manual/streamwrapper.stream-cast.php
    */
   public function stream_cast($cast_as);
 
@@ -178,7 +178,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see fclose()
    * @see PhpStreamWrapperInterface::dir_closedir()
-   * @see http://php.net/manual/en/streamwrapper.stream-close.php
+   * @see https://php.net/manual/en/streamwrapper.stream-close.php
    */
   public function stream_close();
 
@@ -199,7 +199,7 @@ interface PhpStreamWrapperInterface {
    *   stream and if no more data is available to be read, or FALSE otherwise.
    *
    * @see feof()
-   * @see http://php.net/manual/en/streamwrapper.stream-eof.php
+   * @see https://php.net/manual/en/streamwrapper.stream-eof.php
    */
   public function stream_eof();
 
@@ -218,7 +218,7 @@ interface PhpStreamWrapperInterface {
    *   there was no data to store), or FALSE if the data could not be stored.
    *
    * @see fflush()
-   * @see http://php.net/manual/en/streamwrapper.stream-flush.php
+   * @see https://php.net/manual/en/streamwrapper.stream-flush.php
    */
   public function stream_flush();
 
@@ -242,7 +242,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see flock()
    * @see stream_set_blocking()
-   * @see http://php.net/manual/en/streamwrapper.stream-lock.php
+   * @see https://php.net/manual/en/streamwrapper.stream-lock.php
    */
   public function stream_lock($operation);
 
@@ -274,7 +274,7 @@ interface PhpStreamWrapperInterface {
    *   Returns TRUE on success or FALSE on failure. If $option is not
    *   implemented, FALSE should be returned.
    *
-   * @see http://php.net/manual/streamwrapper.stream-metadata.php
+   * @see https://php.net/manual/streamwrapper.stream-metadata.php
    */
   public function stream_metadata($path, $option, $value);
 
@@ -313,7 +313,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see fopen()
    * @see parse_url()
-   * @see http://php.net/manual/en/streamwrapper.stream-open.php
+   * @see https://php.net/manual/en/streamwrapper.stream-open.php
    */
   public function stream_open($path, $mode, $options, &$opened_path);
 
@@ -345,7 +345,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see fread()
    * @see fgets()
-   * @see http://php.net/manual/en/streamwrapper.stream-read.php
+   * @see https://php.net/manual/en/streamwrapper.stream-read.php
    */
   public function stream_read($count);
 
@@ -369,7 +369,7 @@ interface PhpStreamWrapperInterface {
    * @return bool
    *   TRUE if the position was updated, FALSE otherwise.
    *
-   * @see http://php.net/manual/streamwrapper.stream-seek.php
+   * @see https://php.net/manual/streamwrapper.stream-seek.php
    */
   public function stream_seek($offset, $whence = SEEK_SET);
 
@@ -416,7 +416,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see stat()
    * @see PhpStreamWrapperInterface::url_stat()
-   * @see http://php.net/manual/en/streamwrapper.stream-stat.php
+   * @see https://php.net/manual/en/streamwrapper.stream-stat.php
    */
   public function stream_stat();
 
@@ -430,7 +430,7 @@ interface PhpStreamWrapperInterface {
    *   Should return the current position of the stream.
    *
    * @see PhpStreamWrapperInterface::stream_tell()
-   * @see http://php.net/manual/en/streamwrapper.stream-tell.php
+   * @see https://php.net/manual/en/streamwrapper.stream-tell.php
    */
   public function stream_tell();
 
@@ -446,7 +446,7 @@ interface PhpStreamWrapperInterface {
    *   TRUE on success, FALSE otherwise.
    *
    * @see ftruncate()
-   * @see http://php.net/manual/en/streamwrapper.stream-truncate.php
+   * @see https://php.net/manual/en/streamwrapper.stream-truncate.php
    */
   public function stream_truncate($new_size);
 
@@ -466,7 +466,7 @@ interface PhpStreamWrapperInterface {
    *   none could be stored.
    *
    * @see fwrite()
-   * @see http://php.net/manual/en/streamwrapper.stream-write.php
+   * @see https://php.net/manual/en/streamwrapper.stream-write.php
    */
   public function stream_write($data);
 
@@ -489,7 +489,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see unlink()
    * @see PhpStreamWrapperInterface::rmdir()
-   * @see http://php.net/manual/en/streamwrapper.unlink.php
+   * @see https://php.net/manual/en/streamwrapper.unlink.php
    */
   public function unlink($path);
 
@@ -523,7 +523,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see stat()
    * @see PhpStreamWrapperInterface::stream_stat()
-   * @see http://php.net/manual/en/streamwrapper.url-stat.php
+   * @see https://php.net/manual/en/streamwrapper.url-stat.php
    */
   public function url_stat($path, $flags);
 

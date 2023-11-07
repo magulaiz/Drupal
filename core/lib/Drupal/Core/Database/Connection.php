@@ -24,7 +24,7 @@ use Drupal\Core\Pager\PagerManagerInterface;
  * of it to support special handling required by that database.
  * The most common database abstraction layer in PHP is PDO.
  *
- * @see http://php.net/manual/book.pdo.php
+ * @see https://php.net/manual/book.pdo.php
  */
 abstract class Connection {
 
@@ -316,7 +316,7 @@ abstract class Connection {
    *   \PDO::FETCH_OBJ, \PDO::FETCH_NUM, or a string representing the name of a
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
-   *   See http://php.net/manual/pdostatement.fetch.php
+   *   See https://php.net/manual/pdostatement.fetch.php
    * - return: (deprecated) Depending on the type of query, different return
    *   values may be meaningful. This directive instructs the system which type
    *   of return value is desired. The system will generally set the correct
@@ -2138,7 +2138,7 @@ abstract class Connection {
    * and similar). That makes the climbing logic very simple, and handles the
    * variable stack depth caused by the query builders.
    *
-   * See the @link http://php.net/debug_backtrace debug_backtrace() @endlink
+   * See the @link https://php.net/debug_backtrace debug_backtrace() @endlink
    * function.
    *
    * @return array

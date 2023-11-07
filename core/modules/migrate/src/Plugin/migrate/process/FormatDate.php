@@ -13,7 +13,7 @@ use Drupal\migrate\Row;
  *
  * Available configuration keys
  * - from_format: The source format string as accepted by
- *   @link http://php.net/manual/datetime.createfromformat.php \DateTime::createFromFormat. @endlink
+ *   @link https://php.net/manual/datetime.createfromformat.php \DateTime::createFromFormat. @endlink
  * - to_format: The destination format.
  * - from_timezone: String identifying the required source time zone, see
  *   DateTimePlus::__construct().

@@ -165,7 +165,7 @@ class Log {
    * and similar). That makes the climbing logic very simple, and handles the
    * variable stack depth caused by the query builders.
    *
-   * See the @link http://php.net/debug_backtrace debug_backtrace() @endlink
+   * See the @link https://php.net/debug_backtrace debug_backtrace() @endlink
    * function.
    *
    * @return array|null

@@ -21,7 +21,7 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *   An associative array of session ini settings.
    *
    * @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::__construct()
-   * @see http://php.net/manual/session.configuration.php
+   * @see https://php.net/manual/session.configuration.php
    * @see https://www.php.net/manual/session.security.ini.php
    */
   public function __construct($options = []) {

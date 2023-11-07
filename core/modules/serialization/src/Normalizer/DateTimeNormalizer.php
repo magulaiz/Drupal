@@ -22,7 +22,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
    *
    * @var string[]
    *
-   * @see http://php.net/manual/en/datetime.createfromformat.php
+   * @see https://php.net/manual/en/datetime.createfromformat.php
    */
   protected $allowedFormats = [
     'RFC 3339' => \DateTime::RFC3339,

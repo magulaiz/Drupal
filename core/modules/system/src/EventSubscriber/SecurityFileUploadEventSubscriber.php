@@ -49,7 +49,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
     $filename = trim($filename, '.');
 
     // Remove any null bytes. See
-    // http://php.net/manual/security.filesystem.nullbytes.php
+    // https://php.net/manual/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
 
     // Split up the filename by periods. The first part becomes the basename,
