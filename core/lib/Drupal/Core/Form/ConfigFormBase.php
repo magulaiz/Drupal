@@ -153,9 +153,10 @@ abstract class ConfigFormBase extends FormBase {
     assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
 
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
-    $config_names = array_unique(array_map(function (ConfigTarget $target) {
-      return $target->configName;
-    }, $map));
+    $config_names = array_unique(array_map(function (string $map_key) {
+      [$configName] = explode(':', $map_key, 2);
+      return $configName;
+    }, array_keys($map)));
 
     foreach ($config_names as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
@@ -265,9 +266,10 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
-    $config_names = array_unique(array_map(function (ConfigTarget $target) {
-      return $target->configName;
-    }, $map));
+    $config_names = array_unique(array_map(function (string $map_key) {
+      [$configName] = explode(':', $map_key, 2);
+      return $configName;
+    }, array_keys($map)));
 
     foreach ($config_names as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
