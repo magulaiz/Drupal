@@ -133,21 +133,6 @@
           $form.attr('data-drupal-form-submit-last', formValues);
         }
       }
-      once(
-        'ajax-conflict-prevention',
-        '[data-drupal-selector="field-config-edit-form"]',
-      ).forEach((form) => {
-        form.addEventListener('submit', () => {
-          once
-            .filter(
-              'drupal-ajax',
-              '[data-drupal-selector="field-config-edit-form"] [disabled]',
-            )
-            .forEach((disabledElement) => {
-              disabledElement.removeAttribute('disabled');
-            });
-        });
-      });
 
       $(once('form-single-submit', 'body')).on(
         'submit.singleSubmit',
