@@ -94,7 +94,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // Ensure the optional configuration is installed. Note that the overridden
     // ConfigTest install_test has a dependency on this
     // ConfigTest testing_config_overrides, so it has to exist.
-    $this->assertInstanceOf(EntityTestBundle::class, \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('testing_config_overrides'));
+    $this->assertInstanceOf(EntityTestBundle::class, \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('testing_config_overrides_module'));
 
     // Ensure that optional configuration from a profile is created if
     // dependencies are met.
@@ -140,7 +140,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertNull($config_test_storage->load('completely_new'));
 
-    // Ensure the authenticated role has the access tour permission.
+    // Ensure the authenticated role has the access entity_test_bundle permission.
     $role = Role::load(Role::AUTHENTICATED_ID);
     $this->assertTrue($role->hasPermission('administer entity_test_bundle content'), 'The Authenticated role has the "administer entity_test_bundle content" permission.');
     $this->assertEquals(['module' => ['entity_test']], $role->getDependencies());
