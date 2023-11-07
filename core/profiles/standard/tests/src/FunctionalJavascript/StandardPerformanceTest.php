@@ -14,7 +14,7 @@ use Drupal\node\NodeInterface;
  *
  * @group Common
  */
-class NoJavaScriptAnonymousTest extends PerformanceTestBase {
+class StandardPerformanceTest extends PerformanceTestBase {
 
   /**
    * {@inheritdoc}
