@@ -39,13 +39,6 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class CKEditor5ImageController extends ControllerBase {
 
   /**
-   * The currently authenticated user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a new CKEditor5ImageController.
    *
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
