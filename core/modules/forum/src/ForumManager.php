@@ -412,8 +412,13 @@ class ForumManager implements ForumManagerInterface {
     if (empty($this->forumStatistics)) {
       // Prime the statistics.
       $query = $this->connection->select('node_field_data', 'n');
-      $query->join('comment_entity_statistics', 'ces', $this->connection->condition('AND')->compare('n.nid', 'ces.entity_id')->condition('ces.field_name', 'comment_forum')->condition('ces.entity_type', 'node'));
-      $query->join('forum', 'f', $this->connection->condition('AND')->compare('n.vid', 'f.vid'));
+      $query->join('comment_entity_statistics', 'ces',
+        $query->joinCondition()
+          ->compare('n.nid', 'ces.entity_id')
+          ->condition('ces.field_name', 'comment_forum')
+          ->condition('ces.entity_type', 'node')
+      );
+      $query->join('forum', 'f', $query->joinCondition()->compare('n.vid', 'f.vid'));
       $query->addExpression('COUNT([n].[nid])', 'topic_count');
       $query->addExpression('SUM([ces].[comment_count])', 'comment_count');
       $this->forumStatistics = $query

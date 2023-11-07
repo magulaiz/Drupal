@@ -264,7 +264,11 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       ->select('search_index', 'i')
       ->extend(SearchQuery::class)
       ->extend(PagerSelectExtender::class);
-    $query->join('node_field_data', 'n', $this->databaseReplica->condition('AND')->compare('n.nid', 'i.sid')->compare('n.langcode', 'i.langcode'));
+    $query->join('node_field_data', 'n',
+      $query->joinCondition()
+        ->compare('n.nid', 'i.sid')
+        ->compare('n.langcode', 'i.langcode')
+    );
     $query->condition('n.status', 1)
       ->addTag('node_access')
       ->searchExpression($keys, $this->getPluginId());

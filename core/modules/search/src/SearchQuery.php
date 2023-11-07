@@ -430,7 +430,7 @@ class SearchQuery extends SelectExtender {
     // simple, we do not need them for normalization.
     if (!$this->simple) {
       $normalize_query->join('search_dataset', 'd',
-        $this->joinCondition()
+        $normalize_query->joinCondition()
           ->compare('i.sid', 'd.sid')
           ->compare('i.type', 'd.type')
           ->compare('i.langcode', 'd.langcode')
@@ -620,7 +620,7 @@ class SearchQuery extends SelectExtender {
 
     // Add conditions to query.
     $inner->join('search_dataset', 'd',
-      $this->joinCondition()
+      $inner->joinCondition()
         ->compare('i.sid', 'd.sid')
         ->compare('i.type', 'd.type')
     );
