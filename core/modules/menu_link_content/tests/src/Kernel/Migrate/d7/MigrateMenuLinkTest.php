@@ -62,7 +62,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     $this->assertEntity(469, 'und', 'Bing', static::MENU_NAME, 'Bing', TRUE, FALSE, ['attributes' => ['title' => 'Bing']], 'http://bing.com', 0);
     // This link has an i18n translation so the language is changed to the
     // default language of the source site.
-    $this->assertEntity(467, 'en', 'Google', static::MENU_NAME, 'Google', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'http://google.com', 0);
+    $this->assertEntity(467, 'en', 'Google', static::MENU_NAME, 'Google', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'https://google.com', 0);
     $this->assertEntity(468, 'en', 'Yahoo', static::MENU_NAME, 'english description', TRUE, FALSE, ['attributes' => ['title' => 'english description'], 'alter' => TRUE], 'http://yahoo.com', 0);
 
     // Tests migrating an external link with an undefined title attribute.
@@ -88,7 +88,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     foreach ($tree as $menu_link_tree_element) {
       $children += $menu_link_tree_element->hasChildren;
       if ($menu_link_tree_element->link->getUrlObject()->toString() == 'http://bing.com') {
-        $this->assertEquals('http://google.com', reset($menu_link_tree_element->subtree)->link->getUrlObject()->toString());
+        $this->assertEquals('https://google.com', reset($menu_link_tree_element->subtree)->link->getUrlObject()->toString());
         $google_found = TRUE;
       }
     }

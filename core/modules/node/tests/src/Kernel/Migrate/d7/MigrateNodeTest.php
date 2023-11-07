@@ -180,7 +180,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('title text', $node->field_images->title);
     $this->assertEquals('93', $node->field_images->width);
     $this->assertEquals('93', $node->field_images->height);
-    $this->assertEquals('http://google.com', $node->field_link->uri);
+    $this->assertEquals('https://google.com', $node->field_link->uri);
     $this->assertEquals('Click Here', $node->field_link->title);
     // Test that an email field is migrated.
     $this->assertEquals('default@example.com', $node->field_email->value);

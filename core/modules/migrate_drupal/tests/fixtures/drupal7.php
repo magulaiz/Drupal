@@ -7818,7 +7818,7 @@ $connection->insert('field_data_field_link')
   'revision_id' => '1',
   'language' => 'und',
   'delta' => '0',
-  'field_link_url' => 'http://google.com',
+  'field_link_url' => 'https://google.com',
   'field_link_title' => 'Click Here',
   'field_link_attributes' => 'a:1:{s:5:"title";s:10:"Click Here";}',
 ))
@@ -14492,7 +14492,7 @@ $connection->insert('field_revision_field_link')
   'revision_id' => '1',
   'language' => 'und',
   'delta' => '0',
-  'field_link_url' => 'http://google.com',
+  'field_link_url' => 'https://google.com',
   'field_link_title' => 'Click Here',
   'field_link_attributes' => 'a:1:{s:5:"title";s:10:"Click Here";}',
 ))
@@ -33879,7 +33879,7 @@ $connection->insert('menu_links')
   'menu_name' => 'menu-test-menu',
   'mlid' => '467',
   'plid' => '469',
-  'link_path' => 'http://google.com',
+  'link_path' => 'https://google.com',
   'router_path' => '',
   'link_title' => 'Google',
   'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:6:"Google";}}',
