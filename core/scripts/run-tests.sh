@@ -247,7 +247,7 @@ All arguments are long options.
               tests and then exits (no tests are run).
 
   --url       The base URL of the root directory of this Drupal checkout; e.g.:
-                http://drupal.test/
+                https://drupal.test/
               Required unless the Drupal root directory maps exactly to:
                 http://localhost:80/
               Use a https:// URL to force all tests to be run under SSL.

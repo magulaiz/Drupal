@@ -322,7 +322,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     // assertEmpty() is used instead of assertSame() because we can only test
     // for the presence of assets, not their loading order. The test is designed
     // to pass before and after the jQuery UI asset changes in
-    // http://drupal.org/node/3113400, which, by necessity, results in loading
+    // https://drupal.org/node/3113400, which, by necessity, results in loading
     // order changes.
     $this->assertEmpty(array_diff($js_loaded_by_page, $expected_js));
   }
