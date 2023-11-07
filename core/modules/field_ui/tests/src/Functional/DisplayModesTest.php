@@ -3,8 +3,6 @@
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
-use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -37,10 +35,6 @@ class DisplayModesTest extends BrowserTestBase {
       'type' => 'article',
       'name' => 'Article',
     ]);
-    $this->drupalCreateContentType([
-      'name' => 'Page',
-      'type' => 'page',
-    ]);
 
     $this->drupalPlaceBlock('local_actions_block');
     $user = $this->drupalCreateUser([
@@ -48,12 +42,6 @@ class DisplayModesTest extends BrowserTestBase {
       'administer node display',
       'administer node form display',
     ]);
-    // Create a new form mode 'foobar' for content.
-    EntityFormMode::create([
-      'id' => 'node.foobar',
-      'targetEntityType' => 'node',
-      'label' => 'Foobar',
-    ])->save();
 
     $this->drupalLogin($user);
   }
