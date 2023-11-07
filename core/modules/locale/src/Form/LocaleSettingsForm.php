@@ -2,8 +2,8 @@
 
 namespace Drupal\locale\Form;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\ConfigMultiTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -64,25 +64,24 @@ class LocaleSettingsForm extends ConfigFormBase {
       '#description' => $this->t('The source of translation files for automatic interface translation.') . ' ' . $description,
     ];
 
-    if ($config->get('translation.overwrite_not_customized') == FALSE) {
-      $default = LOCALE_TRANSLATION_OVERWRITE_NONE;
-    }
-    elseif ($config->get('translation.overwrite_customized') == TRUE) {
-      $default = LOCALE_TRANSLATION_OVERWRITE_ALL;
-    }
-    else {
-      $default = LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED;
-    }
     $form['overwrite'] = [
       '#type' => 'radios',
       '#title' => $this->t('Import behavior'),
-      '#default_value' => $default,
       '#options' => [
         LOCALE_TRANSLATION_OVERWRITE_NONE => $this->t("Don't overwrite existing translations."),
         LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED => $this->t('Only overwrite imported translations, customized translations are kept.'),
         LOCALE_TRANSLATION_OVERWRITE_ALL => $this->t('Overwrite existing translations.'),
       ],
       '#description' => $this->t('How to treat existing translations when automatically updating the interface translations.'),
+      '#config_target' => new ConfigMultiTarget(
+        'locale.settings',
+        [
+          'translation.overwrite_customized',
+          'translation.overwrite_not_customized',
+        ],
+        static::class . '::fromOverwriteSettings',
+        static::class . '::toOverwriteSettings',
+      ),
     ];
 
     return parent::buildForm($form, $form_state);
@@ -100,31 +99,66 @@ class LocaleSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Maps `locale.settings:translation.overwrite_*` to a UI form element value.
+   *
+   * @param bool $overwrite_customized
+   *   The `locale.settings:translation.overwrite_customized` value.
+   * @param bool $overwrite_not_customized
+   *   The `locale.settings:translation.overwrite_not_customized` value.
+   *
+   * @return string
+   *   One of:
+   *   - LOCALE_TRANSLATION_OVERWRITE_ALL
+   *   - LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED
+   *   - LOCALE_TRANSLATION_OVERWRITE_NONE
    */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    parent::copyFormValuesToConfig($config, $form_state);
+  public static function fromOverwriteSettings(bool $overwrite_customized, bool $overwrite_not_customized): string {
+    if ($overwrite_not_customized == FALSE) {
+      return LOCALE_TRANSLATION_OVERWRITE_NONE;
+    }
+    elseif ($overwrite_customized == TRUE) {
+      return LOCALE_TRANSLATION_OVERWRITE_ALL;
+    }
+    else {
+      return LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED;
+    }
+  }
 
-    assert($config->getName() === 'locale.settings');
-
-    switch ($form_state->getValue('overwrite')) {
+  /**
+   * Maps UI form element value to `locale.settings:translation.overwrite_*`.
+   *
+   * @param string $radio_option
+   *   One of the 3 provided options:
+   *   - LOCALE_TRANSLATION_OVERWRITE_ALL
+   *   - LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED
+   *   - LOCALE_TRANSLATION_OVERWRITE_NONE
+   *
+   * @return array
+   *   The values for the 2 `locale.settings:translation.overwrite_*` property
+   *   paths.
+   */
+  public static function toOverwriteSettings(string $radio_option): array {
+    switch ($radio_option) {
       case LOCALE_TRANSLATION_OVERWRITE_ALL:
-        $config
-          ->set('translation.overwrite_customized', TRUE)
-          ->set('translation.overwrite_not_customized', TRUE);
-        break;
+        return [
+          'translation.overwrite_customized' => TRUE,
+          'translation.overwrite_not_customized' => TRUE,
+        ];
 
       case LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED:
-        $config
-          ->set('translation.overwrite_customized', FALSE)
-          ->set('translation.overwrite_not_customized', TRUE);
-        break;
+        return [
+          'translation.overwrite_customized' => FALSE,
+          'translation.overwrite_not_customized' => TRUE,
+        ];
 
       case LOCALE_TRANSLATION_OVERWRITE_NONE:
-        $config
-          ->set('translation.overwrite_customized', FALSE)
-          ->set('translation.overwrite_not_customized', FALSE);
-        break;
+        return [
+          'translation.overwrite_customized' => FALSE,
+          'translation.overwrite_not_customized' => FALSE,
+        ];
+
+      default:
+        throw new \Exception();
     }
   }
 
