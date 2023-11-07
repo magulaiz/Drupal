@@ -810,10 +810,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return $return;
     }
     catch (\Exception $e) {
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
