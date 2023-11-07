@@ -113,7 +113,6 @@
       const originalAjaxBeforeSend = Drupal.Ajax.prototype.beforeSend;
       // eslint-disable-next-line func-names
       Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
-        console.log($('.field-config-edit-form [data-drupal-selector="edit-submit"]'));
         // Disable the submit button on ajax request initiation.
         $('.field-config-edit-form [data-drupal-selector="edit-submit"]').prop(
           'disabled',
