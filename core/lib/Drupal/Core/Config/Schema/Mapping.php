@@ -36,7 +36,7 @@ class Mapping extends ArrayElement {
    *   A list of valid keys given the values in this mapping.
    */
   public function getValidKeys(): array {
-    $all_keys = $this->getLocallyDefinedKeys() + $this->getInheritedKeys();
+    $all_keys = $this->getDefinedKeys();
     return array_keys($all_keys);
   }
 
@@ -47,7 +47,7 @@ class Mapping extends ArrayElement {
    *   A list of required keys given the values in this mapping.
    */
   public function getRequiredKeys(): array {
-    $all_keys = $this->getLocallyDefinedKeys() + $this->getInheritedKeys();
+    $all_keys = $this->getDefinedKeys();
     $required_keys = array_filter(
       $all_keys,
       fn (array $raw_schema_definition) => !array_key_exists('requiredKey', $raw_schema_definition),
@@ -56,41 +56,18 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Gets the mapping keys defined locally.
+   * Gets the keys defined for this mapping (locally defined + inherited).
    *
    * @return array
    *   Raw schema definitions: keys are mapping keys, values are their
    *   definitions.
    */
-  protected function getLocallyDefinedKeys(): array {
+  protected function getDefinedKeys(): array {
     $definition = $this->getDataDefinition();
     assert($definition instanceof MapDataDefinition && self::validateMappingConfigSchemaDefinition($definition));
     // f.e. when using `type: mapping`, no keys have been defined, but it's
     // still possible to define keys under `mapping: {…}`.
     return $definition->toArray()['mapping'];
-  }
-
-  /**
-   * Gets the mapping keys defined in the schema, including inheritance.
-   *
-   * TRICKY: $this->getDataDefinition() returns only the subset of the
-   * definition based on the values that are present
-   * TRICKY: $this->getTypedDataManager()->getDefinition() performs inheritance
-   * for us, but ignores the locally defined keys.
-   *
-   * @return array
-   *   Raw schema definitions: keys are mapping keys, values are their
-   *   definitions.
-   *
-   * @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
-   */
-  protected function getInheritedKeys(): array {
-    $definition = $this->getDataDefinition();
-    assert($definition instanceof MapDataDefinition);
-    $config_schema_definition = $this->getTypedDataManager()->getDefinition($definition->getDataType());
-    // f.e. when using `type: _core_config_info`, which extends `type: mapping`,
-    // we need the keys defined for `type: _core_config_info` to be inherited.
-    return $config_schema_definition['mapping'];
   }
 
   /**
