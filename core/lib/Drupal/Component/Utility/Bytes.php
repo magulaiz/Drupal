@@ -10,14 +10,14 @@ class Bytes {
   /**
    * The number of bytes in a kilobyte.
    *
-   * @see http://wikipedia.org/wiki/Kilobyte
+   * @see https://wikipedia.org/wiki/Kilobyte
    */
   const KILOBYTE = 1024;
 
   /**
    * The allowed suffixes of a bytes string in lowercase.
    *
-   * @see http://wikipedia.org/wiki/Kilobyte
+   * @see https://wikipedia.org/wiki/Kilobyte
    */
   const ALLOWED_SUFFIXES = [
     '',

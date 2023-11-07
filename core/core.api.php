@@ -78,9 +78,9 @@
  * Web services make it possible for applications and websites to read and
  * update information from other websites. There are several standard
  * techniques for providing web services, including:
- * - SOAP: http://wikipedia.org/wiki/SOAP
- * - XML-RPC: http://wikipedia.org/wiki/XML-RPC
- * - REST: http://wikipedia.org/wiki/Representational_state_transfer
+ * - SOAP: https://wikipedia.org/wiki/SOAP
+ * - XML-RPC: https://wikipedia.org/wiki/XML-RPC
+ * - REST: https://wikipedia.org/wiki/Representational_state_transfer
  * Drupal sites can both provide web services and integrate third-party web
  * services.
  *
@@ -253,7 +253,7 @@
  * - Exporting and importing configuration.
  *
  * The file storage format for configuration information in Drupal is
- * @link http://wikipedia.org/wiki/YAML YAML files. @endlink Configuration is
+ * @link https://wikipedia.org/wiki/YAML YAML files. @endlink Configuration is
  * divided into files, each containing one configuration object. The file name
  * for a configuration object is equal to the unique name of the configuration,
  * with a '.yml' extension. The default configuration files for each module are
