@@ -83,6 +83,7 @@ bebebe
 beforeclose
 beforecreate
 behat
+behaviour
 bergmann
 berne
 bgblue
@@ -619,7 +620,6 @@ nmsgstr
 nntp
 noaccess
 noadd
-noblanks
 nocache
 nocase
 nocookie
