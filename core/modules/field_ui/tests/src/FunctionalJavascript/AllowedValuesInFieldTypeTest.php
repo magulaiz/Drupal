@@ -44,10 +44,10 @@ class AllowedValuesInFieldTypeTest extends WebDriverTestBase {
       'type' => 'text',
     ])->save();
     FieldConfig::create([
-        'field_name' => 'field_text',
-        'entity_type' => 'node',
-        'bundle' => 'article',
-      ])->save();
+      'field_name' => 'field_text',
+      'entity_type' => 'node',
+      'bundle' => 'article',
+    ])->save();
     $this->drupalLogin($this->rootUser);
   }
 
