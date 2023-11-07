@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Util\PropertyPath;
  * This class calls out to some methods on the execution context marked as
  * internal. These methods are internal to the validator (which is implemented
  * by this class) but should not be called by users.
- * See http://symfony.com/doc/current/contributing/code/bc.html for more
+ * See https://symfony.com/doc/current/contributing/code/bc.html for more
  * information about @internal.
  *
  * @see \Drupal\Core\TypedData\Validation\RecursiveValidator::startContext()

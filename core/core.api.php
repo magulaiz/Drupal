@@ -736,7 +736,7 @@
  * @section sec_overview Overview of container, injection, and services
  * The Services and Dependency Injection Container concepts have been adopted by
  * Drupal from the
- * @link http://symfony.com/doc/current/components/dependency_injection.html
+ * @link https://symfony.com/doc/current/components/dependency_injection.html
  * Symfony DependencyInjection component. @endlink A "service" (such as
  * accessing the database, sending email, or translating user interface text) is
  * defined (given a name and an interface or at least a class that defines the
@@ -2507,7 +2507,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   can be used for dynamic routing and route altering; see the
  *   @link menu Menu and routing system topic @endlink for more information.
  *   They can also be used for other purposes; see
- *   http://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
+ *   https://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
  *   for more information.
  * - needs_destruction: Indicates that a destruct() method needs to be called
  *   at the end of a request to finalize operations, if this service was
@@ -2572,7 +2572,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * when an event is dispatched, a method is called on each registered
  * subscriber, allowing each one to react. For more on the general concept of
  * events, see
- * http://symfony.com/doc/current/components/event_dispatcher/introduction.html
+ * https://symfony.com/doc/current/components/event_dispatcher/introduction.html
  *
  * @section sec_dispatch Dispatching events
  * To dispatch an event, call the
