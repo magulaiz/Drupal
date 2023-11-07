@@ -2,7 +2,7 @@
 
 namespace Drupal\form_test\Form;
 
-use Drupal\Core\Config\Config;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 
 class NestedConfigTargetForm extends TreeConfigTargetForm {
@@ -34,41 +34,52 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
     $form['favorites']['first'] = [
       '#type' => 'textfield',
       '#title' => t('First choice'),
-      '#default_value' => 'Mango',
+      '#config_target' => new ConfigTarget(
+        'form_test.object',
+        'favorite_fruits',
+        fromConfig: static::class . '::getFirstIfExists',
+        toConfig: static::class . '::toFavoriteFruits',
+      ),
     ];
     $form['favorites']['second'] = [
       '#type' => 'textfield',
       '#title' => t('Second choice'),
-      '#default_value' => 'Orange',
+      '#config_target' => new ConfigTarget(
+        'form_test.object',
+        'favorite_fruits.1',
+        toConfig: static::class . '::nothing',
+      ),
+      '#states' => [
+        // @todo hide this unless the first favorite is not empty
+      ],
     ];
     return parent::buildForm($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    // The 1:1 things can be handled by the base class.
-    parent::copyFormValuesToConfig($config, $form_state);
-
-    // Not every config property is mapped 1:1 to a form element.
-    $config->set('favorite_fruits', [
-      0 => $form_state->getValue(['favorites', 'first']),
-      1 => $form_state->getValue(['favorites', 'second']),
-    ]);
+  public static function getFirstIfExists(?array $favorite_fruits) : ?string {
+    $favorite_fruits = $favorite_fruits ?? [];
+    return array_key_exists(0, $favorite_fruits) ? $favorite_fruits[0] : 'Mango';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected static function mapConfigKeyToFormElementName(string $config_name, string $key) : string {
-    if ($key === 'favorite_fruits.0') {
-      return 'favorites][first';
+  public static function getSecondIfExists(?array $favorite_fruits) : ?string {
+    $favorite_fruits = $favorite_fruits ?? [];
+    return array_key_exists(1, $favorite_fruits) ? $favorite_fruits[1] : 'Orange';
+  }
+
+  public static function toFavoriteFruits(string $first, FormStateInterface $form_state) : array {
+    $favorites = [];
+    if (!empty($first)) {
+      $favorites[] = $first;
     }
-    if ($key === 'favorite_fruits.1') {
-      return 'favorites][second';
+    $second = $form_state->getValue(['favorites', 'second']);
+    if (!empty($second)) {
+      $favorites[] = $second;
     }
-    return '';
+    return $favorites;
+  }
+
+  public static function nothing() : array {
+    throw new \OutOfBoundsException();
   }
 
 }

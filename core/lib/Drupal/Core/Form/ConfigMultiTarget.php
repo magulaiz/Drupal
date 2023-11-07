@@ -22,7 +22,7 @@ final class ConfigMultiTarget {
   public array $elementParents;
 
   /**
-   * Constructs a ConfigTarget object.
+   * Constructs a ConfigMultiTarget object.
    *
    * @param string $configName
    *   The name of the config object being read from or written to, e.g.
