@@ -24,6 +24,13 @@ final class ConfigTarget {
   public array $elementParents;
 
   /**
+   * The property paths to target.
+   *
+   * @var string[]
+   */
+  public readonly array $propertyPaths;
+
+  /**
    * Transforms a value loaded from config before it gets displayed by the form.
    *
    * @var \Closure|null
@@ -43,8 +50,8 @@ final class ConfigTarget {
    * @param string $configName
    *   The name of the config object being read from or written to, e.g.
    *   `system.site`.
-   * @param string $propertyPath
-   *   The property path being read or written, e.g., `page.front`.
+   * @param string|array $propertyPath
+   *   The property path(s) being read or written, e.g., `page.front`.
    * @param callable|null $fromConfig
    *   (optional) A callback which should transform the value loaded from
    *   config before it gets displayed by the form. If NULL, no transformation
@@ -56,12 +63,20 @@ final class ConfigTarget {
    */
   public function __construct(
     public readonly string $configName,
-    public readonly string $propertyPath,
+    string|array $propertyPath,
     ?callable $fromConfig = NULL,
     ?callable $toConfig = NULL,
   ) {
     $this->fromConfig = $fromConfig ? $fromConfig(...) : NULL;
     $this->toConfig = $toConfig ? $toConfig(...) : NULL;
+
+    if (is_string($propertyPath)) {
+      $propertyPath = [$propertyPath];
+    }
+    elseif (empty($fromConfig) || empty($toConfig)) {
+      throw new \LogicException('The $fromConfig and $toConfig arguments must be passed to ' . __METHOD__ . '() if multiple property paths are targted.');
+    }
+    $this->propertyPaths = $propertyPath;
   }
 
   /**

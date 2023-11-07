@@ -98,18 +98,9 @@ abstract class ConfigFormBase extends FormBase {
       }
 
       $config = $this->config($target->configName);
-      if ($target instanceof ConfigMultiTarget) {
-        $arguments = [];
-        foreach ($target->propertyPaths as $property_path) {
-          $arguments[] = $config->get($property_path);
-        }
+      if ($target->fromConfig) {
+        $arguments = array_map($config->get(...), $target->propertyPaths);
         $value = ($target->fromConfig)(...$arguments);
-      }
-      else {
-        $value = $config->get($target->propertyPath);
-        if ($target->fromConfig) {
-          $value = call_user_func($target->fromConfig, $value);
-        }
       }
 
       $element['#default_value'] = $value;
@@ -144,20 +135,13 @@ abstract class ConfigFormBase extends FormBase {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
+      /** @var \Drupal\Core\Form\ConfigTarget $target */
       $target = $element['#config_target'];
-      if ($target instanceof ConfigTarget) {
-        $target = $target->configName . ':' . $target->propertyPath;
-      }
       $target->elementParents = $element['#parents'];
-      if ($target instanceof ConfigMultiTarget) {
-        foreach ($target->propertyPaths as $property_path) {
-          $map[$target->configName . ':' . $property_path] = $target;
-        }
+
+      foreach ($target->propertyPaths as $property_path) {
+        $map[$target->configName . ":$property_path"] = $element['#array_parents'];
       }
-      else {
-        $map[$target->configName . ':' . $target->propertyPath] = $target;
-      }
-      $map[$target] = $element['#array_parents'];
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -323,40 +307,27 @@ abstract class ConfigFormBase extends FormBase {
 
     foreach ($map as $element_parents) {
       $target = ConfigTarget::fromForm($element_parents, $form);
-      if ($target->configName === $config->getName()) {
-        $value = $form_state->getValue($target->elementParents);
+      if ($target->configName !== $config->getName()) {
+        continue;
+      }
+      $value = $form_state->getValue($target->elementParents);
+      if ($target->toConfig) {
         try {
-          if ($target->toConfig) {
-            $arguments = [$value];
-            // @todo expand and make it work for all possible callables
-            // @see https://github.com/technically-php/callable-reflection
-            if (is_string($target->toConfig) && str_contains($target->toConfig, '::')) {
-              [$class, $method] = explode('::', $target->toConfig);
-              $reflection = new \ReflectionMethod($class, $method);
-              // If the second parameter is a FormState object, pass it.
-              if (count($reflection->getParameters()) > 1 && $reflection->getParameters()[1]->getType()->getName() === FormStateInterface::class) {
-                $arguments[] = $form_state;
-              }
-            }
-            $value = ($target->toConfig)(...$arguments);
-          }
-          if ($target instanceof ConfigMultiTarget) {
-            if (array_keys($value) != $target->propertyPaths) {
-              throw new \LogicException('A ConfigMultiTarget must always return a value for each of the property paths it targets.');
-            }
-            foreach ($target->propertyPaths as $property_path) {
-              $config->set($property_path, $value[$property_path]);
-            }
-          }
-          else {
-            $config->set($target->propertyPath, $value);
-          }
+          $value = ($target->toConfig)($form_state, $value);
         }
         catch (\OutOfBoundsException) {
           // The "toConfig" callable indicated that this form value does not
           // correspond to any value needing to be set. Typical use case: some
           // property path must only be set conditionally.
+          continue;
         }
+      }
+
+      if (count($target->propertyPaths) > 1 && (!is_array($value) || array_diff(array_keys($value), $target->propertyPaths))) {
+        throw new \LogicException('A ConfigTarget instance must return a value for every property path it targets.');
+      }
+      foreach ($target->propertyPaths as $property_path) {
+        $config->set($property_path, $value[$property_path]);
       }
     }
   }
