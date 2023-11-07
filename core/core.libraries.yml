@@ -797,7 +797,7 @@ jquery:
 jquery.functions:
   version: VERSION
   js:
-    misc/jquery.functions.shim.js: {}
+    misc/jquery.functions.deprecation.js: {}
 
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.
