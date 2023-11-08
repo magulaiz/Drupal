@@ -155,14 +155,16 @@ final class ConfigTarget {
       throw new \InvalidArgumentException();
     }
 
-    $values = array_map($config->get(...), $this->propertyPaths);
+    $is_multi_target = count($this->propertyPaths) > 1;
+    $value = $is_multi_target
+      ? array_map($config->get(...), $this->propertyPaths)
+      : $config->get(...$this->propertyPaths);
     if ($this->fromConfig) {
-      $values = array_map($this->fromConfig, $values);
+      $value = $is_multi_target
+        ? ($this->fromConfig)(...$value)
+        : ($this->fromConfig)($value);
     }
-    if (count($this->propertyPaths) === 1) {
-      return reset($values);
-    }
-    return array_combine($this->propertyPaths, $values);
+    return $value;
   }
 
   /**
@@ -188,32 +190,42 @@ final class ConfigTarget {
       throw new \InvalidArgumentException();
     }
 
-    // Create an array of the submitted values, keyed by their corresponding
-    // property path in config.
-    if (count($this->propertyPaths) === 1) {
-      $values = [
-        $this->propertyPaths[0] => $value,
-      ];
-    }
-    else {
-      // If we're targeting multiple property paths, $value needs to be an array
-      // with every targeted property path.
-      if (!is_array($value) || array_diff(array_keys($value), $this->propertyPaths)) {
-        throw new \LogicException();
+    $is_multi_target = count($this->propertyPaths) > 1;
+    if ($this->toConfig) {
+      try {
+        $value = ($this->toConfig)($form_state, $value);
       }
-      $values = $value;
+      catch (\OutOfBoundsException) {
+        if ($is_multi_target) {
+          throw new \LogicException('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.');
+        }
+        else {
+          // The callback is telling us this value should not be set in config.
+          return;
+        }
+      }
+
+      if ($is_multi_target) {
+        // If we're targeting multiple property paths, $value needs to be an array
+        // with every targeted property path.
+        if (!is_array($value) || array_diff(array_keys($value), $this->propertyPaths)) {
+          throw new \LogicException();
+        }
+        // No restructuring needed.
+        $values = $value;
+      }
+    }
+
+    // The multi-target case will always have a toConfig callable, so it will
+    // have been processed by the preceding logic. Restructure the single target
+    // case's single value to allow using the same logic for setting one or
+    // multiple property path targets.
+    // @see \Drupal\Core\Form\ConfigTarget::__construct
+    if (!$is_multi_target) {
+      $values = [$this->propertyPaths[0] => $value];
     }
 
     foreach ($values as $property_path => $value) {
-      if ($this->toConfig) {
-        try {
-          $value = ($this->toConfig)($form_state, $value);
-        }
-        catch (\OutOfBoundsException) {
-          // The callback is telling us this value should not be set in config.
-          continue;
-        }
-      }
       $config->set($property_path, $value);
     }
   }
