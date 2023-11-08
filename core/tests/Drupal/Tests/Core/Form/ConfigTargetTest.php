@@ -30,7 +30,7 @@ class ConfigTargetTest extends UnitTestCase {
     ];
     $config_target = ConfigTarget::fromForm(['group', 'test'], $form);
     $this->assertSame('system.site', $config_target->configName);
-    $this->assertSame('name', $config_target->propertyPath);
+    $this->assertSame(['name'], $config_target->propertyPaths);
     $this->assertSame(['test'], $config_target->elementParents);
   }
 
@@ -49,7 +49,7 @@ class ConfigTargetTest extends UnitTestCase {
     ];
     $config_target = ConfigTarget::fromForm(['test'], $form);
     $this->assertSame('system.site', $config_target->configName);
-    $this->assertSame('admin_compact_mode', $config_target->propertyPath);
+    $this->assertSame(['admin_compact_mode'], $config_target->propertyPaths);
     $this->assertSame(['test'], $config_target->elementParents);
     $this->assertSame(1, ($config_target->fromConfig)(TRUE));
     $this->assertFalse(($config_target->toConfig)('0'));
