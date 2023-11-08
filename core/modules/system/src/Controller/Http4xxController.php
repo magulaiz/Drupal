@@ -3,6 +3,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Controller for default HTTP 4xx responses.
@@ -27,6 +28,12 @@ class Http4xxController extends ControllerBase {
    * @return array
    *   A render array containing the message to display for 401 pages.
    */
+  #[Route(
+    path: '/system/401',
+    name: 'system.401',
+    requirements: ['_access' => 'TRUE'],
+    defaults: ['_title' => 'Unauthorized']
+  )]
   public function on401() {
     return [
       '#markup' => $this->t('Log in to access this page.'),
