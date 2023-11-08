@@ -14,7 +14,7 @@ class ConfigExportTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config', 'system'];
+  protected static $modules = ['config', 'system', 'block'];
 
   /**
    * {@inheritdoc}
@@ -51,6 +51,17 @@ class ConfigExportTest extends WebDriverTestBase {
     $page->selectFieldOption('config_type', 'Action');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldValueEquals('export', '');
+
+    // Check that the 'Configuration name' list is sorted alphabetically by ID, not label.
+    // Options 1 and 4 include the randomly generated username, so use Contains instead of Equals.
+    $page->selectFieldOption('config_type', 'Action');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $options = $page->findField('config_name')->findAll('css', 'option');
+    $this->assertStringContainsString('user_add_role_action', $options[1]->getValue());
+    $this->assertEquals('user_block_user_action', $options[2]->getValue());
+    $this->assertEquals('user_cancel_user_action', $options[3]->getValue());
+    $this->assertStringContainsString('user_remove_role_action', $options[4]->getValue());
+    $this->assertEquals('user_unblock_user_action', $options[5]->getValue());
   }
 
 }
