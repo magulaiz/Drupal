@@ -31,10 +31,6 @@ class AccessRouteAlterSubscriber implements EventSubscriberInterface {
   public function accessAdminMenuBlockPage(RouteBuildEvent $event) {
     $routes = $event->getRouteCollection();
     foreach ($routes as $route) {
-      $admin_controllers = [
-        'Drupal\system\Controller\SystemController::systemAdminMenuBlockPage',
-        'Drupal\system\Controller\SystemController::overview',
-      ];
       // Do not use a leading slash when comparing to the _controller string
       // because the leading slash in a fully-qualified method name is optional.
       if ($route->hasDefault('_controller')) {

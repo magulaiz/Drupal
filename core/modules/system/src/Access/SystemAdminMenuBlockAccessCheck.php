@@ -13,6 +13,7 @@ use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\AccessAwareRouter;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Access check for routes implementing _access_admin_menu_block_page.
@@ -42,7 +43,16 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
   ) {
   }
 
-  private static function getChildLevelForRout(\Symfony\Component\Routing\Route $route): int {
+  /**
+   * Gets child level required for accessing a route.
+   *
+   * @param Route $route
+   *   The route.
+   * @return int
+   *  The child level.
+   *
+   */
+  private static function getChildLevelForRoute(Route $route): int {
     return $route->getRequirement('_access_admin_overview_page') ? 2 : 1;
   }
 
@@ -80,16 +90,18 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       // If we did not find a link then we have no opinion on access.
       return AccessResult::neutral();
     }
-    return $this->hasAccessToChildMenuItems(reset($links), $account, static::getChildLevelForRout($route))->cachePerPermissions();
+    return $this->hasAccessToChildMenuItems(reset($links), $account, static::getChildLevelForRoute($route))->cachePerPermissions();
   }
 
   /**
-   * Check that the given route has access to one of it's child routes.
+   * Check that the given route has access to child routes.
    *
    * @param \Drupal\Core\Menu\MenuLinkInterface $link
    *   The menu link.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account.
+   * @param int $child_level
+   *    The child level required for access.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
@@ -122,7 +134,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       // If access is allowed to this element in the tree check for access to
       // its own children.
       $elementRoute = $this->router->getRouteCollection()->get($element->link->getRouteName());
-      return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account, static::getChildLevelForRout($elementRoute))->isAllowed());
+      return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account, static::getChildLevelForRoute($elementRoute))->isAllowed());
     }
     return AccessResult::neutral();
   }
