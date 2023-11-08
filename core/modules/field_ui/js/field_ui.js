@@ -102,15 +102,15 @@
     },
   };
 
-  // Override the beforeSend method to disable the submit button.
-  // This is done to avoid the race condition that is being caused
-  // by change event listener that is attached to every form element
-  // inside field storage config edit form to update the field config
-  // form based on changes made to the storage settings.This piece of
-  // code disables the submit button until the AJAX request is completed.
+  // Override the beforeSend method to disable the submit button until
+  // the AJAX request is completed. This is done to avoid the race
+  // condition that is being caused by change event listener that is
+  // attached to every form element inside field storage config edit
+  // form to update the field config form based on changes made to the
+  // storage settings.
   const originalAjaxBeforeSend = Drupal.Ajax.prototype.beforeSend;
   // eslint-disable-next-line func-names
-  Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
+  Drupal.Ajax.prototype.beforeSend = function () {
     // Disable the submit button on AJAX request initiation.
     $('.field-config-edit-form [data-drupal-selector="edit-submit"]').prop(
       'disabled',
