@@ -127,7 +127,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#derivative_plugin_id' => $block->getDerivativeId(),
         '#in_preview' => $event->inPreview(),
         '#weight' => $event->getComponent()->getWeight(),
-        '#id' => str_replace(':', '_', Html::getUniqueId($block->getPluginId())),
+        '#id' => Html::cleanCssIdentifier(Html::getUniqueId($block->getPluginId())),
       ];
 
       // Place the $content returned by the block plugin into a 'content' child
