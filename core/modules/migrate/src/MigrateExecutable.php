@@ -412,7 +412,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected function processPipeline(Row $row, string $destination, array $plugins, $value) {
     $multiple = FALSE;
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
-    foreach ($plugins as $plugin) {
+    foreach ($plugins as $index => $plugin) {
       $definition = $plugin->getPluginDefinition();
       // Many plugins expect a scalar value but the current value of the
       // pipeline might be multiple scalars (this is set by the previous plugin)
@@ -433,8 +433,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
             $break = TRUE;
           }
           catch (MigrateException $e) {
-            // Prepend the process plugin id to the message.
-            $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+            // Prepend the process plugin id and index to the message.
+            $message = sprintf("%s($index): %s", $plugin->getPluginId(), $e->getMessage());
             throw new MigrateException($message);
           }
         }
@@ -452,8 +452,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
           break;
         }
         catch (MigrateException $e) {
-          // Prepend the process plugin id to the message.
-          $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+          // Prepend the process plugin id and index to the message.
+          $message = sprintf("%s($index): %s", $plugin->getPluginId(), $e->getMessage());
           throw new MigrateException($message);
         }
 
