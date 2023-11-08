@@ -191,6 +191,7 @@ final class ConfigTarget {
     }
 
     $is_multi_target = count($this->propertyPaths) > 1;
+    $values = [];
     if ($this->toConfig) {
       try {
         $value = ($this->toConfig)($form_state, $value);
