@@ -135,8 +135,6 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
-      $target->elementParents = $element['#parents'];
-
       foreach ($target->propertyPaths as $property_path) {
         $map[$target->configName][$property_path] = $element['#array_parents'];
       }
