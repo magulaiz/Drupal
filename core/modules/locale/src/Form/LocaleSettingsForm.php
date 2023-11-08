@@ -3,7 +3,7 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Form\ConfigMultiTarget;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -73,7 +73,7 @@ class LocaleSettingsForm extends ConfigFormBase {
         LOCALE_TRANSLATION_OVERWRITE_ALL => $this->t('Overwrite existing translations.'),
       ],
       '#description' => $this->t('How to treat existing translations when automatically updating the interface translations.'),
-      '#config_target' => new ConfigMultiTarget(
+      '#config_target' => new ConfigTarget(
         'locale.settings',
         [
           'translation.overwrite_customized',
