@@ -137,8 +137,10 @@ abstract class ConfigFormBase extends FormBase {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
-      /** @var \Drupal\Core\Form\ConfigTarget $target */
       $target = $element['#config_target'];
+      if (is_string($target)) {
+        $target = ConfigTarget::fromString($target);
+      }
       $target->elementParents = $element['#parents'];
 
       foreach ($target->propertyPaths as $property_path) {
@@ -329,7 +331,7 @@ abstract class ConfigFormBase extends FormBase {
         throw new \LogicException('A ConfigTarget instance must return a value for every property path it targets.');
       }
       foreach ($target->propertyPaths as $property_path) {
-        $config->set($property_path, $value[$property_path]);
+        $config->set($property_path, count($target->propertyPaths) === 1 ? $value : $value[$property_path]);
       }
     }
   }
