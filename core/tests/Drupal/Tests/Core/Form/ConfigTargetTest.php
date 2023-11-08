@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Tests\UnitTestCase;
 
@@ -105,6 +106,24 @@ class ConfigTargetTest extends UnitTestCase {
         'The form element [group][test] #config_target property is not a string or a ConfigTarget object',
       ],
     ];
+  }
+
+  public function testFromConfigCallbackArgumentsPassedInWrongOrder(): void {
+    $config = $this->prophesize(Config::class);
+    $config->get('foo')->willReturn('bar')->shouldBeCalled();
+    $config->get('baz')->willReturn(39)->shouldBeCalled();
+    $config->getName()->willReturn('test')->shouldBeCalled();
+
+    $target = new ConfigTarget(
+      'test',
+      ['foo', 'baz'],
+      // The callback is expecting the arguments in a different order than the
+      // property paths were passed to ConfigTarget, which results in a
+      // TypeError.
+      fn (int $baz_value, string $foo_value) => func_get_args(),
+      fn ($value) => $value,
+    );
+    $target->getValue($config->reveal());
   }
 
 }
