@@ -170,7 +170,7 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     $form['field_options_wrapper'] = [
-      '#prefix' => '<div id="field-options-wrapper" class="field-options-wrapper">',
+      '#prefix' => '<div class="field-options-wrapper">',
       '#suffix' => '</div>',
     ];
     // Set the selected field to the form state by checking

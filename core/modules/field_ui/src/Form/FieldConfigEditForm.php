@@ -367,11 +367,6 @@ class FieldConfigEditForm extends EntityForm {
       ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
       $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_delete_form', $route_parameters);
 
-      if ($this->getRequest()->query->has('destination')) {
-        $query = $url->getOption('query');
-        $query['destination'] = $this->getRequest()->query->get('destination');
-        $url->setOption('query', $query);
-      }
       $actions['delete'] = [
         '#type' => 'link',
         '#title' => $this->t('Delete'),
