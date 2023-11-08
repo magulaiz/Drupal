@@ -40,8 +40,8 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
         fn (?array $favorite_fruits): string => $favorite_fruits === NULL || !isset($favorite_fruits[0]) ? 'Mango' : $favorite_fruits[0],
         fn (string $first, FormStateInterface $form_state) : array => [
           0 => $first,
-          1 => $form_state->getValue(['favorites', 'second'],
-        )],
+          1 => $form_state->getValue(['favorites', 'second']),
+        ],
       ),
     ];
     $form['favorites']['second'] = [
