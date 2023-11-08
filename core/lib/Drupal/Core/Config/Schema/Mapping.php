@@ -109,7 +109,7 @@ class Mapping extends ArrayElement {
     // if a non-special string is used, will any other configuration key's value
     // actually be used to determine the type.
     // Explained by examples:
-    // - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no
+    // - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no information
     //   stored somewhere: the chosen key (in a sequence) determines the type.
     // - third party settings use '[%parent.%parent.%type].third_party.[%key]',
     //   but the first variable value only causes the config entity type (at the
