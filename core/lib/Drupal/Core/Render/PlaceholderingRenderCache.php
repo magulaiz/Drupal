@@ -96,10 +96,6 @@ class PlaceholderingRenderCache extends RenderCache {
    * {@inheritdoc}
    */
   public function get(array $elements) {
-    // @todo remove this check when https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
-      return FALSE;
-    }
 
     // When rendering placeholders, special case auto-placeholdered elements:
     // avoid retrieving them from cache again, or rendering them again.
