@@ -137,8 +137,8 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     }
     $settings = $editor->getSettings();
 
-    // Nothing to do if the List plugin is not enabled.
-    if (!array_key_exists('ckeditor5_list', $settings['plugins'])) {
+    // Nothing to do if the numbered list toolbar item is not enabled.
+    if (!in_array('numberedList', $settings['toolbar']['items'], TRUE)) {
       return FALSE;
     }
 
@@ -159,16 +159,18 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     // which case they may already have set it. If that is the case: do not
     // override it.
     $ol_start = HTMLRestrictions::fromString('<ol start>');
-    if (!array_key_exists('startIndex', $settings['plugins']['ckeditor5_list']['properties'])) {
+    if (!array_key_exists('ckeditor5_list', $settings['plugins']) || !array_key_exists('startIndex', $settings['plugins']['ckeditor5_list']['properties'])) {
       $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = $ol_start->diff($source_edited)
         ->allowsNothing() || $format_restrictions->isUnrestricted();
     }
     // Same for <ol reversed> and "reversed".
     $ol_reversed = HTMLRestrictions::fromString('<ol reversed>');
-    if (!array_key_exists('reversed', $settings['plugins']['ckeditor5_list']['properties'])) {
+    if (!array_key_exists('ckeditor5_list', $settings['plugins']) || !array_key_exists('reversed', $settings['plugins']['ckeditor5_list']['properties'])) {
       $settings['plugins']['ckeditor5_list']['properties']['reversed'] = $ol_reversed->diff($source_edited)
         ->allowsNothing() || $format_restrictions->isUnrestricted();
     }
+    // Match the sort order in ListPlugin::defaultConfiguration().
+    ksort($settings['plugins']['ckeditor5_list']['properties']);
 
     // Update the Source Editing configuration too.
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited

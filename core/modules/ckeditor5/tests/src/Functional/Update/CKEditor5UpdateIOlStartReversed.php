@@ -60,7 +60,7 @@ class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
 
     // test_format_list_ol_start before: nothing listed for Source Editing.
     $settings = $before['test_format_list_ol_start']->getSettings();
-    $this->assertArrayHasKey('ckeditor5_list', $settings['plugins']);
+    $this->assertArrayNotHasKey('ckeditor5_list', $settings['plugins']);
     $this->assertSame(['<ol start foo>'], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
     // test_text_format before: not using the List plugin.
