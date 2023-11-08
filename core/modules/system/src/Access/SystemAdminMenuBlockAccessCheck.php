@@ -46,11 +46,11 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
   /**
    * Gets child level required for accessing a route.
    *
-   * @param Route $route
+   * @param \Symfony\Component\Routing\Route $route
    *   The route.
-   * @return int
-   *  The child level.
    *
+   * @return int
+   *   The child level.
    */
   private static function getChildLevelForRoute(Route $route): int {
     return $route->getRequirement('_access_admin_overview_page') ? 2 : 1;
@@ -101,7 +101,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account.
    * @param int $child_level
-   *    The child level required for access.
+   *   The child level required for access.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
