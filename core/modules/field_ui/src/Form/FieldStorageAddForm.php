@@ -255,6 +255,26 @@ class FieldStorageAddForm extends FormBase {
         $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
       }
     }
+    // Provide some help text to aid users decide whether they need a Media,
+    // File, or Image reference field.
+    $description_text = t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before installing the Media module.');
+    if (\Drupal::moduleHandler()->moduleExists('help')) {
+      $description_text .= ' ' . t('For more information, see the <a href="@help_url">Media help page</a>.', [
+        '@help_url' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
+      ]);
+    }
+    // Provide help text for the listed field types.
+    $field_types = [
+      'file_upload',
+      'field_ui:entity_reference:media',
+    ];
+    if (in_array($selected_field_type, $field_types)) {
+      $form['field_options_wrapper']['description_wrapper'] = [
+        '#type' => 'item',
+        '#markup' => $description_text,
+        '#weight' => -1,
+      ];
+    }
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
     // we create field storage as translatable so it will be possible to enable
