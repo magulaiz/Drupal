@@ -155,10 +155,12 @@ final class ConfigTarget {
       throw new \InvalidArgumentException();
     }
 
-    $is_multi_target = count($this->propertyPaths) > 1;
+    $is_multi_target = $this->isMultiTarget();
+
     $value = $is_multi_target
       ? array_map($config->get(...), $this->propertyPaths)
-      : $config->get(...$this->propertyPaths);
+      : $config->get($this->propertyPaths[0]);
+
     if ($this->fromConfig) {
       $value = $is_multi_target
         ? ($this->fromConfig)(...$value)
@@ -182,32 +184,24 @@ final class ConfigTarget {
    *   Thrown if the given config object is not the one being targeted by
    *   $this->configName.
    * @throws \LogicException
-   *   Thrown if this object is targeting multiple property paths and $value
-   *   does not contain a value for every one of those property paths.
+   *   Thrown if this object is targeting multiple property paths and either
+   *   of the following situations arises:
+   *   - $value does not contain a value for every targeted property path.
+   *   - The toConfig callback throws an \OutOfBoundsException.
    */
   public function setValue(Config $config, mixed $value, FormStateInterface $form_state): void {
     if ($config->getName() !== $this->configName) {
       throw new \InvalidArgumentException();
     }
 
-    $is_multi_target = count($this->propertyPaths) > 1;
+    $is_multi_target = $this->isMultiTarget();
     if ($this->toConfig) {
       try {
-        // The first argument to be passed to the "toConfig" callable is always
-        // the value of the form element that #config_target was set on.
-        $arguments = [$value];
-
-        // Optionally, if the callable expects a FormStateInterface parameter,
-        // also pass it the form state.
-        $reflection = new \ReflectionFunction($this->toConfig);
-        if (count($reflection->getParameters()) > 1 && $reflection->getParameters()[1]->getType()->getName() === FormStateInterface::class) {
-          $arguments[] = $form_state;
-        }
-        $value = ($this->toConfig)(...$arguments);
+        $value = ($this->toConfig)($value, $form_state);
       }
-      catch (\OutOfBoundsException) {
+      catch (\OutOfBoundsException $e) {
         if ($is_multi_target) {
-          throw new \LogicException('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.');
+          throw new \LogicException('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.', previous: $e);
         }
         else {
           // The callback is telling us this value should not be set in config.
@@ -224,12 +218,23 @@ final class ConfigTarget {
       }
     }
 
-    if (!$is_multi_target) {
-      $config->set($this->propertyPaths[0], $value);
+    if ($is_multi_target) {
+      array_walk($value, fn ($value, $property) => $config->set($property, $value));
     }
     else {
-      array_map($config->set(...), array_keys($value), array_values($value));
+      $config->set($this->propertyPaths[0], $value);
     }
+  }
+
+  /**
+   * Indicates if this object targets multiple property paths.
+   *
+   * @return bool
+   *   TRUE if this object is targeting multiple property paths, otherwise
+   *   FALSE.
+   */
+  private function isMultiTarget(): bool {
+    return count($this->propertyPaths) > 1;
   }
 
 }
