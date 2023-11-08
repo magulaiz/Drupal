@@ -34,6 +34,7 @@
   position: relative;
   box-sizing: border-box;
   padding: var(--space-m) var(--jui-dialog-close-button-reserved-space) var(--space-m) var(--space-l); /* LTR */
+  word-wrap: break-word;
   color: var(--jui-dialog-title-color);
   border-top-left-radius: var(--jui-dialog-border-radius);
   border-top-right-radius: var(--jui-dialog-border-radius);
