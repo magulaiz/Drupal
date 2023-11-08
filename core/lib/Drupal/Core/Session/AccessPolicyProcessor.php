@@ -18,20 +18,6 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
    */
   protected array $accessPolicies = [];
 
-  /**
-   * Constructs an AccessPolicyChain object.
-   *
-   * @param \Drupal\Core\Cache\VariationCacheInterface $variationCache
-   *   The variation cache backend to use as a persistent cache.
-   * @param \Drupal\Core\Cache\VariationCacheInterface $variationStatic
-   *   The variation cache backend to use as a static cache.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $static
-   *   The regular cache backend to use as a static cache.
-   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
-   *   The current user.
-   * @param \Drupal\Core\Session\AccountSwitcherInterface $accountSwitcher
-   *   The account switcher service.
-   */
   public function __construct(
     protected VariationCacheInterface $variationCache,
     protected VariationCacheInterface $variationStatic,
@@ -68,18 +54,20 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     // cache contexts with a provided environmental value (such as the current
     // user), then we should update the logic below to use that instead.
     //
-    // For the time being, we simply set the current user to the passed in
-    // account, calculate the cache ID and then immediately switch back. It's
-    // the cleanest solution we could come up with that doesn't involve copying
-    // half of the caching layer and that still allows us to use the
+    // For the time being, we set the current user to the passed in account if
+    // they differ, calculate the permissions and then immediately switch back.
+    // It's the cleanest solution we could come up with that doesn't involve
+    // copying half of the caching layer and that still allows us to use the
     // VariationCache for accounts other than the current user.
     $switch_account = FALSE;
-    foreach ($persistent_cache_contexts as $cache_context) {
-      [$cache_context_root] = explode('.', $cache_context, 2);
-      if ($cache_context_root === 'user' && $this->currentUser->id() !== $account->id()) {
-        $switch_account = TRUE;
-        $this->accountSwitcher->switchTo($account);
-        break;
+    if ($this->currentUser->id() !== $account->id()) {
+      foreach ($persistent_cache_contexts as $cache_context) {
+        [$cache_context_root] = explode('.', $cache_context, 2);
+        if ($cache_context_root === 'user') {
+          $switch_account = TRUE;
+          $this->accountSwitcher->switchTo($account);
+          break;
+        }
       }
     }
 
