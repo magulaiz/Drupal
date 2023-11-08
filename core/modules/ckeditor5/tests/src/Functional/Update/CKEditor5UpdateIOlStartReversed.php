@@ -69,7 +69,7 @@ class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
     // Basic HTML after: reversed=FALSE, startIndex=FALSE, Source Editing
     // configuration unchanged.
     $settings = $after['basic_html']->getSettings();
-    $this->assertSame(['reversed' => FALSE, 'startIndex' => FALSE], $settings['plugins']['ckeditor5_list']);
+    $this->assertSame(['reversed' => FALSE, 'startIndex' => FALSE], $settings['plugins']['ckeditor5_list']['properties']);
     $source_editable = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
     $this->assertSame(['type' => TRUE], $source_editable->getAllowedElements()['ol']);
 
@@ -77,14 +77,14 @@ class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
     // configuration is unchanged.
     $settings = $after['full_html']->getSettings();
     $this->assertNotSame($before['full_html']->getSettings(), $after['full_html']->getSettings());
-    $this->assertSame(['reversed' => TRUE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']);
+    $this->assertSame(['reversed' => TRUE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
     $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
     // test_format_list_ol_type after: reversed=TRUE, startIndex=TRUE, and
     // Source Editing configuration has been updated.
     $this->assertNotSame($before['test_format_list_ol_start']->getSettings(), $after['test_format_list_ol_start']->getSettings());
     $settings = $after['test_format_list_ol_start']->getSettings();
-    $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']);
+    $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
     $this->assertSame(['<ol foo>'], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
     // test_text_format after: no changes.

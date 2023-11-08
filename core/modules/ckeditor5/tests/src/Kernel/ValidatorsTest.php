@@ -554,8 +554,11 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [
           'ckeditor5_list' => [
-            'reversed' => TRUE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
