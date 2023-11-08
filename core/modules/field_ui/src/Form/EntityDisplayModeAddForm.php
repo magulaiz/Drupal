@@ -25,7 +25,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $form = parent::buildForm($form, $form_state, $entity_type_id);
     // Add an ajax callback when the form is loaded from respective field UI's.
-    if (!str_contains($this->getRedirectDestination()->get(), 'display-modes')) {
+    if (\Drupal::request()->query->get('parent')) {
       $form['actions']['submit']['#ajax'] = [
         'callback' => '::ajaxSubmit',
       ];
@@ -92,11 +92,8 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    *   The redirect URL or NULL if dialog should just be closed.
    */
   protected function getRedirectUrl() {
-    // \Drupal\Core\Routing\RedirectDestination::get() cannot be used directly
-    // because it will use <current> if 'destination' is not in the query
-    // string.
-    if ($this->getRequest()->query->has('destination') && $destination = $this->getRedirectDestination()->get()) {
-      return Url::fromUri('base:' . $destination);
+    if ($destination = \Drupal::request()->query->get('testing')) {
+      return Url::fromUri($destination);
     }
     return NULL;
   }

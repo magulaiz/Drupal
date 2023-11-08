@@ -127,8 +127,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       }
     }
 
-    // I need bundle type here.
-    $bundle = 'article';
+    $bundle = \Drupal::request()->query->get('parent') ?: NULL;
     $form['bundles_by_entity'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Enable this @display-mode for the following @bundle-label types:', ['@display-mode' => $this->entityType->getSingularLabel(), '@bundle-label' => $definition->getLabel()]),
