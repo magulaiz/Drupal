@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\standard\FunctionalJavascript;
 
-use Drupal\Tests\PerformanceData;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
+use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
 
 /**
@@ -75,7 +75,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Tests performance of logging in.
    */
-  public function testLogIn() {
+  public function testLogin() {
     // Create a user and log them in to warm all caches.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
@@ -90,6 +90,28 @@ class StandardPerformanceTest extends PerformanceTestBase {
     });
     $this->assertLessThanOrEqual(89, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(88, $performance_data->getQueryCount());
+  }
+
+  /**
+   * Tests performance of logging in via the user login block.
+   */
+  public function testLoginBlock() {
+    $this->drupalPlaceBlock('user_login_block');
+    // Create a user and log them in to warm all caches.
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $this->drupalLogout();
+
+    $this->drupalGet('<front>');
+    $this->assertSession()->responseContains('Password');
+    $performance_data = $this->collectPerformanceData(function () use ($account) {
+      $this->submitForm([
+        'name' => $account->getAccountName(),
+        'pass' => $account->passRaw,
+      ], 'Log in');
+    });
+    $this->assertLessThanOrEqual(198, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(197, $performance_data->getQueryCount());
   }
 
   /**
