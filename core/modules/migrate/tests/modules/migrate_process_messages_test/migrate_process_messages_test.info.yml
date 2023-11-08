@@ -1,0 +1,6 @@
+type: module
+name: migrate_process_messages_test
+description: 'Provides process plugins to test migration messages.'
+package: Testing
+dependencies:
+  - drupal:migrate
