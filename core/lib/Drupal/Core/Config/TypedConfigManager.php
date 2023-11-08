@@ -282,61 +282,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   }
 
   /**
-   * Returns all possible types for the type with the given name.
-   *
-   * @param string $name
-   *   Configuration name or key.
-   *
-   * @return string[]
-   *   All possible types for a given type. For example,
-   *   `core_date_format_pattern.[%parent.locked]` will return:
-   *   - `core_date_format_pattern.0`
-   *   - `core_date_format_pattern.1`
-   *   If a fallback name is available, that will be returned too. In this
-   *   example, that would be `core_date_format_pattern.*`.
-   *
-   * @see ::getFallbackName()
-   *
-   * todo move to mapping as protected?
-   */
-  public function getPossibleTypes(string $name): array {
-    // First, parse from e.g.
-    // `module.something.foo_[%parent.locked]`
-    // this:
-    // `[%parent.locked]`
-    // or from
-    // `[%parent.%parent.%type].third_party.[%key]`
-    // this:
-    // `[%parent.%parent.%type]` and `[%key]`.
-    // And collapse all these to just `[]`.
-    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-    $matches = [];
-    if (preg_match_all('/(\[[^\]]+\])/', $name, $matches) >= 1) {
-      $name = str_replace($matches[0], '[]', $name);
-    }
-    // Then, replace all `[]` occurrences with `.*` and escape all periods for
-    // use in a regex. So:
-    // `module\.something\.foo_.*`
-    // or
-    // `.*\.third_party\..*`
-    $regex = str_replace(['.', '[]'], ['\.', '.*'], $name);
-    // Now find all possible types:
-    // 1. `module.something.foo_foo`, `module.something.foo_bar`, etc.
-    $possible_types = array_filter(
-      array_keys($this->definitions),
-      fn (string $type) => preg_match("/^$regex$/", $type) === 1
-    );
-    // 2. The fallback: `module.something.*` — if no concrete definition for it
-    // exists.
-    $fallback_type = $this->getFallbackName($name);
-    if ($fallback_type && !in_array($fallback_type, $possible_types, TRUE)) {
-      $possible_types[] = $fallback_type;
-    }
-    // TODO: for third party settings on config entities, this finds impossible matches! The logic is a bit too generic ATM. Ideally we can reuse logic somewhere in the config system?
-    return $possible_types;
-  }
-
-  /**
    * Replaces variables in configuration name.
    *
    * The configuration name may contain one or more variables to be replaced,
