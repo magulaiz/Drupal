@@ -258,7 +258,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
       $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
 
       $request = \Drupal::request();
-      $current_url = $request->getRequestUri();
+      $current_url = base_path() . $request->getRequestUri();
       // Create a URL for the form route.
       $url = Url::fromRoute($route_name, $route_arguments, ['query' => ['destination' => $current_url]]);
       $form['modes']['add_new_display_mode'] = [
