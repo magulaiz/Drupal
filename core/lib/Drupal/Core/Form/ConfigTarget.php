@@ -219,7 +219,7 @@ final class ConfigTarget {
     }
 
     if ($is_multi_target) {
-      array_walk($value, fn ($value, $property) => $config->set($property, $value));
+      array_walk($value, fn (mixed $value, string $property) => $config->set($property, $value));
     }
     else {
       $config->set($this->propertyPaths[0], $value);
