@@ -127,7 +127,6 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       }
     }
 
-
     $this->getEntity()->getEntityType();
     $form['bundles_by_entity'] = [
       '#type' => 'checkboxes',
