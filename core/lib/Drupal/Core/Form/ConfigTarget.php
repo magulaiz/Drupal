@@ -38,7 +38,7 @@ final class ConfigTarget {
    *
    * @see ::getValue()
    */
-  private readonly ?\Closure $fromConfig;
+  public readonly ?\Closure $fromConfig;
 
   /**
    * Transforms a value submitted by the form before it is set in the config.
@@ -47,7 +47,7 @@ final class ConfigTarget {
    *
    * @see ::setValue()
    */
-  private readonly ?\Closure $toConfig;
+  public readonly ?\Closure $toConfig;
 
   /**
    * Constructs a ConfigTarget object.
