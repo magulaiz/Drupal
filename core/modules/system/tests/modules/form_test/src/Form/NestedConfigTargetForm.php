@@ -47,6 +47,7 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'favorite_fruits.1',
+        fromConfig: static::class . '::getSecondIfExists',
         toConfig: static::class . '::nothing',
       ),
       '#states' => [
@@ -61,16 +62,12 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
     return array_key_exists(0, $favorite_fruits) ? $favorite_fruits[0] : 'Mango';
   }
 
+  public static function getSecondIfExists(?string $second_favorite_fruit) : ?string {
+    return $second_favorite_fruit ?? 'Orange';
+  }
+
   public static function toFavoriteFruits(FormStateInterface $form_state, string $first) : array {
-    $favorites = [];
-    if (!empty($first)) {
-      $favorites[] = $first;
-    }
-    $second = $form_state->getValue(['favorites', 'second']);
-    if (!empty($second)) {
-      $favorites[] = $second;
-    }
-    return $favorites;
+    return [$first, $form_state->getValue(['favorites', 'second'])];
   }
 
   public static function nothing() : array {
