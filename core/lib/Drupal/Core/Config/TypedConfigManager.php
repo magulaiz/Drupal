@@ -245,7 +245,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function findFallback(string $name): ?string {
     $fallback = $this->getFallbackName($name);
-    assert(str_ends_with($fallback, '.*'));
+    assert($fallback === NULL || str_ends_with($fallback, '.*'));
     return $fallback;
   }
 
