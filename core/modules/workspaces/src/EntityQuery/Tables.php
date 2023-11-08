@@ -169,7 +169,8 @@ class Tables extends BaseTables {
       $this->contentWorkspaceTables[$base_table_alias] = $this->sqlQuery->leftJoin('workspace_association', NULL,
         $this->sqlQuery->joinCondition()
           ->condition("%alias.target_entity_type_id", $entity_type_id)
-          ->compare("%alias.target_entity_id", "$base_table_alias.$id_field")->condition("%alias.workspace", $active_workspace_id)
+          ->compare("%alias.target_entity_id", "$base_table_alias.$id_field")
+          ->condition("%alias.workspace", $active_workspace_id)
       );
 
       $this->baseTablesEntityType[$base_table_alias] = $entity_type->id();

@@ -467,7 +467,11 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     $query = $this->databaseReplica->select('node', 'n');
     $query->addField('n', 'nid');
-    $query->leftJoin('search_dataset', 'sd', $this->databaseReplica->condition('AND')->compare('sd.sid', 'n.nid')->condition('sd.type', $this->getPluginId()));
+    $query->leftJoin('search_dataset', 'sd',
+      $query->joinCondition()
+        ->compare('sd.sid', 'n.nid')
+        ->condition('sd.type', $this->getPluginId())
+    );
     $query->addExpression('CASE MAX([sd].[reindex]) WHEN NULL THEN 0 ELSE 1 END', 'ex');
     $query->addExpression('MAX([sd].[reindex])', 'ex2');
     $query->condition(

@@ -52,7 +52,11 @@ class FieldLabelDescriptionTranslation extends DrupalSqlBase {
     $query->condition($condition);
     $query->innerJoin('locales_target', 'lt', $query->joinCondition()->compare('lt.lid', 'i18n.lid'));
 
-    $query->leftJoin('field_config_instance', 'fci', $query->joinCondition()->compare('fci.bundle', 'i18n.objectid')->compare('fci.field_name', 'i18n.type'));
+    $query->leftJoin('field_config_instance', 'fci',
+      $query->joinCondition()
+        ->compare('fci.bundle', 'i18n.objectid')
+        ->compare('fci.field_name', 'i18n.type')
+    );
     return $query;
   }
 
