@@ -37,8 +37,8 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'favorite_fruits',
-        fromConfig: static::class . '::getFirstIfExists',
-        toConfig: static::class . '::toFavoriteFruits',
+        fn (?array $favorite_fruits): string => $favorite_fruits === NULL || !isset($favorite_fruits[0]) ? 'Mango' : $favorite_fruits[0],
+        fn (string $first, FormStateInterface $form_state) : array => [$first, $form_state->getValue(['favorites', 'second'])],
       ),
     ];
     $form['favorites']['second'] = [
@@ -47,31 +47,13 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'favorite_fruits.1',
-        fromConfig: static::class . '::getSecondIfExists',
-        toConfig: static::class . '::nothing',
+        fn (?string $second_favorite_fruit) : string => $second_favorite_fruit ?? 'Orange',
+        // phpcs:disable
+        // The "toConfig" callable for the first choice sets all choices.
+        fn () => throw new \OutOfBoundsException(),
       ),
-      '#states' => [
-        // @todo hide this unless the first favorite is not empty
-      ],
     ];
     return parent::buildForm($form, $form_state);
-  }
-
-  public static function getFirstIfExists(?array $favorite_fruits) : ?string {
-    $favorite_fruits = $favorite_fruits ?? [];
-    return array_key_exists(0, $favorite_fruits) ? $favorite_fruits[0] : 'Mango';
-  }
-
-  public static function getSecondIfExists(?string $second_favorite_fruit) : ?string {
-    return $second_favorite_fruit ?? 'Orange';
-  }
-
-  public static function toFavoriteFruits(string $first, FormStateInterface $form_state) : array {
-    return [$first, $form_state->getValue(['favorites', 'second'])];
-  }
-
-  public static function nothing() : array {
-    throw new \OutOfBoundsException();
   }
 
 }
