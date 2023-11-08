@@ -42,9 +42,14 @@ class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
       'test_text_format',
     ], array_keys($before));
 
-    // Basic HTML before: only <ol type> editable via Source Editing.
+    // Basic HTML before: only <ol type> editable via Source Editing … but just
+    // like a real site, this update path was added too late, and many sites
+    // have in the meantime edited their text editor configuration through the
+    // UI, in which case they may already have set it. That is also the case for
+    // the test fixture used by update path tests.
     $settings = $before['basic_html']->getSettings();
     $this->assertArrayHasKey('ckeditor5_list', $settings['plugins']);
+    $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']);
     $source_editable = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
     $this->assertSame(['type' => TRUE], $source_editable->getAllowedElements()['ol']);
 
@@ -69,7 +74,7 @@ class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
     // Basic HTML after: reversed=FALSE, startIndex=FALSE, Source Editing
     // configuration unchanged.
     $settings = $after['basic_html']->getSettings();
-    $this->assertSame(['reversed' => FALSE, 'startIndex' => FALSE], $settings['plugins']['ckeditor5_list']['properties']);
+    $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
     $source_editable = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
     $this->assertSame(['type' => TRUE], $source_editable->getAllowedElements()['ol']);
 
@@ -80,8 +85,11 @@ class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
     $this->assertSame(['reversed' => TRUE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
     $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
-    // test_format_list_ol_type after: reversed=TRUE, startIndex=TRUE, and
+    // test_format_list_ol_start after: reversed=FALSE, startIndex=TRUE, and
     // Source Editing configuration has been updated.
+    // Unlike the basic_html editor, this one was not yet modified by the user
+    // on the site, so it does not yet have `settings.plugins.ckeditor5_list`.
+    // Hence the missing update path is applied.
     $this->assertNotSame($before['test_format_list_ol_start']->getSettings(), $after['test_format_list_ol_start']->getSettings());
     $settings = $after['test_format_list_ol_start']->getSettings();
     $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);

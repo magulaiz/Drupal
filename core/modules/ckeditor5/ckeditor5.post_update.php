@@ -154,13 +154,21 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     // could possibly be supported until now), and it is not an unrestricted
     // text format (such as "Full HTML"), then set the new "startIndex" setting
     // for the List plugin to false.
+    // Except … that this update path was added too late, and many sites have in
+    // the meantime edited their text editor configuration through the UI, in
+    // which case they may already have set it. If that is the case: do not
+    // override it.
     $ol_start = HTMLRestrictions::fromString('<ol start>');
-    $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = $ol_start->diff($source_edited)
-      ->allowsNothing() || $format_restrictions->isUnrestricted();
+    if (!array_key_exists('startIndex', $settings['plugins']['ckeditor5_list']['properties'])) {
+      $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = $ol_start->diff($source_edited)
+        ->allowsNothing() || $format_restrictions->isUnrestricted();
+    }
     // Same for <ol reversed> and "reversed".
     $ol_reversed = HTMLRestrictions::fromString('<ol reversed>');
-    $settings['plugins']['ckeditor5_list']['properties']['reversed'] = $ol_reversed->diff($source_edited)
-      ->allowsNothing() || $format_restrictions->isUnrestricted();
+    if (!array_key_exists('reversed', $settings['plugins']['ckeditor5_list']['properties'])) {
+      $settings['plugins']['ckeditor5_list']['properties']['reversed'] = $ol_reversed->diff($source_edited)
+        ->allowsNothing() || $format_restrictions->isUnrestricted();
+    }
 
     // Update the Source Editing configuration too.
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
