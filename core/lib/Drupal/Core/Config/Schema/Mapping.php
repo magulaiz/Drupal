@@ -173,21 +173,16 @@ class Mapping extends ArrayElement {
       $this->getTypedDataManager()->clearCachedDefinitions();
     }
 
-    // From all valid keys, determine which ones are supported everywhere:
-    // inspect the fallback type — if it exists.
-    // @todo use \Drupal\Core\Config\TypedConfigManager::getFallbackName()?
-    $valid_keys_everywhere = array_filter(
-      $valid_keys_per_type,
-      fn (array $valid_keys, string $type) => str_ends_with($type, '.*'),
-      ARRAY_FILTER_USE_BOTH
-    );
-    // There can only be one fallback type whose definition is inherited by all
-    // children.
+    // From all valid keys across all types, get the ones for the fallback type:
+    // the keys in this mapping definition are inherited by all type definitions
+    // and are hence valid everywhere. Not all types have a fallback type.
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
-    // assert(count($valid_keys_all) <= 1);
-    if (count($valid_keys_everywhere) > 1) {
-      // @todo BROKEN! Fix this in \Drupal\Core\Config\TypedConfigManager::getPossibleTypes()
-    }
+    $fallback_type = $this->getTypedDataManager()->findFallback($original_mapping_type);
+    $valid_keys_everywhere = array_intersect_key(
+      $valid_keys_per_type,
+      [$fallback_type => NULL],
+    );
+    assert(count($valid_keys_everywhere) <= 1);
     $statically_required_keys = NestedArray::mergeDeepArray($valid_keys_everywhere);
 
     // Now that statically valid keys are known, determine which valid keys are
