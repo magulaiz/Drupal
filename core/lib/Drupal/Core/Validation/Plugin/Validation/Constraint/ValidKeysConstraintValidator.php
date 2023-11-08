@@ -65,7 +65,11 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // Statically valid: valid here and not dynamically valid.
     $invalid_keys = array_diff(array_keys($value), $valid_keys, $other_type_valid_keys);
     foreach ($invalid_keys as $key) {
-      $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
+      $this->context->buildViolation($constraint->invalidKeyMessage)
+        ->setParameter('@key', $key)
+        ->atPath($key)
+        ->setInvalidValue($key)
+        ->addViolation();
     }
     // Dynamically valid: not valid here but valid for some resolved types.
     $dynamically_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
