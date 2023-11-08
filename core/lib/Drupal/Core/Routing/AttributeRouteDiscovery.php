@@ -94,6 +94,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
       }
     }
 
+    // See https://symfony.com/doc/current/controller/service.html#invokable-controllers.
     if (0 === $collection->count() && $class->hasMethod('__invoke')) {
       $globals = $this->resetGlobals();
       foreach ($this->getAttributes($class) as $attribute) {
@@ -130,6 +131,9 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
       }
 
       $globals['localized_paths'] = $attribute->getLocalizedPaths();
+      if (!empty($globals['localized_paths'])) {
+        throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute does not support arrays in class "%s"', "path", $class->getName()));
+      }
 
       if (NULL !== $attribute->getRequirements()) {
         $globals['requirements'] = $attribute->getRequirements();
@@ -141,6 +145,9 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
       if (NULL !== $attribute->getDefaults()) {
         $globals['defaults'] = $attribute->getDefaults();
+        if (!empty($attribute->getDefaults()['_locale'])) {
+          throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported in class "%s""', "locale", $class->getName()));
+        }
       }
 
       if (NULL !== $attribute->getSchemes()) {
@@ -189,6 +196,13 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
     $name = $attribute->getName() ?? $this->getDefaultRouteName($class, $method);
     $name = $globals['name'] . $name;
 
+    if (!empty($attribute->getLocalizedPaths())) {
+      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute does not support arrays on route "%s" in "%s::%s()"', "path", $name, $class->getName(), $method->getName()));
+    }
+    if (!empty($attribute->getDefaults()['_locale'])) {
+      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported on route "%s" in "%s::%s()"', "locale", $name, $class->getName(), $method->getName()));
+    }
+
     $requirements = $attribute->getRequirements();
 
     foreach ($requirements as $placeholder => $requirement) {
@@ -207,63 +221,12 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
     $condition = $attribute->getCondition() ?? $globals['condition'];
     $priority = $attribute->getPriority() ?? $globals['priority'];
 
-    $path = $attribute->getLocalizedPaths() ?: $attribute->getPath();
-    $prefix = $globals['localized_paths'] ?: $globals['path'];
-    $paths = [];
+    $path = $attribute->getPath();
+    $prefix = $globals['path'];
 
-    if (\is_array($path)) {
-      if (!\is_array($prefix)) {
-        foreach ($path as $locale => $localePath) {
-          $paths[$locale] = $prefix . $localePath;
-        }
-      }
-      elseif ($missing = array_diff_key($prefix, $path)) {
-        throw new \LogicException(sprintf('Route to "%s" is missing paths for locale(s) "%s".', $class->name . '::' . $method->name, implode('", "', array_keys($missing))));
-      }
-      else {
-        foreach ($path as $locale => $localePath) {
-          if (!isset($prefix[$locale])) {
-            throw new \LogicException(sprintf('Route to "%s" with locale "%s" is missing a corresponding prefix in class "%s".', $method->name, $locale, $class->name));
-          }
-
-          $paths[$locale] = $prefix[$locale] . $localePath;
-        }
-      }
-    }
-    elseif (\is_array($prefix)) {
-      foreach ($prefix as $locale => $localePrefix) {
-        $paths[$locale] = $localePrefix . $path;
-      }
-    }
-    else {
-      $paths[] = $prefix . $path;
-    }
-
-    foreach ($method->getParameters() as $param) {
-      if (isset($defaults[$param->name]) || !$param->isDefaultValueAvailable()) {
-        continue;
-      }
-      foreach ($paths as $locale => $path) {
-        if (preg_match(sprintf('/\{%s(?:<.*?>)?\}/', preg_quote($param->name)), $path)) {
-          $defaults[$param->name] = $param->getDefaultValue();
-          break;
-        }
-      }
-    }
-
-    foreach ($paths as $locale => $path) {
-      $route = $this->createRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
-      $this->configureRoute($route, $class, $method);
-      if (0 !== $locale) {
-        $route->setDefault('_locale', $locale);
-        $route->setRequirement('_locale', preg_quote($locale));
-        $route->setDefault('_canonical_route', $name);
-        $collection->add($name . '.' . $locale, $route, $priority);
-      }
-      else {
-        $collection->add($name, $route, $priority);
-      }
-    }
+    $route = $this->createRoute($prefix . $path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
+    $this->configureRoute($route, $class, $method);
+    $collection->add($name, $route, $priority);
   }
 
   /**
@@ -279,7 +242,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    */
   private function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method): string {
     $name = str_replace('\\', '_', $class->name) . '_' . $method->name;
-    $name = \function_exists('mb_strtolower') && preg_match('//u', $name) ? mb_strtolower($name, 'UTF-8') : strtolower($name);
+    $name = preg_match('//u', $name) ? mb_strtolower($name, 'UTF-8') : strtolower($name);
     if ($this->defaultRouteIndex > 0) {
       $name .= '_' . $this->defaultRouteIndex;
     }
