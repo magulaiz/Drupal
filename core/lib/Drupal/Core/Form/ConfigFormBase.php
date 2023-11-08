@@ -135,7 +135,7 @@ abstract class ConfigFormBase extends FormBase {
 
       /** @var \Drupal\Core\Form\ConfigTarget|string $target */
       $target = $element['#config_target'];
-      if (!$target instanceof ConfigTarget) {
+      if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
       $map[$target->configName][$target->propertyPath] = $element['#array_parents'];
