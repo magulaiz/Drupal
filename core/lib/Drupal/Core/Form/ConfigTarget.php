@@ -200,15 +200,9 @@ final class ConfigTarget {
 
         // Optionally, if the callable expects a FormStateInterface parameter,
         // also pass it the form state.
-        // @todo expand and make it work for all possible callables
-        // @see https://github.com/technically-php/callable-reflection
-        if (is_string($this->toConfig) && str_contains($this->toConfig, '::')) {
-          [$class, $method] = explode('::', $this->toConfig);
-          $reflection = new \ReflectionMethod($class, $method);
-          // If the second parameter is a FormState object, pass it.
-          if (count($reflection->getParameters()) > 1 && $reflection->getParameters()[1]->getType()->getName() === FormStateInterface::class) {
-            $arguments[] = $form_state;
-          }
+        $reflection = new \ReflectionFunction($this->toConfig);
+        if (count($reflection->getParameters()) > 1 && $reflection->getParameters()[1]->getType()->getName() === FormStateInterface::class) {
+          $arguments[] = $form_state;
         }
         $value = ($this->toConfig)(...$arguments);
       }
