@@ -79,9 +79,10 @@ final class FieldStorageAddController extends ControllerBase {
     }
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
-
+    $ui_definitions = $this->fieldTypePluginManager->getUiDefinitions();
+    \Drupal::moduleHandler()->invokeAll('ui_definitions_alter', [&$ui_definitions, $entity_type_id]);
     $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($ui_definitions, 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {
