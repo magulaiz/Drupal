@@ -9,6 +9,8 @@ use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\editor\Entity\Editor;
 
+// cspell:ignore multiblock
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -101,7 +103,25 @@ function ckeditor5_post_update_code_block(&$sandbox = []) {
       return FALSE;
     }
     $settings = $editor->getSettings();
+    // @see ckeditor5_editor_presave()
     return in_array('codeBlock', $settings['toolbar']['items'], TRUE);
+  });
+}
+
+/**
+ * Updates Text Editors using CKEditor 5.
+ */
+function ckeditor5_post_update_list_multiblock(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+    $settings = $editor->getSettings();
+
+    // @see ckeditor5_editor_presave()
+    return array_key_exists('ckeditor5_list', $settings['plugins']);
   });
 }
 
@@ -135,10 +155,12 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     // text format (such as "Full HTML"), then set the new "startIndex" setting
     // for the List plugin to false.
     $ol_start = HTMLRestrictions::fromString('<ol start>');
-    $settings['plugins']['ckeditor5_list']['startIndex'] = $ol_start->diff($source_edited)->allowsNothing() || $format_restrictions->isUnrestricted();
+    $settings['plugins']['ckeditor5_list']['startIndex'] = $ol_start->diff($source_edited)
+        ->allowsNothing() || $format_restrictions->isUnrestricted();
     // Same for <ol reversed> and "reversed".
     $ol_reversed = HTMLRestrictions::fromString('<ol reversed>');
-    $settings['plugins']['ckeditor5_list']['reversed'] = $ol_reversed->diff($source_edited)->allowsNothing() || $format_restrictions->isUnrestricted();
+    $settings['plugins']['ckeditor5_list']['reversed'] = $ol_reversed->diff($source_edited)
+        ->allowsNothing() || $format_restrictions->isUnrestricted();
 
     // Update the Source Editing configuration too.
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
