@@ -66,7 +66,7 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
     return $second_favorite_fruit ?? 'Orange';
   }
 
-  public static function toFavoriteFruits(FormStateInterface $form_state, string $first) : array {
+  public static function toFavoriteFruits(string $first, FormStateInterface $form_state) : array {
     return [$first, $form_state->getValue(['favorites', 'second'])];
   }
 

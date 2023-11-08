@@ -116,15 +116,13 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * Prepares the submitted value to be stored in the notify_emails property.
    *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
    * @param string $value
    *   The submitted value.
    *
    * @return array
    *   The value to be stored in config.
    */
-  public static function multiLineStringToArray(FormStateInterface $form_state, string $value): array {
+  public static function multiLineStringToArray(string $value): array {
     return array_map('trim', explode("\n", trim($value)));
   }
 

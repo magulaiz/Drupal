@@ -127,8 +127,6 @@ class LocaleSettingsForm extends ConfigFormBase {
   /**
    * Maps UI form element value to `locale.settings:translation.overwrite_*`.
    *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
    * @param string $radio_option
    *   One of the 3 provided options:
    *   - LOCALE_TRANSLATION_OVERWRITE_ALL
@@ -139,7 +137,7 @@ class LocaleSettingsForm extends ConfigFormBase {
    *   The values for the 2 `locale.settings:translation.overwrite_*` property
    *   paths.
    */
-  public static function toOverwriteSettings(FormStateInterface $form_state, string $radio_option): array {
+  public static function toOverwriteSettings(string $radio_option): array {
     switch ($radio_option) {
       case LOCALE_TRANSLATION_OVERWRITE_ALL:
         return [

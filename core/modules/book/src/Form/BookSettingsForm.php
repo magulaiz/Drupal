@@ -66,15 +66,13 @@ class BookSettingsForm extends ConfigFormBase {
   /**
    * Transformation callback for the book_allowed_types config value.
    *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
    * @param array $allowed_types
    *   The config value to transform.
    *
    * @return array
    *   The transformed value.
    */
-  public static function filterAndSortAllowedTypes(FormStateInterface $form_state, array $allowed_types): array {
+  public static function filterAndSortAllowedTypes(array $allowed_types): array {
     $allowed_types = array_filter($allowed_types);
     // We need to save the allowed types in an array ordered by machine_name so
     // that we can save them in the correct order if node type changes.
