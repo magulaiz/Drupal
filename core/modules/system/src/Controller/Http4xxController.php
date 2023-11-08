@@ -3,6 +3,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -32,7 +33,7 @@ class Http4xxController extends ControllerBase {
     path: '/system/401',
     name: 'system.401',
     requirements: ['_access' => 'TRUE'],
-    defaults: ['_title' => 'Unauthorized']
+    defaults: ['_title' => new TranslatableMarkup('Unauthorized')]
   )]
   public function on401() {
     return [
