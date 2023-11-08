@@ -8,6 +8,14 @@ form_test.object:
     favorite_vegetable:
       type: required_label
       label: 'Favorite vegetable'
+      # Optional because different tests exercise different parts.
+      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
+      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
+      requiredKey: false
     nemesis_vegetable:
       type: required_label
       label: 'Nemesis vegetable'
+      # Optional because different tests exercise different parts.
+      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
+      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
+      requiredKey: false
