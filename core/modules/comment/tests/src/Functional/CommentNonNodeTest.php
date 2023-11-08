@@ -437,15 +437,15 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Add a new comment field.
     $storage_edit = [
-      'field_storage[subform][settings][comment_type]' => 'foobar',
+      'settings[comment_type]' => 'foobar',
     ];
     $this->fieldUIAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
 
     // Add a third comment field.
-    $this->fieldUIAddNewField('entity_test/structure/entity_test', 'barfoo', 'BarFoo', 'comment', $storage_edit);
+    $this->fieldUIAddNewField('entity_test/structure/entity_test', 'bar_foo', 'Bar_Foo', 'comment', $storage_edit);
 
     // Check the field contains the correct comment type.
-    $field_storage = FieldStorageConfig::load('entity_test.field_barfoo');
+    $field_storage = FieldStorageConfig::load('entity_test.field_bar_foo');
     $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
     $this->assertEquals('foobar', $field_storage->getSetting('comment_type'));
     $this->assertEquals(1, $field_storage->getCardinality());
@@ -477,7 +477,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->fieldValueEquals('comment_body[0][value]', '');
-    $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings');
+    $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings', 'comment type');
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->fieldNotExists('comment_body[0][value]');
     // Set subject field to autogenerate it.
