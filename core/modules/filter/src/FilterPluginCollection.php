@@ -2,6 +2,7 @@
 
 namespace Drupal\filter;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 
@@ -88,8 +89,13 @@ class FilterPluginCollection extends DefaultLazyPluginCollection {
    * {@inheritdoc}
    */
   public function sortHelper($aID, $bID) {
-    $a = $this->get($aID);
-    $b = $this->get($bID);
+    try {
+      $a = $this->get($aID);
+      $b = $this->get($bID);
+    }
+    catch (PluginNotFoundException) {
+      return 0;
+    }
     if ($a->status != $b->status) {
       return !empty($a->status) ? -1 : 1;
     }
