@@ -161,14 +161,9 @@ class Mapping extends ArrayElement {
     );
 
     // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. In the
-    // case of hitting the `$type = "$type||$sub_type";` edge case, 2 calls to
-    // `getDefinitionWithReplacements()` happen:
-    // 1. buildDataDefinition() calls it WITH the $replace parameter
-    // 2. getDefinition() calls it WITHOUT the $replace parameter
-    // Calling getDefinition() like we do above causes the computed type to be
-    // overwritten. Clearing the definitions cache is a temporary work-around.
-    // @todo create issue + fix
+    // bug that made TypedConfigManager sensitive to cache pollution. This is a
+    // work-around.
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
     if (str_starts_with($original_mapping_type, 'wrapping.')) {
       $this->getTypedDataManager()->clearCachedDefinitions();
     }
