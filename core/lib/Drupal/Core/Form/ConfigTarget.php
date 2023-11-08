@@ -191,7 +191,6 @@ final class ConfigTarget {
     }
 
     $is_multi_target = count($this->propertyPaths) > 1;
-    $values = [];
     if ($this->toConfig) {
       try {
         // The first argument to be passed to the "toConfig" callable is always
@@ -227,17 +226,13 @@ final class ConfigTarget {
       }
     }
 
-    // The multi-target case will always have a toConfig callable, so it will
-    // have been processed by the preceding logic. Restructure the single target
-    // case's single value to allow using the same logic for setting one or
-    // multiple property path targets.
-    // @see \Drupal\Core\Form\ConfigTarget::__construct
     if (!$is_multi_target) {
-      $values = [$this->propertyPaths[0] => $value];
+      $config->set($this->propertyPaths[0], $value);
     }
-
-    foreach ($values as $property_path => $value) {
-      $config->set($property_path, $value);
+    else {
+      foreach ($values as $property_path => $value) {
+        $config->set($property_path, $value);
+      }
     }
   }
 
