@@ -221,8 +221,6 @@ final class ConfigTarget {
         if (!is_array($value) || array_diff(array_keys($value), $this->propertyPaths)) {
           throw new \LogicException();
         }
-        // No restructuring needed.
-        $values = $value;
       }
     }
 
@@ -230,9 +228,7 @@ final class ConfigTarget {
       $config->set($this->propertyPaths[0], $value);
     }
     else {
-      foreach ($values as $property_path => $value) {
-        $config->set($property_path, $value);
-      }
+      array_map($config->set(...), array_keys($value), array_values($value));
     }
   }
 
