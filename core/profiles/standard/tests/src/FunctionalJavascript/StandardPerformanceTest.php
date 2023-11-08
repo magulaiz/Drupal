@@ -73,6 +73,26 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
+   * Tests performance of logging in.
+   */
+  public function testLogIn() {
+    // Create a user and log them in to warm all caches.
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $this->drupalLogout();
+
+    $this->drupalGet('user/login');
+    $performance_data = $this->collectPerformanceData(function () use ($account) {
+      $this->submitForm([
+        'name' => $account->getAccountName(),
+        'pass' => $account->passRaw,
+      ], 'Log in');
+    });
+    $this->assertLessThanOrEqual(89, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(88, $performance_data->getQueryCount());
+  }
+
+  /**
    * Passes if no JavaScript is found on the page.
    *
    * @param Drupal\Tests\PerformanceData $performance_data
@@ -86,6 +106,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertEmpty($settings, 'drupalSettings is not set.');
     $this->assertSession()->responseNotMatches('/\.js/');
     $this->assertSame(0, $performance_data->getScriptCount());
+  }
+
+  /**
+   * Empty implementation to prevent resetting of caches.
+   */
+  protected function refreshVariables() {
   }
 
 }
