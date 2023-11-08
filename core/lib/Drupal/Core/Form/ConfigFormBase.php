@@ -156,15 +156,7 @@ abstract class ConfigFormBase extends FormBase {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
-      try {
-        static::copyFormValuesToConfig($config, $form_state, $form);
-      }
-      catch (\BadMethodCallException $e) {
-        // Nothing to do: this config form does not yet use validation
-        // constraints. Continue trying the other editable config, to allow
-        // partial adoption.
-        continue;
-      }
+      static::copyFormValuesToConfig($config, $form_state, $form);
       $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
 
       $violations = $typed_config->validate();
@@ -264,16 +256,8 @@ abstract class ConfigFormBase extends FormBase {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
-      try {
-        static::copyFormValuesToConfig($config, $form_state, $form);
-        $config->save();
-      }
-      catch (\BadMethodCallException $e) {
-        // Nothing to do: this config form does not yet use validation
-        // constraints. Continue trying the other editable config, to allow
-        // partial adoption.
-        continue;
-      }
+      static::copyFormValuesToConfig($config, $form_state, $form);
+      $config->save();
     }
     $this->messenger()->addStatus($this->t('The configuration options have been saved.'));
   }
@@ -295,12 +279,6 @@ abstract class ConfigFormBase extends FormBase {
    */
   private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $form): void {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP);
-    // If there's no map of config keys to form elements, this form does not
-    // yet support config validation.
-    // @see ::validateForm()
-    if (empty($map[$config->getName()])) {
-      throw new \BadMethodCallException();
-    }
 
     foreach ($map[$config->getName()] as $array_parents) {
       $target = ConfigTarget::fromForm($array_parents, $form);
