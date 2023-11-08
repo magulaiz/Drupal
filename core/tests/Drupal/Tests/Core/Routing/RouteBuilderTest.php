@@ -340,7 +340,7 @@ class RouteBuilderTest extends UnitTestCase implements EventSubscriberInterface 
    * @group legacy
    */
   public function testDeprecatedConstructorArgs() {
-    $this->expectDeprecation('Calling Drupal\Core\Routing\RouteBuilder::__construct() with the module handler and controller resolver services is deprecated in drupal:10.1.0 and will be removed in drupal:11.0.0. See https://www.drupal.org/node/3324751');
+    $this->expectDeprecation('Calling Drupal\Core\Routing\RouteBuilder::__construct() with the module handler and controller resolver services is deprecated in drupal:10.3.0 and will be removed in drupal:11.0.0. See https://www.drupal.org/node/3324751');
     new RouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->checkProvider);
   }
 
