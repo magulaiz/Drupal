@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\Config;
 
 /**
  * Represents the mapping of a config property to a form element.
@@ -34,15 +35,19 @@ final class ConfigTarget {
    * Transforms a value loaded from config before it gets displayed by the form.
    *
    * @var \Closure|null
+   *
+   * @see ::getValue()
    */
-  public readonly ?\Closure $fromConfig;
+  private readonly ?\Closure $fromConfig;
 
   /**
    * Transforms a value submitted by the form before it is set in the config.
    *
    * @var \Closure|null
+   *
+   * @see ::setValue()
    */
-  public readonly ?\Closure $toConfig;
+  private readonly ?\Closure $toConfig;
 
   /**
    * Constructs a ConfigTarget object.
@@ -76,7 +81,7 @@ final class ConfigTarget {
     elseif (count($propertyPath) > 1 && (empty($fromConfig) || empty($toConfig))) {
       throw new \LogicException('The $fromConfig and $toConfig arguments must be passed to ' . __METHOD__ . '() if multiple property paths are targeted.');
     }
-    $this->propertyPaths = $propertyPath;
+    $this->propertyPaths = array_values($propertyPath);
   }
 
   /**
@@ -130,6 +135,87 @@ final class ConfigTarget {
     // Add the element information to the config target object.
     $target->elementParents = $element['#parents'];
     return $target;
+  }
+
+  /**
+   * Retrieves the mapped value from config.
+   *
+   * @param \Drupal\Core\Config\Config $config
+   *   The config object we're reading from.
+   *
+   * @return mixed
+   *   The mapped value, with any transformations applied.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown if the given config object is not the one being targeted by
+   *   $this->configName.
+   */
+  public function getValue(Config $config): mixed {
+    if ($config->getName() !== $this->configName) {
+      throw new \InvalidArgumentException();
+    }
+
+    $values = array_map($config->get(...), $this->propertyPaths);
+    if ($this->fromConfig) {
+      $values = array_map($this->fromConfig, $values);
+    }
+    if (count($this->propertyPaths) === 1) {
+      return reset($values);
+    }
+    return array_combine($this->propertyPaths, $values);
+  }
+
+  /**
+   * Sets the submitted value from config.
+   *
+   * @param \Drupal\Core\Config\Config $config
+   *   The config object we're changing.
+   * @param mixed $value
+   *   The value(s) to set. If this object is targeting multiple property paths,
+   *   this must be an array with the values to set, keyed by property path.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown if the given config object is not the one being targeted by
+   *   $this->configName.
+   * @throws \LogicException
+   *   Thrown if this object is targeting multiple property paths and $value
+   *   does not contain a value for every one of those property paths.
+   */
+  public function setValue(Config $config, mixed $value, FormStateInterface $form_state): void {
+    if ($config->getName() !== $this->configName) {
+      throw new \InvalidArgumentException();
+    }
+
+    // Create an array of the submitted values, keyed by their corresponding
+    // property path in config.
+    if (count($this->propertyPaths) === 1) {
+      $values = [
+        $this->propertyPaths[0] => $value,
+      ];
+    }
+    else {
+      // If we're targeting multiple property paths, $value needs to be an array
+      // with every targeted property path.
+      if (!is_array($value) || array_diff(array_keys($value), $this->propertyPaths)) {
+        throw new \LogicException();
+      }
+      $values = $value;
+    }
+
+    foreach ($values as $property_path => $value) {
+      if ($this->toConfig) {
+        try {
+          $value = ($this->toConfig)($form_state, $value);
+        }
+        catch (\OutOfBoundsException) {
+          // The callback is telling us this value should not be set in config.
+          continue;
+        }
+      }
+      $config->set($property_path, $value);
+    }
   }
 
 }

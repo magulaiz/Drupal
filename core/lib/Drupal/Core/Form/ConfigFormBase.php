@@ -98,14 +98,7 @@ abstract class ConfigFormBase extends FormBase {
       }
 
       $config = $this->config($target->configName);
-      $value = array_map($config->get(...), $target->propertyPaths);
-      if ($target->fromConfig) {
-        $value = ($target->fromConfig)(...$value);
-      }
-      if (count($target->propertyPaths) === 1) {
-        $value = reset($value);
-      }
-      $element['#default_value'] = $value;
+      $element['#default_value'] = $target->getValue($config);
     }
 
     foreach (Element::children($element) as $key) {
@@ -315,24 +308,7 @@ abstract class ConfigFormBase extends FormBase {
         continue;
       }
       $value = $form_state->getValue($target->elementParents);
-      if ($target->toConfig) {
-        try {
-          $value = ($target->toConfig)($form_state, $value);
-        }
-        catch (\OutOfBoundsException) {
-          // The "toConfig" callable indicated that this form value does not
-          // correspond to any value needing to be set. Typical use case: some
-          // property path must only be set conditionally.
-          continue;
-        }
-      }
-
-      if (count($target->propertyPaths) > 1 && (!is_array($value) || array_diff(array_keys($value), $target->propertyPaths))) {
-        throw new \LogicException('A ConfigTarget instance must return a value for every property path it targets.');
-      }
-      foreach ($target->propertyPaths as $property_path) {
-        $config->set($property_path, count($target->propertyPaths) === 1 ? $value : $value[$property_path]);
-      }
+      $target->setValue($config, $value, $form_state);
     }
   }
 
