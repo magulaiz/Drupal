@@ -9,6 +9,7 @@ use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
@@ -52,20 +53,30 @@ class FieldStorageAddForm extends FormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypePluginManager
    *   The field type plugin manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface|ConfigFactoryInterface $entityFieldManager
    *   (optional) The entity field manager.
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
    * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface $fieldTypeCategoryManager
    *   The field type category plugin manager.
+   *
+   * @see https://www.drupal.org/node/3400352
    */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
-    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityFieldManagerInterface|ConfigFactoryInterface $entityFieldManager,
     protected PrivateTempStore $tempStore,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
   ) {
+    if ($this->entityFieldManager instanceof ConfigFactoryInterface) {
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $config_factory argument is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3400352', E_USER_DEPRECATED);
+      $this->entityFieldManager = func_get_arg(3);
+      if ($this->tempStore !== NULL && $this->fieldTypeCategoryManager !== NULL) {
+        $this->tempStore = func_get_arg(4);
+        $this->fieldTypeCategoryManager = func_get_arg(5);
+      }
+    }
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldStorageAddForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
