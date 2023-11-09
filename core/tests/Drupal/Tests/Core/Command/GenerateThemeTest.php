@@ -102,7 +102,7 @@ class GenerateThemeTest extends QuickStartTestBase {
 
     // Confirm readme is rewritten.
     $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
-    $this->assertSame('test_custom_theme theme, generated from starterkit_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+    $this->assertSame('"Test custom starterkit theme" theme, generated from starterkit_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
 
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
