@@ -5,6 +5,7 @@ namespace Drupal\Tests\rest\Functional;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Drupal\Core\Url;
 use Drupal\rest\RestResourceConfigInterface;
+use Drupal\Tests\ApiRequestTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -23,6 +24,8 @@ use Psr\Http\Message\ResponseInterface;
  * entity types), but the same principles apply.
  */
 abstract class ResourceTestBase extends BrowserTestBase {
+
+  use ApiRequestTrait;
 
   /**
    * The format to use in this test.
@@ -454,32 +457,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
     $expected_body = ($expected_message !== FALSE) ? $this->serializer->encode(['message' => $expected_message], static::$format) : FALSE;
     $this->assertResourceResponse($expected_status_code, $expected_body, $response, $expected_cache_tags, $expected_cache_contexts, $expected_page_cache_header_value, $expected_dynamic_page_cache_header_value);
-  }
-
-  /**
-   * Adds the Xdebug cookie to the request options.
-   *
-   * @param array $request_options
-   *   The request options.
-   *
-   * @return array
-   *   Request options updated with the Xdebug cookie if present.
-   */
-  protected function decorateWithXdebugCookie(array $request_options) {
-    $session = $this->getSession();
-    $driver = $session->getDriver();
-    if ($driver instanceof BrowserKitDriver) {
-      $client = $driver->getClient();
-      foreach ($client->getCookieJar()->all() as $cookie) {
-        if (isset($request_options[RequestOptions::HEADERS]['Cookie'])) {
-          $request_options[RequestOptions::HEADERS]['Cookie'] .= '; ' . $cookie->getName() . '=' . $cookie->getValue();
-        }
-        else {
-          $request_options[RequestOptions::HEADERS]['Cookie'] = $cookie->getName() . '=' . $cookie->getValue();
-        }
-      }
-    }
-    return $request_options;
   }
 
   /**
