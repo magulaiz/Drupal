@@ -67,7 +67,7 @@ class ConfigTargetTest extends BrowserTestBase {
 
     $page->fillField('First choice', $most_favorite_fruit);
     $page->pressButton('Save configuration');
-    $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
+    $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
 
     $this->assertSame([
       'favorite_fruits' => [
