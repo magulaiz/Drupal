@@ -265,13 +265,6 @@ system.file:
     default_scheme:
       type: string
       label: 'Default download method'
-    path:
-      type: mapping
-      label: 'Path settings'
-      mapping:
-        temporary:
-          type: string
-          label: 'Temporary directory'
     temporary_maximum_age:
       type: integer
       label: 'Maximum age for temporary files'
