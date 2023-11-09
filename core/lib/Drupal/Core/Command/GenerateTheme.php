@@ -337,25 +337,6 @@ class GenerateTheme extends Command {
       $info = Yaml::decode($info_contents);
       $this->source_theme_info = $info;
 
-      if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
-        foreach ($info_overrides as $key => $value) {
-          if ($value === NULL) {
-            unset($info[$key]);
-          }
-          else {
-            $info[$key] = $value;
-          }
-        }
-      }
-
-      if ($this->destination_theme_description) {
-        $info['description'] = $this->destination_theme_description;
-      }
-
-      if (!isset($info['core_version_requirement'])) {
-        $info['core_version_requirement'] = '^' . explode('.', \Drupal::VERSION)[0];
-      }
-
       $source_version = $info['version'] ?? 'unknown-version';
       if ($source_version === 'VERSION') {
         $source_version = \Drupal::VERSION;
@@ -387,6 +368,25 @@ class GenerateTheme extends Command {
         }
       }
       $info['generator'] = "$this->source_theme_name:$source_version";
+
+      if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
+        foreach ($info_overrides as $key => $value) {
+          if ($value === NULL) {
+            unset($info[$key]);
+          }
+          else {
+            $info[$key] = $value;
+          }
+        }
+      }
+
+      if ($this->destination_theme_description) {
+        $info['description'] = $this->destination_theme_description;
+      }
+
+      if (!isset($info['core_version_requirement'])) {
+        $info['core_version_requirement'] = '^' . explode('.', \Drupal::VERSION)[0];
+      }
 
       $info_contents = Yaml::encode($info);
       file_put_contents($info_file, $info_contents);
