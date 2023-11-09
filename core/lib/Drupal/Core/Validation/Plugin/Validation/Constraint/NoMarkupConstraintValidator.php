@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use Drupal\Component\Utility\Html;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -22,7 +21,7 @@ class NoMarkupConstraintValidator extends ConstraintValidator {
     if (NULL === $value) {
       return;
     }
-    if (Html::escape($value) !== $value) {
+    if (strip_tags($value) !== $value) {
       $this->context->buildViolation($constraint->markupPresentMessage)
         ->addViolation();
       return;
