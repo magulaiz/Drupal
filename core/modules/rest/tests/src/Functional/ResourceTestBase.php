@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\rest\Functional;
 
-use Behat\Mink\Driver\BrowserKitDriver;
 use Drupal\Core\Url;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\ApiRequestTrait;
