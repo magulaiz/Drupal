@@ -84,7 +84,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query->condition('grant_' . $operation, 1, '>=');
     // Check for grants for this node and the correct langcode.
     $nids = $query->andConditionGroup()
-      ->condition('nid', $node->id())
+      ->condition('nid', (int) $node->id())
       ->condition('langcode', $node->language()->getId());
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.

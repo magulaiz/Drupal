@@ -205,10 +205,11 @@ class CommentStatistics implements CommentStatisticsInterface {
       ->fetchField();
 
     if ($count > 0) {
+      $commented_entity_id = is_numeric($comment->getCommentedEntityId()) ? (int) $comment->getCommentedEntityId() : $comment->getCommentedEntityId();
       // Comments exist.
       $last_reply = $this->database->select('comment_field_data', 'c')
         ->fields('c', ['cid', 'name', 'changed', 'uid'])
-        ->condition('c.entity_id', $comment->getCommentedEntityId())
+        ->condition('c.entity_id', $commented_entity_id)
         ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
         ->condition('c.field_name', $comment->getFieldName())
         ->condition('c.status', CommentInterface::PUBLISHED)
@@ -227,7 +228,7 @@ class CommentStatistics implements CommentStatisticsInterface {
           'last_comment_uid' => $last_reply->uid,
         ])
         ->keys([
-          'entity_id' => $comment->getCommentedEntityId(),
+          'entity_id' => $commented_entity_id,
           'entity_type' => $comment->getCommentedEntityTypeId(),
           'field_name' => $comment->getFieldName(),
         ])

@@ -51,7 +51,7 @@ use Drupal\node\NodeInterface;
  */
 function node_access_test_node_grants($account, $operation) {
   $grants = [];
-  $grants['node_access_test_author'] = [$account->id()];
+  $grants['node_access_test_author'] = [(int) $account->id()];
   if ($operation == 'view' && $account->hasPermission('node test view')) {
     $grants['node_access_test'] = [8888, 8889];
   }
