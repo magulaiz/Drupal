@@ -329,6 +329,7 @@ class GenerateTheme extends Command {
    */
   private function overrideThemeInfo() {
     $info_overrides = $this->info_overrides;
+    $source_theme = $this->source_theme_name;
     $theme = $this->destination_theme;
     $tmp_dir = $this->tmp_dir;
     $info_file = "$tmp_dir/$theme.info.yml";
