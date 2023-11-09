@@ -164,7 +164,6 @@ class ConditionParameterTypeCheck {
 
         // Get the schemas for the tables created in hook_schema().
         $schemas = $this->moduleHandler->invokeAll('schema') ?? [];
-        //dump(array_keys($schemas));
         foreach ($schemas as $table_name => $table_schema) {
           $this->schema[$table_name] = $table_schema;
         }
