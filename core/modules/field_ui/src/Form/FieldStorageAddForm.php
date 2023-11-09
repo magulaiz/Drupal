@@ -110,7 +110,7 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $selected_field_type = NULL, $entity_type_id = NULL, $bundle = NULL, $field_type_options = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $selected_field_type = NULL, $field_type_options = NULL) {
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
     }
