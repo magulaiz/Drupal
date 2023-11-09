@@ -643,6 +643,7 @@ JS;
               'reversed' => FALSE,
               'startIndex' => FALSE,
             ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
