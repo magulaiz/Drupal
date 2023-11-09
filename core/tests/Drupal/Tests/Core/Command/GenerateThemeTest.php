@@ -137,6 +137,12 @@ class GenerateThemeTest extends QuickStartTestBase {
     $info['version'] = '9.4.0';
     file_put_contents($starterkit_info_yml, Yaml::encode($info));
 
+    // Add starterkit back into first generated theme.
+    $starterkit_starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
+    $sk = Yaml::decode(file_get_contents($starterkit_starterkit_yml));
+    $sk['starterkit'] = true;
+    file_put_contents($starterkit_starterkit_yml, Yaml::encode($sk));
+
     $process = $this->generateThemeFromStarterkit();
     $exit_code = $process->run();
     $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
