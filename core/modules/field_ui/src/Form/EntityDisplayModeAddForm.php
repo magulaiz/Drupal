@@ -92,7 +92,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    *   The redirect URL or NULL if dialog should just be closed.
    */
   protected function getRedirectUrl() {
-    if ($destination = \Drupal::request()->query->get('testing')) {
+    if ($destination = \Drupal::request()->query->get('parent_url')) {
       return Url::fromUri($destination);
     }
     return NULL;
