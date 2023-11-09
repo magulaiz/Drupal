@@ -163,7 +163,10 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    * {@inheritdoc}
    */
   public function getCacheTagsToInvalidate() {
-    return $this->shortcut_set->entity->getCacheTags();
+    if ($this->entity) {
+      return $this->entity->getCacheTagsToInvalidate();
+    }
+    return [];
   }
 
   /**

@@ -385,7 +385,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
       }
 
-      $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
+      if (!$sync_status || $this->moduleHandler->getModule($modules_installed)->getType() !== "profile") {
+        // Invoke the extensions install hook if we are not syncing config
+        // or if the extension is not the profile. Profiles install hook is
+        // only invoked when installing it with the normal installer.
+        $this->moduleHandler->invoke($modules_installed, 'install', [$sync_status]);
+      }
     }
 
     return TRUE;

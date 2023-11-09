@@ -73,7 +73,7 @@ function system_requirements($phase) {
   $theme_extension_list->reset();
   $requirements = [];
 
-  // Report Drupal version
+  // Report Drupal version.
   if ($phase == 'runtime') {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
@@ -238,7 +238,7 @@ function system_requirements($phase) {
     if (preg_match('/Apache\/(\d+)\.?(\d+)?\.?(\d+)?/', $software, $matches)) {
       $apache_version_string = $matches[0];
 
-      // Major version number
+      // Major version number.
       if ($matches[1] < 2) {
         $rewrite_error = TRUE;
       }
@@ -598,7 +598,7 @@ function system_requirements($phase) {
     }
   }
 
-  // Test PHP memory_limit
+  // Test PHP memory_limit.
   $memory_limit = ini_get('memory_limit');
   $requirements['php_memory_limit'] = [
     'title' => t('PHP memory limit'),
@@ -978,7 +978,7 @@ function system_requirements($phase) {
     }
   }
 
-  // Verify the update.php access setting
+  // Verify the update.php access setting.
   if ($phase == 'runtime') {
     if (Settings::get('update_free_access')) {
       $requirements['update access'] = [
@@ -1433,20 +1433,6 @@ function system_requirements($phase) {
       'description' => t('You are running on a system where PHP is compiled or limited to using 32-bit integers. This will limit the range of dates and timestamps to the years 1901-2038. Read about the <a href=":url">limitations of 32-bit PHP</a>.', [':url' => 'https://www.drupal.org/docs/system-requirements/limitations-of-32-bit-php']),
       'severity' => REQUIREMENT_WARNING,
     ];
-  }
-
-  // During installs from configuration don't support install profiles that
-  // implement hook_install.
-  if ($phase == 'install' && !empty($install_state['config_install_path'])) {
-    $install_hook = $install_state['parameters']['profile'] . '_install';
-    if (function_exists($install_hook)) {
-      $requirements['config_install'] = [
-        'title' => t('Configuration install'),
-        'value' => $install_state['parameters']['profile'],
-        'description' => t('The selected profile has a hook_install() implementation and therefore can not be installed from configuration.'),
-        'severity' => REQUIREMENT_ERROR,
-      ];
-    }
   }
 
   if ($phase === 'runtime') {

@@ -89,36 +89,32 @@ class SelectProfileForm extends FormBase {
       $extensions = $sync->read('core.extension');
       $site = $sync->read('system.site');
       if (isset($site['name']) && isset($extensions['profile']) && in_array($extensions['profile'], array_keys($names), TRUE)) {
-        // Ensure the profile can be installed from configuration. Install
-        // profile's which implement hook_INSTALL() are not supported.
-        // @todo https://www.drupal.org/project/drupal/issues/2982052 Remove
-        //   this restriction.
         $root = \Drupal::root();
         include_once $root . '/core/includes/install.inc';
         $file = $root . '/' . $install_state['profiles'][$extensions['profile']]->getPath() . "/{$extensions['profile']}.install";
         if (is_file($file)) {
           require_once $file;
         }
-        if (!function_exists($extensions['profile'] . '_install')) {
-          $form['profile']['#options'][static::CONFIG_INSTALL_PROFILE_KEY] = $this->t('Use existing configuration');
-          $form['profile'][static::CONFIG_INSTALL_PROFILE_KEY]['#description'] = [
-            'description' => [
-              '#markup' => $this->t('Install %name using existing configuration.', ['%name' => $site['name']]),
+
+        // Add the option to install the site from configuration.
+        $form['profile']['#options'][static::CONFIG_INSTALL_PROFILE_KEY] = $this->t('Use existing configuration');
+        $form['profile'][static::CONFIG_INSTALL_PROFILE_KEY]['#description'] = [
+          'description' => [
+            '#markup' => $this->t('Install %name using existing configuration.', ['%name' => $site['name']]),
+          ],
+          'info' => [
+            '#type' => 'item',
+            '#markup' => $this->t('The configuration from the directory %sync_directory will be used.', ['%sync_directory' => $config_sync_directory]),
+            '#wrapper_attributes' => [
+              'class' => ['messages', 'messages--status'],
             ],
-            'info' => [
-              '#type' => 'item',
-              '#markup' => $this->t('The configuration from the directory %sync_directory will be used.', ['%sync_directory' => $config_sync_directory]),
-              '#wrapper_attributes' => [
-                'class' => ['messages', 'messages--status'],
-              ],
-              '#states' => [
-                'visible' => [
-                  ':input[name="profile"]' => ['value' => static::CONFIG_INSTALL_PROFILE_KEY],
-                ],
+            '#states' => [
+              'visible' => [
+                ':input[name="profile"]' => ['value' => static::CONFIG_INSTALL_PROFILE_KEY],
               ],
             ],
-          ];
-        }
+          ],
+        ];
       }
     }
 

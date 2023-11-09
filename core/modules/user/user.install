@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_schema().
@@ -73,24 +75,30 @@ function user_schema() {
 function user_install() {
   $storage = \Drupal::entityTypeManager()->getStorage('user');
   // Insert a row for the anonymous user.
-  $storage
-    ->create([
-      'uid' => 0,
-      'status' => 0,
-      'name' => '',
-    ])
-    ->save();
+  $anonymous_user = User::load(0);
+  if (!$anonymous_user instanceof UserInterface) {
+    $storage
+      ->create([
+        'uid' => 0,
+        'status' => 0,
+        'name' => '',
+      ])
+      ->save();
+  }
 
   // We need some placeholders here as name and mail are unique.
   // This will be changed by the settings form in the installer.
-  $storage
-    ->create([
-      'uid' => 1,
-      'name' => 'placeholder-for-uid-1',
-      'mail' => 'placeholder-for-uid-1',
-      'status' => TRUE,
-    ])
-    ->save();
+  $user = User::load(1);
+  if (!$user instanceof UserInterface) {
+    $storage
+      ->create([
+        'uid' => 1,
+        'name' => 'placeholder-for-uid-1',
+        'mail' => 'placeholder-for-uid-1',
+        'status' => TRUE,
+      ])
+      ->save();
+  }
 }
 
 /**
