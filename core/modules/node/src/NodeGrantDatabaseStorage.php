@@ -201,7 +201,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function write(NodeInterface $node, array $grants, $realm = NULL, $delete = TRUE) {
     if ($delete) {
-      $query = $this->database->delete('node_access')->condition('nid', $node->id());
+      $query = $this->database->delete('node_access')->condition('nid', (int) $node->id());
       if ($realm) {
         $query->condition('realm', [$realm, 'all'], 'IN');
       }
@@ -277,6 +277,10 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    * {@inheritdoc}
    */
   public function deleteNodeRecords(array $nids) {
+    foreach ($nids as &$nid) {
+      $nid = (int) $nid;
+    }
+
     $this->database->delete('node_access')
       ->condition('nid', $nids, 'IN')
       ->execute();

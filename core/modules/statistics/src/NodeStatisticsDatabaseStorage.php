@@ -69,6 +69,10 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function fetchViews($ids) {
+    foreach ($ids as &$id) {
+      $id = (int) $id;
+    }
+
     $views = $this->connection
       ->select('node_counter', 'nc')
       ->fields('nc', ['totalcount', 'daycount', 'timestamp'])
@@ -110,7 +114,7 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
   public function deleteViews($id) {
     return (bool) $this->connection
       ->delete('node_counter')
-      ->condition('nid', $id)
+      ->condition('nid', (int) $id)
       ->execute();
   }
 

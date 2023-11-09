@@ -197,8 +197,8 @@ class NodeRevisionsTest extends NodeTestBase {
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
       ->allRevisions()
-      ->condition('nid', $node->id())
-      ->condition('vid', $nodes[1]->getRevisionId())
+      ->condition('nid', (int) $node->id())
+      ->condition('vid', (int) $nodes[1]->getRevisionId())
       ->execute();
     $this->assertCount(0, $nids);
 
@@ -206,7 +206,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
     $connection->update('node_revision')
-      ->condition('vid', $nodes[2]->getRevisionId())
+      ->condition('vid', (int) $nodes[2]->getRevisionId())
       ->fields([
         'revision_timestamp' => $old_revision_date,
       ])
@@ -260,7 +260,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // revision vid.
     $default_revision = $connection->select('node', 'n')
       ->fields('n', ['vid'])
-      ->condition('nid', $node->id())
+      ->condition('nid', (int) $node->id())
       ->execute()
       ->fetchCol();
     $default_revision_vid = $default_revision[0];

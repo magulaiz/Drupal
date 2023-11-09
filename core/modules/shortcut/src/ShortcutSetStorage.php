@@ -100,7 +100,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    */
   public function unassignUser($account) {
     $deleted = $this->connection->delete('shortcut_set_users')
-      ->condition('uid', $account->id())
+      ->condition('uid', (int) $account->id())
       ->execute();
     return (bool) $deleted;
   }

@@ -315,8 +315,8 @@ class Node extends DrupalSqlBase {
         // A better way would be to allow field plugins to alter the query
         // directly before it's run, but this will do for the time being.
         ->isNotNull($field['field_name'] . '_' . $columns[0])
-        ->condition('nid', $node->getSourceProperty('nid'))
-        ->condition('vid', $node->getSourceProperty('vid'))
+        ->condition('nid', (int) $node->getSourceProperty('nid'))
+        ->condition('vid', (int) $node->getSourceProperty('vid'))
         ->orderBy('delta')
         ->execute()
         ->fetchAllAssoc('delta');

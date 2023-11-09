@@ -100,13 +100,13 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       ->fields([
         'changed' => $node1->getChangedTime() + 100,
       ])
-      ->condition('nid', $node2->id())
+      ->condition('nid', (int) $node2->id())
       ->execute();
     $connection->update('node_field_data')
       ->fields([
         'changed' => $node1->getChangedTime() + 200,
       ])
-      ->condition('nid', $node3->id())
+      ->condition('nid', (int) $node3->id())
       ->execute();
 
     // Test that a user without the 'access content' permission cannot

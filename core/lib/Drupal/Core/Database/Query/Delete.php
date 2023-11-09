@@ -50,6 +50,8 @@ class Delete extends Query implements ConditionInterface {
   public function execute() {
     $values = [];
     if (count($this->condition)) {
+      $this->getConditionParameterTypeCheck()->checkParameterTypes([$this->table], $this->conditions());
+
       $this->condition->compile($this->connection, $this);
       $values = $this->condition->arguments();
     }

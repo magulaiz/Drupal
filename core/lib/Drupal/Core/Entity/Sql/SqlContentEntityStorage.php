@@ -1004,7 +1004,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $value = $revision ? $entity->getRevisionId() : $entity->id();
       // Delete and insert to handle removed values.
       $this->database->delete($table_name)
-        ->condition($key, $value)
+        ->condition($key, (is_numeric($value) ? (int) $value : $value))
         ->execute();
     }
 

@@ -277,7 +277,7 @@ class ForumTest extends BrowserTestBase {
     $vid = $this->config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(FALSE)
-      ->condition('vid', $vid)
+      ->condition('vid', (int) $vid)
       ->execute();
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $terms = $term_storage->loadMultiple($tids);
@@ -676,8 +676,8 @@ class ForumTest extends BrowserTestBase {
         ->get('database')
         ->select('forum', 'f')
         ->fields('f', ['tid'])
-        ->condition('nid', $node->id())
-        ->condition('vid', $node->getRevisionId())
+        ->condition('nid', (int) $node->id())
+        ->condition('vid', (int) $node->getRevisionId())
         ->execute()
         ->fetchField();
       $this->assertSame($this->rootForum['tid'], $forum_tid, 'The forum topic is linked to a different forum');

@@ -74,7 +74,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $account->login = REQUEST_TIME - mt_rand(10, 100000);
     Database::getConnection()->update('users_field_data')
       ->fields(['login' => $account->getLastLoginTime()])
-      ->condition('uid', $account->id())
+      ->condition('uid', (int) $account->id())
       ->execute();
   }
 

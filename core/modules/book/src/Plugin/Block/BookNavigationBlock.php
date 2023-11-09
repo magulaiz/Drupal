@@ -163,7 +163,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       // not show unpublished books.
       $nid = \Drupal::entityQuery('node')
         ->accessCheck(TRUE)
-        ->condition('nid', $node->book['bid'], '=')
+        ->condition('nid', (int) $node->book['bid'], '=')
         ->condition('status', NodeInterface::PUBLISHED)
         ->execute();
 

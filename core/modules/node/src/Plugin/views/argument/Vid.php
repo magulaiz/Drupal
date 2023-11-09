@@ -54,6 +54,9 @@ class Vid extends NumericArgument {
    */
   public function titleQuery() {
     $titles = [];
+    foreach ($this->value as &$value) {
+      $value = (int) $value;
+    }
 
     $results = $this->nodeStorage->getAggregateQuery()
       ->accessCheck(FALSE)

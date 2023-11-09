@@ -149,6 +149,9 @@ class DefaultMenuLinkTreeManipulators {
     $this->collectNodeLinks($tree, $node_links);
     if ($node_links) {
       $nids = array_keys($node_links);
+      foreach ($nids as &$nid) {
+        $nid = (int) $nid;
+      }
 
       $query = $this->entityTypeManager->getStorage('node')->getQuery();
       $query->accessCheck(TRUE);

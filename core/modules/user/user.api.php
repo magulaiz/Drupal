@@ -46,7 +46,7 @@ function hook_user_cancel($edit, UserInterface $account, $method) {
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $nodes = \Drupal::entityQuery('node')
         ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       node_mass_update($nodes, ['status' => 0], NULL, TRUE);
       break;
@@ -56,13 +56,13 @@ function hook_user_cancel($edit, UserInterface $account, $method) {
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $nodes = \Drupal::entityQuery('node')
         ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       node_mass_update($nodes, ['uid' => 0], NULL, TRUE);
       // Anonymize old revisions.
       \Drupal::database()->update('node_field_revision')
         ->fields(['uid' => 0])
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       break;
   }

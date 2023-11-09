@@ -414,7 +414,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
 
           // Permission has changed, update record.
           $this->database->update('help_search_items')
-            ->condition('sid', $old_item->sid)
+            ->condition('sid', (int) $old_item->sid)
             ->fields(['permission' => $permission])
             ->execute();
           unset($sids_to_remove[$old_item->sid]);

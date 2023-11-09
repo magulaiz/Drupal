@@ -60,7 +60,7 @@ class ConditionParameterTypeCheck {
    */
   public function checkParameterTypes(array $table_names, array $conditions): void {
     $schemas = $this->getSchemaTables($table_names);
-
+//$i = FALSE;
     foreach ($conditions as $condition) {
       if (isset($condition['field']) && $condition['field'] instanceof ConditionInterface) {
         // Recursively call this method to check all nested conditions.
@@ -93,8 +93,14 @@ class ConditionParameterTypeCheck {
           }
 
           if ($throw_error) {
-            // dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+//if (!$i) {
+//  dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+//  $i = TRUE;
+//}
+            dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
             @trigger_error($error_message, E_USER_DEPRECATED);
+            throw new \Exception('STOP');
+
           }
         }
       }

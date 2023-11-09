@@ -30,7 +30,7 @@ class FileSelection extends DefaultSelection {
     //   saved.)
     $query->condition($query->orConditionGroup()
       ->condition('status', FileInterface::STATUS_PERMANENT)
-      ->condition('uid', $this->currentUser->id()));
+      ->condition('uid', (int) $this->currentUser->id()));
     return $query;
   }
 
