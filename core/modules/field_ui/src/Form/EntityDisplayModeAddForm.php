@@ -78,15 +78,15 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
       $command = new RedirectCommand($redirect_url->setAbsolute()->toString());
     }
     else {
-      // Display mode add always provides a destination.
-      throw new \Exception("No destination provided by Display mode add form");
+      // Display mode add always provides a parent_url.
+      throw new \Exception("No parent_url provided by Display mode add form");
     }
     $response = new AjaxResponse();
     return $response->addCommand($command);
   }
 
   /**
-   * Gets the form's redirect URL from 'destination' provide in the request.
+   * Gets the form's redirect URL.
    *
    * @return \Drupal\Core\Url|null
    *   The redirect URL or NULL if dialog should just be closed.
