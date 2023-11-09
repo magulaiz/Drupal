@@ -63,7 +63,7 @@ class Select extends QuerySelect {
     // Only allow ASC and DESC, default to ASC.
     // Emulate MySQL default behavior to sort NULL values first for ascending,
     // and last for descending.
-    // @see http://www.postgresql.org/docs/9.3/static/queries-order.html
+    // @see https://www.postgresql.org/docs/9.3/static/queries-order.html
     $direction = strtoupper($direction) == 'DESC' ? 'DESC NULLS LAST' : 'ASC NULLS FIRST';
     $this->order[$field] = $direction;
 

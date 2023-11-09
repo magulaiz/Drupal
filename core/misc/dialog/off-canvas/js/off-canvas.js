@@ -80,7 +80,7 @@
       Drupal.offCanvas.removeOffCanvasEvents($element);
 
       $('body').addClass('js-off-canvas-dialog-open');
-      // @see http://api.jqueryui.com/position/
+      // @see https://api.jqueryui.com/position/
       settings.position = {
         my: 'left top',
         at: `${Drupal.offCanvas.getEdge()} top`,
@@ -89,7 +89,7 @@
 
       /**
        * Applies initial height and with to dialog based depending on position.
-       * @see http://api.jqueryui.com/dialog for all dialog options.
+       * @see https://api.jqueryui.com/dialog for all dialog options.
        */
       const position = settings.drupalOffCanvasPosition;
       const height = position === 'side' ? $(window).height() : settings.height;
@@ -224,7 +224,7 @@
       const topPosition =
         position === 'side' && offsets.top !== 0 ? `+${offsets.top}` : '';
       const adjustedOptions = {
-        // @see http://api.jqueryui.com/position/
+        // @see https://api.jqueryui.com/position/
         position: {
           my: `${Drupal.offCanvas.getEdge()} top`,
           at: `${Drupal.offCanvas.getEdge()} top${topPosition}`,

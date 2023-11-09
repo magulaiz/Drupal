@@ -201,7 +201,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $domain_configuration[] = [
       'http_host' => 'example.de',
       'domains' => [
-        'de' => 'http://example.de',
+        'de' => 'https://example.de',
       ],
       'expected_langcode' => 'de',
     ];
@@ -215,7 +215,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $domain_configuration[] = [
       'http_host' => 'example.de:8080',
       'domains' => [
-        'de' => 'http://example.de',
+        'de' => 'https://example.de',
       ],
       'expected_langcode' => 'de',
     ];
@@ -231,7 +231,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $domain_configuration[] = [
       'http_host' => 'example.com',
       'domains' => [
-        'de' => 'http://example.com',
+        'de' => 'https://example.com',
       ],
       'expected_langcode' => 'de',
     ];
@@ -239,7 +239,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $domain_configuration[] = [
       'http_host' => 'example.com',
       'domains' => [
-        'it' => 'http://example.it',
+        'it' => 'https://example.it',
       ],
       'expected_langcode' => FALSE,
     ];
@@ -247,8 +247,8 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $domain_configuration[] = [
       'http_host' => 'example.com',
       'domains' => [
-        'de' => 'http://example.de',
-        'en' => 'http://example.com',
+        'de' => 'https://example.de',
+        'en' => 'https://example.com',
       ],
       'expected_langcode' => 'en',
     ];

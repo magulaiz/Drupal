@@ -13,7 +13,7 @@
  * @section sec_overview Overview and terminology
  * The Drupal routing system defines how Drupal responds to URL requests that
  * the web server passes on to Drupal. The routing system is based on the
- * @link http://symfony.com Symfony routing system. @endlink The central idea is
+ * @link https://symfony.com Symfony routing system. @endlink The central idea is
  * that Drupal subsystems and modules can register routes (basically, URL
  * paths and context); they can also register to respond dynamically to
  * routes, for more flexibility. When Drupal receives a URL request, it will

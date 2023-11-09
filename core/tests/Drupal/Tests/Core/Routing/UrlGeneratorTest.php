@@ -448,22 +448,22 @@ class UrlGeneratorTest extends UnitTestCase {
    * Confirms that explicitly setting the base_url works with generated routes.
    */
   public function testBaseURLGeneration() {
-    $options = ['base_url' => 'http://www.example.com:8888'];
-    $this->assertGenerateFromRoute('test_1', [], $options, 'http://www.example.com:8888/hello/world', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $options = ['base_url' => 'https://www.example.com:8888'];
+    $this->assertGenerateFromRoute('test_1', [], $options, 'https://www.example.com:8888/hello/world', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
-    $options = ['base_url' => 'http://www.example.com:8888', 'https' => TRUE];
+    $options = ['base_url' => 'https://www.example.com:8888', 'https' => TRUE];
     $this->assertGenerateFromRoute('test_1', [], $options, 'https://www.example.com:8888/hello/world', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
     $options = ['base_url' => 'https://www.example.com:8888', 'https' => FALSE];
-    $this->assertGenerateFromRoute('test_1', [], $options, 'http://www.example.com:8888/hello/world', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_1', [], $options, 'https://www.example.com:8888/hello/world', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
     $this->routeProcessorManager->expects($this->exactly(2))
       ->method('processOutbound')
       ->with($this->anything());
 
-    $options = ['base_url' => 'http://www.example.com:8888', 'fragment' => 'top'];
+    $options = ['base_url' => 'https://www.example.com:8888', 'fragment' => 'top'];
     // Extra parameters should appear in the query string.
-    $this->assertGenerateFromRoute('test_1', ['zoo' => 5], $options, 'http://www.example.com:8888/hello/world?zoo=5#top', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_1', ['zoo' => 5], $options, 'https://www.example.com:8888/hello/world?zoo=5#top', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**

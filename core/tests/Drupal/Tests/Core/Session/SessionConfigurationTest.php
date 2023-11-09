@@ -47,10 +47,10 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   public function providerTestGeneratedCookieDomain() {
     return [
-      ['http://example.com/path/index.php', '.example.com'],
-      ['http://www.example.com/path/index.php', '.www.example.com'],
+      ['https://example.com/path/index.php', '.example.com'],
+      ['https://www.example.com/path/index.php', '.www.example.com'],
       ['http://subdomain.example.com/path/index.php', '.subdomain.example.com'],
-      ['http://example.com:8080/path/index.php', '.example.com'],
+      ['https://example.com:8080/path/index.php', '.example.com'],
       ['https://example.com/path/index.php', '.example.com'],
       ['http://localhost/path/index.php', ''],
       ['http://127.0.0.1/path/index.php', ''],
@@ -86,10 +86,10 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   public function providerTestEnforcedCookieDomain() {
     return [
-      ['http://example.com/path/index.php', '.example.com'],
-      ['http://www.example.com/path/index.php', '.example.com'],
+      ['https://example.com/path/index.php', '.example.com'],
+      ['https://www.example.com/path/index.php', '.example.com'],
       ['http://subdomain.example.com/path/index.php', '.example.com'],
-      ['http://example.com:8080/path/index.php', '.example.com'],
+      ['https://example.com:8080/path/index.php', '.example.com'],
       ['https://example.com/path/index.php', '.example.com'],
       ['http://localhost/path/index.php', '.example.com'],
       ['http://127.0.0.1/path/index.php', '.example.com'],
@@ -152,7 +152,7 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   public function providerTestCookieSecure() {
     return [
-      ['http://example.com/path/index.php', FALSE],
+      ['https://example.com/path/index.php', FALSE],
       ['https://www.example.com/path/index.php', TRUE],
       ['http://127.0.0.1/path/index.php', FALSE],
       ['https://127.0.0.1:8888/path/index.php', TRUE],
@@ -185,12 +185,12 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   public function providerTestGeneratedSessionName() {
     $data = [
-      ['http://example.com/path/index.php', 'SESS', 'example.com'],
-      ['http://www.example.com/path/index.php', 'SESS', 'www.example.com'],
+      ['https://example.com/path/index.php', 'SESS', 'example.com'],
+      ['https://www.example.com/path/index.php', 'SESS', 'www.example.com'],
       ['http://subdomain.example.com/path/index.php', 'SESS', 'subdomain.example.com'],
-      ['http://example.com:8080/path/index.php', 'SESS', 'example.com'],
+      ['https://example.com:8080/path/index.php', 'SESS', 'example.com'],
       ['https://example.com/path/index.php', 'SSESS', 'example.com'],
-      ['http://example.com/path/core/install.php', 'SESS', 'example.com'],
+      ['https://example.com/path/core/install.php', 'SESS', 'example.com'],
       ['http://localhost/path/index.php', 'SESS', 'localhost'],
       ['http://127.0.0.1/path/index.php', 'SESS', '127.0.0.1'],
       ['http://127.0.0.1:8888/path/index.php', 'SESS', '127.0.0.1'],
@@ -233,12 +233,12 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   public function providerTestEnforcedSessionName() {
     $data = [
-      ['http://example.com/path/index.php', 'SESS', '.example.com'],
-      ['http://www.example.com/path/index.php', 'SESS', '.example.com'],
+      ['https://example.com/path/index.php', 'SESS', '.example.com'],
+      ['https://www.example.com/path/index.php', 'SESS', '.example.com'],
       ['http://subdomain.example.com/path/index.php', 'SESS', '.example.com'],
-      ['http://example.com:8080/path/index.php', 'SESS', '.example.com'],
+      ['https://example.com:8080/path/index.php', 'SESS', '.example.com'],
       ['https://example.com/path/index.php', 'SSESS', '.example.com'],
-      ['http://example.com/path/core/install.php', 'SESS', '.example.com'],
+      ['https://example.com/path/core/install.php', 'SESS', '.example.com'],
       ['http://localhost/path/index.php', 'SESS', '.example.com'],
       ['http://127.0.0.1/path/index.php', 'SESS', '.example.com'],
       ['http://127.0.0.1:8888/path/index.php', 'SESS', '.example.com'],

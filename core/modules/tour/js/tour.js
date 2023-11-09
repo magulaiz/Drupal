@@ -16,7 +16,7 @@
    *   subset which match the given class.
    *
    * @example
-   * http://example.com/foo?tour=1&tips=bar
+   * https://example.com/foo?tour=1&tips=bar
    *
    * @type {Drupal~behavior}
    *
@@ -280,7 +280,7 @@
        * @example
        * <caption>This will filter out tips that do not have a matching
        * page element or don't have the "bar" class.</caption>
-       * http://example.com/foo?tips=bar
+       * https://example.com/foo?tips=bar
        *
        * @param {Object[]} tourItems
        *   An array containing tour Step config objects.

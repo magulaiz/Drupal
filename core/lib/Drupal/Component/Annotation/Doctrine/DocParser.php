@@ -5,7 +5,7 @@
  * @file
  *
  * This class is a near-copy of Doctrine\Common\Annotations\DocParser, which is
- * part of the Doctrine project: <http://www.doctrine-project.org>. It was
+ * part of the Doctrine project: <https://www.doctrine-project.org>. It was
  * copied from version 1.2.7.
  *
  * Original copyright:

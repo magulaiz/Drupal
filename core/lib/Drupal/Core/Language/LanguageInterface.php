@@ -26,7 +26,7 @@ interface LanguageInterface {
    * determined. This special language code is useful when we know the data
    * might have linguistic information, but we don't know the language.
    *
-   * See http://www.w3.org/International/questions/qa-no-language#undetermined.
+   * See https://www.w3.org/International/questions/qa-no-language#undetermined.
    */
   const LANGCODE_NOT_SPECIFIED = 'und';
 
@@ -36,7 +36,7 @@ interface LanguageInterface {
    * Should be used when we explicitly know that the data referred has no
    * linguistic content.
    *
-   * See http://www.w3.org/International/questions/qa-no-language#nonlinguistic.
+   * See https://www.w3.org/International/questions/qa-no-language#nonlinguistic.
    */
   const LANGCODE_NOT_APPLICABLE = 'zxx';
 
@@ -44,7 +44,7 @@ interface LanguageInterface {
    * Language code referring to the default language of data, e.g. of an entity.
    *
    * See the BCP 47 syntax for defining private language tags:
-   * http://www.rfc-editor.org/rfc/bcp/bcp47.txt
+   * https://www.rfc-editor.org/rfc/bcp/bcp47.txt
    */
   const LANGCODE_DEFAULT = 'x-default';
 

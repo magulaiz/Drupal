@@ -320,7 +320,7 @@ class TwigExtensionTest extends UnitTestCase {
 
     $twig->addExtension($this->systemUnderTest);
     $link = new GeneratedLink();
-    $link->setGeneratedLink('<a href="http://example.com"></a>');
+    $link->setGeneratedLink('<a href="https://example.com"></a>');
     $link->addCacheTags(['foo']);
     $link->addAttachments(['library' => ['system/base']]);
 
@@ -335,7 +335,7 @@ class TwigExtensionTest extends UnitTestCase {
         "#attached" => ['library' => ['system/base']],
       ]);
     $result = $this->systemUnderTest->escapeFilter($twig, $link, 'html', NULL, TRUE);
-    $this->assertEquals('<a href="http://example.com"></a>', $result);
+    $this->assertEquals('<a href="https://example.com"></a>', $result);
   }
 
   /**
@@ -344,7 +344,7 @@ class TwigExtensionTest extends UnitTestCase {
    */
   public function testRenderVarWithGeneratedLink() {
     $link = new GeneratedLink();
-    $link->setGeneratedLink('<a href="http://example.com"></a>');
+    $link->setGeneratedLink('<a href="https://example.com"></a>');
     $link->addCacheTags(['foo']);
     $link->addAttachments(['library' => ['system/base']]);
 
@@ -359,7 +359,7 @@ class TwigExtensionTest extends UnitTestCase {
         "#attached" => ['library' => ['system/base']],
       ]);
     $result = $this->systemUnderTest->renderVar($link);
-    $this->assertEquals('<a href="http://example.com"></a>', $result);
+    $this->assertEquals('<a href="https://example.com"></a>', $result);
   }
 
   /**

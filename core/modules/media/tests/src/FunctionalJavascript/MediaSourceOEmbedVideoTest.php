@@ -160,7 +160,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
 
     // Try to create a media asset from a disallowed provider.
     $this->drupalGet("media/add/$media_type_id");
-    $assert_session->fieldExists('Remote video URL')->setValue('http://www.collegehumor.com/video/40003213/grant-and-katie-are-starting-their-own-company');
+    $assert_session->fieldExists('Remote video URL')->setValue('https://www.collegehumor.com/video/40003213/grant-and-katie-are-starting-their-own-company');
     $page->pressButton('Save');
 
     $assert_session->pageTextContains('The CollegeHumor provider is not allowed.');
@@ -172,7 +172,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $source_configuration['providers'][] = 'CollegeHumor';
     $media_type->getSource()->setConfiguration($source_configuration);
     $media_type->save();
-    $video_url = 'http://www.collegehumor.com/video/40003213/let-not-get-a-drink-sometime';
+    $video_url = 'https://www.collegehumor.com/video/40003213/let-not-get-a-drink-sometime';
     ResourceController::setResourceUrl($video_url, $this->getFixturesDirectory() . '/video_collegehumor.xml');
 
     // Create a new media item using a CollegeHumor video.
@@ -236,7 +236,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
 
     $assert_session->pageTextContains('It is potentially insecure to display oEmbed content in a frame');
 
-    $this->config('media.settings')->set('iframe_domain', 'http://example.com')->save();
+    $this->config('media.settings')->set('iframe_domain', 'https://example.com')->save();
 
     $this->drupalGet('admin/structure/media/add');
     $page->fillField('label', $media_type_id);

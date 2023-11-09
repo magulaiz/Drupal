@@ -78,7 +78,7 @@ interface UploadedFileInterface {
    * @return string|false
    *   The path to the file, or FALSE if the file does not exist.
    *
-   * @see https://php.net/manual/en/splfileinfo.getrealpath.php
+   * @see http://php.net/manual/en/splfileinfo.getrealpath.php
    */
   public function getRealPath();
 
@@ -88,7 +88,7 @@ interface UploadedFileInterface {
    * @return string
    *   The path to the file.
    *
-   * @see https://php.net/manual/en/splfileinfo.getpathname.php
+   * @see http://php.net/manual/en/splfileinfo.getpathname.php
    */
   public function getPathname(): string;
 
@@ -98,7 +98,7 @@ interface UploadedFileInterface {
    * @return string
    *   The filename.
    *
-   * @see https://php.net/manual/en/splfileinfo.getfilename.php
+   * @see http://php.net/manual/en/splfileinfo.getfilename.php
    */
   public function getFilename(): string;
 

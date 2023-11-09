@@ -15,7 +15,7 @@ QUICKSTART
 ----------------------
 
 Prerequisites:
-- PHP 8.1.0 (or greater) (https://php.net).
+- PHP 8.1.0 (or greater) (http://php.net).
 
 In the instructions below, replace the version x.y.z with the specific version
 you wish to download. Example: 8.6.0.zip. You can find the latest stable version
@@ -50,13 +50,13 @@ Drupal requires:
   - Nginx 1.1 (or greater) (http://nginx.com/).
 - PHP 8.1.0 (or greater) (http://php.net/).
 - One of the following databases:
-  - MySQL 5.7.8 (or greater) (http://www.mysql.com/).
+  - MySQL 5.7.8 (or greater) (https://www.mysql.com/).
   - MariaDB 10.3.7 (or greater) (https://mariadb.org/). MariaDB is a fully
     compatible drop-in replacement for MySQL.
-  - Percona Server 5.7.8 (or greater) (http://www.percona.com/). Percona
+  - Percona Server 5.7.8 (or greater) (https://www.percona.com/). Percona
     Server is a backwards-compatible replacement for MySQL.
-  - PostgreSQL 10 (or greater) (http://www.postgresql.org/).
-  - SQLite 3.26 (or greater) (http://www.sqlite.org/).
+  - PostgreSQL 10 (or greater) (https://www.postgresql.org/).
+  - SQLite 3.26 (or greater) (https://www.sqlite.org/).
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"
@@ -144,7 +144,7 @@ INSTALLATION
 3. Run the install script.
 
    To run the install script, point your browser to the base URL of your
-   website (e.g., http://www.example.com).
+   website (e.g., https://www.example.com).
 
    You will be guided through several screens to set up the database, add the
    site maintenance account (the first user, also known as user/1), and provide
@@ -332,9 +332,9 @@ INSTALLATION
    crontab utility on Unix/Linux systems. The following crontab line uses the
    wget command to visit the cron page, and runs each hour, on the hour:
 
-   0 * * * * wget -O - -q -t 1 http://example.com/cron/YOURKEY
+   0 * * * * wget -O - -q -t 1 https://example.com/cron/YOURKEY
 
-   Replace the text "http://example.com/cron/YOURKEY" in the example with the
+   Replace the text "https://example.com/cron/YOURKEY" in the example with the
    full URL displayed under "Cron maintenance tasks" on the "Status report"
    page.
 
@@ -399,7 +399,7 @@ copy file 'default.settings.php' from the 'sites/default' directory into the
 new site directory with file name 'settings.php' and modify as appropriate.
 The new directory name is constructed from the site's URL. The configuration
 for www.example.com could be in 'sites/example.com/settings.php' (note that
-'www.' should be omitted if users can access your site at http://example.com/).
+'www.' should be omitted if users can access your site at https://example.com/).
 
   $ cp sites/default/default.settings.php sites/example.com/settings.php
 
@@ -426,7 +426,7 @@ first configuration it finds:
   sites/default/settings.php
 
 If you are installing on a non-standard port, the port number is treated as the
-deepest subdomain. For example: http://www.example.com:8080/ could be loaded
+deepest subdomain. For example: https://www.example.com:8080/ could be loaded
 from sites/8080.www.example.com/. The port number will be removed according to
 the pattern above if no port-specific configuration is found, just like a real
 subdomain.

@@ -16,7 +16,7 @@ use Drupal\migrate\Row;
  *
  * @section overview Overview of a migration
  * Migration is an
- * @link http://wikipedia.org/wiki/Extract,_transform,_load Extract, Transform, Load @endlink
+ * @link https://wikipedia.org/wiki/Extract,_transform,_load Extract, Transform, Load @endlink
  * (ETL) process. In the Drupal Migrate API, the extract phase is called
  * 'source', the transform phase is called 'process', and the load phase is
  * called 'destination'. It is important to understand that the term 'load' in

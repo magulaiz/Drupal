@@ -2,7 +2,7 @@
  * @file
  * Dialog API inspired by HTML5 dialog element.
  *
- * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
+ * @see https://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
 (function ($, Drupal, drupalSettings, bodyScrollLock) {

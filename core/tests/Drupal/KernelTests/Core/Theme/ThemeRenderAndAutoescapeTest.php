@@ -93,7 +93,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
    */
   public function testBubblingMetadata() {
     $link = new GeneratedLink();
-    $link->setGeneratedLink('<a href="http://example.com"></a>');
+    $link->setGeneratedLink('<a href="https://example.com"></a>');
     $link->addCacheTags(['foo']);
     $link->addAttachments(['library' => ['system/base']]);
 
@@ -105,7 +105,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $output = $renderer->executeInRenderContext($context, $theme_render_and_autoescape);
-    $this->assertEquals('<a href="http://example.com"></a>', $output);
+    $this->assertEquals('<a href="https://example.com"></a>', $output);
     /** @var \Drupal\Core\Render\BubbleableMetadata $metadata */
     $metadata = $context->pop();
     $this->assertEquals(['foo'], $metadata->getCacheTags());

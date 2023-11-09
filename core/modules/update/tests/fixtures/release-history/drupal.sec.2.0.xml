@@ -8,15 +8,15 @@
     <supported_majors>8</supported_majors>
     <default_major>8</default_major>
     <project_status>published</project_status>
-    <link>http://example.com/project/drupal</link>
+    <link>https://example.com/project/drupal</link>
     <terms><term><name>Projects</name><value>Drupal project</value></term></terms>
     <releases>
         <release>
             <name>Drupal 8.2.0</name>
             <version>8.2.0</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-8-2-0-release</release_link>
-            <download_link>http://example.com/drupal-8-2-0.tar.gz</download_link>
+            <release_link>https://example.com/drupal-8-2-0-release</release_link>
+            <download_link>https://example.com/drupal-8-2-0.tar.gz</download_link>
             <date>1250424641</date>
             <terms>
                 <term>
@@ -33,8 +33,8 @@
             <name>drupal 8.2.0-beta2</name>
             <version>8.2.0-beta2</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-8-2-0-beta2-release</release_link>
-            <download_link>http://example.com/drupal-8-2-0-beta2.tar.gz</download_link>
+            <release_link>https://example.com/drupal-8-2-0-beta2-release</release_link>
+            <download_link>https://example.com/drupal-8-2-0-beta2.tar.gz</download_link>
             <date>1533298080</date>
             <terms>
                 <term><name>Release type</name><value>Bug fixes</value></term>
@@ -48,8 +48,8 @@
             <name>Drupal 8.1.0</name>
             <version>8.1.0</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-8-1-0-release</release_link>
-            <download_link>http://example.com/drupal-8-1-0.tar.gz</download_link>
+            <release_link>https://example.com/drupal-8-1-0-release</release_link>
+            <download_link>https://example.com/drupal-8-1-0.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -66,8 +66,8 @@
             <name>Drupal 8.0.0</name>
             <version>8.0.0</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-8-0-0-release</release_link>
-            <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
+            <release_link>https://example.com/drupal-8-0-0-release</release_link>
+            <download_link>https://example.com/drupal-8-0-0.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>

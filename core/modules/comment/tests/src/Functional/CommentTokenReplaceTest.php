@@ -68,7 +68,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $parent_comment->id());
     $child_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName());
     $comment = Comment::load($child_comment->id());
-    $comment->setHomepage('http://example.org/');
+    $comment->setHomepage('https://example.org/');
 
     // Add HTML to ensure that sanitation of some fields tested directly.
     $comment->setSubject('<blink>Blinking Comment</blink>');

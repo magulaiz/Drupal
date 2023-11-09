@@ -52,7 +52,7 @@ class LinkFormatterTest extends UnitTestCase {
     $urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('<none>', [], [], FALSE)
-      ->willReturn('http://example.com');
+      ->willReturn('https://example.com');
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $fieldTypePluginManager);
     $container->set('url_generator', $urlGenerator);
@@ -131,7 +131,7 @@ class LinkFormatterTest extends UnitTestCase {
     $urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('<front>', [], [], FALSE)
-      ->willReturn('http://example.com');
+      ->willReturn('https://example.com');
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $fieldTypePluginManager);
     $container->set('url_generator', $urlGenerator);
@@ -144,7 +144,7 @@ class LinkFormatterTest extends UnitTestCase {
     $this->assertEquals([
       [
         '#type' => 'link',
-        '#title' => 'http://example.com',
+        '#title' => 'https://example.com',
         '#options' => [],
         '#url' => $expectedUrl,
       ],

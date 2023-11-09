@@ -223,7 +223,7 @@ class FileCopyTest extends FileTestBase {
     );
 
     $plugin->transform(
-      ['http://drupal.org/favicon.ico', '/destination/path'],
+      ['https://drupal.org/favicon.ico', '/destination/path'],
       $this->createMock(MigrateExecutableInterface::class),
       new Row([], []),
       $this->randomMachineName()

@@ -5,8 +5,8 @@ namespace Drupal\Component\Uuid;
 /**
  * Generates a UUID v4 (RFC 4122 section 4.4) using PHP code.
  *
- * @see http://www.rfc-editor.org/rfc/rfc4122.txt
- * @see http://www.rfc-editor.org/errata_search.php?rfc=4122&eid=3546
+ * @see https://www.rfc-editor.org/rfc/rfc4122.txt
+ * @see https://www.rfc-editor.org/errata_search.php?rfc=4122&eid=3546
  */
 class Php implements UuidInterface {
 

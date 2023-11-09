@@ -30,7 +30,7 @@ class AddCssCommand implements CommandInterface {
    */
   public function __construct($styles) {
     if (is_string($styles)) {
-      @trigger_error('The ' . __NAMESPACE__ . '\AddCssCommand with a string argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See http://www.drupal.org/node/3154948', E_USER_DEPRECATED);
+      @trigger_error('The ' . __NAMESPACE__ . '\AddCssCommand with a string argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3154948', E_USER_DEPRECATED);
     }
     $this->styles = $styles;
   }

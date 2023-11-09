@@ -430,7 +430,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   public function testExternalLink() {
     $edit = [
       'title[0][value]' => 'External URL',
-      'link[0][uri]' => 'http://example.org',
+      'link[0][uri]' => 'https://example.org',
       'menu_parent' => 'admin:system.admin',
       'description[0][value]' => 'External URL & escaped',
     ];

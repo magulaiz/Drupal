@@ -43,7 +43,7 @@ class TimezoneResolverTest extends KernelTestBase {
     $eventDispatcher = $this->container->get('event_dispatcher');
     $kernel = $this->container->get('kernel');
 
-    $eventDispatcher->dispatch(new RequestEvent($kernel, Request::create('http://www.example.com'), HttpKernelInterface::MAIN_REQUEST));
+    $eventDispatcher->dispatch(new RequestEvent($kernel, Request::create('https://www.example.com'), HttpKernelInterface::MAIN_REQUEST));
 
     $this->assertEquals('Australia/Adelaide', date_default_timezone_get());
 

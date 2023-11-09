@@ -426,7 +426,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Specific entity types may also expand upon this list by overriding the
    * Entity::urlRouteParameters() method.
    *
-   * @link http://www.iana.org/assignments/link-relations/link-relations.xml @endlink
+   * @link https://www.iana.org/assignments/link-relations/link-relations.xml @endlink
    * @link http://tools.ietf.org/html/rfc6570 @endlink
    *
    * @return array

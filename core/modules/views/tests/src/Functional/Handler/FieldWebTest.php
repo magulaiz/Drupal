@@ -320,7 +320,7 @@ class FieldWebTest extends ViewTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    $this->assertSubString($output, 'http://www.example.com');
+    $this->assertSubString($output, 'https://www.example.com');
 
     // Setup a not external URL, which shouldn't lead to an external URL.
     $id_field->options['alter']['external'] = FALSE;
@@ -328,7 +328,7 @@ class FieldWebTest extends ViewTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    $this->assertNotSubString($output, 'http://www.example.com');
+    $this->assertNotSubString($output, 'https://www.example.com');
 
     // Tests the transforming of the case setting.
     $id_field->options['alter']['path'] = $path = $this->randomMachineName();

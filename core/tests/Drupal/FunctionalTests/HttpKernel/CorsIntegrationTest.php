@@ -45,21 +45,21 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Fire off a request.
-    $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
+    $this->drupalGet('/test-page', [], ['Origin' => 'https://example.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Fire the same exact request. This time it should be cached.
-    $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
+    $this->drupalGet('/test-page', [], ['Origin' => 'https://example.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Fire a request for a different origin. Verify the CORS header.
-    $this->drupalGet('/test-page', [], ['Origin' => 'http://example.org']);
+    $this->drupalGet('/test-page', [], ['Origin' => 'https://example.org']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
@@ -112,7 +112,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Configure the CORS stack to allow a specific origin.
-    $cors_config['allowedOrigins'] = ['http://example.com'];
+    $cors_config['allowedOrigins'] = ['https://example.com'];
     $cors_config['allowedOriginsPatterns'] = [];
 
     $this->setContainerParameter('cors.config', $cors_config);
@@ -122,17 +122,17 @@ class CorsIntegrationTest extends BrowserTestBase {
     /** @var \Symfony\Component\HttpFoundation\Response $response */
     $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'https://example.com');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Specify a valid origin.
-    $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
+    $this->drupalGet('/test-page', [], ['Origin' => 'https://example.com']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'https://example.com');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Configure the CORS stack to allow a specific set of origins.
-    $cors_config['allowedOrigins'] = ['http://example.com', 'https://drupal.org'];
+    $cors_config['allowedOrigins'] = ['https://example.com', 'https://drupal.org'];
 
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
@@ -145,9 +145,9 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Specify a valid origin.
-    $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
+    $this->drupalGet('/test-page', [], ['Origin' => 'https://example.com']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'https://example.com');
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Specify a valid origin.

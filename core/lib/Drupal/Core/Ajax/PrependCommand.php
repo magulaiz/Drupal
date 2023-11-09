@@ -12,7 +12,7 @@ namespace Drupal\Core\Ajax;
  * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
- * @see http://docs.jquery.com/Manipulation/prepend#content
+ * @see https://docs.jquery.com/Manipulation/prepend#content
  *
  * @ingroup ajax
  */

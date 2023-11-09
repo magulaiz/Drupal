@@ -78,9 +78,9 @@
  * Web services make it possible for applications and websites to read and
  * update information from other websites. There are several standard
  * techniques for providing web services, including:
- * - SOAP: http://wikipedia.org/wiki/SOAP
- * - XML-RPC: http://wikipedia.org/wiki/XML-RPC
- * - REST: http://wikipedia.org/wiki/Representational_state_transfer
+ * - SOAP: https://wikipedia.org/wiki/SOAP
+ * - XML-RPC: https://wikipedia.org/wiki/XML-RPC
+ * - REST: https://wikipedia.org/wiki/Representational_state_transfer
  * Drupal sites can both provide web services and integrate third-party web
  * services.
  *
@@ -253,7 +253,7 @@
  * - Exporting and importing configuration.
  *
  * The file storage format for configuration information in Drupal is
- * @link http://wikipedia.org/wiki/YAML YAML files. @endlink Configuration is
+ * @link https://wikipedia.org/wiki/YAML YAML files. @endlink Configuration is
  * divided into files, each containing one configuration object. The file name
  * for a configuration object is equal to the unique name of the configuration,
  * with a '.yml' extension. The default configuration files for each module are
@@ -736,7 +736,7 @@
  * @section sec_overview Overview of container, injection, and services
  * The Services and Dependency Injection Container concepts have been adopted by
  * Drupal from the
- * @link http://symfony.com/doc/current/components/dependency_injection.html
+ * @link https://symfony.com/doc/current/components/dependency_injection.html
  * Symfony DependencyInjection component. @endlink A "service" (such as
  * accessing the database, sending email, or translating user interface text) is
  * defined (given a name and an interface or at least a class that defines the
@@ -1159,7 +1159,7 @@
  * - core/tests/README.md for instructions on running tests
  * - https://www.drupal.org/phpunit for full documentation on how to write
  *   and run PHPUnit tests for Drupal.
- * - http://phpunit.de for general information on the PHPUnit framework.
+ * - https://phpunit.de for general information on the PHPUnit framework.
  * - @link oo_conventions Object-oriented programming topic @endlink for more
  *   on PSR-4, namespaces, and where to place classes.
  * - http://nightwatchjs.org/ for information about Nightwatch testing for
@@ -2364,7 +2364,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * - method: The jQuery method for placing the new content (used with
  *   'wrapper'). Valid options are 'replaceWith' (default), 'append', 'prepend',
  *   'before', 'after', or 'html'. See
- *   http://api.jquery.com/category/manipulation/ for more information on these
+ *   https://api.jquery.com/category/manipulation/ for more information on these
  *   methods.
  * - effect: The jQuery effect to use when placing the new HTML (used with
  *   'wrapper'). Valid options are 'none' (default), 'slide', or 'fade'.
@@ -2507,7 +2507,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   can be used for dynamic routing and route altering; see the
  *   @link menu Menu and routing system topic @endlink for more information.
  *   They can also be used for other purposes; see
- *   http://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
+ *   https://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
  *   for more information.
  * - needs_destruction: Indicates that a destruct() method needs to be called
  *   at the end of a request to finalize operations, if this service was
@@ -2572,7 +2572,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * when an event is dispatched, a method is called on each registered
  * subscriber, allowing each one to react. For more on the general concept of
  * events, see
- * http://symfony.com/doc/current/components/event_dispatcher/introduction.html
+ * https://symfony.com/doc/current/components/event_dispatcher/introduction.html
  *
  * @section sec_dispatch Dispatching events
  * To dispatch an event, call the

@@ -69,7 +69,7 @@ class UpdateFetcherTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->mockConfigFactory = $this->getConfigFactoryStub(['update.settings' => ['fetch_url' => 'http://www.example.com']]);
+    $this->mockConfigFactory = $this->getConfigFactoryStub(['update.settings' => ['fetch_url' => 'https://www.example.com']]);
     $this->mockHttpClient = $this->createMock('\GuzzleHttp\ClientInterface');
     $settings = new Settings([]);
     $this->logger = new TestLogger();
@@ -122,31 +122,31 @@ class UpdateFetcherTest extends UnitTestCase {
     $project['name'] = 'update_test';
     $project['project_type'] = '';
     $project['info']['version'] = '';
-    $project['info']['project status url'] = 'http://www.example.com';
+    $project['info']['project status url'] = 'https://www.example.com';
     $project['includes'] = ['module1' => 'Module 1', 'module2' => 'Module 2'];
     $site_key = '';
-    $expected = "http://www.example.com/{$project['name']}/current";
+    $expected = "https://www.example.com/{$project['name']}/current";
 
     $data[] = [$project, $site_key, $expected];
 
     // For disabled projects it shouldn't add the site key either.
     $site_key = 'site_key';
     $project['project_type'] = 'disabled';
-    $expected = "http://www.example.com/{$project['name']}/current";
+    $expected = "https://www.example.com/{$project['name']}/current";
 
     $data[] = [$project, $site_key, $expected];
 
     // For enabled projects, test adding the site key.
     $project['project_type'] = '';
-    $expected = "http://www.example.com/{$project['name']}/current";
+    $expected = "https://www.example.com/{$project['name']}/current";
     $expected .= '?site_key=site_key';
     $expected .= '&list=' . rawurlencode('module1,module2');
 
     $data[] = [$project, $site_key, $expected];
 
     // Test when the URL contains a question mark.
-    $project['info']['project status url'] = 'http://www.example.com/?project=';
-    $expected = "http://www.example.com/?project=/{$project['name']}/current";
+    $project['info']['project status url'] = 'https://www.example.com/?project=';
+    $expected = "https://www.example.com/?project=/{$project['name']}/current";
     $expected .= '&site_key=site_key';
     $expected .= '&list=' . rawurlencode('module1,module2');
 

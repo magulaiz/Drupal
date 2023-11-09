@@ -883,7 +883,7 @@
 
       // Let the server know when the IFRAME submission mechanism is used. The
       // server can use this information to wrap the JSON response in a
-      // TEXTAREA, as per http://jquery.malsup.com/form/#file-upload.
+      // TEXTAREA, as per https://jquery.malsup.com/form/#file-upload.
       options.extraData.ajax_iframe_upload = '1';
 
       // The triggering element is about to be disabled (see below), but if it

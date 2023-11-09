@@ -205,7 +205,7 @@ class ValidationTest extends BrowserTestBase {
     $edit = [
       'textfield' => '',
       'tel' => '',
-      'url' => 'http://www.example.com/',
+      'url' => 'https://www.example.com/',
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');

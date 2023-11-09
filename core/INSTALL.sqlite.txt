@@ -7,7 +7,7 @@ available, depending on your system there are different ways to install it.
 
 Windows
 -------
-Read more about it on http://www.php.net/manual/en/pdo.installation.php
+Read more about it on https://www.php.net/manual/en/pdo.installation.php
 
 Linux
 -----

@@ -568,7 +568,7 @@
 				 * carry the protocol property in ie8, when running under ssl
 				 * frame.document is the only valid response document, since
 				 * the protocol is know but not on the other two objects. strange?
-				 * "Same origin policy" http://en.wikipedia.org/wiki/Same_origin_policy
+				 * "Same origin policy" https://en.wikipedia.org/wiki/Same_origin_policy
 				 */
 
 				var doc = null;
@@ -1000,7 +1000,7 @@
 				return this;
 			}
 
-			// is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
+			// is your DOM ready?  https://docs.jquery.com/Tutorials:Introducing_$(document).ready()
 			log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
 
 			return this;
@@ -1263,7 +1263,7 @@
 	 *	v === ['C1']
 	 *
 	 * The successful argument controls whether or not the field element must be 'successful'
-	 * (per http://www.w3.org/TR/html4/interact/forms.html#successful-controls).
+	 * (per https://www.w3.org/TR/html4/interact/forms.html#successful-controls).
 	 * The default value of the successful argument is true. If this value is false the value(s)
 	 * for each element is returned.
 	 *

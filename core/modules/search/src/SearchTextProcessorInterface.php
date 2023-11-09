@@ -45,14 +45,14 @@ interface SearchTextProcessorInterface {
    * Matches CJK (Chinese, Japanese, Korean) letter-like characters.
    *
    * This list is derived from the "East Asian Scripts" section of
-   * http://www.unicode.org/charts/index.html, as well as a comment on
+   * https://www.unicode.org/charts/index.html, as well as a comment on
    * http://unicode.org/reports/tr11/tr11-11.html listing some character
    * ranges that are reserved for additional CJK ideographs.
    *
    * The character ranges do not include numbers, punctuation, or symbols, since
    * these are handled separately in search. Note that radicals and strokes are
    * considered symbols. (See
-   * http://www.unicode.org/Public/UNIDATA/extracted/DerivedGeneralCategory.txt)
+   * https://www.unicode.org/Public/UNIDATA/extracted/DerivedGeneralCategory.txt)
    *
    * @see \Drupal\search\SearchTextProcessor::expandCjk()
    */
