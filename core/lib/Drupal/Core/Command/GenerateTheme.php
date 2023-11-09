@@ -329,7 +329,7 @@ class GenerateTheme extends Command {
    */
   private function overrideThemeInfo() {
     $info_overrides = $this->info_overrides;
-    $source_theme = $this->source_theme_name;
+    $source_theme_name = $this->source_theme_name;
     $theme = $this->destination_theme;
     $tmp_dir = $this->tmp_dir;
     $info_file = "$tmp_dir/$theme.info.yml";
@@ -339,7 +339,7 @@ class GenerateTheme extends Command {
       $this->source_theme_info = $info;
 
       if (!array_key_exists('version', $info)) {
-        $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName()));
+        $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme_name));
         if (!$this->io->askQuestion($confirm_versionless_source_theme)) {
           return 0;
         }
