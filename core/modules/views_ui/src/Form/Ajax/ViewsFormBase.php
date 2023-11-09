@@ -119,8 +119,8 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // Automatically remove the form cache if it is set and the key does
     // not match. This way navigating away from the form without hitting
     // update will work.
-    if (isset($view->form_cache) && $view->form_cache['key'] !== $form_key) {
-      unset($view->form_cache);
+    if (array_key_exists('key', $view->form_cache) && $view->form_cache['key'] !== $form_key) {
+      $view->form_cache = [];
     }
 
     $form_class = get_class($form_state->getFormObject());

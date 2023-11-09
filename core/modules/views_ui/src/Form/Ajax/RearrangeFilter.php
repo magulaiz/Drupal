@@ -59,7 +59,7 @@ class RearrangeFilter extends ViewsFormBase {
       views_ui_standard_display_dropdown($form, $form_state, $section);
     }
 
-    if (!empty($view->form_cache)) {
+    if ($view->form_cache !== []) {
       $groups = $view->form_cache['groups'];
       $handlers = $view->form_cache['handlers'];
     }
@@ -231,7 +231,7 @@ class RearrangeFilter extends ViewsFormBase {
     $display = &$view->getExecutable()->displayHandlers->get($form_state->get('display_id'));
     $remember_groups = [];
 
-    if (!empty($view->form_cache)) {
+    if ($view->form_cache !== []) {
       $old_fields = $view->form_cache['handlers'];
     }
     else {
@@ -321,8 +321,8 @@ class RearrangeFilter extends ViewsFormBase {
       // Write the changed handler values.
       $display->setOption($types['filter']['plural'], $new_fields);
       $display->setOption('filter_groups', $groups);
-      if (isset($view->form_cache)) {
-        unset($view->form_cache);
+      if ($view->form_cache !== []) {
+        $view->form_cache = [];
       }
     }
 
