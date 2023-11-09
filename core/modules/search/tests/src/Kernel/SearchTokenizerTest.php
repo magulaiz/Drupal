@@ -18,6 +18,14 @@ class SearchTokenizerTest extends KernelTestBase {
   protected static $modules = ['search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig('search');
+  }
+
+  /**
    * Verifies that strings of CJK characters are tokenized.
    *
    * The text analysis function does special things with numbers, symbols
