@@ -161,6 +161,9 @@ final class ConfigTarget {
       ? array_map($config->get(...), $this->propertyPaths)
       : $config->get($this->propertyPaths[0]);
 
+    // Ensure the values are sorted in the order that
+
+
     if ($this->fromConfig) {
       $value = $is_multi_target
         ? ($this->fromConfig)(...$value)
