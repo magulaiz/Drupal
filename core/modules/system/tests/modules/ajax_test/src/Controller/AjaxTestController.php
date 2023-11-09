@@ -464,7 +464,6 @@ class AjaxTestController implements TrustedCallbackInterface {
    *
    * @return array
    *   The render array.
-   *
    */
   public function externalFonts() {
     return [
@@ -493,7 +492,7 @@ class AjaxTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * Lists the trusted callbacks provided by the implementing class.
    */
   public static function trustedCallbacks() {
     return ['buildExternalFonts'];
