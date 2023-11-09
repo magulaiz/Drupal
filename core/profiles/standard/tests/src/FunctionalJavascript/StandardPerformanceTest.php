@@ -81,6 +81,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->drupalLogin($account);
     $this->drupalLogout();
 
+    $this->drupalGet('node');
     $this->drupalGet('user/login');
     $performance_data = $this->collectPerformanceData(function () use ($account) {
       $this->submitForm([
@@ -102,7 +103,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->drupalLogin($account);
     $this->drupalLogout();
 
-    $this->drupalGet('<front>');
+    $this->drupalGet('node');
     $this->assertSession()->responseContains('Password');
     $performance_data = $this->collectPerformanceData(function () use ($account) {
       $this->submitForm([
