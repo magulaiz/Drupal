@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestAttributes extends ControllerBase {
 
   #[Route('/test_method_attribute', requirements: ['_access' => 'TRUE'])]
+  #[Route('/test_method_attribute-other-path', requirements: ['_access' => 'TRUE'])]
   public function attributeMethod() {
     return ['#markup' => 'Testing method with a Route attribute'];
   }

@@ -44,6 +44,14 @@ class AttributeRouteDiscoveryTest extends UnitTestCase {
     $this->assertEquals('/test_class_attribute', $route2->getPath());
     $this->assertEquals('Drupal\router_test\Controller\TestClassAttribute', $route2->getDefault('_controller'));
     $this->assertEquals("TRUE", $route2->getRequirement('_access'));
+
+    // cspell:ignore testattributes attributemethod
+    $route3 = $routeCollection->get('drupal_router_test_controller_testattributes_attributemethod_1');
+    $this->assertNotNull($route3);
+    $this->assertEquals('/test_method_attribute-other-path', $route3->getPath());
+    $this->assertEquals('Drupal\router_test\Controller\TestAttributes::attributeMethod', $route3->getDefault('_controller'));
+    $this->assertEquals("TRUE", $route3->getRequirement('_access'));
+
   }
 
 }
