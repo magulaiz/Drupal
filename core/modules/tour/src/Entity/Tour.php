@@ -75,7 +75,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
    *
    * @var array
    */
-  protected $keyedRoutes;
+  protected $keyedRoutes = [];
 
   /**
    * Holds the collection of tips that are attached to this tour.
@@ -141,8 +141,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
    * {@inheritdoc}
    */
   public function hasMatchingRoute($route_name, $route_params) {
-    if (!isset($this->keyedRoutes)) {
-      $this->keyedRoutes = [];
+    if ($this->keyedRoutes === []) {
       foreach ($this->getRoutes() as $route) {
         $this->keyedRoutes[$route['route_name']] = $route['route_params'] ?? [];
       }
