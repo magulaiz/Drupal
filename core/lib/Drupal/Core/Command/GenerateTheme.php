@@ -337,6 +337,13 @@ class GenerateTheme extends Command {
       $info = Yaml::decode($info_contents);
       $this->source_theme_info = $info;
 
+      if (!array_key_exists('version', $info)) {
+        $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName()));
+        if (!$this->io->askQuestion($confirm_versionless_source_theme)) {
+          return 0;
+        }
+      }
+
       $source_version = $info['version'] ?? 'unknown-version';
       if ($source_version === 'VERSION') {
         $source_version = \Drupal::VERSION;

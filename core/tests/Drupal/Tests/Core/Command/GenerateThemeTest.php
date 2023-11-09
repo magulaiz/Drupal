@@ -98,7 +98,7 @@ class GenerateThemeTest extends QuickStartTestBase {
     $info = $this->assertThemeExists($theme_path_relative);
     self::assertArrayNotHasKey('hidden', $info);
     self::assertArrayHasKey('generator', $info);
-    self::assertEquals('starterkit_theme:1.0.0', $info['generator']);
+    self::assertEquals('starterkit_theme:9.4.0', $info['generator']);
 
     // Confirm readme is rewritten.
     $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
@@ -140,7 +140,7 @@ class GenerateThemeTest extends QuickStartTestBase {
     // Add starterkit back into first generated theme.
     $starterkit_starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
     $sk = Yaml::decode(file_get_contents($starterkit_starterkit_yml));
-    $sk['starterkit'] = TRUE;
+    $sk['info']['starterkit'] = TRUE;
     file_put_contents($starterkit_starterkit_yml, Yaml::encode($sk));
 
     $process = $this->generateThemeFromStarterkit();
@@ -186,7 +186,7 @@ class GenerateThemeTest extends QuickStartTestBase {
     $info = $this->assertThemeExists($theme_path_relative);
     self::assertArrayNotHasKey('hidden', $info);
     self::assertArrayHasKey('generator', $info);
-    self::assertMatchesRegularExpression('/^starterkit_theme\:1.0.0$/', $info['generator']);
+    self::assertMatchesRegularExpression('/^starterkit_theme\:9.4.0-dev#[0-9a-f]+$/', $info['generator']);
   }
 
   /**
