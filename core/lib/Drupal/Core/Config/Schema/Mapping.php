@@ -160,14 +160,6 @@ class Mapping extends ArrayElement {
       ),
     );
 
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. This is a
-    // work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    if (str_starts_with($original_mapping_type, 'wrapping.')) {
-      $this->getTypedDataManager()->clearCachedDefinitions();
-    }
-
     // From all valid keys across all types, get the ones for the fallback type:
     // the keys in this mapping definition are inherited by all type definitions
     // and are hence valid everywhere. Not all types have a fallback type.
