@@ -107,6 +107,11 @@ class GenerateTheme extends Command {
     'version' => '1.0.0',
   ];
 
+  /**
+   * The machine name of the destination theme.
+   *
+   * @var String
+   */
   private $destination_theme;
 
   /**
@@ -200,14 +205,14 @@ class GenerateTheme extends Command {
     // Remove files marked for deletion.
     $this->removeDeletableFiles();
 
-    // Alter THEMENAME.info.yml for new theme.
-    $this->overrideThemeInfo();
-
     // Get all the source/dest/token strings needed for renaming & editing.
     $this->prepareForRenameAndEdit();
 
     // Replace temporary placeholder tokens with final strings.
     $this->doRenameAndEdit();
+
+    // Alter THEMENAME.info.yml for new theme.
+    $this->overrideThemeInfo();
 
     // Let source theme define additional tasks.
     if (!$this->doPostProcess()) {
@@ -324,7 +329,7 @@ class GenerateTheme extends Command {
    */
   private function overrideThemeInfo() {
     $info_overrides = $this->info_overrides;
-    $theme = $this->source_theme_name;
+    $theme = $this->destination_theme;
     $tmp_dir = $this->tmp_dir;
     $info_file = "$tmp_dir/$theme.info.yml";
 
@@ -345,6 +350,10 @@ class GenerateTheme extends Command {
 
       if ($this->destination_theme_description) {
         $info['description'] = $this->destination_theme_description;
+      }
+
+      if (!isset($info['core_version_requirement'])) {
+        $info['core_version_requirement'] = '^' . explode('.', \Drupal::VERSION)[0];
       }
 
       $source_version = $info['version'] ?? 'unknown-version';
