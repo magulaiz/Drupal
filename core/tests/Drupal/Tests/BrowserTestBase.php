@@ -553,6 +553,10 @@ abstract class BrowserTestBase extends TestCase {
     $this->doInstall();
     $this->initSettings();
     $this->container = $container = $this->initKernel(\Drupal::request());
+
+    // Lets the database know that we are in testing mode.
+    Database::getConnection()->setInTesting(TRUE);
+
     $this->initConfig($container);
     $this->installDefaultThemeFromClassProperty($container);
     $this->installModulesFromClassProperty($container);

@@ -140,8 +140,10 @@ class Select extends Query implements SelectInterface {
    *   The alias for the table.
    * @param array $options
    *   Array of query options.
+   * @param bool $inTesting
+   *   Whether we are in testing mode.
    */
-  public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
+  public function __construct(Connection $connection, $table, $alias = NULL, $options = [], bool $inTesting = FALSE) {
     // @todo Remove $options['return'] in Drupal 11.
     // @see https://www.drupal.org/project/drupal/issues/3256524
     $options['return'] = Database::RETURN_STATEMENT;
@@ -150,6 +152,7 @@ class Select extends Query implements SelectInterface {
     $this->condition = $this->connection->condition($conjunction);
     $this->having = $this->connection->condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
+    $this->inTesting = $inTesting;
   }
 
   /**
@@ -239,6 +242,11 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
+    // Check that the condition parameters are of the correct type.
+    // if ($this->inTesting()) {
+    $conditions = array_merge($this->conditions(), $this->havingConditions());
+    $this->getConditionParameterTypeCheck()->checkParameterTypes(array_keys($this->tables), $conditions);
+
     $this->condition->compile($connection, $queryPlaceholder);
     $this->having->compile($connection, $queryPlaceholder);
 

@@ -102,7 +102,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
     for ($i = 1; $i <= $max_depth; $i++) {
       $query->orderBy('p' . $i, 'ASC');
     }
-    $query->condition('bid', $bid);
+    $query->condition('bid', (int) $bid);
     if (!empty($parameters['expanded'])) {
       $query->condition('pid', $parameters['expanded'], 'IN');
     }

@@ -222,7 +222,7 @@ function _tracker_add($nid, $uid, $changed) {
 
   // Update the node-level data.
   $connection->merge('tracker_node')
-    ->key('nid', $nid)
+    ->key('nid', (int) $nid)
     ->fields([
       'changed' => $changed,
       'published' => $node->status,
@@ -232,7 +232,7 @@ function _tracker_add($nid, $uid, $changed) {
   // Create or update the user-level data, first for the user posting.
   $connection->merge('tracker_user')
     ->keys([
-      'nid' => $nid,
+      'nid' => (int) $nid,
       'uid' => $uid,
     ])
     ->fields([

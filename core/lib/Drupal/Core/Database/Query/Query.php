@@ -63,6 +63,20 @@ abstract class Query implements PlaceholderInterface {
   protected $comments = [];
 
   /**
+   * Whether we are in testing mode.
+   *
+   * @var bool
+   */
+  protected $inTesting = FALSE;
+
+  /**
+   * The condition parameter type check service.
+   *
+   * @var \Drupal\Core\Database\Query\ConditionParameterTypeCheck
+   */
+  protected $conditionParameterTypeCheck;
+
+  /**
    * Constructs a Query object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -187,6 +201,41 @@ abstract class Query implements PlaceholderInterface {
    */
   public function getConnection() {
     return $this->connection;
+  }
+
+  /**
+   * Change the in testing mode.
+   *
+   * @param bool $mode
+   *   The in testing mode to be set.
+   *
+   * @return $this
+   */
+  public function setInTesting(bool $mode = FALSE): Query {
+    $this->inTesting = $mode;
+
+    return $this;
+  }
+
+  /**
+   * Whether we are in testing mode.
+   *
+   * @return bool
+   */
+  public function inTesting(): bool {
+    return $this->inTesting;
+  }
+
+  /**
+   * Get the condition parameter type check service.
+   *
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected function getConditionParameterTypeCheck() {
+    if (!isset($this->conditionParameterTypeCheck)) {
+      $this->conditionParameterTypeCheck = \Drupal::service('condition_parameter_type_check');
+    }
+    return $this->conditionParameterTypeCheck;
   }
 
 }

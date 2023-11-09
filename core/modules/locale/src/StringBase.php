@@ -142,7 +142,12 @@ abstract class StringBase implements StringInterface {
     $values = [];
     foreach ($fields as $field) {
       if (isset($this->$field)) {
-        $values[$field] = $this->$field;
+        if ($field == 'lid') {
+          $values[$field] = (int) $this->$field;
+        }
+        else {
+          $values[$field] = $this->$field;
+        }
       }
     }
     return $values;

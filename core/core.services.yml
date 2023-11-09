@@ -426,6 +426,10 @@ services:
     arguments: ['@settings', '@datetime.time', '@session']
   Drupal\Core\Database\ReplicaKillSwitch: '@database.replica_kill_switch'
   Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber: ~
+  condition_parameter_type_check:
+    class: Drupal\Core\Database\Query\ConditionParameterTypeCheck
+    arguments: ['@module_handler', '@keyvalue', '@entity_type.manager']
+  Drupal\Core\Database\Query\ConditionParameterTypeCheck: '@condition_parameter_type_check'
   datetime.time:
     class: Drupal\Component\Datetime\Time
     arguments: ['@request_stack']

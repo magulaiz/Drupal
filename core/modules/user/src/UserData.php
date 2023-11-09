@@ -80,7 +80,7 @@ class UserData implements UserDataInterface {
     }
     $this->connection->merge('users_data')
       ->keys([
-        'uid' => $uid,
+        'uid' => (int) $uid,
         'module' => $module,
         'name' => $name,
       ])
