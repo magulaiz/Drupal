@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
+use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -14,7 +15,12 @@ class CommandsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'ajax_test', 'ajax_forms_test'];
+  protected static $modules = [
+    'node',
+    'ajax_test',
+    'ajax_forms_test',
+    'big_pipe',
+  ];
 
   /**
    * {@inheritdoc}
@@ -157,6 +163,21 @@ JS;
     $this->expectDeprecation('Javascript Deprecation: Passing a string to the Drupal.ajax.add_css() method is deprecated in 10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3154948.');
     $page->pressButton("AJAX 'add_css' legacy command");
     $this->assertWaitPageContains('my/file.css');
+  }
+
+  /**
+   * Tests ability to load external fonts via add_css command.
+   */
+  public function testExternalFontLoadingViaAddCss() {
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet(Url::fromRoute('ajax.test.external_library_with_fonts'));
+    $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
+    $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
+    $this->assertCount(2, $this->getSession()->getPage()->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
+    $assert_session->elementExists('css', '#ajax-text-external-font');
   }
 
   /**

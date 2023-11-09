@@ -145,3 +145,10 @@ ajax_test.http_methods.dialog:
     _controller: Drupal\ajax_test\Controller\AjaxTestController::httpMethodsDialog
   requirements:
     _access: 'TRUE'
+
+ajax.test.external_library_with_fonts:
+  path: '/ajax-test/external-font'
+  defaults:
+    _controller: \Drupal\ajax_test\Controller\AjaxTestController::externalFonts
+  requirements:
+    _access: 'TRUE'
