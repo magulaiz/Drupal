@@ -140,7 +140,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $header['label'] = t('Vocabulary name');
     $header['description'] = t('Description');
 
-    if ($this->currentUser->hasPermission('administer vocabularies') && !empty($this->weightKey)) {
+    if ($this->weightKey !== FALSE && $this->currentUser->hasPermission('administer vocabularies')) {
       $header['weight'] = t('Weight');
     }
 
@@ -161,10 +161,10 @@ class VocabularyListBuilder extends DraggableListBuilder {
    */
   public function render() {
     $entities = $this->load();
-    // If there are not multiple vocabularies, disable dragging by unsetting the
+    // If there are no multiple vocabularies, disable dragging by unsetting the
     // weight key.
     if (count($entities) <= 1) {
-      unset($this->weightKey);
+      $this->weightKey = FALSE;
     }
     $build = parent::render();
 
