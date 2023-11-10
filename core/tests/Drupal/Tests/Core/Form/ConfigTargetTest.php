@@ -197,8 +197,8 @@ class ConfigTargetTest extends UnitTestCase {
       // config (`foo.settings:first` and `foo.settings:second`) and that they
       // are presented by a single <input type=text> in the form. We could
       // present this to the user as two integers separated by the pipe symbol.
-      fromConfig: fn (int $first, int $second) => "$first|$second",
-      toConfig: fn (string $form_value) => [
+      fromConfig: fn (int $first, int $second): string => "$first|$second",
+      toConfig: fn (string $form_value): array => [
         'first' => intval(explode('|', $form_value)[0]),
         'second' => intval(explode('|', $form_value)[1]),
       ],
@@ -244,8 +244,8 @@ class ConfigTargetTest extends UnitTestCase {
       // In case of multiple targets, the return value must be an array with the
       // keys matching
       // @see ::testMultiTarget()
-      fromConfig: fn (int $first, int $second) => "$first|$second",
-      toConfig: fn () => $toConfigReturnValue,
+      fromConfig: fn (int $first, int $second): string => "$first|$second",
+      toConfig: fn (): mixed => $toConfigReturnValue,
     );
 
     $config = $this->prophesize(Config::class);
@@ -265,7 +265,7 @@ class ConfigTargetTest extends UnitTestCase {
       ],
       // In case of multiple targets, \OutOfBoundsException may never be thrown.
       // @see ::testMultiTarget()
-      fromConfig: fn (int $first, int $second) => "$first|$second",
+      fromConfig: fn (int $first, int $second): string => "$first|$second",
       // phpcs:disable
       // The "toConfig" callable for the first choice sets all choices.
       toConfig: fn () => throw new \OutOfBoundsException(),

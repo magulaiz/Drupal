@@ -79,12 +79,12 @@ class LocaleSettingsForm extends ConfigFormBase {
           'translation.overwrite_customized',
           'translation.overwrite_not_customized',
         ],
-        fn (bool $overwrite_customized, bool $overwrite_not_customized): string => match(TRUE) {
+        fromConfig: fn (bool $overwrite_customized, bool $overwrite_not_customized): string => match(TRUE) {
           $overwrite_not_customized == FALSE => LOCALE_TRANSLATION_OVERWRITE_NONE,
           $overwrite_customized == TRUE => LOCALE_TRANSLATION_OVERWRITE_ALL,
           default => LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED,
         },
-        fn (string $radio_option): array => match($radio_option) {
+        toConfig: fn (string $radio_option): array => match($radio_option) {
           LOCALE_TRANSLATION_OVERWRITE_ALL => [
             'translation.overwrite_customized' => TRUE,
             'translation.overwrite_not_customized' => TRUE,
