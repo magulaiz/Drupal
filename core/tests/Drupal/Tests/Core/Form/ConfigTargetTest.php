@@ -162,9 +162,9 @@ class ConfigTargetTest extends UnitTestCase {
     // Assert the logic in the callables works as expected.
     $this->assertSame("Yes", ($config_target->fromConfig)(TRUE));
     $this->assertSame("No", ($config_target->fromConfig)(FALSE));
-    $this->assertSame(TRUE, ($config_target->toConfig)("Yes"));
-    $this->assertSame(FALSE, ($config_target->toConfig)("No"));
-    $this->assertSame(FALSE, ($config_target->toConfig)("some random string"));
+    $this->assertTrue(($config_target->toConfig)("Yes"));
+    $this->assertFalse(($config_target->toConfig)("No"));
+    $this->assertFalse(($config_target->toConfig)("some random string"));
 
     // Now simulate how this will be used in the form, and ensure it results in
     // the expected Config::set() calls.
