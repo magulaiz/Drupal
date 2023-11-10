@@ -266,8 +266,9 @@ class GenerateTheme extends Command {
   private function getStarterKitConfig() {
     $source_path = $this->source_theme->getPath();
     $themename = $this->source_theme_name;
+    $config_file = $source_path . '/' . $themename . '.starterkit.yml';
 
-    if ($config_file = file_get_contents($source_path . '/' . $themename . '.starterkit.yml')) {
+    if (is_file($config_file) && $config_file = file_get_contents($config_file)) {
       $config = Yaml::decode($config_file);
 
       if (isset($config['delete']) && is_array($config['delete'])) {
@@ -375,6 +376,7 @@ class GenerateTheme extends Command {
           $source_version .= '#' . trim($git_get_commit->getOutput());
         }
       }
+      $info['name'] = $this->destination_theme_label;
       $info['generator'] = "$this->source_theme_name:$source_version";
 
       if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
