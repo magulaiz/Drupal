@@ -298,7 +298,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // We may be moving the link to a new menu.
       $affected_menus[$fields['menu_name']] = $fields['menu_name'];
       $query = $this->connection->update($this->table, $this->options);
-      $query->condition('mlid', $link['mlid']);
+      $query->condition('mlid', (int) $link['mlid']);
       $query->fields($fields)
         ->execute();
       if ($original) {
@@ -760,6 +760,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $result = current($subquery->execute()->fetchAll(\PDO::FETCH_ASSOC));
     $ids = array_filter($result);
     if ($ids) {
+      foreach ($ids as &$id) {
+        $id = (int) $id;
+      }
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->fields($this->table, ['id']);
       $query->orderBy('depth', 'DESC');
@@ -919,10 +922,10 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition('parent', $parameters->expandedParents, 'IN');
     }
     if (isset($parameters->minDepth) && $parameters->minDepth > 1) {
-      $query->condition('depth', $parameters->minDepth, '>=');
+      $query->condition('depth', (int) $parameters->minDepth, '>=');
     }
     if (isset($parameters->maxDepth)) {
-      $query->condition('depth', $parameters->maxDepth, '<=');
+      $query->condition('depth', (int) $parameters->maxDepth, '<=');
     }
     // Add custom query conditions, if any were passed.
     if (!empty($parameters->conditions)) {

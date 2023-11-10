@@ -570,7 +570,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // Get the revision IDs.
         $revision_ids = [];
         foreach ($values as $entity_values) {
-          $revision_ids[] = $entity_values[$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT];
+          $revision_ids[] = (int) $entity_values[$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT];
         }
         $query->condition('revision.' . $this->revisionKey, $revision_ids, 'IN');
       }
