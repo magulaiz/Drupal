@@ -92,7 +92,7 @@ class ConditionParameterTypeCheck {
           }
 
           if ($throw_error) {
-            dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            // dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
             @trigger_error($error_message, E_USER_DEPRECATED);
           }
         }
