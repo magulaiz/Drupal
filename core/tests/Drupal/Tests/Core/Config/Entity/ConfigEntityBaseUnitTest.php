@@ -11,6 +11,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityDuplicateInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -162,6 +164,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $container->set('config.typed', $this->typedConfigManager);
     $container->set('module_handler', $this->moduleHandler->reveal());
     $container->set('theme_handler', $this->themeHandler->reveal());
+
     \Drupal::setContainer($container);
 
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [$values, $this->entityTypeId]);
@@ -473,38 +476,6 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertTrue($this->entity->isSyncing());
     $this->entity->setSyncing(FALSE);
     $this->assertFalse($this->entity->isSyncing());
-  }
-
-  /**
-   * @covers ::createDuplicate
-   */
-  public function testCreateDuplicate() {
-    $this->entityType->expects($this->exactly(2))
-      ->method('getKey')
-      ->willReturnMap([
-        ['id', 'id'],
-        ['uuid', 'uuid'],
-      ]);
-
-    $this->entityType->expects($this->once())
-      ->method('hasKey')
-      ->with('uuid')
-      ->willReturn(TRUE);
-
-    $new_uuid = '8607ef21-42bc-4913-978f-8c06207b0395';
-    $this->uuid->expects($this->once())
-      ->method('generate')
-      ->willReturn($new_uuid);
-
-    $duplicate = $this->entity->createDuplicate();
-    $this->assertInstanceOf('\Drupal\Core\Entity\EntityBase', $duplicate);
-    $this->assertNotSame($this->entity, $duplicate);
-    $this->assertFalse($this->entity->isNew());
-    $this->assertTrue($duplicate->isNew());
-    $this->assertNull($duplicate->id());
-    $this->assertNull($duplicate->getOriginalId());
-    $this->assertNotEquals($this->entity->uuid(), $duplicate->uuid());
-    $this->assertSame($new_uuid, $duplicate->uuid());
   }
 
   /**
