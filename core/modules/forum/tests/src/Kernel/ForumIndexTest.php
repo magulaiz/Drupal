@@ -50,7 +50,6 @@ final class ForumIndexTest extends KernelTestBase {
     // doesn't have named indexes for primary keys like mysql (PRIMARY) and
     // pgsql (pkey).
     $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
-    $find_primary_key_columns->setAccessible(TRUE);
     $this->assertEquals(['nid', 'tid'], $find_primary_key_columns->invoke($schema, 'forum_index'));
   }
 
