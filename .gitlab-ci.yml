@@ -284,6 +284,7 @@ stages:
       - core/assets/vendor/ckeditor5
       - core/modules/ckeditor5/js/build
   script:
+    - sudo apk add jq
     - jq '.devDependencies | keys | .[]' core/package.json | grep ckeditor | xargs -I % yarn --cwd ./core upgrade %@nightly
     - yarn --cwd ./core build
     - yarn --cwd ./core build:ckeditor5-types
