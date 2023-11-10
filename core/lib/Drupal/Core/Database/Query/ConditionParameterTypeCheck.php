@@ -93,6 +93,7 @@ class ConditionParameterTypeCheck {
 
           if ($throw_error) {
             // dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            // dump($error_message);
             @trigger_error($error_message, E_USER_DEPRECATED);
           }
         }
@@ -119,6 +120,12 @@ class ConditionParameterTypeCheck {
       if (isset($schema['fields']) && is_array($schema['fields'])) {
         if (in_array($field_name, array_keys($schema['fields']), TRUE) && isset($schema['fields'][$field_name]['type'])) {
           $field_type = $schema['fields'][$field_name]['type'];
+          // $field_size = $schema['fields'][$field_name]['size'] ?? '';
+          // if (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'tiny') && !in_array($field_name, ['severity', 'weight', 'delta', 'mode', 'cardinality'], TRUE)) {
+          // Use the value as returned by gettype().
+          // $matched_fields[] = 'boolean';
+          // }
+          // else
           if (in_array($field_type, ['int', 'serial', 'bigserial'])) {
             // Use the value as returned by gettype().
             $matched_fields[] = 'integer';
@@ -159,7 +166,7 @@ class ConditionParameterTypeCheck {
       // Load the hook_schema tables only once.
       if (empty($this->schemas)) {
         // Reset the module handler cache to get the right table schemas.
-        $this->moduleHandler->resetImplementations();
+        // $this->moduleHandler->resetImplementations();
 
         // Get the schemas for the tables created in hook_schema().
         $schemas = $this->moduleHandler->invokeAll('schema') ?? [];

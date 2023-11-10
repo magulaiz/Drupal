@@ -104,7 +104,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
    */
   protected function hasTermsForVocabulary(VocabularyInterface $vocabulary) {
     $terms = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery()
-      ->condition('vid', (int) $vocabulary->id())
+      ->condition('vid', $vocabulary->id())
       ->accessCheck(FALSE)
       ->range(0, 1)
       ->execute();

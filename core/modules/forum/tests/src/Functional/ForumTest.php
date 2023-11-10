@@ -277,7 +277,7 @@ class ForumTest extends BrowserTestBase {
     $vid = $this->config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(FALSE)
-      ->condition('vid', (int) $vid)
+      ->condition('vid', $vid)
       ->execute();
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $terms = $term_storage->loadMultiple($tids);
