@@ -92,6 +92,7 @@ stages:
   <<: [*default-job-settings]
   rules:
     - if: $PERFORMANCE_TEST != "1"
+    - if: $CKEDITOR_NIGHTLY_TEST != "1"
 
 .junit-artifacts: &junit-artifacts
   artifacts:
