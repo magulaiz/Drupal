@@ -165,7 +165,7 @@ class UsageTest extends FileManagedUnitTestBase {
         'status' => 0,
         'changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1,
       ])
-      ->condition('fid', $temp_old->id())
+      ->condition('fid', (int) $temp_old->id())
       ->execute();
     $this->assertFileExists($temp_old->getFileUri());
 
@@ -173,7 +173,7 @@ class UsageTest extends FileManagedUnitTestBase {
     $temp_new = $fileRepository->writeData('', $destination);
     $connection->update('file_managed')
       ->fields(['status' => 0])
-      ->condition('fid', $temp_new->id())
+      ->condition('fid', (int) $temp_new->id())
       ->execute();
     $this->assertFileExists($temp_new->getFileUri());
 
@@ -181,7 +181,7 @@ class UsageTest extends FileManagedUnitTestBase {
     $perm_old = $fileRepository->writeData('', $destination);
     $connection->update('file_managed')
       ->fields(['changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1])
-      ->condition('fid', $temp_old->id())
+      ->condition('fid', (int) $temp_old->id())
       ->execute();
     $this->assertFileExists($perm_old->getFileUri());
 
