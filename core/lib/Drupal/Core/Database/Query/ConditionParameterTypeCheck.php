@@ -69,7 +69,7 @@ class ConditionParameterTypeCheck {
         if ($matched_field_type = $this->getMatchedFieldType($condition['field'], $schemas)) {
           $throw_error = FALSE;
           $error_message = t('Using a query condition where the condition value is not of the same type as the field type is not allowed.');
-          if (isset($condition['operator']) && in_array(strtoupper($condition['operator']), ['IN', 'NOT IN'], TRUE)) {
+          if (isset($condition['operator']) && in_array(strtoupper($condition['operator']), ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], TRUE)) {
             foreach ($condition['value'] as $value) {
               if (!in_array(gettype($value), [$matched_field_type, 'null'], TRUE)) {
                 $throw_error = TRUE;
@@ -92,7 +92,7 @@ class ConditionParameterTypeCheck {
           }
 
           if ($throw_error) {
-            // dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
             @trigger_error($error_message, E_USER_DEPRECATED);
           }
         }

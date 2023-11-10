@@ -1335,13 +1335,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // of an entity.
         if ($entity->isDefaultRevision()) {
           $this->database->delete($table_name)
-            ->condition('entity_id', $id)
+            ->condition('entity_id', (is_numeric($id) ? (int) $id : $id))
             ->execute();
         }
         if ($this->entityType->isRevisionable()) {
           $this->database->delete($revision_name)
-            ->condition('entity_id', $id)
-            ->condition('revision_id', $vid)
+            ->condition('entity_id', (is_numeric($id) ? (int) $id : $id))
+            ->condition('revision_id', (int) $vid)
             ->execute();
         }
       }
@@ -1421,11 +1421,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
       $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
       $this->database->delete($table_name)
-        ->condition('entity_id', $entity->id())
+        ->condition('entity_id', (is_numeric($entity->id()) ? (int) $entity->id() : $entity->id()))
         ->execute();
       if ($this->entityType->isRevisionable()) {
         $this->database->delete($revision_name)
-          ->condition('entity_id', $entity->id())
+          ->condition('entity_id', (is_numeric($entity->id()) ? (int) $entity->id() : $entity->id()))
           ->execute();
       }
     }
@@ -1447,8 +1447,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
         $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
         $this->database->delete($revision_name)
-          ->condition('entity_id', $entity->id())
-          ->condition('revision_id', $vid)
+          ->condition('entity_id', (is_numeric($entity->id()) ? (int) $entity->id() : $entity->id()))
+          ->condition('revision_id', (int) $vid)
           ->execute();
       }
     }
@@ -1672,7 +1672,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     foreach ($entity_query->execute() as $row) {
       $item_query = $this->database->select($table_name, 't', ['fetch' => \PDO::FETCH_ASSOC])
         ->fields('t')
-        ->condition('entity_id', $row['entity_id'])
+        ->condition('entity_id', (is_numeric($row['entity_id']) ? (int) $row['entity_id'] : $row['entity_id']))
         ->condition('deleted', 1)
         ->orderBy('delta');
 
@@ -1711,12 +1711,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $is_deleted);
     $revision_id = $this->entityType->isRevisionable() ? $entity->getRevisionId() : $entity->id();
     $this->database->delete($table_name)
-      ->condition('revision_id', $revision_id)
+      ->condition('revision_id', (int) $revision_id)
       ->condition('deleted', 1)
       ->execute();
     if ($this->entityType->isRevisionable()) {
       $this->database->delete($revision_name)
-        ->condition('revision_id', $revision_id)
+        ->condition('revision_id', (int) $revision_id)
         ->condition('deleted', 1)
         ->execute();
     }
