@@ -3,6 +3,7 @@
 namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
@@ -66,32 +67,55 @@ class PathItem extends FieldItemBase {
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
     $entity = $this->getEntity();
 
-    // If specified, rely on the langcode property for the language, so that the
-    // existing language of an alias can be kept. That could for example be
-    // unspecified even if the field/entity has a specific langcode.
-    $alias_langcode = ($this->langcode && $this->pid) ? $this->langcode : $this->getLangcode();
+    // Load the path alias entity if that's an entity update and it's ID is
+    // known.
+    $path_alias = NULL;
+    if ($update && $this->pid) {
+      /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
+      $path_alias = $path_alias_storage->load($this->pid);
+    }
+
+    // Stop at this point in case the alias haven't been changed, even if it's a
+    // fallback alias that can't be managed by this item.
+    $existing_alias = NULL;
+    if ($path_alias) {
+      $existing_alias = $path_alias->getAlias();
+    }
+    if ($this->alias == $existing_alias) {
+      return;
+    }
+
+    $is_multilingual = FALSE;
+    if ($entity instanceof TranslatableInterface) {
+      $is_multilingual = count($entity->getTranslationLanguages()) > 1;
+    }
+
+    // Detect if the alias this item holds can be updated/deleted.
+    $has_own_alias = !empty($path_alias);
+    if ($is_multilingual) {
+      // On a multilingual entity the alias could only be managed in case it has
+      // the same language with the item, otherwise editor would be able to
+      // change the fallback alias through editing an entity translation.
+      $has_own_alias = $has_own_alias && $path_alias->language()->getId() === $this->getLangcode();
+    }
 
     // If we have an alias, we need to create or update a path alias entity.
     if ($this->alias) {
-      if (!$update || !$this->pid) {
+      if (!$has_own_alias) {
         $path_alias = $path_alias_storage->create([
           'path' => '/' . $entity->toUrl()->getInternalPath(),
           'alias' => $this->alias,
-          'langcode' => $alias_langcode,
+          'langcode' => $this->getLangcode(),
         ]);
         $path_alias->save();
         $this->pid = $path_alias->id();
       }
-      elseif ($this->pid) {
-        $path_alias = $path_alias_storage->load($this->pid);
-
-        if ($this->alias != $path_alias->getAlias()) {
-          $path_alias->setAlias($this->alias);
-          $path_alias->save();
-        }
+      else {
+        $path_alias->setAlias($this->alias);
+        $path_alias->save();
       }
     }
-    elseif ($this->pid && !$this->alias) {
+    elseif ($has_own_alias) {
       // Otherwise, delete the old alias if the user erased it.
       $path_alias = $path_alias_storage->load($this->pid);
       if ($entity->isDefaultRevision()) {

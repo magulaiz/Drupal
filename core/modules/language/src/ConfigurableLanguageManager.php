@@ -367,12 +367,16 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     if ($this->isMultilingual()) {
       $candidates = [];
       if (empty($context['operation']) || $context['operation'] != 'locale_lookup') {
-        // If the fallback context is not locale_lookup, initialize the
-        // candidates with languages ordered by weight and add
+        // If the fallback context is not locale_lookup or path_alias,
+        // initialize the candidates with languages ordered by weight and add
         // LanguageInterface::LANGCODE_NOT_SPECIFIED at the end. Interface
         // translation fallback should only be based on explicit configuration
-        // gathered via the alter hooks below.
-        $candidates = array_keys($this->getLanguages());
+        // gathered via the alter hooks below. Path aliases fall back to
+        // LanguageInterface::LANGCODE_NOT_SPECIFIED but not other languages,
+        // unless the candidates are altered.
+        if (empty($context['operation']) || $context['operation'] != 'path_alias') {
+          $candidates = array_keys($this->getLanguages());
+        }
         $candidates[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
         $candidates = array_combine($candidates, $candidates);
 
