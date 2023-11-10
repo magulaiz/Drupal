@@ -9,7 +9,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 /**
  * Test ID map which passes messages to the message service.
  *
- * Intended for use with tests whicih extend MigrateTestBase.
+ * Intended for use with tests which extend MigrateTestBase.
  *
  * @PluginID("test_message_collector")
  */
