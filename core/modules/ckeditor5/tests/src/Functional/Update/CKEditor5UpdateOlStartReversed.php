@@ -13,7 +13,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group Update
  * @group ckeditor5
  */
-class CKEditor5UpdateIOlStartReversed extends UpdatePathTestBase {
+class CKEditor5UpdateOlStartReversed extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}
