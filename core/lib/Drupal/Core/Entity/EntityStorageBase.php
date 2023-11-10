@@ -111,7 +111,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
 
     if (!$uuid_service) {
-      @trigger_error('Calling EntityStorageBase::__construct() without the $uuid_service argument is deprecated in drupal:9.4.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3268812', E_USER_DEPRECATED);
+      @trigger_error('Calling EntityStorageBase::__construct() without the $uuid_service argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3268812', E_USER_DEPRECATED);
       $uuid_service = \Drupal::service('uuid');
     }
     $this->uuidService = $uuid_service;
