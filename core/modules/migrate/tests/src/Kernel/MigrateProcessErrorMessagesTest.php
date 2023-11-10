@@ -37,9 +37,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
       ],
       'source' => [
         'plugin' => 'embedded_data',
-        'data_rows' => [
-          ['id' => 1, 'name' => 'Item 1'],
-        ],
+        'data_rows' => [],
         'ids' => ['id' => ['type' => 'integer']],
       ],
       'process' => [],
@@ -49,6 +47,12 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
       'migration_dependencies' => [],
     ];
 
+    $definition['source']['data_rows'] = [
+      [
+        'id' => 1,
+        'name' => 'Item 1',
+      ],
+    ];
     $definition['process'] = [
       'id' => [
         [
@@ -64,6 +68,43 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     $executable->import();
 
     $this->assertEquals("process_errors:id:test_error_single: Process exception.", $this->migrateMessages[1][0]);
+    $this->migrateMessages = [];
+
+    $definition['source']['data_rows'] = [
+      [
+        'id' => 1,
+        'property' => [
+          'subfield' => [
+            42,
+          ],
+        ],
+      ],
+    ];
+    $definition['process'] = [
+      'id' => 'id',
+      'property' => [
+        [
+          'plugin' => 'sub_process',
+          'source' => 'property',
+          'process' => [
+            'subfield' => [
+              [
+                'plugin' => 'test_error_single',
+                'value' => 'subfield',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
+
+    $executable = new MigrateExecutable($migration, $this);
+    $executable->import();
+
+    $this->assertEquals("process_errors:property:sub_process: test_error_single: Process exception.", $this->migrateMessages[1][0]);
+    $this->migrateMessages = [];
   }
 
 }
