@@ -54,7 +54,7 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
   public function recordView($id) {
     return (bool) $this->connection
       ->merge('node_counter')
-      ->key('nid', $id)
+      ->key('nid', (int) $id)
       ->fields([
         'daycount' => 1,
         'totalcount' => 1,

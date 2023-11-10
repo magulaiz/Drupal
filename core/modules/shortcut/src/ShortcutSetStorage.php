@@ -89,7 +89,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    */
   public function assignUser(ShortcutSetInterface $shortcut_set, $account) {
     $this->connection->merge('shortcut_set_users')
-      ->key('uid', $account->id())
+      ->key('uid', (int) $account->id())
       ->fields(['set_name' => $shortcut_set->id()])
       ->execute();
     drupal_static_reset('shortcut_current_displayed_set');

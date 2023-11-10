@@ -88,7 +88,7 @@ class NodeCounter extends DestinationBase implements ContainerFactoryPluginInter
 
     $this->connection
       ->merge('node_counter')
-      ->key('nid', $nid)
+      ->key('nid', (int) $nid)
       ->fields([
         'daycount' => $daycount,
         'totalcount' => $totalcount,

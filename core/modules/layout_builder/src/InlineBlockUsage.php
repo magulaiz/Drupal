@@ -69,6 +69,9 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
    */
   public function deleteUsage(array $block_content_ids) {
     if (!empty($block_content_ids)) {
+      foreach ($block_content_ids as &$block_content_id) {
+        $block_content_id = (int) $block_content_id;
+      }
       $query = $this->database->delete('inline_block_usage')->condition('block_content_id', $block_content_ids, 'IN');
       $query->execute();
     }
@@ -79,7 +82,7 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
    */
   public function getUsage($block_content_id) {
     $query = $this->database->select('inline_block_usage');
-    $query->condition('block_content_id', $block_content_id);
+    $query->condition('block_content_id', (int) $block_content_id);
     $query->fields('inline_block_usage', ['layout_entity_id', 'layout_entity_type']);
     $query->range(0, 1);
     return $query->execute()->fetchObject();
