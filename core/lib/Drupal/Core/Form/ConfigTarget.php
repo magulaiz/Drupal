@@ -232,8 +232,8 @@ final class ConfigTarget {
         elseif ($missing_keys = array_diff($this->propertyPaths, array_keys($value))) {
           throw new \LogicException(sprintf('The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: %s.', implode(', ', $missing_keys)));
         }
-        elseif ($extraneous_keys = array_diff(array_keys($value), $this->propertyPaths)) {
-          throw new \LogicException(sprintf('The toConfig callable returned an array that has key-value pairs that are extraneous because they do not match targeted property paths: %s.', implode(', ', $extraneous_keys)));
+        elseif ($unknown_keys = array_diff(array_keys($value), $this->propertyPaths)) {
+          throw new \LogicException(sprintf('The toConfig callable returned an array that contains key-value pairs that do not match targeted property paths: %s.', implode(', ', $unknown_keys)));
         }
       }
     }

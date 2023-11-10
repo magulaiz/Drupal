@@ -229,7 +229,7 @@ class ConfigTargetTest extends UnitTestCase {
    *           [{"FIRST": 42, "SECOND": 1337}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
    *           [{"second": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first."]
    *           [{"first": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: second."]
-   *           [{"first": 42, "second": 1337, "yar": "har"}, "The toConfig callable returned an array that has key-value pairs that are extraneous because they do not match targeted property paths: yar."]
+   *           [{"first": 42, "second": 1337, "yar": "har"}, "The toConfig callable returned an array that contains key-value pairs that do not match targeted property paths: yar."]
    */
   public function testSetValueMultiTargetToConfigReturnValue(mixed $toConfigReturnValue, string $expected_exception_message): void {
     $config_target = new ConfigTarget(
