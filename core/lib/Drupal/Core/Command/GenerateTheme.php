@@ -214,7 +214,7 @@ class GenerateTheme extends Command {
     // Alter THEMENAME.info.yml for new theme.
     if (!is_null($exit_code = $this->overrideThemeInfo())) {
       return $exit_code;
-   }
+    }
 
     // Let source theme define additional tasks.
     if (!$this->doPostProcess()) {
@@ -413,7 +413,7 @@ class GenerateTheme extends Command {
       file_put_contents($info_file, $info_contents);
     }
 
-    return null;
+    return NULL;
   }
 
   /**
