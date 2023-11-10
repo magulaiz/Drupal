@@ -98,7 +98,7 @@ class ConfigTargetTest extends BrowserTestBase {
     $this->assertSame([
       'favorite_fruits' => [
         $most_favorite_fruit,
-        'Kiwi',
+        $second_favorite_fruit,
       ],
       'favorite_vegetable' => 'Potato',
       'nemesis_vegetable' => $nemesis_vegetable,
