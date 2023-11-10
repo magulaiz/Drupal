@@ -166,7 +166,7 @@ final class ConfigTarget {
    */
   public function getValue(Config $config): mixed {
     if ($config->getName() !== $this->configName) {
-      throw new \InvalidArgumentException();
+      throw new \InvalidArgumentException(sprintf('Config target is associated with %s but %s given.', $this->configName, $config->getName()));
     }
 
     $is_multi_target = $this->isMultiTarget();
@@ -205,7 +205,7 @@ final class ConfigTarget {
    */
   public function setValue(Config $config, mixed $value, FormStateInterface $form_state): void {
     if ($config->getName() !== $this->configName) {
-      throw new \InvalidArgumentException();
+      throw new \InvalidArgumentException(sprintf('Config target is associated with %s but %s given.', $this->configName, $config->getName()));
     }
 
     $is_multi_target = $this->isMultiTarget();
