@@ -149,6 +149,43 @@ class ConfigTargetTest extends UnitTestCase {
     $sut->setValue($config->reveal(), $this->randomString(), $this->prophesize(FormStateInterface::class)->reveal());
   }
 
+  public function testSingleTarget(): void {
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      'something',
+      // This is an artificial example. Imagine a boolean value stored in config
+      // (`foo.settings:something`) and that it is presented by the string "Yes"
+      // or the string "No" in an <input type=text> in the form.
+      fromConfig: fn (bool $something): string => $something ? 'Yes' : 'No',
+      toConfig: fn (string $form_value): bool => $form_value === 'Yes',
+    );
+    // Assert the logic in the callables works as expected.
+    $this->assertSame("Yes", ($config_target->fromConfig)(TRUE));
+    $this->assertSame("No", ($config_target->fromConfig)(FALSE));
+    $this->assertSame(TRUE, ($config_target->toConfig)("Yes"));
+    $this->assertSame(FALSE, ($config_target->toConfig)("No"));
+    $this->assertSame(FALSE, ($config_target->toConfig)("some random string"));
+
+    // Now simulate how this will be used in the form, and ensure it results in
+    // the expected Config::set() calls.
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('foo.settings');
+
+    // First to transform the stored config value to the form value.
+    $config->get('something')->willReturn(TRUE);
+    $this->assertSame("Yes", $config_target->getValue($config->reveal()));
+
+    // Then to transform the modified form value back to config.
+    $config->set('something', TRUE)->shouldBeCalledTimes(1);
+    $config_target->setValue($config->reveal(), 'Yes', $this->prophesize(FormStateInterface::class)->reveal());
+
+    // Repeat, but for the other possible value.
+    $config->get('something')->willReturn(FALSE);
+    $this->assertSame("No", $config_target->getValue($config->reveal()));
+    $config->set('something', FALSE)->shouldBeCalledTimes(1);
+    $config_target->setValue($config->reveal(), 'No', $this->prophesize(FormStateInterface::class)->reveal());
+  }
+
   public function testMultiTarget(): void {
     $config_target = new ConfigTarget(
       'foo.settings',
