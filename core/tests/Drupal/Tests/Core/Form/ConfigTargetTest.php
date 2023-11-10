@@ -109,6 +109,24 @@ class ConfigTargetTest extends UnitTestCase {
     ];
   }
 
+  public function testMultiTargetWithoutCallables(): void {
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
+    new ConfigTarget('foo.settings', ['a', 'b']);
+  }
+
+  public function testMultiTargetWithoutToConfigCallable(): void {
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
+    new ConfigTarget('foo.settings', ['a', 'b'], fromConfig: "intval");
+  }
+
+  public function testMultiTargetWithoutFromConfigCallable(): void {
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
+    new ConfigTarget('foo.settings', ['a', 'b'], toConfig: "intval");
+  }
+
   public function testGetValueCorrectConfig(): void {
     $sut = new ConfigTarget('foo.settings', $this->randomMachineName());
 
