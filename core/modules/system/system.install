@@ -1919,6 +1919,9 @@ function system_update_10201(&$sandbox) {
     ->fetchCol();
 
   if ($revision_ids) {
+    foreach ($revision_ids as &$revision_id) {
+      $revision_id = (int) $revision_id;
+    }
     $database->delete($revision_data_table)
       ->condition($revision_field, $revision_ids, 'IN')
       ->execute();

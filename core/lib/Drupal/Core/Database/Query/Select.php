@@ -244,8 +244,10 @@ class Select extends Query implements SelectInterface {
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     // Check that the condition parameters are of the correct type.
     // if ($this->inTesting()) {
-    $conditions = array_merge($this->conditions(), $this->havingConditions());
-    $this->getConditionParameterTypeCheck()->checkParameterTypes(array_keys($this->tables), $conditions);
+    if ($this->getConditionParameterTypeCheck()) {
+      $conditions = array_merge($this->conditions(), $this->havingConditions());
+      $this->getConditionParameterTypeCheck()->checkParameterTypes(array_keys($this->tables), $conditions);
+    }
 
     $this->condition->compile($connection, $queryPlaceholder);
     $this->having->compile($connection, $queryPlaceholder);
