@@ -161,9 +161,9 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->assertSame('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $exit_code);
 
-    // Confirm readme is rewritten.
-    $readme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/README.md';
-    $this->assertSame('generated_from_another_theme theme, generated from test_custom_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+    // Confirm new .theme file.
+    $dottheme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/generated_from_another_theme.theme';
+    $this->assertStringContainsString('function generated_from_another_theme_preprocess_image_widget(array &$variables) {', file_get_contents($dottheme_file));
   }
 
   /**
