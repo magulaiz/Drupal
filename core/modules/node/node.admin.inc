@@ -31,8 +31,9 @@ use Drupal\node\NodeInterface;
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  * @param bool $syncing
- *   (optional) TRUE if the update is happening as part of a content synchronization process
- *   and there should be no content updates during an editorial process. The default value is FALSE.
+ *   (optional) TRUE if the update is happening as part of a content
+ *   synchronization process and there should be no content updates during an
+ *   editorial process. The default value is FALSE.
  */
 function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE, $syncing = FALSE) {
   // We use batch processing to prevent timeout when updating a large number
