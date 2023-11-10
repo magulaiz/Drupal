@@ -45,6 +45,8 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
 
     // An array of tags enabled by every plugin other than Source Editing.
     $enabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE));
+    $enabled_plugin_elements_optional = (new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins))))
+      ->diff($enabled_plugin_elements);
     $disabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE));
     $enabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE, TRUE));
     $disabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE, TRUE));
@@ -65,6 +67,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     }
 
     $enabled_plugin_overlap = $enabled_plugin_elements->intersect($source_enabled_element);
+    $enabled_plugin_optional_overlap = $enabled_plugin_elements_optional->intersect($source_enabled_element);
     $disabled_plugin_overlap = $disabled_plugin_elements
       // Merge the enabled plugins' elements, to allow wildcards to be resolved.
       ->merge($enabled_plugin_elements)
@@ -73,13 +76,17 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
       // Exclude the enabled plugin tags from the overlap; we merged these
       // previously to be able to resolve wildcards.
       ->diff($enabled_plugin_overlap);
-    foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as $overlap) {
-      $checking_enabled = $overlap === $enabled_plugin_overlap;
+    foreach ([$enabled_plugin_overlap, $enabled_plugin_optional_overlap, $disabled_plugin_overlap] as $overlap) {
+      $checking_enabled = $overlap === $enabled_plugin_overlap || $overlap === $enabled_plugin_optional_overlap;
       if (!$overlap->allowsNothing()) {
         $plugins_to_check_against = $checking_enabled ? $other_enabled_plugins : $enableable_disabled_plugins;
         $plain_tags_to_check_against = $checking_enabled ? $enabled_plugin_plain_tags : $disabled_plugin_plain_tags;
         $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against, $enabled_plugin_elements);
-        $message = $checking_enabled ? $constraint->enabledPluginsMessage : $constraint->availablePluginsMessage;
+        $message = match($overlap) {
+          $enabled_plugin_overlap => $constraint->enabledPluginsMessage,
+          $enabled_plugin_optional_overlap => $constraint->enabledPluginsOptionalMessage,
+          $disabled_plugin_overlap => $constraint->availablePluginsMessage,
+        };
 
         // Determine which element type is relevant for the violation message.
         assert(count($overlap->getAllowedElements(FALSE)) === 1);
