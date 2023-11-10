@@ -149,4 +149,97 @@ class ConfigTargetTest extends UnitTestCase {
     $sut->setValue($config->reveal(), $this->randomString(), $this->prophesize(FormStateInterface::class)->reveal());
   }
 
+  public function testMultiTarget(): void {
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      [
+        'first',
+        'second',
+      ],
+      // This is an artificial example. Imagine two integer values are stored in
+      // config (`foo.settings:first` and `foo.settings:second`) and that they
+      // are presented by a single <input type=text> in the form. We could
+      // present this to the user as two integers separated by the pipe symbol.
+      fromConfig: fn (int $first, int $second) => "$first|$second",
+      toConfig: fn (string $form_value) => [
+        'first' => intval(explode('|', $form_value)[0]),
+        'second' => intval(explode('|', $form_value)[1]),
+      ],
+    );
+    // Assert the logic in the callables works as expected.
+    $this->assertSame("42|-4", ($config_target->fromConfig)(42, -4));
+    $this->assertSame(['first' => 9, 'second' => 19], ($config_target->toConfig)("9|19"));
+
+    // Now simulate how this will be used in the form, and ensure it results in
+    // the expected Config::set() calls.
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('foo.settings');
+
+    // First to transform the stored config value to the form value.
+    $config->get('first')->willReturn(-17);
+    $config->get('second')->willReturn(71);
+    $this->assertSame("-17|71", $config_target->getValue($config->reveal()));
+
+    // Then to transform the modified form value back to config.
+    $config->set('first', 1988)->shouldBeCalledTimes(1);
+    $config->set('second', 1992)->shouldBeCalledTimes(1);
+    $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
+  }
+
+  /**
+   * @testWith ["this string was returned by toConfig", "The toConfig callable returned a string, but it must be an array with a key-value pair for each of the targeted property paths."]
+   *           [true, "The toConfig callable returned a boolean, but it must be an array with a key-value pair for each of the targeted property paths."]
+   *           [42, "The toConfig callable returned a integer, but it must be an array with a key-value pair for each of the targeted property paths."]
+   *           [[], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
+   *           [{"yar": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
+   *           [{"FIRST": 42, "SECOND": 1337}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
+   *           [{"second": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first."]
+   *           [{"first": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: second."]
+   *           [{"first": 42, "second": 1337, "yar": "har"}, "The toConfig callable returned an array that has key-value pairs that are extraneous because they do not match targeted property paths: yar."]
+   */
+  public function testSetValueMultiTargetToConfigReturnValue(mixed $toConfigReturnValue, string $expected_exception_message): void {
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      [
+        'first',
+        'second',
+      ],
+      // In case of multiple targets, the return value must be an array with the
+      // keys matching
+      // @see ::testMultiTarget()
+      fromConfig: fn (int $first, int $second) => "$first|$second",
+      toConfig: fn () => $toConfigReturnValue,
+    );
+
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('foo.settings');
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage($expected_exception_message);
+    $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
+  }
+
+  public function testSetValueMultiTargetOutOfBounds(): void {
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      [
+        'first',
+        'second',
+      ],
+      // In case of multiple targets, \OutOfBoundsException may never be thrown.
+      // @see ::testMultiTarget()
+      fromConfig: fn (int $first, int $second) => "$first|$second",
+      // phpcs:disable
+      // The "toConfig" callable for the first choice sets all choices.
+      toConfig: fn () => throw new \OutOfBoundsException(),
+    );
+
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('foo.settings');
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.');
+    $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
+  }
+
 }
