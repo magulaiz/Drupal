@@ -109,22 +109,19 @@ class ConfigTargetTest extends UnitTestCase {
     ];
   }
 
-  public function testMultiTargetWithoutCallables(): void {
+  /**
+   * @dataProvider providerMultiTargetWithoutCallables
+   */
+  public function testMultiTargetWithoutCallables(...$arguments): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
-    new ConfigTarget('foo.settings', ['a', 'b']);
+    new ConfigTarget(...$arguments);
   }
 
-  public function testMultiTargetWithoutToConfigCallable(): void {
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
-    new ConfigTarget('foo.settings', ['a', 'b'], fromConfig: "intval");
-  }
-
-  public function testMultiTargetWithoutFromConfigCallable(): void {
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
-    new ConfigTarget('foo.settings', ['a', 'b'], toConfig: "intval");
+  public function providerMultiTargetWithoutCallables(): \Generator {
+    yield "neither callable" => ['foo.settings', ['a', 'b']];
+    yield "only fromConfig" => ['foo.settings', ['a', 'b'], "intval"];
+    yield "only toConfig" => ['foo.settings', ['a', 'b'], NULL, "intval"];
   }
 
   public function testGetValueCorrectConfig(): void {
