@@ -96,16 +96,21 @@
       function checkEmptyRegions(table, rowObject) {
         let direction = 'before';
         // Move the element after or before the region that display the quantity of filtered.
-        let previousElement = rowObject.element.previousElementSibling || null;
-        let nextElement = rowObject.element.nextElementSibling || null;
-        if (rowObject.direction === 'up' && previousElement?.previousElementSibling === null) {
+        const previousElement =
+          rowObject.element.previousElementSibling || null;
+        const nextElement = rowObject.element.nextElementSibling || null;
+        if (
+          rowObject.direction === 'up' &&
+          previousElement?.previousElementSibling === null
+        ) {
           rowObject.swap('after', previousElement);
         }
         if (
-          (nextElement && nextElement.classList.contains('js-region-filter-quantity')) ||
-          (previousElement && previousElement.classList.contains('js-region-filter-quantity'))
+          (nextElement &&
+            nextElement.classList.contains('js-region-filter-quantity')) ||
+          (previousElement &&
+            previousElement.classList.contains('js-region-filter-quantity'))
         ) {
-
           let el = previousElement;
           if (rowObject.direction === 'down') {
             direction = 'after';
@@ -207,7 +212,6 @@
       const tableDrag = Drupal.tableDrag.blocks;
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
-        scrollDraggedRow(table, this);
         updateParentRegionName(this);
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
@@ -259,13 +263,6 @@
         }
 
         updateBlockWeights(table, regionName);
-        const params = {
-          detail: {
-            regionName,
-          },
-        };
-        const onDropEvent = new CustomEvent('blocksDropped', params);
-        dragObject.rowObject.element.dispatchEvent(onDropEvent);
       };
 
       // Add the behavior to each region select list.

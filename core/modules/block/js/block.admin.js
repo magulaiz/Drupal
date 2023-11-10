@@ -295,9 +295,9 @@
               'There are no blocks matching the filter conditions.',
             );
             gotoFiltered.style.display = 'block';
-            gotoFiltered.classList.remove('js-goto-enabled');
+            gotoFiltered.classList.remove('has-block-results');
           } else {
-            gotoFiltered.classList.add('js-goto-enabled');
+            gotoFiltered.classList.add('has-block-results');
             gotoFiltered.textContent = Drupal.t('Go to items found.');
             gotoFiltered.style.display = 'block';
           }
@@ -308,7 +308,7 @@
       // to help users get there faster they can click on the link
       // below the input filter.
       gotoFiltered.addEventListener('click', (e) => {
-        if (!gotoFiltered.classList.contains('js-goto-enabled')) {
+        if (!gotoFiltered.classList.contains('has-block-results')) {
           return;
         }
         let firstVisibleRegion = null;
@@ -405,14 +405,6 @@
           });
         });
       }
-
-      // Extend block table drag event adding the filter callback.
-      document.querySelectorAll('.draggable').forEach((row) => {
-        row.addEventListener('blocksDropped', (e) => {
-          toggleBlocksByRegion(e.detail.regionName, 'add');
-          filterCallback();
-        });
-      });
     },
   };
 })(jQuery, Drupal, Drupal.debounce, once);

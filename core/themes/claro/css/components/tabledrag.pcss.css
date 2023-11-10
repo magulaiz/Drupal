@@ -84,11 +84,13 @@ body.drag {
   display: none;
   margin: 0;
   padding: 0;
-  cursor: pointer;
-  color: var(--color-link);
   font-size: 0.75rem;
   font-weight: 400;
   font-style: italic;
+}
+.js-input-filter-goto-element.has-block-results {
+  cursor: pointer;
+  color: var(--color-link);
 }
 
 /* Empty region message row in table. */
