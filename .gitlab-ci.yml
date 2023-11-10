@@ -243,17 +243,12 @@ stages:
   script:
     - yarn --cwd ./core upgrade $(cat ./package.json | jq -r '.devDependencies | keys | .[]' | grep '@ckeditor/' | sed 's/$/@nightly/') ckeditor5@nightly
 
-'PHP 8.2 MySQL 8 + CKEditor Nightly':
+'CKEditor Nightly + PHP 8.2 MySQL 8':
   <<: [ *default-stage ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "mysql-8"
   needs: ['🌌 CKEditor Nightly']
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CKEDITOR_NIGHTLY_TEST == "1"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
-      allow_failure: true
 
 ################
 # Build Jobs for linting
