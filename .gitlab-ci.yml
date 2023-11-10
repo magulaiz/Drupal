@@ -58,6 +58,7 @@ variables:
 #############
 stages:
   - 🏗️ Build
+  - 🏛️ Post Build
   - 🪄 Lint
   - 🗜️ Test
 
@@ -228,7 +229,7 @@ stages:
   <<: *default-job-settings
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  stage: 🏗️ Build
+  stage: 🏛️ Post Build
   needs: ['📦️ Yarn']
   artifacts:
     expire_in: 1 week
