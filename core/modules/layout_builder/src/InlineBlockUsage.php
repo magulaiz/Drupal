@@ -33,8 +33,8 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
   public function addUsage($block_content_id, EntityInterface $entity) {
     $this->database->merge('inline_block_usage')
       ->keys([
-        'block_content_id' => $block_content_id,
-        'layout_entity_id' => $entity->id(),
+        'block_content_id' => (int) $block_content_id,
+        'layout_entity_id' => (int) $entity->id(),
         'layout_entity_type' => $entity->getEntityTypeId(),
       ])->execute();
   }

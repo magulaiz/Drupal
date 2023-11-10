@@ -114,8 +114,8 @@ function history_write($nid, $account = NULL) {
     $request_time = \Drupal::time()->getRequestTime();
     \Drupal::database()->merge('history')
       ->keys([
-        'uid' => $account->id(),
-        'nid' => $nid,
+        'uid' => (int) $account->id(),
+        'nid' => (int) $nid,
       ])
       ->fields(['timestamp' => $request_time])
       ->execute();

@@ -233,7 +233,7 @@ function _tracker_add($nid, $uid, $changed) {
   $connection->merge('tracker_user')
     ->keys([
       'nid' => (int) $nid,
-      'uid' => $uid,
+      'uid' => (int) $uid,
     ])
     ->fields([
       'changed' => $changed,
