@@ -31,7 +31,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
    */
   public function testProcessErrorMessages() {
     $definition = [
-      'id' => 'process_errors',
+      'id' => 'process_errors_migration',
       'idMap' => [
         'plugin' => 'test_message_collector',
       ],
@@ -67,13 +67,13 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
 
-    $this->assertEquals("process_errors:id:test_error_single: Process exception.", $this->migrateMessages[1][0]);
+    $this->assertEquals("process_errors_migration:id:test_error_single: Process exception.", $this->migrateMessages[1][0]);
     $this->migrateMessages = [];
 
     $definition['source']['data_rows'] = [
       [
         'id' => 1,
-        'property' => [
+        'my_property' => [
           'subfield' => [
             42,
           ],
@@ -82,10 +82,10 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     ];
     $definition['process'] = [
       'id' => 'id',
-      'property' => [
+      'my_property' => [
         [
           'plugin' => 'sub_process',
-          'source' => 'property',
+          'source' => 'my_property',
           'process' => [
             'subfield' => [
               [
@@ -103,7 +103,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
 
-    $this->assertEquals("process_errors:property:sub_process: test_error_single: Process exception.", $this->migrateMessages[1][0]);
+    $this->assertEquals("process_errors_migration:my_property:sub_process: test_error_single: Process exception.", $this->migrateMessages[1][0]);
     $this->migrateMessages = [];
   }
 
