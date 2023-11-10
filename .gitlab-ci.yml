@@ -284,6 +284,7 @@ stages:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   stage: 🏗️ Build
+  needs: ['📦️ Yarn']
   artifacts:
     expire_in: 1 week
     expose_as: 'yarn-vendor-ckeditor-nightly'
