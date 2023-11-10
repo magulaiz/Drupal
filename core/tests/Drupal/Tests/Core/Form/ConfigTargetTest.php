@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigTarget;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -105,6 +107,28 @@ class ConfigTargetTest extends UnitTestCase {
         'The form element [group][test] #config_target property is not a string or a ConfigTarget object',
       ],
     ];
+  }
+
+  public function testGetValueCorrectConfig(): void {
+    $sut = new ConfigTarget('foo.settings', $this->randomMachineName());
+
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('bar.settings');
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Config target is associated with foo.settings but bar.settings given.');
+    $sut->getValue($config->reveal());
+  }
+
+  public function testSetValueCorrectConfig(): void {
+    $sut = new ConfigTarget('foo.settings', $this->randomMachineName());
+
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('bar.settings');
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Config target is associated with foo.settings but bar.settings given.');
+    $sut->setValue($config->reveal(), $this->randomString(), $this->prophesize(FormStateInterface::class)->reveal());
   }
 
 }
