@@ -44,6 +44,9 @@ stages:
       job: '📦️ Composer'
     - pipeline: $PARENT_PIPELINE_ID
       job: '📦️ Yarn'
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '🌌 CKEditor Nightly'
+      optional: true
 
 .test-variables: &test-variables
   FF_NETWORK_PER_BUILD: 1

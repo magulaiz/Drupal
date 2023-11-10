@@ -221,6 +221,16 @@ stages:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "sqlite-3"
 
+'PHP 8.3 MySQL 8 + CKEditor Nightly':
+  <<: [ *default-stage ]
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "mysql-8"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CKEDITOR_NIGHTLY_TEST == "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
 
 ################
 # Build Jobs for linting
@@ -268,6 +278,19 @@ stages:
       - core/node_modules/
   script:
     - yarn --cwd ./core install
+
+'🌌 CKEditor Nightly':
+  <<: *default-job-settings
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  stage: 🏗️ Build
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor-ckeditor-nightly'
+    paths:
+      - core/node_modules/
+  script:
+    - yarn --cwd ./core upgrade $(cat ./package.json | jq -r '.devDependencies | keys | .[]' | grep '@ckeditor/' | sed 's/$/@nightly/') ckeditor5@nightly
 
 ################
 # Lint Jobs
