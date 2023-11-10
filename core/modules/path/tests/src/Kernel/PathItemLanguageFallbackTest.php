@@ -57,7 +57,10 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
 
     $this->installSchema('node', ['node_access']);
 
-    $node_type = NodeType::create(['type' => 'foo']);
+    $node_type = NodeType::create([
+      'type' => 'foo',
+      'name' => 'Foo',
+    ]);
     $node_type->save();
 
     $this->installConfig(['language']);
