@@ -376,8 +376,9 @@ class GenerateTheme extends Command {
           $source_version .= '#' . trim($git_get_commit->getOutput());
         }
       }
-      $info['name'] = $this->destination_theme_label;
-      $info['generator'] = "$this->source_theme_name:$source_version";
+
+      // Create the generator string before doing *.info.yml overrides.
+      $generator_string = "$this->source_theme_name:$source_version";
 
       if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
         foreach ($info_overrides as $key => $value) {
@@ -390,10 +391,18 @@ class GenerateTheme extends Command {
         }
       }
 
+      // Insert generator string, theme label, and description from command after overrides.
+      $info['generator'] = $generator_string;
+
+      if ($this->destination_theme_label) {
+        $info['name'] = $this->destination_theme_label;
+      }
+
       if ($this->destination_theme_description) {
         $info['description'] = $this->destination_theme_description;
       }
 
+      // Set a default core version requirement to the current major version of Drupal.
       if (!isset($info['core_version_requirement'])) {
         $info['core_version_requirement'] = '^' . explode('.', \Drupal::VERSION)[0];
       }
