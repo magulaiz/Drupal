@@ -21,3 +21,11 @@ list_filter_test.table:
     _controller: '\Drupal\list_filter_test\Controller\ListFilterTestController::contentTable'
   requirements:
     _access: 'TRUE'
+
+list_filter_test.details:
+  path: /list-filter-test/details
+  defaults:
+    _title: 'List filter test: details'
+    _controller: '\Drupal\list_filter_test\Controller\ListFilterTestController::contentDetails'
+  requirements:
+    _access: 'TRUE'

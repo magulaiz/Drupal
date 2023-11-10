@@ -16,6 +16,9 @@ use Drupal\Core\Render\Element;
  *   elements containing text to search for. This may produce multiple elements.
  *   Defaults to an empty string, which indicates that the whole of the list
  *   item should be considered searchable text.
+ * - #list_group: (optional) The CSS selector, relative to the container, for
+ *   the groups of items. If omitted, the list is not considered to have
+ *   grouping.
  *
  * @RenderElement("list_filter")
  */
@@ -38,6 +41,7 @@ class ListFilter extends Search {
       '#list_container_id' => 'filter-container',
       '#list_item' => '.filter-item',
       '#list_text' => '',
+      '#list_group' => '',
     ];
   }
 
@@ -71,6 +75,7 @@ class ListFilter extends Search {
       '#list_container_id',
       '#list_item',
       '#list_text',
+      '#list_group',
     ] as $key) {
       $settings[substr($key, 1)] = $element[$key];
     }

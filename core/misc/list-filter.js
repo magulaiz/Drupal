@@ -53,6 +53,12 @@
    *   Settings for the filtering added via the list_filter render element.
    */
   Drupal.listFilter = function ($container, listFilterSettings) {
+
+    /**
+     * jQuery object for the filter search box.
+     */
+    const $input = $('#' + listFilterSettings.search_field_id);
+
     /**
      * jQuery object for the filter container.
      *
@@ -71,9 +77,17 @@
     this.sources = [];
 
     /**
-     * jQuery object for the filter search box.
+     * jQuery object of groups.
      */
-    const $input = $('#' + listFilterSettings.search_field_id);
+    this.$groups = listFilterSettings.list_group ?
+      this.$container.find(listFilterSettings.list_group) :
+      null;
+
+    /**
+     * Nested array of jQuery row objects. The outer indexes match the indexes
+     * of this.$groups.
+     */
+    this.rowsByGroup = [];
 
     function preventEnterKey(event) {
       if (event.which === 13) {
@@ -85,14 +99,24 @@
     // Initialize rows.
     this.$rows = this.$container.find(listFilterSettings.list_item);
 
+    // Assemble text sources and if applicable, groups.
     if (this.$rows.length) {
-      // Build up an array of text content, with the same indexes as the $rows.
-      // This is to avoid having to concatenate any multiple text items on
-      // every search.
       this.$rows.each(function (index, row) {
+        let $row = $(row);
+
+        // Assemble a nested array of rows by group.
+        if (this.$groups) {
+          let groupIndex = this.getRowGroup($row, this.$groups);
+          this.rowsByGroup[groupIndex] ??= [];
+          this.rowsByGroup[groupIndex].push($row);
+        }
+
+        // Build up an array of text content, with the same indexes as the $rows.
+        // This is to avoid having to concatenate any multiple text items on
+        // every search.
         let $sources = listFilterSettings.list_text ?
-          $(row).find(listFilterSettings.list_text) :
-          $(row);
+          $row.find(listFilterSettings.list_text) :
+          $row;
 
         // Concatenate the textContent of the elements in the row, with a
         // space in between.
@@ -114,6 +138,59 @@
   };
 
   /**
+    * Gets the group index for a row.
+    *
+    * This hands over to a helper method based on how groups and rows are
+    * arranged. Override this for custom arrangements.
+    *
+    * @param {jQuery} $row
+    *  A row jQuery object.
+    * @param {jQuery} $groups
+    *  The jQuery object of all groups.
+    *
+    * @return {number}
+    *  The index for the group the row belongs to.
+    */
+  Drupal.listFilter.prototype.getRowGroup = function ($row, $groups) {
+    // TODO: use a setting to pick which helper function to use.
+    return this.getRowGroupUsingContainment($row, $groups);
+  }
+
+  /**
+   * Gets the group for a row, for rows which are children of groups.
+   *
+   * @param {jQuery} row
+   *   The jQuery object for the row.
+   *
+   * @return {number}
+   *   The index of the group.
+   */
+  Drupal.listFilter.prototype.getRowGroupUsingContainment = function ($row, $groups) {
+    let foundIndex = null;
+    $groups.each((index, group) => {
+      if (jQuery.contains(group, $row[0])) {
+        foundIndex = index;
+        // Break the each() loop.
+        return false;
+      }
+    });
+    return foundIndex;
+  }
+
+  /**
+   * Gets the group for a row, for rows which are siblings of groups.
+   *
+   * @param {jQuery} row
+   *   The jQuery object for the row.
+   *
+   * @return {number}
+   *   The index of the group.
+   */
+  Drupal.listFilter.prototype.getRowGroupUsingPrior = function ($row) {
+    // @todo: the header row case.
+  }
+
+  /**
    * Filters the list in response to typing in the search box.
    *
    * @param {*} e
@@ -128,6 +205,7 @@
     // Reset table when the textbox is cleared.
     if (query.length === 0) {
       this.$rows.show();
+      this.showAllGroups();
 
       return;
     }
@@ -138,7 +216,35 @@
 
       this.$rows.eq(index).toggle(match);
     });
+
+    this.hideEmptyGroups();
   };
+
+  /**
+   * Hides all groups which have no rows showing for the current filter.
+   */
+  Drupal.listFilter.prototype.hideEmptyGroups = function() {
+    this.$groups.each((index, group) => {
+      let showGroup = this.rowsByGroup[index].reduce(
+        (accumulator, $row) => {
+          // Don't use .is(":visible") as that considers visibility of ancestors
+          // as well, and we want to know specifically if the row has been
+          // hidden.
+          return accumulator || $row.css("display") != "none";
+        },
+        false
+      );
+
+      $(this.$groups[index]).toggle(showGroup);
+    });
+  }
+
+  /**
+   * Shows all groups.
+   */
+  Drupal.listFilter.prototype.showAllGroups = function () {
+    this.$groups.show();
+  }
 
 
 })(jQuery, Drupal, drupalSettings);

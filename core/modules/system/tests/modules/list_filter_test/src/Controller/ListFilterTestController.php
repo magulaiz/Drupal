@@ -119,4 +119,68 @@ class ListFilterTestController {
     return $build;
   }
 
+  /**
+   * Grouped filtering with DETAILS and DIV and P elements.
+   */
+  public function contentDetails() {
+    $build = [];
+
+    $build['list_filter'] = [
+      '#type' => 'list_filter',
+      '#placeholder' => $this->t('Filter list'),
+      '#attributes' => [
+        'title' => $this->t('Enter a part of an item to filter by.'),
+      ],
+      '#list_container_id' => 'filter-container',
+      '#list_item' => '.filter-item',
+      '#list_text' => '.filter-text',
+      '#list_group' => 'details',
+    ];
+
+    $build['container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => ['filter-container'],
+      ],
+    ];
+
+    $build['container']['letters'] = [
+      '#type' => 'details',
+      '#title' => 'Letters',
+      '#open' => TRUE,
+    ];
+    foreach (['alpha', 'beta', 'gamma'] as $row) {
+      $build['container']['letters'][$row] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['filter-item'],
+        ],
+        'paragraph' => [
+          '#markup' => "<p><span class=\"filter-text\">$row</span> (excluded text)</p>",
+          '#allowed_tags' => ['p', 'span'],
+        ],
+      ];
+    }
+
+    $build['container']['numbers'] = [
+      '#type' => 'details',
+      '#title' => 'Numbers',
+      '#open' => TRUE,
+    ];
+    foreach (['one', 'two', 'three'] as $row) {
+      $build['container']['numbers'][$row] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['filter-item'],
+        ],
+        'paragraph' => [
+          '#markup' => "<p><span class=\"filter-text\">$row</span> (excluded text)</p>",
+          '#allowed_tags' => ['p', 'span'],
+        ],
+      ];
+    }
+
+    return $build;
+  }
+
 }
