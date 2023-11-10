@@ -212,7 +212,9 @@ class GenerateTheme extends Command {
     $this->doRenameAndEdit();
 
     // Alter THEMENAME.info.yml for new theme.
-    $this->overrideThemeInfo();
+    if (!is_null($exit_code = $this->overrideThemeInfo())) {
+      return $exit_code;
+   }
 
     // Let source theme define additional tasks.
     if (!$this->doPostProcess()) {
@@ -326,7 +328,7 @@ class GenerateTheme extends Command {
   /**
    * Overrides source *.info.yml with key/value pairs specified in *.starterkit.yml.
    *
-   * @return void
+   * @return int|NULL returns an exit code or NULL to continue.
    */
   private function overrideThemeInfo() {
     $info_overrides = $this->info_overrides;
@@ -411,6 +413,7 @@ class GenerateTheme extends Command {
       file_put_contents($info_file, $info_contents);
     }
 
+    return null;
   }
 
   /**
