@@ -5,6 +5,12 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Test form for testing config targets that are not 1:1.
+ *
+ * Note this is extending TreeConfigTargetForm to ensure that the presence of
+ * both 1:1 config targets and ones that aren't work together in the same form.
+ */
 class NestedConfigTargetForm extends TreeConfigTargetForm {
 
   /**
