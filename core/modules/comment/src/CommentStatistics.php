@@ -74,10 +74,14 @@ class CommentStatistics implements CommentStatisticsInterface {
    * {@inheritdoc}
    */
   public function read($entities, $entity_type, $accurate = TRUE) {
+    $entity_ids = array_keys($entities);
+    foreach ($entity_ids as &$entity_id) {
+      $entity_id = (int) $entity_id;
+    }
     $connection = $accurate ? $this->database : $this->databaseReplica;
     $stats = $connection->select('comment_entity_statistics', 'ces')
       ->fields('ces')
-      ->condition('ces.entity_id', array_keys($entities), 'IN')
+      ->condition('ces.entity_id', $entity_ids, 'IN')
       ->condition('ces.entity_type', $entity_type)
       ->execute();
 
@@ -93,7 +97,7 @@ class CommentStatistics implements CommentStatisticsInterface {
    */
   public function delete(EntityInterface $entity) {
     $this->database->delete('comment_entity_statistics')
-      ->condition('entity_id', $entity->id())
+      ->condition('entity_id', (int) $entity->id())
       ->condition('entity_type', $entity->getEntityTypeId())
       ->execute();
   }
@@ -205,11 +209,10 @@ class CommentStatistics implements CommentStatisticsInterface {
       ->fetchField();
 
     if ($count > 0) {
-      $commented_entity_id = is_numeric($comment->getCommentedEntityId()) ? (int) $comment->getCommentedEntityId() : $comment->getCommentedEntityId();
       // Comments exist.
       $last_reply = $this->database->select('comment_field_data', 'c')
         ->fields('c', ['cid', 'name', 'changed', 'uid'])
-        ->condition('c.entity_id', $commented_entity_id)
+        ->condition('c.entity_id', (int) $comment->getCommentedEntityId())
         ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
         ->condition('c.field_name', $comment->getFieldName())
         ->condition('c.status', CommentInterface::PUBLISHED)
@@ -225,10 +228,10 @@ class CommentStatistics implements CommentStatisticsInterface {
           'comment_count' => $count,
           'last_comment_timestamp' => $last_reply->changed,
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
-          'last_comment_uid' => $last_reply->uid,
+          'last_comment_uid' => (int) $last_reply->uid,
         ])
         ->keys([
-          'entity_id' => $commented_entity_id,
+          'entity_id' => (int) $comment->getCommentedEntityId(),
           'entity_type' => $comment->getCommentedEntityTypeId(),
           'field_name' => $comment->getFieldName(),
         ])
@@ -257,7 +260,7 @@ class CommentStatistics implements CommentStatisticsInterface {
           'last_comment_name' => '',
           'last_comment_uid' => $last_comment_uid,
         ])
-        ->condition('entity_id', $comment->getCommentedEntityId())
+        ->condition('entity_id', (int) $comment->getCommentedEntityId())
         ->condition('entity_type', $comment->getCommentedEntityTypeId())
         ->condition('field_name', $comment->getFieldName())
         ->execute();

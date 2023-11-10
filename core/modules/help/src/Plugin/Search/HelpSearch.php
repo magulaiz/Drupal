@@ -495,6 +495,9 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     // Remove items from our table in batches of 100, to avoid problems
     // with having too many placeholders in database queries.
     foreach (array_chunk($sids, 100) as $this_list) {
+      foreach ($this_list as &$this_list_item) {
+        $this_list_item = (int) $this_list_item;
+      }
       $this->database->delete('help_search_items')
         ->condition('sid', $this_list, 'IN')
         ->execute();

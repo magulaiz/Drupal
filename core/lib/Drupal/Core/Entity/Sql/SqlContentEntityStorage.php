@@ -638,12 +638,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function doDeleteRevisionFieldItems(ContentEntityInterface $revision) {
     $this->database->delete($this->revisionTable)
-      ->condition($this->revisionKey, $revision->getRevisionId())
+      ->condition($this->revisionKey, (int) $revision->getRevisionId())
       ->execute();
 
     if ($this->revisionDataTable) {
       $this->database->delete($this->revisionDataTable)
-        ->condition($this->revisionKey, $revision->getRevisionId())
+        ->condition($this->revisionKey, (int) $revision->getRevisionId())
         ->execute();
     }
 
@@ -927,7 +927,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             $this->database
               ->update($this->revisionTable)
               ->fields((array) $record)
-              ->condition($this->revisionKey, $entity->getRevisionId())
+              ->condition($this->revisionKey, (int) $entity->getRevisionId())
               ->execute();
           }
         }
@@ -1173,7 +1173,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $this->database
         ->update($this->revisionTable)
         ->fields((array) $record)
-        ->condition($this->revisionKey, $entity->getRevisionId())
+        ->condition($this->revisionKey, (int) $entity->getRevisionId())
         ->execute();
     }
     return $entity->getRevisionId();

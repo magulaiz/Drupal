@@ -251,7 +251,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
 
     // Check that data for both revisions are in the revision table.
     foreach ($revision_values as $revision_id => $values) {
-      $rows = $connection->select($this->revisionTable, 't')->fields('t')->condition('revision_id', $revision_id)->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
+      $rows = $connection->select($this->revisionTable, 't')->fields('t')->condition('revision_id', (int) $revision_id)->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
       $this->assertCount(min(count($values), $this->fieldCardinality), $rows);
       foreach ($rows as $delta => $row) {
         $expected = [

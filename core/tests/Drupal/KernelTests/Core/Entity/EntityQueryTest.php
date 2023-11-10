@@ -300,7 +300,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->queryResults = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('revision_id', $first_entity->getRevisionId())
+      ->condition('revision_id', (int) $first_entity->getRevisionId())
       ->allRevisions()
       ->execute();
     $this->assertCount(1, $this->queryResults);
