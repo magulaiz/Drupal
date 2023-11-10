@@ -57,13 +57,14 @@ class ConfigTargetTest extends BrowserTestBase {
     $this->drupalGet('/form-test/nested-config-target');
     $page = $this->getSession()->getPage();
     $page->fillField('First choice', '');
+    $page->fillField('Second choice', '');
     $page->fillField('Nemesis', $nemesis_vegetable);
     $page->pressButton('Save configuration');
     $assert_session = $this->assertSession();
     $assert_session->statusMessageContains('This value should not be blank.', 'error');
     $assert_session->elementAttributeNotExists('css', '#edit-favorites', 'aria-invalid');
     $assert_session->elementAttributeExists('named', ['field', 'First choice'], 'aria-invalid');
-    $assert_session->elementAttributeNotExists('named', ['field', 'Second choice'], 'aria-invalid');
+    $assert_session->elementAttributeExists('named', ['field', 'Second choice'], 'aria-invalid');
 
     $page->fillField('First choice', $most_favorite_fruit);
     $page->pressButton('Save configuration');
