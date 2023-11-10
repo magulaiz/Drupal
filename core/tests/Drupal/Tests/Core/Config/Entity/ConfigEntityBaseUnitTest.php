@@ -11,8 +11,6 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityDuplicateInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
