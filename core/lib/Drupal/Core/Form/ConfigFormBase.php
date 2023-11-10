@@ -172,24 +172,32 @@ abstract class ConfigFormBase extends FormBase {
         $property_path = $violation->getPropertyPath();
         // Default to index 0.
         $index = 0;
-        // Detect if this is a sequence property path, and if so, determine the
-        // actual sequence index.
-        $matches = [];
-        if (preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
-          $index = intval($matches[1]);
-          // The property path as known in the config key-to-form element map
-          // will not have the sequence index in it.
-          $property_path = rtrim($property_path, '0123456789.');
-        }
 
+        // If there is an explicit config target for the violation's property
+        // path, use that.
         if (isset($map[$config_name][$property_path])) {
           $config_target = ConfigTarget::fromForm($map[$config_name][$property_path], $form);
           $form_element_name = implode('][', $config_target->elementParents);
         }
+        // Detect if this is a sequence item property path, and if so, attempt
+        // to fall back to the containing sequence's property path.
         else {
-          // We cannot determine where to place the violation. The only option
-          // is the entire form.
-          $form_element_name = '';
+          $matches = [];
+          if (preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
+            $index = intval($matches[1]);
+            // The property path as known in the config key-to-form element map
+            // will not have the sequence index in it.
+            $property_path = rtrim($property_path, '0123456789.');
+          }
+          if (isset($map[$config_name][$property_path])) {
+            $config_target = ConfigTarget::fromForm($map[$config_name][$property_path], $form);
+            $form_element_name = implode('][', $config_target->elementParents);
+          }
+          else {
+            // We cannot determine where to place the violation. The only option
+            // is the entire form.
+            $form_element_name = '';
+          }
         }
         $violations_per_form_element[$form_element_name][$index] = $violation;
       }
