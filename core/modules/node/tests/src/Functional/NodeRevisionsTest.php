@@ -335,133 +335,133 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains('New revision message (DE)');
   }
 
-//  /**
-//   * Checks that revisions are correctly saved without log messages.
-//   */
-//  public function testNodeRevisionWithoutLogMessage() {
-//    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-//    // Create a node with an initial log message.
-//    $revision_log = $this->randomMachineName(10);
-//    $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
-//
-//    // Save over the same revision and explicitly provide an empty log message
-//    // (for example, to mimic the case of a node form submitted with no text in
-//    // the "log message" field), and check that the original log message is
-//    // preserved.
-//    $new_title = $this->randomMachineName(10) . 'testNodeRevisionWithoutLogMessage1';
-//
-//    $node = clone $node;
-//    $node->title = $new_title;
-//    $node->revision_log = '';
-//    $node->setNewRevision(FALSE);
-//
-//    $node->save();
-//    $this->drupalGet('node/' . $node->id());
-//    $this->assertSession()->pageTextContains($new_title);
-//    $node_storage->resetCache([$node->id()]);
-//    $node_revision = $node_storage->load($node->id());
-//    $this->assertEquals($revision_log, $node_revision->revision_log->value, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
-//
-//    // Create another node with an initial revision log message.
-//    $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
-//
-//    // Save a new node revision without providing a log message, and check that
-//    // this revision has an empty log message.
-//    $new_title = $this->randomMachineName(10) . 'testNodeRevisionWithoutLogMessage2';
-//
-//    $node = clone $node;
-//    $node->title = $new_title;
-//    $node->setNewRevision();
-//    $node->revision_log = NULL;
-//
-//    $node->save();
-//    $this->drupalGet('node/' . $node->id());
-//    $this->assertSession()->pageTextContains($new_title);
-//    $node_storage->resetCache([$node->id()]);
-//    $node_revision = $node_storage->load($node->id());
-//    $this->assertEmpty($node_revision->revision_log->value, 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
-//  }
-//
-//  /**
-//   * Tests the revision translations are correctly reverted.
-//   */
-//  public function testRevisionTranslationRevert() {
-//    // Create a node and a few revisions.
-//    $node = $this->drupalCreateNode(['langcode' => 'en']);
-//
-//    $initial_revision_id = $node->getRevisionId();
-//    $initial_title = $node->label();
-//    $this->createRevisions($node, 2);
-//
-//    // Translate the node and create a few translation revisions.
-//    $translation = $node->addTranslation('it');
-//    $this->createRevisions($translation, 3);
-//    $revert_id = $node->getRevisionId();
-//    $translated_title = $translation->label();
-//    $untranslatable_string = $node->untranslatable_string_field->value;
-//
-//    // Create a new revision for the default translation in-between a series of
-//    // translation revisions.
-//    $this->createRevisions($node, 1);
-//    $default_translation_title = $node->label();
-//
-//    // And create a few more translation revisions.
-//    $this->createRevisions($translation, 2);
-//    $translation_revision_id = $translation->getRevisionId();
-//
-//    // Now revert the a translation revision preceding the last default
-//    // translation revision, and check that the desired value was reverted but
-//    // the default translation value was preserved.
-//    $revert_translation_url = Url::fromRoute('node.revision_revert_translation_confirm', [
-//      'node' => $node->id(),
-//      'node_revision' => $revert_id,
-//      'langcode' => 'it',
-//    ]);
-//    $this->drupalGet($revert_translation_url);
-//    $this->submitForm([], 'Revert');
-//    /** @var \Drupal\node\NodeStorage $node_storage */
-//    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-//    $node_storage->resetCache();
-//    /** @var \Drupal\node\NodeInterface $node */
-//    $node = $node_storage->load($node->id());
-//    $this->assertGreaterThan($translation_revision_id, $node->getRevisionId());
-//    $this->assertEquals($default_translation_title, $node->label());
-//    $this->assertEquals($translated_title, $node->getTranslation('it')->label());
-//    $this->assertNotEquals($untranslatable_string, $node->untranslatable_string_field->value);
-//
-//    $latest_revision_id = $translation->getRevisionId();
-//
-//    // Now revert the a translation revision preceding the last default
-//    // translation revision again, and check that the desired value was reverted
-//    // but the default translation value was preserved. But in addition the
-//    // untranslated field will be reverted as well.
-//    $this->drupalGet($revert_translation_url);
-//    $this->submitForm(['revert_untranslated_fields' => TRUE], 'Revert');
-//    $node_storage->resetCache();
-//    /** @var \Drupal\node\NodeInterface $node */
-//    $node = $node_storage->load($node->id());
-//    $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
-//    $this->assertEquals($default_translation_title, $node->label());
-//    $this->assertEquals($translated_title, $node->getTranslation('it')->label());
-//    $this->assertEquals($untranslatable_string, $node->untranslatable_string_field->value);
-//
-//    $latest_revision_id = $translation->getRevisionId();
-//
-//    // Now revert the entity revision to the initial one where the translation
-//    // didn't exist.
-//    $revert_url = Url::fromRoute('node.revision_revert_confirm', [
-//      'node' => $node->id(),
-//      'node_revision' => $initial_revision_id,
-//    ]);
-//    $this->drupalGet($revert_url);
-//    $this->submitForm([], 'Revert');
-//    $node_storage->resetCache();
-//    /** @var \Drupal\node\NodeInterface $node */
-//    $node = $node_storage->load($node->id());
-//    $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
-//    $this->assertEquals($initial_title, $node->label());
-//    $this->assertFalse($node->hasTranslation('it'));
-//  }
+  /**
+   * Checks that revisions are correctly saved without log messages.
+   */
+  public function testNodeRevisionWithoutLogMessage() {
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    // Create a node with an initial log message.
+    $revision_log = $this->randomMachineName(10);
+    $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
+
+    // Save over the same revision and explicitly provide an empty log message
+    // (for example, to mimic the case of a node form submitted with no text in
+    // the "log message" field), and check that the original log message is
+    // preserved.
+    $new_title = $this->randomMachineName(10) . 'testNodeRevisionWithoutLogMessage1';
+
+    $node = clone $node;
+    $node->title = $new_title;
+    $node->revision_log = '';
+    $node->setNewRevision(FALSE);
+
+    $node->save();
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->pageTextContains($new_title);
+    $node_storage->resetCache([$node->id()]);
+    $node_revision = $node_storage->load($node->id());
+    $this->assertEquals($revision_log, $node_revision->revision_log->value, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
+
+    // Create another node with an initial revision log message.
+    $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
+
+    // Save a new node revision without providing a log message, and check that
+    // this revision has an empty log message.
+    $new_title = $this->randomMachineName(10) . 'testNodeRevisionWithoutLogMessage2';
+
+    $node = clone $node;
+    $node->title = $new_title;
+    $node->setNewRevision();
+    $node->revision_log = NULL;
+
+    $node->save();
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->pageTextContains($new_title);
+    $node_storage->resetCache([$node->id()]);
+    $node_revision = $node_storage->load($node->id());
+    $this->assertEmpty($node_revision->revision_log->value, 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
+  }
+
+  /**
+   * Tests the revision translations are correctly reverted.
+   */
+  public function testRevisionTranslationRevert() {
+    // Create a node and a few revisions.
+    $node = $this->drupalCreateNode(['langcode' => 'en']);
+
+    $initial_revision_id = $node->getRevisionId();
+    $initial_title = $node->label();
+    $this->createRevisions($node, 2);
+
+    // Translate the node and create a few translation revisions.
+    $translation = $node->addTranslation('it');
+    $this->createRevisions($translation, 3);
+    $revert_id = $node->getRevisionId();
+    $translated_title = $translation->label();
+    $untranslatable_string = $node->untranslatable_string_field->value;
+
+    // Create a new revision for the default translation in-between a series of
+    // translation revisions.
+    $this->createRevisions($node, 1);
+    $default_translation_title = $node->label();
+
+    // And create a few more translation revisions.
+    $this->createRevisions($translation, 2);
+    $translation_revision_id = $translation->getRevisionId();
+
+    // Now revert the a translation revision preceding the last default
+    // translation revision, and check that the desired value was reverted but
+    // the default translation value was preserved.
+    $revert_translation_url = Url::fromRoute('node.revision_revert_translation_confirm', [
+      'node' => $node->id(),
+      'node_revision' => $revert_id,
+      'langcode' => 'it',
+    ]);
+    $this->drupalGet($revert_translation_url);
+    $this->submitForm([], 'Revert');
+    /** @var \Drupal\node\NodeStorage $node_storage */
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage->resetCache();
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $node_storage->load($node->id());
+    $this->assertGreaterThan($translation_revision_id, $node->getRevisionId());
+    $this->assertEquals($default_translation_title, $node->label());
+    $this->assertEquals($translated_title, $node->getTranslation('it')->label());
+    $this->assertNotEquals($untranslatable_string, $node->untranslatable_string_field->value);
+
+    $latest_revision_id = $translation->getRevisionId();
+
+    // Now revert the a translation revision preceding the last default
+    // translation revision again, and check that the desired value was reverted
+    // but the default translation value was preserved. But in addition the
+    // untranslated field will be reverted as well.
+    $this->drupalGet($revert_translation_url);
+    $this->submitForm(['revert_untranslated_fields' => TRUE], 'Revert');
+    $node_storage->resetCache();
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $node_storage->load($node->id());
+    $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
+    $this->assertEquals($default_translation_title, $node->label());
+    $this->assertEquals($translated_title, $node->getTranslation('it')->label());
+    $this->assertEquals($untranslatable_string, $node->untranslatable_string_field->value);
+
+    $latest_revision_id = $translation->getRevisionId();
+
+    // Now revert the entity revision to the initial one where the translation
+    // didn't exist.
+    $revert_url = Url::fromRoute('node.revision_revert_confirm', [
+      'node' => $node->id(),
+      'node_revision' => $initial_revision_id,
+    ]);
+    $this->drupalGet($revert_url);
+    $this->submitForm([], 'Revert');
+    $node_storage->resetCache();
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $node_storage->load($node->id());
+    $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
+    $this->assertEquals($initial_title, $node->label());
+    $this->assertFalse($node->hasTranslation('it'));
+  }
 
   /**
    * Creates a series of revisions for the specified node.
