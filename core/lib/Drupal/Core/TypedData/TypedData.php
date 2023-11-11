@@ -177,6 +177,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
       $prefix = $this->parent->getPropertyPath();
       // Variables in double quotes used to leverage fast string concatenation.
       // In PHP 7+ concatenation with variable inside string is the fastest.
+      // @see https://blog.blackfire.io/php-7-performance-improvements-encapsed-strings-optimization.html
       return $prefix !== '' ? "{$prefix}.{$this->name}" : $this->name;
     }
     // If no parent is set, this is the root of the data tree. Thus the property
