@@ -540,6 +540,7 @@ core_date_format_pattern.1:
     NotNull: {}
     NotBlank: {}
     Regex:
+      # cspell:ignore Hisuve
       pattern: '/[dDjlNSwzWFmMntLoXxYyaABgGhHisuveIOPpTZcrU]+/'
       message: 'At least one of the characters should format this into a date, see https://www.php.net/manual/en/datetime.format.php'
 
