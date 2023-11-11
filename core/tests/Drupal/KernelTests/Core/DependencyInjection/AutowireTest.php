@@ -193,7 +193,7 @@ class AutowireTest extends KernelTestBase {
 
     $autowire = [];
     foreach ($services as $id => $service) {
-      if ($id == 'cache_tags.invalidator.checksum') {
+      if ($id === 'cache_tags.invalidator.checksum') {
         // @todo Autowiring this breaks ServiceProviderTest.
         continue;
       }
