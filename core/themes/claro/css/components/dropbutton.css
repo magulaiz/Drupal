@@ -393,6 +393,7 @@
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   -webkit-text-decoration: none;
   text-decoration: none;
+  text-wrap: wrap;
   color: var(--color-gray-800);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
