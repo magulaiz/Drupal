@@ -206,8 +206,6 @@ class StringDatabaseStorage implements StringStorageInterface {
   public function deleteStrings($conditions) {
     $lids = $this->dbStringSelect($conditions, ['fields' => ['lid']])->execute()->fetchCol();
     if ($lids) {
-dump('$lids');
-dump($lids);
       $this->dbDelete('locales_target', ['lid' => $lids])->execute();
       $this->dbDelete('locales_source', ['lid' => $lids])->execute();
       $this->dbDelete('locales_location', ['sid' => $lids])->execute();
