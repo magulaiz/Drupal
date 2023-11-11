@@ -34,7 +34,7 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
     $this->database->merge('inline_block_usage')
       ->keys([
         'block_content_id' => (int) $block_content_id,
-        'layout_entity_id' => (int) $entity->id(),
+        'layout_entity_id' => $entity->id(),
         'layout_entity_type' => $entity->getEntityTypeId(),
       ])->execute();
   }

@@ -232,13 +232,12 @@ abstract class Query implements PlaceholderInterface {
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected function getConditionParameterTypeCheck() {
-    if (!isset($this->conditionParameterTypeCheck)) {
-      if (\Drupal::getContainer()->has('condition_parameter_type_check')) {
-        $this->conditionParameterTypeCheck = \Drupal::service('condition_parameter_type_check');
-      }
+    try {
+      return \Drupal::service('condition_parameter_type_check');
     }
-
-    return $this->conditionParameterTypeCheck;
+    catch (\Exception $e) {
+      return FALSE;
+    }
   }
 
 }

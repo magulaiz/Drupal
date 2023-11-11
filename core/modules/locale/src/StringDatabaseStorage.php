@@ -143,7 +143,7 @@ class StringDatabaseStorage implements StringStorageInterface {
           // Make sure that the name isn't longer than 255 characters.
           $name = substr($name, 0, 255);
           if (!$lid) {
-            $this->dbDelete('locales_location', ['sid' => $string->getId(), 'type' => $type, 'name' => $name])
+            $this->dbDelete('locales_location', ['sid' => (int) $string->getId(), 'type' => $type, 'name' => $name])
               ->execute();
           }
           elseif ($lid === TRUE) {
@@ -206,6 +206,8 @@ class StringDatabaseStorage implements StringStorageInterface {
   public function deleteStrings($conditions) {
     $lids = $this->dbStringSelect($conditions, ['fields' => ['lid']])->execute()->fetchCol();
     if ($lids) {
+dump('$lids');
+dump($lids);
       $this->dbDelete('locales_target', ['lid' => $lids])->execute();
       $this->dbDelete('locales_source', ['lid' => $lids])->execute();
       $this->dbDelete('locales_location', ['sid' => $lids])->execute();

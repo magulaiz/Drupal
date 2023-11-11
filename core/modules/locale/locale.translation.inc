@@ -340,7 +340,7 @@ function locale_cron_fill_queue() {
   $connection = \Drupal::database();
   $files = $connection->select('locale_file', 'f')
     ->condition('f.project', array_keys($projects), 'IN')
-    ->condition('f.last_checked', $last, '<')
+    ->condition('f.last_checked', (int) $last, '<')
     ->fields('f', ['project', 'langcode'])
     ->execute()->fetchAll();
   foreach ($files as $file) {

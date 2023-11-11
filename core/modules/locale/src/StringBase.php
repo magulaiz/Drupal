@@ -159,7 +159,7 @@ abstract class StringBase implements StringInterface {
   public function getLocations($check_only = FALSE) {
     if (!isset($this->locations) && !$check_only) {
       $this->locations = [];
-      foreach ($this->getStorage()->getLocations(['sid' => $this->getId()]) as $location) {
+      foreach ($this->getStorage()->getLocations(['sid' => (int) $this->getId()]) as $location) {
         $this->locations[$location->type][$location->name] = $location->lid;
       }
     }
