@@ -392,6 +392,13 @@
         }
       });
 
+      // Extend block table drag event adding the filter callback.
+      document.querySelectorAll('.draggable').forEach((row) => {
+        row.addEventListener('blocksDropped', (e) => {
+          filterCallback();
+        });
+      });
+
       // Do the filter after region changed by select field.
       const $selectRegionChange = once(
         'block-region-select-filter',
@@ -399,8 +406,7 @@
       );
       if ($selectRegionChange.length > 0) {
         $selectRegionChange.forEach((selectElement) => {
-          selectElement.addEventListener('change', (e) => {
-            toggleBlocksByRegion(e.target.value, 'add');
+          selectElement.addEventListener('change', () => {
             filterCallback(inputFilterElement.value);
           });
         });
