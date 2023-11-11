@@ -96,7 +96,7 @@ class Email extends FormElement {
     foreach ($emails as $delta => $email) {
       $email = trim($email);
       $emails[$delta] = $email;
-      if (!\Drupal::service('email.validator')->isValid(trim($email))) {
+      if (!\Drupal::service('email.validator')->isValid($email)) {
         $invalid_emails[] = $email;
       }
     }
