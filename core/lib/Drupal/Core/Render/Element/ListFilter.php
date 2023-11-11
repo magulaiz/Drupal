@@ -27,6 +27,8 @@ use Drupal\Core\Render\Element;
  *   - getRowGroupUsingPriorSibling: Item elements are siblings of group
  *     elements. The group of an item is its first prior sibling element that is
  *     a group.
+ * - #debug: (optional) Set to TRUE to add CSS styling to highlight the
+ *   different elements.
  *
  * @RenderElement("list_filter")
  */
@@ -51,6 +53,7 @@ class ListFilter extends Search {
       '#list_text' => '',
       '#list_group' => '',
       '#grouping_method' => '',
+      '#debug' => FALSE,
     ];
   }
 
@@ -86,6 +89,7 @@ class ListFilter extends Search {
       '#list_text',
       '#list_group',
       '#grouping_method',
+      '#debug',
     ] as $key) {
       $settings[substr($key, 1)] = $element[$key];
     }

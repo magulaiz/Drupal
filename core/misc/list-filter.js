@@ -140,6 +140,14 @@
         keydown: preventEnterKey,
       });
     }
+
+    if (listFilterSettings.debug) {
+      this.$container.css('border', 'red 2px dotted');
+      this.$rows.css('background-color', 'yellow');
+      if (this.$groups) {
+        this.$groups.css('border', 'green 2px dotted');
+      }
+    }
   };
 
   /**
