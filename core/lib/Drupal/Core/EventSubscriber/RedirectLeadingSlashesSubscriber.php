@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Redirects paths containing successive slashes to those with single slashes.
  */
-class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
+class RedirectSuccessiveSlashesSubscriber implements EventSubscriberInterface {
 
   /**
    * Redirects paths containing successive slashes to those with single slashes.
