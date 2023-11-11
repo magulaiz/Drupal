@@ -1250,8 +1250,8 @@ services:
     arguments: ['@unrouted_url_assembler', '@router.request_context']
     tags:
       - { name: event_subscriber }
-  redirect_leading_slashes_subscriber:
-    class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
+  redirect_successive_slashes_subscriber:
+    class: Drupal\Core\EventSubscriber\RedirectSuccessiveSlashesSubscriber
     tags:
       - { name: event_subscriber }
   request_close_subscriber:
