@@ -73,8 +73,8 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->installConfig(['language']);
 
-    $figures = mb_strtolower($this->randomMachineName());
-    $greetings = mb_strtolower($this->randomMachineName());
+    $figures = $this->randomMachineName();
+    $greetings = $this->randomMachineName();
     foreach ([$figures => 'shape', $greetings => 'text'] as $field_name => $field_type) {
       $field_storage = FieldStorageConfig::create([
         'field_name' => $field_name,
@@ -1377,6 +1377,9 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testAccessCheckSpecified() {
     $this->expectException(QueryException::class);
     $this->expectExceptionMessage('Entity queries must explicitly set whether the query should be access checked or not. See Drupal\Core\Entity\Query\QueryInterface::accessCheck().');
+    // We are purposely testing an entity query without access check, so we need
+    // to tell PHPStan to ignore this.
+    // @phpstan-ignore-next-line
     $this->storage->getQuery()->execute();
   }
 

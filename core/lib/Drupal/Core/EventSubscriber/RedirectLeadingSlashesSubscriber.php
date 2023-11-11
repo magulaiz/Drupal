@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Redirects paths containing successive slashes to those with single slashes.
  */
-class RedirectSuccessiveSlashesSubscriber implements EventSubscriberInterface {
+class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
 
   /**
    * Redirects paths containing successive slashes to those with single slashes.
@@ -28,7 +28,7 @@ class RedirectSuccessiveSlashesSubscriber implements EventSubscriberInterface {
     // submits back to the same URI this presents an open redirect
     // vulnerability. Also, Drupal 7 renders the same page for
     // http://www.example.org/foo and http://www.example.org////foo.
-    if (strpos($path, '//') !== FALSE) {
+    if (str_contains($path, '//')) {
       $path = preg_replace('/\/+/', '/', $path);
       $qs = $request->getQueryString();
       if ($qs) {

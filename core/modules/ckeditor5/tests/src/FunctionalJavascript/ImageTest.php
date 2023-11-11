@@ -13,6 +13,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
 class ImageTest extends ImageTestBase {
@@ -116,6 +117,8 @@ class ImageTest extends ImageTestBase {
       'data-entity-type' => 'file',
       'data-entity-uuid' => $this->file->uuid(),
       'src' => $this->file->createFileUrl(),
+      'width' => '40',
+      'height' => '20',
     ];
   }
 

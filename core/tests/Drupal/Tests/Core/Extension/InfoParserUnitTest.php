@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\InfoParser;
+use Drupal\Core\Extension\InfoParserDynamic;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
@@ -295,7 +296,9 @@ CORE_INCOMPATIBILITY;
    * Data provider for testCoreIncompatibility().
    */
   public function providerCoreIncompatibility() {
-    [$major, $minor] = explode('.', \Drupal::VERSION);
+    // Remove possible stability suffix to properly parse 11.0-dev.
+    $version = preg_replace('/-dev$/', '', \Drupal::VERSION);
+    [$major, $minor] = explode('.', $version, 2);
 
     $next_minor = $minor + 1;
     $next_major = $major + 1;
@@ -502,7 +505,7 @@ INFO;
     vfsStream::setup('modules');
     // Use a random file name to bypass the static caching in
     // \Drupal\Core\Extension\InfoParser.
-    $random = mb_strtolower($this->randomMachineName());
+    $random = $this->randomMachineName();
     $filename = "lifecycle-$random.info.yml";
     vfsStream::create([
       'fixtures' => [
@@ -558,6 +561,14 @@ INFO;
         "Extension Module for That (%s) has a 'lifecycle_link' entry that is not a valid URL.",
       ],
     ];
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testDeprecation(): void {
+    $this->expectDeprecation('Calling InfoParserDynamic::__construct() without the $app_root argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3293709');
+    new InfoParserDynamic();
   }
 
 }

@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Exception\DriverException;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -111,7 +112,8 @@ abstract class WebDriverTestBase extends BrowserTestBase {
 
       $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
       foreach ($warnings as $warning) {
-        if (strpos($warning, '[Deprecation]') === 0) {
+        if (str_starts_with($warning, '[Deprecation]')) {
+          // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
         }
       }
@@ -217,8 +219,11 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   }
 })();
 EndOfScript;
-
-    return $this->getSession()->evaluateScript($script) ?: [];
+    $settings = $this->getSession()->evaluateScript($script) ?: [];
+    if (isset($settings['ajaxPageState'])) {
+      $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+    }
+    return $settings;
   }
 
   /**

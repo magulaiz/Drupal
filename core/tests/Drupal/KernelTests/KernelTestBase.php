@@ -227,8 +227,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected static $configSchemaCheckerExclusions = [
     // Following are used to test lack of or partial schema. Where partial
     // schema is provided, that is explicitly tested in specific tests.
-    'config_schema_test.noschema',
-    'config_schema_test.someschema',
+    'config_schema_test.no_schema',
+    'config_schema_test.some_schema',
     'config_schema_test.schema_data_types',
     'config_schema_test.no_schema_data_types',
     // Used to test application of schema to filtering of configuration.
@@ -259,6 +259,17 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __get(string $name) {
+    if ($name === 'randomGenerator') {
+      @trigger_error('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445', E_USER_DEPRECATED);
+
+      return $this->getRandomGenerator();
+    }
   }
 
   /**
@@ -333,7 +344,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Bootstraps a kernel for a test.
    */
-  private function bootKernel() {
+  protected function bootKernel() {
     $this->setSetting('container_yamls', []);
     // Allow for test-specific overrides.
     $settings_services_file = $this->root . '/sites/default/testing.services.yml';
@@ -358,7 +369,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $driver = $connection_info['default']['driver'];
     $namespace = $connection_info['default']['namespace'] ?? '';
     $autoload = $connection_info['default']['autoload'] ?? '';
-    if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
+    if (str_contains($autoload, 'src/Driver/Database/')) {
       [$first, $second] = explode('\\', $namespace, 3);
       if ($first === 'Drupal' && strtolower($second) === $second) {
         // Add the module that provides the database driver to the list of
@@ -419,6 +430,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     $GLOBALS['config']['system.mail']['interface']['default'] = 'test_mail_collector';
+    $GLOBALS['config']['system.mail']['mailer_dsn'] = 'null://null';
 
     // Manually configure the default file scheme so that modules that use file
     // functions don't have to install system and its configuration.
@@ -582,9 +594,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         ->clearTag('path_processor_outbound');
     }
 
+    // Relax the password hashing cost in tests to avoid performance issues.
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
-        ->setArguments([1]);
+        ->setArguments([PASSWORD_BCRYPT, ['cost' => 4]]);
     }
 
     // Add the on demand rebuild route provider service.
@@ -710,7 +723,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected function installConfig($modules) {
     foreach ((array) $modules as $module) {
       if (!$this->container->get('module_handler')->moduleExists($module)) {
-        throw new \LogicException("$module module is not enabled.");
+        throw new \LogicException("$module module is not installed.");
       }
       try {
         $this->container->get('config.installer')->installDefaultConfig('module', $module);
@@ -742,13 +755,16 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // failures, we only allow the schema of explicitly loaded/enabled modules
     // to be installed.
     if (!$module_handler->moduleExists($module)) {
-      throw new \LogicException("$module module is not enabled.");
+      throw new \LogicException("$module module is not installed.");
     }
     $specification = SchemaInspector::getTablesSpecification($module_handler, $module);
     /** @var \Drupal\Core\Database\Schema $schema */
     $schema = $this->container->get('database')->schema();
     $tables = (array) $tables;
     foreach ($tables as $table) {
+      if ($module === 'system' && $table === 'sequences') {
+        @trigger_error('Installing the table sequences with the method KernelTestBase::installSchema() is deprecated in drupal:10.2.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
+      }
       if (empty($specification[$table])) {
         throw new \LogicException("$module module does not define a schema for table '$table'.");
       }
@@ -843,7 +859,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $module_handler->reload();
     foreach ($modules as $module) {
       if (!$module_handler->moduleExists($module)) {
-        throw new \RuntimeException("$module module is not enabled after enabling it.");
+        throw new \RuntimeException("$module module is not installed after installing it.");
       }
     }
   }
@@ -869,7 +885,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $extension_config = $this->config('core.extension');
     foreach ($modules as $module) {
       if (!$module_handler->moduleExists($module)) {
-        throw new \LogicException("$module module cannot be disabled because it is not enabled.");
+        throw new \LogicException("$module module cannot be uninstalled because it is not installed.");
       }
       unset($module_filenames[$module]);
       $extension_config->clear('module.' . $module);
@@ -888,7 +904,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $module_handler->reload();
     foreach ($modules as $module) {
       if ($module_handler->moduleExists($module)) {
-        throw new \RuntimeException("$module module is not disabled after disabling it.");
+        throw new \RuntimeException("$module module is not uninstalled after uninstalling it.");
       }
     }
   }

@@ -44,6 +44,7 @@ class FilterTest extends WebDriverTestBase {
 
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
 
     FieldConfig::create([
@@ -151,7 +152,7 @@ class FilterTest extends WebDriverTestBase {
 
       foreach ($handler_rows as $handler_row) {
         // Test that all the visible rows are of the 'content' type.
-        if (strpos($handler_row->getAttribute('class'), 'content') === FALSE) {
+        if (!str_contains($handler_row->getAttribute('class'), 'content')) {
           return FALSE;
         }
       }

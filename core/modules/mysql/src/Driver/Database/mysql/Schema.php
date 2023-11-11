@@ -48,7 +48,7 @@ class Schema extends DatabaseSchema {
    *   A keyed array with information about the database, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
-    $info = ['prefix' => $this->connection->tablePrefix($table)];
+    $info = ['prefix' => $this->connection->getPrefix()];
     if ($add_prefix) {
       $table = $info['prefix'] . $table;
     }
@@ -409,9 +409,9 @@ class Schema extends DatabaseSchema {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $spec]);
     }
 
-    $fixnull = FALSE;
+    $fix_null = FALSE;
     if (!empty($spec['not null']) && !isset($spec['default']) && !$is_primary_key) {
-      $fixnull = TRUE;
+      $fix_null = TRUE;
       $spec['not null'] = FALSE;
     }
     $query = 'ALTER TABLE {' . $table . '} ADD ';
@@ -445,7 +445,7 @@ class Schema extends DatabaseSchema {
         ->fields([$field => $spec['initial']])
         ->execute();
     }
-    if ($fixnull) {
+    if ($fix_null) {
       $spec['not null'] = TRUE;
       $this->changeField($table, $field, $field, $spec);
     }

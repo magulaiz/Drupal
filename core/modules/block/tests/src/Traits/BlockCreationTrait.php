@@ -36,14 +36,14 @@ trait BlockCreationTrait {
    *   The block entity.
    *
    * @todo
-   *   Add support for creating custom block instances.
+   *   Add support for creating content block instances.
    */
   protected function placeBlock($plugin_id, array $settings = []) {
     $config = \Drupal::configFactory();
     $settings += [
       'plugin' => $plugin_id,
       'region' => 'content',
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'theme' => $config->get('system.theme')->get('default'),
       'label' => $this->randomMachineName(8),
       'visibility' => [],

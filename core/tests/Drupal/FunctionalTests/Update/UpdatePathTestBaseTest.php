@@ -103,7 +103,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $select->fields('watchdog', ['message']);
 
     $container_cannot_be_saved_messages = array_filter(iterator_to_array($select->execute()), function ($row) {
-      return strpos($row->message, 'Container cannot be saved to cache.') !== FALSE;
+      return str_contains($row->message, 'Container cannot be saved to cache.');
     });
     $this->assertEquals([], $container_cannot_be_saved_messages);
 
@@ -216,9 +216,9 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    */
   public function testSchemaChecking() {
     // Create some configuration that should be skipped.
-    $this->config('config_schema_test.noschema')->set('foo', 'bar')->save();
+    $this->config('config_schema_test.no_schema')->set('foo', 'bar')->save();
     $this->runUpdates();
-    $this->assertSame('bar', $this->config('config_schema_test.noschema')->get('foo'));
+    $this->assertSame('bar', $this->config('config_schema_test.no_schema')->get('foo'));
 
   }
 

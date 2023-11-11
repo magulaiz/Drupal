@@ -10,6 +10,7 @@ use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Cache\CacheRedirect;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
@@ -990,18 +991,16 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // @see \Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
     $cache_items = $this->container->get('database')
       ->select('cache_dynamic_page_cache', 'cdp')
-      ->fields('cdp', ['cid', 'data'])
+      ->fields('cdp', ['data'])
       ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
       ->execute()
-      ->fetchAllAssoc('cid');
-    $this->assertGreaterThanOrEqual(2, count($cache_items));
-    $found_cache_redirect = FALSE;
+      ->fetchAll();
+    $this->assertLessThanOrEqual(5, count($cache_items));
     $found_cached_200_response = FALSE;
     $other_cached_responses_are_4xx = TRUE;
-    foreach ($cache_items as $cid => $cache_item) {
-      $cached_data = unserialize($cache_item->data);
-      if (!isset($cached_data['#cache_redirect'])) {
-        $cached_response = $cached_data['#response'];
+    foreach ($cache_items as $cache_item) {
+      $cached_response = unserialize($cache_item->data);
+      if (!$cached_response instanceof CacheRedirect) {
         if ($cached_response->getStatusCode() === 200) {
           $found_cached_200_response = TRUE;
         }
@@ -1011,11 +1010,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         $this->assertNotInstanceOf(ResourceResponse::class, $cached_response);
         $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
       }
-      else {
-        $found_cache_redirect = TRUE;
-      }
     }
-    $this->assertTrue($found_cache_redirect);
     $this->assertSame($dynamic_cache !== 'UNCACHEABLE' || isset($dynamic_cache_label_only) && $dynamic_cache_label_only !== 'UNCACHEABLE', $found_cached_200_response);
     $this->assertTrue($other_cached_responses_are_4xx);
 
@@ -1043,7 +1038,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     ];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
-        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+        if (str_starts_with($header, 'X-Drupal-Assertion-') || in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
       }
@@ -2660,7 +2655,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cacheability->setCacheTags($this->getExpectedCacheTags($field_set));
       $expected_cacheability->setCacheContexts($this->getExpectedCacheContexts($field_set));
       // This tests sparse field sets on included entities.
-      if (strpos($type, 'nested') === 0) {
+      if (str_starts_with($type, 'nested')) {
         $this->grantPermissionsToTestedRole(['access user profiles']);
         $query['fields[user--user]'] = implode(',', $field_set);
         $query['include'] = 'uid';
@@ -3143,9 +3138,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
-        ? $this->entityStorage->load($entity->id())
-        : $this->entityStorage->loadRevision($revision_id);
+      if ($revision_id === NULL) {
+        $revision = $this->entityStorage->load($entity->id());
+      }
+      else {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $storage = $this->entityStorage;
+        $revision = $storage->loadRevision($revision_id);
+      }
       // Request the relationship resource without access to the relationship
       // field.
       $actual_response = $this->request('GET', $relationship_url, $request_options);
@@ -3170,9 +3170,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
-        ? $this->entityStorage->load($entity->id())
-        : $this->entityStorage->loadRevision($revision_id);
+      if ($revision_id === NULL) {
+        $revision = $this->entityStorage->load($entity->id());
+      }
+      else {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $storage = $this->entityStorage;
+        $revision = $storage->loadRevision($revision_id);
+      }
       // Request the relationship resource after granting access to the
       // relationship field.
       $actual_response = $this->request('GET', $relationship_url, $request_options);

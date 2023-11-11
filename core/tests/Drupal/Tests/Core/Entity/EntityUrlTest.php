@@ -108,6 +108,30 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the toUrl() method without specifying the $rel parameter..
+   *
+   * @covers ::toUrl
+   */
+  public function testToUrlDefault() {
+    $values = ['id' => $this->entityId];
+    $entity = $this->getEntity(UrlTestEntity::class, $values);
+
+    $this->expectException(UndefinedLinkTemplateException::class);
+    $this->expectExceptionMessage("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '" . $this->entityTypeId . "' entity type");
+    $entity->toUrl();
+
+    $this->registerLinkTemplate('edit-form');
+    /** @var \Drupal\Core\Url $url */
+    $url = $entity->toUrl();
+    $this->assertUrl('entity.test_entity.edit_form', ['test_entity' => $this->entityId], $entity, FALSE, $url);
+
+    $this->registerLinkTemplate('canonical');
+    /** @var \Drupal\Core\Url $url */
+    $url = $entity->toUrl();
+    $this->assertUrl('entity.test_entity.canonical', ['test_entity' => $this->entityId], $entity, FALSE, $url);
+  }
+
+  /**
    * Tests the toUrl() method with simple link templates.
    *
    * @param string $link_template
@@ -415,15 +439,15 @@ class EntityUrlTest extends UnitTestCase {
    * Returns a mock entity for testing.
    *
    * @param string $class
-   *   The class name to mock. Should be \Drupal\Core\Entity\Entity or a
-   *   subclass.
+   *   The class name to mock. Should be \Drupal\Tests\Core\Entity\UrlTestEntity
+   *   or a subclass.
    * @param array $values
    *   An array of entity values to construct the mock entity with.
    * @param array $methods
    *   (optional) An array of additional methods to mock on the entity object.
    *   The getEntityType() and entityTypeBundleInfo() methods are always mocked.
    *
-   * @return \Drupal\Core\Entity\Entity|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Tests\Core\Entity\UrlTestEntity|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getEntity($class, array $values, array $methods = []) {
     $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
@@ -454,7 +478,7 @@ class EntityUrlTest extends UnitTestCase {
    *   The expected route name of the generated URL.
    * @param array $expected_route_parameters
    *   The expected route parameters of the generated URL.
-   * @param \Drupal\Core\Entity\Entity|\PHPUnit\Framework\MockObject\MockObject $entity
+   * @param \Drupal\Tests\Core\Entity\UrlTestEntity|\PHPUnit\Framework\MockObject\MockObject $entity
    *   The entity that is expected to be set as a URL option.
    * @param bool $has_language
    *   Whether or not the URL is expected to have a language option.
