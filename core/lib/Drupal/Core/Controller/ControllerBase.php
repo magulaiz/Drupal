@@ -4,13 +4,12 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Logger\LoggerChannelTrait;
-use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -148,7 +147,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   /**
    * Retrieves a configuration object.
    *
-   * This is the main entry point to the configuration API. Calling.
+   * This is the main entry point to the configuration API. Calling
    * @code $this->config('book.admin') @endcode will return a configuration
    * object in which the book module can store its administrative settings.
    *
@@ -270,27 +269,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   protected function redirect($route_name, array $route_parameters = [], array $options = [], $status = 302) {
     $options['absolute'] = TRUE;
     return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
-  }
-
-  /**
-   * Returns a redirect response object as ajax.
-   *
-   * @param string $route_name
-   *   The name of the route to which to redirect.
-   * @param array $route_parameters
-   *   (optional) Parameters for the route.
-   * @param array $options
-   *   (optional) An associative array of additional options.
-   * @param int $status
-   *   (optional) The HTTP redirect status code for the redirect. The default is
-   *   302 Found.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   A redirect response object that may be returned by the controller.
-   */
-  protected function redirectAsAjax($route_name, array $route_parameters = [], array $options = [], $status = 302) {
-    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
-    return $this->redirect($route_name, $route_parameters, $options, $status);
   }
 
   /**
