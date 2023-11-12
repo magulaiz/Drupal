@@ -55,9 +55,6 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
       404 => RfcLogLevel::WARNING,
       405 => RfcLogLevel::WARNING,
       408 => RfcLogLevel::WARNING,
-      // Do not check the 500 status code here because it would be caught by
-      // Drupal\Core\EventSubscriberExceptionTestSiteSubscriber which has lower
-      // priority.
       501 => RfcLogLevel::ERROR,
       502 => RfcLogLevel::ERROR,
       503 => RfcLogLevel::ERROR,
@@ -81,7 +78,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     $logs = $this->container->get($this->testLogServiceName)->cleanLogs();
     foreach ($expected_channels as $key => $expected_channel) {
       $this->assertEquals($expected_channel, $logs[$key][2]['channel']);
-      $this->assertEquals($expected_levels[$key], $logs[$key][2]['severity_level']);
+      $this->assertEquals($expected_levels[$key], $logs[$key][0]);
     }
   }
 
