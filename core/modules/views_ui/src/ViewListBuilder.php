@@ -196,7 +196,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
     $list['#attributes']['id'] = 'views-entity-list';
 
     $list['#attached']['library'][] = 'core/drupal.ajax';
-    $list['#attached']['library'][] = 'views_ui/views_ui.listing';
+    $list['#attached']['library'][] = 'views_ui/admin.styling';
 
     $list['filters'] = [
       '#type' => 'container',
@@ -206,7 +206,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
     ];
 
     $list['filters']['text'] = [
-      '#type' => 'search',
+      '#type' => 'list_filter',
       '#title' => $this->t('Filter'),
       '#title_display' => 'invisible',
       '#size' => 60,
@@ -216,6 +216,14 @@ class ViewListBuilder extends ConfigEntityListBuilder {
         'data-table' => '.views-listing-table',
         'autocomplete' => 'off',
         'title' => $this->t('Enter a part of the view name, machine name, description, or display path to filter by.'),
+      ],
+      '#list_container_id' => 'views-entity-list',
+      '#list_item' => 'tbody tr',
+      '#list_text' => 'td.views-ui-view-name, td.views-ui-view-machine-name, td.views-ui-view-description',
+      '#announce' => [
+        'singular' => $this->t('1 view is available in the modified list.'),
+        'plural' => $this->t('@count views are available in the modified list.'),
+        'all' => $this->t('All available views are listed.'),
       ],
     ];
 
