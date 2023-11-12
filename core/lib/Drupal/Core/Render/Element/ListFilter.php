@@ -19,6 +19,14 @@ use Drupal\Core\Render\Element;
  * - #list_group: (optional) The CSS selector, relative to the container, for
  *   the groups of items. If omitted, the list is not considered to have
  *   grouping.
+ * - #grouping_method: (optional) The name of a method on Drupal.listFilter to
+ *   use to associate items into groups. The base library supports the
+ *   following values:
+ *   - getRowGroupUsingContainment: Item elements are within their group
+ *     elements.
+ *   - getRowGroupUsingPriorSibling: Item elements are siblings of group
+ *     elements. The group of an item is its first prior sibling element that is
+ *     a group.
  *
  * @RenderElement("list_filter")
  */
@@ -42,6 +50,7 @@ class ListFilter extends Search {
       '#list_item' => '.filter-item',
       '#list_text' => '',
       '#list_group' => '',
+      '#grouping_method' => '',
     ];
   }
 
@@ -76,6 +85,7 @@ class ListFilter extends Search {
       '#list_item',
       '#list_text',
       '#list_group',
+      '#grouping_method',
     ] as $key) {
       $settings[substr($key, 1)] = $element[$key];
     }

@@ -135,6 +135,7 @@ class ListFilterTestController {
       '#list_item' => '.filter-item',
       '#list_text' => '.filter-text',
       '#list_group' => 'details',
+      '#grouping_method' => 'getRowGroupUsingContainment',
     ];
 
     $build['container'] = [
@@ -177,6 +178,68 @@ class ListFilterTestController {
           '#markup' => "<p><span class=\"filter-text\">$row</span> (excluded text)</p>",
           '#allowed_tags' => ['p', 'span'],
         ],
+      ];
+    }
+
+    return $build;
+  }
+
+  /**
+   * Grouped filtering with a table.
+   */
+  public function contentTableWithHeaders() {
+    $build = [];
+
+    $build['list_filter'] = [
+      '#type' => 'list_filter',
+      '#placeholder' => $this->t('Filter list'),
+      '#attributes' => [
+        'title' => $this->t('Enter a part of an item to filter by.'),
+      ],
+      '#list_container_id' => 'filter-container',
+      '#list_item' => 'tr:has(td.list-text)',
+      '#list_group' => 'tr:has(td.list-header)',
+      '#list_text' => '.list-text',
+      '#grouping_method' => 'getRowGroupUsingPriorSibling',
+    ];
+
+    $build['container'] = [
+      '#theme' => 'table',
+      '#attributes' => [
+        'id' => ['filter-container'],
+      ],
+    ];
+
+    $build['container']['#rows'][] = [
+      [
+        'data' => 'Letters',
+        'class' => 'list-header',
+        'colspan' => 2,
+      ],
+    ];
+    foreach (['alpha', 'beta', 'gamma'] as $row) {
+      $build['container']['#rows'][] = [
+        [
+          'data' => $row,
+          'class' => 'list-text',
+        ],
+        '(excluded text)',
+      ];
+    }
+    $build['container']['#rows'][] = [
+      [
+        'data' => 'Numbers',
+        'class' => 'list-header',
+        'colspan' => 2,
+      ],
+    ];
+    foreach (['one', 'two', 'three'] as $row) {
+      $build['container']['#rows'][] = [
+        [
+          'data' => $row,
+          'class' => 'list-text',
+        ],
+        '(excluded text)',
       ];
     }
 

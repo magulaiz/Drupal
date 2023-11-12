@@ -55,6 +55,11 @@
   Drupal.listFilter = function ($container, listFilterSettings) {
 
     /**
+     * The list filter settings, from the render element.
+     */
+    this.listFilterSettings = listFilterSettings;
+
+    /**
      * jQuery object for the filter search box.
      */
     const $input = $('#' + listFilterSettings.search_field_id);
@@ -152,8 +157,9 @@
     *  The index for the group the row belongs to.
     */
   Drupal.listFilter.prototype.getRowGroup = function ($row, $groups) {
-    // TODO: use a setting to pick which helper function to use.
-    return this.getRowGroupUsingContainment($row, $groups);
+    const groupingMethod = this.listFilterSettings.grouping_method;
+
+    return this[groupingMethod]($row, $groups);
   }
 
   /**
@@ -180,14 +186,28 @@
   /**
    * Gets the group for a row, for rows which are siblings of groups.
    *
+   * For example, a table where some table rows are headings and some rows are
+   * items to search.
+   *
    * @param {jQuery} row
    *   The jQuery object for the row.
    *
    * @return {number}
    *   The index of the group.
    */
-  Drupal.listFilter.prototype.getRowGroupUsingPrior = function ($row) {
-    // @todo: the header row case.
+  Drupal.listFilter.prototype.getRowGroupUsingPriorSibling = function ($row, $groups) {
+    // Go through previous siblings of the row, until we find a previous sibling
+    // that is a group.
+    let $currentSibling = $row;
+    do {
+      $currentSibling = $currentSibling.prev()
+    } while (!$groups.is($currentSibling) && $currentSibling.length > 0);
+
+    if ($currentSibling.length == 0) {
+      return null;
+    }
+
+    return $groups.index($currentSibling);
   }
 
   /**

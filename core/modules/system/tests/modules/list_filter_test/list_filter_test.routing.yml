@@ -29,3 +29,11 @@ list_filter_test.details:
     _controller: '\Drupal\list_filter_test\Controller\ListFilterTestController::contentDetails'
   requirements:
     _access: 'TRUE'
+
+list_filter_test.table-with-headers:
+  path: /list-filter-test/table-with-headers
+  defaults:
+    _title: 'List filter test: table with headers'
+    _controller: '\Drupal\list_filter_test\Controller\ListFilterTestController::contentTableWithHeaders'
+  requirements:
+    _access: 'TRUE'
