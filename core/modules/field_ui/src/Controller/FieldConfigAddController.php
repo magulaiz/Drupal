@@ -68,9 +68,8 @@ final class FieldConfigAddController extends ControllerBase {
     ]);
 
     if ($this->isAjax()) {
-      $dialog_options['modal'] = TRUE;
       $response = new AjaxResponse();
-      $response->addCommand(new OpenModalDialogCommand('Field settings', $edit_form, $dialog_options));
+      $response->addCommand(new OpenModalDialogCommand('Field settings', $edit_form));
     }
     else {
       $response = $edit_form;

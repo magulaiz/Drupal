@@ -201,15 +201,6 @@ class FieldConfigEditForm extends EntityForm {
       '#required' => FALSE,
     ];
 
-    // Build the configurable field values.
-    //    $form['label'] = [
-    //      '#type' => 'textfield',
-    //      '#title' => $this->t('Label'),
-    //      '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
-    //      '#required' => TRUE,
-    //      '#maxlength' => 255,
-    //      '#weight' => -20,
-    //    ];.
     $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),

@@ -376,6 +376,9 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
       'core/drupal.dialog.ajax',
+      // @todo: Remove below workarounds needed for modal functionality.
+      'core/drupal.machine-name',
+      'core/drupal.states',
     ];
     return $form;
   }

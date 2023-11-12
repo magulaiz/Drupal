@@ -277,7 +277,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    */
   protected function redirectAsAjax($route_name, array $route_parameters = [], array $options = [], $status = 302) {
     $options['absolute'] = TRUE;
-    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
+    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_modal';
     return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
   }
 
