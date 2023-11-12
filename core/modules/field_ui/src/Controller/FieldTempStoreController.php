@@ -93,6 +93,7 @@ final class FieldTempStoreController extends ControllerBase {
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('There was a problem creating field %label: @message'));
+      exit;
     }
 
     // Save field and field storage values in tempstore.

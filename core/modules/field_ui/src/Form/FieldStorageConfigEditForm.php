@@ -91,7 +91,6 @@ class FieldStorageConfigEditForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $field_label = $form_state->get('field_config')->label();
     $form['#prefix'] = '<p>' . $this->t('These settings apply to this field everywhere it is used. Some also impact the way that data is stored and cannot be changed once data has been created.') . '</p>';
 
     // Add the cardinality sub-form.

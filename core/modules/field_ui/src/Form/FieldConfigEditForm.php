@@ -83,6 +83,10 @@ class FieldConfigEditForm extends EntityForm {
    *   The entity type bundle info service.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The type data manger.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface|null $entityDisplayRepository
    *   The entity display repository.
    * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
@@ -422,6 +426,10 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+    $entity_type = $this->entity->getTargetEntityTypeId();
+    $temp_field_name = $this->entity->get('field_name');
+    $temp_store = $this->tempStore->get($entity_type . ':' . $temp_field_name);
+    $default_options = $temp_store['default_options'];
 
     $this->validateAddNew($form, $form_state);
     $values = $form_state->getValues();
@@ -432,14 +440,14 @@ class FieldConfigEditForm extends EntityForm {
       'label' => $values['label'],
       // Field translatability should be explicitly enabled by the users.
       'translatable' => FALSE,
-      'entity_type' => $this->entity->getTargetEntityTypeId(),
+      'entity_type' => $entity_type,
       'bundle' => $this->entity->getTargetBundle(),
     ];
     $field_storage_values = [
       ...$default_options['field_storage_config'] ?? [],
       'field_name' => $field_name,
       'type' => $this->entity->get('field_type'),
-      'entity_type' => $this->entity->getTargetEntityTypeId(),
+      'entity_type' => $entity_type,
       'translatable' => $values['translatable'],
     ];
     try {

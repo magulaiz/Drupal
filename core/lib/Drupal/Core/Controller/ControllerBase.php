@@ -273,12 +273,24 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   }
 
   /**
+   * Returns a redirect response object as ajax.
    *
+   * @param string $route_name
+   *   The name of the route to which to redirect.
+   * @param array $route_parameters
+   *   (optional) Parameters for the route.
+   * @param array $options
+   *   (optional) An associative array of additional options.
+   * @param int $status
+   *   (optional) The HTTP redirect status code for the redirect. The default is
+   *   302 Found.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect response object that may be returned by the controller.
    */
   protected function redirectAsAjax($route_name, array $route_parameters = [], array $options = [], $status = 302) {
-    $options['absolute'] = TRUE;
-    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_modal';
-    return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
+    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
+    return $this->redirect($route_name, $route_parameters, $options, $status);
   }
 
   /**

@@ -32,11 +32,12 @@ final class FieldConfigAddController extends ControllerBase {
    *
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
+   *   The field type plugin manager.
    */
   public function __construct(
     protected readonly PrivateTempStore $tempStore,
     FieldTypePluginManagerInterface $field_type_plugin_manager,
-
   ) {
     $this->fieldTypePluginManager = $field_type_plugin_manager;
   }
