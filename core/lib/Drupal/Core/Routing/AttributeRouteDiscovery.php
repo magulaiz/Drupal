@@ -75,7 +75,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
     if (!class_exists($class)) {
       // In Symfony code this triggers an exception. It is removed here because
-      // Drupal already has traits and other things in this folder.
+      // Drupal already has traits, interfaces and other things in this folder.
       // Alternatively, we could remove this if clause and then check what the
       // resulting reflection object is.
       return $collection;
