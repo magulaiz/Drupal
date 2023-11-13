@@ -548,6 +548,22 @@ ckeditor5_table_cell_properties:
       - <th style>
       - <th rowspan colspan style>
 
+ckeditor5_tableColumnResize:
+  ckeditor5:
+    plugins:
+      - table.TableColumnResize
+  drupal:
+    label: Table Column Resize
+    conditions:
+      plugins:
+        - ckeditor5_table
+        # When arbitrary HTML is already allowed, it's harmless to enable CKEditor 5's UI for table cell properties.
+        - ckeditor5_arbitraryHtmlSupport
+    elements:
+      - <colgroup>
+      - <col>
+      - <col style>
+
 ckeditor5_image:
   ckeditor5:
     plugins:
