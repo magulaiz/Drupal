@@ -64,7 +64,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
   /**
    * Creates a route collection from a class's attributed methods.
    *
-   * @param string $class
+   * @param class-string $class
    *   The class to generate a route collection for.
    *
    * @return \Symfony\Component\Routing\RouteCollection
