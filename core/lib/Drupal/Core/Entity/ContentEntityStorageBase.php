@@ -509,7 +509,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $result = $this->getQuery()
         ->allRevisions()
         ->condition($this->entityType->getKey('id'), $entity_id)
-        ->condition($this->entityType->getKey('revision_translation_affected'), 1, '=', $langcode)
+        ->condition($this->entityType->getKey('revision_translation_affected'), TRUE, '=', $langcode)
         ->range(0, 1)
         ->sort($this->entityType->getKey('revision'), 'DESC')
         ->accessCheck(FALSE)

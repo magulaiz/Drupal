@@ -98,7 +98,7 @@ class LatestTranslationAffectedRevision extends FilterPluginBase implements Cont
     $subquery->fields('base_table', [$keys['id'], 'langcode']);
     $subquery->groupBy("base_table.{$keys['id']}");
     $subquery->groupBy('base_table.langcode');
-    $subquery->condition('base_table.revision_translation_affected', '1');
+    $subquery->condition('base_table.revision_translation_affected', TRUE);
 
     $definition = [
       'table formula' => $subquery,
@@ -114,7 +114,7 @@ class LatestTranslationAffectedRevision extends FilterPluginBase implements Cont
 
     $join = $this->joinHandler->createInstance('standard', $definition);
     $query->addTable($query_base_table, $this->relationship, $join);
-    $query->addWhere($this->options['group'], "$query_base_table.revision_translation_affected", '1', '=');
+    $query->addWhere($this->options['group'], "$query_base_table.revision_translation_affected", TRUE, '=');
   }
 
 }
