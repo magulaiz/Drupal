@@ -115,7 +115,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     $query = $this->database->select($data_table, 'c1');
     $query->innerJoin($data_table, 'c2', '[c2].[entity_id] = [c1].[entity_id] AND [c2].[entity_type] = [c1].[entity_type] AND [c2].[field_name] = [c1].[field_name]');
     $query->addExpression('COUNT(*)', 'count');
-    $query->condition('c2.cid', $comment->id());
+    $query->condition('c2.cid', (int) $comment->id());
     if (!$this->currentUser->hasPermission('administer comments')) {
       $query->condition('c1.status', CommentInterface::PUBLISHED);
     }
@@ -124,7 +124,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       // For rendering flat comments, cid is used for ordering comments due to
       // unpredictable behavior with timestamp, so we make the same assumption
       // here.
-      $query->condition('c1.cid', $comment->id(), '<');
+      $query->condition('c1.cid', (int) $comment->id(), '<');
     }
     else {
       // For threaded comments, the c.thread column is used for ordering. We can
@@ -133,8 +133,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       $query->where('SUBSTRING([c1].[thread], 1, (LENGTH([c1].[thread]) - 1)) < SUBSTRING([c2].[thread], 1, (LENGTH([c2].[thread]) - 1))');
     }
 
-    $query->condition('c1.default_langcode', 1);
-    $query->condition('c2.default_langcode', 1);
+    $query->condition('c1.default_langcode', TRUE);
+    $query->condition('c2.default_langcode', TRUE);
 
     $ordinal = $query->execute()->fetchField();
 
@@ -193,7 +193,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
         AND SUBSTRING([thread], 1, (LENGTH([thread]) - 1)) < :thread
         AND [default_langcode] = 1', [
           ':status' => CommentInterface::PUBLISHED,
-          ':entity_id' => $entity->id(),
+          ':entity_id' => (int) $entity->id(),
           ':field_name' => $field_name,
           ':entity_type' => $entity->getEntityTypeId(),
           ':thread' => $first_thread,
@@ -208,9 +208,13 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    * {@inheritdoc}
    */
   public function getChildCids(array $comments) {
+    $comment_ids = array_keys($comments);
+    foreach ($comment_ids as &$comment_id) {
+      $comment_id = (int) $comment_id;
+    }
     return $this->database->select($this->getDataTable(), 'c')
       ->fields('c', ['cid'])
-      ->condition('pid', array_keys($comments), 'IN')
+      ->condition('pid', $comment_ids, 'IN')
       ->condition('default_langcode', TRUE)
       ->execute()
       ->fetchCol();

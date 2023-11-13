@@ -223,7 +223,7 @@ class CommentManager implements CommentManagerInterface {
       $query = $this->entityTypeManager->getStorage('comment')->getQuery()
         ->accessCheck(TRUE)
         ->condition('entity_type', $entity->getEntityTypeId())
-        ->condition('entity_id', $entity->id())
+        ->condition('entity_id', (int) $entity->id())
         ->condition('created', $timestamp, '>')
         ->condition('status', CommentInterface::PUBLISHED);
       if ($field_name) {

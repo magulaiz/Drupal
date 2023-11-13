@@ -200,7 +200,7 @@ class CommentStatistics implements CommentStatisticsInterface {
 
     $query = $this->database->select('comment_field_data', 'c');
     $query->addExpression('COUNT([cid])');
-    $count = $query->condition('c.entity_id', $comment->getCommentedEntityId())
+    $count = $query->condition('c.entity_id', (int) $comment->getCommentedEntityId())
       ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
       ->condition('c.field_name', $comment->getFieldName())
       ->condition('c.status', CommentInterface::PUBLISHED)
