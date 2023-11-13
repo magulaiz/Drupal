@@ -30,7 +30,7 @@ class CommentSelection extends DefaultSelection {
     // core requires us to also know about the concept of 'published' and
     // 'unpublished'.
     if (!$this->currentUser->hasPermission('administer comments')) {
-      $query->condition('status', CommentInterface::PUBLISHED);
+      $query->condition('status', (bool) CommentInterface::PUBLISHED);
     }
     return $query;
   }

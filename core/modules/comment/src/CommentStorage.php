@@ -117,7 +117,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     $query->addExpression('COUNT(*)', 'count');
     $query->condition('c2.cid', (int) $comment->id());
     if (!$this->currentUser->hasPermission('administer comments')) {
-      $query->condition('c1.status', CommentInterface::PUBLISHED);
+      $query->condition('c1.status', (bool) CommentInterface::PUBLISHED);
     }
 
     if ($comment_mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
@@ -166,7 +166,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
         ->condition('entity_id', (int) $entity->id())
         ->condition('entity_type', $entity->getEntityTypeId())
         ->condition('field_name', $field_name)
-        ->condition('status', CommentInterface::PUBLISHED)
+        ->condition('status', (bool) CommentInterface::PUBLISHED)
         ->condition('default_langcode', TRUE)
         ->orderBy('created', 'DESC')
         ->orderBy('cid', 'DESC')
@@ -315,9 +315,9 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     }
 
     if (!$this->currentUser->hasPermission('administer comments')) {
-      $query->condition('c.status', CommentInterface::PUBLISHED);
+      $query->condition('c.status', (bool) CommentInterface::PUBLISHED);
       if ($comments_per_page) {
-        $count_query->condition('c.status', CommentInterface::PUBLISHED);
+        $count_query->condition('c.status', (bool) CommentInterface::PUBLISHED);
       }
     }
     if ($mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
@@ -345,7 +345,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    */
   public function getUnapprovedCount() {
     return $this->database->select($this->getDataTable(), 'c')
-      ->condition('status', CommentInterface::NOT_PUBLISHED, '=')
+      ->condition('status', (bool) CommentInterface::NOT_PUBLISHED, '=')
       ->condition('default_langcode', TRUE)
       ->countQuery()
       ->execute()

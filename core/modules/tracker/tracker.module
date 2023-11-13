@@ -100,7 +100,7 @@ function tracker_cron() {
         ->condition('entity_type', 'node')
         ->condition('entity_id', (int) $node->id())
         ->condition('uid', (int) $node->getOwnerId(), '<>')
-        ->condition('status', CommentInterface::PUBLISHED)
+        ->condition('status', (bool) CommentInterface::PUBLISHED)
         ->groupBy('uid')
         ->execute();
       if ($result) {
@@ -109,7 +109,7 @@ function tracker_cron() {
           $query->fields([
             'uid' => $row['uid'],
             'nid' => $nid,
-            'published' => CommentInterface::PUBLISHED,
+            'published' => (bool) CommentInterface::PUBLISHED,
             'changed' => $changed,
           ]);
         }

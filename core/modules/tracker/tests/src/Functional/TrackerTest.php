@@ -214,7 +214,7 @@ class TrackerTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('comment/1/edit');
-    $this->submitForm(['status' => CommentInterface::NOT_PUBLISHED], 'Save');
+    $this->submitForm(['status' => 0], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertSession()->pageTextNotContains($other_published_my_comment->label());
 

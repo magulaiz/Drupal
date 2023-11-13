@@ -735,18 +735,18 @@ function node_get_recent($number = 10) {
     $access_query = \Drupal::entityQuery('node')
       ->accessCheck(TRUE)
       ->condition('uid', (int) $account->id())
-      ->condition('status', NodeInterface::NOT_PUBLISHED);
+      ->condition('status', (bool) NodeInterface::NOT_PUBLISHED);
     if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {
       foreach ($own_unpublished as &$nid) {
         $nid = (int) $nid;
       }
       $query->orConditionGroup()
-        ->condition('status', NodeInterface::PUBLISHED)
+        ->condition('status', (bool) NodeInterface::PUBLISHED)
         ->condition('nid', $own_unpublished, 'IN');
     }
     else {
       // If not, restrict the query to published nodes.
-      $query->condition('status', NodeInterface::PUBLISHED);
+      $query->condition('status', (bool) NodeInterface::PUBLISHED);
     }
   }
   $nids = $query

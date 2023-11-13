@@ -225,7 +225,7 @@ class CommentManager implements CommentManagerInterface {
         ->condition('entity_type', $entity->getEntityTypeId())
         ->condition('entity_id', (int) $entity->id())
         ->condition('created', $timestamp, '>')
-        ->condition('status', CommentInterface::PUBLISHED);
+        ->condition('status', (bool) CommentInterface::PUBLISHED);
       if ($field_name) {
         // Limit to a particular field.
         $query->condition('field_name', $field_name);

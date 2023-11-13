@@ -16,32 +16,32 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
   /**
    * Denotes that the node is not published.
    */
-  const NOT_PUBLISHED = FALSE;
+  const NOT_PUBLISHED = 0;
 
   /**
    * Denotes that the node is published.
    */
-  const PUBLISHED = TRUE;
+  const PUBLISHED = 1;
 
   /**
    * Denotes that the node is not promoted to the front page.
    */
-  const NOT_PROMOTED = FALSE;
+  const NOT_PROMOTED = 0;
 
   /**
    * Denotes that the node is promoted to the front page.
    */
-  const PROMOTED = TRUE;
+  const PROMOTED = 1;
 
   /**
    * Denotes that the node is not sticky at the top of the page.
    */
-  const NOT_STICKY = FALSE;
+  const NOT_STICKY = 0;
 
   /**
    * Denotes that the node is sticky at the top of the page.
    */
-  const STICKY = TRUE;
+  const STICKY = 1;
 
   /**
    * Gets the node type.
