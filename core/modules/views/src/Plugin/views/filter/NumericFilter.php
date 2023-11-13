@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Views;
 
 /**
  * Simple filter to handle greater than/less than filters.
