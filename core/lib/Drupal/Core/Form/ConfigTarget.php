@@ -63,7 +63,7 @@ final class ConfigTarget {
    *   will be done. The callback will receive all of the values loaded from
    *   config as separate arguments, in the order specified by
    *   $this->propertyPaths. Defaults to NULL.
-   * @param callable|null $toConfig
+   * @param callable|null|false $toConfig
    *   (optional) A callback which should transform the value submitted by the
    *   form before it is set in the config object. If NULL, no transformation
    *   will be done. The callback will receive the value submitted through the
@@ -71,13 +71,16 @@ final class ConfigTarget {
    *   be an array of the submitted values, keyed by property path, and must
    *   return an array with the transformed values, also keyed by property path.
    *   The callback will receive the form state object as its second argument.
+   *   When targeting a single property path, FALSE indicates this config target
+   *   opts out of setting a value (because another config target is setting a
+   *   superset).
    *   Defaults to NULL.
    */
   public function __construct(
     public readonly string $configName,
     string|array $propertyPath,
     ?callable $fromConfig = NULL,
-    ?callable $toConfig = NULL,
+    callable|null|false $toConfig = NULL,
   ) {
     $this->fromConfig = $fromConfig ? $fromConfig(...) : NULL;
     $this->toConfig = $toConfig ? $toConfig(...) : NULL;
@@ -208,21 +211,13 @@ final class ConfigTarget {
       throw new \InvalidArgumentException(sprintf('Config target is associated with %s but %s given.', $this->configName, $config->getName()));
     }
 
+    if ($this->toConfig === FALSE) {
+      // This config target has opted out of setting configuration values.
+      return;
+    }
     $is_multi_target = $this->isMultiTarget();
     if ($this->toConfig) {
-      try {
-        $value = ($this->toConfig)($value, $form_state);
-      }
-      catch (\OutOfBoundsException $e) {
-        if ($is_multi_target) {
-          throw new \LogicException('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.', previous: $e);
-        }
-        else {
-          // The callback is telling us this value should not be set in config.
-          return;
-        }
-      }
-
+      $value = ($this->toConfig)($value, $form_state);
       if ($is_multi_target) {
         // If we're targeting multiple property paths, $value needs to be an array
         // with every targeted property path.
