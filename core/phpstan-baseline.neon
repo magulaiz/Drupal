@@ -188,11 +188,6 @@ parameters:
 			path: lib/Drupal/Component/Gettext/PoStreamReader.php
 
 		-
-			message: "#^Variable \\$permission might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Access/AccessResult.php
-
-		-
 			message: """
 				#^Class Drupal\\\\Core\\\\Access\\\\CheckProvider implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
 				since Symfony 6\\.4, use dependency injection instead$#
