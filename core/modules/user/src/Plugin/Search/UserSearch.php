@@ -122,7 +122,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
       ->select('users_field_data', 'users')
       ->extend(PagerSelectExtender::class);
     $query->fields('users', ['uid']);
-    $query->condition('default_langcode', 1);
+    $query->condition('default_langcode', TRUE);
     if ($this->currentUser->hasPermission('administer users')) {
       // Administrators can also search in the otherwise private email field,
       // and they don't need to be restricted to only active users.
@@ -136,7 +136,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
       // Regular users can only search via usernames, and we do not show them
       // blocked accounts.
       $query->condition('name', '%' . $keys . '%', 'LIKE')
-        ->condition('status', 1);
+        ->condition('status', TRUE);
     }
     $uids = $query
       ->limit(15)

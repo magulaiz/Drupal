@@ -485,7 +485,7 @@ class ForumManager implements ForumManagerInterface {
     $query->leftJoin('history', 'h', '[n].[nid] = [h].[nid] AND [h].[uid] = :uid', [':uid' => $uid]);
     $query->addExpression('COUNT([n].[nid])', 'count');
     return $query
-      ->condition('status', 1)
+      ->condition('status', TRUE)
       // @todo This should be actually filtering on the desired node status
       //   field language and just fall back to the default language.
       ->condition('n.default_langcode', 1)

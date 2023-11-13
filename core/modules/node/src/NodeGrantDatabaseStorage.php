@@ -81,7 +81,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query = $this->database->select('node_access');
     $query->addExpression('1');
     // Only interested for granting in the current operation.
-    $query->condition('grant_' . $operation, 1, '>=');
+    $query->condition('grant_' . $operation, TRUE);
     // Check for grants for this node and the correct langcode.
     $nids = $query->andConditionGroup()
       ->condition('nid', (int) $node->id())
@@ -133,7 +133,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query->addExpression('COUNT(*)');
     $query
       ->condition('nid', 0)
-      ->condition('grant_view', 1, '>=');
+      ->condition('grant_view', TRUE);
 
     $grants = $this->buildGrantsQueryCondition(node_access_grants('view', $account));
 

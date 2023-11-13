@@ -122,7 +122,11 @@ class ConditionParameterTypeCheck {
         if (in_array($field_name, array_keys($schema['fields']), TRUE) && isset($schema['fields'][$field_name]['type'])) {
           $field_type = $schema['fields'][$field_name]['type'];
           $field_size = $schema['fields'][$field_name]['size'] ?? '';
-          if (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'tiny') && !in_array($field_name, ['severity', 'weight', 'delta', 'mode', 'cardinality'], TRUE)) {
+          if (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'tiny') && !in_array($field_name, ['severity', 'weight', 'delta', 'mode', 'cardinality', 'tags', 'source_row_status'], TRUE)) {
+            // Use the value as returned by gettype().
+            $matched_fields[] = 'boolean';
+          }
+          elseif (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'small') && !in_array($field_name, ['number_parts', 'depth', 'format', 'min_word_count', 'schema_version', 'signature_format'], TRUE)) {
             // Use the value as returned by gettype().
             $matched_fields[] = 'boolean';
           }

@@ -96,8 +96,8 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field')->getFieldStorageDefinition(), TRUE);
     $result = $this->database->select($table, 'f')
-      ->condition('f.entity_id', $entity->id())
-      ->condition('deleted', 1)
+      ->condition('f.entity_id', (int) $entity->id())
+      ->condition('deleted', TRUE)
       ->countQuery()
       ->execute();
     $this->assertEquals(1, $result->fetchField(), 'Field data has been deleted');

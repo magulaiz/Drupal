@@ -62,7 +62,7 @@ class PathTaxonomyTermTest extends PathTestBase {
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(FALSE)
       ->condition('name', $edit['name[0][value]'])
-      ->condition('default_langcode', 1)
+      ->condition('default_langcode', TRUE)
       ->execute();
     $tid = reset($tids);
 

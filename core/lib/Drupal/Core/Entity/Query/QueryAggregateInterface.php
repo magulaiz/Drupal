@@ -139,7 +139,7 @@ interface QueryAggregateInterface extends QueryInterface {
    *   @code
    *     $result = $query
    *       ->aggregate('nid', 'count')
-   *       ->condition('status', 1)
+   *       ->condition('status', TRUE)
    *       ->groupby('type')
    *       ->execute();
    *   @endcode

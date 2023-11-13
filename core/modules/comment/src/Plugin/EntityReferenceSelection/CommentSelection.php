@@ -74,7 +74,7 @@ class CommentSelection extends DefaultSelection {
       $query = $this->buildEntityQuery();
       // Mirror the conditions checked in buildEntityQuery().
       if (!$this->currentUser->hasPermission('administer comments')) {
-        $query->condition('status', 1);
+        $query->condition('status', TRUE);
       }
       $result = $query
         ->condition($entity_type->getKey('id'), $ids, 'IN')

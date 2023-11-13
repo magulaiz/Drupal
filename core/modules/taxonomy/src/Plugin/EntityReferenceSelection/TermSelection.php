@@ -105,7 +105,7 @@ class TermSelection extends DefaultSelection {
     // core requires us to also know about the concept of 'published' and
     // 'unpublished'.
     if (!$this->currentUser->hasPermission('administer taxonomy')) {
-      $query->condition('status', 1);
+      $query->condition('status', TRUE);
     }
     return $query;
   }

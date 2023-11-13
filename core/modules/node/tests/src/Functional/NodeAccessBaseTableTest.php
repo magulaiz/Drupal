@@ -166,13 +166,13 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     $public_tids = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(FALSE)
       ->condition('name', 'public')
-      ->condition('default_langcode', 1)
+      ->condition('default_langcode', TRUE)
       ->execute();
     $this->publicTid = reset($public_tids);
     $private_tids = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(FALSE)
       ->condition('name', 'private')
-      ->condition('default_langcode', 1)
+      ->condition('default_langcode', TRUE)
       ->execute();
     $this->privateTid = reset($private_tids);
 

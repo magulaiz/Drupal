@@ -204,7 +204,7 @@ class CommentStatistics implements CommentStatisticsInterface {
       ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
       ->condition('c.field_name', $comment->getFieldName())
       ->condition('c.status', CommentInterface::PUBLISHED)
-      ->condition('default_langcode', 1)
+      ->condition('default_langcode', TRUE)
       ->execute()
       ->fetchField();
 
@@ -216,7 +216,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
         ->condition('c.field_name', $comment->getFieldName())
         ->condition('c.status', CommentInterface::PUBLISHED)
-        ->condition('default_langcode', 1)
+        ->condition('default_langcode', TRUE)
         ->orderBy('c.created', 'DESC')
         ->range(0, 1)
         ->execute()

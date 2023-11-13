@@ -1236,7 +1236,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $results = $this->database->select($table, 't')
         ->fields('t')
         ->condition(!$load_from_revision ? 'entity_id' : 'revision_id', $ids, 'IN')
-        ->condition('deleted', 0)
+        ->condition('deleted', FALSE)
         ->condition('langcode', $langcodes, 'IN')
         ->orderBy('delta')
         ->execute();
@@ -1673,7 +1673,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $item_query = $this->database->select($table_name, 't', ['fetch' => \PDO::FETCH_ASSOC])
         ->fields('t')
         ->condition('entity_id', (is_numeric($row['entity_id']) ? (int) $row['entity_id'] : $row['entity_id']))
-        ->condition('deleted', 1)
+        ->condition('deleted', TRUE)
         ->orderBy('delta');
 
       foreach ($item_query->execute() as $item_row) {
@@ -1712,12 +1712,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $revision_id = $this->entityType->isRevisionable() ? $entity->getRevisionId() : $entity->id();
     $this->database->delete($table_name)
       ->condition('revision_id', (int) $revision_id)
-      ->condition('deleted', 1)
+      ->condition('deleted', TRUE)
       ->execute();
     if ($this->entityType->isRevisionable()) {
       $this->database->delete($revision_name)
         ->condition('revision_id', (int) $revision_id)
-        ->condition('deleted', 1)
+        ->condition('deleted', TRUE)
         ->execute();
     }
   }

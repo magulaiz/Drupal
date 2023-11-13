@@ -216,7 +216,7 @@ class TaxonomyIndexTid extends ManyToOne {
           ->sort('name')
           ->addTag('taxonomy_term_access');
         if (!$this->currentUser->hasPermission('administer taxonomy')) {
-          $query->condition('status', 1);
+          $query->condition('status', TRUE);
         }
         if ($this->options['limit']) {
           $query->condition('vid', $vocabulary->id());
