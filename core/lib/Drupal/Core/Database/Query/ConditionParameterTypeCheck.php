@@ -123,8 +123,8 @@ class ConditionParameterTypeCheck {
           $field_type = $schema['fields'][$field_name]['type'];
           $field_size = $schema['fields'][$field_name]['size'] ?? '';
           if (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'tiny') && !in_array($field_name, ['severity', 'weight', 'delta', 'mode', 'cardinality'], TRUE)) {
-          // Use the value as returned by gettype().
-             $matched_fields[] = 'boolean';
+            // Use the value as returned by gettype().
+            $matched_fields[] = 'boolean';
           }
           elseif (in_array($field_type, ['int', 'serial', 'bigserial'])) {
             // Use the value as returned by gettype().
