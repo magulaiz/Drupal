@@ -61,7 +61,6 @@ class ConfigTargetTest extends BrowserTestBase {
     // Both invalid.
     $page->fillField('First choice', '');
     $page->fillField('Second choice', '');
-    $page->fillField('Nemesis', $nemesis_vegetable);
     $page->pressButton('Save configuration');
     $assert_session = $this->assertSession();
     $assert_session->statusMessageContains('This value should not be blank.', 'error');
@@ -101,7 +100,36 @@ class ConfigTargetTest extends BrowserTestBase {
         $second_favorite_fruit,
       ],
       'favorite_vegetable' => 'Potato',
+      'nemesis_vegetable' => '',
+    ], $this->config('form_test.object')->getRawData());
+
+    // Now enter a nemesis vegetable too.
+    $this->drupalGet('/form-test/nested-config-target');
+    $page->fillField('First choice', $most_favorite_fruit);
+    $page->fillField('Second choice', $second_favorite_fruit);
+    $page->fillField('Nemesis', $nemesis_vegetable);
+    $page->pressButton('Save configuration');
+
+    // A new validation error has appeared, on the conditionally displayed
+    // "I could not live without" form field — this field must be filled out if
+    // all others are.
+    $assert_session->statusMessageContains('The value you selected is not a valid choice.', 'error');
+    $assert_session->elementAttributeExists('named', ['field', 'I could not live without'], 'aria-invalid');
+    $page->fillField('First choice', $most_favorite_fruit);
+    $page->fillField('Second choice', $second_favorite_fruit);
+    $page->fillField('Nemesis', $nemesis_vegetable);
+    $page->fillField('I could not live without', 'fruits');
+    $page->pressButton('Save configuration');
+    $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
+
+    $this->assertSame([
+      'favorite_fruits' => [
+        $most_favorite_fruit,
+        $second_favorite_fruit,
+      ],
+      'favorite_vegetable' => 'Potato',
       'nemesis_vegetable' => $nemesis_vegetable,
+      'could_not_live_without' => 'fruits',
     ], $this->config('form_test.object')->getRawData());
   }
 

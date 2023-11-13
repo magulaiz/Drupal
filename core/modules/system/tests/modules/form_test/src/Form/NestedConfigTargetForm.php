@@ -61,6 +61,44 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
         FALSE,
       ),
     ];
+    $form['could_not_live_without'] = [
+      '#weight' => 10,
+      '#type' => 'textfield',
+      '#title' => 'I could not live without',
+      '#placeholder' => 'vegetables',
+      '#wrapper_attributes' => ['class' => ['container-inline']],
+      '#config_target' => new ConfigTarget(
+        'form_test.object',
+        'could_not_live_without',
+        toConfig: function (string $could_not_live_without, FormStateInterface $form_state): string {
+          if (empty($form_state->getValue(['favorites', 'first']))) {
+            throw new \OutOfBoundsException();
+          }
+          if (empty($form_state->getValue(['favorites', 'second']))) {
+            throw new \OutOfBoundsException();
+          }
+          if (empty($form_state->getValue(['vegetables', 'favorite']))) {
+            throw new \OutOfBoundsException();
+          }
+          if (empty($form_state->getValue(['vegetables', 'nemesis']))) {
+            throw new \OutOfBoundsException();
+          }
+          return $could_not_live_without;
+        },
+
+      ),
+      // Only if everything else is answered will this be asked.
+      '#states' => [
+        'visible' => [
+          // 2 favorite fruits.
+          ':input[name="favorites[first]"]' => ['empty' => FALSE],
+          ':input[name="favorites[second]"]' => ['empty' => FALSE],
+          // Favorite & nemesis vegetable.
+          ':input[name="vegetables[favorite]"]' => ['empty' => FALSE],
+          ':input[name="vegetables[nemesis]"]' => ['empty' => FALSE],
+        ],
+      ],
+    ];
     return parent::buildForm($form, $form_state);
   }
 
