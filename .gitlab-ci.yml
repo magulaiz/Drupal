@@ -235,7 +235,10 @@ stages:
     expire_in: 1 week
     expose_as: 'yarn-vendor-ckeditor-nightly'
     paths:
+      - core/package.json
       - core/node_modules/
+      - core/assets/vendor/ckeditor5
+      - core/modules/ckeditor5/js/build
   script:
     - yarn --cwd ./core upgrade $(cat ./package.json | jq -r '.devDependencies | keys | .[]' | grep '@ckeditor/' | sed 's/$/@nightly/') ckeditor5@nightly
 
