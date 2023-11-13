@@ -121,13 +121,12 @@ class ConditionParameterTypeCheck {
       if (isset($schema['fields']) && is_array($schema['fields'])) {
         if (in_array($field_name, array_keys($schema['fields']), TRUE) && isset($schema['fields'][$field_name]['type'])) {
           $field_type = $schema['fields'][$field_name]['type'];
-          // $field_size = $schema['fields'][$field_name]['size'] ?? '';
-          // if (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'tiny') && !in_array($field_name, ['severity', 'weight', 'delta', 'mode', 'cardinality'], TRUE)) {
+          $field_size = $schema['fields'][$field_name]['size'] ?? '';
+          if (($field_type == 'int') && !empty($field_size) && (strtolower($field_size) == 'tiny') && !in_array($field_name, ['severity', 'weight', 'delta', 'mode', 'cardinality'], TRUE)) {
           // Use the value as returned by gettype().
-          // $matched_fields[] = 'boolean';
-          // }
-          // else
-          if (in_array($field_type, ['int', 'serial', 'bigserial'])) {
+             $matched_fields[] = 'boolean';
+          }
+          elseif (in_array($field_type, ['int', 'serial', 'bigserial'])) {
             // Use the value as returned by gettype().
             $matched_fields[] = 'integer';
           }

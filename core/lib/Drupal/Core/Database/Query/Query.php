@@ -233,7 +233,10 @@ abstract class Query implements PlaceholderInterface {
    */
   protected function getConditionParameterTypeCheck() {
     try {
-      return \Drupal::service('condition_parameter_type_check');
+      if (!isset($this->conditionParameterTypeCheck)) {
+        $this->conditionParameterTypeCheck = \Drupal::service('condition_parameter_type_check');
+      }
+      return $this->conditionParameterTypeCheck;
     }
     catch (\Exception $e) {
       return FALSE;
