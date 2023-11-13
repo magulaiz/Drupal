@@ -1257,8 +1257,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $result = $storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', 'entity_test')
-      ->condition('ref1', $ref1->id())
-      ->condition('ref2', $ref2->id())
+      ->condition('ref1', (int) $ref1->id())
+      ->condition('ref2', (int) $ref2->id())
       ->execute();
     $this->assertCount(1, $result);
     $this->assertEquals($entity->id(), reset($result));
@@ -1267,8 +1267,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $result = $storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', 'entity_test')
-      ->condition('ref1.target_id', $ref1->id())
-      ->condition('ref2.target_id', $ref2->id())
+      ->condition('ref1.target_id', (int) $ref1->id())
+      ->condition('ref2.target_id', (int) $ref2->id())
       ->execute();
     $this->assertCount(1, $result);
     $this->assertEquals($entity->id(), reset($result));
@@ -1277,8 +1277,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $result = $storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', 'entity_test')
-      ->condition('ref1.entity.id', $ref1->id())
-      ->condition('ref2.entity.id', $ref2->id())
+      ->condition('ref1.entity.id', (int) $ref1->id())
+      ->condition('ref2.entity.id', (int) $ref2->id())
       ->execute();
     $this->assertCount(1, $result);
     $this->assertEquals($entity->id(), reset($result));

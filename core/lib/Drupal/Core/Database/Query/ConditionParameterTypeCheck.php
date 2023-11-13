@@ -2,9 +2,10 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 
 // cSpell:ignore bigserial
 
@@ -74,7 +75,7 @@ class ConditionParameterTypeCheck {
         if ($matched_field_type = $this->getMatchedFieldType($field_name, $schemas)) {
           $throw_error = FALSE;
           $error_message = t('Using a query condition where the condition value is not of the same type as the field type is not allowed.');
-          if (isset($condition['operator']) && in_array(strtoupper($condition['operator']), ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], TRUE)) {
+          if (isset($condition['operator']) && in_array(strtoupper($condition['operator']), ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], TRUE) && !($condition['value'] instanceof SelectInterface)) {
             foreach ($condition['value'] as $value) {
               if (!in_array(gettype($value), [$matched_field_type, 'null'], TRUE)) {
                 $throw_error = TRUE;
@@ -87,7 +88,7 @@ class ConditionParameterTypeCheck {
               }
             }
           }
-          elseif (!in_array(gettype($condition['value']), [$matched_field_type, 'null'], TRUE)) {
+          elseif (!in_array(gettype($condition['value']), [$matched_field_type, 'null'], TRUE) && !($condition['value'] instanceof SelectInterface)) {
             $throw_error = TRUE;
             $error_message .= sprintf(' The condition on the field "%s" is of the type "%s" and its condition value is of the type "%s".',
               $field_name,
