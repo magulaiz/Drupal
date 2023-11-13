@@ -66,7 +66,12 @@ class ConditionParameterTypeCheck {
         $this->checkParameterTypes($table_names, $condition['field']->conditions());
       }
       elseif (isset($condition['field']) && isset($condition['value'])) {
-        if ($matched_field_type = $this->getMatchedFieldType($condition['field'], $schemas)) {
+        $field_name = $condition['field'];
+        $last_dot_in_field_name = strrpos($field_name, '.');
+        if ($last_dot_in_field_name !== FALSE) {
+          $field_name = substr($field_name, ($last_dot_in_field_name + 1));
+        }
+        if ($matched_field_type = $this->getMatchedFieldType($field_name, $schemas)) {
           $throw_error = FALSE;
           $error_message = t('Using a query condition where the condition value is not of the same type as the field type is not allowed.');
           if (isset($condition['operator']) && in_array(strtoupper($condition['operator']), ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], TRUE)) {
@@ -74,7 +79,7 @@ class ConditionParameterTypeCheck {
               if (!in_array(gettype($value), [$matched_field_type, 'null'], TRUE)) {
                 $throw_error = TRUE;
                 $error_message .= sprintf(' The condition on the field "%s" is of the type "%s" and its condition value is an array of "%s", which contains a value of "%s".',
-                  $condition['field'],
+                  $field_name,
                   $matched_field_type,
                   $matched_field_type,
                   gettype($value),
@@ -85,7 +90,7 @@ class ConditionParameterTypeCheck {
           elseif (!in_array(gettype($condition['value']), [$matched_field_type, 'null'], TRUE)) {
             $throw_error = TRUE;
             $error_message .= sprintf(' The condition on the field "%s" is of the type "%s" and its condition value is of the type "%s".',
-              $condition['field'],
+              $field_name,
               $matched_field_type,
               gettype($condition['value']),
             );

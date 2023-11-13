@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\tracker\Functional;
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
@@ -213,7 +214,7 @@ class TrackerTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('comment/1/edit');
-    $this->submitForm(['status' => 0], 'Save');
+    $this->submitForm(['status' => CommentInterface::NOT_PUBLISHED], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertSession()->pageTextNotContains($other_published_my_comment->label());
 
