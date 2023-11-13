@@ -90,7 +90,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
       ->fields('t')
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', (is_numeric($entity_id) ? (int) $entity_id : $entity_id))
-      ->condition('deleted', FALSE)
+      ->condition('deleted', 0)
       ->orderBy('delta');
     if (isset($revision_id)) {
       $query->condition('revision_id', (int) $revision_id);
