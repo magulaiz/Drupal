@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Block\Plugin\Block;
 
-use Drupal\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\TitleBlockPluginInterface;
@@ -10,7 +10,6 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Utility\BaseRouteTitle;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
