@@ -144,7 +144,7 @@ user.pass_change.http:
     _controller: \Drupal\user\Controller\UserAuthenticationController::changePassword
   methods: [PATCH]
   requirements:
-    _user_is_logged_in: 'TRUE'
+    _access: 'TRUE'
     _format: 'json'
 
 user.page:
