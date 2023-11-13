@@ -253,7 +253,9 @@ class ConfigTargetTest extends UnitTestCase {
     $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
   }
 
-  public function testSetValueMultiTargetOutOfBounds(): void {
+  public function testSetValueMultiTargetExplicitNoToConfig(): void {
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
     $config_target = new ConfigTarget(
       'foo.settings',
       [
@@ -263,17 +265,9 @@ class ConfigTargetTest extends UnitTestCase {
       // In case of multiple targets, \OutOfBoundsException may never be thrown.
       // @see ::testMultiTarget()
       fromConfig: fn (int $first, int $second): string => "$first|$second",
-      // phpcs:disable
       // The "toConfig" callable for the first choice sets all choices.
-      toConfig: fn () => throw new \OutOfBoundsException(),
+      toConfig: FALSE,
     );
-
-    $config = $this->prophesize(Config::class);
-    $config->getName()->willReturn('foo.settings');
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.');
-    $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
   }
 
 }

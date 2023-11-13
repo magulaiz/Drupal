@@ -57,9 +57,8 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
         'form_test.object',
         'favorite_fruits.1',
         fn (?string $second_favorite_fruit) : string => $second_favorite_fruit ?? 'Orange',
-        // phpcs:disable
         // The "toConfig" callable for the first choice sets all choices.
-        fn () => throw new \OutOfBoundsException(),
+        FALSE,
       ),
     ];
     return parent::buildForm($form, $form_state);
