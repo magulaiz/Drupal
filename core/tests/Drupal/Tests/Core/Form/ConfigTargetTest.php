@@ -4,8 +4,10 @@ namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigTarget;
+use Drupal\Core\Form\ConfigTargetValue;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\ConfigTarget
@@ -154,7 +156,12 @@ class ConfigTargetTest extends UnitTestCase {
       // (`foo.settings:something`) and that it is presented by the string "Yes"
       // or the string "No" in an <input type=text> in the form.
       fromConfig: fn (bool $something): string => $something ? 'Yes' : 'No',
-      toConfig: fn (string $form_value): bool => $form_value === 'Yes',
+      toConfig: fn (string $form_value): ConfigTargetValue|bool => match ($form_value) {
+        'Yes' => TRUE,
+        '<test:noop>' => ConfigTargetValue::NoMapping,
+        '<test:delete>' => ConfigTargetValue::DeleteKey,
+        default => FALSE,
+      },
     );
     // Assert the logic in the callables works as expected.
     $this->assertSame("Yes", ($config_target->fromConfig)(TRUE));
@@ -162,6 +169,8 @@ class ConfigTargetTest extends UnitTestCase {
     $this->assertTrue(($config_target->toConfig)("Yes"));
     $this->assertFalse(($config_target->toConfig)("No"));
     $this->assertFalse(($config_target->toConfig)("some random string"));
+    $this->assertSame(ConfigTargetValue::NoMapping, ($config_target->toConfig)("<test:noop>"));
+    $this->assertSame(ConfigTargetValue::DeleteKey, ($config_target->toConfig)("<test:delete>"));
 
     // Now simulate how this will be used in the form, and ensure it results in
     // the expected Config::set() calls.
@@ -181,6 +190,20 @@ class ConfigTargetTest extends UnitTestCase {
     $this->assertSame("No", $config_target->getValue($config->reveal()));
     $config->set('something', FALSE)->shouldBeCalledTimes(1);
     $config_target->setValue($config->reveal(), 'No', $this->prophesize(FormStateInterface::class)->reveal());
+
+    // Test `ConfigTargetValue::NoMapping`: nothing should happen to the Config.
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('foo.settings');
+    $config->set('something', Argument::any())->shouldBeCalledTimes(0);
+    $config->clear('something', Argument::any())->shouldBeCalledTimes(0);
+    $config_target->setValue($config->reveal(), '<test:noop>', $this->prophesize(FormStateInterface::class)->reveal());
+
+    // Test `ConfigTargetValue::DeleteKey`: Config::clear() should be called.
+    $config = $this->prophesize(Config::class);
+    $config->getName()->willReturn('foo.settings');
+    $config->clear('something')->shouldBeCalledTimes(1);
+    $config_target->setValue($config->reveal(), '<test:delete>', $this->prophesize(FormStateInterface::class)->reveal());
+
   }
 
   public function testMultiTarget(): void {
@@ -250,29 +273,6 @@ class ConfigTargetTest extends UnitTestCase {
 
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage($expected_exception_message);
-    $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
-  }
-
-  public function testSetValueMultiTargetOutOfBounds(): void {
-    $config_target = new ConfigTarget(
-      'foo.settings',
-      [
-        'first',
-        'second',
-      ],
-      // In case of multiple targets, \OutOfBoundsException may never be thrown.
-      // @see ::testMultiTarget()
-      fromConfig: fn (int $first, int $second): string => "$first|$second",
-      // phpcs:disable
-      // The "toConfig" callable for the first choice sets all choices.
-      toConfig: fn () => throw new \OutOfBoundsException(),
-    );
-
-    $config = $this->prophesize(Config::class);
-    $config->getName()->willReturn('foo.settings');
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.');
     $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
   }
 

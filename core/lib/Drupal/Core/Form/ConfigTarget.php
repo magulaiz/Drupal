@@ -71,6 +71,11 @@ final class ConfigTarget {
    *   be an array of the submitted values, keyed by property path, and must
    *   return an array with the transformed values, also keyed by property path.
    *   The callback will receive the form state object as its second argument.
+   *   The callback may return a special values:
+   *   - ConfigTargetValue::NoMapping, to indicate that the given form value
+   *     does not need to be mapped onto the Config object
+   *   - ConfigTargetValue::DeleteKey to indicate that the targeted property
+   *     path should be deleted from config.
    *   Defaults to NULL.
    */
   public function __construct(
@@ -198,10 +203,8 @@ final class ConfigTarget {
    *   Thrown if the given config object is not the one being targeted by
    *   $this->configName.
    * @throws \LogicException
-   *   Thrown if this object is targeting multiple property paths and either
-   *   of the following situations arises:
-   *   - $value does not contain a value for every targeted property path.
-   *   - The toConfig callback throws an \OutOfBoundsException.
+   *   Thrown if this object is targeting multiple property paths and $value
+   *   does not contain a value for every targeted property path.
    */
   public function setValue(Config $config, mixed $value, FormStateInterface $form_state): void {
     if ($config->getName() !== $this->configName) {
@@ -210,19 +213,7 @@ final class ConfigTarget {
 
     $is_multi_target = $this->isMultiTarget();
     if ($this->toConfig) {
-      try {
-        $value = ($this->toConfig)($value, $form_state);
-      }
-      catch (\OutOfBoundsException $e) {
-        if ($is_multi_target) {
-          throw new \LogicException('The toConfig callable threw an OutOfBoundsException, which is only allowed for ConfigTargets targeting a single property path.', previous: $e);
-        }
-        else {
-          // The callback is telling us this value should not be set in config.
-          return;
-        }
-      }
-
+      $value = ($this->toConfig)($value, $form_state);
       if ($is_multi_target) {
         // If we're targeting multiple property paths, $value needs to be an array
         // with every targeted property path.
@@ -238,12 +229,21 @@ final class ConfigTarget {
       }
     }
 
-    if ($is_multi_target) {
-      array_walk($value, fn (mixed $value, string $property) => $config->set($property, $value));
+    // Match the structure expected for a multi-target ConfigTarget.
+    if (!$is_multi_target) {
+      $value = [$this->propertyPaths[0] => $value];
     }
-    else {
-      $config->set($this->propertyPaths[0], $value);
-    }
+
+    // Set the returned value, or if a special value (one of the cases in the
+    // ConfigTargetValue enum): apply the appropriate action.
+    array_walk($value, fn (mixed $value, string $property) => match ($value) {
+      // No-op.
+      ConfigTargetValue::NoMapping => function (): void {},
+      // Delete.
+      ConfigTargetValue::DeleteKey => $config->clear($property),
+      // Set.
+      default => $config->set($property, $value),
+    });
   }
 
   /**

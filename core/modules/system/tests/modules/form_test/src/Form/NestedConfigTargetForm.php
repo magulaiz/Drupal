@@ -3,6 +3,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\ConfigTarget;
+use Drupal\Core\Form\ConfigTargetValue;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -57,9 +58,8 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
         'form_test.object',
         'favorite_fruits.1',
         fn (?string $second_favorite_fruit) : string => $second_favorite_fruit ?? 'Orange',
-        // phpcs:disable
         // The "toConfig" callable for the first choice sets all choices.
-        fn () => throw new \OutOfBoundsException(),
+        fn () => ConfigTargetValue::NoMapping,
       ),
     ];
     $form['could_not_live_without'] = [
@@ -71,18 +71,18 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'could_not_live_without',
-        toConfig: function (string $could_not_live_without, FormStateInterface $form_state): string {
+        toConfig: function (string $could_not_live_without, FormStateInterface $form_state): ConfigTargetValue|string {
           if (empty($form_state->getValue(['favorites', 'first']))) {
-            throw new \OutOfBoundsException();
+            return ConfigTargetValue::DeleteKey;
           }
           if (empty($form_state->getValue(['favorites', 'second']))) {
-            throw new \OutOfBoundsException();
+            return ConfigTargetValue::DeleteKey;
           }
           if (empty($form_state->getValue(['vegetables', 'favorite']))) {
-            throw new \OutOfBoundsException();
+            return ConfigTargetValue::DeleteKey;
           }
           if (empty($form_state->getValue(['vegetables', 'nemesis']))) {
-            throw new \OutOfBoundsException();
+            return ConfigTargetValue::DeleteKey;
           }
           return $could_not_live_without;
         },
