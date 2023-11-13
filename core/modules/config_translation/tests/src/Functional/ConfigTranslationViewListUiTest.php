@@ -6,7 +6,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views_ui\Functional\UITestBase;
 use Drupal\views\Views;
 
-// cspell:ignore später
 
 /**
  * Visit view list and test if translate is available.

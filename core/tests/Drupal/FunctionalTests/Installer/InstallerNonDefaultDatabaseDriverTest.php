@@ -6,8 +6,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 
-// cspell:ignore drupaldriver testdriverdatabasedrivertestmysql
-// cspell:ignore testdriverdatabasedrivertestpgsql
 
 /**
  * Tests the interactive installer.

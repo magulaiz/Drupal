@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Functional\Datetime;
 
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore ABCDEFGHIJK
 
 /**
  * Tests converting JavaScript time zone abbreviations to time zone identifiers.

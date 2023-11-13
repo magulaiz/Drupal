@@ -7,7 +7,6 @@
 
 use Drupal\Core\Database\Database;
 
-// cspell:ignore destid sourceid
 
 $connection = Database::getConnection();
 

@@ -1,4 +1,3 @@
-// cspell:ignore drupalemphasis
 
 import DrupalEmphasis from './drupalemphasis';
 

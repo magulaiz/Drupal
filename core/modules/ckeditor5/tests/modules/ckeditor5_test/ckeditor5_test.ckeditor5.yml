@@ -1,4 +1,3 @@
-# cspell:ignore layercake
 ckeditor5_test_layercake:
   ckeditor5:
     plugins: []

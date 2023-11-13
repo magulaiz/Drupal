@@ -1,4 +1,3 @@
-# cspell:ignore layercake
 layercake:
   version: VERSION
   # In real-world (non-test) scenarios, this would load the CKEditor 5 plugin's built JS.

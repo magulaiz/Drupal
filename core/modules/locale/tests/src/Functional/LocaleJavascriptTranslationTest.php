@@ -7,7 +7,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Component\Render\FormattableMarkup;
 
-// cspell:ignore descripcion mostrar
 
 /**
  * Tests parsing js files for translatable strings.

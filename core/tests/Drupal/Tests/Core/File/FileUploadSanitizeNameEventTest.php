@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\File;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Tests\UnitTestCase;
 
-// cspell:ignore äöüåøhello
 
 /**
  * FileUploadSanitizeNameEvent tests.

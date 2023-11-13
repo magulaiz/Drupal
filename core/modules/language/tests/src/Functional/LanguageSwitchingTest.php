@@ -8,7 +8,6 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore publi publié
 
 /**
  * Functional tests for the language switching feature.

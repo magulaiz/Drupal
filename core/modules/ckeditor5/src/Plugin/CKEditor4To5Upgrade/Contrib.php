@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
-// cspell:ignore codesnippet
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;

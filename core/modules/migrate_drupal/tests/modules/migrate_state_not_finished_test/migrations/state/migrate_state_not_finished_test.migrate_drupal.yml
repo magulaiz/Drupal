@@ -1,4 +1,3 @@
-# cspell:ignore optionwidgets
 not_finished:
   6:
     block: migrate_state_not_finished_test

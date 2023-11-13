@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-// cspell:ignore focusables
 
 import {
   ButtonView,
@@ -16,7 +15,6 @@ import {
 import { FocusTracker, KeystrokeHandler } from 'ckeditor5/src/utils';
 import { icons } from 'ckeditor5/src/core';
 
-// cspell:ignore focusables
 
 export default class TextAlternativeFormView extends View {
   /**

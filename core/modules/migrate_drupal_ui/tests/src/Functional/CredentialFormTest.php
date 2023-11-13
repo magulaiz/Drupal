@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
-// cspell:ignore drupalmysqldriverdatabasemysql
 
 /**
  * Test the credential form for both Drupal 6 and Drupal 7 sources.

@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore textalternativeformview */
 
 import { Plugin, icons } from 'ckeditor5/src/core';
 import {

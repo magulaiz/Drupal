@@ -4,7 +4,6 @@ namespace Drupal\Tests\config_translation\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
-// cspell:ignore objectid
 
 /**
  * Tests the i18nProfileField source plugin.

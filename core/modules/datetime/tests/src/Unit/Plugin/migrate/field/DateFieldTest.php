@@ -6,7 +6,6 @@ use Drupal\datetime\Plugin\migrate\field\DateField;
 use Drupal\migrate\MigrateException;
 use Drupal\Tests\UnitTestCase;
 
-// cspell:ignore todate
 
 /**
  * Provides unit tests for the DateField Plugin.

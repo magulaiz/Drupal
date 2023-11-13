@@ -7,7 +7,6 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore destid
 
 /**
  * Tests the 'download' process plugin.

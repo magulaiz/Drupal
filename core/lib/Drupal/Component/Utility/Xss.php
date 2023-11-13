@@ -2,7 +2,6 @@
 
 namespace Drupal\Component\Utility;
 
-// cspell:ignore ckers kses harnhammar
 
 /**
  * Provides helper to filter for cross-site scripting.

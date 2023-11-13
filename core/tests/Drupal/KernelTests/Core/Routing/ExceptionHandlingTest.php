@@ -213,7 +213,6 @@ class ExceptionHandlingTest extends KernelTestBase {
     // final exception subscriber, it is printed as partial HTML, and hence
     // escaped.
     $this->assertEquals('text/plain; charset=UTF-8', $response->headers->get('Content-type'));
-    // cspell:ignore jsonalert
     $this->assertStringStartsWith('Not acceptable format: jsonalert(123);', $response->getContent());
   }
 

@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupalelementstyleediting splitbutton imagestyle componentfactory buttonview */
 import { Plugin } from 'ckeditor5/src/core';
 import { Collection, toMap } from 'ckeditor5/src/utils';
 import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';

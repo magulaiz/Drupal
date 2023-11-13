@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 
-// cspell:ignore Filefield Flexslider Multiupload Imagefield rulesets
 
 /**
  * Tests migrate upgrade review page for Drupal 7.

@@ -8,7 +8,6 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
-// cspell:ignore imagefield
 
 /**
  * @coversDefaultClass \Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings

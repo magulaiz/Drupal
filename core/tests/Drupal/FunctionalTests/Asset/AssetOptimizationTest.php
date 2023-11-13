@@ -7,7 +7,6 @@ namespace Drupal\FunctionalTests\Asset;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore abcdefghijklmnop
 
 /**
  * Tests asset aggregation.

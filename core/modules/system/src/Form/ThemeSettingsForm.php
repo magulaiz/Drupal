@@ -17,7 +17,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
-// cspell:ignore apng
 
 /**
  * Displays theme configuration for entire site and individual themes.

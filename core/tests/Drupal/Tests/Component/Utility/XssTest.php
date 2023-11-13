@@ -7,9 +7,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use PHPUnit\Framework\TestCase;
 
-// cspell:ignore ascript barbaz ckers cript CVEs dynsrc fooÿñ msgbox ncript
-// cspell:ignore nfocus nmedi nosuchscheme nosuchtag onmediaerror scrscriptipt
-// cspell:ignore tascript vbscript
 
 /**
  * XSS Filtering tests.

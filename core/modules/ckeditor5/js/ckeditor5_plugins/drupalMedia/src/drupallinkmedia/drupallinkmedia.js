@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupallinkmediaediting drupallinkmediaui */
 
 import { Plugin } from 'ckeditor5/src/core';
 import DrupalLinkMediaEditing from './drupallinkmediaediting';

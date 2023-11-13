@@ -20,7 +20,6 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-// cspell:ignore svenska
 
 /**
  * @coversDefaultClass \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter

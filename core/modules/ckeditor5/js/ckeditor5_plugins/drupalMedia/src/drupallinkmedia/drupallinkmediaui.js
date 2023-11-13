@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore linkui
 import { Plugin } from 'ckeditor5/src/core';
 import { LINK_KEYSTROKE } from '@ckeditor/ckeditor5-link/src/utils';
 import { ButtonView } from 'ckeditor5/src/ui';

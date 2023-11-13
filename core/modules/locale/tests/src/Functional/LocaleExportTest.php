@@ -5,7 +5,6 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore janvier
 
 /**
  * Tests the exportation of locale files.

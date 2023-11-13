@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupalimageuploadediting drupalfilerepository */
 
 import { Plugin } from 'ckeditor5/src/core';
 import DrupalImageUploadEditing from './drupalimageuploadediting';

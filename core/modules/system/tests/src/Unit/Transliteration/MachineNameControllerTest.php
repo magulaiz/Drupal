@@ -10,7 +10,6 @@ use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-// cspell:ignore aewesome
 
 /**
  * Tests that the machine name controller can transliterate strings as expected.
@@ -58,7 +57,6 @@ class MachineNameControllerTest extends UnitTestCase {
    *     - The expected content of the JSONresponse.
    */
   public function providerTestMachineNameController() {
-    // cspell:ignore äwesome
     $valid_data = [
       [['text' => 'Bob', 'langcode' => 'en'], '"Bob"'],
       [['text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE], '"bob"'],

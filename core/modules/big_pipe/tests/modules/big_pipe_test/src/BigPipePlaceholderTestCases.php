@@ -4,7 +4,6 @@
  * @file
  */
 
-// cspell:ignore divpiggydiv
 
 namespace Drupal\big_pipe_test;
 

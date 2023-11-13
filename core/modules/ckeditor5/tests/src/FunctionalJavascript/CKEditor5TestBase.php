@@ -5,7 +5,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Behat\Mink\Element\TraversableElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
-// cspell:ignore esque
 
 /**
  * Base class for testing CKEditor 5.
