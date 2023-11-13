@@ -661,7 +661,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Default to the original entity language if not explicitly specified
       // otherwise.
       if (!array_key_exists($this->defaultLangcodeKey, $values)) {
-        $values[$this->defaultLangcodeKey] = 1;
+        $values[$this->defaultLangcodeKey] = TRUE;
       }
       // If the 'default_langcode' flag is explicitly not set, we do not care
       // whether the queried values are in the original entity language or not.
