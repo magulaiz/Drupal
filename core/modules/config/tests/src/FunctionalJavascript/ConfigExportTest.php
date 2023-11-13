@@ -3,8 +3,6 @@
 namespace Drupal\Tests\config\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -25,12 +23,15 @@ class ConfigExportTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @var string $blockNamePrefix
+   * @var string
    *  A prefix string used in naming the test blocks.
    */
   protected string $blockNamePrefix = 'aaaaaa_test_block_';
 
-  function setUp(): void {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -57,9 +58,10 @@ class ConfigExportTest extends WebDriverTestBase {
    * Helper function to create test blocks.
    *
    * @param $title
-   *  Title of the block.
+   *   Title of the block.
    *
    * @return \Drupal\block_content\Entity\BlockContent
+   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createBlockContent($title) {
@@ -116,4 +118,5 @@ class ConfigExportTest extends WebDriverTestBase {
       $this->assertEquals($block_name, $options[$num]->getValue());
     }
   }
+
 }
