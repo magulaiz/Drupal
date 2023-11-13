@@ -1,6 +1,6 @@
 server {
     server_name example.com;
-    root /var/www/drupal8; ## <-- Your only path reference.
+    root /var/www/drupal/web; ## <-- Drupal web-root.
 
     location = /favicon.ico {
         log_not_found off;
@@ -27,6 +27,11 @@ server {
         return 403;
     }
 
+    # Block access to scripts in site files directory
+    location ~ ^/sites/[^/]+/files/.*\.php$ {
+        deny all;
+    }
+
     # Allow "Well-Known URIs" as per RFC 5785
     location ~* ^/.well-known/ {
         allow all;
@@ -40,12 +45,11 @@ server {
     }
 
     location / {
-        # try_files $uri @rewrite; # For Drupal <= 6
-        try_files $uri /index.php?$query_string; # For Drupal >= 7
+        try_files $uri /index.php?$query_string;
     }
 
     location @rewrite {
-        rewrite ^/(.*)$ /index.php?q=$1;
+        rewrite ^ /index.php;
     }
 
     # Don't allow direct access to PHP files in the vendor directory.
@@ -77,10 +81,9 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
         fastcgi_param QUERY_STRING $query_string;
         fastcgi_intercept_errors on;
-        # PHP 5 socket location.
-        #fastcgi_pass unix:/var/run/php5-fpm.sock;
-        # PHP 7 socket location.
-        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+        # PHP 8 socket location.
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+
     }
 
     # Fighting with Styles? This little gem is amazing.
