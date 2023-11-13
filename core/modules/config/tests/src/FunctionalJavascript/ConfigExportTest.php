@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\config\FunctionalJavascript;
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -14,7 +17,7 @@ class ConfigExportTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config', 'system', 'block'];
+  protected static $modules = ['config', 'system', 'block', 'block_content'];
 
   /**
    * {@inheritdoc}
@@ -22,11 +25,62 @@ class ConfigExportTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * @var string $blockNamePrefix
+   *  A prefix string used in naming the test blocks.
+   */
+  protected string $blockNamePrefix = 'aaaaaa_test_block_';
+
+  function setUp(): void {
+    parent::setUp();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access block library',
+      'administer block types',
+      'administer block content',
+    ]));
+
+    // Create test blocks, so we know what the titles will be to check their order.
+    foreach ([1, 2, 3, 4] as $num) {
+      $block_name = $this->blockNamePrefix . $num;
+      $new_block = $this->createBlockContent($block_name);
+      $this->drupalPlaceBlock('block_content:' . $new_block->uuid(), [
+        'id' => $block_name,
+        'label' => $block_name,
+        'theme' => $this->defaultTheme,
+        'region' => 'sidebar_first',
+      ]);
+    }
+  }
+
+  /**
+   * Helper function to create test blocks.
+   *
+   * @param $title
+   *  Title of the block.
+   *
+   * @return \Drupal\block_content\Entity\BlockContent
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createBlockContent($title) {
+    $block_content = BlockContent::create([
+      'info' => $title,
+      'type' => 'basic',
+      'langcode' => 'en',
+    ]);
+    if ($block_content) {
+      $block_content->save();
+    }
+    return $block_content;
+  }
+
+  /**
    * Tests Ajax form functionality on the config export page.
    */
   public function testAjaxOnExportPage() {
     $this->drupalLogin($this->drupalCreateUser([
       'export configuration',
+      'administer blocks',
     ]));
 
     $page = $this->getSession()->getPage();
@@ -53,15 +107,13 @@ class ConfigExportTest extends WebDriverTestBase {
     $this->assertSession()->fieldValueEquals('export', '');
 
     // Check that the 'Configuration name' list is sorted alphabetically by ID, not label.
-    // Options 1 and 4 include the randomly generated username, so use Contains instead of Equals.
-    $page->selectFieldOption('config_type', 'Action');
+    $page->selectFieldOption('config_type', 'Block');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $options = $page->findField('config_name')->findAll('css', 'option');
-    $this->assertStringContainsString('user_add_role_action', $options[1]->getValue());
-    $this->assertEquals('user_block_user_action', $options[2]->getValue());
-    $this->assertEquals('user_cancel_user_action', $options[3]->getValue());
-    $this->assertStringContainsString('user_remove_role_action', $options[4]->getValue());
-    $this->assertEquals('user_unblock_user_action', $options[5]->getValue());
+    foreach ([1, 2, 3, 4] as $num) {
+      $block_name = $this->blockNamePrefix . $num;
+      $this->assertEquals("$block_name ($block_name)", $options[$num]->getText());
+      $this->assertEquals($block_name, $options[$num]->getValue());
+    }
   }
-
 }
