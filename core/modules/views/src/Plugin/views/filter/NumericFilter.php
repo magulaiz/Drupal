@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Views;
 
 /**
  * Simple filter to handle greater than/less than filters.
@@ -359,6 +360,15 @@ class NumericFilter extends FilterPluginBase {
   }
 
   protected function opSimple($field) {
+    // Numeric fields are integers.
+    if (is_array($this->value['value'])) {
+      foreach ($this->value['value'] as &$value) {
+        $value = (int) $value;
+      }
+    }
+    else {
+      $this->value['value'] = (int) $this->value['value'];
+    }
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], $this->operator);
   }
 
