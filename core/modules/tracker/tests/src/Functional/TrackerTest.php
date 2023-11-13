@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\tracker\Functional;
 
-use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
