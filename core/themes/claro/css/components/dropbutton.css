@@ -391,9 +391,9 @@
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   position: relative;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
+  white-space: normal;
   -webkit-text-decoration: none;
   text-decoration: none;
-  white-space: normal;
   color: var(--color-gray-800);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
