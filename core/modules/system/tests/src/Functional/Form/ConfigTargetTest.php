@@ -131,6 +131,24 @@ class ConfigTargetTest extends BrowserTestBase {
       'nemesis_vegetable' => $nemesis_vegetable,
       'could_not_live_without' => 'fruits',
     ], $this->config('form_test.object')->getRawData());
+
+    // Remove the nemesis vegetable; this should cause the deletion of the
+    // `could_not_live_without` property path in the Config object.
+    $this->drupalGet('/form-test/nested-config-target');
+    $page->fillField('First choice', $most_favorite_fruit);
+    $page->fillField('Second choice', $second_favorite_fruit);
+    $page->fillField('Nemesis', '');
+    $page->pressButton('Save configuration');
+    $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
+
+    $this->assertSame([
+      'favorite_fruits' => [
+        $most_favorite_fruit,
+        $second_favorite_fruit,
+      ],
+      'favorite_vegetable' => 'Potato',
+      'nemesis_vegetable' => '',
+    ], $this->config('form_test.object')->getRawData());
   }
 
 }
