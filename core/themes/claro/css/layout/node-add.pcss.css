@@ -18,6 +18,8 @@
     grid-template-rows: auto 1fr;
     grid-template-columns: minmax(calc((100% - 22.5rem) - var(--space-l)) , calc(75% - var(--space-l))) minmax(22.5rem, 25%);
     gap: var(--space-l);
+    max-width: 76rem;
+    margin-inline: auto;
   }
 
   .layout-region--node-main,
