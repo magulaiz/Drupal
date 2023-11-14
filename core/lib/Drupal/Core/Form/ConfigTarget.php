@@ -240,7 +240,7 @@ final class ConfigTarget {
     // ConfigTargetValue enum): apply the appropriate action.
     array_walk($value, fn (mixed $value, string $property) => match ($value) {
       // No-op.
-      ToConfig::NoOp => function (): void {},
+      ToConfig::NoOp => NULL,
       // Delete.
       ToConfig::DeleteKey => $config->clear($property),
       // Set.
