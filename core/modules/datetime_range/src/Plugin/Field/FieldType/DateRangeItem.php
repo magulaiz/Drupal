@@ -165,7 +165,7 @@ class DateRangeItem extends DateTimeItem {
       ->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
-    if (!$this->getFieldDefinition()->isRequired()) {
+    if ($this->getFieldDefinition()->isRequired()) {
       $label = $this->getFieldDefinition()->getLabel();
       // If the end date triggers constraint validation then test the start date.
       $constraints[] = $constraint_manager
