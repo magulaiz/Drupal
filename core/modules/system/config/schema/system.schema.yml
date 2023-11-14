@@ -266,6 +266,8 @@ system.file:
       type: string
       label: 'Default download method'
     path:
+      # Optional since https://www.drupal.org/project/drupal/issues/3039026.
+      requiredKey: false
       type: mapping
       label: 'Path settings'
       mapping:
