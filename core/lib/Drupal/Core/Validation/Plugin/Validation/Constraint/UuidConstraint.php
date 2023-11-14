@@ -18,7 +18,7 @@ class UuidConstraint extends Uuid {
   /**
    * {@inheritdoc}
    */
-  public function validatedBy() {
+  public function validatedBy(): string {
     return UuidValidator::class;
   }
 

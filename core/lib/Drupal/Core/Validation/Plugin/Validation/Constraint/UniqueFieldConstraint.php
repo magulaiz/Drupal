@@ -21,7 +21,7 @@ class UniqueFieldConstraint extends Constraint {
    *
    * @return string
    */
-  public function validatedBy() {
+  public function validatedBy(): string {
     return '\Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator';
   }
 
