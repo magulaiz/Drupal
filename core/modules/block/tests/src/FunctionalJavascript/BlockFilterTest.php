@@ -119,7 +119,8 @@ class BlockFilterTest extends WebDriverTestBase {
       }
     }
 
-    // Add more three blocks with friendly labels containing same word to check if all will be displayed.
+    // Add more three blocks with friendly labels containing same word,
+    // to check if all will be displayed.
     $fakeBlock1 = $this->placeBlock(
       'system_messages_block',
       ['region' => 'content', 'label' => 'a common block label to be displayed']
@@ -134,8 +135,6 @@ class BlockFilterTest extends WebDriverTestBase {
     );
 
     $this->drupalGet('admin/structure/block');
-
-    // Start the tests
     $assertSession = $this->assertSession();
     $session = $this->getSession();
     $page = $session->getPage();
@@ -145,7 +144,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $inputFilter->setValue('this text cant be found');
     $this->assertSession()->waitForText($emptyMessage);
 
-    // Text if any block was displayed
+    // Text if any block was displayed.
     $visibleBlocks = $this->filterVisibleElements($allBlocks);
     $assertSession->assert(count($visibleBlocks) === 0, "Some blocks has been displayed but should not");
 
@@ -169,85 +168,61 @@ class BlockFilterTest extends WebDriverTestBase {
     $assertSession->pageTextContainsOnce($emptyMessage);
 
     // Test each block validating if the regions will be displayed.
-//    foreach ($blockConfig as $blockTest) {
-//      $inputFilter->setValue($blockTest['label']);
-//      $this->assertSession()
-//        ->waitForElementVisible('xpath', "//td[contains(text(), '" . $blockTest['label'] . "')]");
-//      $assertSession->pageTextContains($blockTest['label']);
-//      $assertSession->pageTextContains($blockTest['region']);
-//    }
+    foreach ($blockConfig as $blockTest) {
+      $inputFilter->setValue($blockTest['label']);
+      $this->assertSession()
+        ->waitForElementVisible('xpath', "//td[contains(text(), '" . $blockTest['label'] . "')]");
+      $assertSession->pageTextContains($blockTest['label']);
+      $assertSession->pageTextContains($blockTest['region']);
+    }
 
     // Test drag and drop after any filter applied.
     $inputFilter->setValue('');
-    $this->assertSession()
-      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
     $this->moveBlock($fakeBlock1->id(), 'highlighted');
-//    $this->assertSession()->waitForElementVisible('css', '.test', 5 * 10000);
     $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
-    return;
-
-//    $highlighted = $this->getSession()
-//      ->getPage()
-//      ->find('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-region-highlighted-message"]');
-//    $blockToMove = $this->getSession()
-//      ->getPage()
-//      ->find('css', 'tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
-//    $blockToMove->dragTo($highlighted);
-//    $this->assertEquals(
-//      'highlighted',
-//      $this->getSession()->getPage()->findField('edit-blocks-' . $fakeBlock1->id() . '-region')->getValue(),
-//      "Drupal {$fakeBlock1->id()} should be positioned on highlighted"
-//    );
 
     // Test filter when user changes the region by select element.
     $this->getSession()
       ->getPage()
       ->findField('edit-blocks-' . $fakeBlock1->id() . '-region')
-      ->setValue('sidebar_first');
+      ->setValue('breadcrumb');
     $this->assertSession()
       ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
+
     $this->assertEquals(
-      'sidebar_first',
+      'breadcrumb',
       $this->getSession()->getPage()->findField('edit-blocks-' . $fakeBlock1->id() . '-region')->getValue(),
       "Drupal {$fakeBlock1->id()} should be positioned on left sidebar"
     );
 
-    $this->moveBlock($fakeBlock1->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]');
-    $this->moveBlock($fakeBlock2->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted"]');
-    $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
+    $this->moveBlock($fakeBlock1->id(), 'highlighted');
+    $this->moveBlock($fakeBlock2->id(), 'highlighted');
+    $this->moveBlock($fakeBlock3->id(), 'breadcrumb');
     $inputFilter->setValue('label');
 
     $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
     $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock3->id(), 'help');
+    $this->assertBlockOnRegion($fakeBlock3->id(), 'breadcrumb');
 
-    $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]');
-    $this->assertSession()->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
+    $this->getSession()
+      ->getPage()
+      ->clickLink('Toggle blocks on region breadcrumb');
+
+    $this->moveBlock($fakeBlock3->id(), 'highlighted');
+    $this->moveBlock('claro-breadcrumbs', 'highlighted');
+    $this->assertSession()->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-region-breadcrumbs-message"]');
     $this->assertFalse($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]')->isVisible());
+    $this->assertTrue($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-breadcrumb-message"]')->isVisible());
 
     // Save blocks and test if was saved in the correction region.
     $this->submitForm([], 'Save blocks');
-    $page = $this->getSession()
-      ->getPage();
     $this->assertSession()->pageTextContains('The block settings have been updated.');
     $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
     $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock3->id(), 'help');
+    $this->assertBlockOnRegion($fakeBlock3->id(), 'highlighted');
 
-    // Test move up with filter.
-    $page->find('css', '[data-drupal-selector="edit-search-blocks"]')
-      ->setValue('label');
-    $this->moveBlock($fakeBlock3->id(), 'tr[data-drupal-selector="edit-blocks-region-header-message"]');
-    $this->moveBlock($fakeBlock2->id(), 'tr.region-title-highlighted');
-    $page->find('css', '[data-drupal-selector="edit-search-blocks"]')
-      ->setValue('');
-    // Wait debounce time to make sure that filter was cleaned.
-    $this->getSession()
-      ->wait(210);
-    $this->assertBlockOnRegion($fakeBlock3->id(), 'header');
-    $this->assertBlockOnRegion($fakeBlock2->id(), 'header');
     // Back to the previous theme default to avoid failing other tests.
-//    $this->config('system.theme')->set('default', $defaultTheme)->save();
+    $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
 
   /**
@@ -257,6 +232,7 @@ class BlockFilterTest extends WebDriverTestBase {
    *   An array of node elements.
    *
    * @return \Behat\Mink\Element\NodeElement[]
+   *   The node element.
    */
   protected function filterVisibleElements(array $elements) {
     $elements = array_filter($elements, function (NodeElement $element) {
@@ -332,10 +308,8 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertSession()->waitForElementVisible('css', $dest);
     $destRegion = $this->getSession()
       ->getPage()
-      ->find('css', 'tr[data-drupal-selector="edit-blocks-region-' . $dest . '-message"]');
+      ->find('css', 'tr[data-parent-region="' . $dest . '"]');
     $this->assertNotEmpty($destRegion, 'Destination region ' . $dest . ' does not exists.');
-
-    var_dump($destRegion->getOuterHtml());
 
     $dragRow = '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockId . '"] a.tabledrag-handle';
     $blockToMove = $this->getSession()
