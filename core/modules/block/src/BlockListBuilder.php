@@ -255,8 +255,16 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ],
       ];
 
+      $titleLink = $this->t('Toggle blocks on region @region', ['@region' => $region]);
+      $showFiltered = $this->t('Show filtered');
       $filter = [
-        '#markup' => '<a aria-hidden="true" title="' . $this->t('Toggle blocks on region @region', ["@region" => $region]) . '" aria-pressed="false" href="#" data-toggle-region="' . $region . '" class="button button--small region-filter-control">' . $this->t('Show filtered') . '</a>',
+        '#markup' => '<a
+          aria-hidden="true"
+          title="' . $titleLink . '"
+          aria-pressed="false"
+          href="#"
+          data-toggle-region="' . $region . '"
+          class="button button--small region-filter-control">' . $showFiltered . '</a>',
       ];
 
       $form['region-' . $region]['title'] = [
