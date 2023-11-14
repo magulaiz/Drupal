@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigTarget;
-use Drupal\Core\Form\ConfigTargetValue;
+use Drupal\Core\Form\ToConfig;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -156,10 +156,10 @@ class ConfigTargetTest extends UnitTestCase {
       // (`foo.settings:something`) and that it is presented by the string "Yes"
       // or the string "No" in an <input type=text> in the form.
       fromConfig: fn (bool $something): string => $something ? 'Yes' : 'No',
-      toConfig: fn (string $form_value): ConfigTargetValue|bool => match ($form_value) {
+      toConfig: fn (string $form_value): ToConfig|bool => match ($form_value) {
         'Yes' => TRUE,
-        '<test:noop>' => ConfigTargetValue::NoOp,
-        '<test:delete>' => ConfigTargetValue::DeleteKey,
+        '<test:noop>' => ToConfig::NoOp,
+        '<test:delete>' => ToConfig::DeleteKey,
         default => FALSE,
       },
     );
@@ -169,8 +169,8 @@ class ConfigTargetTest extends UnitTestCase {
     $this->assertTrue(($config_target->toConfig)("Yes"));
     $this->assertFalse(($config_target->toConfig)("No"));
     $this->assertFalse(($config_target->toConfig)("some random string"));
-    $this->assertSame(ConfigTargetValue::NoOp, ($config_target->toConfig)("<test:noop>"));
-    $this->assertSame(ConfigTargetValue::DeleteKey, ($config_target->toConfig)("<test:delete>"));
+    $this->assertSame(ToConfig::NoOp, ($config_target->toConfig)("<test:noop>"));
+    $this->assertSame(ToConfig::DeleteKey, ($config_target->toConfig)("<test:delete>"));
 
     // Now simulate how this will be used in the form, and ensure it results in
     // the expected Config::set() calls.

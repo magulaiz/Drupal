@@ -3,7 +3,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\ConfigTarget;
-use Drupal\Core\Form\ConfigTargetValue;
+use Drupal\Core\Form\ToConfig;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -59,7 +59,7 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
         'favorite_fruits.1',
         fn (?string $second_favorite_fruit) : string => $second_favorite_fruit ?? 'Orange',
         // The "toConfig" callable for the first choice sets all choices.
-        fn () => ConfigTargetValue::NoOp,
+        fn () => ToConfig::NoOp,
       ),
     ];
     $form['could_not_live_without'] = [
@@ -71,18 +71,18 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'could_not_live_without',
-        toConfig: function (string $could_not_live_without, FormStateInterface $form_state): ConfigTargetValue|string {
+        toConfig: function (string $could_not_live_without, FormStateInterface $form_state): ToConfig|string {
           if (empty($form_state->getValue(['favorites', 'first']))) {
-            return ConfigTargetValue::DeleteKey;
+            return ToConfig::DeleteKey;
           }
           if (empty($form_state->getValue(['favorites', 'second']))) {
-            return ConfigTargetValue::DeleteKey;
+            return ToConfig::DeleteKey;
           }
           if (empty($form_state->getValue(['vegetables', 'favorite']))) {
-            return ConfigTargetValue::DeleteKey;
+            return ToConfig::DeleteKey;
           }
           if (empty($form_state->getValue(['vegetables', 'nemesis']))) {
-            return ConfigTargetValue::DeleteKey;
+            return ToConfig::DeleteKey;
           }
           return $could_not_live_without;
         },

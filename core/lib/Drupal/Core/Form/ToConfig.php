@@ -7,7 +7,7 @@ namespace Drupal\Core\Form;
 /**
  * Enumeration of the special possible return values for toConfig callables.
  */
-enum ConfigTargetValue {
+enum ToConfig {
 
   // Appropriate to return from a toConfig callable when another toConfig
   // callable handles setting this property path. In other words: "no-op".
