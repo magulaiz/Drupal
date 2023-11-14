@@ -1714,7 +1714,7 @@
 
       const allUniqueBundleIds = response.data.map(function (style) {
         const uniqueBundleId = style.href + ajax.instanceIndex;
-        // Force treat file as CSS stylesheet using 'css!' flag.
+        // Force file to load as a CSS stylesheet using 'css!' flag.
         loadjs(`css!${style.href}`, uniqueBundleId, {
           before(path, styleEl) {
             // This allows all attributes to be added, like media.
