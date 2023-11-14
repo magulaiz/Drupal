@@ -158,7 +158,7 @@ class ConfigTargetTest extends UnitTestCase {
       fromConfig: fn (bool $something): string => $something ? 'Yes' : 'No',
       toConfig: fn (string $form_value): ConfigTargetValue|bool => match ($form_value) {
         'Yes' => TRUE,
-        '<test:noop>' => ConfigTargetValue::NoMapping,
+        '<test:noop>' => ConfigTargetValue::NoOp,
         '<test:delete>' => ConfigTargetValue::DeleteKey,
         default => FALSE,
       },
@@ -169,7 +169,7 @@ class ConfigTargetTest extends UnitTestCase {
     $this->assertTrue(($config_target->toConfig)("Yes"));
     $this->assertFalse(($config_target->toConfig)("No"));
     $this->assertFalse(($config_target->toConfig)("some random string"));
-    $this->assertSame(ConfigTargetValue::NoMapping, ($config_target->toConfig)("<test:noop>"));
+    $this->assertSame(ConfigTargetValue::NoOp, ($config_target->toConfig)("<test:noop>"));
     $this->assertSame(ConfigTargetValue::DeleteKey, ($config_target->toConfig)("<test:delete>"));
 
     // Now simulate how this will be used in the form, and ensure it results in
