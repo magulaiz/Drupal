@@ -43,7 +43,7 @@ class ValidKeysConstraint extends Constraint {
    *
    * @var string
    */
-  public string $dynamicRequiredKeyMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
+  public string $dynamicMissingRequiredKeyMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
 
   /**
    * The error message if the array being validated is a list.

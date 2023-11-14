@@ -154,7 +154,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests ValidKeys detecting missing dynamically required keys.
    *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicRequiredKeyMessage
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMissingRequiredKeyMessage
    */
   public function testDynamicallyRequiredKeys(): void {
     // Start from the valid config.

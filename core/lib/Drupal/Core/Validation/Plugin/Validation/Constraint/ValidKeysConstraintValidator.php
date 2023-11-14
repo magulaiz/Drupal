@@ -86,7 +86,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     $dynamically_required_keys = array_intersect($required_keys, $dynamically_valid_keys);
     $missing_dynamically_required_keys = array_diff($dynamically_required_keys, array_keys($value));
     foreach ($missing_dynamically_required_keys as $key) {
-      $this->context->addViolation($constraint->dynamicRequiredKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
+      $this->context->addViolation($constraint->dynamicMissingRequiredKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
     }
   }
 
