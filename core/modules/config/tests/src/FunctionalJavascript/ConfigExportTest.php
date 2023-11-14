@@ -26,7 +26,7 @@ class ConfigExportTest extends WebDriverTestBase {
    * @var string
    *  A prefix string used in naming the test blocks.
    */
-  protected string $blockNamePrefix = 'aaaaaa_test_block_';
+  protected string $blockNamePrefix = 'aaaaaa_config_export_test_block';
 
   /**
    * {@inheritdoc}
@@ -68,7 +68,6 @@ class ConfigExportTest extends WebDriverTestBase {
     $block_content = BlockContent::create([
       'info' => $title,
       'type' => 'basic',
-      'langcode' => 'en',
     ]);
     if ($block_content) {
       $block_content->save();
