@@ -410,6 +410,8 @@ class NumericFilter extends FilterPluginBase {
     elseif (isset($this->options['expose']['identifier'])) {
       $identifier = $this->options['expose']['identifier'];
     }
+    
+    $rc = parent::acceptExposedInput($input);
 
     // rewrite the input value so that it's in the correct format so that
     // the parent gets the right data.
@@ -421,8 +423,6 @@ class NumericFilter extends FilterPluginBase {
         ];
       }
     }
-
-    $rc = parent::acceptExposedInput($input);
 
     if (empty($this->options['expose']['required'])) {
       // We have to do some of our own checking for non-required filters.
