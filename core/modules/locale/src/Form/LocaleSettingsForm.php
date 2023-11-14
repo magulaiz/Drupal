@@ -5,6 +5,7 @@ namespace Drupal\locale\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\locale\TranslationOverrideType;
 
 /**
  * Configure locale settings for this site.
@@ -64,22 +65,22 @@ class LocaleSettingsForm extends ConfigFormBase {
     ];
 
     if ($config->get('translation.overwrite_not_customized') == FALSE) {
-      $default = LOCALE_TRANSLATION_OVERWRITE_NONE;
+      $default = TranslationOverrideType::None->value;
     }
     elseif ($config->get('translation.overwrite_customized') == TRUE) {
-      $default = LOCALE_TRANSLATION_OVERWRITE_ALL;
+      $default = TranslationOverrideType::All->value;
     }
     else {
-      $default = LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED;
+      $default = TranslationOverrideType::NonCustomized->value;
     }
     $form['overwrite'] = [
       '#type' => 'radios',
       '#title' => $this->t('Import behavior'),
       '#default_value' => $default,
       '#options' => [
-        LOCALE_TRANSLATION_OVERWRITE_NONE => $this->t("Don't overwrite existing translations."),
-        LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED => $this->t('Only overwrite imported translations, customized translations are kept.'),
-        LOCALE_TRANSLATION_OVERWRITE_ALL => $this->t('Overwrite existing translations.'),
+        TranslationOverrideType::None->value => $this->t("Don't overwrite existing translations."),
+        TranslationOverrideType::NonCustomized->value => $this->t('Only overwrite imported translations, customized translations are kept.'),
+        TranslationOverrideType::All->value => $this->t('Overwrite existing translations.'),
       ],
       '#description' => $this->t('How to treat existing translations when automatically updating the interface translations.'),
     ];
@@ -109,21 +110,21 @@ class LocaleSettingsForm extends ConfigFormBase {
     $config->set('translation.use_source', $values['use_source'])->save();
 
     switch ($values['overwrite']) {
-      case LOCALE_TRANSLATION_OVERWRITE_ALL:
+      case TranslationOverrideType::All->value:
         $config
           ->set('translation.overwrite_customized', TRUE)
           ->set('translation.overwrite_not_customized', TRUE)
           ->save();
         break;
 
-      case LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED:
+      case TranslationOverrideType::NonCustomized->value:
         $config
           ->set('translation.overwrite_customized', FALSE)
           ->set('translation.overwrite_not_customized', TRUE)
           ->save();
         break;
 
-      case LOCALE_TRANSLATION_OVERWRITE_NONE:
+      case TranslationOverrideType::None->value:
         $config
           ->set('translation.overwrite_customized', FALSE)
           ->set('translation.overwrite_not_customized', FALSE)
