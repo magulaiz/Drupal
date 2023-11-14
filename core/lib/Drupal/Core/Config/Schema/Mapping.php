@@ -43,6 +43,9 @@ class Mapping extends ArrayElement {
   /**
    * Gets all required keys in this mapping.
    *
+   * Keys are required by default, they can opt out by specifying
+   * `requiredKey: false`. Deprecated keys are also treated as optional.
+   *
    * @return string[]
    *   A list of required keys given the values in this mapping.
    */
@@ -50,7 +53,7 @@ class Mapping extends ArrayElement {
     $all_keys = $this->getDefinedKeys();
     $required_keys = array_filter(
       $all_keys,
-      fn (array $raw_schema_definition) => !array_key_exists('requiredKey', $raw_schema_definition),
+      fn (array $raw_schema_definition) => !array_key_exists('requiredKey', $raw_schema_definition) && !array_key_exists('deprecated', $raw_schema_definition),
     );
     return array_keys($required_keys);
   }
