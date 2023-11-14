@@ -110,7 +110,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
     $field_name = $this->fieldStorage->getName();
 
     $this->field->setSettings([
-      'optional_end_date' => FALSE,
+      'optional_values' => DateRangeItem::OPTIONAL_NONE,
     ])
       ->save();
 
@@ -126,7 +126,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
     $this->assertNotEquals(count($entity->validate()), 0);
 
     // Verify entity with the optional_end_date enabled.
-    $this->field->setSetting('optional_end_date', TRUE)
+    $this->field->setSetting('optional_values', DateRangeItem::OPTIONAL_END)
       ->save();
     $entity = EntityTest::create([
       'name' => $this->randomString(),

@@ -29,7 +29,7 @@ class DateRangeItem extends DateTimeItem {
    */
   public static function defaultFieldSettings() {
     return [
-      'optional_end_date' => FALSE,
+      'optional_values' => FALSE,
     ] + parent::defaultFieldSettings();
   }
 
@@ -37,6 +37,16 @@ class DateRangeItem extends DateTimeItem {
    * Value for the 'datetime_type' setting: store a date and time.
    */
   const DATETIME_TYPE_ALLDAY = 'allday';
+
+  /**
+   * Optional values setting, require a bounded datetime range.
+   */
+  const OPTIONAL_NONE = 0x01;
+
+  /**
+   * Optional values setting, do not require an end date.
+   */
+  const OPTIONAL_END = 0x02;
 
   /**
    * {@inheritdoc}
@@ -89,11 +99,15 @@ class DateRangeItem extends DateTimeItem {
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $element = [];
-    $element['optional_end_date'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Optional end date'),
-      '#description' => $this->t('Allow end date to be optional opposed to the default behaviour where end date is required when "Required field" is checked.'),
-      '#default_value' => $this->getSetting('optional_end_date'),
+    $element['optional_values'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('End date'),
+      '#description' => $this->t('Applies regardless of whether the whole field is required'),
+      '#default_value' => $this->getSetting('optional_values'),
+      '#options' => [
+        static::OPTIONAL_NONE => $this->t('Required'),
+        static::OPTIONAL_END => $this->t('Optional end date'),
+      ],
     ];
 
     return $element;
@@ -151,19 +165,29 @@ class DateRangeItem extends DateTimeItem {
       ->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
-    if (!empty($this->getSetting('optional_end_date'))) {
-      return $constraints;
-    }
-
-    $label = $this->getFieldDefinition()->getLabel();
-    $constraints[] = $constraint_manager
-      ->create('ComplexData', [
-        'end_value' => [
-          'NotNull' => [
-            'message' => $this->t('The @title end date is required', ['@title' => $label]),
+    if (!$this->getFieldDefinition()->isRequired()) {
+      $label = $this->getFieldDefinition()->getLabel();
+      // If the end date triggers constraint validation then test the start date.
+      $constraints[] = $constraint_manager
+        ->create('ComplexData', [
+          'value' => [
+            'NotNull' => [
+              'message' => $this->t('The @title start date is required', ['@title' => $label]),
+            ],
           ],
-        ],
-      ]);
+        ]);
+      // Testing the end date is only needed if not required and not optional.
+      if ($this->getSetting('optional_values') == static::OPTIONAL_NONE) {
+        $constraints[] = $constraint_manager
+          ->create('ComplexData', [
+            'end_value' => [
+              'NotNull' => [
+                'message' => $this->t('The @title end date is required', ['@title' => $label]),
+              ],
+            ],
+          ]);
+      }
+    }
 
     return $constraints;
   }
