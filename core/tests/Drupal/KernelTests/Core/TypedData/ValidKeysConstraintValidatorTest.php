@@ -91,7 +91,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests ValidKeys constraint validator detecting missing required keys.
    *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$requiredKeyMessage
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$missingRequiredKeyMessage
    */
   public function testRequiredKeys(): void {
     // Start from the valid config.

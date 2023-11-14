@@ -80,7 +80,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
     $missing_keys = array_diff($statically_required_keys, array_keys($value));
     foreach ($missing_keys as $key) {
-      $this->context->addViolation($constraint->requiredKeyMessage, ['@key' => $key]);
+      $this->context->addViolation($constraint->missingRequiredKeyMessage, ['@key' => $key]);
     }
     // Dynamically required: required here but not for all resolved types.
     $dynamically_required_keys = array_intersect($required_keys, $dynamically_valid_keys);

@@ -85,7 +85,8 @@ class Mapping extends ArrayElement {
    *     are supported for this resolved type
    */
   public function getDynamicallyValidKeys(): array {
-    if ($this->getParent() === NULL) {
+    $parent_data_def = $this->getParent()?->getDataDefinition();
+    if ($parent_data_def === NULL) {
       return [];
     }
 
@@ -93,7 +94,6 @@ class Mapping extends ArrayElement {
     // f.e.:
     // 1. `type: editor.settings.[%parent.editor]`
     // 2. `type: editor.image_upload_settings.[status]`.
-    $parent_data_def = $this->getParent()->getDataDefinition();
     $original_mapping_type = match (TRUE) {
       $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$this->getName()]['type'],
       $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
@@ -101,7 +101,7 @@ class Mapping extends ArrayElement {
     };
 
     // If the original mapping type is not dynamic, there's no additional work.
-    if (strpos($original_mapping_type, ']') === FALSE) {
+    if (!str_contains($original_mapping_type, ']')) {
       return [];
     }
 
@@ -113,7 +113,7 @@ class Mapping extends ArrayElement {
     // actually be used to determine the type.
     // Explained by examples:
     // - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no information
-    //   stored somewhere: the chosen key (in a sequence) determines the type.
+    //   stored elsewhere: the chosen key (in a sequence) determines the type.
     // - third party settings use '[%parent.%parent.%type].third_party.[%key]',
     //   but the first variable value only causes the config entity type (at the
     //   root) to be inherited (f.e. 'node.type.third_party.[%key]').

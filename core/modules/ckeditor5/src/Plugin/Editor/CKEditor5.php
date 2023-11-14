@@ -713,7 +713,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
       // This handles CKEditor 5 plugin settings violations, not violations in
       // generic Text Editor or Text Format parts.
-      if (!str_starts_with($violation->getPropertyPath(), 'settings')) {
+      if (!str_starts_with($violation->getPropertyPath(), 'settings.')) {
         continue;
       }
 

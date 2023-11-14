@@ -25,7 +25,7 @@ class ValidKeysConstraint extends Constraint {
   public string $invalidKeyMessage = "'@key' is not a supported key.";
 
   /**
-   * The error message if a key is valid but unknown for the resolved type.
+   * The error message if a key is unknown for the resolved type.
    *
    * @var string
    */
@@ -36,7 +36,7 @@ class ValidKeysConstraint extends Constraint {
    *
    * @var string
    */
-  public string $requiredKeyMessage = "'@key' is a required key.";
+  public string $missingRequiredKeyMessage = "'@key' is a required key.";
 
   /**
    * The error message if a dynamically required key is missing.
