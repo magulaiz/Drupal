@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Form;
 
 /**
- * Enumeration of the special possible return values for toConfig callables.
+ * Enumeration of the special return values for ConfigTarget toConfig callables.
+ *
+ * @see \Drupal\Core\Form\ConfigTarget
  */
 enum ToConfig {
 

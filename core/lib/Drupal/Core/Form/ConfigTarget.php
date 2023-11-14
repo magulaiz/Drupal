@@ -9,6 +9,8 @@ use Drupal\Core\Config\Config;
 
 /**
  * Represents the mapping of a config property to a form element.
+ *
+ * @see \Drupal\Core\Form\ToConfig
  */
 final class ConfigTarget {
 
