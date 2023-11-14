@@ -15,6 +15,13 @@ use Drupal\KernelTests\KernelTestBase;
 class MappingTest extends KernelTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $configSchemaCheckerExclusions = [
+    'config_schema_deprecated_test.settings',
+  ];
+
+  /**
    * @dataProvider providerMappingInterpretation
    */
   public function testMappingInterpretation(
