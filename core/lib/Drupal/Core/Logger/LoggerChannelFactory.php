@@ -2,14 +2,15 @@
 
 namespace Drupal\Core\Logger;
 
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Drupal\Core\DependencyInjection\ContainerAwareTrait;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Defines a factory for logging channels.
  */
 class LoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAwareInterface {
+
   use ContainerAwareTrait;
 
   /**
@@ -36,7 +37,7 @@ class LoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAw
       // If we have a container set the request_stack and current_user services
       // on the channel. It is up to the channel to determine if there is a
       // current request.
-      if ($this->container) {
+      if (isset($this->container)) {
         $instance->setRequestStack($this->container->get('request_stack'));
         $instance->setCurrentUser($this->container->get('current_user'));
       }
