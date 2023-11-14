@@ -250,9 +250,9 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForElementRemoved('xpath', $default_input_2->getXpath());
     // Ensure the first input retains its value.
-    $this->assertTrue($assert_session->waitForText('There can be only one!'));
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
-    $cardinality->setValue(2);
+    $this->assertNotNull($assert_session->fieldExists('field_storage[subform][cardinality_number]'));
+    $cardinality->setValue('2');
     $assert_session->waitForField($default_input_2_name);
     // Ensure when the second input is added again it does not retain its value.
     $assert_session->fieldValueEquals($default_input_2_name, '');
