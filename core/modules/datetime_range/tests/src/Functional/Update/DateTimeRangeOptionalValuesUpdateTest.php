@@ -2,16 +2,17 @@
 
 namespace Drupal\Tests\datetime_range\Functional\Update;
 
+use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests that optional_end_date config is added in daterange field settings.
+ * Tests that optional_values config is added in daterange field settings.
  *
  * @group Update
  * @group legacy
- * @covers \datetime_range_post_update_add_optional_end_date
+ * @covers \datetime_range_post_update_add_optional_values
  */
-class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase {
+class DateTimeRangeOptionalValuesUpdateTest extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}
@@ -25,19 +26,19 @@ class DateTimeRangeOptionalEndDateUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests that optional_end_date config is added in daterange field settings.
+   * Tests that optional_values config is added in daterange field settings.
    *
-   * @see datetime_range_post_update_add_optional_end_date()
+   * @see datetime_range_post_update_add_optional_values()
    */
-  public function testOptionalEndDateAddedAfterUpdate() {
+  public function testOptionalValuesAddedAfterUpdate() {
     $field_settings = $this->config('field.field.node.page.field_date_range')->get('settings');
-    $this->assertArrayNotHasKey('optional_end_date', $field_settings);
+    $this->assertArrayNotHasKey('optional_values', $field_settings);
 
     $this->runUpdates();
 
     $field_settings = $this->config('field.field.node.page.field_date_range')->get('settings');
-    $this->assertArrayHasKey('optional_end_date', $field_settings);
-    $this->assertFalse($field_settings['optional_end_date']);
+    $this->assertArrayHasKey('optional_values', $field_settings);
+    $this->assertSame(DateRangeItem::OPTIONAL_NONE, $field_settings['optional_values']);
   }
 
 }

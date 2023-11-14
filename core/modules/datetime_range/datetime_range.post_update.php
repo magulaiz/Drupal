@@ -5,6 +5,8 @@
  * Post-update functions for Datetime Range module.
  */
 
+use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -16,9 +18,9 @@ function datetime_range_removed_post_updates() {
 }
 
 /**
- * Adds optional_end_date config in daterange field settings.
+ * Adds optional_values config in daterange field settings.
  */
-function datetime_range_post_update_add_optional_end_date() {
+function datetime_range_post_update_add_optional_values() {
   $config_factory = \Drupal::configFactory();
   foreach ($config_factory->listAll('field.field.') as $field_settings) {
     $field_config = $config_factory->getEditable($field_settings);
@@ -26,8 +28,8 @@ function datetime_range_post_update_add_optional_end_date() {
       continue;
     }
     $settings = $field_config->get('settings');
-    if (!isset($settings['optional_end_date'])) {
-      $settings['optional_end_date'] = FALSE;
+    if (!isset($settings['optional_values'])) {
+      $settings['optional_values'] = DateRangeItem::OPTIONAL_NONE;
     }
     $field_config->set('settings', $settings);
 
