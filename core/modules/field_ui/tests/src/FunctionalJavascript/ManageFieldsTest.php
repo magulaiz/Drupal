@@ -250,6 +250,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForElementRemoved('xpath', $default_input_2->getXpath());
     // Ensure the first input retains its value.
+    $this->assertTrue($assert_session->waitForText('There can be only one!'));
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
     $cardinality->setValue(2);
     $assert_session->waitForField($default_input_2_name);
@@ -271,7 +272,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Save');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved ' . $field_name . ' configuration.'));
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('string', $field_storage->getType());
 

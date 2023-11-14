@@ -229,9 +229,10 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $this->assertNotNull($assert_session->waitForElement('css', "[name='field_storage[subform][settings][allowed_values][table][1][item][label]']"));
     $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->optionExists('default_value_input[field_test_string_list]', 'second');
-    $page->selectFieldOption('default_value_input[field_test_string_list]', 'second');
-    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+    $assert_session->waitForElement('css', '[data_selector="edit-default-value-input-field-test-string-list"]');
+    $this->getSession()->getPage()->selectFieldOption('default_value_input[field_test_string_list]', 'second');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonset');
+    $buttons->pressButton('Save');
     $this->assertTrue($assert_session->waitForText('Saved Test string list configuration.'));
 
     // Create a field of type list:integer.
@@ -242,10 +243,13 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $assert_session->statusMessageNotContains('Value field is required.');
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue(1);
     $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->waitForText('Set default value'));
+    $assert_session->waitForField('set_default_value');
     $page->findField('set_default_value')->setValue(TRUE);
+    $assert_session->checkboxChecked('set_default_value');
     // Assert that the option added in the subform is available to the default
     // value field.
-    $this->assertSession()->optionExists('default_value_input[field_test_int_list]', 'first');
+    $this->assertTrue($assert_session->waitForElement('css', '[data_selector="edit-default-value-input-field-test-int-list"]'));
     $page->selectFieldOption('default_value_input[field_test_int_list]', 'first');
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
     $this->assertTrue($assert_session->waitForText('Saved Test int list configuration.'));
