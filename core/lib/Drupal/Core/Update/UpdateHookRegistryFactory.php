@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Update;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Drupal\Core\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Service factory for the versioning update registry.

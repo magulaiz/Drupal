@@ -2,7 +2,8 @@
 
 namespace Drupal\Core\StackMiddleware;
 
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Drupal\Core\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * premature initialization of session storage (database). Instead the session
  * service is retrieved from the container only when handling the request.
  */
-class Session implements HttpKernelInterface {
+class Session implements HttpKernelInterface, ContainerAwareInterface {
 
   use ContainerAwareTrait;
 

@@ -34,14 +34,14 @@ class ImmutablePropertiesConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOption() {
+  public function getDefaultOption(): ?string {
     return 'properties';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['properties'];
   }
 

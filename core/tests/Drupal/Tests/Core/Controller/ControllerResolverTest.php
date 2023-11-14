@@ -4,13 +4,13 @@ namespace Drupal\Tests\Core\Controller;
 
 use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Drupal\Core\DependencyInjection\ContainerAwareTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -220,6 +220,7 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
 }
 class MockContainerAware implements ContainerAwareInterface {
+
   use ContainerAwareTrait;
 
   public function getResult() {

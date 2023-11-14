@@ -35,7 +35,7 @@ class ToolbarItemDependencyConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['toolbarItem'];
   }
 

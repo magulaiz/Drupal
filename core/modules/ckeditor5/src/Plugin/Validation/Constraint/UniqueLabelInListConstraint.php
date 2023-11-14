@@ -35,7 +35,7 @@ class UniqueLabelInListConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['labelKey'];
   }
 

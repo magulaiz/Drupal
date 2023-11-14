@@ -27,7 +27,7 @@ class EmailConstraint extends Email {
   /**
    * {@inheritdoc}
    */
-  public function validatedBy() {
+  public function validatedBy(): string {
     return EmailValidator::class;
   }
 

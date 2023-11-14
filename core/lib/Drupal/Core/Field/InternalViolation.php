@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field;
 
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -128,6 +129,20 @@ final class InternalViolation implements ConstraintViolationInterface {
    */
   public function getCode(): ?string {
     return $this->violation->getCode();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCause(): mixed {
+    return $this->violation->getCause();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraint(): ?Constraint {
+    return $this->violation->getConstraint();
   }
 
 }

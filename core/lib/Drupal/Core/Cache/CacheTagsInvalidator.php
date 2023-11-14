@@ -3,12 +3,13 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Component\Assertion\Inspector;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Drupal\Core\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Passes cache tag events to classes that wish to respond to them.
  */
-class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
+class CacheTagsInvalidator implements CacheTagsInvalidatorInterface, ContainerAwareInterface {
 
   use ContainerAwareTrait;
 

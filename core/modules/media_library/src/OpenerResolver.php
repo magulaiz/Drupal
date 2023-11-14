@@ -2,7 +2,8 @@
 
 namespace Drupal\media_library;
 
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Drupal\Core\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Defines a class to get media library openers from the container.
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *   This service is an internal part of the modal media library dialog and
  *   does not provide any extension points or public API.
  */
-class OpenerResolver implements OpenerResolverInterface {
+class OpenerResolver implements OpenerResolverInterface, ContainerAwareInterface {
 
   use ContainerAwareTrait;
 
