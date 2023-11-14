@@ -52,6 +52,7 @@ function book_help($route_name, RouteMatchInterface $route_match) {
 
   // Change here.
   $this_does_nothing = 1;
+  $this_does_nothing++;
 }
 
 /**
