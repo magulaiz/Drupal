@@ -38,7 +38,7 @@ class DateRangeFormatterTest extends DateTestBase {
    */
   public function testMissingEndDate() {
     $field_name = $this->fieldStorage->getName();
-    $this->field->setSetting('optional_end_date', TRUE)->save();
+    $this->field->setSetting('optional_values', DateRangeItem::OPTIONAL_END)->save();
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE)->save();
 
     // Add new entity with start date only.

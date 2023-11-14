@@ -59,7 +59,7 @@ class DateRangeWidgetTest extends DateTestBase {
     ]);
     $field->save();
 
-    $field->setSetting('optional_end_date', TRUE)->save();
+    $field->setSetting('optional_values', DateRangeItem::OPTIONAL_END)->save();
 
     \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'daterange_content')
