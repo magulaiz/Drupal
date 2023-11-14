@@ -106,7 +106,7 @@ class DateRangeItem extends DateTimeItem {
       '#default_value' => $this->getSetting('optional_values'),
       '#options' => [
         static::OPTIONAL_NONE => $this->t('Required'),
-        static::OPTIONAL_END => $this->t('Optional end date'),
+        static::OPTIONAL_END => $this->t('Optional'),
       ],
     ];
 
