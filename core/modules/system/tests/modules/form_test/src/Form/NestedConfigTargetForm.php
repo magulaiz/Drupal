@@ -53,7 +53,7 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
     ];
     $form['favorites']['second'] = [
       '#type' => 'textfield',
-      '#title' => t('Second choice'),
+      '#title' => 'Second choice',
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'favorite_fruits.1',
