@@ -211,18 +211,12 @@ yarn >/dev/null
 # Check all files for spelling in one go for better performance.
 if [[ $CSPELL_DICTIONARY_FILE_CHANGED == "1" ]] ; then
   printf "\nRunning spellcheck on *all* files.\n"
-<<<<<<< HEAD
-  yarn run -s spellcheck:core --no-must-find-files --no-progress
+  yarn run spellcheck:core --no-must-find-files --no-progress --root $TOP_LEVEL $ABS_FILES >/dev/null
 else
   # Check all files for spelling in one go for better performance. We pipe the
   # list files in so we obey the globs set on the spellcheck:core command in
   # core/package.json.
-  echo "${ABS_FILES}" | tr ' ' '\n' | yarn run -s spellcheck:core --no-must-find-files --file-list stdin
-=======
-  yarn run spellcheck:core --no-must-find-files --root $TOP_LEVEL $ABS_FILES >/dev/null
-else
-  yarn run spellcheck --no-must-find-files --root $TOP_LEVEL $ABS_FILES >/dev/null
->>>>>>> 2421321cf7 (Fixed commit-code-check)
+  echo "${ABS_FILES}" | tr ' ' '\n' | yarn run -s spellcheck:core --no-must-find-files --root --file-list $TOP_LEVEL $ABS_FILES >/dev/null stdin
 fi
 
 if [ "$?" -ne "0" ]; then
