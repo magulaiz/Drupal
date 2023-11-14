@@ -4,7 +4,7 @@
   "license": "GPL-2.0",
   "private": true,
   "engines": {
-    "yarn": ">= 4.0.0-rc.50",
+    "yarn": ">= 4.0.2",
     "node": ">= 18.12"
   },
   "scripts": {
@@ -119,5 +119,5 @@
     "last 1 Samsung version",
     "Firefox ESR"
   ],
-  "packageManager": "yarn@4.0.0-rc.50"
+  "packageManager": "yarn@4.0.2"
 }
