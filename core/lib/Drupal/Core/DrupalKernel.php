@@ -673,11 +673,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function terminate(Request $request, Response $response) {
+  public function terminate(Request $request, Response $response): void {
     // Only run terminate() when essential services have been set up properly
     // by preHandle() before.
     if (FALSE === $this->prepared) {
@@ -1588,7 +1585,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // TrustedHostsRequestFactory makes sure to pass in the server variables
       // from the main request.
       $request_factory = new TrustedHostsRequestFactory($host);
-      Request::setFactory([$request_factory, 'createRequest']);
+      Request::setFactory($request_factory->createRequest(...));
 
     }
     catch (\UnexpectedValueException $e) {
