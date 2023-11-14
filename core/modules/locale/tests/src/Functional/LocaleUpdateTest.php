@@ -4,6 +4,7 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\locale\TranslationOverrideType;
 
 /**
  * Tests for updating the interface translations of projects.
@@ -123,7 +124,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Set the update conditions for this test.
     $edit = [
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
-      'overwrite' => LOCALE_TRANSLATION_OVERWRITE_ALL,
+      'overwrite' => TranslationOverrideType::All->value,
     ];
     $this->drupalGet('admin/config/regional/translate/settings');
     $this->submitForm($edit, 'Save configuration');
@@ -194,7 +195,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Set the update conditions for this test.
     $edit = [
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_LOCAL,
-      'overwrite' => LOCALE_TRANSLATION_OVERWRITE_ALL,
+      'overwrite' => TranslationOverrideType::All->value,
     ];
     $this->drupalGet('admin/config/regional/translate/settings');
     $this->submitForm($edit, 'Save configuration');
@@ -254,7 +255,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Set the test conditions.
     $edit = [
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
-      'overwrite' => LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED,
+      'overwrite' => TranslationOverrideType::NonCustomized->value,
     ];
     $this->drupalGet('admin/config/regional/translate/settings');
     $this->submitForm($edit, 'Save configuration');
@@ -294,7 +295,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Set the test conditions.
     $edit = [
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
-      'overwrite' => LOCALE_TRANSLATION_OVERWRITE_NONE,
+      'overwrite' => TranslationOverrideType::None->value,
     ];
     $this->drupalGet('admin/config/regional/translate/settings');
     $this->submitForm($edit, 'Save configuration');
