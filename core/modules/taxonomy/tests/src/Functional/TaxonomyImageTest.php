@@ -5,6 +5,7 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Tests image upload on taxonomy terms.
@@ -19,11 +20,11 @@ class TaxonomyImageTest extends TaxonomyTestBase {
   }
 
   /**
-   * Used taxonomy vocabulary.
+   * The taxonomy vocabulary used for the test.
    *
    * @var \Drupal\taxonomy\VocabularyInterface
    */
-  protected $vocabulary;
+  protected VocabularyInterface $vocabulary;
 
   /**
    * {@inheritdoc}
@@ -68,14 +69,14 @@ class TaxonomyImageTest extends TaxonomyTestBase {
   /**
    * Tests that a file can be uploaded before the taxonomy term has a name.
    */
-  public function testTaxonomyImageUpload() {
+  public function testTaxonomyImageUpload(): void {
     $user = $this->drupalCreateUser(['administer taxonomy']);
     $this->drupalLogin($user);
 
     $files = $this->drupalGetTestFiles('image');
     $image = array_pop($files);
 
-    // Ensure that file can be uploaded before taxonomy term has a name.
+    // Ensure that a file can be uploaded before taxonomy term has a name.
     $edit = [
       'files[field_test_0]' => \Drupal::service('file_system')->realpath($image->uri),
     ];
