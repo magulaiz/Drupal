@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autowire: true
   migrate.plugin_event_subscriber:
     class: Drupal\migrate\Plugin\PluginEventSubscriber
     tags:
@@ -34,9 +36,7 @@ services:
   Drupal\migrate\MigrateBuildDependencyInterface: '@plugin.manager.migration'
   migrate.lookup:
     class: Drupal\migrate\MigrateLookup
-    arguments: ['@plugin.manager.migration']
   Drupal\migrate\MigrateLookupInterface: '@migrate.lookup'
   migrate.stub:
     class: Drupal\migrate\MigrateStub
-    arguments: ['@plugin.manager.migration']
   Drupal\migrate\MigrateStubInterface: '@migrate.stub'

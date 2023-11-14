@@ -122,4 +122,51 @@ class AutowireTest extends KernelTestBase {
     $this->assertSame($expected, array_intersect($expected, $aliases), sprintf('The following core services do not have map the class name to an alias. Add the following to core.services.yml in the appropriate place: %s%s%s', \PHP_EOL, \PHP_EOL, $formatted));
   }
 
+  /**
+   * Tests that core services are autowired where possible.
+   */
+  public function testCoreAutowiring(): void {
+    $services = [];
+    $aliases = [];
+    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
+    foreach (array_filter($filenames, 'file_exists') as $filename) {
+      foreach (Yaml::decode(file_get_contents($filename))['services'] as $id => $service) {
+        if (is_string($service)) {
+          $aliases[$id] = substr($service, 1);
+        }
+        elseif (isset($service['class']) && isset($service['arguments'])) {
+          $services[$id] = $service;
+        }
+      }
+    }
+
+    $autowire = [];
+    foreach ($services as $id => $service) {
+      if ($id === 'cache_tags.invalidator.checksum') {
+        // @todo Autowiring this breaks ServiceProviderTest.
+        continue;
+      }
+
+      if (!method_exists($service['class'], '__construct')) {
+        continue;
+      }
+
+      $constructor = new \ReflectionMethod($service['class'], '__construct');
+      foreach ($constructor->getParameters() as $pos => $parameter) {
+        $interface = (string) $parameter->getType();
+        if (!isset($aliases[$interface])) {
+          // There is no service to autowire.
+          continue 2;
+        }
+        if ($aliases[$interface] !== substr($service['arguments'][$pos], 1)) {
+          // The service is different.
+          continue 2;
+        }
+      }
+      $autowire[] = $id;
+    }
+
+    $this->assertEmpty($autowire, 'The following core services can be autowired. Remove their arguments from the services.yml file:' . PHP_EOL . implode(PHP_EOL, $autowire));
+  }
+
 }
