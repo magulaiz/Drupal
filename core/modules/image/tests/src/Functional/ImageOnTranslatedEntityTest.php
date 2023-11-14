@@ -243,23 +243,23 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     // Enable translation for "Basic page" nodes.
     $edit = [
       'entity_types[node]' => 1,
-      'settings[node][basicpage][translatable]' => 1,
-      "settings[node][basicpage][fields][$this->fieldName]" => 1,
-      "settings[node][basicpage][columns][$this->fieldName][file]" => FALSE,
+      'settings[node][basic_page][translatable]' => 1,
+      "settings[node][basic_page][fields][$this->fieldName]" => 1,
+      "settings[node][basic_page][columns][$this->fieldName][file]" => FALSE,
       // Enable alt and title.
-      "settings[node][basicpage][columns][$this->fieldName][alt]" => 1,
-      "settings[node][basicpage][columns][$this->fieldName][title]" => 1,
+      "settings[node][basic_page][columns][$this->fieldName][alt]" => 1,
+      "settings[node][basic_page][columns][$this->fieldName][title]" => 1,
     ];
     $this->drupalGet('admin/config/regional/content-language');
     $this->submitForm($edit, 'Save configuration');
 
     // Verify that the image field on the "Basic basic" node type is
     // translatable.
-    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'basicpage');
+    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'basic_page');
     $this->assertTrue($definitions[$this->fieldName]->isTranslatable(), 'Node image field is translatable.');
 
     // Create a default language node.
-    $default_language_node = $this->drupalCreateNode(['type' => 'basicpage', 'title' => 'Lost in translation']);
+    $default_language_node = $this->drupalCreateNode(['type' => 'basic_page', 'title' => 'Lost in translation']);
 
     // Edit the node to upload a file.
     $edit = [];
@@ -310,12 +310,12 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     // Enable translation for "Basic page" nodes.
     $edit = [
       'entity_types[node]' => 1,
-      'settings[node][basicpage][translatable]' => 1,
-      "settings[node][basicpage][fields][$this->fieldName]" => 1,
-      "settings[node][basicpage][columns][$this->fieldName][file]" => FALSE,
+      'settings[node][basic_page][translatable]' => 1,
+      "settings[node][basic_page][fields][$this->fieldName]" => 1,
+      "settings[node][basic_page][columns][$this->fieldName][file]" => FALSE,
       // Enable alt and title.
-      "settings[node][basicpage][columns][$this->fieldName][alt]" => 1,
-      "settings[node][basicpage][columns][$this->fieldName][title]" => 1,
+      "settings[node][basic_page][columns][$this->fieldName][alt]" => 1,
+      "settings[node][basic_page][columns][$this->fieldName][title]" => 1,
     ];
     $this->drupalGet('admin/config/regional/content-language');
     $this->drupalGet('admin/config/regional/content-language');
@@ -323,11 +323,11 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
 
     // Verify that the image field on the "Basic basic" node type is
     // translatable.
-    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'basicpage');
+    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'basic_page');
     $this->assertTrue($definitions[$this->fieldName]->isTranslatable(), 'Node image field is translatable.');
 
     // Create a default language node.
-    $default_language_node = $this->drupalCreateNode(['type' => 'basicpage', 'title' => 'Lost in translation']);
+    $default_language_node = $this->drupalCreateNode(['type' => 'basic_page', 'title' => 'Lost in translation']);
 
     // Edit the node to upload a file.
     $edit = [];
@@ -359,7 +359,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     // Install content moderation and enable moderation on Basic Page node type.
     \Drupal::service('module_installer')->install(['content_moderation']);
     $workflow = $this->createEditorialWorkflow();
-    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'basicpage');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'basic_page');
     $workflow->save();
     $this->drupalLogin($this->rootUser);
 
