@@ -71,6 +71,16 @@ class MappingTest extends KernelTestBase {
           ],
         ])->save();
         break;
+
+      case 'config_schema_deprecated_test.settings':
+        $this->enableModules(['config_schema_deprecated_test']);
+        $config = $this->config('config_schema_deprecated_test.settings');
+        // @see \Drupal\KernelTests\Core\Config\ConfigSchemaDeprecationTest
+        $config
+          ->set('complex_structure_deprecated.type', 'fruits')
+          ->set('complex_structure_deprecated.products', ['apricot', 'apple'])
+          ->save();
+        break;
     }
 
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
@@ -116,8 +126,50 @@ class MappingTest extends KernelTestBase {
     yield 'core.extension' => [
       'core.extension',
       NULL,
-      ['_core', 'langcode', 'module', 'theme', 'profile'],
+      [
+        // Keys inherited from `type: config_object`.
+        // @see core/config/schema/core.data_types.schema.yml
+        '_core',
+        'langcode',
+        // Keys defined locally, in `type: core.extension`.
+        // @see core/config/schema/core.extension.schema.yml
+        'module',
+        'theme',
+        'profile',
+      ],
       ['_core'],
+      [],
+    ];
+
+    // Special case: deprecated  is needed for deprecated config schema:
+    // - deprecated keys are treated as optional
+    // - if a deprecated property path is itself a mapping, then the keys inside
+    //   are not optional
+    yield 'config_schema_deprecated_test.settings' => [
+      'config_schema_deprecated_test.settings',
+      NULL,
+      [
+        // Keys inherited from `type: config_object`.
+        // @see core/config/schema/core.data_types.schema.yml
+        '_core',
+        'langcode',
+        // Keys defined locally, in `type: config_schema_deprecated_test.settings`.
+        // @see core/modules/config/tests/config_schema_deprecated_test/config/schema/config_schema_deprecated_test.schema.yml
+        'complex_structure_deprecated',
+      ],
+      ['_core', 'complex_structure_deprecated'],
+      [],
+    ];
+    yield 'config_schema_deprecated_test.settings:complex_structure_deprecated' => [
+      'config_schema_deprecated_test.settings',
+      'complex_structure_deprecated',
+      [
+        // Keys defined locally, in `type: config_schema_deprecated_test.settings`.
+        // @see core/modules/config/tests/config_schema_deprecated_test/config/schema/config_schema_deprecated_test.schema.yml
+        'type',
+        'products',
+      ],
+      [],
       [],
     ];
 
