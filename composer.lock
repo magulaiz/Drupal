@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3974a7180dc44e4406092583649a0a31",
+    "content-hash": "ab1f56317f7fd34f6dc4d4e5a635594e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4508,10 +4508,16 @@
         {
             "name": "behat/mink-browserkit-driver",
             "version": "dev-symfony-7",
-            "dist": {
-                "type": "path",
-                "url": "../../mink-browserkit-driver",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/longwave/mink-browserkit-driver.git",
                 "reference": "e685c13664e4d960ab5d68291c696c0420289874"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/longwave/mink-browserkit-driver/zipball/e685c13664e4d960ab5d68291c696c0420289874",
+                "reference": "e685c13664e4d960ab5d68291c696c0420289874",
+                "shasum": ""
             },
             "require": {
                 "behat/mink": "^1.11.0@dev",
@@ -4565,8 +4571,8 @@
                 "browser",
                 "testing"
             ],
-            "transport-options": {
-                "relative": true
+            "support": {
+                "source": "https://github.com/longwave/mink-browserkit-driver/tree/symfony-7"
             },
             "time": "2023-11-13T10:10:58+00:00"
         },
@@ -9601,7 +9607,9 @@
         "drupal/core": 20,
         "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20,
-        "behat/mink": 20
+        "behat/mink": 20,
+        "behat/mink-browserkit-driver": 20,
+        "mglaman/phpstan-drupal": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
