@@ -13,7 +13,7 @@ use Drupal\Tests\path_alias\Traits\PathAliasLanguageFallbackTestTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
- * Tests loading and storing path alias using PathItem with language fallback.
+ * Tests loading and storing PathItem path aliases with fallback languages.
  *
  * @group path
  */
@@ -23,9 +23,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     PathAliasLanguageFallbackTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'path',
@@ -72,7 +70,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   }
 
   /**
-   * Re-loads the passed node from storage with cache reset.
+   * Reloads the passed node from storage with cache reset.
    */
   protected function reloadNode(NodeInterface $node): NodeInterface {
     $node_id = $node->id();
@@ -81,7 +79,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   }
 
   /**
-   * Asserts that alias of the node in is the same as expected.
+   * Asserts that the alias of the node is as expected.
    *
    * The alias is taken from the path field item.
    *
@@ -97,7 +95,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     ?string $expected_alias,
     NodeInterface $node,
     ?string $translation_langcode = NULL
-  ) {
+  ): void {
     if ($translation_langcode !== NULL) {
       $this->assertTrue($node->hasTranslation($translation_langcode));
       $node = $node->getTranslation($translation_langcode);
@@ -151,7 +149,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   /**
    * Tests path item on multilingual node with alias in fallback language.
    */
-  public function testMultilingualWithAliasInFallbackLanguage() {
+  public function testMultilingualWithAliasInFallbackLanguage(): void {
     // Create a node with two translations, but without any aliases yet.
     $node = $this->createNodeWithTranslations('en', ['fr', 'de']);
     $node = $this->reloadNode($node);
@@ -159,7 +157,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     $this->assertNodeAlias(NULL, $node, 'fr');
     $this->assertNodeAlias(NULL, $node, 'de');
 
-    // Add alias to the fallback language and make sure it affects the same
+    // Add an alias to the fallback language and make sure it affects the same
     // language only.
     $translation = $node->getTranslation('fr');
     $translation->get('path')->alias = '/foo-fallback';
@@ -169,18 +167,18 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     $this->assertNodeAlias('/foo-fallback', $node, 'fr');
     $this->assertNodeAlias(NULL, $node, 'de');
 
-    // Set fallback language to the one having an alias and make sure that alias
-    // appears in all the translations. This way editors will be able to use it
-    // as a default value.
+    // Set the fallback language to the one having an alias and make sure that
+    // the alias appears in all the translations. This way editors will be
+    // able to use it as a default value.
     $this->setPathAliasFallbackLanguage('fr');
     $node = $this->reloadNode($node);
     $this->assertNodeAlias('/foo-fallback', $node);
     $this->assertNodeAlias('/foo-fallback', $node, 'fr');
     $this->assertNodeAlias('/foo-fallback', $node, 'de');
 
-    // Update a translation with the same alias and make sure it neither creates
-    // an unnecessary copy of the alias in that language nor changes the one
-    // in the fallback language.
+    // Update a translation with the same alias and make sure it neither
+    // creates an unnecessary copy of the alias in that language nor changes
+    // the one in the fallback language.
     $node = $this->reloadNode($node);
     $translation = $node->getTranslation('de');
     $translation->get('path')->alias = '/foo-fallback';
@@ -213,7 +211,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   }
 
   /**
-   * Tests path item on multilingual node with alias in non-specified language.
+   * Tests a multilingual node with an alias in non-specified language.
    */
   public function testMultilingualNodeWithAliasInNonSpecifiedLanguage() {
     // Create a node with two translations, but without any aliases yet.
@@ -223,8 +221,8 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     $this->assertNodeAlias(NULL, $node, 'fr');
     $this->assertNodeAlias(NULL, $node, 'de');
 
-    // Create path alias in non-specified language, make sure it affects all the
-    // node translations.
+    // Create a path alias in a non-specified language, and make sure it
+    // affects all the node translations.
     $this->createPathAlias(
       $this->getInternalPathOfEntity($node),
       '/foo-und',
@@ -235,9 +233,9 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     $this->assertNodeAlias('/foo-und', $node, 'fr');
     $this->assertNodeAlias('/foo-und', $node, 'de');
 
-    // Update a translation with the same alias and make sure it neither creates
-    // an unnecessary copy of the alias in that language nor changes the one
-    // in non-specified language.
+    // Update a translation with the same alias and make sure it neither
+    // creates an unnecessary copy of the alias in that language nor changes
+    // the one in a non-specified language.
     $node = $this->reloadNode($node);
     $translation = $node->getTranslation('fr');
     $translation->get('path')->alias = '/foo-und';
@@ -253,9 +251,9 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
       $this->getInternalPathOfEntity($node)
     );
 
-    // Set alias on a node translation and make sure it affects that specific
-    // translation only. The alias in non-specified language must stay
-    // untouched.
+    // Set the alias on a node translation and make sure it affects that
+    // specific translation only. The alias in the non-specified language must
+    // stay untouched.
     $translation = $node->getTranslation('de');
     $translation->get('path')->alias = '/foo-de';
     $translation->save();
@@ -269,8 +267,9 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
       $this->getInternalPathOfEntity($node)
     );
 
-    // Change alias on default translation of the node, it should affect default
-    // language only, keeping the one in non-specified language untouched.
+    // Change the alias on the default translation of the node. It should
+    // affect the default language only, keeping the one in the non-specified
+    // language untouched.
     $node->get('path')->alias = '/foo-default';
     $node->save();
     $node = $this->reloadNode($node);
@@ -285,15 +284,16 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   }
 
   /**
-   * Tests path item on a monolingual node with alias in non-specified language.
+   * Tests a monolingual node with an alias in the non-specified language.
    */
-  public function testMonolingualNodeWithAliasInNonSpecifiedLanguage() {
+  public function testMonolingualNodeWithAliasInNonSpecifiedLanguage(): void {
     // Create a node without any translations or aliases yet.
     $node = $this->createNodeWithTranslations('en', []);
     $node = $this->reloadNode($node);
     $this->assertNodeAlias(NULL, $node);
 
-    // Create an alias in non-specified language, make sure it affects the node.
+    // Create an alias in the non-specified language and make sure it affects
+    // the node.
     $this->createPathAlias(
       $this->getInternalPathOfEntity($node),
       '/foo-und',
@@ -302,8 +302,8 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     $node = $this->reloadNode($node);
     $this->assertNodeAlias('/foo-und', $node);
 
-    // Update the alias through the path item, make sure it changes existing
-    // alias without making a copy in the node's language.
+    // Update the alias through the path item. Make sure it changes the
+    // existing alias without making a copy in the node's language.
     $node->get('path')->alias = '/foo-en';
     $node->save();
     $node = $this->reloadNode($node);

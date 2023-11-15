@@ -24,7 +24,7 @@ class AliasRepository implements AliasRepositoryInterface {
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * Constructs an AliasRepository object.

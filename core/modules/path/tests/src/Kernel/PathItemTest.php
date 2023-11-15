@@ -214,9 +214,10 @@ class PathItemTest extends KernelTestBase {
     $node->save();
     $this->assertStringStartsWith('/', $node->get('path')->alias);
 
-    // Test that new path alias is created on entity creation even if the alias
-    // ID was programmatically specified on it, e.g. after cloning an existing
-    // entity with the path item that has been computed already.
+    // Test that the new path alias is created on entity creation even if the
+    // alias ID was programmatically specified on it (for example, after
+    // cloning an existing entity with the path item that has already been
+    // computed).
     $node = Node::create([
       'langcode' => 'en',
       'title' => $this->randomString(),

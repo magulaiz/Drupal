@@ -90,12 +90,12 @@ class PathItem extends FieldItemBase {
       $is_multilingual = count($entity->getTranslationLanguages()) > 1;
     }
 
-    // Detect if the alias this item holds can be updated/deleted.
+    // Detect if the alias this item holds can be updated or deleted.
     $has_own_alias = !empty($path_alias);
     if ($is_multilingual) {
-      // On a multilingual entity the alias could only be managed in case it has
-      // the same language with the item, otherwise editor would be able to
-      // change the fallback alias through editing an entity translation.
+      // On multilingual entities, the alias can only be managed if it has the
+      // same language as the item. Otherwise, the editor would be able to
+      // change the fallback alias by editing an entity translation.
       $has_own_alias = $has_own_alias && $path_alias->language()->getId() === $this->getLangcode();
     }
 
