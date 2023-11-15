@@ -1,8 +1,8 @@
 #!/bin/bash
-# This script deletes unnecessary directories and files for "production" env
+# This script deletes unnecessary directories and files.
 #
-# It is meant to be run at the project base and should be run before packaging
-# the Drupal application for production.
+# It is meant to be run before packaging the Drupal application for deplpoyment
+# to production environment to minimize its digital footprint (i.e. disk usage).
 #
 # @see https://unix.stackexchange.com/a/89937
 
