@@ -209,6 +209,7 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInte
     ],
     [
       'href' => 'https://example.com/css?family=Open+Sans',
+      'media' => 'all',
     ],
   ]));
   return $response;
