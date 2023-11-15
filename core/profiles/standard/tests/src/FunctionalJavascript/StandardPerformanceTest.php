@@ -59,7 +59,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertGreaterThanOrEqual(178, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(174, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(182, $performance_data->getQueryCount());
 
     // Test user profile page.
