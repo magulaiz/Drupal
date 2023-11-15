@@ -150,8 +150,7 @@ services:
       - { name: cache.context }
   cache_context.route.menu_active_trails:
     class: Drupal\Core\Cache\Context\MenuActiveTrailsCacheContext
-    calls:
-      - [setContainer, ['@service_container']]
+    arguments: ['@menu.active_trail']
     tags:
       - { name: cache.context }
 
@@ -774,7 +773,7 @@ services:
   Drupal\Core\Menu\MenuLinkManagerInterface: '@plugin.manager.menu.link'
   menu.link_tree:
     class: Drupal\Core\Menu\MenuLinkTree
-    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver']
+    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@callable_resolver']
   Drupal\Core\Menu\MenuLinkTreeInterface: '@menu.link_tree'
   menu.default_tree_manipulators:
     class: Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
@@ -785,6 +784,7 @@ services:
     arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock']
     tags:
       - { name: needs_destruction }
+    lazy: true
   Drupal\Core\Menu\MenuActiveTrailInterface: '@menu.active_trail'
   menu.parent_form_selector:
     class: Drupal\Core\Menu\MenuParentFormSelector
@@ -891,6 +891,10 @@ services:
   argument_resolver.default:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver
     public: false
+  http_middleware.ajax_page_state:
+    class: Drupal\Core\StackMiddleware\AjaxPageState
+    tags:
+      - { name: http_middleware, priority: 500 }
   http_middleware.negotiation:
     class: Drupal\Core\StackMiddleware\NegotiationMiddleware
     tags:
@@ -1735,7 +1739,7 @@ services:
   Drupal\Core\Render\RenderCacheInterface: '@render_cache'
   renderer:
     class: Drupal\Core\Render\Renderer
-    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_placeholder_generator', '@render_cache', '@request_stack', '%renderer.config%']
+    arguments: ['@callable_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_placeholder_generator', '@render_cache', '@request_stack', '%renderer.config%']
   Drupal\Core\Render\RendererInterface: '@renderer'
   early_rendering_controller_wrapper_subscriber:
     class: Drupal\Core\EventSubscriber\EarlyRenderingControllerWrapperSubscriber
