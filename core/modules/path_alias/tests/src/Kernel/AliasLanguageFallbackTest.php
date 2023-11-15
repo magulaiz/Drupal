@@ -3,6 +3,7 @@
 namespace Drupal\Tests\path_alias\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\path_alias\AliasRepositoryInterface;
 use Drupal\Tests\language\Kernel\LanguageTestBase;
 use Drupal\Tests\path_alias\Traits\PathAliasLanguageFallbackTestTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
@@ -34,7 +35,7 @@ class AliasLanguageFallbackTest extends LanguageTestBase {
    *
    * @var \Drupal\path_alias\AliasRepositoryInterface
    */
-  protected $aliasRepository;
+  protected AliasRepositoryInterface $aliasRepository;
 
   /**
    * {@inheritdoc}

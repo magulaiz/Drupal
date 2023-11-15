@@ -67,7 +67,7 @@ class PathItem extends FieldItemBase {
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
     $entity = $this->getEntity();
 
-    // Load the path alias entity if that's an entity update and it's ID is
+    // Load the path alias entity if the entity is being updated and its ID is
     // known.
     $path_alias = NULL;
     if ($update && $this->pid) {
@@ -75,7 +75,7 @@ class PathItem extends FieldItemBase {
       $path_alias = $path_alias_storage->load($this->pid);
     }
 
-    // Stop at this point in case the alias haven't been changed, even if it's a
+    // Stop at this point if the alias hasn't been changed, even if it's a
     // fallback alias that can't be managed by this item.
     $existing_alias = NULL;
     if ($path_alias) {

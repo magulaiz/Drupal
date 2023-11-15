@@ -20,28 +20,19 @@ class AliasRepository implements AliasRepositoryInterface {
   protected $connection;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected LanguageManagerInterface $languageManager;
-
-  /**
    * Constructs an AliasRepository object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection for reading and writing path aliases.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   Language manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface|null $languageManager
+   *   The language manager service.
    */
-  public function __construct(Connection $connection, LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(Connection $connection, protected ?LanguageManagerInterface $languageManager = NULL) {
     $this->connection = $connection;
-    if (!$language_manager) {
-      @trigger_error('Calling AliasRepository::__construct() without the $language_manager argument is deprecated in drupal:10.2.0 and the $language_manager argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3108585', E_USER_DEPRECATED);
-      $language_manager = \Drupal::service('language_manager');
+    if (!$languageManager) {
+      @trigger_error('Calling AliasRepository::__construct() without the $languageManager argument is deprecated in drupal:10.2.0 and the $languageManager argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3108585', E_USER_DEPRECATED);
+      $this->languageManager = \Drupal::service('language_manager');
     }
-
-    $this->languageManager = $language_manager;
   }
 
   /**

@@ -9,6 +9,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\node\NodeStorageInterface;
 use Drupal\Tests\path_alias\Traits\PathAliasLanguageFallbackTestTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
@@ -41,7 +42,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
    *
    * @var \Drupal\node\NodeStorageInterface
    */
-  protected $nodeStorage;
+  protected NodeStorageInterface $nodeStorage;
 
   /**
    * {@inheritdoc}
@@ -140,7 +141,13 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   }
 
   /**
-   * Returns internal path of the passed entity.
+   * Returns the internal path of the passed entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to get the internal path of.
+   *
+   * @return string
+   *   Returns the internal path of the passed entity.
    */
   protected function getInternalPathOfEntity(EntityInterface $entity): string {
     return '/' . $entity->toUrl()->getInternalPath();
@@ -194,7 +201,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
       $this->getInternalPathOfEntity($node)
     );
 
-    // Set different alias on a different translation and make sure it affects
+    // Set a different alias on a different translation and make sure it affects
     // that specific translation only, even if path items have been computed on
     // all the other translations before saving the node.
     $node = $this->reloadNode($node);
