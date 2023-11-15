@@ -92,6 +92,23 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
   }
 
   /**
+   * Gets the form title.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The form title.
+   */
+  public function formTitle($entity_type_id = NULL) {
+    $this->entityTypeId = $entity_type_id;
+    if (!$this->entityTypeManager->hasDefinition($this->entityTypeId)) {
+      throw new NotFoundHttpException();
+    }
+    return $this->getQuestion();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
