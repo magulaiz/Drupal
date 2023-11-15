@@ -16,7 +16,7 @@
    *
    * @type {object}
    */
-  if(window.drupalSettings === undefined) {
+  if (window.drupalSettings === undefined) {
     window.drupalSettings = {};
 
     if (settingsElement !== null) {
