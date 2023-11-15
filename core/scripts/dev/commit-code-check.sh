@@ -211,7 +211,7 @@ yarn >/dev/null
 # Check all files for spelling in one go for better performance.
 if [[ $CSPELL_DICTIONARY_FILE_CHANGED == "1" ]] ; then
   printf "\nRunning spellcheck on *all* files.\n"
-  yarn run spellcheck:core --no-must-find-files --no-progress --root $TOP_LEVEL $ABS_FILES >/dev/null
+  yarn run spellcheck:core --no-must-find-files --no-progress
 else
   # Check all files for spelling in one go for better performance. We pipe the
   # list files in so we obey the globs set on the spellcheck:core command in
