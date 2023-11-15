@@ -133,6 +133,7 @@ variables:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - |
+      export
       echo "ℹ️ Changes from ${TARGET_BRANCH}"
       git diff refs/heads/${TARGET_BRANCH}...refs/heads/${CI_COMMIT_BRANCH} --name-only
       echo "If this list contains more files than what you changed, then you need to rebase your branch."
