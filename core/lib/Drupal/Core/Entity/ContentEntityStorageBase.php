@@ -483,7 +483,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     if (!isset($this->latestRevisionIds[$entity_id][LanguageInterface::LANGCODE_DEFAULT])) {
       $result = $this->getQuery()
         ->latestRevision()
-        ->condition($this->entityType->getKey('id'), $entity_id)
+        ->condition($this->entityType->getKey('id'), (is_numeric($entity_id) ? (int) $entity_id : $entity_id))
         ->accessCheck(FALSE)
         ->execute();
 
@@ -508,7 +508,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     if (!isset($this->latestRevisionIds[$entity_id][$langcode])) {
       $result = $this->getQuery()
         ->allRevisions()
-        ->condition($this->entityType->getKey('id'), $entity_id)
+        ->condition($this->entityType->getKey('id'), (is_numeric($entity_id) ? (int) $entity_id : $entity_id))
         ->condition($this->entityType->getKey('revision_translation_affected'), TRUE, '=', $langcode)
         ->range(0, 1)
         ->sort($this->entityType->getKey('revision'), 'DESC')
