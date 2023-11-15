@@ -334,7 +334,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
     $query = $this->getQuery()
       ->condition($this->entityType->getKey('id'), $entity->id())
-      ->condition($this->entityType->getKey('default_langcode'), 0)
+      ->condition($this->entityType->getKey('default_langcode'), FALSE)
       ->accessCheck(FALSE)
       ->range(0, 1);
 
