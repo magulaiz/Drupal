@@ -208,7 +208,7 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInte
       'media' => 'all',
     ],
     [
-      'href' => 'https://fonts.googleapis.com/css?family=Open+Sans',
+      'href' => 'https://example.com',
       'media' => 'all',
     ],
   ]));
