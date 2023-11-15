@@ -132,6 +132,8 @@ class SimpleConfigValidationTest extends KernelTestBase {
    *   A special character to embed.
    * @param string|null $expected_error_message
    *   The expected validation error message, if any.
+   * @param int|null $violations_count
+   *   The expected amount of violations.
    *
    * @dataProvider providerSpecialCharacters
    */
