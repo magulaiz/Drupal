@@ -76,15 +76,24 @@ class Mapping extends ArrayElement {
   /**
    * Gets all dynamically valid keys.
    *
-   * When the `type` of the mapping is dynamic itself, such as:
-   * - `type: editor.settings.[%parent.editor]`
-   * - `type: field.field_settings.[%parent.field_type]`
-   * - `type: editor.image_upload_settings.[status]`
-   * then the mapping at this property path may have keys that are dynamically
-   * valid. This means that depending on other values (hence "dynamically"),
-   * different sets of keys are considered valid.
-   * For example: the settings associated with a FieldConfig depends on which
-   * field plugin that field uses.
+   * When the `type` of the mapping is dynamic itself. For example: the settings
+   * associated with a FieldConfig depends on which field plugin that field
+   * uses.
+   * Other examples:
+   * - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no information
+   *   stored elsewhere: the chosen key (in a sequence) determines the type.
+   * - third party settings use '[%parent.%parent.%type].third_party.[%key]',
+   *   but the first variable value only causes the config entity type (at the
+   *   root) to be inherited (f.e. 'node.type.third_party.[%key]').
+   * - field instances 'field.value.[%parent.%parent.field_type]', which is
+   *   used to determine the type of the default field value, to ensure
+   *   matches the precise config schema type of the field type
+   * - views use 'views.filter.[plugin_id]' to allow the value itself to
+   *   determine which filter plugin it  uses, in the 'plugin_id' key.
+   *
+   * For each of these examples, the mapping at this property path may have keys
+   * that are dynamically valid. This means that depending on other values
+   * (hence "dynamically"), different sets of keys are considered valid.
    *
    * @return string[][]
    *   A list of dynamically valid keys. An array with:
@@ -92,6 +101,7 @@ class Mapping extends ArrayElement {
    *   - the corresponding value an array of the additional mapping keys that
    *     are supported for this resolved type
    *
+   * @see \Drupal\Core\Config\TypedConfigManager::replaceName()
    * @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
    */
   public function getDynamicallyValidKeys(): array {
@@ -115,34 +125,9 @@ class Mapping extends ArrayElement {
     if (!str_contains($original_mapping_type, ']')) {
       return [];
     }
-
-    // When using dynamic typing, the type names contain variable values. These
-    // refer to nested configuration keys (that will be replaced by their value)
-    // or the special strings '%key', '%parent' or '%type'.
-    // When only those special strings are used, then no dynamism exists: only
-    // if a non-special string is used, will any other configuration key's value
-    // actually be used to determine the type.
-    // Explained by examples:
-    // - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no information
-    //   stored elsewhere: the chosen key (in a sequence) determines the type.
-    // - third party settings use '[%parent.%parent.%type].third_party.[%key]',
-    //   but the first variable value only causes the config entity type (at the
-    //   root) to be inherited (f.e. 'node.type.third_party.[%key]').
-    // - field instances 'field.value.[%parent.%parent.field_type]', which is
-    //   used to determine the type of the default field value, to ensure
-    //   matches the precise config schema type of the field type
-    // - views use 'views.filter.[plugin_id]' to allow the value itself to
-    //   determine which filter plugin it  uses, in the 'plugin_id' key.
-    // Note that only the last two examples contained strings other than the 3
-    // special ones.
-    // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
-    $matches = [];
-    preg_match_all("/\[(.*)\]/U", $original_mapping_type, $matches);
-    $variable_values = array_merge(...array_map(
-      fn (string $s) => explode('.', $s),
-      $matches[1]
-    ));
-    if (empty(array_diff($variable_values, ['%key', '%parent', '%type']))) {
+    // Prefix-based dynamic typing is used only by third party settings, which
+    // are by definition optional.
+    elseif (str_starts_with($original_mapping_type, '[')) {
       return [];
     }
 
