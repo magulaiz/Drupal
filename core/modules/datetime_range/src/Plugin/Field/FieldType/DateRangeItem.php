@@ -16,7 +16,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  * @FieldType(
  *   id = "daterange",
  *   label = @Translation("Date range"),
- *   category = "date_time",
+ *   category = @Translation("Date and Time"),
  *   description = @Translation("Create and store date ranges."),
  *   default_widget = "daterange_default",
  *   default_formatter = "daterange_default",
