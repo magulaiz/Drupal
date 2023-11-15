@@ -15,7 +15,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'user'];
+  protected static $modules = ['field', 'node', 'user', 'file', 'image'];
 
   /**
    * {@inheritdoc}
@@ -30,6 +30,25 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
       'entity_type' => 'user',
     ]);
     $this->entity->save();
+  }
+
+  /**
+   * Tests an invalid value for a plugin-specific FieldStorageConfig setting.
+   */
+  public function testInvalidPluginSpecificSetting(): void {
+    $this->entity = FieldStorageConfig::create([
+      'field_name' => 'invalid_default_image',
+      'entity_type' => 'node',
+      'type' => 'image',
+      'settings' => [
+        'default_image' => [
+          'uuid' => 100000,
+        ],
+      ],
+    ]);
+    $this->assertValidationErrors([
+      'settings.default_image.uuid' => 'This is not a valid UUID.',
+    ]);
   }
 
 }

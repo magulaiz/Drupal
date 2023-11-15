@@ -17,6 +17,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('file');
 
     // The field storage was created in the parent method.
     $field_storage = $this->entity;
@@ -102,6 +103,50 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
           "'off_label' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
         ],
       ],
+    ]);
+  }
+
+  /**
+   * Tests an invalid value for a plugin-specific FieldConfig setting.
+   *
+   * @see \Drupal\Tests\field\Kernel\Entity\FieldStorageConfigValidationTest::testInvalidPluginSpecificSetting
+   */
+  public function testInvalidPluginSpecificSetting(): void {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'invalid_default_image',
+      'entity_type' => 'node',
+      'type' => 'image',
+      'settings' => [
+        'default_image' => [
+          'uuid' => 100000,
+        ],
+      ],
+    ]);
+    $field_storage->save();
+
+    $this->entity = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'page',
+      'label' => $this->randomMachineName(),
+      'settings' => [
+        'default_image' => [
+          'uuid' => 100000,
+        ],
+      ],
+    ]);
+    $this->entity->set('dependencies', [
+      'config' => [
+        $field_storage->getConfigDependencyName(),
+      ],
+    ]);
+    $this->assertValidationErrors([
+      'settings.default_image' => [
+        "'alt' is a required key.",
+        "'title' is a required key.",
+        "'width' is a required key.",
+        "'height' is a required key.",
+      ],
+      'settings.default_image.uuid' => 'This is not a valid UUID.',
     ]);
   }
 

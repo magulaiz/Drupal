@@ -268,7 +268,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   /**
    * Tests image field and field storage having an invalid default image.
    *
-        * @todo Move to FieldConfigValidationTest + FieldStorageConfigValidationTest
+   * @see \Drupal\Tests\field\Kernel\Entity\FieldStorageConfigValidationTest::testInvalidPluginSpecificSetting
+   * @see \Drupal\Tests\field\Kernel\Entity\FieldConfigValidationTest::testInvalidPluginSpecificSetting
    */
   public function testInvalidDefaultImage() {
     $field_storage = FieldStorageConfig::create([
