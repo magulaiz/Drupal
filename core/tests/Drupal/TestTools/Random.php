@@ -98,7 +98,7 @@ abstract class Random {
    * @return string
    *   Randomly generated unique string.
    *
-   * @see \Drupal\Component\Utility\Random::name()
+   * @see \Drupal\Component\Utility\Random::machineName()
    */
   public static function machineName(int $length = 8): string {
     return static::getGenerator()->machineName($length, TRUE);
