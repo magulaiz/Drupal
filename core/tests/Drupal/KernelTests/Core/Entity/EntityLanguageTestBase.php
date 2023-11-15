@@ -108,7 +108,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
     for ($i = 0; $i < 3; ++$i) {
       $language = ConfigurableLanguage::create([
         'id' => 'l' . $i,
-        'label' => $this->randomString(),
+        'label' => $this->randomName(),
         'weight' => $i,
       ]);
       $this->langcodes[$i] = $language->getId();
