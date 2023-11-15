@@ -197,11 +197,11 @@ stages:
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  parallel: 2
+  parallel: 3
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
+    CONCURRENCY: 10
     KUBERNETES_CPU_REQUEST: "8"
   services:
     - <<: *with-database
