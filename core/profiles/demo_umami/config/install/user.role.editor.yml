@@ -12,7 +12,6 @@ dependencies:
     - taxonomy.vocabulary.tags
     - workflows.workflow.editorial
   module:
-    - announcements_feed
     - content_moderation
     - content_translation
     - contextual
@@ -30,7 +29,6 @@ weight: 4
 is_admin: null
 permissions:
   - 'access administration pages'
-  - 'access announcements'
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
