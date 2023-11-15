@@ -19,6 +19,9 @@ class DatabaseEventEnabler implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     if ($type === static::MAIN_REQUEST) {
       $this->connection->enableEvents([
+        // StatementExecutionStartEvent must be enabled in order for
+        // StatementExecutionEndEvent to be fired, even though we only subscribe
+        // to the latter event.
         StatementExecutionStartEvent::class,
         StatementExecutionEndEvent::class,
       ]);
