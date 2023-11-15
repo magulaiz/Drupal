@@ -293,7 +293,7 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
     'entity_type' => 'block_content',
     'entity_field' => $published_key,
     'plugin_id' => 'boolean',
-    'operator' => '',
+    'operator' => '=',
     'value' => 'All',
     'group' => 1,
     'exposed' => TRUE,
