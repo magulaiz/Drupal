@@ -12,7 +12,6 @@ dependencies:
     - taxonomy.vocabulary.tags
     - workflows.workflow.editorial
   module:
-    - announcements_feed
     - content_moderation
     - contextual
     - file
@@ -27,7 +26,6 @@ label: Author
 weight: 3
 is_admin: null
 permissions:
-  - 'access announcements'
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
