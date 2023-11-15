@@ -11,6 +11,10 @@ form_test.object:
       sequence:
         type: required_label
         label: 'Fruit'
+      # Optional because different tests exercise different parts.
+      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
+      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
+      requiredKey: false
     favorite_vegetable:
       type: required_label
       label: 'Favorite vegetable'
