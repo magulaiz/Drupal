@@ -18,12 +18,12 @@
   @media (--grid-md) {
     width: calc(var(--grid-col-count) * var(--grid-col-width) + var(--grid-gap-count) * var(--grid-gap));
     margin-block: var(--sp2) var(--sp4);
-    margin-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
+    margin-inline-start: calc( 0 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
   @media (--lg) {
     width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
-    margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
+    margin-inline-start: calc( 0 * (var(--grid-col-width) + var(--grid-gap)));
   }
 }
 
