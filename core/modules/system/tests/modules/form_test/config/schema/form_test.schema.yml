@@ -5,6 +5,10 @@ form_test.object:
     bananas:
       type: string
       label: 'Bananas'
+      # Optional because different tests exercise different parts.
+      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
+      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
+      requiredKey: false
     favorite_fruits:
       type: sequence
       label: 'Favorite fruits'
