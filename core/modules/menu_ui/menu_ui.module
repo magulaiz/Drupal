@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -95,7 +96,16 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
     $entity = MenuLinkContent::load($values['entity_id']);
     if ($entity->isTranslatable()) {
       if (!$entity->hasTranslation($node->language()->getId())) {
-        $entity = $entity->addTranslation($node->language()->getId(), $entity->toArray());
+        if (!in_array($node->language()->getId(), [
+          LanguageInterface::LANGCODE_NOT_APPLICABLE,
+          LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        ], TRUE)) {
+          $entity = $entity->addTranslation($node->language()->getId(), $entity->toArray());
+        }
+        else {
+          $entity = $entity->getUntranslated();
+          $entity->set($entity->getEntityType()->getKey('langcode'), $node->language()->getId());
+        }
       }
       else {
         $entity = $entity->getTranslation($node->language()->getId());
