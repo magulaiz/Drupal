@@ -102,11 +102,11 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     NodeType::create([
       'type' => $this->randomMachineName(),
-      'name' => $this->randomString(),
+      'name' => $this->randomName(),
     ])->save();
     CommentType::create([
       'id' => $this->randomMachineName(),
-      'label' => $this->randomString(),
+      'label' => $this->randomName(),
       'target_entity_type_id' => 'node',
     ])->save();
 
@@ -525,7 +525,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertCount(0, $errors);
 
     // Test with an unpublished and unsaved comment.
-    $title = $this->randomString();
+    $title = $this->randomName();
     $comment = Comment::create([
       'subject' => $title,
       'comment_type' => 'comment',
