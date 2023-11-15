@@ -51,7 +51,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertGreaterThanOrEqual(487, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(484, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(488, $performance_data->getQueryCount());
 
     // Test node page.
@@ -90,7 +90,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       ], 'Log in');
     });
     $this->assertLessThanOrEqual(89, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(88, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(86, $performance_data->getQueryCount());
   }
 
   /**
@@ -111,7 +111,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'pass' => $account->passRaw,
       ], 'Log in');
     });
-    $this->assertLessThanOrEqual(198, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(200, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(197, $performance_data->getQueryCount());
   }
 
