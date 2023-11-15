@@ -92,7 +92,7 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
       $this->drupalGet($translation_base_url);
 
-      // 'Add' link should be present for French translation.
+      // 'Add' link should be present for German translation.
       $translation_page_url = "$translation_base_url/de/add";
       $this->assertSession()->linkByHrefExists($translation_page_url);
 
