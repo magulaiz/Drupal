@@ -16,8 +16,12 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  * @FieldType(
  *   id = "daterange",
  *   label = @Translation("Date range"),
- *   category = @Translation("Date and Time"),
- *   description = @Translation("Create and store date ranges."),
+ *   category = "date_time",
+ *   description = {
+ *     @Translation("Ideal when date range needs to be input by users, like event start date and end date."),
+ *     @Translation("Date or date and time stored in a readable string format"),
+ *     @Translation("Easy to read and understand for humans"),
+ *   },
  *   default_widget = "daterange_default",
  *   default_formatter = "daterange_default",
  *   list_class = "\Drupal\datetime_range\Plugin\Field\FieldType\DateRangeFieldItemList"
