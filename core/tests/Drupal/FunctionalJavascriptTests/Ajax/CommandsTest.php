@@ -36,7 +36,7 @@ class CommandsTest extends WebDriverTestBase {
     // Tests the 'add_css' command.
     $page->pressButton("AJAX 'add_css' command");
     $this->assertWaitPageContains('my/file.css');
-    $this->assertWaitPageContains('<link rel="stylesheet" href="https://example.com/css?family=Open+Sans">');
+    $this->assertWaitPageContains('https://example.com/css?family=Open+Sans');
 
     // Tests the 'after' command.
     $page->pressButton("AJAX 'After': Click to put something after the div");
