@@ -10,7 +10,7 @@ trait BlockContentTestBulkOperationsTrait {
   /**
    * Unpublishes a block using the unpublish action.
    */
-  protected function unpublishUsingBulkAction() {
+  protected function unpublishUsingBulkAction(): void {
     $edit = [];
     $edit['action'] = 'block_content_unpublish_action';
     $edit["block_content_bulk_form[0]"] = TRUE;
@@ -22,7 +22,7 @@ trait BlockContentTestBulkOperationsTrait {
   /**
    * Publishes a block using the publish action.
    */
-  protected function publishUsingBulkAction() {
+  protected function publishUsingBulkAction(): void {
     $edit = [];
     $edit['action'] = 'block_content_publish_action';
     $edit['block_content_bulk_form[0]'] = TRUE;
@@ -37,7 +37,7 @@ trait BlockContentTestBulkOperationsTrait {
    * @param bool $published
    *   Whether or not the block should display as published.
    */
-  protected function assertBlockStatusDisplayedAs($published) {
+  protected function assertBlockStatusDisplayedAs(bool $published): void {
     $elements = $this->xpath('//form[@id="views-form-block-content-page-1"]//table/tbody/tr/td');
     $this->assertSame($elements[4]->getText(), $published ? 'Yes' : 'No', 'Block displayed as ' . $published ? 'published' : 'unpublished');
   }
