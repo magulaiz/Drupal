@@ -62,7 +62,12 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
     $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
 
-    // Statically valid: valid here and not dynamically valid.
+    // Statically valid: keys that are valid for all possible types matching the
+    // type definition of this mapping.
+    // For example, `block.block.*:settings` has the following statically valid
+    // keys: id, label, label_display, provider, status, info, view_mode and
+    // context_mapping.
+    // @see \Drupal\KernelTests\Config\Schema\MappingTest::providerMappingInterpretation()
     $invalid_keys = array_diff(array_keys($value), $valid_keys, $other_type_valid_keys);
     foreach ($invalid_keys as $key) {
       $this->context->buildViolation($constraint->invalidKeyMessage)
@@ -71,18 +76,32 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
         ->setInvalidValue($key)
         ->addViolation();
     }
-    // Dynamically valid: not valid here but valid for some resolved types.
+    // Dynamically valid: keys that are valid not for all possible types, but
+    // for the actually resolved type definition of this mapping (in addition to
+    // the statically valid keys).
+    // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
+    // For example, `block.block.*:settings` has the following dynamically valid
+    // keys when the block plugin is `system_branding_block`: use_site_logo,
+    // use_site_name and use_site_slogan. But if the used block plugin is
+    // `local_tasks_block`, then the dynamically valid keys are: primary,
+    // secondary.
+    // @see \Drupal\KernelTests\Config\Schema\MappingTest::providerMappingInterpretation()
     $dynamically_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
     foreach ($dynamically_invalid_keys as $key) {
       $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
     }
-    // Statically required: required here and not dynamically valid.
+
+    // Statically required: same principle as for "statically valid" above, but
+    // this time restricted to the subset of statically valid keys that do not
+    // have `requiredKey: false`.
     $statically_required_keys = array_diff($required_keys, $dynamically_valid_keys);
     $missing_keys = array_diff($statically_required_keys, array_keys($value));
     foreach ($missing_keys as $key) {
       $this->context->addViolation($constraint->missingRequiredKeyMessage, ['@key' => $key]);
     }
-    // Dynamically required: required here but not for all resolved types.
+    // Dynamically required: same principle as for "dynamically valid" above,
+    // but this time restricted to the subset of dynamically valid keys that do
+    // not have `requiredKey: false`.
     $dynamically_required_keys = array_intersect($required_keys, $dynamically_valid_keys);
     $missing_dynamically_required_keys = array_diff($dynamically_required_keys, array_keys($value));
     foreach ($missing_dynamically_required_keys as $key) {

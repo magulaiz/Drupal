@@ -76,13 +76,23 @@ class Mapping extends ArrayElement {
   /**
    * Gets all dynamically valid keys.
    *
-   * (When the `type` of the mapping is dynamic itself.)
+   * When the `type` of the mapping is dynamic itself, such as:
+   * - `type: editor.settings.[%parent.editor]`
+   * - `type: field.field_settings.[%parent.field_type]`
+   * - `type: editor.image_upload_settings.[status]`
+   * then the mapping at this property path may have keys that are dynamically
+   * valid. This means that depending on other values (hence "dynamically"),
+   * different sets of keys are considered valid.
+   * For example: the settings associated with a FieldConfig depends on which
+   * field plugin that field uses.
    *
    * @return string[][]
    *   A list of dynamically valid keys. An array with:
    *   - a key for every possible resolved type
    *   - the corresponding value an array of the additional mapping keys that
    *     are supported for this resolved type
+   *
+   * @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
    */
   public function getDynamicallyValidKeys(): array {
     $parent_data_def = $this->getParent()?->getDataDefinition();
@@ -90,7 +100,8 @@ class Mapping extends ArrayElement {
       return [];
     }
 
-    // The original mapping definition is used to determine the original type.
+    // The parent mapping definition is used to determine the type used to
+    // determine the type of this mapping.
     // f.e.:
     // 1. `type: editor.settings.[%parent.editor]`
     // 2. `type: editor.image_upload_settings.[status]`.
