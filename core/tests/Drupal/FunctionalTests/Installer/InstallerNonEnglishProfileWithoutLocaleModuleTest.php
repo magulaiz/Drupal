@@ -2,7 +2,7 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Component\Serialization\Yaml;
 
 /**
  * Tests installing a profile with non-English language and no locale module.

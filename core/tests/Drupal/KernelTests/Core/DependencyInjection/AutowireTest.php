@@ -6,10 +6,10 @@ use Drupal\autowire_test\TestInjection;
 use Drupal\autowire_test\TestInjection2;
 use Drupal\autowire_test\TestInjection3;
 use Drupal\autowire_test\TestService;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 

@@ -2,8 +2,8 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Routing\RoutingEvents;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Test\PerformanceTestRecorder;
 
 /**

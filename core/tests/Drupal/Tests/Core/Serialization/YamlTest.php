@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\Serialization\Yaml
  * @group Serialization
+ * @group legacy
  */
 class YamlTest extends UnitTestCase {
 

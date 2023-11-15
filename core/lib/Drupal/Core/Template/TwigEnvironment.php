@@ -4,10 +4,10 @@ namespace Drupal\Core\Template;
 
 use Drupal\Component\FrontMatter\Exception\FrontMatterParseException;
 use Drupal\Component\FrontMatter\FrontMatter;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\State\StateInterface;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -105,7 +105,7 @@ class TwigEnvironment extends Environment {
    * {@inheritdoc}
    */
   public function compileSource(Source $source): string {
-    // Note: always use \Drupal\Core\Serialization\Yaml here instead of the
+    // Note: always use \Drupal\Component\Serialization\Yaml here instead of the
     // "serializer.yaml" service. This allows the core serializer to utilize
     // core related functionality which isn't available as the standalone
     // component based serializer.
@@ -168,7 +168,7 @@ class TwigEnvironment extends Environment {
     $loader = $this->getLoader();
     $source = $loader->getSourceContext($name);
 
-    // Note: always use \Drupal\Core\Serialization\Yaml here instead of the
+    // Note: always use \Drupal\Component\Serialization\Yaml here instead of the
     // "serializer.yaml" service. This allows the core serializer to utilize
     // core related functionality which isn't available as the standalone
     // component based serializer.

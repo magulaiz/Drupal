@@ -5,8 +5,8 @@
  * Contains database additions for testing the help module permission.
  */
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Serialization\Yaml;
 
 $connection = Database::getConnection();
 

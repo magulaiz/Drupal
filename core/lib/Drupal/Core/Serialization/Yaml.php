@@ -9,6 +9,9 @@ use Drupal\Component\Serialization\Yaml as ComponentYaml;
  * Provides a YAML serialization implementation.
  *
  * Allow settings to override the YAML implementation resolution.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Component\Serialization\Yaml instead.
  */
 class Yaml extends ComponentYaml {
 
