@@ -328,7 +328,7 @@ default:
     paths:
       - core/node_modules/
   script:
-    - yarn --cwd ./core install
+    - cd core && yarn install
 
 ################
 # Lint Jobs
@@ -380,7 +380,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+    - cd core && yarn run -s lint:core-js-passing --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -391,7 +391,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - cd core && yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
@@ -402,7 +402,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn run --cwd=./core build:css --check
+    - cd core && yarn run build:css --check
     - cd core && yarn run -s check:ckeditor5
 
 '📔 Spell-checking':
