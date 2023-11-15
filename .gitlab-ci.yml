@@ -403,7 +403,7 @@ default:
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - cd core && yarn run build:css --check
-    - yarn run -s check:ckeditor5
+    - yarn run check:ckeditor5
 
 '📔 Spell-checking':
   <<: [ *with-yarn, *default-job-settings-lint ]
