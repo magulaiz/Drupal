@@ -348,7 +348,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertEquals(
       $crawler->filter('#sdc-wrapper')->innerText(),
-      'In memory of Hawkeye Tenderwolf. You had the best laughter of all, sometimes I can still hear it. I miss you dearly, my friend.'
+      'This is a test string.'
     );
   }
 

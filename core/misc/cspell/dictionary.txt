@@ -991,7 +991,6 @@ tempfile
 templating
 tempstore
 tempuser
-tenderwolf
 tercera
 testajax
 testattribute
