@@ -53,16 +53,608 @@ class DateRangeFieldTest extends DateTestBase {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
+    // Ensure field is set to a date-only field.
+    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
+    $this->fieldStorage->save();
+
     // Loop through defined timezones to test that date-only fields work at the
     // extremes.
     foreach (static::$timezones as $timezone) {
+      foreach ([
+        'two dates' => ['2012-12-31 00:00:00', '2013-06-06 00:00:00'],
+        'same year' => ['2012-06-06 00:00:00', '2012-12-31 00:00:00'],
+        'same date' => ['2012-12-31 00:00:00', '2012-12-31 00:00:00'],
+      ] as $date_range_id => $date_range_data) {
+        $date_range_id = $timezone . ': ' . $date_range_id;
+        [$start_value, $end_value] = $date_range_data;
 
-      $this->setSiteTimezone($timezone);
-      $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
+        // Set timezone.
+        $this->setSiteTimezone($timezone);
+        $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
 
-      // Ensure field is set to a date-only field.
-      $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
-      $this->fieldStorage->save();
+        // Display creation form.
+        $this->drupalGet('entity_test/add');
+        $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+        $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
+        $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]');
+        $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
+        $this->assertSession()->fieldNotExists("{$field_name}[0][end_value][time]");
+        $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
+        $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
+        $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
+
+        // Build up dates in the UTC timezone.
+        $start_date = new DrupalDateTime($start_value, 'UTC');
+        $end_date = new DrupalDateTime($end_value, 'UTC');
+
+        // Submit a valid date and ensure it is accepted.
+        $date_format = DateFormat::load('html_date')->getPattern();
+        $time_format = DateFormat::load('html_time')->getPattern();
+
+        $edit = [
+          "{$field_name}[0][value][date]" => $start_date->format($date_format),
+          "{$field_name}[0][end_value][date]" => $end_date->format($date_format),
+        ];
+        $this->submitForm($edit, 'Save');
+        preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+        $id = $match[1];
+        $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
+        $this->assertSession()->responseContains($start_date->format($date_format));
+        $this->assertSession()->responseNotContains($start_date->format($time_format));
+        $this->assertSession()->responseContains($end_date->format($date_format));
+        $this->assertSession()->responseNotContains($end_date->format($time_format));
+
+        // Verify the date doesn't change when entity is edited through the
+        // form.
+        $entity = EntityTest::load($id);
+        $this->assertEquals($start_date->format('Y-m-d'), $entity->{$field_name}->value);
+        $this->assertEquals($end_date->format('Y-m-d'), $entity->{$field_name}->end_value);
+        $this->drupalGet('entity_test/manage/' . $id . '/edit');
+        $this->submitForm([], 'Save');
+        $this->drupalGet('entity_test/manage/' . $id . '/edit');
+        $this->submitForm([], 'Save');
+        $this->drupalGet('entity_test/manage/' . $id . '/edit');
+        $this->submitForm([], 'Save');
+        $entity = EntityTest::load($id);
+        $this->assertEquals($start_date->format('Y-m-d'), $entity->{$field_name}->value);
+        $this->assertEquals($end_date->format('Y-m-d'), $entity->{$field_name}->end_value);
+
+        // Formats that display a time component for date-only fields will
+        // display the default time, so that is applied before calculating the
+        // expected value.
+        $this->massageTestDate($start_date);
+        $this->massageTestDate($end_date);
+
+        // Reset display options since these get changed below.
+        $this->displayOptions = [
+          'type' => 'daterange_default',
+          'label' => 'hidden',
+          'settings' => [
+            'format_type' => 'long',
+            'separator' => 'THESEPARATOR',
+          ] + $this->defaultSettings,
+        ];
+
+        /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+        $display_repository = \Drupal::service('entity_display.repository');
+
+        // Verify that the default formatter works.
+        $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+        $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
+        $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
+        $output = $this->renderTestEntity($id);
+        $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'long',
+          '%expected' => $start_expected,
+          '%expected_iso' => $start_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+        $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'long',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+        if ($start_value === $end_value) {
+          $this->assertStringNotContainsString(' THESEPARATOR ', $output, new FormattableMarkup('No separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+        else {
+          $this->assertStringContainsString(' THESEPARATOR ', $output, new FormattableMarkup('Found proper separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+
+        // Verify that hook_entity_prepare_view can add attributes.
+        // @see entity_test_entity_prepare_view()
+        $this->drupalGet('entity_test/' . $id);
+        if ($start_value === $end_value) {
+          $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
+        }
+        else {
+          $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
+        }
+
+        // Verify the default formatter works when displaying the year only.
+        $this->displayOptions = [
+          'type' => 'daterange_default',
+          'label' => 'hidden',
+          'settings' => [
+            'format_type' => 'html_year',
+            'separator' => 'THESEPARATOR',
+          ] + $this->defaultSettings,
+        ];
+        $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+        $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'html_year', '', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
+        $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'html_year', '', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
+        $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
+        $output = $this->renderTestEntity($id);
+        $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'html_year',
+          '%expected' => $start_expected,
+          '%expected_iso' => $start_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+        if ($start_expected === $end_expected && $start_expected_markup !== $end_expected_markup) {
+          $this->assertStringNotContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format has no end component %expected with %expected_iso attribute for date range %date_range.', [
+            '%value' => 'html_year',
+            '%expected' => $end_expected,
+            '%expected_iso' => $end_expected_iso,
+            '%date_range' => $date_range_id,
+          ]));
+        }
+        else {
+          $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+            '%value' => 'html_year',
+            '%expected' => $end_expected,
+            '%expected_iso' => $end_expected_iso,
+            '%date_range' => $date_range_id,
+          ]));
+        }
+        if ($start_expected === $end_expected) {
+          $this->assertStringNotContainsString(' THESEPARATOR ', $output, new FormattableMarkup('No separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+        else {
+          $this->assertStringContainsString(' THESEPARATOR ', $output, new FormattableMarkup('Found proper separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+
+        // Verify that hook_entity_prepare_view can add attributes.
+        // @see entity_test_entity_prepare_view()
+        $this->drupalGet('entity_test/' . $id);
+        if ($start_expected === $end_expected) {
+          $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
+        }
+        else {
+          $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
+        }
+
+        // Verify that the plain formatter works.
+        $this->displayOptions['type'] = 'daterange_plain';
+        $this->displayOptions['settings'] = $this->defaultSettings;
+        $this->container->get('entity_display.repository')
+          ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+        $expected = $start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT) . ' - ' . $end_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
+        if ($start_value === $end_value) {
+          $expected = $start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
+        }
+        $output = $this->renderTestEntity($id);
+        $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected for date range %date_range.', [
+          '%expected' => $expected,
+          '%date_range' => $date_range_id,
+        ]));
+        if ($start_value === $end_value) {
+          $this->assertStringNotContainsString(' ' . $this->defaultSettings['separator'] . ' ', $output, new FormattableMarkup('Formatted date field using plain format has no separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+
+        // Verify that the custom formatter works.
+        $this->displayOptions['type'] = 'daterange_custom';
+        $this->displayOptions['settings'] = ['date_format' => 'm/d/Y'] + $this->defaultSettings;
+        $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+        $expected = $start_date->format($this->displayOptions['settings']['date_format']) . ' - ' . $end_date->format($this->displayOptions['settings']['date_format']);
+        if ($start_value === $end_value) {
+          $expected = $start_date->format($this->displayOptions['settings']['date_format']);
+        }
+        $output = $this->renderTestEntity($id);
+        $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+          '%expected' => $expected,
+          '%date_range' => $date_range_id,
+        ]));
+        if ($start_value === $end_value) {
+          $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Formatted date field using daterange_custom format has no separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+
+        // Verify that the custom formatter works when displaying the year only.
+        $this->displayOptions['type'] = 'daterange_custom';
+        $this->displayOptions['settings'] = ['date_format' => 'Y'] + $this->defaultSettings;
+        $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+        $start_expected = $start_date->format($this->displayOptions['settings']['date_format']);
+        $end_expected = $end_date->format($this->displayOptions['settings']['date_format']);
+        $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+        if ($start_expected === $end_expected) {
+          $expected = $start_expected;
+        }
+        $output = $this->renderTestEntity($id);
+        $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+          '%expected' => $expected,
+          '%date_range' => $date_range_id,
+        ]));
+        if ($start_expected === $end_expected) {
+          $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Formatted date field using daterange_custom format has no separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+
+        // Test that allowed markup in custom format is preserved and XSS is
+        // removed.
+        $this->displayOptions['settings']['date_format'] = '\\<\\s\\t\\r\\o\\n\\g\\>m/d/Y\\<\\/\\s\\t\\r\\o\\n\\g\\>\\<\\s\\c\\r\\i\\p\\t\\>\\a\\l\\e\\r\\t\\(\\S\\t\\r\\i\\n\\g\\.\\f\\r\\o\\m\\C\\h\\a\\r\\C\\o\\d\\e\\(\\8\\8\\,\\8\\3\\,\\8\\3\\)\\)\\<\\/\\s\\c\\r\\i\\p\\t\\>';
+        $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+        $expected = '<strong>' . $start_date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83)) - <strong>' . $end_date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
+        if ($start_value === $end_value) {
+          $expected = '<strong>' . $start_date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
+        }
+        $output = $this->renderTestEntity($id);
+        $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+          '%expected' => $expected,
+          '%date_range' => $date_range_id,
+        ]));
+        if ($start_value === $end_value) {
+          $this->assertStringNotContainsString(' ' . $this->defaultSettings['separator'] . ' ', $output, new FormattableMarkup('Formatted date field using daterange_custom format has no separator for date range %date_range.', [
+            '%date_range' => $date_range_id,
+          ]));
+        }
+      }
+    }
+  }
+
+  /**
+   * Tests date and time field.
+   */
+  public function testDatetimeRangeField() {
+    $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
+
+    // Ensure the field to a datetime field.
+    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->save();
+
+    foreach ([
+      'two dates' => ['2012-12-31 00:00:00', '2013-06-06 00:00:00'],
+      'same year' => ['2012-06-06 00:00:00', '2012-12-31 00:00:00'],
+      'same date' => ['2012-12-31 00:00:00', '2012-12-31 00:00:00'],
+    ] as $date_range_id => $date_range_data) {
+      [$start_value, $end_value] = $date_range_data;
+
+      // Display creation form.
+      $this->drupalGet('entity_test/add');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][time]", '');
+      $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
+      $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
+      $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
+
+      // Build up dates in the UTC timezone.
+      $start_date = new DrupalDateTime($start_value, 'UTC');
+      $end_date = new DrupalDateTime($end_value, 'UTC');
+
+      // Update the timezone to the system default.
+      $start_date->setTimezone(timezone_open(date_default_timezone_get()));
+      $end_date->setTimezone(timezone_open(date_default_timezone_get()));
+
+      // Submit a valid date and ensure it is accepted.
+      $date_format = DateFormat::load('html_date')->getPattern();
+      $time_format = DateFormat::load('html_time')->getPattern();
+
+      $edit = [
+        "{$field_name}[0][value][date]" => $start_date->format($date_format),
+        "{$field_name}[0][value][time]" => $start_date->format($time_format),
+        "{$field_name}[0][end_value][date]" => $end_date->format($date_format),
+        "{$field_name}[0][end_value][time]" => $end_date->format($time_format),
+      ];
+      $this->submitForm($edit, 'Save');
+      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+      $id = $match[1];
+      $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
+      $this->assertSession()->responseContains($start_date->format($date_format));
+      $this->assertSession()->responseContains($start_date->format($time_format));
+      $this->assertSession()->responseContains($end_date->format($date_format));
+      $this->assertSession()->responseContains($end_date->format($time_format));
+
+      /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+      $display_repository = \Drupal::service('entity_display.repository');
+
+      // Verify that the default formatter works.
+      $this->displayOptions['type'] = 'daterange_default';
+      $this->displayOptions['settings'] = [
+        'format_type' => 'long',
+        'separator' => 'THESEPARATOR',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+
+      $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
+      $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
+      $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
+      $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
+      $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
+      $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+        '%value' => 'long',
+        '%expected' => $start_expected,
+        '%expected_iso' => $start_expected_iso,
+        '%date_range_id' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected && $start_expected_markup !== $end_expected_markup) {
+        $this->assertStringNotContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format has no end component %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'long',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      else {
+        $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'long',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Separator not found for date range %date_range.', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      else {
+        $this->assertStringContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Found proper separator for date range %date_range.', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that hook_entity_prepare_view can add attributes.
+      // @see entity_test_entity_prepare_view()
+      $this->drupalGet('entity_test/' . $id);
+      if ($start_expected === $end_expected) {
+        $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
+      }
+      else {
+        $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
+      }
+
+      // Verify that the default formatter works when displaying the year only.
+      $this->displayOptions['settings'] = [
+        'format_type' => 'html_year',
+        'separator' => 'THESEPARATOR',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+
+      $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'html_year');
+      $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
+      $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
+      $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'html_year');
+      $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
+      $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+        '%value' => 'html_year',
+        '%expected' => $start_expected,
+        '%expected_iso' => $start_expected_iso,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected && $start_expected_markup !== $end_expected_markup) {
+        $this->assertStringNotContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format has no end component %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'html_year',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      else {
+        $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'html_year',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('No separator found for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      else {
+        $this->assertStringContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Found proper separator for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that hook_entity_prepare_view can add attributes.
+      // @see entity_test_entity_prepare_view()
+      $this->drupalGet('entity_test/' . $id);
+      if ($start_expected === $end_expected) {
+        $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
+      }
+      else {
+        $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
+      }
+
+      // Verify that the plain formatter works.
+      $this->displayOptions['type'] = 'daterange_plain';
+      $this->displayOptions['settings'] = $this->defaultSettings;
+      $this->container->get('entity_display.repository')
+        ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $start_expected = $start_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+      $end_expected = $end_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('No separator found for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that the 'datetime_custom' formatter works.
+      $this->displayOptions['type'] = 'daterange_custom';
+      $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A'] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $start_expected = $start_date->format($this->displayOptions['settings']['date_format']);
+      $end_expected = $end_date->format($this->displayOptions['settings']['date_format']);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('No separator found for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that the 'datetime_custom' formatter works when displaying the
+      // year only.
+      $this->displayOptions['type'] = 'daterange_custom';
+      $this->displayOptions['settings'] = ['date_format' => 'Y'] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $start_expected = $start_date->format($this->displayOptions['settings']['date_format']);
+      $end_expected = $end_date->format($this->displayOptions['settings']['date_format']);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('No separator found for date range %date_range.', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that the 'timezone_override' setting works.
+      $this->displayOptions['type'] = 'daterange_custom';
+      $this->displayOptions['settings'] = [
+        'date_format' => 'm/d/Y g:i:s A',
+        'timezone_override' =>
+        'America/New_York',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $start_expected = $start_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $end_expected = $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('No separator found for date range %date_range.', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that the 'timezone_override' setting works when displaying year,
+      // month and day only.
+      $this->displayOptions['type'] = 'daterange_custom';
+      $this->displayOptions['settings'] = [
+        'date_format' => 'Y-m-d',
+        'timezone_override' => 'America/New_York',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $start_expected = $start_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $end_expected = $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('No separator found for date range %date_range.', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+    }
+  }
+
+  /**
+   * Tests all-day field.
+   */
+  public function testAlldayRangeField() {
+    $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
+
+    // Ensure field is set to an all-day field.
+    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
+    $this->fieldStorage->save();
+
+    foreach ([
+      'two dates' => ['2012-12-31 00:00:00', '2013-06-06 23:59:59'],
+      'same year' => ['2012-06-06 00:00:00', '2012-12-31 23:59:59'],
+      'same day' => ['2012-12-31 00:00:00', '2012-12-31 23:59:59'],
+    ] as $date_range_id => $date_range_data) {
+      [$start_value, $end_value] = $date_range_data;
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
@@ -75,11 +667,9 @@ class DateRangeFieldTest extends DateTestBase {
       $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
       $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
-      // Build up dates in the UTC timezone.
-      $value = '2012-12-31 00:00:00';
-      $start_date = new DrupalDateTime($value, 'UTC');
-      $end_value = '2013-06-06 00:00:00';
-      $end_date = new DrupalDateTime($end_value, 'UTC');
+      // Build up dates in the proper timezone.
+      $start_date = new DrupalDateTime($start_value, timezone_open(date_default_timezone_get()));
+      $end_date = new DrupalDateTime($end_value, timezone_open(date_default_timezone_get()));
 
       // Submit a valid date and ensure it is accepted.
       $date_format = DateFormat::load('html_date')->getPattern();
@@ -98,62 +688,37 @@ class DateRangeFieldTest extends DateTestBase {
       $this->assertSession()->responseContains($end_date->format($date_format));
       $this->assertSession()->responseNotContains($end_date->format($time_format));
 
-      // Verify the date doesn't change when entity is edited through the form.
-      $entity = EntityTest::load($id);
-      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
-      $this->assertEquals('2013-06-06', $entity->{$field_name}->end_value);
-      $this->drupalGet('entity_test/manage/' . $id . '/edit');
-      $this->submitForm([], 'Save');
-      $this->drupalGet('entity_test/manage/' . $id . '/edit');
-      $this->submitForm([], 'Save');
-      $this->drupalGet('entity_test/manage/' . $id . '/edit');
-      $this->submitForm([], 'Save');
-      $entity = EntityTest::load($id);
-      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
-      $this->assertEquals('2013-06-06', $entity->{$field_name}->end_value);
-
-      // Formats that display a time component for date-only fields will display
-      // the default time, so that is applied before calculating the expected
-      // value.
-      $this->massageTestDate($start_date);
-      $this->massageTestDate($end_date);
-
-      // Reset display options since these get changed below.
-      $this->displayOptions = [
-        'type' => 'daterange_default',
-        'label' => 'hidden',
-        'settings' => [
-          'format_type' => 'long',
-          'separator' => 'THESEPARATOR',
-        ] + $this->defaultSettings,
-      ];
-
       /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
       $display_repository = \Drupal::service('entity_display.repository');
 
       // Verify that the default formatter works.
+      $this->displayOptions['type'] = 'daterange_default';
+      $this->displayOptions['settings'] = [
+        'format_type' => 'long',
+        'separator' => 'THESEPARATOR',
+      ] + $this->defaultSettings;
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
 
-      $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
+      $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
+      $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
       $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
-      $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
+      $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
+      $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
       $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
       $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
+      $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
         '%value' => 'long',
         '%expected' => $start_expected,
         '%expected_iso' => $start_expected_iso,
-        '%timezone' => $timezone,
+        '%date_range' => $date_range_id,
       ]));
-      $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
+      $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
         '%value' => 'long',
         '%expected' => $end_expected,
         '%expected_iso' => $end_expected_iso,
-        '%timezone' => $timezone,
+        '%date_range' => $date_range_id,
       ]));
       $this->assertStringContainsString(' THESEPARATOR ', $output, 'Found proper separator');
 
@@ -162,6 +727,58 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/' . $id);
       $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
 
+      // Verify that the default formatter works when displaying the year only.
+      $this->displayOptions['settings'] = [
+        'format_type' => 'html_year',
+        'separator' => 'THESEPARATOR',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+
+      $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'html_year');
+      $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
+      $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
+      $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'html_year');
+      $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
+      $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+        '%value' => 'long',
+        '%expected' => $start_expected,
+        '%expected_iso' => $start_expected_iso,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format has no end component %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'long',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+        $this->assertStringNotContainsString(' THESEPARATOR ', $output, new FormattableMarkup('Separator not found for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+      else {
+        $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute for date range %date_range.', [
+          '%value' => 'long',
+          '%expected' => $end_expected,
+          '%expected_iso' => $end_expected_iso,
+          '%date_range' => $date_range_id,
+        ]));
+        $this->assertStringContainsString(' THESEPARATOR ', $output, new FormattableMarkup('Found proper separator for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that hook_entity_prepare_view can add attributes.
+      // @see entity_test_entity_prepare_view()
+      $this->drupalGet('entity_test/' . $id);
+      if ($start_expected === $end_expected) {
+        $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
+      }
+
       // Verify that the plain formatter works.
       $this->displayOptions['type'] = 'daterange_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
@@ -169,11 +786,11 @@ class DateRangeFieldTest extends DateTestBase {
         ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
-      $expected = $start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT) . ' - ' . $end_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
+      $expected = $start_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT) . ' - ' . $end_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
       $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected for date range %date_range.', [
         '%expected' => $expected,
-        '%timezone' => $timezone,
+        '%date_range' => $date_range_id,
       ]));
 
       // Verify that the custom formatter works.
@@ -184,455 +801,79 @@ class DateRangeFieldTest extends DateTestBase {
         ->save();
       $expected = $start_date->format($this->displayOptions['settings']['date_format']) . ' - ' . $end_date->format($this->displayOptions['settings']['date_format']);
       $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
         '%expected' => $expected,
-        '%timezone' => $timezone,
+        '%date_range' => $date_range_id,
       ]));
 
-      // Test that allowed markup in custom format is preserved and XSS is
-      // removed.
-      $this->displayOptions['settings']['date_format'] = '\\<\\s\\t\\r\\o\\n\\g\\>m/d/Y\\<\\/\\s\\t\\r\\o\\n\\g\\>\\<\\s\\c\\r\\i\\p\\t\\>\\a\\l\\e\\r\\t\\(\\S\\t\\r\\i\\n\\g\\.\\f\\r\\o\\m\\C\\h\\a\\r\\C\\o\\d\\e\\(\\8\\8\\,\\8\\3\\,\\8\\3\\)\\)\\<\\/\\s\\c\\r\\i\\p\\t\\>';
-      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
-        ->save();
-      $expected = '<strong>' . $start_date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83)) - <strong>' . $end_date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
-      $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected in %timezone.', [
-        '%expected' => $expected,
-        '%timezone' => $timezone,
-      ]));
-
-      // Test formatters when start date and end date are the same
-      $this->drupalGet('entity_test/add');
-      $value = '2012-12-31 00:00:00';
-      $start_date = new DrupalDateTime($value, 'UTC');
-
-      $date_format = DateFormat::load('html_date')->getPattern();
-      $time_format = DateFormat::load('html_time')->getPattern();
-
-      $edit = [
-        "{$field_name}[0][value][date]" => $start_date->format($date_format),
-        "{$field_name}[0][end_value][date]" => $start_date->format($date_format),
-      ];
-
-      $this->submitForm($edit, 'Save');
-      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-      $id = $match[1];
-      $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-
-      $this->massageTestDate($start_date);
-
-      $this->displayOptions = [
-        'type' => 'daterange_default',
-        'label' => 'hidden',
-        'settings' => [
-          'format_type' => 'long',
-          'separator' => 'THESEPARATOR',
-        ] + $this->defaultSettings,
-      ];
-
-      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
-        ->save();
-
-      $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
-      $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
-        '%value' => 'long',
-        '%expected' => $start_expected,
-        '%expected_iso' => $start_expected_iso,
-        '%timezone' => $timezone,
-      ]));
-      $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page in ' . $timezone);
-
-      // Verify that hook_entity_prepare_view can add attributes.
-      // @see entity_test_entity_prepare_view()
-      $this->drupalGet('entity_test/' . $id);
-      $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
-
-      $this->displayOptions['type'] = 'daterange_plain';
-      $this->displayOptions['settings'] = $this->defaultSettings;
-      $this->container->get('entity_display.repository')
-        ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
-        ->save();
-      $expected = $start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
-      $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected in %timezone.', [
-        '%expected' => $expected,
-        '%timezone' => $timezone,
-      ]));
-      $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page');
-
+      // Verify that the custom formatter works when displaying the year only.
       $this->displayOptions['type'] = 'daterange_custom';
-      $this->displayOptions['settings'] = ['date_format' => 'm/d/Y'] + $this->defaultSettings;
+      $this->displayOptions['settings'] = ['date_format' => 'Y'] + $this->defaultSettings;
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
-      $expected = $start_date->format($this->displayOptions['settings']['date_format']);
+      $start_expected = $start_date->format($this->displayOptions['settings']['date_format']);
+      $end_expected = $end_date->format($this->displayOptions['settings']['date_format']);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
       $output = $this->renderTestEntity($id);
-      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
         '%expected' => $expected,
-        '%timezone' => $timezone,
+        '%date_range' => $date_range_id,
       ]));
-      $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page');
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Separator not found for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
+
+      // Verify that the 'timezone_override' setting works.
+      $this->displayOptions['type'] = 'daterange_custom';
+      $this->displayOptions['settings'] = [
+        'date_format' => 'm/d/Y g:i:s A',
+        'timezone_override' => 'America/New_York',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $expected = $start_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $expected .= ' - ' . $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+
+      // Verify that the 'timezone_override' setting works when displaying the
+      // year, month and day only.
+      $this->displayOptions['type'] = 'daterange_custom';
+      $this->displayOptions['settings'] = [
+        'date_format' => 'Y-m-d',
+        'timezone_override' =>
+        'America/New_York',
+      ] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $start_expected = $start_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $end_expected = $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
+      $expected = $start_expected . ' ' . $this->displayOptions['settings']['separator'] . ' ' . $end_expected;
+      if ($start_expected === $end_expected) {
+        $expected = $start_expected;
+      }
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected for date range %date_range.', [
+        '%expected' => $expected,
+        '%date_range' => $date_range_id,
+      ]));
+      if ($start_expected === $end_expected) {
+        $this->assertStringNotContainsString(' ' . $this->displayOptions['settings']['separator'] . ' ', $output, new FormattableMarkup('Separator not found for date range %date_range', [
+          '%date_range' => $date_range_id,
+        ]));
+      }
     }
-  }
-
-  /**
-   * Tests date and time field.
-   */
-  public function testDatetimeRangeField() {
-    $field_name = $this->fieldStorage->getName();
-    $field_label = $this->field->label();
-
-    // Ensure the field to a datetime field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
-    $this->fieldStorage->save();
-
-    // Display creation form.
-    $this->drupalGet('entity_test/add');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][time]", '');
-    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
-    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
-    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
-
-    // Build up dates in the UTC timezone.
-    $value = '2012-12-31 00:00:00';
-    $start_date = new DrupalDateTime($value, 'UTC');
-    $end_value = '2013-06-06 00:00:00';
-    $end_date = new DrupalDateTime($end_value, 'UTC');
-
-    // Update the timezone to the system default.
-    $start_date->setTimezone(timezone_open(date_default_timezone_get()));
-    $end_date->setTimezone(timezone_open(date_default_timezone_get()));
-
-    // Submit a valid date and ensure it is accepted.
-    $date_format = DateFormat::load('html_date')->getPattern();
-    $time_format = DateFormat::load('html_time')->getPattern();
-
-    $edit = [
-      "{$field_name}[0][value][date]" => $start_date->format($date_format),
-      "{$field_name}[0][value][time]" => $start_date->format($time_format),
-      "{$field_name}[0][end_value][date]" => $end_date->format($date_format),
-      "{$field_name}[0][end_value][time]" => $end_date->format($time_format),
-    ];
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-    $this->assertSession()->responseContains($start_date->format($date_format));
-    $this->assertSession()->responseContains($start_date->format($time_format));
-    $this->assertSession()->responseContains($end_date->format($date_format));
-    $this->assertSession()->responseContains($end_date->format($time_format));
-
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-
-    // Verify that the default formatter works.
-    $this->displayOptions['settings'] = [
-      'format_type' => 'long',
-      'separator' => 'THESEPARATOR',
-    ] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-
-    $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
-    $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
-    $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
-    $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
-    $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
-    $this->assertStringContainsString(' THESEPARATOR ', $output, 'Found proper separator');
-
-    // Verify that hook_entity_prepare_view can add attributes.
-    // @see entity_test_entity_prepare_view()
-    $this->drupalGet('entity_test/' . $id);
-    $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
-
-    // Verify that the plain formatter works.
-    $this->displayOptions['type'] = 'daterange_plain';
-    $this->displayOptions['settings'] = $this->defaultSettings;
-    $this->container->get('entity_display.repository')
-      ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT) . ' - ' . $end_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
-
-    // Verify that the 'datetime_custom' formatter works.
-    $this->displayOptions['type'] = 'daterange_custom';
-    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A'] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format($this->displayOptions['settings']['date_format']) . ' - ' . $end_date->format($this->displayOptions['settings']['date_format']);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
-
-    // Verify that the 'timezone_override' setting works.
-    $this->displayOptions['type'] = 'daterange_custom';
-    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
-    $expected .= ' - ' . $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
-
-    // Test formatters when start date and end date are the same
-    $this->drupalGet('entity_test/add');
-    $value = '2012-12-31 00:00:00';
-    $start_date = new DrupalDateTime($value, 'UTC');
-    $start_date->setTimezone(timezone_open(date_default_timezone_get()));
-
-    $date_format = DateFormat::load('html_date')->getPattern();
-    $time_format = DateFormat::load('html_time')->getPattern();
-
-    $edit = [
-      "{$field_name}[0][value][date]" => $start_date->format($date_format),
-      "{$field_name}[0][value][time]" => $start_date->format($time_format),
-      "{$field_name}[0][end_value][date]" => $start_date->format($date_format),
-      "{$field_name}[0][end_value][time]" => $start_date->format($time_format),
-    ];
-
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-
-    $this->displayOptions = [
-      'type' => 'daterange_default',
-      'label' => 'hidden',
-      'settings' => [
-        'format_type' => 'long',
-        'separator' => 'THESEPARATOR',
-      ] + $this->defaultSettings,
-    ];
-
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-
-    $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
-    $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
-    $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page');
-
-    // Verify that hook_entity_prepare_view can add attributes.
-    // @see entity_test_entity_prepare_view()
-    $this->drupalGet('entity_test/' . $id);
-    $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
-
-    $this->displayOptions['type'] = 'daterange_plain';
-    $this->displayOptions['settings'] = $this->defaultSettings;
-    $this->container->get('entity_display.repository')
-      ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
-    $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page');
-
-    $this->displayOptions['type'] = 'daterange_custom';
-    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A'] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format($this->displayOptions['settings']['date_format']);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
-    $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page');
-  }
-
-  /**
-   * Tests all-day field.
-   */
-  public function testAlldayRangeField() {
-    $field_name = $this->fieldStorage->getName();
-    $field_label = $this->field->label();
-
-    // Ensure field is set to an all-day field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
-    $this->fieldStorage->save();
-
-    // Display creation form.
-    $this->drupalGet('entity_test/add');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
-    $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]');
-    $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
-    $this->assertSession()->fieldNotExists("{$field_name}[0][end_value][time]");
-    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
-    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
-    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
-
-    // Build up dates in the proper timezone.
-    $value = '2012-12-31 00:00:00';
-    $start_date = new DrupalDateTime($value, timezone_open(date_default_timezone_get()));
-    $end_value = '2013-06-06 23:59:59';
-    $end_date = new DrupalDateTime($end_value, timezone_open(date_default_timezone_get()));
-
-    // Submit a valid date and ensure it is accepted.
-    $date_format = DateFormat::load('html_date')->getPattern();
-    $time_format = DateFormat::load('html_time')->getPattern();
-
-    $edit = [
-      "{$field_name}[0][value][date]" => $start_date->format($date_format),
-      "{$field_name}[0][end_value][date]" => $end_date->format($date_format),
-    ];
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-    $this->assertSession()->responseContains($start_date->format($date_format));
-    $this->assertSession()->responseNotContains($start_date->format($time_format));
-    $this->assertSession()->responseContains($end_date->format($date_format));
-    $this->assertSession()->responseNotContains($end_date->format($time_format));
-
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-
-    // Verify that the default formatter works.
-    $this->displayOptions['settings'] = [
-      'format_type' => 'long',
-      'separator' => 'THESEPARATOR',
-    ] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-
-    $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
-    $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
-    $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
-    $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
-    $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
-    $this->assertStringContainsString(' THESEPARATOR ', $output, 'Found proper separator');
-
-    // Verify that hook_entity_prepare_view can add attributes.
-    // @see entity_test_entity_prepare_view()
-    $this->drupalGet('entity_test/' . $id);
-    $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
-
-    // Verify that the plain formatter works.
-    $this->displayOptions['type'] = 'daterange_plain';
-    $this->displayOptions['settings'] = $this->defaultSettings;
-    $this->container->get('entity_display.repository')
-      ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT) . ' - ' . $end_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
-
-    // Verify that the custom formatter works.
-    $this->displayOptions['type'] = 'daterange_custom';
-    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y'] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format($this->displayOptions['settings']['date_format']) . ' - ' . $end_date->format($this->displayOptions['settings']['date_format']);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
-
-    // Verify that the 'timezone_override' setting works.
-    $this->displayOptions['type'] = 'daterange_custom';
-    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
-    $expected .= ' - ' . $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
-
-    // Test formatters when start date and end date are the same
-    $this->drupalGet('entity_test/add');
-
-    $value = '2012-12-31 00:00:00';
-    $start_date = new DrupalDateTime($value, timezone_open(date_default_timezone_get()));
-    $end_value = '2012-12-31 23:59:59';
-    $end_date = new DrupalDateTime($end_value, timezone_open(date_default_timezone_get()));
-
-    $date_format = DateFormat::load('html_date')->getPattern();
-    $time_format = DateFormat::load('html_time')->getPattern();
-
-    $edit = [
-      "{$field_name}[0][value][date]" => $start_date->format($date_format),
-      "{$field_name}[0][end_value][date]" => $start_date->format($date_format),
-    ];
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-
-    $this->displayOptions = [
-      'type' => 'daterange_default',
-      'label' => 'hidden',
-      'settings' => [
-        'format_type' => 'long',
-        'separator' => 'THESEPARATOR',
-      ] + $this->defaultSettings,
-    ];
-
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-
-    $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
-    $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
-    $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
-    $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
-    $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
-    $this->assertStringContainsString(' THESEPARATOR ', $output, 'Found proper separator');
-
-    // Verify that hook_entity_prepare_view can add attributes.
-    // @see entity_test_entity_prepare_view()
-    $this->drupalGet('entity_test/' . $id);
-    $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
-
-    $this->displayOptions['type'] = 'daterange_plain';
-    $this->container->get('entity_display.repository')
-      ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT) . ' THESEPARATOR ' . $end_date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
-    $this->assertStringContainsString(' THESEPARATOR ', $output, 'Found proper separator');
-
-    $this->displayOptions['type'] = 'daterange_custom';
-    $this->displayOptions['settings']['date_format'] = 'm/d/Y';
-    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-    $expected = $start_date->format($this->displayOptions['settings']['date_format']) . ' THESEPARATOR ' . $end_date->format($this->displayOptions['settings']['date_format']);
-    $output = $this->renderTestEntity($id);
-    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
-    $this->assertStringContainsString(' THESEPARATOR ', $output, 'Found proper separator');
-
   }
 
   /**
