@@ -4,13 +4,13 @@
   <version>1.0</version>
   <title>Let's Not Get a Drink Sometime</title>
   <https/>
-  <author_name>CollegeHumor</author_name>
-  <author_url>http://www.collegehumor.com</author_url>
-  <provider_name>CollegeHumor</provider_name>
-  <provider_url>http://www.collegehumor.com</provider_url>
+  <author_name>Dropout</author_name>
+  <author_url>https://signup.dropout.tv</author_url>
+  <provider_name>Dropout</provider_name>
+  <provider_url>https://signup.dropout.tv</provider_url>
   <width>610</width>
   <height>343</height>
-  <html><h1>By the power of Grayskull, CollegeHumor works!</h1>
+  <html><h1>By the power of Grayskull, Dropout works!</h1>
   </html>
   <!-- The thumbnail URL does not contain a file extension, so we use
   this to test the oEmbed source plugin's thumbnail handling;
