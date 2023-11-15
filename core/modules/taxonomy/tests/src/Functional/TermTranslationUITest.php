@@ -122,43 +122,43 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     }
   }
 
-//  /**
-//   * Tests translate link on vocabulary term list.
-//   */
-//  public function testTranslateLinkVocabularyAdminPage() {
-//    $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy'])));
-//
-//    $values = [
-//      'name' => $this->randomMachineName(),
-//    ];
-//    $translatable_tid = $this->createEntity($values, $this->langcodes[0], $this->vocabulary->id());
-//
-//    // Create an untranslatable vocabulary.
-//    $untranslatable_vocabulary = Vocabulary::create([
-//      'name' => 'untranslatable_voc',
-//      'description' => $this->randomMachineName(),
-//      'vid' => 'untranslatable_voc',
-//      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-//      'weight' => mt_rand(0, 10),
-//    ]);
-//    $untranslatable_vocabulary->save();
-//
-//    $values = [
-//      'name' => $this->randomMachineName(),
-//    ];
-//    $untranslatable_tid = $this->createEntity($values, $this->langcodes[0], $untranslatable_vocabulary->id());
-//
-//    // Verify translation links.
-//    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-//    $this->assertSession()->statusCodeEquals(200);
-//    $this->assertSession()->linkByHrefExists('term/' . $translatable_tid . '/translations', 0, 'The translations link exists for a translatable vocabulary.');
-//    $this->assertSession()->linkByHrefExists('term/' . $translatable_tid . '/edit', 0, 'The edit link exists for a translatable vocabulary.');
-//
-//    $this->drupalGet('admin/structure/taxonomy/manage/' . $untranslatable_vocabulary->id() . '/overview');
-//    $this->assertSession()->statusCodeEquals(200);
-//    $this->assertSession()->linkByHrefExists('term/' . $untranslatable_tid . '/edit');
-//    $this->assertSession()->linkByHrefNotExists('term/' . $untranslatable_tid . '/translations');
-//  }
+  /**
+   * Tests translate link on vocabulary term list.
+   */
+  public function testTranslateLinkVocabularyAdminPage() {
+    $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy'])));
+
+    $values = [
+      'name' => $this->randomMachineName(),
+    ];
+    $translatable_tid = $this->createEntity($values, $this->langcodes[0], $this->vocabulary->id());
+
+    // Create an untranslatable vocabulary.
+    $untranslatable_vocabulary = Vocabulary::create([
+      'name' => 'untranslatable_voc',
+      'description' => $this->randomMachineName(),
+      'vid' => 'untranslatable_voc',
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'weight' => mt_rand(0, 10),
+    ]);
+    $untranslatable_vocabulary->save();
+
+    $values = [
+      'name' => $this->randomMachineName(),
+    ];
+    $untranslatable_tid = $this->createEntity($values, $this->langcodes[0], $untranslatable_vocabulary->id());
+
+    // Verify translation links.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefExists('term/' . $translatable_tid . '/translations', 0, 'The translations link exists for a translatable vocabulary.');
+    $this->assertSession()->linkByHrefExists('term/' . $translatable_tid . '/edit', 0, 'The edit link exists for a translatable vocabulary.');
+
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $untranslatable_vocabulary->id() . '/overview');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefExists('term/' . $untranslatable_tid . '/edit');
+    $this->assertSession()->linkByHrefNotExists('term/' . $untranslatable_tid . '/translations');
+  }
 
   /**
    * {@inheritdoc}
