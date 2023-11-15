@@ -88,7 +88,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     // The following config trigger config schema validation errors, even after
     // the update. An update path is needed to fix these.
     // @see drupal-9.4.0.filled.standard.php.gz
-    // @todo Remove in <follow-up issue to be created>
+          // @todo Remove in <follow-up issue to be created>
     'block.block.claro_help_search',
     'block.block.stark_testblock',
     'block.block.testblock',

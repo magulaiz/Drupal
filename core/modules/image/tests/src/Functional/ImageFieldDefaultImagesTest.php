@@ -268,7 +268,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   /**
    * Tests image field and field storage having an invalid default image.
    *
-   * @todo Move to FieldConfigValidationTest + FieldStorageConfigValidationTest
+        * @todo Move to FieldConfigValidationTest + FieldStorageConfigValidationTest
    */
   public function testInvalidDefaultImage() {
     $field_storage = FieldStorageConfig::create([
