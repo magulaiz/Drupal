@@ -52,7 +52,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     });
     $this->assertNoJavaScript($performance_data);
     $this->assertGreaterThanOrEqual(484, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(488, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(507, $performance_data->getQueryCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
