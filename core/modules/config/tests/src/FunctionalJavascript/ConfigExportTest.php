@@ -47,7 +47,7 @@ class ConfigExportTest extends WebDriverTestBase {
       $new_block = $this->createBlockContent($block_name);
       $this->drupalPlaceBlock('block_content:' . $new_block->uuid(), [
         'id' => $block_name,
-        'label' => $block_name,
+        'label' => $this->randomMachineName(),
         'theme' => $this->defaultTheme,
         'region' => 'sidebar_first',
       ]);
@@ -107,13 +107,14 @@ class ConfigExportTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldValueEquals('export', '');
 
-    // Check that the 'Configuration name' list is sorted alphabetically by ID, not label.
+    // Check that the 'Configuration name' list is sorted alphabetically by ID,
+    // which always begins with our prefix, and not the label, which is randomized.
     $page->selectFieldOption('config_type', 'Block');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $options = $page->findField('config_name')->findAll('css', 'option');
     foreach ([1, 2, 3, 4] as $num) {
       $block_name = $this->blockNamePrefix . $num;
-      $this->assertEquals("$block_name ($block_name)", $options[$num]->getText());
+      $this->assertStringStartsWith($block_name, $options[$num]->getText());
       $this->assertEquals($block_name, $options[$num]->getValue());
     }
   }
