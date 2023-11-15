@@ -141,7 +141,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
       ->condition('targetEntityType', 'block_content')
       ->execute();
 
-    // Make sure we have the expected values before the update.
+    // Make sure block_content does not have status field added.
     $config_keys = [];
     foreach ($ids as $id) {
       $config_keys[] = 'core.entity_form_display.' . $id;
@@ -200,7 +200,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertArrayHasKey('status', $data['display']['default']['display_options']['filters']);
     $this->assertTrue($data['display']['default']['display_options']['filters']['status']['exposed'], 'The status filter is exposed');
 
-    // Check the new actions were created and work as expected.
+    // Create a new user with permissions to administer block_content.
     $user = $this->drupalCreateUser([
       'administer blocks',
       'administer block content',

@@ -166,12 +166,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     $entity = $storage->loadUnchanged($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 
-    $statuses = [
-      TRUE,
-      FALSE,
-    ];
-
-    foreach ($statuses as $index => $value) {
+    foreach ([TRUE, FALSE] as $index => $value) {
       // (Un)publish the block content translations and check that the
       // translation statuses are (un)published accordingly.
       foreach ($this->langcodes as $langcode) {
