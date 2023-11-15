@@ -20,6 +20,6 @@ class NoMarkupConstraint extends Constraint {
    *
    * @var string
    */
-  public string $markupPresentMessage = 'The value should not contain markup';
+  public string $markupPresentMessage = 'The value should not contain HTML markup';
 
 }
