@@ -8,7 +8,6 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\file\Plugin\migrate\field\d6\FileField;
 use Prophecy\Argument;
 
-// cspell:ignore filefield imagefield
 
 /**
  * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d6\FileField

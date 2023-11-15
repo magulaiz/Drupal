@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
-// cspell:ignore drupalmysqldriverdatabasemysql
 
 /**
  * Tests migrate upgrade credential form with settings in settings.php.

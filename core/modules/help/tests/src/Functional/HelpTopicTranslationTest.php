@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\help\Functional;
 
-// cspell:ignore hilfetestmodul übersetzung
 
 /**
  * Verifies help topic translations.

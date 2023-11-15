@@ -14,7 +14,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore onhover baguette
 
 /**
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
@@ -616,7 +615,6 @@ class ValidatorsTest extends KernelTestBase {
    * Provides a list of Text Editor + Text Format pairs to test.
    */
   public function providerPair(): array {
-    // cspell:ignore donk
     $data = [];
     $data['INVALID: allow_view_mode_override condition not met: filter must be configured to allow 2 or more view modes'] = [
       'settings' => [

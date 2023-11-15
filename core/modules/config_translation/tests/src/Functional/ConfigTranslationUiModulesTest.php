@@ -8,7 +8,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 
-// cspell:ignore tuvan
 
 /**
  * Translate settings and entities to various languages.

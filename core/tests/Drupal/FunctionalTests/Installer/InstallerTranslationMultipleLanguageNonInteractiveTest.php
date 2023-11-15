@@ -4,7 +4,6 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore montag
 
 /**
  * Tests translation files for multiple languages get imported during install.

@@ -23,7 +23,6 @@ use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-// cspell:ignore destid idmap sourceid
 
 /**
  * Defines the sql based ID map implementation.

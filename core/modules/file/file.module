@@ -28,7 +28,6 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Upload\FormUploadedFile;
 
-// cspell:ignore abiword widthx
 
 /**
  * Implements hook_help().

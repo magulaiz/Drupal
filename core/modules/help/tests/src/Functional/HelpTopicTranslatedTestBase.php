@@ -4,7 +4,6 @@ namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore hilfetestmodul übersetzung
 
 /**
  * Provides a base class for functional help topic tests that use translation.

@@ -6,9 +6,6 @@ use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\Tests\UnitTestCase;
 use Drupal\filter\Plugin\FilterInterface;
 
-// cspell:ignore ascript attributename bgsound bscript ckers cript datafld
-// cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover
-// cspell:ignore noxss pression ript scri scriptlet unicoded vbscript
 
 /**
  * @coversDefaultClass \Drupal\editor\EditorXssFilter\Standard

@@ -7,7 +7,6 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore esque imageUpload sourceediting Editing's
 
 /**
  * Tests for CKEditor 5.

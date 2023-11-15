@@ -24,7 +24,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 
-// cspell:ignore multiblock
 
 /**
  * Implements hook_help().

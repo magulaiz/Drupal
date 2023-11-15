@@ -1,4 +1,3 @@
-// cspell:ignore drupalhtmlengine
 import DrupalHtmlEngine from './drupalhtmlengine';
 
 /**

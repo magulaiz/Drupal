@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore documentselection
 import { isWidget } from 'ckeditor5/src/widget';
 
 /**

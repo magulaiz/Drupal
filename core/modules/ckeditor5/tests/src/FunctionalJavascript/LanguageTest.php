@@ -6,7 +6,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 
-// cspell:ignore คำพูดบล็อก sourceediting
 
 /**
  * Tests for CKEditor 5 UI translations.

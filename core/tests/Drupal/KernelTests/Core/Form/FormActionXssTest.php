@@ -8,7 +8,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
-// cspell:ignore attribute\'close
 
 /**
  * Ensures that a form's action attribute can't be exploited with XSS.

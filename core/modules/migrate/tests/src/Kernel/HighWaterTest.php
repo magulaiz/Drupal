@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
-// cspell:ignore Highwater
 
 /**
  * Tests migration high water property.

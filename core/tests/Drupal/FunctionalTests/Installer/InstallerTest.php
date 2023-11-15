@@ -7,7 +7,6 @@ use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Test\PerformanceTestRecorder;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 
-// cspell:ignore drupalmysqldriverdatabasemysql drupalpgsqldriverdatabasepgsql
 
 /**
  * Tests the interactive installer.

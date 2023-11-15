@@ -5,7 +5,6 @@ const postcssImport = require('postcss-import');
 const postcssHeader = require('postcss-header');
 const postcssUrl = require('postcss-url');
 const postcssPresetEnv = require('postcss-preset-env');
-// cspell:ignore pxtorem
 const postcssPixelsToRem = require('postcss-pxtorem');
 const prettier = require('prettier');
 const removeUnwantedComments = require('./remove-unwanted-comments');

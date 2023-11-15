@@ -1,4 +1,3 @@
-// cspell:ignore imageupload insertimage drupalimage drupalimageupload drupalinsertimage
 
 import DrupalImage from './drupalimage';
 import DrupalImageUpload from './imageupload/drupalimageupload';

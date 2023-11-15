@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore datafilter eventinfo downcastdispatcher generalhtmlsupport
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
 

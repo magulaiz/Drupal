@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-// cspell:ignore subtheming
 
 /**
  * Tests warnings when ckeditor_stylesheets do not have CKEditor 5 equivalents.

@@ -14,7 +14,6 @@ use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore esque māori sourceediting splitbutton upcasted
 
 /**
  * Tests for CKEditor 5.

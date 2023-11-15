@@ -1,4 +1,3 @@
-# cspell:ignore everytextcontainer justheading
 ckeditor5_plugin_elements_test_headingCombo:
   ckeditor5:
     plugins: []

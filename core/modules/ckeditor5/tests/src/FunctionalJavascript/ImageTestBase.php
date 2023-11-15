@@ -8,7 +8,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
-// cspell:ignore imageresize
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image

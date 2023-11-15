@@ -1,4 +1,3 @@
-// cspell:ignore drupalhtmlbuilder dataprocessor basichtmlwriter htmlwriter
 import DrupalHtmlBuilder from './drupalhtmlbuilder';
 
 /**

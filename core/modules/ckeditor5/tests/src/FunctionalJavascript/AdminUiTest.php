@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-// cspell:ignore sourceediting
 
 /**
  * Tests for CKEditor 5 in the admin UI.

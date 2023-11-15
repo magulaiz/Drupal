@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Core\Template;
 
-// cspell:ignore mila
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\File\FileUrlGeneratorInterface;

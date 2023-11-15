@@ -7,7 +7,6 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 
-// cspell:ignore horserad
 
 /**
  * Tests the Field UI "Manage Fields" screens.

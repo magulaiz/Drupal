@@ -8,7 +8,6 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\help\Plugin\HelpSection\HelpSectionPluginBase;
 
-// cspell:ignore asdrsad barmm foomm sqruct wcsrefsdf sdeeeee
 
 /**
  * Provides a searchable help section for testing.

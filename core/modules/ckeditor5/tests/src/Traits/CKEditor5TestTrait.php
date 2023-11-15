@@ -5,7 +5,6 @@ namespace Drupal\Tests\ckeditor5\Traits;
 use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
 
-// cspell:ignore downcasted
 
 /**
  * Provides methods to test CKEditor 5.

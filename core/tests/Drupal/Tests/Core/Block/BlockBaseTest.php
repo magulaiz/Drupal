@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Block;
 use Drupal\block_test\Plugin\Block\TestBlockInstantiation;
 use Drupal\Tests\UnitTestCase;
 
-// cspell:ignore adminlabel
 
 /**
  * @coversDefaultClass \Drupal\Core\Block\BlockBase

@@ -1,6 +1,5 @@
 <?php
 // phpcs:ignoreFile
-// cspell:ignore paamayim nekudotayim
 
 /**
  * @file

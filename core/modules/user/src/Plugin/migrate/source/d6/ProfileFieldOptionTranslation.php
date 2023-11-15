@@ -4,7 +4,6 @@ namespace Drupal\user\Plugin\migrate\source\d6;
 
 use Drupal\user\Plugin\migrate\source\ProfileField;
 
-// cspell:ignore nprofile objectid
 
 /**
  * Drupal 6 i18n profile field option labels source from database.

@@ -31,7 +31,6 @@ use Drupal\Core\Utility\Error;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
-// cspell:ignore quickedit
 
 /**
  * An array of machine names of modules that were removed from Drupal core.

@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Event;
 
-// cspell:ignore idmap
 
 /**
  * Defines events for the migration system.

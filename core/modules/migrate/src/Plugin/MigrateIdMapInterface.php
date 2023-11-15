@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;
 
-// cspell:ignore destid sourceid
 
 /**
  * Defines an interface for migrate ID mappings.
