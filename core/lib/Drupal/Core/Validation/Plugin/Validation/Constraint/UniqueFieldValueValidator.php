@@ -76,7 +76,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
       ->condition($field_name, $item_values, 'IN')
       ->groupBy("$field_name.$property_name");
     if (!$is_new) {
-      $entity_id = $entity->id();
+      $entity_id = is_numeric($entity->id()) ? (int) $entity->id() : $entity->id();
       $query->condition($id_key, $entity_id, '<>');
     }
     $results = $query->execute();
