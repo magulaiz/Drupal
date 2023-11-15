@@ -186,7 +186,7 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'settings.plugins.ckeditor5_language' => [
           'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
-          "'language_list' is a required key.",
+          "'language_list' is a required key because settings.plugins.%key is ckeditor5_language (see config schema type ckeditor5.plugin.ckeditor5_language).",
         ],
       ],
     ];
