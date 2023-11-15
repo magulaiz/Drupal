@@ -87,12 +87,17 @@ class SimpleConfigValidationTest extends KernelTestBase {
         'name',
         mb_chr($code_point),
         'Labels are not allowed to span multiple lines or contain control characters.',
+        // ASCII 0 is removed by strip_tags, so label validation for
+        // NoMarkupConstraint will produce an extra validation error in that
+        // case.
+        $code_point == 0 ? 2 : 1,
       ];
       $data["text $code_point"] = [
         'system.maintenance',
         'message',
         mb_chr($code_point),
         'Text is not allowed to contain control characters, only visible characters.',
+        1,
       ];
     }
     // Line feeds (ASCII 10) and carriage returns (ASCII 13) are used to create
@@ -130,7 +135,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
    *
    * @dataProvider providerSpecialCharacters
    */
-  public function testSpecialCharacters(string $config_name, string $property, string $character, ?string $expected_error_message): void {
+  public function testSpecialCharacters(string $config_name, string $property, string $character, ?string $expected_error_message, ?int $violations_count = 1): void {
     $config = $this->config($config_name)
       ->set($property, "This has a special character: $character");
 
@@ -143,7 +148,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
     }
     else {
       $code_point = mb_ord($character);
-      $this->assertCount(1, $violations, "Character $code_point did not raise a constraint violation.");
+      $this->assertCount($violations_count, $violations, "Character $code_point did not raise a constraint violation.");
       $this->assertSame($property, $violations[0]->getPropertyPath());
       $this->assertSame($expected_error_message, (string) $violations[0]->getMessage());
     }
