@@ -170,7 +170,21 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
     $property_path_parts = explode('.', $property_path_mapping);
     // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
-    assert(!in_array(['%key', '%type'], $instructions));
+    assert(!in_array('%type', $instructions));
+
+    // The %key instruction can only be used on its own. In this case, there is
+    // no need to fetch a value, only the string that was used as the key is
+    // responsible for determining the mapping type.
+    if ($instructions === ['%key']) {
+      $key = array_pop($property_path_parts);
+      array_push($property_path_parts, '%key');
+      $resolved_property_path = implode('.', $property_path_parts);
+      return $message_parameters + [
+        '@dynamic_type_property_path' => $resolved_property_path,
+        '@dynamic_type_property_value' => $key,
+      ];
+    }
+
     // Do not replace variables, do not traverse the tree of data, but instead
     // resolve the property path that contains the value causing this particular
     // type to be selected.
