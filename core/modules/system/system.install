@@ -1509,6 +1509,20 @@ function system_requirements($phase) {
     }
   }
 
+  // Add warning when twig debug option is enabled.
+  if ($phase === 'runtime' && (Settings::get('twig_debug') || \Drupal::state()->get('twig_debug', FALSE))) {
+    $requirements['twig_debug_enabled'] = [
+      'title' => t('Twig debug mode'),
+      'value' => t('Debug mode for twig is enabled. Go to @link to disable it.', [
+        '@link' => Link::createFromRoute(
+          'developer settings page',
+          'system.developer_settings',
+        )->toString(),
+      ]),
+      'severity' => REQUIREMENT_WARNING,
+    ];
+  }
+
   return $requirements;
 }
 
