@@ -329,6 +329,10 @@ JS;
     $textfield2->setValue('Llamas say yarhar');
     $textfield3->focus();
     $this->assertSession()->assertExpectedAjaxRequest(4);
+    // refocus-blur relies on Drupal.Ajax.prototype.success which runs after
+    // a successful AJAX request. So waiting for the AJAX request to complete is
+    // insufficient, give it an extra second.
+    sleep(1);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
