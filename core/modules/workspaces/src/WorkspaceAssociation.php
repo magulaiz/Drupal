@@ -153,17 +153,13 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     if ($entity_type_id) {
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
-      // Make sure that the integer entity_ids are integers.
-      if (is_array($entity_ids)) {
-        foreach ($entity_ids as &$entity_id) {
-          if (is_numeric($entity_id)) {
-            $entity_id = (int) $entity_id;
-          }
-        }
-      }
       if ($entity_ids) {
-        foreach ($entity_ids as &$entity_id) {
-          $entity_id = (int) $entity_id;
+        if (is_array($entity_ids)) {
+          foreach ($entity_ids as &$entity_id) {
+            if (is_numeric($entity_id)) {
+              $entity_id = (int) $entity_id;
+            }
+          }
         }
         $query->condition('target_entity_id', $entity_ids, 'IN');
       }
