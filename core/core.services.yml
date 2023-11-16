@@ -313,13 +313,12 @@ services:
   # backend it should wrap a VariationCache around is a proper cache bin. The
   # MemoryCache backend, however, is not so we cannot use the factory here.
   #
-  # By instantiating a VariationCache via the container and tagging it as a
-  # cache tags invalidator, it does still behave as a cache though.
+  # By instantiating a VariationCache via the container and tagging the cache
+  # it's wrapping as a cache tags invalidator, it does still behave the way we
+  # want it to, though.
   variation_cache.access_policy_memory:
     class: Drupal\Core\Cache\VariationCache
     arguments: ['@request_stack', '@cache.access_policy_memory', '@cache_contexts_manager']
-    tags:
-      - { name: cache_tags_invalidator }
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
