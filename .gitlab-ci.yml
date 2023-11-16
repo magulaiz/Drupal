@@ -328,7 +328,7 @@ default:
     paths:
       - core/node_modules/
   script:
-    - cd core && yarn install
+    - corepack enable && cd core && yarn install
 
 ################
 # Lint Jobs
