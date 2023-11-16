@@ -3,7 +3,6 @@
 namespace Drupal\Core\Utility;
 
 use Drupal\Core\Utility\Attribute\OmitFromDump;
-use ReflectionClass;
 use Symfony\Component\VarDumper\Cloner\Stub;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
