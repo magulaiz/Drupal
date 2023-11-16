@@ -129,4 +129,15 @@ class Name extends InOperator {
     return parent::adminSummary();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function query() {
+    // All user ids are integers.
+    foreach ($this->value as &$value) {
+      $value = (int) $value;
+    }
+    parent::query();
+  }
+
 }
