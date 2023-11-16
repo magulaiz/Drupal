@@ -115,11 +115,10 @@
         }
         if (
           option === 'width' &&
-          $(window).width() -
-            (displace.offsets.left + displace.offsets.right) >=
-            880
+          $(window).width() - (displace.offsets.left + displace.offsets.right) >
+            parseInt(optionValue, 10)
         ) {
-          adjustedOptions[option] = 880;
+          adjustedOptions[option] = parseInt(optionValue, 10);
         }
       }
     }
