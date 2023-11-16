@@ -414,4 +414,5 @@ default:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=$GIT_DEPTH origin "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
-    - echo $MODIFIED | tr ' ' '\n' | cd core && yarn run spellcheck:core --no-must-find-files --root --file-list $MODIFIED >/dev/null stdin
+    - cd core
+    - echo $MODIFIED | tr ' ' '\n' | yarn run spellcheck:core --no-must-find-files --file-list stdin
