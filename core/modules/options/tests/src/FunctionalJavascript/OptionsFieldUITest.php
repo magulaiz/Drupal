@@ -238,11 +238,13 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Create a field of type list:integer.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
-    $assert_session->assertNoElementAfterWait('css', '.ajax-progress-throbber');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->waitForElement('css', '[name="default_value_input[field_test_int_list]"] option:contains("first")');
     // Assert that no validation is performed.
     $assert_session->statusMessageNotContains('Value field is required.');
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue(1);
-    $assert_session->assertNoElementAfterWait('css', '.ajax-progress-throbber');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->waitForElement('css', '[name="default_value_input[field_test_int_list]"] option[value="1"]');
     $page->checkField('set_default_value');
     // Assert that the option added in the subform is available to the default
     // value field.
