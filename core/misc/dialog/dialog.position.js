@@ -113,6 +113,14 @@
             (displace.offsets.left + displace.offsets.right);
           adjustedOptions[option] = adjustedValue;
         }
+        if (
+          option === 'width' &&
+          $(window).width() -
+            (displace.offsets.left + displace.offsets.right) >=
+            880
+        ) {
+          adjustedOptions[option] = 880;
+        }
       }
     }
     // Offset the dialog center to be at the center of Drupal.displace.offsets.
