@@ -220,16 +220,16 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Create a field of type list:string.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_string_list', 'Test string list', 'list_string', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
-    $assert_session->assertNoElementAfterWait('css', '.ajax-progress-throbber');
-    $page->checkField('set_default_value');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->findField('set_default_value')->setValue(TRUE);
     // Assert that the option added in the subform is available to the default
     // value field.
     $this->assertSession()->optionExists('default_value_input[field_test_string_list]', 'first');
     $page->pressButton('Add another item');
     $this->assertNotNull($assert_session->waitForElement('css', "[name='field_storage[subform][settings][allowed_values][table][1][item][label]']"));
     $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
-    $assert_session->assertNoElementAfterWait('css', '.ajax-progress-throbber');
-    $this->assertNotNull($assert_session->waitForElement('css', "[name='default_value_input[field_test_string_list]'] option[value='second']"));
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotNull($assert_session->waitForElement('css', '[name="default_value_input[field_test_string_list]"] option:contains("second")'));
     $assert_session->optionExists('default_value_input[field_test_string_list]', 'second');
     $page->selectFieldOption('default_value_input[field_test_string_list]', 'second');
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
