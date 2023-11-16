@@ -1,4 +1,5 @@
 <?php
+// cspell:ignore iban issn luhn
 
 namespace Drupal\Core\Validation;
 
