@@ -187,10 +187,10 @@ class OverviewTerms extends FormBase {
       $term->parents = $raw_term->parents;
       if (isset($term->depth) && ($term->depth > 0) && !isset($back_step)) {
         $back_step = 0;
-        while ($pterm = $tree[--$tree_index]) {
+        while ($parent_term = $tree[--$tree_index]) {
           $before_entries--;
           $back_step++;
-          if ($pterm->depth == 0) {
+          if ($parent_term->depth == 0) {
             $tree_index--;
             // Jump back to the start of the root level parent.
             continue 2;
@@ -331,6 +331,7 @@ class OverviewTerms extends FormBase {
       '#empty' => $empty,
       '#header' => [
         'term' => $this->t('Name'),
+        'status' => $this->t('Status'),
         'operations' => $this->t('Operations'),
         'weight' => !$operations_access ? $this->t('Weight') : NULL,
       ],
@@ -343,6 +344,7 @@ class OverviewTerms extends FormBase {
     foreach ($current_page as $key => $term) {
       $form['terms'][$key] = [
         'term' => [],
+        'status' => [],
         'operations' => [],
         'weight' => $update_tree_access->isAllowed() ? [] : NULL,
       ];
@@ -361,6 +363,10 @@ class OverviewTerms extends FormBase {
         '#type' => 'link',
         '#title' => $term->getName(),
         '#url' => $term->toUrl(),
+      ];
+      $form['terms'][$key]['status'] = [
+        '#type' => 'item',
+        '#markup' => ($term->isPublished()) ? t('Published') : t('Unpublished'),
       ];
 
       // Add a special class for terms with pending revision so we can highlight

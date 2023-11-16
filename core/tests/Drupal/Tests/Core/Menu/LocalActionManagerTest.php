@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\LocalActionManagerTest.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
@@ -23,6 +18,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
@@ -195,8 +191,8 @@ class LocalActionManagerTest extends UnitTestCase {
     $this->assertEquals($expected_actions, $this->localActionManager->getActionsForRoute($route_appears));
   }
 
-  public function getActionsForRouteProvider() {
-    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
+  public static function getActionsForRouteProvider() {
+    $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens(Argument::any())
       ->willReturn(TRUE);
 
@@ -396,7 +392,7 @@ class TestLocalActionManager extends LocalActionManager {
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
     $this->alterInfo('menu_local_actions');
-    $this->setCacheBackend($cache_backend, 'local_action_plugins', ['local_action']);
+    $this->setCacheBackend($cache_backend, 'local_action_plugins');
   }
 
 }

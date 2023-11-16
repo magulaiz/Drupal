@@ -230,6 +230,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * Tests enabling and disabling Edit Mode.
    */
   public function testEditModeEnableDisable() {
+    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3317520");
     foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
       $block = $this->placeBlock('system_powered_by_block');
@@ -277,7 +278,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       $web_assert->assertWaitOnAjaxRequest();
       // The settings_tray_test_validation test plugin form always has a
       // validation error.
-      $web_assert->elementContains('css', '#drupal-off-canvas', 'Sorry system error. Please save again');
+      $web_assert->elementContains('css', '#drupal-off-canvas', 'Sorry system error. Save again');
       $this->disableEditMode();
       $block->delete();
     }

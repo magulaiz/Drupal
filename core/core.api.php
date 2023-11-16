@@ -246,7 +246,10 @@
  *   module B some time later, then module A's config/optional directory will be
  *   scanned at that time for newly met dependencies, and the configuration will
  *   be installed then. If module B is never installed, the configuration item
- *   will not be installed either.
+ *   will not be installed either. Optional configuration items are ignored if
+ *   they already exist or if they are not configuration entities (this also
+ *   includes configuration that has an implicit dependency on modules that
+ *   are not yet installed).
  * - Exporting and importing configuration.
  *
  * The file storage format for configuration information in Drupal is
@@ -1984,6 +1987,20 @@ function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
   $queues['mymodule_feeds']['cron']['time'] = 90;
+}
+
+/**
+ * Alter the information provided in \Drupal\Core\Condition\ConditionManager::getDefinitions().
+ *
+ * @param array $definitions
+ *   The array of condition definitions.
+ */
+function hook_condition_info_alter(array &$definitions) {
+  // Add custom or modify existing condition definitions.
+  if (isset($definitions['node_type']) && $definitions['node_type']['class'] == 'Drupal\node\Plugin\Condition\NodeType') {
+    // If the node_type's class is unaltered, use a custom implementation.
+    $definitions['node_type']['class'] = 'Drupal\mymodule\Plugin\Condition\NodeType';
+  }
 }
 
 /**
