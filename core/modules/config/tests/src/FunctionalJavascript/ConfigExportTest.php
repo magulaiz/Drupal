@@ -55,7 +55,7 @@ class ConfigExportTest extends WebDriverTestBase {
   }
 
   /**
-   * Helper function to create test blocks.
+   * Creates test blocks.
    *
    * @param $title
    *   Title of the block.
@@ -69,9 +69,7 @@ class ConfigExportTest extends WebDriverTestBase {
       'info' => $title,
       'type' => 'basic',
     ]);
-    if ($block_content) {
-      $block_content->save();
-    }
+    $block_content->save();
     return $block_content;
   }
 
