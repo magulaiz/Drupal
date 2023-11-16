@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Config\Schema\Enum;
 use Drupal\Core\Config\Schema\Ignore;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\Sequence;
@@ -205,11 +206,7 @@ abstract class StorableConfigBase extends ConfigBase {
         }
       }
     }
-    else {
-      // Throw exception on any non-scalar or non-array value.
-      if (!is_array($value)) {
-        throw new UnsupportedDataTypeConfigException("Invalid data type for config element {$this->getName()}:$key");
-      }
+    elseif (is_array($value)) {
       // Recurse into any nested keys.
       foreach ($value as $nested_value_key => $nested_value) {
         $lookup_key = $key ? $key . '.' . $nested_value_key : $nested_value_key;
@@ -249,6 +246,13 @@ abstract class StorableConfigBase extends ConfigBase {
           }
         }
       }
+    }
+    elseif ($element instanceof Enum) {
+      $value = $element->getScalarValue();
+    }
+    else {
+      // Throw exception on any non-scalar or non-array value.
+      throw new UnsupportedDataTypeConfigException("Invalid data type for config element {$this->getName()}:$key");
     }
     return $value;
   }

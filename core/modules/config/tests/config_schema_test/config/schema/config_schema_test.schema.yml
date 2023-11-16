@@ -350,3 +350,24 @@ config_schema_test.schema_mapping_sort:
           type: string
         sub_bar:
           type: string
+
+config_schema_test.schema_non_backed_enum:
+  type: config_object
+  mapping:
+    whatever:
+      type: enum
+      enum: '\Drupal\config_schema_test\NonBackedTestEnum'
+
+config_schema_test.schema_string_backed_enum:
+  type: config_object
+  mapping:
+    fruit:
+      type: enum
+      enum: '\Drupal\config_schema_test\StringBackedTestEnum'
+
+config_schema_test.schema_integer_backed_enum:
+  type: config_object
+  mapping:
+    severity:
+      type: enum
+      enum: '\Drupal\config_schema_test\IntegerBackedTestEnum'

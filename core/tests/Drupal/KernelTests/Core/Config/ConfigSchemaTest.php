@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\config_schema_test\NonBackedTestEnum;
+use Drupal\config_schema_test\StringBackedTestEnum;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
@@ -765,6 +767,24 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->assertEquals('wrapping.test.other_double_brackets.*||test.double_brackets.cat:*.*', $definition['type']);
     // Check that breed was inherited from parent definition.
     $this->assertEquals(['type' => 'string'], $definition['mapping']['breed']);
+  }
+
+  public function testEnumSaveAndLoad(): void {
+    $storage = $this->container->get('config.storage');
+
+    // String backed enum.
+    $config = $this->config('config_schema_test.schema_string_backed_enum');
+    $config->set('fruit', StringBackedTestEnum::APPLE)->save();
+    // Check that stored value is a string.
+    $raw = $storage->read('config_schema_test.schema_string_backed_enum');
+    $this->assertSame('apple', $raw['fruit']);
+    // Check that retrieved value is an enum case.
+    $this->assertSame(StringBackedTestEnum::APPLE, $config->get('fruit'));
+
+    // Check that only backed enums can be used in schemas.
+    $this->expectExceptionMessage('\Drupal\config_schema_test\NonBackedTestEnum is not a backed enum');
+    $config = $this->config('config_schema_test.schema_non_backed_enum');
+    $config->set('whatever', NonBackedTestEnum::BAR)->save();
   }
 
 }
