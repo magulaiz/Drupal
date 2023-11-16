@@ -634,9 +634,9 @@ abstract class BrowserTestBase extends TestCase {
     $html = $this->getSession()->getPage()->getContent();
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
       $settings = Json::decode($matches[1]);
-//      if (isset($settings['ajaxPageState']['libraries'])) {
-//        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
-//      }
+      if (isset($settings['ajaxPageState']['libraries'])) {
+        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+      }
       return $settings;
     }
     return [];

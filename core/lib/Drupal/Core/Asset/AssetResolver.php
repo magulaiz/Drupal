@@ -340,9 +340,9 @@ class AssetResolver implements AssetResolverInterface {
       $assets->setSettings($settings);
       // Convert ajaxPageState to a compressed string from an array, since it is
       // used by ajax.js to pass to AJAX requests as a query parameter.
-//      if (isset($settings['ajaxPageState']['libraries'])) {
-//        $settings['ajaxPageState']['libraries'] = UrlHelper::compressQueryParameter($settings['ajaxPageState']['libraries']);
-//      }
+      if (isset($settings['ajaxPageState']['libraries'])) {
+        $settings['ajaxPageState']['libraries'] = UrlHelper::compressQueryParameter($settings['ajaxPageState']['libraries']);
+      }
       $settings_as_inline_javascript = [
         'type' => 'setting',
         'group' => JS_SETTING,
