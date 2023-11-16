@@ -147,7 +147,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
     // Test a non-overridden block does show the form in the off-canvas dialog.
     $block = $this->placeBlock('system_powered_by_block', [
       'label_display' => TRUE,
-      'label' => 'Labely label',
+      'label' => 'Foo label',
     ]);
     $this->drupalGet('user');
     $block_selector = $this->getBlockSelector($block);
