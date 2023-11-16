@@ -6,7 +6,7 @@ use Drupal\Core\TypedData\TypedData;
 
 class Enum extends TypedData {
 
-  protected string|int $value ;
+  protected string|int $value;
 
   public function setValue($value, $notify = TRUE): void {
     // Value may be either as enum case or as scalar (string, integer) but we
