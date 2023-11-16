@@ -394,7 +394,9 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - cd core && yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - corepack enable
+    - cd core
+    - yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
