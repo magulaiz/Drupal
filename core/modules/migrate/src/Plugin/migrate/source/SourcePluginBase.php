@@ -409,7 +409,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       // adding new ones. This must happen before prepareRow() so that we do not
       // lose non-fatal messages emitted by the source plugin.
       if (!empty($this->currentSourceIds) &&
-          (!$row->getIdMap() || $row->needsUpdate() || $this->aboveHighWater($row) || $this->rowChanged($row))) {
+          (!$row->getIdMap() || $row->needsUpdate() || $this->aboveHighWater($row))) {
         $this->idMap->delete($this->currentSourceIds, TRUE);
       }
 
