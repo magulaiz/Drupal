@@ -773,7 +773,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @see \Drupal\Core\Url::toString()
    */
-  public function __toString() {
+  public function __toString(): string {
     return $this->toString();
   }
 
