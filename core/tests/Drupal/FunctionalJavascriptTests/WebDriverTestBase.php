@@ -221,9 +221,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
 })();
 EndOfScript;
     $settings = $this->getSession()->evaluateScript($script) ?: [];
-//    if (isset($settings['ajaxPageState'])) {
-//      $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
-//    }
     return $settings;
   }
 
