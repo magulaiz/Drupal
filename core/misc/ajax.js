@@ -602,6 +602,13 @@
       method: ajax.httpMethod,
     };
 
+    if (drupalSettings.ajaxCrossDomain.withCredentials) {
+      ajax.options.crossDomain = true;
+      ajax.options.xhrFields = {
+        withCredentials: true
+      };
+    }
+
     if (elementSettings.dialog) {
       ajax.options.data.dialogOptions = elementSettings.dialog;
     }
