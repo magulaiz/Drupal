@@ -1,8 +1,8 @@
 <?php
 
-// cspell:ignore iban issn luhn
-
 namespace Drupal\Core\Validation;
+
+// cspell:ignore iban issn luhn
 
 use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
