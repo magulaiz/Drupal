@@ -534,14 +534,13 @@ class OverviewTerms extends FormBase {
     // Build a list of all terms that need to be updated on previous pages.
     $weight = 0;
     $raw_term = $tree[0];
+    $term_weights = [];
     while ($raw_term->tid != $form['#first_tid']) {
       if ($raw_term->parents[0] == 0 && $raw_term->weight != $weight) {
-        $term = $this->storageController->load($raw_term->tid);
-        $term->setWeight($weight);
-        $changed_terms[$term->id()] = $term;
+        $term_weights[$raw_term->tid] = $weight;
       }
       $weight++;
-      $term = $tree[$weight];
+      $raw_term = $tree[$weight];
     }
 
     // Renumber the current page weights and assign any new parents.
@@ -575,11 +574,15 @@ class OverviewTerms extends FormBase {
     for ($weight; $weight < count($tree); $weight++) {
       $raw_term = $tree[$weight];
       if ($raw_term->parents[0] == 0 && $raw_term->weight != $weight) {
-        $term = $this->storageController->load($raw_term->tid);
-        $term->parent->target_id = $term->parents[0];
-        $term->setWeight($weight);
-        $changed_terms[$term->id()] = $term;
+        $term_weights[$raw_term->tid] = $weight;
       }
+    }
+
+    // Load all the items that need to be updated at once.
+    $terms = $this->storageController->loadMultiple(array_keys($term_weights));
+    foreach ($terms as $term) {
+      $term->setWeight($term_weights[$term->id()]);
+      $changed_terms[$term->id()] = $term;
     }
 
     if (!empty($changed_terms)) {
