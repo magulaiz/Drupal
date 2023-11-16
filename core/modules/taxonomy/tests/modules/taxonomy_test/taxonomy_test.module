@@ -52,10 +52,9 @@ function taxonomy_test_form_taxonomy_term_form_alter(&$form, FormStateInterface 
  */
 function taxonomy_test_taxonomy_term_load($entities) {
   $value = \Drupal::state()->get(__FUNCTION__);
-  if (isset($value)) {
-    foreach ($entities as $entity) {
-      $value[$entity->id()] = $entity;
-    }
-    \Drupal::state()->set(__FUNCTION__, $value);
+  // Only record loaded terms is the test has set this to an empty array.
+  if (is_array($value)) {
+    $value = array_merge($value, array_keys($entities));
+    \Drupal::state()->set(__FUNCTION__, array_unique($value));
   }
 }

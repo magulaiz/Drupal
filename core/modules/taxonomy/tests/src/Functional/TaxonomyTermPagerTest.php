@@ -83,7 +83,6 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
       ->save();
 
     $state = $this->container->get('state');
-    $state->set('taxonomy_test_taxonomy_term_load', []);
 
     // Create 5 terms.
     for ($x = 0; $x <= 10; $x++) {
@@ -94,19 +93,19 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
     $state->set('taxonomy_test_taxonomy_term_load', []);
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $loaded_terms = $state->get('taxonomy_test_taxonomy_term_load');
-    $this->assertCount(5, $loaded_terms);
+    $this->assertCount(4, $loaded_terms);
 
     // Check the overview page for submit callback.
     $state->set('taxonomy_test_taxonomy_term_load', []);
     $this->submitForm([], 'Save');
     $loaded_terms = $state->get('taxonomy_test_taxonomy_term_load');
-    $this->assertCount(5, $loaded_terms);
+    $this->assertCount(4, $loaded_terms);
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', ['query' => ['page' => 2]]);
     $state->set('taxonomy_test_taxonomy_term_load', []);
     $this->submitForm([], 'Save');
     $loaded_terms = $state->get('taxonomy_test_taxonomy_term_load');
-    $this->assertCount(5, $loaded_terms);
+    $this->assertCount(4, $loaded_terms);
 
     // Adding a new term with weight < 0 implies that all root terms are updated.
     $this->createTerm($this->vocabulary, ['weight' => -1]);

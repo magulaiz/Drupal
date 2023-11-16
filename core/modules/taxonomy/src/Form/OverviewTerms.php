@@ -226,6 +226,8 @@ class OverviewTerms extends FormBase {
       $terms_to_load[] = $raw_term->tid;
     } while (isset($tree[++$tree_index]));
 
+    // Load all the terms we're going to display and set the weight and parents
+    // from the tree.
     $terms = $this->storageController->loadMultiple($terms_to_load);
     $current_page = array_map(function ($raw_term) use ($terms) {
       $term = $terms[$raw_term->tid];
@@ -233,8 +235,6 @@ class OverviewTerms extends FormBase {
       $term->parents = $raw_term->parents;
       return $term;
     }, $current_page);
-
-    dump($current_page);
 
     // Because we didn't use a pager query, set the necessary pager variables.
     $total_entries = $before_entries + $page_entries + $after_entries;
