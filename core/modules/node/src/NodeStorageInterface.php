@@ -42,7 +42,7 @@ interface NodeStorageInterface extends ContentEntityStorageInterface {
    * @return int[]
    *   Node revision IDs (in ascending order).
    */
-  public function userRevisionAuthorRevisionIds(AccountInterface $account);
+  public function userRevisionAuthorRevisionIds(AccountInterface $account): array;
 
   /**
    * Counts the number of revisions in the default language.
