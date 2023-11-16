@@ -107,7 +107,10 @@
           parseInt(optionValue, 10) >
             $(window).width() - (displace.offsets.left + displace.offsets.right)
         ) {
-          adjustedValue = $(window).width() - 40;
+          adjustedValue =
+            $(window).width() -
+            40 -
+            (displace.offsets.left + displace.offsets.right);
           adjustedOptions[option] = adjustedValue;
         }
       }
