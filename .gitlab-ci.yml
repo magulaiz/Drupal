@@ -125,7 +125,7 @@ default:
       allow_failure: true
 
 # Default configuration.
-'[DEFAULT] PHP 8.2 MySQL 8':
+'DEFAULT: PHP 8.2 MySQL 8':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.2"
@@ -137,7 +137,7 @@ default:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $PERFORMANCE_TEST == "1"
 
-'[DEFAULT] PHP 8.2 MySQL 8 - Test-only':
+'DEFAULT: PHP 8.2 MySQL 8 - Test-only':
   <<: *default-stage
   when: manual
   allow_failure: true
