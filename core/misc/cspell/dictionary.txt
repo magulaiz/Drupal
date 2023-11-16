@@ -247,7 +247,6 @@ deutscher
 devel
 deviantart
 dflt
-dflydev
 dialogsave
 diffchange
 differring
@@ -316,6 +315,7 @@ entitytype
 entityviewedit
 errmode
 errrf
+espagnol
 etag
 eurozone
 evenodd
@@ -376,6 +376,7 @@ fudgy
 fulldata
 fulldate
 fulltext
+funciona
 functionaljavascripttest
 functionaltest
 funic
@@ -386,7 +387,7 @@ gids
 gloop
 gnumeric
 googleapis
-grasmash
+gotit
 greeking
 gripsmall
 groupable
@@ -451,6 +452,7 @@ jamo
 javascripts
 jessebeach
 johansson
+johndoe
 jqueryui
 jsonlint
 jssdk
@@ -663,14 +665,12 @@ peast
 percona
 permissionless
 persistable
-phootwork
 phpass
 phpcbf
 phpcodesniffer
 phpcs
 phpdocumentor
 phpfile
-phpowermove
 phpserialize
 phpspec
 pianura
@@ -733,7 +733,6 @@ protossl
 proxied
 proxying
 pseudotag
-psysh
 ptablenode
 puzzlepiece
 pwprompt
@@ -796,7 +795,6 @@ revlog
 revpub
 ribisi
 ritchie
-robo
 routable
 routeable
 rowspans
@@ -937,7 +935,6 @@ tarz
 taskless
 tbodies
 tcomment
-teck
 tempfile
 templating
 tempuser
