@@ -104,7 +104,8 @@
         }
         if (
           option === 'width' &&
-          parseInt(optionValue, 10) > $(window).width()
+          parseInt(optionValue, 10) >
+            $(window).width() - (displace.offsets.left + displace.offsets.right)
         ) {
           adjustedValue = $(window).width() - 40;
           adjustedOptions[option] = adjustedValue;
