@@ -319,6 +319,7 @@ services:
   variation_cache.access_policy_memory:
     class: Drupal\Core\Cache\VariationCache
     arguments: ['@request_stack', '@cache.access_policy_memory', '@cache_contexts_manager']
+  Drupal\Core\Cache\VariationCacheInterface: '@variation_cache.access_policy_memory'
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
