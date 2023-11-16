@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\Validator\Constraints\NotEqualTo;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -110,4 +111,12 @@ function form_test_form_form_test_vertical_tabs_access_form_alter(&$form, &$form
  */
 function form_test_tableselect_ajax_callback($form, FormStateInterface $form_state) {
   return $form['tableselect'];
+}
+
+function form_test_validation_constraint_alter(array &$definitions): void {
+  $definitions['NotEqualTo'] = [
+    'label' => t('Not equal to'),
+    'class' => NotEqualTo::class,
+    'type' => FALSE,
+  ];
 }

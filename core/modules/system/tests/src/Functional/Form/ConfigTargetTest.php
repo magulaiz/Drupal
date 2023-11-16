@@ -151,4 +151,14 @@ class ConfigTargetTest extends BrowserTestBase {
     ], $this->config('form_test.object')->getRawData());
   }
 
+  public function testMultipleViolations(): void {
+    $this->drupalGet('/form-test/tree-config-target');
+    $page = $this->getSession()->getPage();
+    $page->fillField('Favorite', 'durian');
+    $page->pressButton('Save configuration');
+    $assert_session = $this->assertSession();
+    $assert_session->statusMessageContains('Absolutely not. Durians are the worst.', 'error');
+    $assert_session->statusMessageContains('Your favorite vegetable cannot begin with the letter D.', 'error');
+  }
+
 }
