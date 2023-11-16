@@ -4,11 +4,10 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
@@ -107,7 +106,7 @@ class AssetResolver implements AssetResolverInterface {
     // representative set before then expanding the list to include all
     // dependencies.
     // @see Drupal\FunctionalTests\Core\Asset\AssetOptimizationTestUmami
-    // @todo: https://www.drupal.org/project/drupal/issues/1945262
+    // @todo https://www.drupal.org/project/drupal/issues/1945262
     $libraries = $assets->getLibraries();
     if ($libraries) {
       $libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries);
@@ -340,9 +339,9 @@ class AssetResolver implements AssetResolverInterface {
       $assets->setSettings($settings);
       // Convert ajaxPageState to a compressed string from an array, since it is
       // used by ajax.js to pass to AJAX requests as a query parameter.
-//      if (isset($settings['ajaxPageState']['libraries'])) {
-//        $settings['ajaxPageState']['libraries'] = UrlHelper::compressQueryParameter($settings['ajaxPageState']['libraries']);
-//      }
+      //      if (isset($settings['ajaxPageState']['libraries'])) {
+      //        $settings['ajaxPageState']['libraries'] = UrlHelper::compressQueryParameter($settings['ajaxPageState']['libraries']);
+      //      }.
       $settings_as_inline_javascript = [
         'type' => 'setting',
         'group' => JS_SETTING,

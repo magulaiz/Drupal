@@ -8,7 +8,6 @@ use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
@@ -634,9 +633,9 @@ abstract class BrowserTestBase extends TestCase {
     $html = $this->getSession()->getPage()->getContent();
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
       $settings = Json::decode($matches[1]);
-//      if (isset($settings['ajaxPageState']['libraries'])) {
-//        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
-//      }
+      // If (isset($settings['ajaxPageState']['libraries'])) {
+      //        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+      //      }.
       return $settings;
     }
     return [];
