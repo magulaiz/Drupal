@@ -775,7 +775,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     // If CORS is enabled, make sure ajax calls send the credentials if needed.
     $cors_config = \Drupal::getContainer()->getParameter('cors.config');
     $settings['ajaxCrossDomain'] = [
-    'withCredentials' => $cors_config['supportsCredentials'] ?? FALSE,
+      'withCredentials' => $cors_config['supportsCredentials'] ?? FALSE,
     ];
   }
 }
