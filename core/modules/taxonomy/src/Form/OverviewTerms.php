@@ -163,6 +163,7 @@ class OverviewTerms extends FormBase {
     $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, FALSE);
     $tree_index = 0;
     $complete_tree = NULL;
+    $terms_to_load = [];
     do {
       // In case this tree is completely empty.
       if (empty($tree[$tree_index])) {
@@ -182,10 +183,7 @@ class OverviewTerms extends FormBase {
 
       // Do not let a term start the page that is not at the root.
       $raw_term = $tree[$tree_index];
-      $term = $this->storageController->load($raw_term->tid);
-      $term->depth = $raw_term->depth;
-      $term->parents = $raw_term->parents;
-      if (isset($term->depth) && ($term->depth > 0) && !isset($back_step)) {
+      if (isset($raw_term->depth) && ($raw_term->depth > 0) && !isset($back_step)) {
         $back_step = 0;
         while ($parent_term = $tree[--$tree_index]) {
           $before_entries--;
@@ -200,7 +198,7 @@ class OverviewTerms extends FormBase {
       $back_step = $back_step ?? 0;
 
       // Continue rendering the tree until we reach the a new root item.
-      if ($page_entries >= $page_increment + $back_step + 1 && $term->depth == 0 && $root_entries > 1) {
+      if ($page_entries >= $page_increment + $back_step + 1 && $raw_term->depth == 0 && $root_entries > 1) {
         $complete_tree = TRUE;
         // This new item at the root level is the first item on the next page.
         $after_entries++;
@@ -213,19 +211,30 @@ class OverviewTerms extends FormBase {
       // Finally, if we've gotten down this far, we're rendering a term on this
       // page.
       $page_entries++;
-      $term_deltas[$term->id()] = isset($term_deltas[$term->id()]) ? $term_deltas[$term->id()] + 1 : 0;
-      $key = 'tid:' . $term->id() . ':' . $term_deltas[$term->id()];
+      $term_deltas[$raw_term->tid] = isset($term_deltas[$raw_term->tid]) ? $term_deltas[$raw_term->tid] + 1 : 0;
+      $key = 'tid:' . $raw_term->tid . ':' . $term_deltas[$raw_term->tid];
 
       // Keep track of the first term displayed on this page.
       if ($page_entries == 1) {
-        $form['#first_tid'] = $term->id();
+        $form['#first_tid'] = $raw_term->tid;
       }
       // Keep a variable to make sure at least 2 root elements are displayed.
-      if ($term->parents[0] == 0) {
+      if ($raw_term->parents[0] == 0) {
         $root_entries++;
       }
-      $current_page[$key] = $term;
+      $current_page[$key] = $raw_term;
+      $terms_to_load[] = $raw_term->tid;
     } while (isset($tree[++$tree_index]));
+
+    $terms = $this->storageController->loadMultiple($terms_to_load);
+    $current_page = array_map(function ($raw_term) use ($terms) {
+      $term = $terms[$raw_term->tid];
+      $term->depth = $raw_term->depth;
+      $term->parents = $raw_term->parents;
+      return $term;
+    }, $current_page);
+
+    dump($current_page);
 
     // Because we didn't use a pager query, set the necessary pager variables.
     $total_entries = $before_entries + $page_entries + $after_entries;
