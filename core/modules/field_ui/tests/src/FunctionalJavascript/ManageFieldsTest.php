@@ -184,8 +184,6 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $this->clickLink('Number');
     $assert_session->assertWaitOnAjaxRequest();
-//        $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
-//    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
     $assert_session->waitForText('Add field: Number');
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
