@@ -163,7 +163,6 @@ class OverviewTerms extends FormBase {
     $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, FALSE);
     $tree_index = 0;
     $complete_tree = NULL;
-    $terms_to_load = [];
     do {
       // In case this tree is completely empty.
       if (empty($tree[$tree_index])) {
@@ -223,12 +222,11 @@ class OverviewTerms extends FormBase {
         $root_entries++;
       }
       $current_page[$key] = $raw_term;
-      $terms_to_load[] = $raw_term->tid;
     } while (isset($tree[++$tree_index]));
 
     // Load all the terms we're going to display and set the weight and parents
     // from the tree.
-    $terms = $this->storageController->loadMultiple($terms_to_load);
+    $terms = $this->storageController->loadMultiple(array_keys($term_deltas));
     $current_page = array_map(function ($raw_term) use ($terms) {
       $term = $terms[$raw_term->tid];
       $term->depth = $raw_term->depth;
