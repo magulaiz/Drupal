@@ -23,25 +23,3 @@ function block_install() {
 function block_update_last_removed() {
   return 8003;
 }
-
-/**
- * Change label_display value to boolean.
- */
-function block_update_10100(&$sandbox) {
-  $blockEntityTypeManager = \Drupal::entityTypeManager()->getStorage('block');
-  $blocks = $blockEntityTypeManager->loadMultiple();
-  foreach ($blocks as $block) {
-    $settings = $block->get('settings');
-    switch ($settings['label_display']) {
-      case '0':
-        $settings['label_display'] = FALSE;
-        break;
-
-      case '1':
-      case 'visible':
-        $settings['label_display'] = TRUE;
-    }
-    $block->set('settings', $settings);
-    $block->save();
-  }
-}
