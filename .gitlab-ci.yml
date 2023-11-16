@@ -138,7 +138,7 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 'DEFAULT: Test-only':
-  <<: *default-stage
+  <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
   variables:
