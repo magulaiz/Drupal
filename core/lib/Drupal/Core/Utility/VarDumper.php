@@ -26,6 +26,16 @@ class VarDumper {
     $dumper->dump($cloner->cloneVar($var));
   }
 
+  /**
+   * Adds our caster which ignored marked properties.
+   *
+   * Helper for handlers.
+   *
+   * @param \Symfony\Component\VarDumper\Cloner\VarCloner $cloner
+   *   The cloner.
+   * @param mixed $var
+   *   The variable being dumped.
+   */
   public static function addCasters(VarCloner $cloner, $var) {
     if (is_object($var)) {
       // Add a caster specifically for the class of the object being dumped, as
