@@ -11,6 +11,9 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Provides handlers for the Symfony VarDumper.
+ *
+ * In PHPUnit tests, this is enabled automatically. Outside of tests, this needs
+ * to be enabled with the 'setup_var_dumper' setting in settings.php.
  */
 class VarDumper {
 
