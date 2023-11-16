@@ -19,7 +19,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    */
   public function addItem(CalculatedPermissionsItemInterface $item, bool $overwrite = FALSE): self {
     if (!$overwrite && $existing = $this->getItem($item->getScope(), $item->getIdentifier())) {
-      $item = $this->mergeItems($existing, $item);
+      $item = static::mergeItems($existing, $item);
     }
     $this->items[$item->getScope()][$item->getIdentifier()] = $item;
     return $this;
@@ -71,7 +71,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
    * @return \Drupal\Core\Session\CalculatedPermissionsItemInterface
    *   A new item representing the merger of both items.
    */
-  protected function mergeItems(CalculatedPermissionsItemInterface $a, CalculatedPermissionsItemInterface $b): CalculatedPermissionsItemInterface {
+  protected static function mergeItems(CalculatedPermissionsItemInterface $a, CalculatedPermissionsItemInterface $b): CalculatedPermissionsItemInterface {
     // If either of the items is admin, the new one is too.
     $is_admin = $a->isAdmin() || $b->isAdmin();
 

@@ -196,13 +196,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
    */
   protected function validateScope(string $scope, CalculatedPermissionsInterface $calculated_permissions): bool {
     $actual_scopes = $calculated_permissions->getScopes();
-
-    // The calculated permissions should only contain items for the given scope.
-    if (!empty($actual_scopes) && (count($actual_scopes) > 1 || reset($actual_scopes) !== $scope)) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return empty($actual_scopes) || $actual_scopes === [$scope];
   }
 
 }
