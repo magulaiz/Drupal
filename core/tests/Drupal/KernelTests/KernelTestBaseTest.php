@@ -359,6 +359,7 @@ class KernelTestBaseTest extends KernelTestBase {
     dump($user);
 
     $this->assertStringContainsString('Drupal\user\Entity\User', StreamCapturer::$cache);
+    // Properties which have the OmitFromDump attribute are not included.
     $this->assertStringNotContainsString('fieldDefinitions', StreamCapturer::$cache);
     $this->assertStringNotContainsString('typedData', StreamCapturer::$cache);
 
