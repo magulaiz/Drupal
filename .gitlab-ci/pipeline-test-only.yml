@@ -90,8 +90,6 @@ variables:
 
 '🩹 Test-only changes':
   <<: [ *with-composer, *default-job-settings ]
-  when: manual
-  allow_failure: true
   services:
     - <<: *with-database
     - <<: *with-chrome
