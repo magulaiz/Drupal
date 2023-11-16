@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests the upgrade path for changing block label_display schema.
  *
  * @group Update
- * @group legacy
  */
 class BlockUpdateLabelDisplaySchemaTest extends UpdatePathTestBase {
 
