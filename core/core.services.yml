@@ -240,8 +240,6 @@ services:
     arguments: ['@cache_tags.invalidator.checksum']
   cache.backend.memory:
     class: Drupal\Core\Cache\MemoryBackendFactory
-  cache.backend.memory_fast:
-    class: Drupal\Core\Cache\MemoryFastBackendFactory
   # A special cache bin that does not persist beyond the length of the request.
   cache.static:
     class: Drupal\Core\Cache\CacheBackendInterface
@@ -292,11 +290,9 @@ services:
     factory: ['@cache_factory', 'get']
     arguments: [access_policy]
   cache.access_policy_memory:
-    class: Drupal\Core\Cache\CacheBackendInterface
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
     tags:
-      - { name: cache.bin, default_backend: 'cache.backend.memory_fast' }
-    factory: [ '@cache_factory', 'get' ]
-    arguments: [access_policy_memory]
+      - { name: cache_tags_invalidator }
   cache.data:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -313,10 +309,17 @@ services:
     class: Drupal\Core\Cache\VariationCacheInterface
     factory: ['@variation_cache_factory', 'get']
     arguments: [access_policy]
+  # We cannot use the VariationCacheFactory here because that expects that the
+  # backend it should wrap a VariationCache around is a proper cache bin. The
+  # MemoryCache backend, however, is not so we cannot use the factory here.
+  #
+  # By instantiating a VariationCache via the container and tagging it as a
+  # cache tags invalidator, it does still behave as a cache though.
   variation_cache.access_policy_memory:
-    class: Drupal\Core\Cache\VariationCacheInterface
-    factory: ['@variation_cache_factory', 'get']
-    arguments: [access_policy_memory]
+    class: Drupal\Core\Cache\VariationCache
+    arguments: ['@request_stack', '@cache.access_policy_memory', '@cache_contexts_manager']
+    tags:
+      - { name: cache_tags_invalidator }
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
