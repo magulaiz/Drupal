@@ -5,8 +5,8 @@ namespace Drupal\Core\Config;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Serialization\Yaml;
 
 /**
  * Defines the file storage.

@@ -2,6 +2,7 @@
 
 namespace Drupal\config\Controller;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\ImportStorageTransformer;
@@ -10,7 +11,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Diff\DiffFormatter;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;

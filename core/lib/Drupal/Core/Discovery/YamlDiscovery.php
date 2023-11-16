@@ -4,7 +4,7 @@ namespace Drupal\Core\Discovery;
 
 use Drupal\Component\Discovery\YamlDiscovery as ComponentYamlDiscovery;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Component\Serialization\Yaml;
 
 /**
  * Provides discovery for YAML files within a given set of directories.

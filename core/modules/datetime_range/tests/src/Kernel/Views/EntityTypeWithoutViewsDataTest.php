@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\datetime_range\Kernel\Views;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\InstallStorage;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Entity\View;
 

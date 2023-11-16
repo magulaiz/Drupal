@@ -9,7 +9,7 @@ use Drupal\Component\FrontMatter\FrontMatter;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**

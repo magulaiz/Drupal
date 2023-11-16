@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
 /**

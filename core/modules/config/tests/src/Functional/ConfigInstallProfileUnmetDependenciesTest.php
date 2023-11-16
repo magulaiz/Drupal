@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Core\Config\InstallStorage;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\RequirementsPageTrait;
 
 /**

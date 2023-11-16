@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Archiver\Tar;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
 /**

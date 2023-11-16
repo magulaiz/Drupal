@@ -61,4 +61,16 @@ class Yaml implements SerializationInterface {
     return static::$serializer;
   }
 
+  /**
+   * Explicitly the implementation used for parsing YAML.
+   *
+   * @param class-string $class
+   *   The implementation class name.
+   */
+  public static function setSerializer(?string $class): void {
+    if ($class !== NULL && class_exists($class)) {
+      static::$serializer = $class;
+    }
+  }
+
 }

@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\InstallStorage;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
 /**

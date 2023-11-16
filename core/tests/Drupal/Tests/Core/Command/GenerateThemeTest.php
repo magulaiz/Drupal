@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;

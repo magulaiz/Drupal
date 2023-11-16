@@ -4,9 +4,9 @@ namespace Drupal\help;
 
 use Drupal\Component\FrontMatter\FrontMatter;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Serialization\Yaml;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
@@ -72,7 +72,7 @@ class HelpTopicTwigLoader extends FilesystemLoader {
 
     $contents = file_get_contents($path);
     try {
-      // Note: always use \Drupal\Core\Serialization\Yaml here instead of the
+      // Note: always use \Drupal\Component\Serialization\Yaml here instead of the
       // "serializer.yaml" service. This allows the core serializer to utilize
       // core related functionality which isn't available as the standalone
       // component based serializer.
