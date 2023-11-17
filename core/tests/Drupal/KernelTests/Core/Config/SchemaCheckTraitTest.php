@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
-use Drupal\Core\Config\Schema\SchemaCheckConstraintValidation;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -43,7 +42,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    *
    * @dataProvider providerCheckConfigSchema
    */
-  public function testCheckConfigSchema(SchemaCheckConstraintValidation $validate_constraints, array $expectations) {
+  public function testCheckConfigSchema(bool $validate_constraints, array $expectations) {
     // Test a non existing schema.
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
     $this->assertFalse($ret);
@@ -79,11 +78,11 @@ class SchemaCheckTraitTest extends KernelTestBase {
     ];
     return [
       'without validation' => [
-        SchemaCheckConstraintValidation::NoValidation,
+        FALSE,
         $expected_storage_type_check_errors,
       ],
       'with validation' => [
-        SchemaCheckConstraintValidation::Error,
+        TRUE,
         $expected_storage_type_check_errors + $expected_validation_errors,
       ],
     ];

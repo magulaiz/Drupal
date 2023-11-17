@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
-use Drupal\Core\Config\Schema\SchemaCheckConstraintValidation;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Config\StorageInterface;
@@ -54,11 +53,12 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    *   The typed config manager.
    * @param string[] $exclude
    *   An array of config object names that are excluded from schema checking.
-   * @param \Drupal\Core\Config\Schema\SchemaCheckConstraintValidation $validateConstraints
-   *   Determines if SchemaCheckTrait::checkConfigSchema() will validate
-   *   constraints and, if to error or trigger a deprecation, if they are.
+   * @param bool $validateConstraints
+   *   Determines if constraints will be validated. If TRUE, constraint
+   *   validation errors will be added to the errors found by
+   *   SchemaCheckTrait::checkConfigSchema().
    */
-  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = [], private readonly SchemaCheckConstraintValidation $validateConstraints = SchemaCheckConstraintValidation::NoValidation) {
+  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = [], private readonly bool $validateConstraints = FALSE) {
     $this->typedManager = $typed_manager;
     $this->exclude = $exclude;
   }
