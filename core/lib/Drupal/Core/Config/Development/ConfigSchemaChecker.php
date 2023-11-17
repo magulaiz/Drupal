@@ -53,8 +53,11 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    *   The typed config manager.
    * @param string[] $exclude
    *   An array of config object names that are excluded from schema checking.
+   * @param bool $triggerDeprecationOnValidationError
+   *   Determines if config validation errors will cause a deprecation or be
+   *   added to the errors found by SchemaCheckTrait::checkConfigSchema().
    */
-  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = []) {
+  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = [], private readonly bool $triggerDeprecationOnValidationError = TRUE) {
     $this->typedManager = $typed_manager;
     $this->exclude = $exclude;
   }
@@ -82,7 +85,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
     $checksum = Crypt::hashBase64(serialize($data));
     if (!in_array($name, $this->exclude) && !isset($this->checked[$name . ':' . $checksum])) {
       $this->checked[$name . ':' . $checksum] = TRUE;
-      $errors = $this->checkConfigSchema($this->typedManager, $name, $data);
+      $errors = $this->checkConfigSchema($this->typedManager, $name, $data, $this->triggerDeprecationOnValidationError);
       if ($errors === FALSE) {
         throw new SchemaIncompleteException("No schema for $name");
       }
