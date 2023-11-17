@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Post update functions for Shortcut module.
+ * Post-update functions for the Shortcut module.
  */
 
 use Drupal\shortcut\Entity\Shortcut;

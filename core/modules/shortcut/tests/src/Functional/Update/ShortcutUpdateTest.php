@@ -22,7 +22,7 @@ class ShortcutUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests the fixing of shortcuts empty titles.
+   * Tests the update to fix empty shortcut titles.
    *
    * @see shortcut_post_update_fix_empty_titles()
    */

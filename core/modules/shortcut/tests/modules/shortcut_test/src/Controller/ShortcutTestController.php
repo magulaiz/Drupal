@@ -5,12 +5,15 @@ namespace Drupal\shortcut_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
- * Controller for shortcut_test module.
+ * Provides markup for the shortcut_test module.
  */
 class ShortcutTestController extends ControllerBase {
 
-  public function PageNoTitle() {
-    return ['#markup' => 'Shortcut test no page title.'];
+  /**
+   * Returns the markup for a page without a title.
+   */
+  public function pageNoTitle() {
+    return ['#markup' => 'Shortcut test of a page with no title.'];
   }
 
 }
