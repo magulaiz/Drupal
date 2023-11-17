@@ -39,8 +39,8 @@ class FieldUI {
    * @param bool $view_mode
    *   Is view mode.
    *
-   * @return \Drupal\Core\Url
-   *   A URL object.
+   * @return \Drupal\Core\Url|null
+   *   A URL object, or NULL if there is no route.
    */
   public static function getDisplayRouteInfo($entity_type_id, $bundle, $view_mode) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
@@ -52,6 +52,7 @@ class FieldUI {
         return new Url("entity.entity_form_display.{$entity_type_id}.default", static::getRouteBundleParameter($entity_type, $bundle));
       }
     }
+    return NULL;
   }
 
   /**
