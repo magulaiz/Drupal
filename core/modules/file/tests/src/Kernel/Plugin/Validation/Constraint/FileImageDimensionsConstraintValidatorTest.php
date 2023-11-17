@@ -116,6 +116,15 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
       $violations = $this->validator->validate($this->image, $validators);
       $this->assertCount(0, $violations, 'No errors should be reported when an oversized image can be scaled down.');
 
+      $validators = [
+        'FileImageDimensions' => [
+          'maxDimensions' => '1x1',
+          'resizePolicy' => 'reject_larger_images_with_error',
+        ],
+      ];
+      $violations = $this->validator->validate($this->image, $validators);
+      $this->assertCount(1, $violations, 'An error reported for an oversized image that is not allowed to resize.');
+
       $image = $this->container->get('image.factory')
         ->get($this->image->getFileUri());
       // Verify that the image was scaled to the correct width and height.

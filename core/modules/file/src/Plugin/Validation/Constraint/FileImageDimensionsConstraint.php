@@ -32,6 +32,21 @@ class FileImageDimensionsConstraint extends Constraint {
   public string | int $maxDimensions = 0;
 
   /**
+   * Allows to change resizing policy when an image exceeds the maximum
+   * resolution. Defaults to "Resize larger images".
+   *
+   * @var string
+   */
+  public string $resizePolicy = 'resize_larger_images';
+
+  /**
+   * Message shown when image resize is disabled and image exceeds maximum.
+   *
+   * @var string
+   */
+  public string $messageImageExceedsMaximum = 'The image is too large. The maximum dimensions are %dimensions pixels and the image size is %widthx%height pixels.';
+
+  /**
    * The resized image too small message.
    *
    * @var string

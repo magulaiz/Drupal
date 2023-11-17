@@ -78,6 +78,7 @@ class ImageItem extends FileItem {
       'title_field' => 0,
       'title_field_required' => 0,
       'max_resolution' => '',
+      'resize_policy' => 'resize_larger_images',
       'min_resolution' => '',
       'default_image' => [
         'uuid' => NULL,
@@ -215,7 +216,7 @@ class ImageItem extends FileItem {
       '#title' => $this->t('Maximum image dimensions'),
       '#element_validate' => [[static::class, 'validateResolution']],
       '#weight' => 4.1,
-      '#description' => $this->t('The maximum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a larger image is uploaded, it will be resized to reflect the given width and height. Resizing images on upload will cause the loss of <a href="http://wikipedia.org/wiki/Exchangeable_image_file_format">EXIF data</a> in the image.'),
+      '#description' => $this->t('The maximum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction.'),
     ];
     $element['max_resolution']['x'] = [
       '#type' => 'number',
@@ -235,7 +236,23 @@ class ImageItem extends FileItem {
       '#field_suffix' => ' ' . $this->t('pixels'),
       '#suffix' => '</div>',
     ];
-
+    $element['resize_policy'] = [
+      '#title' => $this->t('Image resize policy'),
+      '#type' => 'radios',
+      '#default_value' => $settings['resize_policy'] ?? FALSE,
+      '#description' => $this->t('Choose whether images that exceed the maximum resolution should be resized to reflect the given width and height or rejected with an error message. Resizing images on upload will cause the loss of <a href="http://wikipedia.org/wiki/Exchangeable_image_file_format">EXIF data</a> in the image.'),
+      '#weight' => 4.11,
+      '#options' => [
+        'resize_larger_images' => $this->t('Resize larger images'),
+        'reject_larger_images_with_error' =>  $this->t('Reject larger images with an error message'),
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[max_resolution][x]"]' => ['!value' => ''],
+          ':input[name="settings[max_resolution][y]"]' => ['!value' => ''],
+        ],
+      ],
+    ];
     $min_resolution = explode('x', $settings['min_resolution']) + ['', ''];
     $element['min_resolution'] = [
       '#type' => 'item',
