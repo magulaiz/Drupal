@@ -126,6 +126,13 @@ field.widget.settings.text_textarea:
     placeholder:
       type: label
       label: 'Placeholder'
+    hide_help:
+      type: string
+      label: 'Hide help'
+    hide_guidelines:
+      type: string
+      label: 'Hide guidelines'
+
 
 field.widget.settings.text_textarea_with_summary:
   type: mapping
@@ -143,6 +150,12 @@ field.widget.settings.text_textarea_with_summary:
     show_summary:
       type: boolean
       label: 'Always show summary'
+    hide_help:
+      type: string
+      label: 'Hide help'
+    hide_guidelines:
+      type: string
+      label: 'Hide guidelines'
 
 field.widget.settings.text_textfield:
   type: mapping
@@ -154,3 +167,9 @@ field.widget.settings.text_textfield:
     placeholder:
       type: label
       label: 'Placeholder'
+    hide_help:
+      type: string
+      label: 'Hide help'
+    hide_guidelines:
+      type: string
+      label: 'Hide guidelines'
