@@ -43,9 +43,17 @@ class SchemaCheckTraitTest extends KernelTestBase {
    * @dataProvider providerCheckConfigSchema
    */
   public function testCheckConfigSchema(bool $validate_constraints, array $expectations) {
+    // Test a non existing schema.
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
+    $this->assertFalse($ret);
+
+    // Test an existing schema with valid data.
+    $config_data = $this->config('config_test.types')->get();
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
+    $this->assertTrue($ret);
+
     // Add a new key, a new array and overwrite boolean with array to test the
     // error messages.
-    $config_data = $this->config('config_test.types')->get();
     $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
     $config_data['boolean'] = [];
 
