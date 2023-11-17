@@ -176,9 +176,8 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $this->assertTrue($checkbox->isChecked());
     $page->find('css', '[data-drupal-selector="edit-label"]')->setValue("test-$display_mode");
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotNull($assert_session->waitForButton('Enable view modes'));
-    $this->assertSession()->pageTextContains("Saved the test-$display_mode $display_mode mode.");
+    $this->assertNotEmpty($this->assertSession()->waitForText("Saved the test-$display_mode $display_mode mode."));
 
     // Check that the display mode checkbox is checked.
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
