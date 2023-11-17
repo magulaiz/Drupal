@@ -44,7 +44,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     if (str_contains($form_state->getBuildInfo()['form_id'], 'view')) {
       $isViewMode = TRUE;
     }
-    $command = new RedirectCommand(FieldUI::getDisplayRouteInfo($form_state->getBuildInfo()['args'][0], \Drupal::request()->query->get('parent'), $isViewMode)->toString());
+    $command = new RedirectCommand(FieldUI::getDisplayRouteInfo($this->getEntity()->toArray()['targetEntityType'], \Drupal::request()->query->get('parent'), $isViewMode)->toString());
     $response = new AjaxResponse();
     return $response->addCommand($command);
   }
