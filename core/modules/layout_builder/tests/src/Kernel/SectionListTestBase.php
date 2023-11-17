@@ -154,7 +154,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
     $data[] = [FALSE, []];
     $data[] = [TRUE,
       [
-        'layout_builder_blank_uuid' => (new Section('layout_builder_blank'))->setUuid('layout_builder_blank_uuid'),
+        'layout_builder_blank_uuid' => (new Section('layout_builder_blank'))->setUuid(\Drupal::service('uuid')->generate()),
       ],
     ];
     return $data;
@@ -179,7 +179,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testRemoveMultipleSections() {
     $expected = [
-      'layout_builder_blank_uuid' => (new Section('layout_builder_blank'))->setUuid('layout_builder_blank_uuid'),
+      'layout_builder_blank_uuid' => (new Section('layout_builder_blank'))->setUuid(\Drupal::service('uuid')->generate()),
     ];
 
     $this->sectionList->removeSection(0);

@@ -71,7 +71,7 @@ class LayoutSectionTest extends BrowserTestBase {
                 'user' => '@user.current_user_context:current_user',
               ],
             ]),
-          ]))->setUuid('fake_section_uuid'),
+          ]))->setUuid(\Drupal::service('uuid')->generate()),
         ],
       ],
       [
@@ -95,7 +95,7 @@ class LayoutSectionTest extends BrowserTestBase {
                 'entity' => 'layout_builder.entity',
               ],
             ]),
-          ]))->setUuid('fake_section_uuid'),
+          ]))->setUuid(\Drupal::service('uuid')->generate()),
         ],
       ],
       [
@@ -115,7 +115,7 @@ class LayoutSectionTest extends BrowserTestBase {
       'baz' => new SectionComponent('baz', 'content', [
         'id' => 'system_powered_by_block',
       ]),
-    ]))->setUuid('fake_section_uuid_1');
+    ]))->setUuid(\Drupal::service('uuid')->generate());
 
     $data['single_section_single_block'] = [
       [
@@ -139,7 +139,7 @@ class LayoutSectionTest extends BrowserTestBase {
         'id' => 'test_block_instantiation',
         'display_message' => 'bar text',
       ]),
-    ]))->setUuid('fake_section_uuid_2')->setWeight(1);
+    ]))->setUuid(\Drupal::service('uuid')->generate())->setWeight(1);
 
     $data['multiple_sections'] = [
       [
@@ -192,7 +192,7 @@ class LayoutSectionTest extends BrowserTestBase {
           'baz' => new SectionComponent('baz', 'content', [
             'id' => 'test_access',
           ]),
-        ]))->setUuid('fake_section_uuid'),
+        ]))->setUuid(\Drupal::service('uuid')->generate()),
       ],
     ]);
 
