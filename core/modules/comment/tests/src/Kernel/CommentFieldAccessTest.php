@@ -232,12 +232,14 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertTrue($may_view, sprintf('User %s can view field %s on comment %s', $set['user']->getAccountName(), $field, $set['comment']->getSubject()));
+        $account_name = $set['user']->getAccountName();
+        $comment_subject = $set['comment']->getSubject();
+        $this->assertTrue($may_view, "User $account_name can view field $field on comment $comment_subject");
         $this->assertEquals(
           $may_update,
           $set['user']->hasPermission('administer comments'),
-          sprintf('User %s %s update field %s on comment %s', $set['user']->getAccountName(), $may_update ? 'can' : 'cannot', $field, $set['comment']->getSubject(),
-        ));
+          "User $account_name" . ($may_update ? 'can' : 'cannot') . "update field $field on comment $comment_subject"
+        );
       }
     }
 
@@ -248,10 +250,11 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $may_update,
         $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()),
         sprintf('User %s %s update field subject on comment %s',
-        $set['user']->getAccountName(),
-        $may_update ? 'can' : 'cannot',
-        $set['comment']->getSubject(),
-      ));
+          $set['user']->getAccountName(),
+          $may_update ? 'can' : 'cannot',
+          $set['comment']->getSubject(),
+        ),
+      );
     }
 
     // Check read-only fields.
@@ -273,19 +276,21 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
           $may_view,
           $view_access,
           sprintf('User %s %s view field %s on comment %s',
-          $set['user']->getAccountName(),
-          $state,
-          $field,
-          $set['comment']->getSubject(),
-        ));
+            $set['user']->getAccountName(),
+            $state,
+            $field,
+            $set['comment']->getSubject(),
+          ),
+        );
         $this->assertFalse(
           $may_update,
           sprintf('User %s %s update field %s on comment %s',
-          $set['user']->getAccountName(),
-          $may_update ? 'can' : 'cannot',
-          $field,
-          $set['comment']->getSubject(),
-        ));
+            $set['user']->getAccountName(),
+            $may_update ? 'can' : 'cannot',
+            $field,
+            $set['comment']->getSubject(),
+          ),
+        );
       }
     }
 
@@ -298,20 +303,22 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $this->assertTrue(
           $may_view,
           sprintf('User %s can view field %s on comment %s',
-          $set['user']->getAccountName(),
-          $field,
-          $set['comment']->getSubject(),
-        ));
+            $set['user']->getAccountName(),
+            $field,
+            $set['comment']->getSubject(),
+          ),
+        );
         $expected = $set['user']->hasPermission('post comments') && $set['comment']->isNew() && (int) $set['comment']->getCommentedEntity()->get($set['comment']->getFieldName())->status !== CommentItemInterface::CLOSED;
         $this->assertEquals(
           $expected,
           $may_update,
           sprintf('User %s %s update field %s on comment %s',
-          $set['user']->getAccountName(),
-          $expected ? 'can' : 'cannot',
-          $field,
-          $set['comment']->getSubject(),
-        ));
+            $set['user']->getAccountName(),
+            $expected ? 'can' : 'cannot',
+            $field,
+            $set['comment']->getSubject(),
+          ),
+        );
       }
     }
 
