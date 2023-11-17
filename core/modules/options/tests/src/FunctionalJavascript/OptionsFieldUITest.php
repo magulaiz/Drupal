@@ -168,7 +168,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
       $this->assertAllowValuesRowCount($expected_rows);
     }
     $page->pressButton('Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertTrue($this->assertSession()->waitForText('Saved field_options_text configuration.'));
 
     // Test the order of the option list on node form.
     $this->drupalGet($this->nodeFormPath);
@@ -184,7 +184,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $drag_handle->dragTo($target);
     $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
     $page->pressButton('Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertTrue($this->assertSession()->waitForText('Saved field_options_text configuration.'));
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', 'Second', 'Third', 'First']);
@@ -199,7 +199,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertOrder(['Second', 'First', ''], $is_string_option);
     $page->pressButton('Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertTrue($this->assertSession()->waitForText('Saved field_options_text configuration.'));
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', 'Second', 'First']);
@@ -226,13 +226,15 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // value field.
     $this->assertSession()->optionExists('default_value_input[field_test_string_list]', 'first');
     $page->pressButton('Add another item');
-    $this->assertNotNull($assert_session->waitForElement('css', "[name='field_storage[subform][settings][allowed_values][table][1][item][label]']"));
-    $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->getSession()->wait(1000);
+    $field_input = $page->find('css', '[name="field_storage[subform][settings][allowed_values][table][1][item][label]"]');
+    $field_input->setValue('second');
     $this->assertNotNull($assert_session->waitForElement('css', '[name="default_value_input[field_test_string_list]"] option:contains("second")'));
     $assert_session->optionExists('default_value_input[field_test_string_list]', 'second');
     $page->selectFieldOption('default_value_input[field_test_string_list]', 'second');
-    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+    $this->getSession()->wait(1000);
+    $page->find('css', '.ui-dialog-buttonset button:contains("Save")')->press();
+    $this->getSession()->wait(1000);
     $this->assertTrue($assert_session->waitForText('Saved Test string list configuration.'));
 
     // Create a field of type list:integer.
