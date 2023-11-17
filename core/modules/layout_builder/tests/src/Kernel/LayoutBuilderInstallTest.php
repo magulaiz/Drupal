@@ -36,7 +36,7 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
     // Add a layout override.
     $this->enableOverrides();
     $this->entity = $this->reloadEntity($this->entity);
-    $this->entity->get(OverridesSectionStorage::FIELD_NAME)->appendSection((new Section('layout_onecol'))->setUuid('first-section-uuid'));
+    $this->entity->get(OverridesSectionStorage::FIELD_NAME)->appendSection((new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate()));
     $this->entity->save();
 
     // The rendered entity has now changed. The non-configurable field is shown
