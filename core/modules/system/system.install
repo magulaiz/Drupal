@@ -1952,8 +1952,8 @@ function system_update_10202() {
   $readme_path = $configuration_directory . '/README.txt';
   $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
   if (!$writable) {
-      // Cannot write the README.txt file, nothing to do.
-      return;
+    // Cannot write the README.txt file, nothing to do.
+    return;
   }
   $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
   file_put_contents($readme_path, $text);
