@@ -39,57 +39,45 @@ class SchemaCheckTraitTest extends KernelTestBase {
 
   /**
    * Tests \Drupal\Core\Config\Schema\SchemaCheckTrait.
+   *
+   * @dataProvider providerCheckConfigSchema
    */
-  public function testTraitWithoutConstraintValidation() {
-    // Test a non existing schema.
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')
-      ->get());
-    $this->assertFalse($ret);
-
-    // Test an existing schema with valid data.
-    $config_data = $this->config('config_test.types')->get();
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
-    $this->assertTrue($ret);
-
+  public function testCheckConfigSchema(bool $validate_constraints, array $expectations) {
     // Add a new key, a new array and overwrite boolean with array to test the
     // error messages.
+    $config_data = $this->config('config_test.types')->get();
     $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
     $config_data['boolean'] = [];
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
-    $expected = [
-      // Storage type check errors.
-      // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::checkValue()
+
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data, $validate_constraints);
+    $this->assertEquals($expectations, $ret);
+  }
+
+  public function providerCheckConfigSchema(): array {
+    // Storage type check errors.
+    // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::checkValue()
+    $expected_storage_type_check_errors = [
       'config_test.types:new_key' => 'missing schema',
       'config_test.types:new_array' => 'missing schema',
       'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
     ];
-    $this->assertEquals($expected, $ret);
-  }
-
-  /**
-   * Tests \Drupal\Core\Config\Schema\SchemaCheckTrait.
-   */
-  public function testTraitWitHConstraintValidation() {
-    // Add a new key, a new array and overwrite boolean with array to test the
-    // error messages.
-    $config_data = $this->config('config_test.types')->get();
-    $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
-    $config_data['boolean'] = [];
-
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data, TRUE);
-    $expected = [
-      // Storage type check errors.
-      // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::checkValue()
-      'config_test.types:new_key' => 'missing schema',
-      'config_test.types:new_array' => 'missing schema',
-      'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
-      // Validation constraints violations.
-      // @see \Drupal\Core\TypedData\TypedDataInterface::validate()
+    // Validation constraints violations.
+    // @see \Drupal\Core\TypedData\TypedDataInterface::validate()
+    $expected_validation_errors = [
       '0' => "[new_key] 'new_key' is not a supported key.",
       '1' => "[new_array] 'new_array' is not a supported key.",
       '2' => '[boolean] This value should be of the correct primitive type.',
     ];
-    $this->assertEquals($expected, $ret);
+    return [
+      'without validation' => [
+        FALSE,
+        $expected_storage_type_check_errors,
+      ],
+      'with validation' => [
+        TRUE,
+        $expected_storage_type_check_errors + $expected_validation_errors,
+      ],
+    ];
   }
 
 }
