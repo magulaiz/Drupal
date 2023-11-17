@@ -63,15 +63,15 @@ trait SchemaCheckTrait {
    *   The configuration name.
    * @param array $config_data
    *   The configuration data, assumed to be data for a top-level config object.
-   * @param bool $validate_constraints
-   *   Determines if constraints will be validated. If TRUE, constraint
-   *   validation errors will be added to the errors found.
+   * @param SchemaCheckConstraintValidation $validate_constraints
+   *   Determines if constraints will be validated and, if to error or trigger a
+   *   deprecation, if they are.
    *
    * @return array|bool
    *   FALSE if no schema found. List of errors if any found. TRUE if fully
    *   valid.
    */
-  public function checkConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data, bool $validate_constraints = FALSE) {
+  public function checkConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data, SchemaCheckConstraintValidation $validate_constraints = SchemaCheckConstraintValidation::NoValidation) {
     // We'd like to verify that the top-level type is either config_base,
     // config_entity, or a derivative. The only thing we can really test though
     // is that the schema supports having langcode in it. So add 'langcode' to
@@ -89,7 +89,8 @@ trait SchemaCheckTrait {
       $errors[] = $this->checkValue($key, $value);
     }
     $errors = array_merge(...$errors);
-    if ($validate_constraints) {
+
+    if ($validate_constraints->doValidation()) {
       // Also perform explicit validation. Note this does NOT require every node
       // in the config schema tree to have validation constraints defined.
       $violations = $this->schema->validate();
@@ -101,7 +102,7 @@ trait SchemaCheckTrait {
         fn(ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
         $filtered_violations
       );
-      // @todo Decide in https://www.drupal.org/project/drupal/issues/3395099 when/how to trigger deprecation errors or even failures for contrib modules.
+
       $errors = array_merge($errors, $validation_errors);
     }
 
