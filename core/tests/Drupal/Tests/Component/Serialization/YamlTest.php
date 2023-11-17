@@ -93,6 +93,24 @@ class YamlTest extends YamlTestBase {
     YAML;
 
     Yaml::decode($yaml);
+   }
+
+  /**
+   * Ensures that decoding php objects does not work in Symfony.
+   *
+   * @requires extension yaml
+   *
+   * @see \Drupal\Tests\Component\Serialization\YamlTest::testObjectSupportDisabledPecl()
+   */
+  public function testConstants() {
+    $yaml = <<<YAML
+foo:
+  !php/const PHP_INT_MAX
+YAML;
+    $symfony = YamlSymfony::decode($yaml);
+    $yaml = YamlPecl::decode($yaml);
+    $this->assertSame($symfony['foo'], PHP_INT_MAX);
+    $this->assertSame($yaml['foo'], PHP_INT_MAX);
   }
 
 }
