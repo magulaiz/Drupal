@@ -96,7 +96,7 @@ class YamlTest extends YamlTestBase {
    }
 
   /**
-   * Ensures that decoding php objects does not work in Symfony.
+   * Tests decoding PHP constants in PECL and Symfony.
    *
    * @requires extension yaml
    *
@@ -132,6 +132,8 @@ class YamlTest extends YamlTestBase {
 
   /**
    * Tests that enums can be encoded by Symfony and parsed by PECL and Symfony.
+   *
+   * @requires extension yaml
    */
   public function testEnums() {
     $data = [
