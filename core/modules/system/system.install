@@ -1948,7 +1948,14 @@ function system_update_10201(&$sandbox) {
  * Fix path in README.txt in CONFIG_SYNC_DIRECTORY.
  */
 function system_update_10202() {
+  $configuration_directory = Settings::get('config_sync_directory');
+  $readme_path = $configuration_directory . '/README.txt';
+  $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
+  if (!$writable) {
+      // Cannot write the README.txt file, nothing to do.
+      return;
+  }
   $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
-  file_put_contents(Settings::get('config_sync_directory') . '/README.txt', $text);
+  file_put_contents($readme_path, $text);
   return \t('Amended configuration synchronization readme file content.');
 }
