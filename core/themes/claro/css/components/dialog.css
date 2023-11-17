@@ -63,9 +63,9 @@
   font-weight: bold;
   float: left;
   white-space: nowrap;
-	width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
@@ -149,7 +149,8 @@
 
 /* Form action buttons are moved in dialogs. Remove empty space. */
 
-.ui-dialog .ui-dialog-content .form-actions {
+.ui-dialog .ui-dialog-content .form-actions,
+.ui-dialog .ui-dialog-content .field-actions {
   margin: 0;
   padding: 0;
 }
