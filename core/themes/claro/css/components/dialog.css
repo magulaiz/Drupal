@@ -58,14 +58,14 @@
 }
 
 .ui-dialog .ui-dialog-title {
-  -webkit-font-smoothing: antialiased;
+  float: left;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--jui-dialog-title-font-size);
   font-weight: bold;
-  float: left;
-  white-space: nowrap;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-font-smoothing: antialiased;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
