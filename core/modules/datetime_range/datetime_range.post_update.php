@@ -30,11 +30,11 @@ function datetime_range_post_update_add_optional_values() {
     $settings = $field_config->get('settings');
     if (!isset($settings['optional_values'])) {
       $settings['optional_values'] = DateRangeItem::OPTIONAL_NONE;
-    }
-    $field_config->set('settings', $settings);
+      $field_config->set('settings', $settings);
 
-    // Mark the resulting configuration as trusted data. This avoids issues with
-    // future schema changes.
-    $field_config->save(TRUE);
+      // Mark the resulting configuration as trusted data. This avoids issues with
+      // future schema changes.
+      $field_config->save(TRUE);
+    }
   }
 }
