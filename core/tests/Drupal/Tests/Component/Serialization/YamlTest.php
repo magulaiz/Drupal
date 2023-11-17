@@ -104,9 +104,9 @@ class YamlTest extends YamlTestBase {
    */
   public function testConstants() {
     $yaml = <<<YAML
-foo:
-  !php/const PHP_INT_MAX
-YAML;
+      foo:
+        !php/const PHP_INT_MAX
+      YAML;
     $symfony = YamlSymfony::decode($yaml);
     $yaml = YamlPecl::decode($yaml);
     $this->assertSame($symfony['foo'], PHP_INT_MAX);
@@ -114,15 +114,19 @@ YAML;
   }
 
   /**
+   * Tests that missing constants cause the same exception in PECL and Symfony.
+   *
    * @testWith ["\\Drupal\\Component\\Serialization\\YamlSymfony::decode"]
    *           ["\\Drupal\\Component\\Serialization\\YamlPecl::decode"]
+   *
+   * @requires extension yaml
    */
   public function testUnDefinedConstant($function) {
     $this->expectExceptionMessage('The constant "DOES_NOT_EXIST" is not defined');
     $yaml = <<<YAML
-foo:
-  !php/const DOES_NOT_EXIST
-YAML;
+      foo:
+        !php/const DOES_NOT_EXIST
+      YAML;
     $function($yaml);
   }
 
