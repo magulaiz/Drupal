@@ -113,4 +113,22 @@ YAML;
     $this->assertSame($yaml['foo'], PHP_INT_MAX);
   }
 
+  /**
+   * Tests that enums can be encoded by Symfony and parsed by PECL and Symfony.
+   */
+  public function testEnums() {
+    $data = [
+      'foo' => EnumValue::Yes,
+      'bar' => BackedEnumValue::Maybe,
+    ];
+    $yaml = YamlSymfony::encode($data);
+
+    $symfony = YamlSymfony::decode($yaml);
+    $yaml = YamlPecl::decode($yaml);
+    $this->assertSame($symfony['foo'], EnumValue::Yes);
+    $this->assertSame($symfony['bar'], BackedEnumValue::Maybe);
+    $this->assertSame($yaml['foo'], EnumValue::Yes);
+    $this->assertSame($yaml['bar'], BackedEnumValue::Maybe);
+  }
+
 }
