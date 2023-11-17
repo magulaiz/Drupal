@@ -474,12 +474,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       throw new \Exception('Kernel does not have site path set before calling boot()');
     }
 
-    if (!DRUPAL_TEST_IN_CHILD_SITE) {
+    if (!defined('DRUPAL_TEST_IN_CHILD_SITE') || !DRUPAL_TEST_IN_CHILD_SITE) {
       // Set up the Symfony VarDumper. The package for this is only installed
       // with the drupal/core-dev metapackage, so this must be enabled in
       // settings.php.
       // We don't do this in a test site, as the testing system has its own
-      // version of this setup.
+      // version of this setup. If the DRUPAL_TEST_IN_CHILD_SITE isn't defined
+      // yet then we're definitely in a non-standard or testing pathway which
+      // hasn't called bootEnvironment() yet.
       if (Settings::get('setup_var_dumper', FALSE)) {
         VarDumper::setHandler(DrupalVarDumper::class . '::handler');
       }
