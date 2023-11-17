@@ -397,7 +397,7 @@ class UrlTest extends UnitTestCase {
    *
    * @covers ::__toString
    */
-  public function testMagicToString($urls) {
+  public function testMagicToString(array $urls): void {
     foreach ($urls as $index => $url) {
       $path = array_pop($this->map[$index]);
       $this->assertSame($path, (string) $url);
