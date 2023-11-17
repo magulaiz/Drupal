@@ -114,6 +114,19 @@ YAML;
   }
 
   /**
+   * @testWith ["\\Drupal\\Component\\Serialization\\YamlSymfony::decode"]
+   *           ["\\Drupal\\Component\\Serialization\\YamlPecl::decode"]
+   */
+  public function testUnDefinedConstant($function) {
+    $this->expectExceptionMessage('The constant "DOES_NOT_EXIST" is not defined');
+    $yaml = <<<YAML
+foo:
+  !php/const DOES_NOT_EXIST
+YAML;
+    $function($yaml);
+  }
+
+  /**
    * Tests that enums can be encoded by Symfony and parsed by PECL and Symfony.
    */
   public function testEnums() {

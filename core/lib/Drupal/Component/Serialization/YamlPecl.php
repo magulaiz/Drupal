@@ -3,6 +3,7 @@
 namespace Drupal\Component\Serialization;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Provides default serialization for YAML using the PECL extension.
@@ -122,6 +123,9 @@ class YamlPecl implements SerializationInterface {
    *   The value of $value interpreted as a constant.
    */
   public static function parsePhpConstant($value, $tag, $flags) {
+    if (!\defined($value)) {
+      throw new ParseException(sprintf('The constant "%s" is not defined.', $value));
+    }
     return constant($value);
   }
 
