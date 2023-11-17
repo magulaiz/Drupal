@@ -583,7 +583,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         ->register('testing.config_schema_checker', ConfigSchemaChecker::class)
         ->addArgument(new Reference('config.typed'))
         ->addArgument($this->getConfigSchemaExclusions())
-        ->addArgument(!$is_core_test)
+        ->addArgument($is_core_test)
         ->addTag('event_subscriber');
     }
 

@@ -139,7 +139,7 @@ trait FunctionalTestSetupTrait {
       $is_core_test = str_starts_with($test_file_name, DRUPAL_ROOT . DIRECTORY_SEPARATOR . 'core');
       $services['services']['testing.config_schema_checker'] = [
         'class' => ConfigSchemaChecker::class,
-        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions(), !$is_core_test],
+        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions(), $is_core_test],
         'tags' => [['name' => 'event_subscriber']],
       ];
       file_put_contents($directory . '/services.yml', $yaml->dump($services));
