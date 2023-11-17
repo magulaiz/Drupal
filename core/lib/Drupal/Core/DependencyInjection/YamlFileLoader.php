@@ -451,7 +451,7 @@ class YamlFileLoader
         }
 
         if ($invalid_keys = array_diff_key($content, array('parameters' => 1, 'services' => 1))) {
-            throw new InvalidArgumentException(sprintf('The service file "%s" is not valid: it contains invalid keys %s. Services have to be added under "services" and Parameters under "parameters".', $file, $invalid_keys));
+            throw new InvalidArgumentException(sprintf('The service file "%s" is not valid: it contains invalid key(s) "%s". Services have to be added under "services" and Parameters under "parameters".', $file, implode('", "', $invalid_keys)));
         }
 
         return $content;
