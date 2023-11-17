@@ -272,7 +272,6 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Save');
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertTrue($assert_session->waitForText('Saved ' . $field_name . ' configuration.'));
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('string', $field_storage->getType());
@@ -304,8 +303,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Save');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved ' . $field_name . ' configuration.'));
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('test_field', $field_storage->getType());
   }

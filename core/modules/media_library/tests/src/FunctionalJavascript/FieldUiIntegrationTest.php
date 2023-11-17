@@ -81,8 +81,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $page->checkField('settings[handler_settings][target_bundles][type_three]');
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_three]"][checked="checked"]');
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Saved Shatner configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved Shatner configuration.'));
 
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_shatner');
     $assert_session->checkboxNotChecked('set_default_value');
@@ -94,8 +93,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->pressInsertSelected('Added one media item.');
 
     $page->pressButton('Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Saved Shatner configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved Shatner configuration.'));
 
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_shatner');
     $assert_session->checkboxChecked('set_default_value');
@@ -108,7 +106,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->waitForFieldExists('Type One')->check();
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_one]"][checked="checked"]');
     $page->pressButton('Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->waitForText('Saved Shatner configuration.'));
     $this->drupalGet('/admin/structure/types/manage/page/form-display');
     $assert_session->fieldValueEquals('fields[field_shatner][type]', 'media_library_widget');
   }

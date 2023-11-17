@@ -89,8 +89,7 @@ trait FieldUiJSTestTrait {
       // Second step: Save field settings.
       $save_button = $page->find('css', '.ui-dialog-buttonpane')->findButton('Save');
       $save_button->click();
-      $this->assertSession()->assertWaitOnAjaxRequest();
-      $assert_session->pageTextContains("Saved $label configuration.");
+      $assert_session->assert($assert_session->waitForText("Saved $label configuration."), 'text not found');
 
       // Check that the field appears in the overview form.
       $row = $page->find('css', '#field-' . $field_name);

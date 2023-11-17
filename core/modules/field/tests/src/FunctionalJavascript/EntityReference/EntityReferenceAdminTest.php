@@ -275,12 +275,13 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->clickLink('Edit', 1);
     $this->assertTrue($assert_session->waitForText('Test settings'));
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
+    $this->assertTrue($assert_session->waitForText('Instructions to present to the user below this field on the editing form.'));
     $page->findField('field_storage[subform][settings][target_type]')->setValue('taxonomy_term');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldExists('settings[handler_settings][auto_create]');
