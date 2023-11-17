@@ -73,9 +73,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Tests performance of logging in.
+   * Tests the performance of logging in.
    */
-  public function testLogin() {
+  public function testLogin(): void {
     // Create a user and log them in to warm all caches.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
@@ -94,9 +94,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Tests performance of logging in via the user login block.
+   * Tests the performance of logging in via the user login block.
    */
-  public function testLoginBlock() {
+  public function testLoginBlock(): void {
     $this->drupalPlaceBlock('user_login_block');
     // Create a user and log them in to warm all caches.
     $account = $this->drupalCreateUser();
@@ -132,9 +132,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Empty implementation to prevent resetting of caches.
+   * Provides an empty implementation to prevent the resetting of caches.
    */
-  protected function refreshVariables() {
-  }
+  protected function refreshVariables() {}
 
 }

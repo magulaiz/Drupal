@@ -75,7 +75,7 @@ class PerformanceData {
    * @param int $count
    *   The number of database queries recorded.
    */
-  public function setQueryCount(int $count) {
+  public function setQueryCount(int $count): void {
     $this->queryCount = $count;
   }
 
