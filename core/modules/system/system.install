@@ -1950,4 +1950,5 @@ function system_update_10201(&$sandbox) {
 function system_update_10202() {
   $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
   file_put_contents(Settings::get('config_sync_directory') . '/README.txt', $text);
+  return \t('Amended configuration synchronization readme file content.');
 }
