@@ -73,8 +73,12 @@ YAML;
     $builder = new ContainerBuilder();
     $yaml_file_loader = new YamlFileLoader($builder);
 
+    if ($pecl_yaml_message !== '' && extension_loaded('yaml')) {
+      $message = $pecl_yaml_message;
+    }
+
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage($pecl_yaml_message ?: $message);
+    $this->expectExceptionMessage($message);
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
   }
 
