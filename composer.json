@@ -117,7 +117,7 @@
         ],
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
-        "delete-tests-and-files": "./core/scripts/delete-tests-and-files.sh"
+        "delete-tests": "./core/scripts/delete-tests.sh"
     },
     "repositories": [
         {
