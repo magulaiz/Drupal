@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\field_ui\FieldUI;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -73,14 +74,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-
-    if ($redirect_url = $this->getRedirectUrl()) {
-      $command = new RedirectCommand($redirect_url->setAbsolute()->toString());
-    }
-    else {
-      // Display mode add always provides a parent_url.
-      throw new \Exception("No parent_url provided by Display mode add form");
-    }
+    $command = new RedirectCommand(FieldUI::getDisplayRouteInfo($form_state->getBuildInfo()['args'][0], \Drupal::request()->query->get('parent'), TRUE)->toString());
     $response = new AjaxResponse();
     return $response->addCommand($command);
   }
