@@ -119,10 +119,10 @@ class YamlPecl implements SerializationInterface {
    * @param int $flags
    *   Scalar entity style flags.
    *
-   * @return string
+   * @return mixed
    *   The value of $value interpreted as a constant.
    */
-  public static function parsePhpConstant($value, $tag, $flags) {
+  public static function parsePhpConstant($value, string $tag, int $flags) {
     if (!\defined($value)) {
       throw new ParseException(sprintf('The constant "%s" is not defined.', $value));
     }
