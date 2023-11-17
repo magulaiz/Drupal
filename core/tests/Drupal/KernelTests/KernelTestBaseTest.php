@@ -351,7 +351,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $user = $user_storage->create(['name' => 'Test user']);
