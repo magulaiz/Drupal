@@ -133,8 +133,7 @@ trait FieldUiJSTestTrait {
 
     // Second step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->pageTextContains("Saved $label configuration.");
+    $this->assertSession()->assert($this->assertSession()->waitForText("Saved $label configuration."), 'text not found');
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
