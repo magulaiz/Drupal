@@ -126,8 +126,8 @@ variables:
   <<: [ *with-composer, *default-job-settings ]
   when: manual
   allow_failure: true
-  variables:
-    GIT_DEPTH: 50
+  # variables:
+  #   GIT_DEPTH: 50
   services:
     - <<: *with-database
     - <<: *with-chrome
