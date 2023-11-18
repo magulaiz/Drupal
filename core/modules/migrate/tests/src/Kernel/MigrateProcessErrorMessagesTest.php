@@ -2,7 +2,16 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Plugin\migrate\process\Get;
+use Drupal\migrate\Plugin\migrate\process\SubProcess;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigratePluginManagerInterface;
+use Drupal\migrate\Plugin\MigrateProcessInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests the format of messages from process plugin exceptions.
@@ -17,70 +26,101 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
   protected static $modules = [
     'system',
     'migrate_events_test',
-    'migrate_process_messages_test',
     'migrate',
+  ];
+
+  /**
+   * A prophesized Process Plugin Manager.
+   *
+   * @var \Prophecy\Prophecy\ObjectProphecy
+   */
+  protected ObjectProphecy $processPluginManager;
+
+  /**
+   * A prophesized ID Map Plugin Manager.
+   *
+   * @var \Prophecy\Prophecy\ObjectProphecy
+   */
+  protected ObjectProphecy $idMapPluginManager;
+
+  /**
+   * A prophesized ID Map.
+   *
+   * @var \Prophecy\Prophecy\ObjectProphecy
+   */
+  protected ObjectProphecy $idMap;
+
+  /**
+   * The default stub migration definition.
+   *
+   * @var array
+   */
+  protected array $definition = [
+    'id' => 'process_errors_migration',
+    'idMap' => [
+      'plugin' => 'idmap_prophecy',
+    ],
+    'source' => [
+      'plugin' => 'embedded_data',
+      'data_rows' => [
+        [
+          'id' => 1,
+          'name' => 'Item 1',
+          'my_property' => [
+            'subfield' => [
+              42,
+            ],
+          ],
+        ],
+      ],
+      'ids' => ['id' => ['type' => 'integer']],
+    ],
+    'destination' => [
+      'plugin' => 'dummy',
+    ],
+    'migration_dependencies' => [],
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $collectMessages = TRUE;
+  protected function setUp(): void {
+    parent::setUp();
+    $this->processPluginManager = $this->prophesize(MigratePluginManagerInterface::class);
+    $this->idMapPluginManager = $this->prophesize(MigratePluginManagerInterface::class);
+    $this->idMap = $this->prophesize(MigrateIdMapInterface::class);
+  }
 
   /**
-   * Tests the format of messages from process plugin exceptions.
+   * Tests format of map messages saved from plugin exceptions.
    */
-  public function testProcessErrorMessages() {
-    $definition = [
-      'id' => 'process_errors_migration',
-      'idMap' => [
-        'plugin' => 'test_message_collector',
-      ],
-      'source' => [
-        'plugin' => 'embedded_data',
-        'data_rows' => [],
-        'ids' => ['id' => ['type' => 'integer']],
-      ],
-      'process' => [],
-      'destination' => [
-        'plugin' => 'dummy',
-      ],
-      'migration_dependencies' => [],
-    ];
-
-    $definition['source']['data_rows'] = [
-      [
-        'id' => 1,
-        'name' => 'Item 1',
-      ],
-    ];
-    $definition['process'] = [
+  public function testProcessErrorMessage() {
+    $this->definition['process'] = [
       'id' => [
         [
-          'plugin' => 'test_error_single',
+          'plugin' => 'test_error',
           'value' => 'id',
         ],
       ],
     ];
-
-    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
+    $this->idMap->saveMessage(['id' => 1], "process_errors_migration:id:test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
+    $this->setPluginManagers();
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($this->definition);
 
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
 
-    $this->assertEquals("process_errors_migration:id:test_error_single: Process exception.", $this->migrateMessages[1][0]);
-    $this->migrateMessages = [];
+  }
 
-    $definition['source']['data_rows'] = [
-      [
-        'id' => 1,
-        'my_property' => [
-          'subfield' => [
-            42,
-          ],
-        ],
-      ],
-    ];
-    $definition['process'] = [
+  /**
+   * Tests format of map messages saved from sub_process exceptions.
+   *
+   * This checks the format of messages that are thrown from normal process
+   * plugins while being executed inside a sub_process pipeline as they
+   * bubble up to the main migration.
+   */
+  public function testSubProcessErrorMessage() {
+    $this->definition['process'] = [
       'id' => 'id',
       'my_property' => [
         [
@@ -89,7 +129,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
           'process' => [
             'subfield' => [
               [
-                'plugin' => 'test_error_single',
+                'plugin' => 'test_error',
                 'value' => 'subfield',
               ],
             ],
@@ -97,14 +137,37 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
         ],
       ],
     ];
-
-    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
-
+    $this->processPluginManager->createInstance('sub_process', Argument::cetera())
+      ->will(fn($x) => new SubProcess($x[1], 'sub_process', ['handle_multiples' => true]));
+    $this->idMap->saveMessage(['id' => 1], "process_errors_migration:my_property:sub_process: test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
+    $this->setPluginManagers();
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($this->definition);
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
-
-    $this->assertEquals("process_errors_migration:my_property:sub_process: test_error_single: Process exception.", $this->migrateMessages[1][0]);
-    $this->migrateMessages = [];
   }
 
+  /**
+   * Prepares and sets the prophesized plugin managers.
+   */
+  protected function setPluginManagers() {
+    $error_plugin_prophecy = $this->prophesize(MigrateProcessInterface::class);
+    $error_plugin_prophecy->getPluginDefinition()->willReturn(['plugin_id' => 'test_error']);
+    $error_plugin_prophecy->getPluginId()->willReturn('test_error');
+    $error_plugin_prophecy->transform(Argument::cetera())->willThrow(new MigrateException('Process exception.'));
+
+    $this->processPluginManager->createInstance('get', Argument::cetera())
+      ->will(fn($x) => new Get($x[1], 'get', ['handle_multiples' => true]));
+    $this->processPluginManager->createInstance('test_error', Argument::cetera())->willReturn($error_plugin_prophecy->reveal());
+
+    $this->idMap->setMessage(Argument::any())->shouldBeCalled();
+    $this->idMap->getRowBySource(Argument::any())->willReturn([]);
+    $this->idMap->delete(Argument::cetera())->willReturn();
+    $this->idMap->saveIdMapping(Argument::cetera())->willReturn();
+
+    $this->idMapPluginManager->createInstance('idmap_prophecy', Argument::cetera())->willReturn($this->idMap->reveal());
+
+    $this->container->set('plugin.manager.migrate.process', $this->processPluginManager->reveal());
+    $this->container->set('plugin.manager.migrate.id_map', $this->idMapPluginManager->reveal());
+  }
 }
