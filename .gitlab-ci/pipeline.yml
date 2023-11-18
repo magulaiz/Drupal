@@ -72,7 +72,7 @@ stages:
     - "--no-sandbox"
     - "--log-path=/tmp/chromedriver.log"
     - "--verbose"
-    - "--whitelisted-ips="
+    - "--whitelisted-ips"
     - "--allowed-origins='*'"
 
 .phpunit-artifacts: &phpunit-artifacts
