@@ -61,7 +61,7 @@ YAML;
   /**
    * @dataProvider providerTestExceptions
    */
-  public function testExceptions($yml, $message, string $pecl_yaml_message = '') {
+  public function testExceptions($yml, $message) {
     vfsStream::setup('drupal', NULL, [
       'modules' => [
         'example' => [
@@ -72,10 +72,6 @@ YAML;
 
     $builder = new ContainerBuilder();
     $yaml_file_loader = new YamlFileLoader($builder);
-
-    if ($pecl_yaml_message !== '' && extension_loaded('yaml')) {
-      $message = $pecl_yaml_message;
-    }
 
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($message);
@@ -175,10 +171,15 @@ YAML,
       ],
       'YAML must be valid' => [<<<YAML
    do not:
-      do this for the love of Foo Bar!
+      do: this: for the love of Foo Bar!
 YAML,
         'The file "vfs://drupal/modules/example/example.yml" does not contain valid YAML',
-        'The service file "vfs://drupal/modules/example/example.yml" is not valid: it contains invalid key(s) "do this for the love of Foo Bar!".',
+      ],
+      'YAML must have expected keys' => [<<<YAML
+      "do not":
+        do: this
+      YAML,
+        'The service file "vfs://drupal/modules/example/example.yml" is not valid: it contains invalid root key(s) "do not". Services have to be added under "services" and Parameters under "parameters".',
       ],
     ];
   }
