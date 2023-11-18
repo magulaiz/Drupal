@@ -86,6 +86,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     $this->processPluginManager = $this->prophesize(MigratePluginManagerInterface::class);
     $this->idMapPluginManager = $this->prophesize(MigratePluginManagerInterface::class);
     $this->idMap = $this->prophesize(MigrateIdMapInterface::class);
@@ -103,13 +104,15 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
         ],
       ],
     ];
+
     $this->idMap->saveMessage(['id' => 1], "process_errors_migration:id:test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
     $this->setPluginManagers();
+
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($this->definition);
 
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
-
   }
 
   /**
@@ -137,12 +140,15 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
         ],
       ],
     ];
+
     $this->processPluginManager->createInstance('sub_process', Argument::cetera())
-      ->will(fn($x) => new SubProcess($x[1], 'sub_process', ['handle_multiples' => true]));
+      ->will(fn($x) => new SubProcess($x[1], 'sub_process', ['handle_multiples' => TRUE]));
     $this->idMap->saveMessage(['id' => 1], "process_errors_migration:my_property:sub_process: test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $this->setPluginManagers();
+
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($this->definition);
+
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
   }
@@ -157,7 +163,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     $error_plugin_prophecy->transform(Argument::cetera())->willThrow(new MigrateException('Process exception.'));
 
     $this->processPluginManager->createInstance('get', Argument::cetera())
-      ->will(fn($x) => new Get($x[1], 'get', ['handle_multiples' => true]));
+      ->will(fn($x) => new Get($x[1], 'get', ['handle_multiples' => TRUE]));
     $this->processPluginManager->createInstance('test_error', Argument::cetera())->willReturn($error_plugin_prophecy->reveal());
 
     $this->idMap->setMessage(Argument::any())->shouldBeCalled();
@@ -170,4 +176,5 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     $this->container->set('plugin.manager.migrate.process', $this->processPluginManager->reveal());
     $this->container->set('plugin.manager.migrate.id_map', $this->idMapPluginManager->reveal());
   }
+
 }
