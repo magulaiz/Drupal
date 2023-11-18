@@ -73,6 +73,7 @@ stages:
     - "--log-path=/tmp/chromedriver.log"
     - "--verbose"
     - "--whitelisted-ips="
+    - "--allowed-origins='*'"
 
 .phpunit-artifacts: &phpunit-artifacts
   artifacts:
