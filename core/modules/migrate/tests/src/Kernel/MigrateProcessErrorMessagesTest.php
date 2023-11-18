@@ -65,7 +65,6 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
       'data_rows' => [
         [
           'id' => 1,
-          'name' => 'Item 1',
           'my_property' => [
             'subfield' => [
               42,
@@ -74,6 +73,9 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
         ],
       ],
       'ids' => ['id' => ['type' => 'integer']],
+    ],
+    'process' => [
+      'id' => 'id',
     ],
     'destination' => [
       'plugin' => 'dummy',
@@ -96,16 +98,9 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
    * Tests format of map messages saved from plugin exceptions.
    */
   public function testProcessErrorMessage() {
-    $this->definition['process'] = [
-      'id' => [
-        [
-          'plugin' => 'test_error',
-          'value' => 'id',
-        ],
-      ],
-    ];
+    $this->definition['process']['error']['plugin'] = 'test_error';
 
-    $this->idMap->saveMessage(['id' => 1], "process_errors_migration:id:test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
+    $this->idMap->saveMessage(['id' => 1], "process_errors_migration:error:test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
     $this->setPluginManagers();
 
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
@@ -123,19 +118,14 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
    * bubble up to the main migration.
    */
   public function testSubProcessErrorMessage() {
-    $this->definition['process'] = [
-      'id' => 'id',
-      'my_property' => [
-        [
-          'plugin' => 'sub_process',
-          'source' => 'my_property',
-          'process' => [
-            'subfield' => [
-              [
-                'plugin' => 'test_error',
-                'value' => 'subfield',
-              ],
-            ],
+    $this->definition['process']['subprocess_error'] = [
+      'plugin' => 'sub_process',
+      'source' => 'my_property',
+      'process' => [
+        'subfield' => [
+          [
+            'plugin' => 'test_error',
+            'value' => 'subfield',
           ],
         ],
       ],
@@ -143,7 +133,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
 
     $this->processPluginManager->createInstance('sub_process', Argument::cetera())
       ->will(fn($x) => new SubProcess($x[1], 'sub_process', ['handle_multiples' => TRUE]));
-    $this->idMap->saveMessage(['id' => 1], "process_errors_migration:my_property:sub_process: test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
+    $this->idMap->saveMessage(['id' => 1], "process_errors_migration:subprocess_error:sub_process: test_error: Process exception.", MigrationInterface::MESSAGE_ERROR)->shouldBeCalled();
     $this->setPluginManagers();
 
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
@@ -166,7 +156,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
       ->will(fn($x) => new Get($x[1], 'get', ['handle_multiples' => TRUE]));
     $this->processPluginManager->createInstance('test_error', Argument::cetera())->willReturn($error_plugin_prophecy->reveal());
 
-    $this->idMap->setMessage(Argument::any())->shouldBeCalled();
+    $this->idMap->setMessage(Argument::any())->willReturn();
     $this->idMap->getRowBySource(Argument::any())->willReturn([]);
     $this->idMap->delete(Argument::cetera())->willReturn();
     $this->idMap->saveIdMapping(Argument::cetera())->willReturn();
