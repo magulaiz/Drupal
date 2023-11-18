@@ -55,6 +55,7 @@ variables:
 #############
 stages:
   - 🏗️ Build
+  - 🏛️ Post Build
   - 🪄 Lint
   - 🗜️ Test
 
@@ -211,6 +212,32 @@ default:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "sqlite-3"
 
+####################
+# CKEditor Nightly #
+####################
+'🌌 CKEditor Nightly':
+  <<: [ *default-job-settings, *run-daily ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  stage: 🏛️ Post Build
+  needs: ['📦️ Yarn']
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor-ckeditor-nightly'
+    paths:
+      - core/package.json
+      - core/node_modules/
+      - core/assets/vendor/ckeditor5
+      - core/modules/ckeditor5/js/build
+  script:
+    - yarn --cwd ./core upgrade $(cat ./package.json | jq -r '.devDependencies | keys | .[]' | grep '@ckeditor/' | sed 's/$/@nightly/') ckeditor5@nightly
+
+'CKEditor Nightly + PHP 8.2 MySQL 8':
+  <<: [ *default-stage ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
+  needs: ['🌌 CKEditor Nightly']
 
 ################
 # Build Jobs for linting
