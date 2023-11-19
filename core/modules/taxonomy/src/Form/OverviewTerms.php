@@ -219,7 +219,7 @@ class OverviewTerms extends FormBase {
         $form['#first_tid'] = $raw_term->tid;
       }
       // Keep a variable to make sure at least 2 root elements are displayed.
-      if ($raw_term->parents[0] == 0) {
+      if ($raw_term->parents[0] == TermInterface::ID_ROOT) {
         $root_entries++;
       }
       $current_page[$key] = $raw_term;
