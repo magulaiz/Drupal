@@ -9,7 +9,7 @@ use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Runs a browser test using a driver that supports JavaScript.
+ * Runs browser tests using a driver that supports JavaScript.
  *
  * Base class for testing browser interaction implemented in JavaScript.
  *
