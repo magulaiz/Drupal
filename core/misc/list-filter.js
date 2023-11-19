@@ -235,17 +235,30 @@
       this.$rows.show();
       this.showAllGroups();
 
+      Drupal.announce(this.listFilterSettings.announce.all);
+
       return;
     }
 
+    let visibleCount = 0;
     // Search in all of the rows' sources and show or hide accordingly.
     this.sources.forEach((source, index) => {
       const match = source.search(re) !== -1;
 
       this.$rows.eq(index).toggle(match);
+
+      visibleCount += + match;
     });
 
     this.hideEmptyGroups();
+
+    Drupal.announce(
+      Drupal.formatPlural(
+        visibleCount,
+        this.listFilterSettings.announce.singular,
+        this.listFilterSettings.announce.plural,
+      ),
+    );
   };
 
   /**

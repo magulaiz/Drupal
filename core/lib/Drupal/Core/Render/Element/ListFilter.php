@@ -27,6 +27,12 @@ use Drupal\Core\Render\Element;
  *   - getRowGroupUsingPriorSibling: Item elements are siblings of group
  *     elements. The group of an item is its first prior sibling element that is
  *     a group.
+ * - #announce: (optional) An array of strings to use for accessibility ARIA
+ *   announcements when the number of visible items is changed. The keys are:
+ *   - singular: Message to announce when only one item is visible.
+ *   - plural: Message to announce when more than one items are visible. This
+ *     must contain the '@count' placeholder.
+ *   - all': Message to announce when all items are visible.
  * - #debug: (optional) Set to TRUE to add CSS styling to highlight the
  *   different elements.
  *
@@ -53,6 +59,11 @@ class ListFilter extends Search {
       '#list_text' => '',
       '#list_group' => '',
       '#grouping_method' => '',
+      '#announce' => [
+        'singular' => t('1 item is available in the modified list.'),
+        'plural' => t('@count items are available in the modified list.'),
+        'all' => t('All available items are listed.'),
+      ],
       '#debug' => FALSE,
     ];
   }
@@ -89,6 +100,7 @@ class ListFilter extends Search {
       '#list_text',
       '#list_group',
       '#grouping_method',
+      '#announce',
       '#debug',
     ] as $key) {
       $settings[substr($key, 1)] = $element[$key];
