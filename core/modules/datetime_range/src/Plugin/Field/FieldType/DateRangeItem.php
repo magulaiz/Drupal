@@ -161,32 +161,19 @@ class DateRangeItem extends DateTimeItem {
    * {@inheritdoc}
    */
   public function getConstraints() {
+    $constraints = parent::getConstraints();
     $constraint_manager = \Drupal::typedDataManager()
       ->getValidationConstraintManager();
-    $constraints = parent::getConstraints();
-
-    if ($this->getFieldDefinition()->isRequired()) {
+    if ($this->getSetting('optional_values') == static::OPTIONAL_NONE) {
       $label = $this->getFieldDefinition()->getLabel();
-      // If the end date triggers constraint validation then test the start date.
       $constraints[] = $constraint_manager
         ->create('ComplexData', [
-          'value' => [
+          'end_value' => [
             'NotNull' => [
-              'message' => $this->t('The @title start date is required', ['@title' => $label]),
+              'message' => $this->t('The @title end date is required', ['@title' => $label]),
             ],
           ],
         ]);
-      // Testing the end date is only needed if not required and not optional.
-      if ($this->getSetting('optional_values') == static::OPTIONAL_NONE) {
-        $constraints[] = $constraint_manager
-          ->create('ComplexData', [
-            'end_value' => [
-              'NotNull' => [
-                'message' => $this->t('The @title end date is required', ['@title' => $label]),
-              ],
-            ],
-          ]);
-      }
     }
 
     return $constraints;
