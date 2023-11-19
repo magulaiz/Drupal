@@ -264,8 +264,8 @@
   /**
    * Hides all groups which have no rows showing for the current filter.
    */
-  Drupal.listFilter.prototype.hideEmptyGroups = function() {
-    this.$groups.each((index, group) => {
+  Drupal.listFilter.prototype.hideEmptyGroups = function () {
+    this.$groups && this.$groups.each((index, group) => {
       let showGroup = this.rowsByGroup[index].reduce(
         (accumulator, $row) => {
           // Don't use .is(":visible") as that considers visibility of ancestors
@@ -284,7 +284,7 @@
    * Shows all groups.
    */
   Drupal.listFilter.prototype.showAllGroups = function () {
-    this.$groups.show();
+    this.$groups && this.$groups.show();
   }
 
 
