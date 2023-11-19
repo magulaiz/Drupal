@@ -101,8 +101,8 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertSame('config_test.validation.llama', $typed_config->get('llama')->getPropertyPath());
 
     $config_test_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
-      'id' => 'asterix',
-      'label' => 'Asterix',
+      'id' => 'test',
+      'label' => 'Test',
       'weight' => 11,
       'style' => 'test_style',
     ]);
@@ -185,9 +185,9 @@ class TypedConfigTest extends KernelTestBase {
     // 2 constraint violations triggered by the default validation constraint
     // for `type: mapping`
     // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint
-    $this->assertSame('', $result->get(0)->getPropertyPath());
+    $this->assertSame('elephant', $result->get(0)->getPropertyPath());
     $this->assertEquals("'elephant' is not a supported key.", $result->get(0)->getMessage());
-    $this->assertSame('', $result->get(1)->getPropertyPath());
+    $this->assertSame('zebra', $result->get(1)->getPropertyPath());
     $this->assertEquals("'zebra' is not a supported key.", $result->get(1)->getMessage());
     // 1 additional constraint violation triggered by the custom
     // constraint for the `config_test.validation` type, which indirectly
