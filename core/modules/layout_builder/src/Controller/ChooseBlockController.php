@@ -155,6 +155,21 @@ class ChooseBlockController implements ContainerInjectionInterface {
       $block_categories[$category]['#title'] = $category;
       $block_categories[$category]['links'] = $this->getBlockLinks($section_storage, $delta, $region, $blocks);
     }
+    // Add the inline blocks to a list.
+    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage), [
+      'section_storage' => $section_storage,
+      'region' => $region,
+      'list' => 'inline_blocks',
+    ]);
+    $blocks = $this->blockManager->getGroupedDefinitions($definitions);
+    $inline_blocks_category = (string) $this->t('Inline blocks');
+    if (isset($blocks[$inline_blocks_category])) {
+      $block_categories['inline']['#type'] = 'details';
+      $block_categories['inline']['#attributes']['class'][] = 'js-layout-builder-category';
+      $block_categories['inline']['#open'] = FALSE;
+      $block_categories['inline']['#title'] = t('Inline blocks');
+      $block_categories['inline']['links'] = $this->getBlockLinks($section_storage, $delta, $region, $blocks[$inline_blocks_category]);
+    }
     $build['block_categories'] = $block_categories;
     return $build;
   }
