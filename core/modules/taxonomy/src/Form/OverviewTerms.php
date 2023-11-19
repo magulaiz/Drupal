@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

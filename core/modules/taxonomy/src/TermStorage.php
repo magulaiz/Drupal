@@ -136,7 +136,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     // Cannot use $this->get('parent')->referencedEntities() here because that
     // strips out the '0' reference.
     foreach ($term->get('parent') as $item) {
-      if ($item->target_id == 0) {
+      if ($item->target_id == TermInterface::ID_ROOT) {
         // The <root> parent.
         $parents[0] = NULL;
         continue;
@@ -221,7 +221,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function loadTree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE) {
+  public function loadTree($vid, $parent = TermInterface::ID_ROOT, $max_depth = NULL, $load_entities = FALSE) {
     $cache_key = implode(':', func_get_args());
     if (!isset($this->trees[$cache_key])) {
       // We cache trees, so it's not CPU-intensive to call on a term and its
