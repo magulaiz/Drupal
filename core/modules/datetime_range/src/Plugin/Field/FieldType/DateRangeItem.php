@@ -29,7 +29,7 @@ class DateRangeItem extends DateTimeItem {
    */
   public static function defaultFieldSettings() {
     return [
-      'optional_values' => FALSE,
+      'optional_values' => static::OPTIONAL_NONE,
     ] + parent::defaultFieldSettings();
   }
 
