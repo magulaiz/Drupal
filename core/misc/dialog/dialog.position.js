@@ -104,7 +104,8 @@
         }
         if (
           option === 'width' &&
-          parseInt(optionValue, 10) > $(window).width()
+          parseInt(optionValue, 10) >
+            $(window).width() - (displace.offsets.left + displace.offsets.right)
         ) {
           if (!event.data.settings.modal) {
             adjustedValue =
@@ -115,11 +116,7 @@
             adjustedValue = $(window).width() - 40;
           }
           adjustedOptions[option] = adjustedValue;
-        }
-        if (
-          option === 'width' &&
-          $(window).width() > parseInt(optionValue, 10)
-        ) {
+        } else {
           adjustedOptions[option] = parseInt(optionValue, 10);
         }
       }
