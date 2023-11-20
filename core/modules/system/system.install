@@ -1950,6 +1950,10 @@ function system_update_10201(&$sandbox) {
 function system_update_10301() {
   $configuration_directory = Settings::get('config_sync_directory');
   $readme_path = $configuration_directory . '/README.txt';
+  if (!file_exists($readme_path)) {
+    // No operation if the original file is not there.
+    return;
+  }
   $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
   if (!$writable) {
     // Cannot write the README.txt file, nothing to do.
