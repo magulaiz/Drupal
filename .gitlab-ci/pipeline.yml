@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # cspell:ignore drupaltestbot drupaltestbotpw
 
 stages:
@@ -105,10 +104,6 @@ variables:
       else
         sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
       fi
-=======
-include:
-  - local: base-pipeline.yml
->>>>>>> 245326cf22 (Moving things to files.)
 
 ################
 # Jobs
