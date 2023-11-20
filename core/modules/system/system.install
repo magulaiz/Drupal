@@ -1947,7 +1947,7 @@ function system_update_10201(&$sandbox) {
 /**
  * Fix path in README.txt in CONFIG_SYNC_DIRECTORY.
  */
-function system_update_10202() {
+function system_update_10301() {
   $configuration_directory = Settings::get('config_sync_directory');
   $readme_path = $configuration_directory . '/README.txt';
   $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
