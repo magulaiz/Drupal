@@ -5,6 +5,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
+use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 
@@ -15,6 +16,8 @@ use Drupal\language\Entity\ContentLanguageSettings;
  * @group #slow
  */
 class ModerationFormTest extends ModerationStateTestBase {
+
+  use LanguageTestTrait;
 
   /**
    * Modules to enable.
@@ -286,7 +289,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalLogin($this->rootUser);
 
     // Add French language.
-    ConfigurableLanguage::createFromLangcode('fr')->save();
+    self::createLanguageFromLangcode('fr');
 
     // Enable content translation on moderated_content.
     $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'moderated_content');
