@@ -81,23 +81,24 @@ class Mapping extends ArrayElement {
    * Gets all dynamically valid keys.
    *
    * When the `type` of the mapping is dynamic itself. For example: the settings
-   * associated with a FieldConfig depends on which field plugin that field
-   * uses.
-   * Other examples:
-   * - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no information
-   *   stored elsewhere: the chosen key (in a sequence) determines the type.
-   * - third party settings use '[%parent.%parent.%type].third_party.[%key]',
-   *   but the first variable value only causes the config entity type (at the
-   *   root) to be inherited (f.e. 'node.type.third_party.[%key]').
-   * - field instances 'field.value.[%parent.%parent.field_type]', which is
-   *   used to determine the type of the default field value, to ensure
-   *   matches the precise config schema type of the field type
-   * - views use 'views.filter.[plugin_id]' to allow the value itself to
-   *   determine which filter plugin it  uses, in the 'plugin_id' key.
+   * associated with a FieldConfig depend on what kind of field it is (i.e.,
+   * which field plugin it uses).
    *
-   * For each of these examples, the mapping at this property path may have keys
-   * that are dynamically valid. This means that depending on other values
-   * (hence "dynamically"), different sets of keys are considered valid.
+   * Other examples:
+   * - CKEditor 5 uses 'ckeditor5.plugin.[%key]'; the mapping is stored in a
+   *   sequence, and `[%key]` is replaced by the mapping's key in that sequence.
+   * - third party settings use '[%parent.%parent.%type].third_party.[%key]';
+   *   `[%parent.%parent.%type]` is replaced by the type of the mapping two
+   *   levels up. For example, 'node.type.third_party.[%key]'.
+   * - field instances's default values have a type of
+   *   'field.value.[%parent.%parent.field_type]'. This uses the value of the
+   *   `field_type` key from the mapping two levels up.
+   * - Views filters have a type of 'views.filter.[plugin_id]'; `[plugin_id]` is
+   *   replaced by the value of the mapping's `plugin_id` key.
+   *
+   * In each of these examples, the mapping may have keys that are dynamically
+   * valid, meaning that which keys are considered valid may depend on other
+   * values in the tree.
    *
    * @return string[][]
    *   A list of dynamically valid keys. An array with:
@@ -115,39 +116,39 @@ class Mapping extends ArrayElement {
       return [];
     }
 
-    // The parent mapping definition is used to determine the type used to
-    // determine the type of this mapping.
-    // f.e.:
-    // 1. `type: editor.settings.[%parent.editor]`
-    // 2. `type: editor.image_upload_settings.[status]`.
+    // Use the parent data definition to determine the type of this mapping
+    // (including the dynamic placeholders). For example:
+    // - `editor.settings.[%parent.editor]`
+    // - `editor.image_upload_settings.[status]`.
     $original_mapping_type = match (TRUE) {
       $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$this->getName()]['type'],
       $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
       default => throw new \LogicException('Invalid config schema detected.'),
     };
 
-    // If the original mapping type is not dynamic, there's no additional work.
+    // If this mapping's type isn't dynamic, there's nothing to do.
     if (!str_contains($original_mapping_type, ']')) {
       return [];
     }
-    // Prefix-based dynamic typing is used only by third party settings, which
-    // are by definition optional.
+    // Only third-party settings, which are optional by definition, start with
+    // a dynamic placeholder.
     elseif (str_starts_with($original_mapping_type, '[')) {
       return [];
     }
 
-    // Find all possible types for the given original mapping type.
-    // f.e.:
-    // 1. `editor.settings.unicorn` or `editor.settings.trex`
-    // 2. `editor.image_upload_settings.*` or `editor.image_upload_settings.1`
+    // Expand the dynamic placeholders to find all mapping types derived from
+    // the original mapping type. To continue the previous example:
+    // - `editor.settings.unicorn`
+    // - `editor.image_upload_settings.*`
+    // - `editor.image_upload_settings.1`
     $possible_types = $this->getPossibleTypes($original_mapping_type);
 
     // TRICKY: it is tempting to not consider this a dynamic type if only one
-    // concrete type is installed. But this would lead to different validation
-    // errors when modules are installed or uninstalled.
+    // concrete type exists. But that would lead to different validation errors
+    // when modules are installed or uninstalled.
     assert(!empty($possible_types));
 
-    // Determine all valid keys across all possible types.
+    // Determine all valid keys, across all possible types.
     $all_type_definitions = $this->getTypedDataManager()->getDefinitions();
     $possible_type_definitions = array_intersect_key($all_type_definitions, array_fill_keys($possible_types, TRUE));
     // TRICKY: \Drupal\Core\Config\TypedConfigManager::getDefinition() does the
@@ -165,8 +166,8 @@ class Mapping extends ArrayElement {
     );
 
     // From all valid keys across all types, get the ones for the fallback type:
-    // the keys in this mapping definition are inherited by all type definitions
-    // and are hence valid everywhere. Not all types have a fallback type.
+    // its keys are inherited by all type definitions and are therefore always
+    // ("statically") valid. Not all types have a fallback type.
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     $fallback_type = $this->getTypedDataManager()->findFallback($original_mapping_type);
     $valid_keys_everywhere = array_intersect_key(
@@ -177,8 +178,8 @@ class Mapping extends ArrayElement {
     $statically_required_keys = NestedArray::mergeDeepArray($valid_keys_everywhere);
 
     // Now that statically valid keys are known, determine which valid keys are
-    // only valid in some cases: filter away the statically valid keys that are
-    // present in each per-type array of valid keys.
+    // only valid in *some* cases: remove the statically valid keys from every
+    // per-type array of valid keys.
     $valid_keys_some = array_diff_key($valid_keys_per_type, $valid_keys_everywhere);
     $valid_keys_some_processed = array_map(
       fn (array $keys) => array_values(array_filter($keys, fn (string $key) => !in_array($key, $statically_required_keys, TRUE))),
