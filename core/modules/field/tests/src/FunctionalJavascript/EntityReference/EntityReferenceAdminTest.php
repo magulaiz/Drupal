@@ -282,7 +282,6 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // specific to its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
-    $this->assertTrue($assert_session->waitForText('Instructions to present to the user below this field on the editing form.'));
     $page->findField('field_storage[subform][settings][target_type]')->setValue('taxonomy_term');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldExists('settings[handler_settings][auto_create]');
