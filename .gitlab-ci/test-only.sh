@@ -8,14 +8,14 @@ git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only
 echo "If this list contains more files than what you changed, then you need to rebase your branch."
 
 echo "1️⃣ Reverting non test changes"
-if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
-git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
+git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
   echo "↩️ Reverting $file";
   git checkout refs/heads/${TARGET_BRANCH} -- $file;
 done
 fi
-if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
-git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "Test.php$"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
+git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
   echo "🗑️️ Deleting $file";
   git rm $file;
 done
