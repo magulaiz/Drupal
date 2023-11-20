@@ -91,6 +91,13 @@ class DialogPositionTest extends WebDriverTestBase {
     $dialog_style = $dialog->getAttribute('style');
     // Assert that the width has been adjusted on window resize.
     $this->assertStringContainsString('width: 745', $dialog_style);
+
+    // Resize the window.
+    $this->getSession()->resizeWindow(1300, 1300);
+    $dialog = $page->find('css', '[role="dialog"]');
+    $dialog_style = $dialog->getAttribute('style');
+    // Assert that the width is restored to full size.
+    $this->assertStringContainsString('width: 880', $dialog_style);
   }
 
 }
