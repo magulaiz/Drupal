@@ -276,6 +276,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->waitForText('Test settings'));
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save settings');
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
+    $this->getSession()->executeScript("location.reload();");
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
