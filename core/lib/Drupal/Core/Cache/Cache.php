@@ -127,15 +127,15 @@ class Cache {
   }
 
   /**
-   * Gets all static cache bin services.
+   * Gets all memory cache bin services.
    *
    * @return \Drupal\Core\Cache\CacheBackendInterface[]
-   *   An array of cache backend objects keyed by static cache bins.
+   *   An array of cache backend objects keyed by memory cache bins.
    */
-  public static function getStaticBins() {
+  public static function getMemoryBins() {
     $bins = [];
     $container = \Drupal::getContainer();
-    foreach ($container->getParameter('static_cache_bins') as $service_id => $bin) {
+    foreach ($container->getParameter('memory_cache_bins') as $service_id => $bin) {
       $bins[$bin] = $container->get($service_id);
     }
     return $bins;

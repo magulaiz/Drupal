@@ -30,7 +30,7 @@ trait RefreshVariablesTrait {
         $backend->reset();
       }
     }
-    foreach (Cache::getStaticBins() as $backend) {
+    foreach (Cache::getMemoryBins() as $backend) {
       if (is_callable([$backend, 'reset'])) {
         $backend->reset();
       }

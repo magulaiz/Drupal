@@ -7,6 +7,7 @@ parameters:
   # \Drupal\Core\Cache\ListCacheBinsPass::process() will override this but defining this allows the cache system to
   # function properly before that runs.
   cache_default_bin_backends: []
+  memory_cache_default_bin_backends: []
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -194,7 +195,7 @@ services:
 
   cache_factory:
     class: Drupal\Core\Cache\CacheFactory
-    arguments: ['@settings', '%cache_default_bin_backends%', '%static_cache_default_bin_backends%']
+    arguments: ['@settings', '%cache_default_bin_backends%', '%memory_cache_default_bin_backends%']
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\Cache\CacheFactoryInterface: '@cache_factory'
@@ -239,7 +240,7 @@ services:
     arguments: ['@cache_tags.invalidator.checksum']
   cache.backend.memory:
     class: Drupal\Core\Cache\MemoryBackendFactory
-  cache.backend.static.memory:
+  cache.backend.memory.memory:
     class: Drupal\Core\Cache\MemoryCache\MemoryCacheFactory
   # A special cache bin that does not persist beyond the length of the request.
   cache.static:
@@ -293,7 +294,7 @@ services:
   cache.access_policy_memory:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin.static, default_backend: cache.backend.static.memory }
+      - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
     factory: ['@cache_factory', 'get']
     arguments: [access_policy_memory]
   cache.data:

@@ -34,7 +34,7 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
   protected $defaultBinBackends;
 
   /**
-   * A map of cache bin to default cache backend service name.
+   * A map of cache bin to default cache memory backend service name.
    *
    * All bin-specific mappings in $settings take precedence over this, but it
    * can be used to optimize cache storage for a Drupal installation without
@@ -44,7 +44,7 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
    *
    * @var array
    */
-  protected $staticDefaultBinBackends;
+  protected $memoryDefaultBinBackends;
 
   /**
    * Constructs CacheFactory object.
@@ -54,14 +54,14 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
    * @param array $default_bin_backends
    *   (optional) A mapping of bin to backend service name. Mappings in
    *   $settings take precedence over this.
-   * @param array $static_default_bin_backends
+   * @param array $memory_default_bin_backends
    *   (optional) A mapping of bin to backend service name. Mappings in
    *   $settings take precedence over this.
    */
-  public function __construct(Settings $settings, array $default_bin_backends = [], array $static_default_bin_backends = []) {
+  public function __construct(Settings $settings, array $default_bin_backends = [], array $memory_default_bin_backends = []) {
     $this->settings = $settings;
     $this->defaultBinBackends = $default_bin_backends;
-    $this->staticDefaultBinBackends = $static_default_bin_backends;
+    $this->memoryDefaultBinBackends = $memory_default_bin_backends;
   }
 
   /**
@@ -89,8 +89,8 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
     elseif (isset($this->defaultBinBackends[$bin])) {
       $service_name = $this->defaultBinBackends[$bin];
     }
-    elseif (isset($this->staticDefaultBinBackends[$bin])) {
-      $service_name = $this->staticDefaultBinBackends[$bin];
+    elseif (isset($this->memoryDefaultBinBackends[$bin])) {
+      $service_name = $this->memoryDefaultBinBackends[$bin];
     }
     // Third, use configured default backend.
     elseif (isset($cache_settings['default'])) {

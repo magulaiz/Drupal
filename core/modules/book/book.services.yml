@@ -43,7 +43,7 @@ services:
   book.memory_cache:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin.static, default_backend: cache.backend.static.memory }
+      - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
     factory: ['@cache_factory', 'get']
     arguments: [memory_cache]
   book.backend_chained_cache:
@@ -54,4 +54,4 @@ services:
     tags:
       # This tag ensures that Drupal's cache_tags.invalidator service
       # invalidates also this cache data.
-      - { name: cache.bin.static }
+      - { name: cache.bin.memory }

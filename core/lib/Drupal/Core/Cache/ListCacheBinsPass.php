@@ -18,12 +18,12 @@ class ListCacheBinsPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container) {
     $cache_info['cache']['bins'] = [];
     $cache_info['cache']['default_bin_backends'] = [];
-    $cache_info['static_cache']['bins'] = [];
-    $cache_info['static_cache']['default_bin_backends'] = [];
+    $cache_info['memory_cache']['bins'] = [];
+    $cache_info['memory_cache']['default_bin_backends'] = [];
 
     $tag_info = [
       'cache.bin' => 'cache',
-      'cache.bin.static' => 'static_cache',
+      'cache.bin.memory' => 'memory_cache',
     ];
     foreach ($tag_info as $service_tag => $section) {
       foreach ($container->findTaggedServiceIds($service_tag) as $id => $attributes) {
@@ -37,8 +37,8 @@ class ListCacheBinsPass implements CompilerPassInterface {
 
     $container->setParameter('cache_bins', $cache_info['cache']['bins']);
     $container->setParameter('cache_default_bin_backends', $cache_info['cache']['default_bin_backends']);
-    $container->setParameter('static_cache_bins', $cache_info['static_cache']['bins']);
-    $container->setParameter('static_cache_default_bin_backends', $cache_info['static_cache']['default_bin_backends']);
+    $container->setParameter('memory_cache_bins', $cache_info['memory_cache']['bins']);
+    $container->setParameter('memory_cache_default_bin_backends', $cache_info['memory_cache']['default_bin_backends']);
   }
 
 }
