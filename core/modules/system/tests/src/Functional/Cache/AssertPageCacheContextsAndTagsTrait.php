@@ -134,8 +134,13 @@ trait AssertPageCacheContextsAndTagsTrait {
       // user is already there.
       if (!in_array('user', $expected_contexts)) {
         $default_contexts[] = 'user.permissions';
+
         if (!in_array('user.roles', $expected_contexts)) {
-          $default_contexts[] = 'user.roles:authenticated';
+          // The system_page_attachments() hook is only called when dealing with
+          // the HtmlRenderer, so check the Content-Type header.
+          if ($this->getSession()->getResponseHeader('Content-Type') === 'text/html; charset=UTF-8') {
+            $default_contexts[] = 'user.roles:authenticated';
+          }
         }
       }
       $expected_contexts = Cache::mergeContexts($expected_contexts, $default_contexts);
