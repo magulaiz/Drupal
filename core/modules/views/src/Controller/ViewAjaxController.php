@@ -28,6 +28,23 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class ViewAjaxController implements ContainerInjectionInterface {
 
   /**
+   * Parameters that should be filtered and ignored inside ajax requests.
+   */
+  public const FILTERED_QUERY_PARAMETERS = [
+    'view_name',
+    'view_display_id',
+    'view_args',
+    'view_path',
+    'view_dom_id',
+    'pager_element',
+    'view_base_path',
+    AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER,
+    AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
+    FormBuilderInterface::AJAX_FORM_REQUEST,
+    MainContentViewSubscriber::WRAPPER_FORMAT,
+  ];
+
+  /**
    * The entity storage for views.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -131,23 +148,13 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $response = new ViewAjaxResponse();
 
       // Remove all of this stuff from the query of the request so it doesn't
-      // end up in pagers and tablesort URLs.
+      // end up in pagers and tablesort URLs. Additionally we need to preserve
+      // ajax_page_state and add it back after the request has been processed so
+      // the related listener can behave correctly.
       // @todo Remove this parsing once these are removed from the request in
       //   https://www.drupal.org/node/2504709.
-      $existing_page_state = $request->get('ajax_page_state');
-      foreach ([
-        'view_name',
-        'view_display_id',
-        'view_args',
-        'view_path',
-        'view_dom_id',
-        'pager_element',
-        'view_base_path',
-        'ajax_page_state',
-        AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
-        FormBuilderInterface::AJAX_FORM_REQUEST,
-        MainContentViewSubscriber::WRAPPER_FORMAT,
-      ] as $key) {
+      $existing_page_state = $request->get(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
+      foreach (self::FILTERED_QUERY_PARAMETERS as $key) {
         $request->query->remove($key);
         $request->request->remove($key);
       }
