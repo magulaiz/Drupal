@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\KernelTests\Config\Schema;
 
+// cspell:ignore childkey
+
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\KernelTests\KernelTestBase;
