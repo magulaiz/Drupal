@@ -3,7 +3,10 @@
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Tests the moderation form, specifically on nodes.
@@ -283,20 +286,19 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalLogin($this->rootUser);
 
     // Add French language.
-    $edit = [
-      'predefined_langcode' => 'fr',
-    ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
-    // Enable content translation on articles.
-    $this->drupalGet('admin/config/regional/content-language');
-    $edit = [
-      'entity_types[node]' => TRUE,
-      'settings[node][moderated_content][translatable]' => TRUE,
-      'settings[node][moderated_content][settings][language][language_alterable]' => TRUE,
-    ];
-    $this->submitForm($edit, 'Save configuration');
+    // Enable content translation on moderated_content.
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'moderated_content');
+    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
+    $config->setLanguageAlterable(TRUE);
+    $config->save();
+
+    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager->setEnabled('node', 'moderated_content', TRUE);
+    $content_translation_manager->setBundleTranslationSettings('node', 'moderated_content', [
+      'untranslatable_fields_hide' => FALSE,
+    ]);
 
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
