@@ -30,10 +30,10 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Gets all valid keys in this mapping.
+   * Gets all keys allowed in this mapping.
    *
    * @return string[]
-   *   A list of valid keys given the values in this mapping.
+   *   A list of keys allowed in this mapping.
    */
   public function getValidKeys(): array {
     $all_keys = $this->getDefinedKeys();
@@ -47,13 +47,17 @@ class Mapping extends ArrayElement {
    * `requiredKey: false`. Deprecated keys are also treated as optional.
    *
    * @return string[]
-   *   A list of required keys given the values in this mapping.
+   *   A list of keys required in this mapping.
    */
   public function getRequiredKeys(): array {
     $all_keys = $this->getDefinedKeys();
     $required_keys = array_filter(
       $all_keys,
-      fn (array $raw_schema_definition) => !array_key_exists('requiredKey', $raw_schema_definition) && !array_key_exists('deprecated', $raw_schema_definition),
+      fn (array $raw_schema_definition) =>
+        // @see ::validateMappingConfigSchemaDefinition()
+        !array_key_exists('requiredKey', $raw_schema_definition)
+        // @see https://www.drupal.org/node/3129881
+        && !array_key_exists('deprecated', $raw_schema_definition),
     );
     return array_keys($required_keys);
   }
@@ -211,8 +215,8 @@ class Mapping extends ArrayElement {
     assert(array_key_exists('mapping', $definition));
 
     // Validates `requiredKey` flag in mapping definitions.
-    foreach ($definition['mapping'] as $options) {
-      if (array_key_exists('requiredKey', $options) && $options['requiredKey'] !== FALSE) {
+    foreach ($definition['mapping'] as $key_definition) {
+      if (array_key_exists('requiredKey', $key_definition) && $key_definition['requiredKey'] !== FALSE) {
         throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
       }
     }
