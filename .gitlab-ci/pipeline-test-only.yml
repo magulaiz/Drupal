@@ -3,52 +3,6 @@
 stages:
   - 🗜️ Test
 
-#############
-# Templates #
-#############
-
-default:
-  interruptible: true
-  retry:
-    max: 2
-    when:
-      - unknown_failure
-      - api_failure
-      - stuck_or_timeout_failure
-      - runner_system_failure
-      - scheduler_failure
-  image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
-  before_script:
-  - |
-      ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
-      sudo service apache2 start
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-      mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-      chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-      sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-  artifacts:
-    when: always
-    expire_in: 6 mos
-    reports:
-      junit: ./sites/default/files/simpletest/phpunit-*.xml
-    paths:
-      - ./sites/default/files/simpletest/phpunit-*.xml
-      - ./sites/simpletest/browser_output
-
-.default-job-settings: &default-job-settings
-  stage: 🗜️ Test
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
-
-.with-composer: &with-composer
-  needs:
-    - pipeline: $PARENT_PIPELINE_ID
-      job: '📦️ Composer'
-
 variables:
   FF_NETWORK_PER_BUILD: 1
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
@@ -64,25 +18,36 @@ variables:
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
-.with-database: &with-database
-  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
-  alias: database
-
-.with-chrome: &with-chrome
-  name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
-  alias: chrome
-  entrypoint:
-    - chromedriver
-    - "--no-sandbox"
-    - "--log-path=/tmp/chromedriver.log"
-    - "--verbose"
-    - "--whitelisted-ips="
-
 '🩹 Test-only changes':
-  <<: [ *with-composer, *default-job-settings ]
+  stage: 🗜️ Test
+  interruptible: true
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+  needs:
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Composer'
   services:
-    - <<: *with-database
-    - <<: *with-chrome
+    - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
+      alias: database
+    - name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+      alias: chrome
+      entrypoint:
+        - chromedriver
+        - "--no-sandbox"
+        - "--log-path=/tmp/chromedriver.log"
+        - "--verbose"
+        - "--whitelisted-ips="
+  before_script:
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   script:
-    - chmod +x $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
+      - ./sites/simpletest/browser_output
