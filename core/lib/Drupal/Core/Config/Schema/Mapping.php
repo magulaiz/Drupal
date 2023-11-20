@@ -107,6 +107,7 @@ class Mapping extends ArrayElement {
    *
    * @see \Drupal\Core\Config\TypedConfigManager::replaceName()
    * @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+   * @see https://www.drupal.org/files/ConfigSchemaCheatSheet2.0.pdf
    */
   public function getDynamicallyValidKeys(): array {
     $parent_data_def = $this->getParent()?->getDataDefinition();
