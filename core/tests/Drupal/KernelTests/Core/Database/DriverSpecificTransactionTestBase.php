@@ -404,11 +404,17 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertEquals(ClientConnectionTransactionState::Voided, $reflectionMethod->invoke($this->connection->transactionManager()));
       $this->assertRowPresent('row');
 
-      // Rollback the outer transaction. Nothing happens as the transaction was
-      // voided.
-      $transaction->rollBack();
-      unset($transaction);
-      $this->assertRowPresent('row');
+      // Try to rollback the root transaction. Since the DDL already committed
+      // it, it should fail.
+      try {
+        $transaction->rollBack();
+        $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
+      }
+      catch (TransactionOutOfOrderException $e) {
+        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty/", $e->getMessage());
+        unset($transaction);
+        $this->assertRowPresent('row');
+      }
     }
   }
 
