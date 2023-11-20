@@ -2,10 +2,10 @@ include:
   - local: base-pipeline.yml
 
 '🩹 Test-only changes':
-  <<: [ *with-composer, *default-job-settings ]
+  <<: [ !reference *with-composer, !reference *default-job-settings ]
   services:
-    - <<: *with-database
-    - <<: *with-chrome
+    - <<: !reference *with-database
+    - <<: !reference *with-chrome
   script:
     - chmod +x $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
