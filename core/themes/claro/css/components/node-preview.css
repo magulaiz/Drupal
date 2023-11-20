@@ -6,13 +6,13 @@
  */
 
 .node-preview-container {
+  position: sticky;
+  z-index: 499;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  position: sticky;
-  z-index: 499;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .node-preview-form-select {
