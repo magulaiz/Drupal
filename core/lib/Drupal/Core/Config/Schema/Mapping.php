@@ -209,11 +209,7 @@ class Mapping extends ArrayElement {
 
     // Validates `requiredKey` flag in mapping definitions.
     foreach ($definition['mapping'] as $options) {
-      if (!array_key_exists('requiredKey', $options)) {
-        // This flag is optional.
-        continue;
-      }
-      if ($options['requiredKey'] !== FALSE) {
+      if (array_key_exists('requiredKey', $options) && $options['requiredKey'] !== FALSE) {
         throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
       }
     }
