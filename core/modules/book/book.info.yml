@@ -1,6 +1,6 @@
 name: Book
 type: module
-description: 'Allows users to create and organize related content in an outline.'
+description: 'Allows users to create and organize related content in an outline. Change here.'
 package: Core
 version: VERSION
 dependencies:

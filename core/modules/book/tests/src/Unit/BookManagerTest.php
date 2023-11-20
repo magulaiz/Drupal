@@ -96,6 +96,10 @@ class BookManagerTest extends UnitTestCase {
     $this->assertEquals($expected, $this->bookManager->getBookParents($book, $parent));
   }
 
+  public function testThis() {
+    $this->assertEquals(1, 1);
+  }
+
   /**
    * Provides test data for testGetBookParents.
    *
