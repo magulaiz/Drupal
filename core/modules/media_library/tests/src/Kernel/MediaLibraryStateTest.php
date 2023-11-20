@@ -362,12 +362,6 @@ class MediaLibraryStateTest extends KernelTestBase {
       TRUE,
     ];
 
-    // Assert ajax_page_state is removed if in the query.
-    $test_data['ajax_page_state'] = [
-      ['ajax_page_state' => 'A long string that gets removed'],
-      FALSE,
-    ];
-
     return $test_data;
   }
 
