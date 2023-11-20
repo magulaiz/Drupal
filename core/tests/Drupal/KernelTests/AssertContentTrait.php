@@ -54,15 +54,15 @@ trait AssertContentTrait {
   /**
    * Sets the raw content (e.g. HTML).
    *
-   * @param string $content
+   * @param \Drupal\Component\Render\MarkupInterface|string $content
    *   The raw content to set.
    */
   protected function setRawContent($content) {
-    $this->content = $content;
+    $this->content = (string) $content;
     $this->plainTextContent = NULL;
     $this->elements = NULL;
     $this->drupalSettings = [];
-    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $content, $matches)) {
+    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', (string) $content, $matches)) {
       $this->drupalSettings = Json::decode($matches[1]);
     }
   }
@@ -305,7 +305,7 @@ trait AssertContentTrait {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
-    $message = ($message ? $message : new FormattableMarkup('Link with label %label not found.', ['%label' => $label]));
+    $message = ($message ?: "Link with label $label not found.");
     $this->assertEmpty($links, $message);
     return TRUE;
   }
@@ -317,7 +317,7 @@ trait AssertContentTrait {
    *   The full or partial value of the 'href' attribute of the anchor tag.
    * @param string $index
    *   Link position counting from zero.
-   * @param string $message
+   * @param \Drupal\Component\Render\MarkupInterface|string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -329,7 +329,7 @@ trait AssertContentTrait {
   protected function assertLinkByHref($href, $index = 0, $message = '') {
     $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : new FormattableMarkup('Link containing href %href found.', ['%href' => $href]));
-    $this->assertArrayHasKey($index, $links, $message);
+    $this->assertArrayHasKey($index, $links, (string) $message);
     return TRUE;
   }
 
@@ -502,7 +502,7 @@ trait AssertContentTrait {
    *
    * @param string $text
    *   Plain text to look for.
-   * @param string $message
+   * @param \Drupal\Component\Render\MarkupInterface|string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -515,13 +515,14 @@ trait AssertContentTrait {
    */
   protected function assertTextHelper($text, $message = '', $group = NULL, $not_exists = TRUE): void {
     if (!$message) {
-      $message = !$not_exists ? new FormattableMarkup('"@text" found', ['@text' => $text]) : new FormattableMarkup('"@text" not found', ['@text' => $text]);
+      $suffix = $not_exists ? 'not found' : 'found';
+      $message = sprintf('"%s" %s', $text, $suffix);
     }
     if ($not_exists) {
-      $this->assertStringNotContainsString((string) $text, $this->getTextContent(), $message);
+      $this->assertStringNotContainsString((string) $text, $this->getTextContent(), (string) $message);
     }
     else {
-      $this->assertStringContainsString((string) $text, $this->getTextContent(), $message);
+      $this->assertStringContainsString((string) $text, $this->getTextContent(), (string) $message);
     }
   }
 
@@ -611,7 +612,7 @@ trait AssertContentTrait {
    *
    * @param string $pattern
    *   Perl regex to look for including the regex delimiters.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -624,7 +625,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
-    $this->assertMatchesRegularExpression($pattern, $this->getRawContent(), $message);
+    $this->assertMatchesRegularExpression($pattern, $this->getRawContent(), (string) $message);
     return TRUE;
   }
 
@@ -674,7 +675,7 @@ trait AssertContentTrait {
    *
    * @param string $title
    *   The string the title should be.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -691,7 +692,7 @@ trait AssertContentTrait {
           '@expected' => var_export($title, TRUE),
         ]);
       }
-      $this->assertEquals($title, $actual, $message);
+      $this->assertEquals($title, $actual, (string) $message);
     }
     else {
       $this->fail('No title element found on the page.');
@@ -729,7 +730,7 @@ trait AssertContentTrait {
    *   An array of variables to pass to the theme function.
    * @param string $expected
    *   The expected themed output string.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -749,7 +750,7 @@ trait AssertContentTrait {
       $message = '%callback rendered correctly.';
     }
     $message = new FormattableMarkup($message, ['%callback' => 'theme_' . $callback . '()']);
-    $this->assertSame($expected, $output, $message);
+    $this->assertSame($expected, $output, (string) $message);
   }
 
   /**
@@ -760,7 +761,7 @@ trait AssertContentTrait {
    * @param string $value
    *   (optional) Value of the field to assert. You may pass in NULL (default) to skip
    *   checking the actual value, while still checking that the field exists.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -802,7 +803,7 @@ trait AssertContentTrait {
       }
     }
     $this->assertNotEmpty($fields);
-    $this->assertTrue($found, $message);
+    $this->assertTrue($found, (string) $message);
     return TRUE;
   }
 
@@ -815,7 +816,7 @@ trait AssertContentTrait {
    *   (optional) Value of the field to assert. You may pass in NULL (default)
    *   to skip checking the actual value, while still checking that the field
    *   exists.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -861,7 +862,7 @@ trait AssertContentTrait {
    * @param string $value
    *   (optional) Value of the field, to assert that the field's value on the
    *   page does not match it.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -886,7 +887,7 @@ trait AssertContentTrait {
       }
     }
     $this->assertNotEmpty($fields);
-    $this->assertTrue($found, $message);
+    $this->assertTrue($found, (string) $message);
     return TRUE;
   }
 
@@ -899,7 +900,7 @@ trait AssertContentTrait {
    *   (optional) Value of the field to assert. You may pass in NULL (default)
    *   to skip checking the actual value, while still checking that the field
    *   exists.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
