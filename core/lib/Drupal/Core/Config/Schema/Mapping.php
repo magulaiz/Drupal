@@ -43,7 +43,7 @@ class Mapping extends ArrayElement {
   /**
    * Gets all required keys in this mapping.
    *
-   * Keys are required by default, they can opt out by specifying
+   * All keys are required by default, but they can opt out by specifying
    * `requiredKey: false`. Deprecated keys are also treated as optional.
    *
    * @return string[]
