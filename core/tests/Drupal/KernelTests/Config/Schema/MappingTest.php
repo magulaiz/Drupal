@@ -8,6 +8,8 @@ namespace Drupal\KernelTests\Config\Schema;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Schema\Mapping;
+use Drupal\editor\Entity\Editor;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -125,6 +127,12 @@ class MappingTest extends KernelTestBase {
           ->set('complex_structure_deprecated.products', ['apricot', 'apple'])
           ->save();
         break;
+
+      case 'editor.editor.funky':
+        $this->enableModules(['filter', 'editor', 'ckeditor5']);
+        FilterFormat::create(['format' => 'funky', 'name' => 'Funky'])->save();
+        Editor::create(['format' => 'funky', 'editor' => 'ckeditor5'])->save();
+        break;
     }
 
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
@@ -142,6 +150,13 @@ class MappingTest extends KernelTestBase {
     $this->assertSame($expected_optional_keys, $mapping->getOptionalKeys());
   }
 
+  /**
+   * Provides test cases for all kinds of i) dynamic typing, ii) optional keys.
+   *
+   * @see https://www.drupal.org/files/ConfigSchemaCheatSheet2.0.pdf
+   *
+   * @return \Generator
+   */
   public function providerMappingInterpretation(): \Generator {
     $available_block_settings_types = [
       'block.settings.field_block:*:*:*' => [
@@ -267,9 +282,10 @@ class MappingTest extends KernelTestBase {
       [],
     ];
 
-    // Two examples of %parent-based dynamic typing in config schema, and the
-    // consequences on what keys are considered valid: it depends on the block
-    // plugin being used. See `type: block.block.*`, which uses
+    // Two examples of `[%parent]`-based dynamic typing in config schema, and
+    // the consequences on what keys are considered valid: it depends on the
+    // block plugin being used.
+    // See `type: block.block.*`, which uses
     // `type: block.settings.[%parent.plugin]`.
     yield 'Dynamic type with [%parent]: block.block.branding:settings' => [
       'block.block.branding',
@@ -316,11 +332,11 @@ class MappingTest extends KernelTestBase {
       $available_block_settings_types,
     ];
 
-    // An example of childkey-based dynamic mapping typing in config schema, for
-    // a mapping inside a sequence: the `id` key-value pair in the mapping
+    // An example of `[childkey]`-based dynamic mapping typing in config schema,
+    // for a mapping inside a sequence: the `id` key-value pair in the mapping
     // determines the type of the mapping. The key in the sequence whose value
-    // is the mapping is irrelevant, it can be arbitrarily chosen. See
-    // `type: block.block.*` which uses `type: condition.plugin.[id]`.
+    // is the mapping is irrelevant, it can be arbitrarily chosen.
+    // See `type: block.block.*` which uses `type: condition.plugin.[id]`.
     yield 'Dynamic type with [childkey]: block.block.positively_powered:visibility.I_CAN_CHOOSE_THIS' => [
       'block.block.positively_powered',
       'visibility.I_CAN_CHOOSE_THIS',
@@ -404,6 +420,33 @@ class MappingTest extends KernelTestBase {
         'condition.plugin.current_theme' => [
           'theme',
         ],
+      ],
+    ];
+
+    // An example of `[%key]`-based dynamic mapping typing in config schema: the
+    // key in the sequence determines the type of the mapping. Unlike the above
+    // `[childkey]` example, the key has meaning here.
+    // See `type: editor.settings.ckeditor5`, which uses
+    // `type: ckeditor5.plugin.[%key]`.
+    yield 'Dynamic type with [%key]: editor.editor.funky:settings.plugins.ckeditor5_heading' => [
+      'editor.editor.funky',
+      'settings.plugins.ckeditor5_heading',
+      [
+        // Keys defined locally, in `type: ckeditor5.plugin.ckeditor5_heading`.
+        // @see core/modules/ckeditor5/config/schema/ckeditor5.schema.yml
+        'enabled_headings',
+      ],
+      [],
+      [
+        'ckeditor5.plugin.ckeditor5_language' => ['language_list'],
+        'ckeditor5.plugin.ckeditor5_heading' => ['enabled_headings'],
+        'ckeditor5.plugin.ckeditor5_imageResize' => ['allow_resize'],
+        'ckeditor5.plugin.ckeditor5_sourceEditing' => ['allowed_tags'],
+        'ckeditor5.plugin.ckeditor5_alignment' => ['enabled_alignments'],
+        'ckeditor5.plugin.ckeditor5_list' => ['properties', 'multiBlock'],
+        'ckeditor5.plugin.media_media' => ['allow_view_mode_override'],
+        'ckeditor5.plugin.ckeditor5_codeBlock' => ['languages'],
+        'ckeditor5.plugin.ckeditor5_style' => ['styles'],
       ],
     ];
   }
