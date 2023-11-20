@@ -320,9 +320,9 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $nonempty_entity_listing_url = Url::fromRoute('entity.entity_test.collection_labels_alphabetically', ['entity_type_id' => $entity_type]);
 
     // The default cache contexts for rendered entities.
-    $default_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions', 'user.roles:authenticated'];
+    $default_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
     $entity_cache_contexts = Cache::mergeContexts($default_cache_contexts, ['url.site']);
-    $page_cache_contexts = Cache::mergeContexts($default_cache_contexts, ['url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT]);
+    $page_cache_contexts = Cache::mergeContexts($default_cache_contexts, ['url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user.roles:authenticated']);
 
     // Cache tags present on every rendered page.
     // 'user.permissions' is a required cache context, and responses that vary
