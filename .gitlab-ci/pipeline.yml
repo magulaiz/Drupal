@@ -132,8 +132,8 @@ variables:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - chmod +x $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
-    - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
+    - chmod +x $CI_PROJECT_DIR/.gitlab-ci/test-only.sh
+    - $CI_PROJECT_DIR/.gitlab-ci/test-only.sh
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
