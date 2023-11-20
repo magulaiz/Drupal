@@ -41,7 +41,7 @@ services:
     arguments: ['@book.outline_storage', '@entity_type.manager', '@string_translation']
     lazy: true
   book.memory_cache:
-    class: Drupal\Core\Cache\CacheBackendInterface
+    class: Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
     tags:
       - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
     factory: ['@cache_factory', 'get']

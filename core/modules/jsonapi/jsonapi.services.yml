@@ -125,7 +125,7 @@ services:
 
   # Cache.
   cache.jsonapi_memory:
-    class: Drupal\Core\Cache\CacheBackendInterface
+    class: Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
     tags:
       - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
     factory: ['@cache_factory', 'get']
