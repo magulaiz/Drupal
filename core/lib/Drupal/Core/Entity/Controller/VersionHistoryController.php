@@ -287,6 +287,8 @@ class VersionHistoryController extends ControllerBase {
       $rowAttributes['class'][] = 'revision-current';
       $row['operations']['data']['status']['#markup'] = $this->t('<em>Current revision</em>');
       $current_revision_displayed = TRUE;
+
+      return ['data' => $row] + $rowAttributes;
     }
 
     // Operation links.
