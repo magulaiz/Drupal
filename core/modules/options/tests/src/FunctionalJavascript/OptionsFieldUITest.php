@@ -224,6 +224,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->findField('set_default_value')->setValue(TRUE);
     // Assert that the option added in the subform is available to the default
     // value field.
+    $this->getSession()->wait(1000);
+    $this->assertSession()->waitForElement('css', '[name="default_value_input[field_test_int_list]"] option:contains("first")');
     $this->assertSession()->optionExists('default_value_input[field_test_string_list]', 'first');
     $page->pressButton('Add another item');
     $this->getSession()->wait(1000);
@@ -240,13 +242,13 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Create a field of type list:integer.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->getSession()->wait(1000);
     $page->findField('set_default_value')->setValue(TRUE);
     $this->getSession()->wait(1000);
     // Assert that no validation is performed.
     $assert_session->statusMessageNotContains('Value field is required.');
-    $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue(1);
+    $field_input = $page->find('css', '[name="field_storage[subform][settings][allowed_values][table][0][item][key]"]');
+    $field_input->setValue(1);
     $this->assertSession()->assertWaitOnAjaxRequest();
     $page->checkField('set_default_value');
     $this->assertSession()->waitForElement('css', '[name="default_value_input[field_test_int_list]"] option:contains("first")');
