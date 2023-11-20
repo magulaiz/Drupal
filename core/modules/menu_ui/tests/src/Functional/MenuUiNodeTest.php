@@ -10,6 +10,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
  * Add, edit, and delete a node with menu link.
@@ -17,6 +18,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group menu_ui
  */
 class MenuUiNodeTest extends BrowserTestBase {
+
+  use ContentTranslationTestTrait;
 
   /**
    * An editor user.
@@ -304,28 +307,10 @@ class MenuUiNodeTest extends BrowserTestBase {
     }
 
     // Enable translation for page.
-    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'page');
-    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
-    $config->setLanguageAlterable(TRUE);
-    $config->save();
-
-    $content_translation_manager = $this->container->get('content_translation.manager');
-    $content_translation_manager->setEnabled('node', 'page', TRUE);
-    $content_translation_manager->setBundleTranslationSettings('node', 'page', [
-      'untranslatable_fields_hide' => FALSE,
-    ]);
+    $this->enableContentTranslation('node', 'page');
 
     // Enable translation for menu_link_content.
-    $config = ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content');
-    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
-    $config->setLanguageAlterable(TRUE);
-    $config->save();
-
-    $content_translation_manager = $this->container->get('content_translation.manager');
-    $content_translation_manager->setEnabled('menu_link_content', 'menu_link_content', TRUE);
-    $content_translation_manager->setBundleTranslationSettings('menu_link_content', 'menu_link_content', [
-      'untranslatable_fields_hide' => FALSE,
-    ]);
+    $this->enableContentTranslation('menu_link_content', 'menu_link_content');
 
     $this->rebuildContainer();
 
