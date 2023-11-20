@@ -82,7 +82,7 @@ class MappingTest extends KernelTestBase {
         break;
 
       case 'block.block.positively_powered___alternate_reality_with_fallback_type___':
-        // $this->enableModules(['config_schema_add_fallback_type_test']);
+        $this->enableModules(['config_schema_add_fallback_type_test']);
         $id = 'positively_powered___alternate_reality_with_fallback_type___';
       case 'block.block.positively_powered':
         $this->enableModules(['system', 'block']);
