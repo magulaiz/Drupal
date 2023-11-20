@@ -102,22 +102,23 @@
           }
           adjustedOptions[option] = adjustedValue;
         }
-        if (
-          option === 'width' &&
-          parseInt(optionValue, 10) >
+        if (option === 'width') {
+          if (
+            parseInt(optionValue, 10) >
             $(window).width() - (displace.offsets.left + displace.offsets.right)
-        ) {
-          if (!event.data.settings.modal) {
-            adjustedValue =
-              $(window).width() -
-              40 -
-              (displace.offsets.left + displace.offsets.right);
+          ) {
+            if (!event.data.settings.modal) {
+              adjustedValue =
+                $(window).width() -
+                40 -
+                (displace.offsets.left + displace.offsets.right);
+            } else {
+              adjustedValue = $(window).width() - 40;
+            }
+            adjustedOptions[option] = adjustedValue;
           } else {
-            adjustedValue = $(window).width() - 40;
+            adjustedOptions[option] = parseInt(optionValue, 10);
           }
-          adjustedOptions[option] = adjustedValue;
-        } else {
-          adjustedOptions[option] = parseInt(optionValue, 10);
         }
       }
     }
