@@ -1,22 +1,11 @@
 include:
   - local: .gitlab-ci/base-pipeline.yml
 
-# Merge key (<<) and "reference" cannot be used together,
-# so redefine the aliases.
-.local-with-composer: &with-composer
-  extends: .with-composer
-.local-with-database: &with-database
-  extends: .with-database
-.local-with-chrome: &with-chrome
-  extends: .with-chrome
-.local-default-job-settings: &default-job-settings
-  extends: .default-job-settings
-
 '🩹 Test-only changes':
-  <<: [ *with-composer, *default-job-settings ]
+  <<: [ !reference .with-composer, !reference .default-job-settings ]
   services:
-    - <<: *with-database
-    - <<: *with-chrome
+    - <<: !reference .with-database
+    - <<: !reference .with-chrome
   script:
     - chmod +x $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
