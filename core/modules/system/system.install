@@ -1943,24 +1943,3 @@ function system_update_10201(&$sandbox) {
 
   $sandbox['#finished'] = $sandbox['current_key'] == $sandbox['max'];
 }
-
-/**
- * Fix path in README.txt in CONFIG_SYNC_DIRECTORY.
- */
-function system_update_10301() {
-  $configuration_directory = Settings::get('config_sync_directory');
-  $readme_path = $configuration_directory . '/README.txt';
-  if (!file_exists($readme_path)) {
-    // No operation if the original file is not there.
-    return;
-  }
-  $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
-  if (!$writable) {
-    // Cannot write the README.txt file, nothing to do.
-    return;
-  }
-  $original_content = file_get_contents($readme_path);
-  $changed_content = str_replace('admin/config/development/configuration/sync', 'admin/config/development/configuration', $original_content);
-  file_put_contents($readme_path, $changed_content);
-  return \t('Amended configuration synchronization readme file content.');
-}
