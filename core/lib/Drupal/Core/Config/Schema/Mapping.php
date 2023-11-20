@@ -202,6 +202,9 @@ class Mapping extends ArrayElement {
    *   The config schema definition for a `type: mapping`.
    *
    * @return bool
+   *
+   * @throws \LogicException
+   *   Thrown when `requiredKey: true` is specified.
    */
   protected static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): bool {
     $definition = $definition->toArray();
