@@ -34,6 +34,19 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
   protected $defaultBinBackends;
 
   /**
+   * A map of cache bin to default cache backend service name.
+   *
+   * All bin-specific mappings in $settings take precedence over this, but it
+   * can be used to optimize cache storage for a Drupal installation without
+   * cache customizations in settings.php. For example, this can be used to map
+   * the 'bootstrap' bin to 'cache.backend.chainedfast', while allowing other
+   * bins to fall back to the global default of 'cache.backend.database'.
+   *
+   * @var array
+   */
+  protected $staticDefaultBinBackends;
+
+  /**
    * Constructs CacheFactory object.
    *
    * @param \Drupal\Core\Site\Settings $settings
@@ -41,10 +54,14 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
    * @param array $default_bin_backends
    *   (optional) A mapping of bin to backend service name. Mappings in
    *   $settings take precedence over this.
+   * @param array $static_default_bin_backends
+   *   (optional) A mapping of bin to backend service name. Mappings in
+   *   $settings take precedence over this.
    */
-  public function __construct(Settings $settings, array $default_bin_backends = []) {
+  public function __construct(Settings $settings, array $default_bin_backends = [], array $static_default_bin_backends = []) {
     $this->settings = $settings;
     $this->defaultBinBackends = $default_bin_backends;
+    $this->staticDefaultBinBackends = $static_default_bin_backends;
   }
 
   /**
@@ -71,6 +88,9 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
     // Second, use the default backend specified by the cache bin.
     elseif (isset($this->defaultBinBackends[$bin])) {
       $service_name = $this->defaultBinBackends[$bin];
+    }
+    elseif (isset($this->staticDefaultBinBackends[$bin])) {
+      $service_name = $this->staticDefaultBinBackends[$bin];
     }
     // Third, use configured default backend.
     elseif (isset($cache_settings['default'])) {

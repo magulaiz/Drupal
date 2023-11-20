@@ -127,6 +127,21 @@ class Cache {
   }
 
   /**
+   * Gets all static cache bin services.
+   *
+   * @return \Drupal\Core\Cache\CacheBackendInterface[]
+   *   An array of cache backend objects keyed by static cache bins.
+   */
+  public static function getStaticBins() {
+    $bins = [];
+    $container = \Drupal::getContainer();
+    foreach ($container->getParameter('static_cache_bins') as $service_id => $bin) {
+      $bins[$bin] = $container->get($service_id);
+    }
+    return $bins;
+  }
+
+  /**
    * Generates a hash from a query object, to be used as part of the cache key.
    *
    * This smart caching strategy saves Drupal from querying and rendering to
