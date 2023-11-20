@@ -1959,7 +1959,8 @@ function system_update_10301() {
     // Cannot write the README.txt file, nothing to do.
     return;
   }
-  $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
-  file_put_contents($readme_path, $text);
+  $original_content = file_get_contents($readme_path);
+  $changed_content = str_replace('admin/config/development/configuration/sync', 'admin/config/development/configuration', $original_content);
+  file_put_contents($readme_path, $changed_content);
   return \t('Amended configuration synchronization readme file content.');
 }
