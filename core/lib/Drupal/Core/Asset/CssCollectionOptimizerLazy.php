@@ -5,6 +5,7 @@ namespace Drupal\Core\Asset;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -106,7 +107,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
       'theme' => $this->themeManager->getActiveTheme()->getName(),
       'include' => UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries))),
     ];
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
     $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
     if ($already_loaded) {
       $query_args['exclude'] = UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded)));
