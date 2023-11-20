@@ -292,10 +292,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     self::createLanguageFromLangcode('fr');
 
     // Enable content translation on moderated_content.
-    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'moderated_content');
-    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
-    $config->setLanguageAlterable(TRUE);
-    $config->save();
+    self::enableBundleTranslation('node', 'moderated_content');
 
     $content_translation_manager = $this->container->get('content_translation.manager');
     $content_translation_manager->setEnabled('node', 'moderated_content', TRUE);
