@@ -134,7 +134,9 @@ trait AssertPageCacheContextsAndTagsTrait {
       // user is already there.
       if (!in_array('user', $expected_contexts)) {
         $default_contexts[] = 'user.permissions';
-        $default_contexts[] = 'user.roles:authenticated';
+        if (!in_array('user.roles', $expected_contexts)) {
+          $default_contexts[] = 'user.roles:authenticated';
+        }
       }
       $expected_contexts = Cache::mergeContexts($expected_contexts, $default_contexts);
     }
