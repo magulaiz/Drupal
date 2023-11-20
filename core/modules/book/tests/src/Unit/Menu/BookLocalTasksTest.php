@@ -65,11 +65,4 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
     ];
   }
 
-  /**
-   * Tests nothing.
-   */
-  public function testNothing() {
-    $this->assertTrue(TRUE);
-  }
-
 }

@@ -20,7 +20,6 @@ if ($connection->databaseType() === 'mysql') {
 $connection->schema()->createTable('actions', array(
   'fields' => array(
     'aid' => array(
-      // One more change here too.
       'type' => 'varchar',
       'not null' => TRUE,
       'length' => '255',
