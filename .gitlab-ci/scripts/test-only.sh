@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
 git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"

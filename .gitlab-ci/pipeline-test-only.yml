@@ -84,5 +84,5 @@ variables:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - chmod +x $CI_PROJECT_DIR/.gitlab-ci/test-only.sh
-    - $CI_PROJECT_DIR/.gitlab-ci/test-only.sh
+    - chmod +x $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
