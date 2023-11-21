@@ -275,6 +275,7 @@ third_party_settings:
               items_per_page: none
             weight: 0
             additional: {  }
+        weight: 4
         third_party_settings: {  }
 id: node.recipe.full
 targetEntityType: node
