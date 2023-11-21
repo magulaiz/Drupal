@@ -533,7 +533,7 @@ class OverviewTerms extends FormBase {
     $changed_terms = [];
     // Terms are not loaded to avoid excessive memory consumption for large
     // vocabularies. Needed terms are loaded explicitly afterward.
-    $tree = $this->storageController->loadTree($vocabulary->id(), TermInterface::ID_ROOT, NULL, FALSE);
+    $tree = $this->storageController->loadTree($vocabulary->id(), TermInterface::ROOT_TERM_ID, NULL, FALSE);
 
     if (empty($tree)) {
       return;
@@ -544,7 +544,15 @@ class OverviewTerms extends FormBase {
     $raw_term = $tree[0];
     $term_weights = [];
     while ($raw_term->tid != $form['#first_tid']) {
-      if ($raw_term->parents[0] == TermInterface::ID_ROOT && $raw_term->weight != $weight) {
+      if ($raw_term->parents[0] == TermInterface::ROOT_TERM_ID && $raw_term->weight != $weight) {
+        $term_weights[$raw_term->tid] = $weight;
+      }
+      $weight++;
+      $raw_term = $tree[$weight];
+    }
+
+    while ($raw_term->tid != $form['#first_tid']) {
+      if ($raw_term->parents[0] == 0 && $raw_term->weight != $weight) {
         $term_weights[$raw_term->tid] = $weight;
       }
       $weight++;
@@ -581,7 +589,7 @@ class OverviewTerms extends FormBase {
     // Build a list of all terms that need to be updated on following pages.
     for ($weight; $weight < count($tree); $weight++) {
       $raw_term = $tree[$weight];
-      if ($raw_term->parents[0] == TermInterface::ID_ROOT && $raw_term->weight != $weight) {
+      if ($raw_term->parents[0] == TermInterface::ROOT_TERM_ID && $raw_term->weight != $weight) {
         $term_weights[$raw_term->tid] = $weight;
       }
     }
