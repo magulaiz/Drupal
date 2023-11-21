@@ -404,12 +404,12 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $row->setIdMap($id_map);
       }
 
-      // When we are asked to process a row for the first time in the current
-      // migration execution, clear any previous messages before potentially
-      // adding new ones. This must happen before prepareRow() so that we do not
-      // lose non-fatal messages emitted by the source plugin.
-      if (!empty($this->currentSourceIds) &&
-          (!$row->getIdMap() || $row->needsUpdate() || $this->aboveHighWater($row))) {
+      // Clear any previous messages for this row before potentially adding
+      // new ones.
+      if (!empty($this->currentSourceIds)) {
+        // Backup messages for current row.
+        $messageBackup = $this->idMap->getMessages($this->currentSourceIds);
+        // Delete messages for current row.
         $this->idMap->delete($this->currentSourceIds, TRUE);
       }
 
@@ -429,6 +429,13 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
       if ($this->getHighWaterProperty()) {
         $this->saveHighWater($row->getSourceProperty($this->highWaterProperty['name']));
+      }
+
+      // Restore deleted messages, if this row will not be processed.
+      if (is_null($this->currentRow)) {
+        foreach ($messageBackup as $msgItem) {
+          $this->idMap->saveMessage($this->currentSourceIds, $msgItem->message, $msgItem->level);
+        }
       }
     }
   }
