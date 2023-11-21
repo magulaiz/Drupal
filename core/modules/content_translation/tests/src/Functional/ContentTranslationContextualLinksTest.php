@@ -6,6 +6,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\language\Traits\LanguageTestTrait;
 
 /**
  * Tests that contextual links are available for content translation.
@@ -13,6 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group content_translation
  */
 class ContentTranslationContextualLinksTest extends BrowserTestBase {
+
+  use LanguageTestTrait;
 
   /**
    * The bundle being tested.
@@ -68,7 +71,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
     parent::setUp();
     // Set up an additional language.
     $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId(), 'es'];
-    ConfigurableLanguage::createFromLangcode('es')->save();
+    self::createLanguageFromLangcode('es');
 
     // Create a content type.
     $this->bundle = $this->randomMachineName();
