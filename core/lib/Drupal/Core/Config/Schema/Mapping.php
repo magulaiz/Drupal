@@ -90,7 +90,7 @@ class Mapping extends ArrayElement {
    * - third party settings use '[%parent.%parent.%type].third_party.[%key]';
    *   `[%parent.%parent.%type]` is replaced by the type of the mapping two
    *   levels up. For example, 'node.type.third_party.[%key]'.
-   * - field instances's default values have a type of
+   * - field instances' default values have a type of
    *   'field.value.[%parent.%parent.field_type]'. This uses the value of the
    *   `field_type` key from the mapping two levels up.
    * - Views filters have a type of 'views.filter.[plugin_id]'; `[plugin_id]` is

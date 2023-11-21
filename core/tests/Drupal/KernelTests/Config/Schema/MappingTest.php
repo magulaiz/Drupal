@@ -9,6 +9,7 @@ namespace Drupal\KernelTests\Config\Schema;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\editor\Entity\Editor;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -132,6 +133,16 @@ class MappingTest extends KernelTestBase {
         $this->enableModules(['filter', 'editor', 'ckeditor5']);
         FilterFormat::create(['format' => 'funky', 'name' => 'Funky'])->save();
         Editor::create(['format' => 'funky', 'editor' => 'ckeditor5'])->save();
+        break;
+
+      case 'field.field.node.forum.comment_forum':
+        $this->enableModules(['field', 'node', 'comment', 'taxonomy', 'forum']);
+        $this->assertNull(FieldConfig::load('node.forum.comment_forum'));
+        // TRICKY: \Drupal\node\Entity\NodeType::$preview_mode uses
+        // DRUPAL_OPTIONAL, which is defined in system.module.
+        require_once 'core/modules/system/system.module';
+        $this->installConfig(['forum']);
+        $this->assertNotNull(FieldConfig::load('node.forum.comment_forum'));
         break;
     }
 
@@ -282,11 +293,13 @@ class MappingTest extends KernelTestBase {
       [],
     ];
 
-    // Two examples of `[%parent]`-based dynamic typing in config schema, and
-    // the consequences on what keys are considered valid: it depends on the
-    // block plugin being used.
-    // See `type: block.block.*`, which uses
-    // `type: block.settings.[%parent.plugin]`.
+    // Three examples of `[%parent]`-based dynamic typing in config schema, and
+    // the consequences on what keys are considered valid: the first 2 depend
+    // on the block plugin being used using a single `%parent`, the third
+    // depends on the field plugin being used using a double `%parent`.
+    // See `type: block.block.*` which uses
+    // `type: block.settings.[%parent.plugin]`, and `type: field_config_base`
+    // which uses `type: field.value.[%parent.%parent.field_type]`.
     yield 'Dynamic type with [%parent]: block.block.branding:settings' => [
       'block.block.branding',
       'settings',
@@ -330,6 +343,43 @@ class MappingTest extends KernelTestBase {
       ],
       [],
       $available_block_settings_types,
+    ];
+    yield 'Dynamic type with [%parent.%parent]: field.field.node.forum.comment_forum:default_value.0' => [
+      'field.field.node.forum.comment_forum',
+      'default_value.0',
+      [
+        // Keys defined locally, in `type: field.value.comment`.
+        // @see core/modules/comment/config/schema/comment.schema.yml
+        'status',
+        'cid',
+        'last_comment_timestamp',
+        'last_comment_name',
+        'last_comment_uid',
+        'comment_count',
+      ],
+      [],
+      [
+        'field.value.string' => ['value'],
+        'field.value.string_long' => ['value'],
+        'field.value.uri' => ['value'],
+        'field.value.created' => ['value'],
+        'field.value.changed' => ['value'],
+        'field.value.entity_reference' => ['target_id', 'target_uuid'],
+        'field.value.boolean' => ['value'],
+        'field.value.email' => ['value'],
+        'field.value.integer' => ['value'],
+        'field.value.decimal' => ['value'],
+        'field.value.float' => ['value'],
+        'field.value.timestamp' => ['value'],
+        'field.value.comment' => [
+          'status',
+          'cid',
+          'last_comment_timestamp',
+          'last_comment_name',
+          'last_comment_uid',
+          'comment_count',
+        ],
+      ],
     ];
 
     // An example of `[childkey]`-based dynamic mapping typing in config schema,
