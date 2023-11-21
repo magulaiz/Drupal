@@ -3,7 +3,6 @@
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -85,9 +84,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
   public function testSyncedImages() {
     // Enable translation for "Basic page" nodes.
     $this->enableContentTranslation('node', 'basic_page');
-
-    $field = FieldConfig::loadByName('node', 'basic_page', $this->fieldName);
-    $field->setTranslatable(TRUE)->save();
+    self::setFieldTranslatable('node', 'basic_page', $this->fieldName, TRUE);
 
     // Verify that the image field on the "Basic basic" node type is
     // translatable.
