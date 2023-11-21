@@ -283,16 +283,26 @@ class Term extends EditorialContentEntityBase implements TermInterface {
    * {@inheritdoc}
    */
   public function hasRootParent(): bool {
-    $tids = array_column($this->parent->getValue(), 'target_id');
-    return in_array(0, $tids);
+    foreach ($this->parent->getValue() as $item) {
+      if (strval($item['target_id']) === '0') {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasNonRootParent(): bool {
-    $tids = array_column($this->parent->getValue(), 'target_id');
-    return !empty(array_filter($tids));
+    foreach ($this->parent->getValue() as $item) {
+      if (!empty($item['target_id'])) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
   }
 
 }
