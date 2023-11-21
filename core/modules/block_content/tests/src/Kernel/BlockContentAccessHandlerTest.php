@@ -91,8 +91,8 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
     ])->save();
 
     $this->role = Role::create([
-      'id' => 'roly',
-      'label' => 'roly poly',
+      'id' => 'test',
+      'label' => 'test role',
     ]);
     $this->role->save();
     $this->accessControlHandler = new BlockContentAccessControlHandler(\Drupal::entityTypeManager()->getDefinition('block_content'), \Drupal::service('event_dispatcher'));
@@ -324,7 +324,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           $operation,
           FALSE,
           TRUE,
-          ['access block library', $label . ' any square block content'],
+          [$label . ' any square block content'],
           TRUE,
           NULL,
           AccessResultAllowed::class,
@@ -333,7 +333,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           $operation,
           TRUE,
           TRUE,
-          ['access block library', $label . ' any square block content'],
+          [$label . ' any square block content'],
           TRUE,
           NULL,
           AccessResultAllowed::class,
@@ -378,7 +378,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           $operation,
           FALSE,
           TRUE,
-          ['access block library', 'edit any basic block content'],
+          ['edit any basic block content'],
           TRUE,
           NULL,
           AccessResultNeutral::class,
@@ -387,7 +387,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           $operation,
           TRUE,
           TRUE,
-          ['access block library', 'edit any basic block content'],
+          ['edit any basic block content'],
           TRUE,
           NULL,
           AccessResultNeutral::class,
@@ -400,7 +400,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         'update',
         FALSE,
         TRUE,
-        ['access block library', 'edit any square block content'],
+        ['edit any square block content'],
         TRUE,
         NULL,
         AccessResultAllowed::class,
@@ -409,7 +409,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         'update',
         TRUE,
         TRUE,
-        ['access block library', 'edit any square block content'],
+        ['edit any square block content'],
         TRUE,
         NULL,
         AccessResultAllowed::class,
@@ -421,7 +421,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         'delete',
         FALSE,
         TRUE,
-        ['access block library', 'edit any square block content'],
+        ['edit any square block content'],
         TRUE,
         NULL,
         AccessResultNeutral::class,
@@ -430,7 +430,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         'delete',
         TRUE,
         TRUE,
-        ['access block library', 'edit any square block content'],
+        ['edit any square block content'],
         TRUE,
         NULL,
         AccessResultNeutral::class,
@@ -447,20 +447,20 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultNeutral::class,
     ];
-    $cases['view all revisions:administer blocks'] = [
+    $cases['view all revisions:view any bundle history'] = [
       'view all revisions',
       TRUE,
       TRUE,
-      ['access block library', 'view any square block content history'],
+      ['view any square block content history'],
       TRUE,
       NULL,
       AccessResultAllowed::class,
     ];
-    $cases['view all revisions:view bundle'] = [
+    $cases['view all revisions:administer block content'] = [
       'view all revisions',
       TRUE,
       TRUE,
-      ['access block library', 'view any square block content history'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultAllowed::class,
@@ -485,38 +485,29 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultNeutral::class,
     ];
-    $cases['revert:administer blocks:latest'] = [
-      'revert',
-      TRUE,
-      TRUE,
-      ['access block library'],
-      TRUE,
-      NULL,
-      AccessResultForbidden::class,
-    ];
-    $cases['revert:administer blocks:historical'] = [
-      'revert',
-      TRUE,
-      TRUE,
-      ['access block library', 'revert any square block content revisions'],
-      FALSE,
-      NULL,
-      AccessResultAllowed::class,
-    ];
-    $cases['revert:revert bundle:latest'] = [
-      'revert',
-      TRUE,
-      TRUE,
-      ['administer blocks'],
-      TRUE,
-      NULL,
-      AccessResultForbidden::class,
-    ];
     $cases['revert:revert bundle:historical'] = [
       'revert',
       TRUE,
       TRUE,
-      ['access block library', 'revert any square block content revisions'],
+      ['revert any square block content revisions'],
+      FALSE,
+      NULL,
+      AccessResultAllowed::class,
+    ];
+    $cases['revert:administer block content:latest'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      ['administer block content'],
+      TRUE,
+      NULL,
+      AccessResultForbidden::class,
+    ];
+    $cases['revert:administer block content:historical'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      ['administer block content'],
       FALSE,
       NULL,
       AccessResultAllowed::class,
@@ -551,20 +542,20 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultNeutral::class,
     ];
-    $cases['delete revision:administer blocks:latest'] = [
+    $cases['delete revision:administer block content:latest'] = [
       'delete revision',
       TRUE,
       TRUE,
-      ['administer blocks'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultForbidden::class,
     ];
-    $cases['delete revision:administer blocks:historical'] = [
+    $cases['delete revision:administer block content:historical'] = [
       'delete revision',
       TRUE,
       TRUE,
-      ['access block library', 'delete any square block content revisions'],
+      ['administer block content'],
       FALSE,
       NULL,
       AccessResultAllowed::class,
@@ -573,7 +564,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       'delete revision',
       TRUE,
       TRUE,
-      ['administer blocks'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultForbidden::class,
@@ -582,7 +573,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       'delete revision',
       TRUE,
       TRUE,
-      ['access block library', 'delete any square block content revisions'],
+      ['delete any square block content revisions'],
       FALSE,
       NULL,
       AccessResultAllowed::class,
@@ -591,7 +582,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       'delete revision',
       TRUE,
       FALSE,
-      ['access block library', 'delete any square block content revisions'],
+      ['delete any square block content revisions'],
       FALSE,
       NULL,
       AccessResultForbidden::class,
