@@ -143,6 +143,12 @@ config_test.types:
       label: 'Nullable string integer'
       nullable: true
 
+# cspell:ignore validatable
+config_test.types.fully_validatable:
+  type: config_test.types
+  constraints:
+    FullyValidatable: ~
+
 config_test.no_status.default:
   type: config_object
   label: 'Configuration no status default'
