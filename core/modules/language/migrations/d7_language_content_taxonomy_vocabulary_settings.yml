@@ -71,4 +71,5 @@ migration_dependencies:
     - language
     - d7_taxonomy_vocabulary
   optional:
+    - d7_language_content_settings
     - d7_entity_translation_settings
