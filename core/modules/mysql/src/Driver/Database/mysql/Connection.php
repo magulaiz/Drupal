@@ -108,6 +108,16 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
     $is_ansi_quotes_mode = FALSE;
+    if (isset($connection_options['init_commands']['sql_mode_options'])) {
+      foreach ($ansi_quotes_modes as $ansi_quotes_mode) {
+        if (!empty($connection_options['init_commands']['sql_mode_options'][$ansi_quotes_mode])) {
+          $is_ansi_quotes_mode = TRUE;
+          break;
+        }
+      }
+    }
+    // Handle the deprecated command. We don't issue a deprecation error
+    // because that is done in static::open().
     if (isset($connection_options['init_commands']['sql_mode'])) {
       foreach ($ansi_quotes_modes as $mode) {
         // None of the modes in $ansi_quotes_modes are substrings of other modes
