@@ -9,21 +9,16 @@ config_test_dynamic:
     label:
       type: label
       label: 'Label'
-      # This is a config entity type without an admin UI: it exists only for testing. Labels are irrelevant.
-      nullable: true
     weight:
       type: integer
       label: 'Weight'
     style:
-      nullable: true
       type: string
       label: 'style'
     size:
-      nullable: true
       type: string
       label: 'Size'
     size_value:
-      nullable: true
       type: string
       label: 'Size value'
     protected_property:
@@ -53,8 +48,6 @@ config_test.query.*:
     label:
       type: label
       label: 'Label'
-      # This is a config entity type without an admin UI: it exists only for testing. Labels are irrelevant.
-      nullable: true
     array:
       type: sequence
       label: 'Array level 1'

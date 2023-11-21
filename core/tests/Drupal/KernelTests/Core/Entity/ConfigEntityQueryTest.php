@@ -122,7 +122,6 @@ class ConfigEntityQueryTest extends KernelTestBase {
       'label' => $this->randomMachineName(),
       'id' => '6',
       'array' => $array,
-      'number' => 0,
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -378,7 +377,6 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity = ConfigQueryTest::create([
       'label' => 'entity_1',
       'id' => 'foo.bar',
-      'number' => 0,
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();

@@ -4,11 +4,9 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Exception\LogicException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
@@ -20,8 +18,6 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
  */
 class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
-
-  use SchemaCheckTrait;
 
   /**
    * {@inheritdoc}
@@ -101,7 +97,6 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     // Try changing one immutable property, and one mutable property.
     $entity->set('id', 'foo')->set('label', 'Testing!');
     $violations = $typed_data_manager->create($definition, $entity)->validate();
-    $violations = array_filter(iterator_to_array($violations), fn (ConstraintViolation $v) => !static::isViolationForIgnoredPropertyPath($v));
     $this->assertCount(1, $violations);
     $this->assertSame("The 'id' property cannot be changed.", (string) $violations[0]->getMessage());
 
@@ -109,7 +104,6 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     // changed.
     $entity->set('description', "From hell's heart, I describe thee!");
     $violations = $typed_data_manager->create($definition, $entity)->validate();
-    $violations = array_filter(iterator_to_array($violations), fn (ConstraintViolation $v) => !static::isViolationForIgnoredPropertyPath($v));
     $this->assertCount(2, $violations);
     $this->assertSame("The 'id' property cannot be changed.", (string) $violations[0]->getMessage());
     $this->assertSame("The 'description' property cannot be changed.", (string) $violations[1]->getMessage());

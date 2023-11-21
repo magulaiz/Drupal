@@ -105,7 +105,7 @@ class ConfigTestTest extends ConfigEntityResourceTestBase {
           'style' => NULL,
           'size' => NULL,
           'size_value' => NULL,
-          'protected_property' => 'Default',
+          'protected_property' => NULL,
           'drupal_internal__id' => 'llama',
         ],
       ],
