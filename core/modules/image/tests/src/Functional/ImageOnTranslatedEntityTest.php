@@ -7,6 +7,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -16,6 +17,7 @@ use Drupal\Tests\TestFileCreationTrait;
  */
 class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
 
+  use ContentTranslationTestTrait;
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
     compareFiles as drupalCompareFiles;
@@ -73,10 +75,8 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second and third language.
-    $langcodes = ['fr', 'nl'];
-    foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
-    }
+    self::createLanguageFromLangcode('fr');
+    self::createLanguageFromLangcode('nl');
   }
 
   /**
@@ -84,16 +84,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
    */
   public function testSyncedImages() {
     // Enable translation for "Basic page" nodes.
-    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'basic_page');
-    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
-    $config->setLanguageAlterable(TRUE);
-    $config->save();
-
-    $content_translation_manager = $this->container->get('content_translation.manager');
-    $content_translation_manager->setEnabled('node', 'basic_page', TRUE);
-    $content_translation_manager->setBundleTranslationSettings('node', 'basic_page', [
-      'untranslatable_fields_hide' => FALSE,
-    ]);
+    $this->enableContentTranslation('node', 'basic_page');
 
     $field = FieldConfig::loadByName('node', 'basic_page', $this->fieldName);
     $field->setTranslatable(TRUE)->save();
