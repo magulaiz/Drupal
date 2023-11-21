@@ -10,8 +10,7 @@
  *
  * $conf['mail_line_endings'] will override this setting.
  */
-define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE) ? "\r\n" : "\n");
-
+define('MAIL_LINE_ENDINGS', (substr(PHP_OS, 0, 3) == 'WIN') ? "\r\n" : "\n");
 
 /**
  * Special characters, defined in RFC_2822.
