@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\contact\Functional;
 
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 

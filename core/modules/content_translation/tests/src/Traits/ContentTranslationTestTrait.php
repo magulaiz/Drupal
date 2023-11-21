@@ -5,7 +5,6 @@ namespace Drupal\Tests\content_translation\Traits;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 
-
 /**
  * Helper functions around content translation.
  */

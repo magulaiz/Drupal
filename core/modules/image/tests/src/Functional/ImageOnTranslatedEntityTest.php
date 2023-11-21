@@ -2,10 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\file\Entity\File;
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
