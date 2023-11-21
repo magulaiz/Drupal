@@ -134,7 +134,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         'wrapper' => [
           '#prefix' => '<div id= "' . $menu_parent_wrapper . '" >',
           '#suffix' => '</div>',
-          'menu_parent'=> $elements['menu_parent'],
+          'menu_parent' => $elements['menu_parent'],
           'menu' => $elements['menu'],
           'submit' => $elements['menu_submit'],
           '#ajax' => [
