@@ -43,12 +43,16 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests that JavaScript Drupal settings can be read.
    */
   public function testDrupalSettings() {
-    $this->drupalGet('');
+    // Trigger a 403 because those pages have very little else going on.
+    $this->drupalGet('admin');
     $this->assertSame([], $this->getDrupalSettings());
 
+    // Now try the same 403 as an authenticated user and verify that Drupal
+    // settings do show up. This ensures we do not regress from the bug in issue
+    // https://www.drupal.org/project/drupal/issues/3379220.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
-    $this->drupalGet('');
+    $this->drupalGet('admin');
     $this->assertNotSame([], $this->getDrupalSettings());
   }
 
