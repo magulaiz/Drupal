@@ -27,7 +27,7 @@ class BlockUpdateLabelDisplaySchemaTest extends UpdatePathTestBase {
 
     $block_config = $this->config('block.block.olivero_account_menu');
     $label_display = $block_config->get('settings.label_display');
-    $this->assertSame('0', $label_display);
+    $this->assertSame(false, $label_display);
     $this->assertIsString($label_display);
 
     $this->runUpdates();
