@@ -270,6 +270,9 @@ abstract class EntityDisplayFormBase extends EntityForm {
             'width' => 880,
             'modal' => TRUE,
           ]),
+          // The jQuery UI dialog automatically moves focus to the first :tabbable
+          // element of the modal, so we need to disable refocus on the button.
+          'data-disable-refocus' => 'true',
         ],
       ];
     }
