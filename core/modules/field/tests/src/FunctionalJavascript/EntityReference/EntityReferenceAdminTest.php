@@ -336,6 +336,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       ->waitForField('settings[handler_settings][view][view_and_display]')
       ->setValue('test_entity_reference:entity_reference_1');
     $this->submitForm([], 'Save settings');
+    $this->getSession()->wait(1000);
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'entity_test'.
