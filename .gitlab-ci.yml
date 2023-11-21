@@ -266,6 +266,9 @@ default:
     KUBERNETES_CPU_REQUEST: "16"
   script:
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    # Run again for humans so errors in the log. This is cheap due to the
+    # phpstan result cache.
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist
   artifacts:
     reports:
       codequality: phpstan-quality-report.json
