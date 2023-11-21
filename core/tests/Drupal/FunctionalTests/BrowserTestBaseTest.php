@@ -40,6 +40,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Tests that JavaScript Drupal settings can be read.
+   */
+  public function testDrupalSettings() {
+    $this->drupalGet('');
+    $this->assertSame([], $this->getDrupalSettings());
+
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $this->drupalGet('');
+    $this->assertNotSame([], $this->getDrupalSettings());
+  }
+
+  /**
    * Tests basic page test.
    */
   public function testGoTo() {
