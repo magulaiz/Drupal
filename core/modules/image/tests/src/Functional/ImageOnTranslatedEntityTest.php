@@ -2,7 +2,11 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -69,15 +73,10 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second and third language.
-    $edit = [];
-    $edit['predefined_langcode'] = 'fr';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
-
-    $edit = [];
-    $edit['predefined_langcode'] = 'nl';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $langcodes = ['fr', 'nl'];
+    foreach ($langcodes as $langcode) {
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
+    }
   }
 
   /**
@@ -85,18 +84,19 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
    */
   public function testSyncedImages() {
     // Enable translation for "Basic page" nodes.
-    $edit = [
-      'entity_types[node]' => 1,
-      'settings[node][basic_page][translatable]' => 1,
-      "settings[node][basic_page][fields][$this->fieldName]" => 1,
-      "settings[node][basic_page][columns][$this->fieldName][file]" => 1,
-      // Explicitly disable alt and title since the javascript disables the
-      // checkboxes on the form.
-      "settings[node][basic_page][columns][$this->fieldName][alt]" => FALSE,
-      "settings[node][basic_page][columns][$this->fieldName][title]" => FALSE,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'basic_page');
+    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
+    $config->setLanguageAlterable(TRUE);
+    $config->save();
+
+    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager->setEnabled('node', 'basic_page', TRUE);
+    $content_translation_manager->setBundleTranslationSettings('node', 'basic_page', [
+      'untranslatable_fields_hide' => FALSE,
+    ]);
+
+    $field = FieldConfig::loadByName('node', 'basic_page', $this->fieldName);
+    $field->setTranslatable(TRUE)->save();
 
     // Verify that the image field on the "Basic basic" node type is
     // translatable.
