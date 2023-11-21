@@ -24,10 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Plugin implementation of the 'oembed' formatter.
  *
- * @internal
- *   This is an internal part of the oEmbed system and should only be used by
- *   oEmbed-related code in Drupal core.
- *
  * @FieldFormatter(
  *   id = "oembed",
  *   label = @Translation("oEmbed content"),
