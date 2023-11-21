@@ -3,6 +3,7 @@
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\node\NodeInterface;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
  * Test content_moderation functionality with localization and translation.
@@ -10,6 +11,8 @@ use Drupal\node\NodeInterface;
  * @group content_moderation
  */
 class ModerationLocaleTest extends ModerationStateTestBase {
+
+  use ContentTranslationTestTrait;
 
   /**
    * Modules to enable.
@@ -40,22 +43,11 @@ class ModerationLocaleTest extends ModerationStateTestBase {
     $this->createContentTypeFromUi('Article', 'article', TRUE);
 
     // Add French and Italian languages.
-    foreach (['fr', 'it'] as $langcode) {
-      $edit = [
-        'predefined_langcode' => $langcode,
-      ];
-      $this->drupalGet('admin/config/regional/language/add');
-      $this->submitForm($edit, 'Add language');
-    }
+    self::createLanguageFromLangcode('fr');
+    self::createLanguageFromLangcode('it');
 
     // Enable content translation on articles.
-    $this->drupalGet('admin/config/regional/content-language');
-    $edit = [
-      'entity_types[node]' => TRUE,
-      'settings[node][article][translatable]' => TRUE,
-      'settings[node][article][settings][language][language_alterable]' => TRUE,
-    ];
-    $this->submitForm($edit, 'Save configuration');
+    $this->enableContentTranslation('node', 'article');
 
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
