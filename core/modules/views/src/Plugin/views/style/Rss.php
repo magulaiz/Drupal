@@ -4,7 +4,6 @@ namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Default style plugin to render an RSS feed.
@@ -19,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  *   display_types = {"feed"}
  * )
  */
-class Rss extends StylePluginBase implements ResponseStylePluginInterface {
+class Rss extends StylePluginBase {
 
   /**
    * The RSS namespaces.
@@ -133,16 +132,14 @@ class Rss extends StylePluginBase implements ResponseStylePluginInterface {
       '#view' => $this->view,
       '#options' => $this->options,
       '#rows' => $rows,
+      '#attached' => [
+        'http_header' => [
+          ['Content-Type', 'application/rss+xml; charset=utf-8'],
+        ],
+      ],
     ];
     unset($this->view->row_index);
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function alterResponse(Response $response) {
-    $response->headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
   }
 
 }
