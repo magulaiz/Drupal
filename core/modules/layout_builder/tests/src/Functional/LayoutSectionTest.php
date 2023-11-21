@@ -71,7 +71,7 @@ class LayoutSectionTest extends BrowserTestBase {
                 'user' => '@user.current_user_context:current_user',
               ],
             ]),
-          ]))->setUuid(\Drupal::service('uuid')->generate()),
+          ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338951'),
         ],
       ],
       [
@@ -95,7 +95,7 @@ class LayoutSectionTest extends BrowserTestBase {
                 'entity' => 'layout_builder.entity',
               ],
             ]),
-          ]))->setUuid(\Drupal::service('uuid')->generate()),
+          ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338952'),
         ],
       ],
       [
@@ -115,7 +115,7 @@ class LayoutSectionTest extends BrowserTestBase {
       'baz' => new SectionComponent('baz', 'content', [
         'id' => 'system_powered_by_block',
       ]),
-    ]))->setUuid(\Drupal::service('uuid')->generate());
+    ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338953');
 
     $data['single_section_single_block'] = [
       [
@@ -139,7 +139,7 @@ class LayoutSectionTest extends BrowserTestBase {
         'id' => 'test_block_instantiation',
         'display_message' => 'bar text',
       ]),
-    ]))->setUuid(\Drupal::service('uuid')->generate())->setWeight(1);
+    ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338952')->setWeight(1);
 
     $data['multiple_sections'] = [
       [
