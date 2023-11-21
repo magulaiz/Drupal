@@ -350,6 +350,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'required' => FALSE,
     ];
     $this->submitForm($edit, 'Save settings');
+    $this->getSession()->wait(1000);
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
   }
 
