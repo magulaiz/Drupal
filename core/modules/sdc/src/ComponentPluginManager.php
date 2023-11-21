@@ -14,7 +14,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Drupal\sdc\Component\ComponentValidator;
+use Drupal\sdc\Component\ComponentValidatorInterface;
 use Drupal\sdc\Component\SchemaCompatibilityChecker;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\IncompatibleComponentSchema;
@@ -59,7 +59,7 @@ final class ComponentPluginManager extends DefaultPluginManager {
    *   The file system service.
    * @param \Drupal\sdc\Component\SchemaCompatibilityChecker $compatibilityChecker
    *   The compatibility checker.
-   * @param \Drupal\sdc\Component\ComponentValidator $componentValidator
+   * @param \Drupal\sdc\Component\ComponentValidatorInterface $componentValidator
    *   The component validator.
    * @param string $appRoot
    *   The application root.
@@ -73,7 +73,7 @@ final class ComponentPluginManager extends DefaultPluginManager {
     protected ComponentNegotiator $componentNegotiator,
     protected FileSystemInterface $fileSystem,
     protected SchemaCompatibilityChecker $compatibilityChecker,
-    protected ComponentValidator $componentValidator,
+    protected ComponentValidatorInterface $componentValidator,
     protected string $appRoot,
   ) {
     // We are skipping the call to the parent constructor to avoid initializing

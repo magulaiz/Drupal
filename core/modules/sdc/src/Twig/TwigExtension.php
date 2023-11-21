@@ -4,7 +4,7 @@ namespace Drupal\sdc\Twig;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\sdc\Component\ComponentValidator;
+use Drupal\sdc\Component\ComponentValidatorInterface;
 use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\InvalidComponentException;
@@ -23,12 +23,12 @@ final class TwigExtension extends AbstractExtension {
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
    *   The component plugin manager.
-   * @param \Drupal\sdc\Component\ComponentValidator $componentValidator
+   * @param \Drupal\sdc\Component\ComponentValidatorInterface $componentValidator
    *   The component validator.
    */
   public function __construct(
     protected PluginManagerInterface $pluginManager,
-    protected ComponentValidator $componentValidator
+    protected ComponentValidatorInterface $componentValidator
   ) {}
 
   /**
