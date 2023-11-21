@@ -3,6 +3,7 @@
 namespace Drupal\Tests\language\Traits;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 
@@ -45,6 +46,26 @@ trait LanguageTestTrait {
     return ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle)
       ->setDefaultLangcode($default_langcode)
       ->setLanguageAlterable(TRUE)
+      ->save();
+  }
+
+  /**
+   * Set and save a given field instance translation status.
+   *
+   * @param string $entity_type_id
+   *   ID of the entity type.
+   * @param string $bundle
+   *   Bundle name.
+   * @param string $field_name
+   *   Name of the field.
+   * @param bool $status
+   *   Whether the field should be translatable or not.
+   *
+   * @return null
+   */
+  public static function setFieldTranslatable(string $entity_type_id, string $bundle, string $field_name, bool $status) {
+    FieldConfig::loadByName($entity_type_id, $bundle, $field_name)
+      ->setTranslatable($status)
       ->save();
   }
 
