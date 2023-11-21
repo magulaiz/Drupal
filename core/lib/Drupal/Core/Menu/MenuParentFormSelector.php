@@ -130,7 +130,20 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         '#prefix' => '<div id= "' . $menu_parent_wrapper . '" >',
         '#suffix' => '</div>',
       ];
-      return $elements;
+      $elements_wrapper = [
+        'wrapper' => [
+          '#prefix' => '<div id= "' . $menu_parent_wrapper . '" >',
+          '#suffix' => '</div>',
+          'menu_parent'=> $elements['menu_parent'],
+          'menu' => $elements['menu'],
+          'submit' => $elements['menu_submit'],
+          '#ajax' => [
+            'callback' => [$this, 'updateParentLinks'],
+            'wrapper' => $menu_parent_wrapper,
+          ],
+        ],
+      ];
+      return $elements_wrapper;
     }
     return [];
   }
@@ -167,7 +180,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * AJAX callback for updating menu parent options.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
-    return $form['menu_parent'];
+    return $form['wrapper'];
   }
 
   /**
