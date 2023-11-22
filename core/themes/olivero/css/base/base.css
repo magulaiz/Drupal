@@ -45,15 +45,15 @@ body.is-fixed {
   background-position: top right;
 }
 
-a:where([href]) {
+a:link {
   color: var(--color-text-primary-medium);
 }
 
-a:where([href]):hover {
+a:link:hover {
   color: var(--color--primary-50);
 }
 
-a:where([href]):focus {
+a:link:focus {
   outline: solid 2px currentColor;
   outline-offset: 2px;
 }
