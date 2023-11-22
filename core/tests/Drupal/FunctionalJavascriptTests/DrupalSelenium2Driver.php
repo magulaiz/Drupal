@@ -193,6 +193,8 @@ JS);
    *   The result of the callback.
    */
   private function waitFor($timeout, callable $callback) {
+    // Double it, for testing.
+    $timeout = $timeout * 2;
     $start = microtime(TRUE);
     $end = $start + $timeout;
 
