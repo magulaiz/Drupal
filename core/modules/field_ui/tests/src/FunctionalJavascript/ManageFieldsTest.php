@@ -190,7 +190,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->pageTextContains('Label field is required.');
-    $assert_session->pageTextContains('You need to select a subfield type.');
+    $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="field_options_wrapper"].error');
     $page->fillField('label', $field_name);
@@ -198,7 +198,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $buttons->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->pageTextContains('You need to select a subfield type.');
+    $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementNotExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="field_options_wrapper"].error');
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
@@ -208,7 +208,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     // Try adding a field using a grouped field type.
     $this->clickLink('Email');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Choose a subfield type');
+    $assert_session->pageTextNotContains('Choose a field type');
     $assert_session->elementExists('css', '[name="label"]');
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Change field type');
@@ -216,7 +216,7 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $this->clickLink('Plain text');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Choose a subfield type');
+    $assert_session->pageTextContains('Choose a field type');
     $assert_session->elementExists('css', '[name="label"]');
     $page->fillField('label', $field_name);
 
@@ -283,7 +283,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]')->getParent());
     $number_field->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Choose a subfield type');
+    $assert_session->pageTextContains('Choose a field type');
     $this->assertNotEmpty($number_integer = $page->find('xpath', '//*[text() = "Number (integer)"]')->getParent());
     $number_integer->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="field_options_wrapper"][value="integer"]')->isSelected());
@@ -296,7 +296,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $field_name = 'test_field_2';
     $page->fillField('label', $field_name);
-    $assert_session->pageTextNotContains('Choose a subfield type');
+    $assert_session->pageTextNotContains('Choose a field type');
 
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');

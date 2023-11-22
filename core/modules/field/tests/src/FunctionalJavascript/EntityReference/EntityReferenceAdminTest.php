@@ -128,7 +128,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Check if the commonly referenced entity types appear in the list.
     $this->clickLink('Reference');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertTrue($assert_session->waitForText('Choose a subfield type'));
+    $this->assertTrue($assert_session->waitForText('Choose a field type'));
     $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:node']");
     $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:user']");
 
