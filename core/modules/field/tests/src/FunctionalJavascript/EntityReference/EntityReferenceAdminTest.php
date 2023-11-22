@@ -257,8 +257,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Third step: confirm.
     $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
-    // @todo should improve the dialog positioning in this situation so it's not
-    //   outside the viewport.
+
+    // @todo remove after https://www.drupal.org/i/3395590 has been fixed.
     $this->getSession()->resizeWindow(1200, 1500);
     usleep(5000);
 
@@ -276,7 +276,6 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->waitForText('Test settings'));
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save settings');
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
-    $this->getSession()->executeScript("location.reload();");
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
