@@ -210,7 +210,7 @@ variables:
   when: manual
   allow_failure: true
   variables:
-    REPEAT_TEST_CLASS: '\Drupal\Tests\field\FunctionalJavascript\EntityReference\EntityReferenceAdminTest'
+    REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
   services:
     - <<: *with-database
 
