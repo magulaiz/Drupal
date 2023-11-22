@@ -102,11 +102,6 @@
           }
           adjustedOptions[option] = adjustedValue;
         }
-        if (event.data.settings.modal) {
-          // Adding the modal-dialog class to take displace into account
-          // for width calculation.
-          event.data.$element.parent()[0].classList.add('modal-dialog');
-        }
       }
     }
     // Offset the dialog center to be at the center of Drupal.displace.offsets.
