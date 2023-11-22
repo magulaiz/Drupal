@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+// cspell:ignore validatable
+
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
@@ -89,6 +91,30 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     $dynamically_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
     foreach ($dynamically_invalid_keys as $key) {
       $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
+    }
+
+    // All keys are optional by default (meaning they can be omitted). This is
+    // unintuitive and contradicts Drupal core's documentation.
+    // @see https://www.drupal.org/node/2264179
+    // To gradually evolve configuration schemas in the Drupal ecosystem to be
+    // validatable, this needs to be clarified in a non-disruptive way. Any
+    // config schema type definition — that is, a top-level entry in a
+    // *.schema.yml file — can opt into stricter behavior, whereby a key is
+    // required unless it specifies `requiredKey: false`, by adding
+    // `FullyValidatable` as a top-level validation constraint.
+    // @see https://www.drupal.org/node/3364108
+    // @see https://www.drupal.org/node/3364109
+    $root_type_has_opted_in = FALSE;
+    foreach ($this->context->getRoot()->getConstraints() as $constraint) {
+      if ($constraint instanceof FullyValidatableConstraint) {
+        $root_type_has_opted_in = TRUE;
+        break;
+      }
+    }
+    // Return early: do not generate validation errors for keys that are
+    // required.
+    if (!$root_type_has_opted_in) {
+      return;
     }
 
     // Statically required: same principle as for "statically valid" above, but
