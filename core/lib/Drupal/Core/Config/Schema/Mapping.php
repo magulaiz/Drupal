@@ -72,8 +72,6 @@ class Mapping extends ArrayElement {
   protected function getDefinedKeys(): array {
     $definition = $this->getDataDefinition();
     assert($definition instanceof MapDataDefinition && static::validateMappingConfigSchemaDefinition($definition));
-    // f.e. when using `type: mapping`, no keys have been defined, but it's
-    // still possible to define keys under `mapping: {…}`.
     return $definition->toArray()['mapping'];
   }
 
