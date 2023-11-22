@@ -135,9 +135,16 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    *
    * @dataProvider providerTestRemoveAllSections
    */
-  public function testRemoveAllSections($set_blank, $expected) {
+  public function testRemoveAllSections($set_blank) {
+    $expected = [];
     if ($set_blank === NULL) {
       $this->sectionList->removeAllSections();
+    }
+    else if ($set_blank === TRUE) {
+      $expected_section = $this->sectionList->removeAllSections($set_blank)->getSection(0);
+      $expected = [
+        $expected_section->getUuid() => $expected_section,
+      ];
     }
     else {
       $this->sectionList->removeAllSections($set_blank);
@@ -149,15 +156,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * Provides test data for ::testRemoveAllSections().
    */
   public function providerTestRemoveAllSections() {
-    $data = [];
-    $data[] = [NULL, []];
-    $data[] = [FALSE, []];
-    $data[] = [TRUE,
-      [
-        '11000000-0000-1000-o000-000000000000' => (new Section('layout_builder_blank'))->setUuid('11000000-0000-1000-o000-000000000000'),
-      ],
-    ];
-    return $data;
+    return [[NULL], [FALSE], [TRUE]];
   }
 
   /**
@@ -178,12 +177,12 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @covers ::removeSection
    */
   public function testRemoveMultipleSections() {
+    $this->sectionList->removeSection(0);
+    $this->sectionList->removeSection(0);
+    $expected_section = $this->sectionList->getSection(0);
     $expected = [
-      '11000000-0000-1000-o000-000000000000' => (new Section('layout_builder_blank'))->setUuid('11000000-0000-1000-o000-000000000000'),
+      $expected_section->getUuid() => $expected_section,
     ];
-
-    $this->sectionList->removeSection(0);
-    $this->sectionList->removeSection(0);
     $this->assertSections($expected);
   }
 
