@@ -125,6 +125,7 @@ class UserLoginForm extends FormBase {
 
     $form['pass'] = [
       '#type' => 'password_unmask',
+      '#title' => $this->t('Password'),
       '#required' => TRUE,
       '#size' => 60,
       '#attributes' => [
