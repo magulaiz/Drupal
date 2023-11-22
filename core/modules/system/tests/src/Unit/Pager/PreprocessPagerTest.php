@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\system\Unit\Pager;
 
+use Drupal\Component\HtmlAttribute\HtmlAttributeScalar;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -85,9 +85,9 @@ class PreprocessPagerTest extends UnitTestCase {
     template_preprocess_pager($variables);
 
     $this->assertEquals(['first', 'previous', 'pages'], array_keys($variables['items']));
-    /** @var \Drupal\Core\Template\AttributeString $attribute */
+    /** @var \Drupal\Component\HtmlAttribute\HtmlAttributeScalar $attribute */
     $attribute = $variables['items']['pages']['2']['attributes']->offsetGet('aria-current');
-    $this->assertInstanceOf(AttributeString::class, $attribute);
+    $this->assertInstanceOf(HtmlAttributeScalar::class, $attribute);
     $this->assertEquals('page', $attribute->value());
   }
 
