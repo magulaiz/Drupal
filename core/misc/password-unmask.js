@@ -22,6 +22,8 @@
     const trigger = document.createElement('button');
     trigger.setAttribute('type', 'button');
     trigger.setAttribute('class', 'link toggle-password');
+    trigger.setAttribute('class', 'button button--small');
+    trigger.setAttribute('style', 'margin-inline-start:10px');
     trigger.setAttribute(
       'aria-checked',
       element.getAttribute('type') === 'password' ? 'true' : 'false',
