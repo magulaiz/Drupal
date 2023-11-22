@@ -27,7 +27,7 @@ class Mapping extends ArrayElement {
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     assert($definition instanceof MapDataDefinition);
-    $this->processRequiredKeyFlags($definition);
+    $this->processRequiredKeyFlags($definition, $parent);
     parent::__construct($definition, $name, $parent);
   }
 
@@ -212,14 +212,21 @@ class Mapping extends ArrayElement {
    *
    * @param \Drupal\Core\TypedData\MapDataDefinition $definition
    *   The config schema definition for a `type: mapping`.
+   * @param \Drupal\Core\TypedData\TypedDataInterface|null $parent
+   *   (optional) The parent object of the data property, or NULL if it is the
+   *   root of a typed data tree. Defaults to NULL.
    *
    * @return void
    *
    * @throws \LogicException
    *   Thrown when `requiredKey: true` is specified.
    */
-  protected static function processRequiredKeyFlags(MapDataDefinition $definition): void {
+  protected static function processRequiredKeyFlags(MapDataDefinition $definition, ?TypedDataInterface $parent): void {
     foreach ($definition['mapping'] as $key => $key_definition) {
+      // Guide developers when a config schema definition is wrong.
+      if (!is_array($key_definition)) {
+        throw new \LogicException(sprintf('The `%s` key in the `%s` mapping contains a %s. It must be an array.', $key, $parent->getPropertyPath(), gettype($key_definition)));
+      }
       // Validates `requiredKey` flag in mapping definitions.
       if (array_key_exists('requiredKey', $key_definition) && $key_definition['requiredKey'] !== FALSE) {
         throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
