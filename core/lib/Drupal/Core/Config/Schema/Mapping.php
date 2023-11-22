@@ -70,7 +70,9 @@ class Mapping extends ArrayElement {
     assert($definition instanceof MapDataDefinition && self::validateMappingConfigSchemaDefinition($definition));
     // f.e. when using `type: mapping`, no keys have been defined, but it's
     // still possible to define keys under `mapping: {…}`.
-    return $definition->toArray()['mapping'];
+    $defined_keys = $definition->toArray()['mapping'];
+    // @todo Avoid fatal errors for invalid mapping definitions; remove this in https://www.drupal.org/project/drupal/issues/3401837
+    return array_filter($defined_keys, 'is_array');
   }
 
   /**
@@ -209,6 +211,10 @@ class Mapping extends ArrayElement {
 
     // Validates `requiredKey` flag in mapping definitions.
     foreach ($definition['mapping'] as $options) {
+      // @todo Avoid fatal errors on invalid mapping definitions; remove this in https://www.drupal.org/project/drupal/issues/3401837
+      if (!is_array($options)) {
+        continue;
+      }
       if (!array_key_exists('requiredKey', $options)) {
         // This flag is optional.
         continue;
