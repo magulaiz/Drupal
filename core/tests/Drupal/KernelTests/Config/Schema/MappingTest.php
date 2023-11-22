@@ -8,6 +8,7 @@ namespace Drupal\KernelTests\Config\Schema;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Schema\Mapping;
+use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -499,6 +500,39 @@ class MappingTest extends KernelTestBase {
         'ckeditor5.plugin.ckeditor5_style' => ['styles'],
       ],
     ];
+  }
+
+  /**
+   * @testWith [false, 42, "The mapping definition at `foobar` is invalid: its `invalid` key contains a integer. It must be an array."]
+   *           [false, 10.2, "The mapping definition at `foobar` is invalid: its `invalid` key contains a double. It must be an array."]
+   *           [false, "type", "The mapping definition at `foobar` is invalid: its `invalid` key contains a string. It must be an array."]
+   *           [false, false, "The mapping definition at `foobar` is invalid: its `invalid` key contains a boolean. It must be an array."]
+   *           [true, 42, "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a integer. It must be an array."]
+   *           [true, 10.2, "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a double. It must be an array."]
+   *           [true, "type", "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a string. It must be an array."]
+   *           [true, false, "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a boolean. It must be an array."]
+   */
+  public function testInvalidMappingKeyDefinition(bool $has_parent, mixed $invalid_key_definition, string $expected_message): void {
+    $definition = new MapDataDefinition([
+      'type' => 'mapping',
+      'mapping' => [
+        'valid' => [
+          'type' => 'boolean',
+          'label' => 'This is a valid key-value pair in this mapping',
+        ],
+        'invalid' => $invalid_key_definition,
+      ],
+    ]);
+    $parent = NULL;
+    if ($has_parent) {
+      $parent = new Mapping(
+        new MapDataDefinition(['type' => 'mapping', 'mapping' => []]),
+        'my_module.settings',
+      );
+    }
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage($expected_message);
+    new Mapping($definition, 'foobar', $parent);
   }
 
 }
