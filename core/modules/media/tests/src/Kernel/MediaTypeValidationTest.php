@@ -30,15 +30,13 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = [], array $indirect_consequences = []): void {
-    parent::testImmutableProperties($valid_values, [
-      'source' => [
-        'source_configuration' => [
-          "'source_field' is an unknown key because source is <RANDOM> (see config schema type media.source.*).",
-          "'test_config_value' is an unknown key because source is <RANDOM> (see config schema type media.source.*).",
-        ],
-      ],
-    ]);
+  public function testImmutableProperties(array $valid_values = []): void {
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* source won't match the config schema for the
+    // settings of the *new* source.
+    $this->entity->set('source_configuration', []);
+    parent::testImmutableProperties($valid_values);
   }
 
 }

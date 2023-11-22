@@ -53,7 +53,7 @@ filter_settings.*:
     label: 'Value'
 
 filter_settings.filter_html:
-  type: mapping
+  type: filter
   label: 'Filter HTML'
   mapping:
     allowed_html:
@@ -68,7 +68,7 @@ filter_settings.filter_html:
 
 
 filter_settings.filter_url:
-  type: mapping
+  type: filter
   label: 'Filter URL'
   mapping:
     filter_url_length:

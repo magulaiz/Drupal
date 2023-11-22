@@ -17,7 +17,6 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('file');
 
     // The field storage was created in the parent method.
     $field_storage = $this->entity;
@@ -78,11 +77,6 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
           'format' => 'basic_html',
         ],
       ],
-      'settings' => [
-        'display_summary' => FALSE,
-        'required_summary' => FALSE,
-        'allowed_formats' => [],
-      ],
       'dependencies' => [
         'config' => [
           $text_field_storage_config->getConfigDependencyName(),
@@ -95,59 +89,13 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = [], array $indirect_consequences = []): void {
-    parent::testImmutableProperties($valid_values, [
-      'field_type' => [
-        'settings' => [
-          "'on_label' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
-          "'off_label' is an unknown key because field_type is <RANDOM> (see config schema type field.field_settings.*).",
-        ],
-      ],
-    ]);
-  }
-
-  /**
-   * Tests an invalid value for a plugin-specific FieldConfig setting.
-   *
-   * @see \Drupal\Tests\field\Kernel\Entity\FieldStorageConfigValidationTest::testInvalidPluginSpecificSetting
-   */
-  public function testInvalidPluginSpecificSetting(): void {
-    $field_storage = FieldStorageConfig::create([
-      'field_name' => 'invalid_default_image',
-      'entity_type' => 'node',
-      'type' => 'image',
-      'settings' => [
-        'default_image' => [
-          'uuid' => 100000,
-        ],
-      ],
-    ]);
-    $field_storage->save();
-
-    $this->entity = FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => 'page',
-      'label' => $this->randomMachineName(),
-      'settings' => [
-        'default_image' => [
-          'uuid' => 100000,
-        ],
-      ],
-    ]);
-    $this->entity->set('dependencies', [
-      'config' => [
-        $field_storage->getConfigDependencyName(),
-      ],
-    ]);
-    $this->assertValidationErrors([
-      'settings.default_image' => [
-        "'alt' is a required key.",
-        "'title' is a required key.",
-        "'width' is a required key.",
-        "'height' is a required key.",
-      ],
-      'settings.default_image.uuid' => 'This is not a valid UUID.',
-    ]);
+  public function testImmutableProperties(array $valid_values = []): void {
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* field_type won't match the config schema for the
+    // settings of the *new* field_type.
+    $this->entity->set('settings', []);
+    parent::testImmutableProperties($valid_values);
   }
 
 }

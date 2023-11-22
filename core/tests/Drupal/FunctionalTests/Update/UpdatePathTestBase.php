@@ -84,20 +84,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $configSchemaCheckerExclusions = [
-    // The following config trigger config schema validation errors, even after
-    // the update. An update path is needed to fix these.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3401876
-    'block.block.claro_help_search',
-    'block.block.stark_testblock',
-    'block.block.testblock',
-    'editor.editor.test_text_format',
-    'search.page.help_search',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     if (!extension_loaded('zlib')) {
       $this->markTestSkipped('The zlib extension is not available.');

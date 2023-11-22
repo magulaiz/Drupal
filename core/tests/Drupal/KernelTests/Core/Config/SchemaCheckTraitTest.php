@@ -42,7 +42,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    *
    * @dataProvider providerCheckConfigSchema
    */
-  public function testCheckConfigSchema(bool $validate_constraints, array|bool $no_data_expectations, array $expectations) {
+  public function testCheckConfigSchema(bool $validate_constraints, array $expectations) {
     // Test a non existing schema.
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
     $this->assertFalse($ret);
@@ -56,14 +56,9 @@ class SchemaCheckTraitTest extends KernelTestBase {
     // error messages.
     $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
     $config_data['boolean'] = [];
+
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data, $validate_constraints);
     $this->assertEquals($expectations, $ret);
-
-    // Omit all data, this should trigger validation errors for required keys
-    // missing.
-    $config_data = [];
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data, $validate_constraints);
-    $this->assertEquals($no_data_expectations, $ret);
   }
 
   public function providerCheckConfigSchema(): array {
@@ -84,22 +79,10 @@ class SchemaCheckTraitTest extends KernelTestBase {
     return [
       'without validation' => [
         FALSE,
-        TRUE,
         $expected_storage_type_check_errors,
       ],
       'with validation' => [
         TRUE,
-        [
-          "[] 'array' is a required key.",
-          "[] 'boolean' is a required key.",
-          "[] 'exp' is a required key.",
-          "[] 'float' is a required key.",
-          "[] 'float_as_integer' is a required key.",
-          "[] 'hex' is a required key.",
-          "[] 'int' is a required key.",
-          "[] 'string' is a required key.",
-          "[] 'string_int' is a required key.",
-        ],
         $expected_storage_type_check_errors + $expected_validation_errors,
       ],
     ];

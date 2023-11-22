@@ -5,34 +5,18 @@ form_test.object:
     bananas:
       type: string
       label: 'Bananas'
-      # Optional because different tests exercise different parts.
-      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
-      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
-      requiredKey: false
     favorite_fruits:
       type: sequence
       label: 'Favorite fruits'
       sequence:
         type: required_label
         label: 'Fruit'
-      # Optional because different tests exercise different parts.
-      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
-      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
-      requiredKey: false
     favorite_vegetable:
       type: required_label
       label: 'Favorite vegetable'
-      # Optional because different tests exercise different parts.
-      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
-      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
-      requiredKey: false
     nemesis_vegetable:
       type: label
       label: 'Nemesis vegetable'
-      # Optional because different tests exercise different parts.
-      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
-      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
-      requiredKey: false
     could_not_live_without:
       type: string
       label: 'Which could you not live without: vegetables or fruits?'
@@ -40,7 +24,3 @@ form_test.object:
         Choice:
           - fruits
           - vegetables
-      # Optional because different tests exercise different parts.
-      # @see \Drupal\Tests\system\Kernel\Form\FormObjectTest
-      # @see \Drupal\Tests\Core\Form\ConfigTargetTest
-      requiredKey: false

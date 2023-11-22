@@ -102,7 +102,6 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    * @dataProvider userMailsProvider
    */
   public function testUserMailsNotSent($op) {
-    $this->installConfig('user');
     $this->config('user.settings')->set('notify.' . $op, FALSE)->save();
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertNull($return);

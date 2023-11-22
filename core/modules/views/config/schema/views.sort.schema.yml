@@ -1,6 +1,5 @@
 # Schema for the views sort plugins.
 
-# Specify defaults.
 views.sort.*:
   type: views_sort
   label: 'Default sort'

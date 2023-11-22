@@ -1,6 +1,5 @@
 # Schema for the views filter plugins.
 
-# Specify defaults.
 views.filter.*:
   type: views_filter
   label: 'Default filter'

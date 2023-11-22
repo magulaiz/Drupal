@@ -181,22 +181,20 @@ class TypedConfigTest extends KernelTestBase {
     $value['zebra'] = 'foo';
     $typed_config->setValue($value);
     $result = $typed_config->validate();
-    $this->assertCount(4, $result);
-    // 3 constraint violations triggered by the default validation constraints
+    $this->assertCount(3, $result);
+    // 2 constraint violations triggered by the default validation constraint
     // for `type: mapping`
     // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint
     $this->assertSame('elephant', $result->get(0)->getPropertyPath());
     $this->assertEquals("'elephant' is not a supported key.", $result->get(0)->getMessage());
     $this->assertSame('zebra', $result->get(1)->getPropertyPath());
     $this->assertEquals("'zebra' is not a supported key.", $result->get(1)->getMessage());
-    $this->assertSame('', $result->get(2)->getPropertyPath());
-    $this->assertEquals("'giraffe' is a required key.", $result->get(2)->getMessage());
     // 1 additional constraint violation triggered by the custom
     // constraint for the `config_test.validation` type, which indirectly
     // extends `type: mapping` (via `type: config_object`).
     // @see \Drupal\config_test\ConfigValidation::validateMapping()
-    $this->assertEquals('', $result->get(3)->getPropertyPath());
-    $this->assertEquals('Unexpected keys: elephant, zebra', $result->get(3)->getMessage());
+    $this->assertEquals('', $result->get(2)->getPropertyPath());
+    $this->assertEquals('Unexpected keys: elephant, zebra', $result->get(2)->getMessage());
   }
 
 }

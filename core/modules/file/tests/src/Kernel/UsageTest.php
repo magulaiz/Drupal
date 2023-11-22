@@ -18,14 +18,6 @@ use Drupal\node\Entity\NodeType;
 class UsageTest extends FileManagedUnitTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installConfig('file');
-  }
-
-  /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::listUsage().
    */
   public function testGetUsage() {

@@ -28,7 +28,6 @@ class UserEntityLabelTest extends KernelTestBase {
    * Tests label callback.
    */
   public function testLabelCallback() {
-    $this->installConfig('user');
     $this->installEntitySchema('user');
 
     $account = $this->createUser();

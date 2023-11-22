@@ -70,7 +70,6 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['mapping']['test_item'] = ['label' => 'Test item'];
     $expected['mapping']['test_list'] = ['label' => 'Test list'];
     $expected['type'] = 'config_schema_test.some_schema';
@@ -119,7 +118,6 @@ class ConfigSchemaTest extends KernelTestBase {
       'type' => 'langcode',
     ];
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['type'] = 'system.maintenance';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
@@ -136,7 +134,6 @@ class ConfigSchemaTest extends KernelTestBase {
       'type' => 'langcode',
     ];
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['mapping']['label'] = [
       'label' => 'Label',
       'type' => 'label',
@@ -198,9 +195,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
     $expected['mapping']['third_party_settings']['sequence']['type'] = '[%parent.%parent.%type].third_party.[%key]';
-    $expected['mapping']['third_party_settings']['requiredKey'] = FALSE;
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['type'] = 'image.style.*';
     $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
@@ -256,7 +251,6 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['mapping']['test_id']['type'] = 'string';
     $expected['mapping']['test_id']['label'] = 'ID';
     $expected['mapping']['test_description']['type'] = 'text';
@@ -531,7 +525,6 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['mapping']['test_id']['type'] = 'string';
     $expected['mapping']['test_id']['label'] = 'ID';
     $expected['mapping']['test_description']['type'] = 'text';
@@ -687,12 +680,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($untyped_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config triggers validation, which in turn triggers that cache pollution
-    // bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $this->assertSame($typed_values, \Drupal::config('wrapping.config_schema_test.double_brackets')->get());
 
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
@@ -726,13 +713,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($untyped_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config in a test triggers the schema checking and validation logic from
-    // \Drupal\Core\Config\Development\ConfigSchemaChecker , which in turn
-    // triggers that cache pollution bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $this->assertSame($typed_values, \Drupal::config('wrapping.config_schema_test.double_brackets')->get());
 
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
@@ -759,13 +739,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($typed_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config in a test triggers the schema checking and validation logic from
-    // \Drupal\Core\Config\Development\ConfigSchemaChecker , which in turn
-    // triggers that cache pollution bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();
     $this->assertEquals('wrapping.test.double_brackets.*||test.double_brackets.cat.dog', $definition['type']);
@@ -786,13 +759,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.other_double_brackets')
       ->setData($typed_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config in a test triggers the schema checking and validation logic from
-    // \Drupal\Core\Config\Development\ConfigSchemaChecker , which in turn
-    // triggers that cache pollution bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.other_double_brackets')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();
     // Check that definition type is a merge of the expected types.

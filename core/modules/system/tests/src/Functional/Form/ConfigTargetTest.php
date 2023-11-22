@@ -123,7 +123,6 @@ class ConfigTargetTest extends BrowserTestBase {
     $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
 
     $this->assertSame([
-      'langcode' => 'en',
       'favorite_fruits' => [
         $most_favorite_fruit,
         $second_favorite_fruit,
@@ -143,7 +142,6 @@ class ConfigTargetTest extends BrowserTestBase {
     $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
 
     $this->assertSame([
-      'langcode' => 'en',
       'favorite_fruits' => [
         $most_favorite_fruit,
         $second_favorite_fruit,
