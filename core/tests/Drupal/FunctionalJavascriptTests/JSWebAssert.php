@@ -225,7 +225,7 @@ JS);
    *   The result of $callback.
    */
   private function waitForHelper(int $timeout, callable $callback) {
-    return $this->session->getPage()->waitFor(($timeout*2) / 1000, $callback);
+    return $this->session->getPage()->waitFor($timeout / 1000, $callback);
   }
 
   /**
