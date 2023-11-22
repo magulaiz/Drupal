@@ -21,6 +21,9 @@ default:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   before_script:
   - |
+      sudo pecl install yaml
+      echo "extension=\"yaml.so\"" | tee /usr/local/etc/php/conf.d/docker-php-pecl-yaml.ini
+      php -m
       ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
       sudo service apache2 start
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
