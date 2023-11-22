@@ -535,4 +535,24 @@ class MappingTest extends KernelTestBase {
     new Mapping($definition, 'foobar', $parent);
   }
 
+  /**
+   * @testWith [true]
+   *           [1]
+   *           ["true"]
+   *           [0]
+   *           ["false"]
+   */
+  public function testInvalidRequiredKeyFlag(mixed $required_key_flag_value): void {
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The `requiredKey` flag must either be omitted or have `false` as the value.');
+    new Mapping(new MapDataDefinition([
+      'type' => 'mapping',
+      'mapping' => [
+        'something' => [
+          'requiredKey' => $required_key_flag_value,
+        ],
+      ],
+    ]));
+  }
+
 }

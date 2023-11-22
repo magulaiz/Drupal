@@ -39,7 +39,7 @@ class Mapping extends ArrayElement {
         }
       }
     }
-    $this->processRequiredKeyFlags($definition, $parent);
+    $this->processRequiredKeyFlags($definition);
     parent::__construct($definition, $name, $parent);
   }
 
