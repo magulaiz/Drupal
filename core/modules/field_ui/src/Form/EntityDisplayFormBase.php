@@ -239,13 +239,14 @@ abstract class EntityDisplayFormBase extends EntityForm {
         $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
       }
       natcasesort($display_mode_options);
-      $form['modes']['display_modes_custom'] = [
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Use custom display settings for the following modes'),
-        '#options' => $display_mode_options,
-        '#default_value' => $default,
-      ];
-
+      if ($display_mode_options) {
+        $form['modes']['display_modes_custom'] = [
+          '#type' => 'checkboxes',
+          '#title' => $this->t('Use custom display settings for the following modes'),
+          '#options' => $display_mode_options,
+          '#default_value' => $default,
+        ];
+      }
       if ($this->entity->getEntityTypeId() == 'entity_form_display') {
         $route_label = $this->t('Add new form mode');
         $route_name = 'entity.entity_form_mode.add_form';
