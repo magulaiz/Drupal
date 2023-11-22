@@ -14,4 +14,4 @@ use Symfony\Component\Validator\Constraint;
  *   label = @Translation("Whether this config schema type is fully validatable", context = "Validation"),
  * )
  */
-class FullyValidatableConstraint extends Constraint {}
+final class FullyValidatableConstraint extends Constraint {}
