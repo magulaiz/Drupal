@@ -3,7 +3,9 @@
 namespace Drupal\Core\Config\Schema;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines a mapping configuration element.
@@ -19,6 +21,15 @@ use Drupal\Core\TypedData\MapDataDefinition;
  * schema, types and type resolution.
  */
 class Mapping extends ArrayElement {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    assert($definition instanceof MapDataDefinition);
+    $this->processRequiredKeyFlags($definition);
+    parent::__construct($definition, $name, $parent);
+  }
 
   /**
    * {@inheritdoc}
@@ -43,9 +54,6 @@ class Mapping extends ArrayElement {
   /**
    * Gets all required keys in this mapping.
    *
-   * All keys are required by default, but they can opt out by specifying
-   * `requiredKey: false`. Deprecated keys are also treated as optional.
-   *
    * @return string[]
    *   A list of keys required in this mapping.
    */
@@ -53,11 +61,7 @@ class Mapping extends ArrayElement {
     $all_keys = $this->getDefinedKeys();
     $required_keys = array_filter(
       $all_keys,
-      fn (array $raw_schema_definition) =>
-        // @see ::validateMappingConfigSchemaDefinition()
-        !array_key_exists('requiredKey', $raw_schema_definition)
-        // @see https://www.drupal.org/node/3129881
-        && !array_key_exists('deprecated', $raw_schema_definition),
+      fn (array $schema_definition): bool => $schema_definition['requiredKey']
     );
     return array_keys($required_keys);
   }
@@ -71,7 +75,6 @@ class Mapping extends ArrayElement {
    */
   protected function getDefinedKeys(): array {
     $definition = $this->getDataDefinition();
-    assert($definition instanceof MapDataDefinition && $this->validateMappingConfigSchemaDefinition($definition));
     return $definition->toArray()['mapping'];
   }
 
@@ -197,31 +200,37 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Validates optional `requiredKey` flags in mappings.
+   * Validates optional `requiredKey` flags, guarantees one will be set.
    *
-   * Validates that the values for either optional flag are correct. Does not
-   * validate the semantics, only the shapes.
+   * For each key-value pair:
+   * - If the `requiredKey` flag is set, it must be `false`, to avoid pointless
+   *   information in the schema.
+   * - If the `requiredKey` flag is not set and the `deprecated` flag is set,
+   *   this will set `requiredKey: false`: deprecated keys are always optional.
+   * - If the `requiredKey` flag is not set, nor the `deprecated` flag,
+   *   will set `requiredKey: true`.
    *
    * @param \Drupal\Core\TypedData\MapDataDefinition $definition
    *   The config schema definition for a `type: mapping`.
    *
-   * @return bool
+   * @return void
    *
    * @throws \LogicException
    *   Thrown when `requiredKey: true` is specified.
    */
-  protected static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): bool {
-    $definition = $definition->toArray();
-    assert(array_key_exists('mapping', $definition));
-
-    // Validates `requiredKey` flag in mapping definitions.
-    foreach ($definition['mapping'] as $key_definition) {
+  protected static function processRequiredKeyFlags(MapDataDefinition $definition): void {
+    foreach ($definition['mapping'] as $key => $key_definition) {
+      // Validates `requiredKey` flag in mapping definitions.
       if (array_key_exists('requiredKey', $key_definition) && $key_definition['requiredKey'] !== FALSE) {
         throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
       }
+      // Generates the `requiredKey` flag if it is not set.
+      if (!array_key_exists('requiredKey', $key_definition)) {
+        // Required by default, unless this key is marked as deprecated.
+        // @see https://www.drupal.org/node/3129881
+        $definition['mapping'][$key]['requiredKey'] = !array_key_exists('deprecated', $key_definition);
+      }
     }
-
-    return TRUE;
   }
 
   /**
