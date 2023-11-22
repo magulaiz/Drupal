@@ -240,8 +240,8 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    */
   public function setCurrentLanguage(LanguageInterface $language, $type = LanguageInterface::TYPE_INTERFACE): LanguageInterface {
     $current_language = $this->getCurrentLanguage($type);
+    $this->reset($type);
     $this->negotiatedLanguages[$type] = $language;
-
     return $current_language;
   }
 
