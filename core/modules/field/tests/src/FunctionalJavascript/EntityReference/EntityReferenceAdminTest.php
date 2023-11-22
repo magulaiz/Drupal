@@ -264,7 +264,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
 
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
 
-    $assert_session->waitForText('Saved Test configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Check that the field appears in the overview form.
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");
@@ -272,9 +272,11 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Check that the field settings form can be submitted again, even when the
     // field is required.
     // The first 'Edit' link is for the Body field.
+    $this->drupalGet($bundle_path . '/fields');
     $this->clickLink('Edit', 1);
-    $this->assertTrue($assert_session->waitForText('Test settings'));
-    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save settings');
+    $assert_session->assertExpectedAjaxRequest(1);
+    $this->assertNotNull($button_set = $assert_session->waitForElement('css', '.ui-dialog-buttonset'));
+    $button_set->pressButton('Save settings');
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'taxonomy_term' and check that the settings
