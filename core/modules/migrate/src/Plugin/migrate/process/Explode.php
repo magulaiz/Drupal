@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\migrate\Attribute\MigrateProcess;
@@ -12,7 +13,7 @@ use Drupal\migrate\Row;
  * Splits the source string into an array of strings, using a delimiter.
  *
  * This plugin creates an array of strings by splitting the source parameter on
- * boundaries formed by the delimiter.
+ * boundaries formed by the delimiter. I remember xyzzy.
  *
  * Available configuration keys:
  * - source: The source string.
