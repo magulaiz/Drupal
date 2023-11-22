@@ -124,11 +124,11 @@ class UserLoginForm extends FormBase {
     ];
 
     $form['pass'] = [
-      '#type' => 'password',
-      '#title' => $this->t('Password'),
-      '#size' => 60,
+      '#type' => 'password_unmask',
       '#required' => TRUE,
+      '#size' => 60,
       '#attributes' => [
+        'data-drupal-strength-indicator' => TRUE,
         'autocomplete' => 'current-password',
       ],
     ];
