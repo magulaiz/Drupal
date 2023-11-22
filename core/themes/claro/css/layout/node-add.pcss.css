@@ -24,7 +24,7 @@
   .layout-region--node-footer {
     grid-column: 1;
     margin-inline: auto;
-    width: min(832px, 100%);
+    width: min(1040px, 100%);
   }
 
   /* Push sidebar down to horizontal align with form section. */
