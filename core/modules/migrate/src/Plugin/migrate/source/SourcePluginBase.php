@@ -406,6 +406,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
       // Clear any previous messages for this row before potentially adding
       // new ones.
+      $messageBackup = [];
       if (!empty($this->currentSourceIds)) {
         // Backup messages for current row.
         $messageBackup = $this->idMap->getMessages($this->currentSourceIds);
