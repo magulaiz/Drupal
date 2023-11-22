@@ -45,6 +45,24 @@ class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
   }
 
   /**
+   * Tests empty file extensions.
+   */
+  public function testEmptyFileExtensions(): void {
+    $file = File::create([
+      'filename' => 'asdf',
+      'uri' => 'temporary://asdf',
+      'status' => 0,
+    ]);
+    $validators = [
+      'FileExtension' => [
+        'extensions' => '',
+      ],
+    ];
+    $violations = $this->validator->validate($file, $validators);
+    $this->assertCount(0, $violations);
+  }
+
+  /**
    * Data provider for ::testFileExtensionOnUri.
    *
    * @return array[][]

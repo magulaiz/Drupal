@@ -21,6 +21,11 @@ class FileExtensionConstraintValidator extends BaseFileConstraintValidator {
       throw new UnexpectedTypeException($constraint, FileExtensionConstraint::class);
     }
 
+    // Empty extensions means all extensions are allowed.
+    if (empty($constraint->extensions)) {
+      return;
+    }
+
     $extensions = $constraint->extensions;
     $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
     // Filename may differ from the basename, for instance in case files
