@@ -140,7 +140,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
     if ($set_blank === NULL) {
       $this->sectionList->removeAllSections();
     }
-    else if ($set_blank === TRUE) {
+    elseif ($set_blank === TRUE) {
       $expected_section = $this->sectionList->removeAllSections($set_blank)->getSection(0);
       $expected = [
         $expected_section->getUuid() => $expected_section,
