@@ -122,7 +122,7 @@ trait SectionListTrait {
       throw new \Exception('A blank section must only be added to an empty list');
     }
 
-    $this->appendSection((new Section('layout_builder_blank'))->setUuid('11000000-0000-1000-o000-000000000000'));
+    $this->appendSection((new Section('layout_builder_blank'))->setUuid(\Drupal::service('uuid')->generate()));
     return $this;
   }
 
