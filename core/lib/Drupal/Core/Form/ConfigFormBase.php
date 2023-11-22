@@ -163,13 +163,6 @@ abstract class ConfigFormBase extends FormBase {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
-      // Simple config does not always have the 'langcode' key specified, but
-      // the schema requires it.
-      // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::checkConfigSchema()
-      // @see https://www.drupal.org/node/2541800
-      if ($config->get('langcode') === NULL) {
-        $config->set('langcode', 'en');
-      }
       static::copyFormValuesToConfig($config, $form_state, $form);
       $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
 
