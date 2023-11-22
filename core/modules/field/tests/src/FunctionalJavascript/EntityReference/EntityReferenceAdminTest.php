@@ -128,7 +128,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Check if the commonly referenced entity types appear in the list.
     $this->clickLink('Reference');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $assert_session->waitForText('Choose an option below');
+    $this->assertTrue($assert_session->waitForText('Choose a subfield type'));
     $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:node']");
     $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:user']");
 
@@ -260,7 +260,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // @todo should improve the dialog positioning in this situation so it's not
     //   outside the viewport.
     $this->getSession()->resizeWindow(1200, 1500);
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    usleep(5000);
 
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
 
@@ -336,22 +336,19 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       ->waitForField('settings[handler_settings][view][view_and_display]')
       ->setValue('test_entity_reference:entity_reference_1');
     $this->submitForm([], 'Save settings');
-    $this->getSession()->wait(1000);
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'entity_test'.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('field_storage[subform][settings][target_type]')->setValue('entity_test');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $page->findField('settings[handler]')->setValue('views');
+    $assert_session->waitForField('settings[handler_settings][view][view_and_display]');
     $page
       ->findField('settings[handler_settings][view][view_and_display]')
       ->selectOption('test_entity_reference_entity_test:entity_reference_1');
-    $edit = [
-      'required' => FALSE,
-    ];
-    $this->submitForm($edit, 'Save settings');
-    $this->getSession()->wait(1000);
+    $this->assertSession()->fieldExists('required')->check();
+    $this->submitForm([], 'Save settings');
     $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
   }
 
