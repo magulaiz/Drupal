@@ -71,7 +71,7 @@ class Mapping extends ArrayElement {
    */
   protected function getDefinedKeys(): array {
     $definition = $this->getDataDefinition();
-    assert($definition instanceof MapDataDefinition && static::validateMappingConfigSchemaDefinition($definition));
+    assert($definition instanceof MapDataDefinition && $this->validateMappingConfigSchemaDefinition($definition));
     return $definition->toArray()['mapping'];
   }
 
