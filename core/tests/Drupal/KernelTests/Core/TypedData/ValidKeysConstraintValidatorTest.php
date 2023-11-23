@@ -2,7 +2,7 @@
 
 namespace Drupal\KernelTests\Core\TypedData;
 
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
@@ -21,15 +21,26 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
    */
   public function testValidation(): void {
     // Create a data definition that specifies certain allowed keys.
-    $definition = DataDefinition::create('any')
+    $definition = MapDataDefinition::create('mapping')
       ->addConstraint('ValidKeys', ['north', 'south', 'west']);
+    $definition['mapping'] = [
+      'north' => ['type' => 'string'],
+      'east' => ['type' => 'string'],
+      'south' => ['type' => 'string'],
+      'west' => ['type' => 'string'],
+    ];
+    // @todo Remove this line in https://www.drupal.org/project/drupal/issues/3403782
+    $definition->setClass('Drupal\Core\Config\Schema\Mapping');
 
-    /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
-    $typed_data = $this->container->get('typed_data_manager');
+    /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_config */
+    $typed_config = $this->container->get('config.typed');
+    // @see \Drupal\Core\Config\TypedConfigManager::buildDataDefinition()
+    // @see \Drupal\Core\TypedData\TypedDataManager::createDataDefinition()
+    $definition->setTypedDataManager($typed_config);
 
     // Passing a non-array value should raise an exception.
     try {
-      $typed_data->create($definition, 2501)->validate();
+      $typed_config->create(clone $definition, 2501)->validate();
       $this->fail('Expected an exception but none was raised.');
     }
     catch (UnexpectedTypeException $e) {
@@ -37,21 +48,21 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     }
 
     // Empty arrays are valid.
-    $this->assertCount(0, $typed_data->create($definition, [])->validate());
+    $this->assertCount(0, $typed_config->create(clone $definition, [])->validate());
 
     // Indexed arrays are never valid.
-    $violations = $typed_data->create($definition, ['north', 'south'])->validate();
+    $violations = $typed_config->create(clone $definition, ['north', 'south'])->validate();
     $this->assertCount(1, $violations);
     $this->assertSame('Numerically indexed arrays are not allowed.', (string) $violations->get(0)->getMessage());
 
     // Arrays with automatically assigned keys, AND a valid key, should be
     // considered invalid overall.
-    $violations = $typed_data->create($definition, ['north', 'south' => 'west'])->validate();
+    $violations = $typed_config->create(clone $definition, ['north', 'south' => 'west'])->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("'0' is not a supported key.", (string) $violations->get(0)->getMessage());
 
     // Associative arrays with an invalid key should be invalid.
-    $violations = $typed_data->create($definition, ['north' => 'south', 'east' => 'west'])->validate();
+    $violations = $typed_config->create(clone $definition, ['north' => 'south', 'east' => 'west'])->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("'east' is not a supported key.", (string) $violations->get(0)->getMessage());
 
@@ -61,7 +72,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       'south' => 'Atlanta',
       'west' => 'San Francisco',
     ];
-    $violations = $typed_data->create($definition, $value)->validate();
+    $violations = $typed_config->create(clone $definition, $value)->validate();
     $this->assertCount(0, $violations);
   }
 
