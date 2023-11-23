@@ -287,7 +287,12 @@ class QuickStartTest extends TestCase {
 
       return rmdir($path);
     }
-    return unlink($path);
+    if (file_exists($path)) {
+      return unlink($path);
+    }
+
+    // If we made it this far, all files are deleted.
+    return TRUE;
   }
 
 }
