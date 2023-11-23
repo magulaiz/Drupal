@@ -123,7 +123,7 @@ config_test.types:
         west: { type: string, requiredKey: false }
     mapping_with_only_optional_keys:
       type: mapping
-      label: 'Mapping with only required keys'
+      label: 'Mapping with only optional keys'
       mapping:
         north: { type: string, requiredKey: false }
         east: { type: string, requiredKey: false }

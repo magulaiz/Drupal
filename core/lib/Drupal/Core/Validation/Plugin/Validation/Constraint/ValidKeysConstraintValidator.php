@@ -105,8 +105,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // @see https://www.drupal.org/node/3364108
     // @see https://www.drupal.org/node/3364109
     $root_type_has_opted_in = FALSE;
-    foreach ($this->context->getRoot()->getConstraints() as $constraint) {
-      if ($constraint instanceof FullyValidatableConstraint) {
+    foreach ($this->context->getRoot()->getConstraints() as $c) {
+      if ($c instanceof FullyValidatableConstraint) {
         $root_type_has_opted_in = TRUE;
         break;
       }
