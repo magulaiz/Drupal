@@ -349,12 +349,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       $current_element = $element['table'][$item];
       $key = $current_element['item']['key']['#value'];
       $label = $current_element['item']['label']['#value'];
-  
+
       if ($key !== NULL && $label) {
           return "$key|$label";
-      } elseif ($key) {
+      }
+      elseif ($key) {
           return $key;
-      } elseif ($label) {
+      }
+      elseif ($label) {
           return $label;
       }
 
