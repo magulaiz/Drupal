@@ -47,7 +47,7 @@ class WebDriverCurlService extends CurlService {
       CURLOPT_FAILONERROR => TRUE,
     ];
     $retries = 0;
-    $max_retries = static::$retry ? 10 : 1;
+    $max_retries = static::$retry ? 20 : 1;
     while ($retries < $max_retries) {
       try {
         $customHeaders = [
@@ -143,7 +143,8 @@ class WebDriverCurlService extends CurlService {
     if (empty($error)) {
       $error = "Retries: $retries and last result:\n" . ($rawResult ?? '');
     }
-    throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
+    $args = print_r(func_get_args(), TRUE);
+    throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s\n\nExtra: %s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error, $args));
   }
 
 }
