@@ -169,6 +169,7 @@ class Mapping extends ArrayElement {
     // necessary resolving, but TypedConfigManager::getDefinitions() does not! 🤷‍♂️
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     // @see ::getValidKeys()
+    $valid_keys_per_type = [];
     foreach (array_keys($possible_type_definitions) as $possible_type_name) {
       $valid_keys_per_type[$possible_type_name] = array_keys($typed_data_manager->getDefinition($possible_type_name)['mapping'] ?? []);
     }
