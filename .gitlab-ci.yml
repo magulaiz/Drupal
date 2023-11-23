@@ -273,9 +273,9 @@ default:
       if [[ $EXIT_CODE != "0" ]]; then
         # Output a copy in plain text for human logs.
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
-        # Generate a new baseline. Allow empty baseline to ensure that artifact exists.
+        # Generate a new baseline.
         echo "Generating an PHPStan baseline file (available as job artifact)."
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/phpstan-baseline.neon --allow-empty-baseline || true
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/phpstan-baseline.neon || true
       fi
     - exit $EXIT_CODE
 
