@@ -645,6 +645,7 @@ JS;
     $assert_session->pageTextContains("You do not have permission to view media item $media_id.");
     // Confirm ajax text does not reveal media name.
     $remove_button->press();
+    sleep(1);
     $this->waitForText("Removing media.");
     $this->waitForText("Media has been removed.");
   }

@@ -331,7 +331,7 @@ JS;
     $textfield3->focus();
     $this->assertSession()->assertWaitOnAjaxRequest();
     // Force longer wait.
-    sleep(1);
+    sleep(2);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
