@@ -56,7 +56,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(484, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(507, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(508, $performance_data->getQueryCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
