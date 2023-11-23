@@ -11,13 +11,10 @@
    *   An Ajax object.
    * @param {object} response
    *   The Ajax response.
-   * @param {string} [status]
-   *   The XHR status code.
    */
   Drupal.AjaxCommands.prototype.openDialogWithUrl = function (
     ajax,
     response,
-    status,
   ) {
     const dialogOptions = response.dialogOptions || {};
     const elementSettings = {

@@ -6,6 +6,7 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the Field UI "Manage display" and "Manage form display" screens.
@@ -15,6 +16,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 class ManageDisplayTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}

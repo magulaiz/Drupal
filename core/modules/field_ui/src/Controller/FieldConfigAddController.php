@@ -47,6 +47,7 @@ final class FieldConfigAddController extends ControllerBase {
    *   The field instance edit form.
    */
   public function fieldConfigAddConfigureForm(string $entity_type, string $field_name): array {
+    // @see \Drupal\field_ui\Form\FieldStorageAddForm::submitForm
     $temp_storage = $this->tempStore->get($entity_type . ':' . $field_name);
     if (!$temp_storage) {
       throw new NotFoundHttpException();
