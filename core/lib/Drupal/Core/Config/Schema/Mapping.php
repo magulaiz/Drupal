@@ -168,15 +168,9 @@ class Mapping extends ArrayElement {
     // necessary resolving, but TypedConfigManager::getDefinitions() does not! 🤷‍♂️
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     // @see ::getValidKeys()
-    $valid_keys_per_type = array_map(
-      fn (string $possible_type) => array_keys($this->getTypedDataManager()->getDefinition($possible_type)['mapping'] ?? []),
-      // Keep the original types, but array_map() does not allow using the keys,
-      // so pass the same information twice: this logic will replace the values.
-      array_combine(
-        array_keys($possible_type_definitions),
-        array_keys($possible_type_definitions),
-      ),
-    );
+    foreach (array_keys($possible_type_definitions) as $possible_type_name) {
+      $valid_keys_per_type[$possible_type_name] = array_keys($this->getTypedDataManager()->getDefinition($possible_type_name)['mapping'] ?? []);
+    }
 
     // From all valid keys across all types, get the ones for the fallback type:
     // its keys are inherited by all type definitions and are therefore always
