@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -299,13 +300,14 @@ class OverviewTerms extends FormBase {
 
     // Only allow access to change parents and reorder the tree if there are no
     // pending revisions and there are no terms with multiple parents.
-    $update_tree_access = $taxonomy_vocabulary->access('reset all weights', NULL, TRUE);
+    $operations_access = !empty($pending_term_ids) || $vocabulary_hierarchy === VocabularyInterface::HIERARCHY_MULTIPLE;
+    $update_tree_access = AccessResult::allowedIf(!$operations_access
+      && $taxonomy_vocabulary->access('reset all weights', NULL, TRUE));
     $form['help'] = [
       '#type' => 'container',
       'message' => ['#markup' => $help_message],
     ];
 
-    $operations_access = !empty($pending_term_ids) || $vocabulary_hierarchy === VocabularyInterface::HIERARCHY_MULTIPLE;
     if ($operations_access) {
       $form['help']['#attributes']['class'] = ['messages', 'messages--warning'];
     }
