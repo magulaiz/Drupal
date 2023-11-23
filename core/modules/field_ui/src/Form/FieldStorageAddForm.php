@@ -125,28 +125,28 @@ class FieldStorageAddForm extends FormBase {
 
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
-    $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
+    $category_definition = $this->fieldTypeCategoryManager->getDefinition($selected_field_type, FALSE);
     // Invoke a hook to get category properties.
-    foreach ($grouped_definitions as $category => $field_types) {
-      foreach ($field_types as $name => $field_type) {
-        $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
-        if ($this->fieldTypeCategoryManager->hasDefinition($category)) {
-          $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name], $category_definitions[$category]);
-          $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
-        }
-        else {
-          $field_type_options[(string) $field_type['label']] = ['unique_identifier' => $name] + $field_type;
-        }
+    $field_types = $grouped_definitions[$selected_field_type];
+    foreach ($field_types as $name => $field_type) {
+      $unique_definitions[$selected_field_type][$name] = ['unique_identifier' => $name] + $field_type;
+      if ($this->fieldTypeCategoryManager->hasDefinition($selected_field_type)) {
+        $category_plugin = $this->fieldTypeCategoryManager->createInstance($selected_field_type, $unique_definitions[$selected_field_type][$name], $category_definition);
+        $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
+      }
+      else {
+        $field_type_options[(string) $field_type['label']] = ['unique_identifier' => $name] + $field_type;
       }
     }
 
+    $field_type = $field_type_options[$selected_field_type];
     $field_type_options_radios = [];
-    foreach ($field_type_options as $id => $field_type) {
+    if ($field_type) {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
       $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
       $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
-      $field_type_options_radios[$id] = [
-        // Store some data we later need.
+      $field_type_options_radios[$selected_field_type] = [
+      // Store some data we later need.
         '#data' => [
           '#group_display' => $display_as_group,
         ],
