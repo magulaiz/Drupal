@@ -143,7 +143,7 @@
         .on(
           'resize.off-canvas',
           eventData,
-          Drupal.offCanvas.resetSize,
+          debounce(Drupal.offCanvas.resetSize, 100, false),
         )
         .trigger('resize.off-canvas');
     },
