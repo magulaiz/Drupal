@@ -230,7 +230,7 @@ class Mapping extends ArrayElement {
    * @throws \LogicException
    *   Thrown when `requiredKey: true` is specified.
    */
-  protected static function processRequiredKeyFlags(MapDataDefinition $definition): void {
+  protected function processRequiredKeyFlags(MapDataDefinition $definition): void {
     foreach ($definition['mapping'] as $key => $key_definition) {
       // Validates `requiredKey` flag in mapping definitions.
       if (array_key_exists('requiredKey', $key_definition) && $key_definition['requiredKey'] !== FALSE) {
