@@ -97,11 +97,8 @@ abstract class ConfigFormBase extends FormBase {
         $target = ConfigTarget::fromString($target);
       }
 
-      $value = $this->config($target->configName)->get($target->propertyPath);
-      if ($target->fromConfig) {
-        $value = ($target->fromConfig)($value);
-      }
-      $element['#default_value'] = $value;
+      $config = $this->configFactory()->getEditable($target->configName);
+      $element['#default_value'] = $target->getValue($config);
     }
 
     foreach (Element::children($element) as $key) {
@@ -133,11 +130,22 @@ abstract class ConfigFormBase extends FormBase {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
+      /** @var \Drupal\Core\Form\ConfigTarget|string $target */
       $target = $element['#config_target'];
-      if ($target instanceof ConfigTarget) {
-        $target = $target->configName . ':' . $target->propertyPath;
+      if (is_string($target)) {
+        $target = ConfigTarget::fromString($target);
       }
-      $map[$target] = $element['#array_parents'];
+      foreach ($target->propertyPaths as $property_path) {
+        if (isset($map[$target->configName][$property_path])) {
+          throw new \LogicException(sprintf('Two #config_targets both target "%s" in the "%s" config: `%s` and `%s`.',
+            $property_path,
+            $target->configName,
+            '$form[\'' . implode("']['", $map[$target->configName][$property_path]) . '\']',
+            '$form[\'' . implode("']['", $element['#array_parents']) . '\']',
+          ));
+        }
+        $map[$target->configName][$property_path] = $element['#array_parents'];
+      }
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -153,18 +161,9 @@ abstract class ConfigFormBase extends FormBase {
     assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
 
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
-
-    foreach ($this->getEditableConfigNames() as $config_name) {
-      $config = $this->config($config_name);
-      try {
-        static::copyFormValuesToConfig($config, $form_state, $form);
-      }
-      catch (\BadMethodCallException $e) {
-        // Nothing to do: this config form does not yet use validation
-        // constraints. Continue trying the other editable config, to allow
-        // partial adoption.
-        continue;
-      }
+    foreach (array_keys($map) as $config_name) {
+      $config = $this->configFactory()->getEditable($config_name);
+      static::copyFormValuesToConfig($config, $form_state, $form);
       $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
 
       $violations = $typed_config->validate();
@@ -181,18 +180,18 @@ abstract class ConfigFormBase extends FormBase {
         $property_path = $violation->getPropertyPath();
         // Default to index 0.
         $index = 0;
-        // Detect if this is a sequence property path, and if so, determine the
-        // actual sequence index.
-        $matches = [];
-        if (preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
+
+        // Detect if this is a sequence item property path, and if so, attempt
+        // to fall back to the containing sequence's property path.
+        if (!isset($map[$config_name][$property_path]) && preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
           $index = intval($matches[1]);
           // The property path as known in the config key-to-form element map
           // will not have the sequence index in it.
           $property_path = rtrim($property_path, '0123456789.');
         }
 
-        if (isset($map["$config_name:$property_path"])) {
-          $config_target = ConfigTarget::fromForm($map["$config_name:$property_path"], $form);
+        if (isset($map[$config_name][$property_path])) {
+          $config_target = ConfigTarget::fromForm($map[$config_name][$property_path], $form);
           $form_element_name = implode('][', $config_target->elementParents);
         }
         else {
@@ -261,18 +260,11 @@ abstract class ConfigFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($this->getEditableConfigNames() as $config_name) {
-      $config = $this->config($config_name);
-      try {
-        static::copyFormValuesToConfig($config, $form_state, $form);
-        $config->save();
-      }
-      catch (\BadMethodCallException $e) {
-        // Nothing to do: this config form does not yet use validation
-        // constraints. Continue trying the other editable config, to allow
-        // partial adoption.
-        continue;
-      }
+    $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
+    foreach (array_keys($map) as $config_name) {
+      $config = $this->configFactory()->getEditable($config_name);
+      static::copyFormValuesToConfig($config, $form_state, $form);
+      $config->save();
     }
     $this->messenger()->addStatus($this->t('The configuration options have been saved.'));
   }
@@ -294,22 +286,14 @@ abstract class ConfigFormBase extends FormBase {
    */
   private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $form): void {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP);
-    // If there's no map of config keys to form elements, this form does not
-    // yet support config validation.
-    // @see ::validateForm()
-    if ($map === NULL) {
-      throw new \BadMethodCallException();
-    }
 
-    foreach ($map as $element_parents) {
-      $target = ConfigTarget::fromForm($element_parents, $form);
-      if ($target->configName === $config->getName()) {
-        $value = $form_state->getValue($target->elementParents);
-        if ($target->toConfig) {
-          $value = ($target->toConfig)($value);
-        }
-        $config->set($target->propertyPath, $value);
+    foreach ($map[$config->getName()] as $array_parents) {
+      $target = ConfigTarget::fromForm($array_parents, $form);
+      if ($target->configName !== $config->getName()) {
+        continue;
       }
+      $value = $form_state->getValue($target->elementParents);
+      $target->setValue($config, $value, $form_state);
     }
   }
 

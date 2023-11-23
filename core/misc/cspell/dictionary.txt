@@ -16,7 +16,6 @@ alphadecimal
 alternatif
 amphibius
 ampm
-andif
 annot
 anonyme
 anothermodule
@@ -35,8 +34,6 @@ arrowthick
 arrowthickstop
 arrr
 assertable
-attrval
-attrvals
 authless
 autocompletefocus
 autocompleteselect
@@ -72,10 +69,8 @@ bakeware
 barbar
 barchart
 barqux
-bartik
 basefield
 basepath
-basestrings
 basetheme
 bazbaz
 beatle
@@ -83,7 +78,6 @@ bebebe
 beforeclose
 beforecreate
 behat
-behaviour
 bergmann
 berne
 bgblue
@@ -103,9 +97,7 @@ blockquotes
 blockrecipe
 blockrelated
 blocktest
-bodyformat
 bodyless
-bodyvalue
 boing
 bomofo
 bovigo
@@ -170,7 +162,6 @@ cldr
 clearer
 clearers
 clearfix
-cleartype
 clicksorter
 clist
 closethick
@@ -178,7 +169,6 @@ cnenzrgre
 codesniffer
 colgroups
 colinodell
-collegehumor
 colonpos
 colour
 colspans
@@ -219,16 +209,14 @@ customly
 customrequest
 cweagans
 cádiz
+dailymotion
 databasename
-datas
 datelist
-dateonly
 daterange
 datestamp
 datetimeiso
 datetimeplus
 daycount
-dblog
 dbtng
 dburl
 dealerdirect
@@ -244,7 +232,6 @@ denormalizers
 dependee
 dependee's
 dependees
-depenencies
 deprioritize
 derivedfrom
 desaturate
@@ -283,14 +270,11 @@ drivertext
 dropbutton
 dropbuttons
 drudbal
-drupalci
-drupaldatetime
 drupaldevdays
 drupalelementstyle
 drupalelementstylecommand
 drupalelementstyleediting
 drupalelementstyleui
-drupalget
 drupalhtmlbuilder
 drupalimage
 drupalin
@@ -301,8 +285,6 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-druplicon
-drush
 drépal
 détruire
 editables
@@ -395,9 +377,6 @@ functionaltest
 funic
 furchtbar
 gabilondo
-gethttpclient
-getlist
-getview
 gids
 gloop
 gnumeric
@@ -412,7 +391,6 @@ guzzlehttp
 gzipped
 hande
 harkonnen
-hasdata
 hasher
 hashmarks
 hateoas
@@ -431,7 +409,6 @@ hrefs
 htkey
 htmlcorrector
 httpheader
-httpkernel
 httplug
 httponly
 hustlin
@@ -471,7 +448,6 @@ jsonlint
 jssdk
 jumplinks
 justinrainbow
-kakec
 kangarookitten
 kerneltest
 kernighan
@@ -489,12 +465,8 @@ kristiaan
 kspread
 kthxbai
 kword
-labely
 lamoids
-langcode
-langcodes
 languageswitcher
-lazybuilder
 libc
 libmysqlclient
 licious
@@ -506,7 +478,6 @@ linkability
 linkback
 linkgenerator
 linkification
-linksby
 linkset
 linktext
 lisu
@@ -529,7 +500,6 @@ lundi
 lzma
 lzop
 macbinary
-madeup
 mainpage
 mank
 maryjane
@@ -559,7 +529,6 @@ mikey
 milli
 mimetypes
 minifyzombies
-minipager
 minusthick
 missingkey
 missingkeys
@@ -573,7 +542,6 @@ modernizr
 modulenarrow
 mojito
 montag
-mooooh
 msgctxt
 msgid
 msgstr
@@ -588,7 +556,6 @@ multifield
 multilanguage
 multipage
 multipass
-multipleforms
 multisite
 multistar
 multistep
@@ -611,7 +578,6 @@ negotiatiors
 newcol
 newfieldinitial
 newnode
-newterm
 newwin
 nids
 nightwatch
@@ -620,7 +586,6 @@ nikic
 nmsgid
 nmsgstr
 nntp
-noaccess
 noadd
 nocache
 nocase
@@ -650,8 +615,6 @@ nyans
 nœud
 oembed
 officedocument
-olivero
-olivero's
 omittable
 onecol
 oneplusfourgrid
@@ -662,7 +625,6 @@ opendocument
 openxmlformats
 optgroups
 optin
-optionchecker
 orgchart
 ossp
 otel
@@ -679,7 +641,6 @@ pagecache
 pagetop
 pagina
 paramconverter
-parens
 parseable
 parsererror
 pastafazoul
@@ -779,7 +740,6 @@ rasterizable
 rasterizes
 rawurlencoded
 readmore
-readonlydir
 realpaths
 realword
 rebuilder
@@ -853,7 +813,6 @@ shortlink
 siema
 silverlight
 silvie
-simpletest
 singlebyte
 sirbrillig
 sisko
@@ -960,12 +919,8 @@ tabwidth
 tappable
 tarz
 taskless
-tbodies
 tcomment
-tempfile
 templating
-tempstore
-tempuser
 tercera
 testajax
 testattribute
@@ -977,7 +932,6 @@ testcase
 testcases
 testcontent
 testcontextawareblock
-testdescription
 testdialog
 testen
 testfield
@@ -985,27 +939,19 @@ testfilename
 testfilter
 testfunc
 testfunction
-testget
 testgroups
-testid
-testitem
 testk
 testkey
-testlist
 testload
 testlogger
 testname
 testproject
-testservice
-teststring
 testsuite
 testsuites
-testvalue
 textareas
 textboxes
 texte
 textfields
-textfile
 textformat
 textgroup
 textwithsummary
@@ -1061,7 +1007,6 @@ tzid
 uberawesome
 uids
 ulwa
-umami
 unaliased
 unallowed
 unassigning
@@ -1183,7 +1128,6 @@ yokotsoko
 yottabyte
 yottabytes
 yourmodule
-yowser
 yygroup
 zartan
 zettabyte
