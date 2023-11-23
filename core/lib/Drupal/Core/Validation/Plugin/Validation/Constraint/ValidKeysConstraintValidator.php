@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-// cspell:ignore validatable
-
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;

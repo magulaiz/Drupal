@@ -2,8 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
-// cspell:ignore validatable
-
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\KernelTests\KernelTestBase;
 
