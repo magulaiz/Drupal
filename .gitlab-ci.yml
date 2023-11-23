@@ -274,7 +274,7 @@ default:
     # Generate a new baseline. Allow empty baseline to ensure that artifact exists.
     - |
       echo "Generating an PHPStan baseline file (available as job artifact)."
-      php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist--no-progress --generate-baseline=./core/phpstan-baseline.neon --allow-empty-baseline || true
+      php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/phpstan-baseline.neon --allow-empty-baseline || true
     - exit $EXIT_CODE
 
   artifacts:
