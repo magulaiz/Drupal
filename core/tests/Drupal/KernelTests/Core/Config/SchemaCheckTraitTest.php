@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
+// cspell:ignore validatable
+
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -42,7 +44,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    *
    * @dataProvider providerCheckConfigSchema
    */
-  public function testCheckConfigSchema(bool $validate_constraints, array $expectations) {
+  public function testCheckConfigSchema(string $type_to_validate_against, bool $validate_constraints, array $expectations) {
     // Test a non existing schema.
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
     $this->assertFalse($ret);
@@ -57,7 +59,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
     $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
     $config_data['boolean'] = [];
 
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data, $validate_constraints);
+    $ret = $this->checkConfigSchema($this->typedConfig, $type_to_validate_against, $config_data, $validate_constraints);
     $this->assertEquals($expectations, $ret);
   }
 
@@ -76,16 +78,52 @@ class SchemaCheckTraitTest extends KernelTestBase {
       '1' => "[new_array] 'new_array' is not a supported key.",
       '2' => '[boolean] This value should be of the correct primitive type.',
     ];
-    return [
-      'without validation' => [
+    $basic_cases = [
+      'config_test.types, without validation' => [
+        'config_test.types',
         FALSE,
         $expected_storage_type_check_errors,
       ],
-      'with validation' => [
+      'config_test.types, with validation' => [
+        'config_test.types',
         TRUE,
         $expected_storage_type_check_errors + $expected_validation_errors,
       ],
     ];
+
+    // Test that if the exact same schema is reused but now has the constraint
+    // "FullyValidatable" specified at the top level, that missing required keys
+    // now trigger validation errors, except when `requiredKey: false` is set.
+    // @see `type: config_test.types.fully_validatable`
+    // @see core/modules/config/tests/config_test/config/schema/config_test.schema.yml
+    $expected_storage_type_check_errors = [
+      'config_test.types.fully_validatable:new_key' => 'missing schema',
+      'config_test.types.fully_validatable:new_array' => 'missing schema',
+      'config_test.types.fully_validatable:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
+    ];
+    $opt_in_cases = [
+      'config_test.types.fully_validatable, without validation' => [
+        'config_test.types.fully_validatable',
+        FALSE,
+        $expected_storage_type_check_errors,
+      ],
+      'config_test.types.fully_validatable, with validation' => [
+        'config_test.types.fully_validatable',
+        TRUE,
+        $expected_storage_type_check_errors + $expected_validation_errors + [
+          // For `mapping_with_only_required_keys`: errors for all 4 keys.
+          3 => "[mapping_with_only_required_keys] 'north' is a required key.",
+          4 => "[mapping_with_only_required_keys] 'east' is a required key.",
+          5 => "[mapping_with_only_required_keys] 'south' is a required key.",
+          6 => "[mapping_with_only_required_keys] 'west' is a required key.",
+          // For `mapping_with_some_required_keys`: errors for 2 required keys.
+          7 => "[mapping_with_some_required_keys] 'north' is a required key.",
+          8 => "[mapping_with_some_required_keys] 'south' is a required key.",
+        ],
+      ],
+    ];
+
+    return array_merge($basic_cases, $opt_in_cases);
   }
 
 }
