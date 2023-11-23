@@ -21,8 +21,8 @@ class FileExtensionConstraintValidator extends BaseFileConstraintValidator {
       throw new UnexpectedTypeException($constraint, FileExtensionConstraint::class);
     }
 
-    // Empty extensions means all extensions are allowed.
-    if (empty($constraint->extensions)) {
+    // Check if all extensions are allowed.
+    if (empty($constraint->allowAllExtensions)) {
       return;
     }
 
