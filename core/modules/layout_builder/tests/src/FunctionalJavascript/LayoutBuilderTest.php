@@ -235,8 +235,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['link', 'Two column']));
 
     $this->clickLink('Two column');
-    $this->assertOffCanvasFormAfterWait('layout_builder_map_section_regions');
-    $assert_session->pageTextContains('Map regions for new layout');
+    $this->assertOffCanvasFormAfterWait('layout_builder_configure_new_section_layout');
+    $assert_session->pageTextContains('Configure new layout');
     $page->pressButton('Update');
     $assert_session->assertWaitOnAjaxRequest();
 

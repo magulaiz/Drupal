@@ -74,7 +74,7 @@ class ChangeSectionLayoutController implements ContainerInjectionInterface {
           ],
         ],
         '#url' => Url::fromRoute(
-          'layout_builder.map_section_regions',
+          'layout_builder.configure_changed_section_layout',
           [
             'section_storage_type' => $section_storage->getStorageType(),
             'section_storage' => $section_storage->getStorageId(),
