@@ -122,9 +122,8 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       $page->pressButton($button_text);
       // Make sure the changes are present.
       $new_page_text_locator = "$block_selector $label_selector:contains($new_page_text)";
-      $this->assertElementVisibleAfterWait('css', $new_page_text_locator);
-      // @todo remove below if we no longer get this one.
-      // $this->assertNotEmpty($web_assert->waitForElementVisible('css', $new_page_text_locator));
+      sleep(2);
+      $this->assertNotEmpty($web_assert->waitForElementVisible('css', $new_page_text_locator));
       // The page is loaded with the new change but make sure page is
       // completely loaded.
       $this->assertPageLoadComplete();
