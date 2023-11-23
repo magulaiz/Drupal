@@ -240,16 +240,6 @@ function comment_ui_definitions_alter(array &$ui_definitions, string $entity_typ
 }
 
 /**
- * Process callback to remove comment type field option.
- */
-function comment_new_storage_type_process_callback($element, &$form_state, $form) {
-  // You cannot use comment fields on entity types with non-integer IDs.
-  unset($element['comment']);
-
-  return $element;
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_form_display_overview_form_alter(&$form, FormStateInterface $form_state) {
