@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Config;
 
-// cspell:ignore validatable
-
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;

@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-// cspell:ignore validatable
-
 use Symfony\Component\Validator\Constraint;
 
 /**
