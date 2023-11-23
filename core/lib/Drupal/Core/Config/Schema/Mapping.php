@@ -162,21 +162,22 @@ class Mapping extends ArrayElement {
     assert(!empty($possible_types));
 
     // Determine all valid keys, across all possible types.
-    $all_type_definitions = $this->getTypedDataManager()->getDefinitions();
+    $typed_data_manager = $this->getTypedDataManager();
+    $all_type_definitions = $typed_data_manager->getDefinitions();
     $possible_type_definitions = array_intersect_key($all_type_definitions, array_fill_keys($possible_types, TRUE));
     // TRICKY: \Drupal\Core\Config\TypedConfigManager::getDefinition() does the
     // necessary resolving, but TypedConfigManager::getDefinitions() does not! 🤷‍♂️
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     // @see ::getValidKeys()
     foreach (array_keys($possible_type_definitions) as $possible_type_name) {
-      $valid_keys_per_type[$possible_type_name] = array_keys($this->getTypedDataManager()->getDefinition($possible_type_name)['mapping'] ?? []);
+      $valid_keys_per_type[$possible_type_name] = array_keys($typed_data_manager->getDefinition($possible_type_name)['mapping'] ?? []);
     }
 
     // From all valid keys across all types, get the ones for the fallback type:
     // its keys are inherited by all type definitions and are therefore always
     // ("statically") valid. Not all types have a fallback type.
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
-    $fallback_type = $this->getTypedDataManager()->findFallback($original_mapping_type);
+    $fallback_type = $typed_data_manager->findFallback($original_mapping_type);
     $valid_keys_everywhere = array_intersect_key(
       $valid_keys_per_type,
       [$fallback_type => NULL],
