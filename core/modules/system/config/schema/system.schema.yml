@@ -228,7 +228,9 @@ system.menu.*:
       label: 'Menu description'
     locked:
       type: boolean
-      label: ''
+      label: 'Locked'
+  constraints:
+    FullyValidatable: ~
 
 system.action.*:
   type: config_entity
