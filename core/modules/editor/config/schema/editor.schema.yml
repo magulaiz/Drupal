@@ -44,3 +44,5 @@ editor.editor.*:
               type: integer
               nullable: true
               label: 'Maximum height'
+  constraints:
+    FullyValidatable: ~
