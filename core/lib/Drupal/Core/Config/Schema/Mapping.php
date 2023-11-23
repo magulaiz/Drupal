@@ -3,7 +3,9 @@
 namespace Drupal\Core\Config\Schema;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines a mapping configuration element.
@@ -23,6 +25,27 @@ class Mapping extends ArrayElement {
   /**
    * {@inheritdoc}
    */
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    assert($definition instanceof MapDataDefinition);
+    // Validate basic structure.
+    foreach ($definition['mapping'] as $key => $key_definition) {
+      // Guide developers when a config schema definition is wrong.
+      if (!is_array($key_definition)) {
+        if (!$parent) {
+          throw new \LogicException(sprintf("The mapping definition at `%s` is invalid: its `%s` key contains a %s. It must be an array.", $name, $key, gettype($key_definition)));
+        }
+        else {
+          throw new \LogicException(sprintf("The mapping definition at `%s:%s` is invalid: its `%s` key contains a %s. It must be an array.", $parent->getPropertyPath(), $name, $key, gettype($key_definition)));
+        }
+      }
+    }
+    $this->processRequiredKeyFlags($definition);
+    parent::__construct($definition, $name, $parent);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getElementDefinition($key) {
     $value = $this->value[$key] ?? NULL;
     $definition = $this->definition['mapping'][$key] ?? [];
@@ -30,10 +53,10 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Gets all valid keys in this mapping.
+   * Gets all keys allowed in this mapping.
    *
    * @return string[]
-   *   A list of valid keys given the values in this mapping.
+   *   A list of keys allowed in this mapping.
    */
   public function getValidKeys(): array {
     $all_keys = $this->getDefinedKeys();
@@ -43,17 +66,14 @@ class Mapping extends ArrayElement {
   /**
    * Gets all required keys in this mapping.
    *
-   * Keys are required by default, they can opt out by specifying
-   * `requiredKey: false`. Deprecated keys are also treated as optional.
-   *
    * @return string[]
-   *   A list of required keys given the values in this mapping.
+   *   A list of keys required in this mapping.
    */
   public function getRequiredKeys(): array {
     $all_keys = $this->getDefinedKeys();
     $required_keys = array_filter(
       $all_keys,
-      fn (array $raw_schema_definition) => !array_key_exists('requiredKey', $raw_schema_definition) && !array_key_exists('deprecated', $raw_schema_definition),
+      fn (array $schema_definition): bool => $schema_definition['requiredKey']
     );
     return array_keys($required_keys);
   }
@@ -67,35 +87,31 @@ class Mapping extends ArrayElement {
    */
   protected function getDefinedKeys(): array {
     $definition = $this->getDataDefinition();
-    assert($definition instanceof MapDataDefinition && self::validateMappingConfigSchemaDefinition($definition));
-    // f.e. when using `type: mapping`, no keys have been defined, but it's
-    // still possible to define keys under `mapping: {…}`.
-    $defined_keys = $definition->toArray()['mapping'];
-    // @todo Avoid fatal errors for invalid mapping definitions; remove this in https://www.drupal.org/project/drupal/issues/3401837
-    return array_filter($defined_keys, 'is_array');
+    return $definition->toArray()['mapping'];
   }
 
   /**
    * Gets all dynamically valid keys.
    *
    * When the `type` of the mapping is dynamic itself. For example: the settings
-   * associated with a FieldConfig depends on which field plugin that field
-   * uses.
-   * Other examples:
-   * - CKEditor 5 uses 'ckeditor5.plugin.[%key]', but that uses no information
-   *   stored elsewhere: the chosen key (in a sequence) determines the type.
-   * - third party settings use '[%parent.%parent.%type].third_party.[%key]',
-   *   but the first variable value only causes the config entity type (at the
-   *   root) to be inherited (f.e. 'node.type.third_party.[%key]').
-   * - field instances 'field.value.[%parent.%parent.field_type]', which is
-   *   used to determine the type of the default field value, to ensure
-   *   matches the precise config schema type of the field type
-   * - views use 'views.filter.[plugin_id]' to allow the value itself to
-   *   determine which filter plugin it  uses, in the 'plugin_id' key.
+   * associated with a FieldConfig depend on what kind of field it is (i.e.,
+   * which field plugin it uses).
    *
-   * For each of these examples, the mapping at this property path may have keys
-   * that are dynamically valid. This means that depending on other values
-   * (hence "dynamically"), different sets of keys are considered valid.
+   * Other examples:
+   * - CKEditor 5 uses 'ckeditor5.plugin.[%key]'; the mapping is stored in a
+   *   sequence, and `[%key]` is replaced by the mapping's key in that sequence.
+   * - third party settings use '[%parent.%parent.%type].third_party.[%key]';
+   *   `[%parent.%parent.%type]` is replaced by the type of the mapping two
+   *   levels up. For example, 'node.type.third_party.[%key]'.
+   * - field instances' default values have a type of
+   *   'field.value.[%parent.%parent.field_type]'. This uses the value of the
+   *   `field_type` key from the mapping two levels up.
+   * - Views filters have a type of 'views.filter.[plugin_id]'; `[plugin_id]` is
+   *   replaced by the value of the mapping's `plugin_id` key.
+   *
+   * In each of these examples, the mapping may have keys that are dynamically
+   * valid, meaning that which keys are considered valid may depend on other
+   * values in the tree.
    *
    * @return string[][]
    *   A list of dynamically valid keys. An array with:
@@ -105,6 +121,7 @@ class Mapping extends ArrayElement {
    *
    * @see \Drupal\Core\Config\TypedConfigManager::replaceName()
    * @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+   * @see https://www.drupal.org/files/ConfigSchemaCheatSheet2.0.pdf
    */
   public function getDynamicallyValidKeys(): array {
     $parent_data_def = $this->getParent()?->getDataDefinition();
@@ -112,60 +129,56 @@ class Mapping extends ArrayElement {
       return [];
     }
 
-    // The parent mapping definition is used to determine the type used to
-    // determine the type of this mapping.
-    // f.e.:
-    // 1. `type: editor.settings.[%parent.editor]`
-    // 2. `type: editor.image_upload_settings.[status]`.
+    // Use the parent data definition to determine the type of this mapping
+    // (including the dynamic placeholders). For example:
+    // - `editor.settings.[%parent.editor]`
+    // - `editor.image_upload_settings.[status]`.
     $original_mapping_type = match (TRUE) {
       $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$this->getName()]['type'],
       $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
       default => throw new \LogicException('Invalid config schema detected.'),
     };
 
-    // If the original mapping type is not dynamic, there's no additional work.
+    // If this mapping's type isn't dynamic, there's nothing to do.
     if (!str_contains($original_mapping_type, ']')) {
       return [];
     }
-    // Prefix-based dynamic typing is used only by third party settings, which
-    // are by definition optional.
+    // Only third-party settings, which are optional by definition, start with
+    // a dynamic placeholder.
     elseif (str_starts_with($original_mapping_type, '[')) {
       return [];
     }
 
-    // Find all possible types for the given original mapping type.
-    // f.e.:
-    // 1. `editor.settings.unicorn` or `editor.settings.trex`
-    // 2. `editor.image_upload_settings.*` or `editor.image_upload_settings.1`
+    // Expand the dynamic placeholders to find all mapping types derived from
+    // the original mapping type. To continue the previous example:
+    // - `editor.settings.unicorn`
+    // - `editor.image_upload_settings.*`
+    // - `editor.image_upload_settings.1`
     $possible_types = $this->getPossibleTypes($original_mapping_type);
 
     // TRICKY: it is tempting to not consider this a dynamic type if only one
-    // concrete type is installed. But this would lead to different validation
-    // errors when modules are installed or uninstalled.
+    // concrete type exists. But that would lead to different validation errors
+    // when modules are installed or uninstalled.
     assert(!empty($possible_types));
 
-    // Determine all valid keys across all possible types.
-    $all_type_definitions = $this->getTypedDataManager()->getDefinitions();
+    // Determine all valid keys, across all possible types.
+    $typed_data_manager = $this->getTypedDataManager();
+    $all_type_definitions = $typed_data_manager->getDefinitions();
     $possible_type_definitions = array_intersect_key($all_type_definitions, array_fill_keys($possible_types, TRUE));
     // TRICKY: \Drupal\Core\Config\TypedConfigManager::getDefinition() does the
     // necessary resolving, but TypedConfigManager::getDefinitions() does not! 🤷‍♂️
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     // @see ::getValidKeys()
-    $valid_keys_per_type = array_map(
-      fn (string $possible_type) => array_keys($this->getTypedDataManager()->getDefinition($possible_type)['mapping'] ?? []),
-      // Keep the original types, but array_map() does not allow using the keys,
-      // so pass the same information twice: this logic will replace the values.
-      array_combine(
-        array_keys($possible_type_definitions),
-        array_keys($possible_type_definitions),
-      ),
-    );
+    $valid_keys_per_type = [];
+    foreach (array_keys($possible_type_definitions) as $possible_type_name) {
+      $valid_keys_per_type[$possible_type_name] = array_keys($typed_data_manager->getDefinition($possible_type_name)['mapping'] ?? []);
+    }
 
     // From all valid keys across all types, get the ones for the fallback type:
-    // the keys in this mapping definition are inherited by all type definitions
-    // and are hence valid everywhere. Not all types have a fallback type.
+    // its keys are inherited by all type definitions and are therefore always
+    // ("statically") valid. Not all types have a fallback type.
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
-    $fallback_type = $this->getTypedDataManager()->findFallback($original_mapping_type);
+    $fallback_type = $typed_data_manager->findFallback($original_mapping_type);
     $valid_keys_everywhere = array_intersect_key(
       $valid_keys_per_type,
       [$fallback_type => NULL],
@@ -174,8 +187,8 @@ class Mapping extends ArrayElement {
     $statically_required_keys = NestedArray::mergeDeepArray($valid_keys_everywhere);
 
     // Now that statically valid keys are known, determine which valid keys are
-    // only valid in some cases: filter away the statically valid keys that are
-    // present in each per-type array of valid keys.
+    // only valid in *some* cases: remove the statically valid keys from every
+    // per-type array of valid keys.
     $valid_keys_some = array_diff_key($valid_keys_per_type, $valid_keys_everywhere);
     $valid_keys_some_processed = array_map(
       fn (array $keys) => array_values(array_filter($keys, fn (string $key) => !in_array($key, $statically_required_keys, TRUE))),
@@ -195,36 +208,37 @@ class Mapping extends ArrayElement {
   }
 
   /**
-   * Validates optional `requiredKey` flags in mappings.
+   * Validates optional `requiredKey` flags, guarantees one will be set.
    *
-   * Validates that the values for either optional flag are correct. Does not
-   * validate the semantics, only the shapes.
+   * For each key-value pair:
+   * - If the `requiredKey` flag is set, it must be `false`, to avoid pointless
+   *   information in the schema.
+   * - If the `requiredKey` flag is not set and the `deprecated` flag is set,
+   *   this will set `requiredKey: false`: deprecated keys are always optional.
+   * - If the `requiredKey` flag is not set, nor the `deprecated` flag,
+   *   will set `requiredKey: true`.
    *
    * @param \Drupal\Core\TypedData\MapDataDefinition $definition
    *   The config schema definition for a `type: mapping`.
    *
-   * @return bool
+   * @return void
+   *
+   * @throws \LogicException
+   *   Thrown when `requiredKey: true` is specified.
    */
-  protected static function validateMappingConfigSchemaDefinition(MapDataDefinition $definition): bool {
-    $definition = $definition->toArray();
-    assert(array_key_exists('mapping', $definition));
-
-    // Validates `requiredKey` flag in mapping definitions.
-    foreach ($definition['mapping'] as $options) {
-      // @todo Avoid fatal errors on invalid mapping definitions; remove this in https://www.drupal.org/project/drupal/issues/3401837
-      if (!is_array($options)) {
-        continue;
-      }
-      if (!array_key_exists('requiredKey', $options)) {
-        // This flag is optional.
-        continue;
-      }
-      if ($options['requiredKey'] !== FALSE) {
+  protected function processRequiredKeyFlags(MapDataDefinition $definition): void {
+    foreach ($definition['mapping'] as $key => $key_definition) {
+      // Validates `requiredKey` flag in mapping definitions.
+      if (array_key_exists('requiredKey', $key_definition) && $key_definition['requiredKey'] !== FALSE) {
         throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
       }
+      // Generates the `requiredKey` flag if it is not set.
+      if (!array_key_exists('requiredKey', $key_definition)) {
+        // Required by default, unless this key is marked as deprecated.
+        // @see https://www.drupal.org/node/3129881
+        $definition['mapping'][$key]['requiredKey'] = !array_key_exists('deprecated', $key_definition);
+      }
     }
-
-    return TRUE;
   }
 
   /**
