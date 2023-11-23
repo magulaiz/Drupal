@@ -268,7 +268,7 @@ default:
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || true
-    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > phpstan-junit.xml || true
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > phpstan-junit.xml || true
     # Output a copy in plain text for human logs.
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || EXIT_CODE=$?
     # Generate a new baseline. Allow empty baseline to ensure that artifact exists.
