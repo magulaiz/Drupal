@@ -36,6 +36,7 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
       - ./sites/simpletest/browser_output
+      - /builds/*.log
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
@@ -79,6 +80,7 @@ variables:
   entrypoint:
     - chromedriver
     - "--no-sandbox"
+    - "--log-path=/builds/chromedriver.log"
     - "--verbose"
     - "--whitelisted-ips="
 
@@ -145,7 +147,6 @@ variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
     KUBERNETES_CPU_REQUEST: "8"
-    CI_DEBUG_SERVICES: "true"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -172,7 +173,6 @@ variables:
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "3"
-    CI_DEBUG_SERVICES: "true"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -198,6 +198,7 @@ variables:
       junit: ./nightwatch_output/**/*.xml
     paths:
       - ./nightwatch_output
+      - /builds/*.log
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
