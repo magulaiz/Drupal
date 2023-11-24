@@ -4,7 +4,6 @@ namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
