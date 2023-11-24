@@ -144,6 +144,7 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @see \Drupal\Core\Form\ConfigFormBase::buildForm()
    */
+  #[TrustedCallback]
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
     // Empty the map to ensure the information is always correct after
     // rebuilding the form.
