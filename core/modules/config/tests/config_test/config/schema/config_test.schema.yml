@@ -206,3 +206,10 @@ config_test.validation:
             callback: [\Drupal\config_test\ConfigValidation, validateGiraffes]
     uuid:
       type: uuid
+    required_label:
+      type: required_label
+    not_null_required_label:
+      type: required_label
+      constraints:
+        # NotNull in addition to `type: required_label`'s NotBlank
+        NotNull: {}

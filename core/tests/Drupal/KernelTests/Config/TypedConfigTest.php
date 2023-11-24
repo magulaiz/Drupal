@@ -126,6 +126,34 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertInstanceOf(ConstraintViolationListInterface::class, $result);
     $this->assertEmpty($result);
 
+    // Validates required label.
+    $original = $config->getRawData();
+    // Empty string.
+    $config->set('required_label', '');
+    $config->set('not_null_required_label', '');
+    $config->save();
+    $typed_config = $typed_config_manager->get('config_test.validation');
+    $result = $typed_config->validate();
+    $this->assertCount(2, $result);
+    $this->assertSame('required_label', $result->get(0)->getPropertyPath());
+    $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
+    $this->assertSame('not_null_required_label', $result->get(1)->getPropertyPath());
+    $this->assertEquals('This value should not be blank.', $result->get(1)->getMessage());
+    // NULL.
+    $config->set('required_label', NULL);
+    $config->set('not_null_required_label', NULL);
+    $config->save();
+    $typed_config = $typed_config_manager->get('config_test.validation');
+    $result = $typed_config->validate();
+    $this->assertSame('required_label', $result->get(0)->getPropertyPath());
+    $this->assertEquals('This value should not be null.', $result->get(0)->getMessage());
+    $this->assertSame('not_null_required_label', $result->get(1)->getPropertyPath());
+    $this->assertEquals('This value should not be null.', $result->get(1)->getMessage());
+    $this->assertCount(2, $result);
+    // Prepare for the next test.
+    $config->setData($original);
+    $config->save();
+
     // Test constraints on primitive types.
     $config->set('llama', 'elephant');
     $config->save();
