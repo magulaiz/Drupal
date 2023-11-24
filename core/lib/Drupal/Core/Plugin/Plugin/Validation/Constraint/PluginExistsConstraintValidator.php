@@ -20,6 +20,11 @@ class PluginExistsConstraintValidator extends ConstraintValidator {
   public function validate(mixed $plugin_id, Constraint $constraint) {
     assert($constraint instanceof PluginExistsConstraint);
 
+    // @todo This will disappear from this MR; it will land as part of https://www.drupal.org/project/drupal/issues/3404039.
+    if ($plugin_id === NULL) {
+      return;
+    }
+
     $definition = $constraint->pluginManager->getDefinition($plugin_id, FALSE);
     // Some plugin managers provide fallbacks.
     if ($constraint->pluginManager instanceof FallbackPluginManagerInterface) {
