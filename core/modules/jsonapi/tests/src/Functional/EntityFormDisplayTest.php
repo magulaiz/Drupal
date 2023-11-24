@@ -149,6 +149,7 @@ class EntityFormDisplayTest extends ConfigEntityResourceTestBase {
                 'match_limit' => 10,
                 'size' => 60,
                 'placeholder' => '',
+                'show_id' => TRUE,
               ],
               'region' => 'content',
               'third_party_settings' => [],
