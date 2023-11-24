@@ -665,4 +665,5 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Asserting the correct element is having error class.
     $this->assertTrue($this->assertSession()->fieldExists('edit-current-pass')->hasClass('error'));
   }
+
 }
