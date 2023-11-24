@@ -60,7 +60,7 @@ final class FieldStorageAddController extends ControllerBase {
   }
 
   /**
-   * .
+   * Builds the field selection form.
    *
    * @param string|null $entity_type_id
    *   The name of the entity type.
@@ -116,12 +116,13 @@ final class FieldStorageAddController extends ControllerBase {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
       $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
       $entity_type = $this->entityTypeManager()->getDefinition($this->entityTypeId);
+      $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
       $route_parameters = [
         'entity_type' => $this->entityTypeId,
         'bundle' => $this->bundle,
+        'display_as_group' => $display_as_group ? 'true' : 'false',
         'selected_field_type' => $category_info->getPluginId(),
       ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-      $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
       $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
       $field_type_options_radios[$id] = [
         '#type' => 'html_tag',

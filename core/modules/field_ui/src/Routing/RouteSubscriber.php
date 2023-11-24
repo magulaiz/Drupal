@@ -115,7 +115,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/fields/add-field/{selected_field_type}",
+          "$path/fields/add-field/{selected_field_type}/{display_as_group}",
           [
             '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
             '_title' => 'Add Sub-field',
