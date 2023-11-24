@@ -154,7 +154,7 @@ stages:
     _TARGET_DB: "mysql-5.7"
   rules:
     - <<: *run-on-commit
-    - <<: *run-on-mr
+    - <<: *run-on-mr-manual
 
 'PHP 5.6 MySQL 5.5':
   <<: *default-stage
