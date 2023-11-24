@@ -23,7 +23,7 @@ stages:
       - runner_system_failure
       - scheduler_failure
   image:
-    name: dimitriskr/php8.1-apache:latest
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
 
