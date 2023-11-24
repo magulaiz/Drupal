@@ -1047,7 +1047,7 @@ mailer_dsn:
         Range:
           min: 0
           max: 65535
-          message: 'The mailer DSN port must be between 0 and 65535.'
+          notInRangeMessage: 'The mailer DSN port must be between 0 and 65535.'
     options:
       type: sequence
       label: 'Options'
