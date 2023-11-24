@@ -289,8 +289,6 @@ class MediaLibraryStateTest extends KernelTestBase {
 
     $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
-
-    // Assert ajax_page_state is no longer in the state.
   }
 
   /**
