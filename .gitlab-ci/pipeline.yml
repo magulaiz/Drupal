@@ -79,7 +79,6 @@ variables:
   entrypoint:
     - chromedriver
     - "--no-sandbox"
-    - "--log-path=/tmp/chromedriver.log"
     - "--verbose"
     - "--whitelisted-ips="
 
