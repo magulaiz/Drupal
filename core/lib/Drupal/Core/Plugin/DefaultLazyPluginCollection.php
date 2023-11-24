@@ -128,6 +128,11 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   public function setConfiguration($configuration) {
+    // @todo This will disappear from this MR; it will land as part of https://www.drupal.org/project/drupal/issues/3404023.
+    if ($configuration === NULL) {
+      return;
+    }
+
     // Track each instance ID as it is updated.
     $unprocessed_instance_ids = $this->getInstanceIds();
 

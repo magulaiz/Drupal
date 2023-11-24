@@ -79,6 +79,11 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   public function setConfiguration($configuration) {
+    // @todo This will disappear from this MR; it will land as part of https://www.drupal.org/project/drupal/issues/3404023.
+    if ($configuration === NULL) {
+      return;
+    }
+
     $this->configuration = $configuration;
     $plugin = $this->get($this->instanceId);
     if ($plugin instanceof ConfigurableInterface) {
