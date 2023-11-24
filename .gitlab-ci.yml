@@ -208,7 +208,6 @@ stages:
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   stage: 🗜️ Test
-  parallel: 3
   interruptible: true
   allow_failure: false
   retry:
