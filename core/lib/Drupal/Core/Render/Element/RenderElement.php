@@ -344,7 +344,6 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
         }
       }
 
-      $element['#attached']['library'][] = 'core/internal.jquery.form';
       $element['#attached']['library'][] = 'core/drupal.ajax';
 
       $settings = $element['#ajax'];
