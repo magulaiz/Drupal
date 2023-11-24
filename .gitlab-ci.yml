@@ -275,4 +275,4 @@ stages:
     - sudo -u www-data /usr/local/bin/drush vset simpletest_verbose '1'
     - sudo -u www-data /usr/local/bin/drush en -y simpletest
     # We need to pass this along directly even though it's set in the environment parameters.
-    - sudo -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest" --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - sudo -u www-data php ./scripts/run-tests.sh --color --concurrency "24" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest" --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
