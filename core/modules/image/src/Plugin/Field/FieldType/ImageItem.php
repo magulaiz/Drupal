@@ -240,10 +240,9 @@ class ImageItem extends FileItem {
       '#title' => $this->t('Image resize policy'),
       '#type' => 'radios',
       '#default_value' => $settings['resize_policy'] ?? FALSE,
-      '#description' => $this->t('Choose whether images that exceed the maximum resolution should be resized to reflect the given width and height or rejected with an error message. Resizing images on upload will cause the loss of <a href="http://wikipedia.org/wiki/Exchangeable_image_file_format">EXIF data</a> in the image.'),
       '#weight' => 4.11,
       '#options' => [
-        'resize_larger_images' => $this->t('Resize larger images'),
+        'resize_larger_images' => $this->t('Resize larger images in a proportional way'),
         'reject_larger_images_with_error' =>  $this->t('Reject larger images with an error message'),
       ],
       '#states' => [

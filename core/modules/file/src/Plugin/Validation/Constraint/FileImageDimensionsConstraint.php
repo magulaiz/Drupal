@@ -33,7 +33,7 @@ class FileImageDimensionsConstraint extends Constraint {
 
   /**
    * Allows to change resizing policy when an image exceeds the maximum
-   * resolution. Defaults to "Resize larger images".
+   * resolution. Defaults to "Resize larger images in a proportional way".
    *
    * @var string
    */
