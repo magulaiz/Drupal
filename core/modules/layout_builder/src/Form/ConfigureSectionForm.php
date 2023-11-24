@@ -30,7 +30,7 @@ class ConfigureSectionForm extends SectionFormBase {
     // exception since the layout may not have a context mapping for a required
     // context slot on creation.
     $this->layout = $section->getLayout();
-    $form = parent::form($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
 
     if ($this->isUpdate) {
       if ($label = $section->getLayoutSettings()['label']) {

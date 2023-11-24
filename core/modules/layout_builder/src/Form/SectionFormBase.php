@@ -121,9 +121,6 @@ class SectionFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $plugin_id = NULL) {
-  }
-
-  public function form(array $form, FormStateInterface $form_state) {
     $form['#tree'] = TRUE;
     $form['layout_settings'] = [];
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);

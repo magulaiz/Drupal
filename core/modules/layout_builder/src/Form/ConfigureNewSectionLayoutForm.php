@@ -67,7 +67,7 @@ class ConfigureNewSectionLayoutForm extends SectionFormBase {
     $this->delta = $delta;
 
     $this->layout = $this->layoutPluginManager->createInstance($plugin_id);
-    $form = parent::form($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
 
     $section = $this->sectionStorage->getSection($this->delta);
     $old_layout_region_labels = $section->getLayout()->getPluginDefinition()->getRegionLabels();
