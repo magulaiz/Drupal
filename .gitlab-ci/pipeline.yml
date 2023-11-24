@@ -144,6 +144,7 @@ stages:
   variables:
     <<: *test-variables
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "24"
 
 '🩹 Test-only changes':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
