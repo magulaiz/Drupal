@@ -198,6 +198,7 @@ variables:
       junit: ./nightwatch_output/**/*.xml
     paths:
       - ./nightwatch_output
+      - /tmp/*.log
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
