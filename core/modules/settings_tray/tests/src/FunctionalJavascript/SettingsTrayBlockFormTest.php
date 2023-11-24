@@ -242,7 +242,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           case 'contextual_link':
             $this->clickContextualLink($this->getBlockSelector($block), "Quick edit");
             $this->waitForOffCanvasToOpen();
-            sleep(1);
+            sleep(10);
             $this->assertEditModeEnabled();
             break;
 
