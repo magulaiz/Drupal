@@ -344,6 +344,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
     $page->findButton('Save settings')->click();
+    sleep(5);
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->pageTextContains('Limit must be higher than or equal to 1.');
   }
