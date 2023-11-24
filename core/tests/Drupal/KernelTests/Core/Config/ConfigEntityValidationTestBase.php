@@ -534,15 +534,16 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * Determines the config entity properties with optional values.
    *
-   * @return string
+   * @return string[]
    *   The config entity properties whose values are optional.
    */
   protected function getOptionalPropertyValues(): array {
+    $config_entity_properties = array_keys($this->entity->getEntityType()
+      ->getPropertiesToExport());
+
     // If a config entity type is not fully validatable, all properties are
     // optional, with the exception of `type: langcode` and
     // `type: required_label`.
-    $config_entity_properties = array_keys($this->entity->getEntityType()
-      ->getPropertiesToExport());
     if (!$this->isFullyValidatable()) {
       return array_diff($config_entity_properties, [
         // @see ::testLangcode()
