@@ -1031,6 +1031,12 @@ mailer_dsn:
       constraints:
         NotBlank:
           message: 'The mailer DSN must contain a host (use "default" by default).'
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'The mailer DSN host is not allowed to span multiple lines or contain control characters.'
     user:
       type: string
       nullable: true
