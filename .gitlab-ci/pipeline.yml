@@ -36,6 +36,7 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
       - ./sites/simpletest/browser_output
+      - /tmp/*.log
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
