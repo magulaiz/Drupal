@@ -125,7 +125,7 @@ default:
       allow_failure: true
 
 # Default configuration.
-'PHP 8.2 MySQL 8':
+'DEFAULT: PHP 8.2 MySQL 8':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.2"
@@ -136,6 +136,22 @@ default:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $PERFORMANCE_TEST == "1"
+
+'DEFAULT: Test-only':
+  <<: [ *default-stage, *with-composer ]
+  when: manual
+  allow_failure: true
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  trigger:
+    # Rely on the status of the child pipeline.
+    strategy: depend
+    include:
+      - local: .gitlab-ci/pipeline-test-only.yml
 
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':
@@ -186,18 +202,11 @@ default:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "sqlite-3"
 
-# Run daily, or manually.
-# 'PHP 8.1 MariaDB 10.3.22':
-#   <<: [ *default-stage, *run-daily ]
-#   variables:
-#     _TARGET_PHP: "8.1"
-#     _TARGET_DB: "mariadb-10.3.22"
-
-# 'PHP 8.1 MySQL 5.7 with updated deps':
-#   <<: [ *default-stage, *run-daily ]
-#   variables:
-#     _TARGET_PHP: "8.1"
-#     _TARGET_DB: "mysql-5.7"
+'PHP 8.1 MariaDB 10.3.22':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mariadb-10.3.22"
 
 'PHP 8.1 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
@@ -265,10 +274,28 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
-    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
+    # Output a copy in junit.
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > phpstan-junit.xml || true
+    - |
+      if [ -n "$EXIT_CODE" ]; then
+        # Output a copy in plain text for human logs.
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
+        # Generate a new baseline.
+        echo "Generating an PHPStan baseline file (available as job artifact)."
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/phpstan-baseline.neon || true
+        exit $EXIT_CODE
+      fi
+
   artifacts:
     reports:
       codequality: phpstan-quality-report.json
+      junit: phpstan-junit.xml
+    # Only store the baseline if the job fails.
+    when: on_failure
+    paths:
+      - core/phpstan-baseline.neon
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *default-job-settings-lint ]
