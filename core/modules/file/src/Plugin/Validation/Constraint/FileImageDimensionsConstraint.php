@@ -32,8 +32,7 @@ class FileImageDimensionsConstraint extends Constraint {
   public string | int $maxDimensions = 0;
 
   /**
-   * Allows to change resizing policy when an image exceeds the maximum
-   * resolution. Defaults to "Resize larger images in a proportional way".
+   * Allows to change resizing policy when an image exceeds maximum.
    *
    * @var string
    */

@@ -72,6 +72,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
                 '%height' => $image->getHeight(),
               ]);
             break;
+
           default:
             // Try to resize the image to fit the dimensions.
             if ($image->scale($width, $height)) {
