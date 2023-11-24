@@ -128,7 +128,10 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   public function setConfiguration($configuration) {
-    $configuration = $configuration ?? [];
+    if ($configuration === NULL) {
+      return;
+    }
+
     // Track each instance ID as it is updated.
     $unprocessed_instance_ids = $this->getInstanceIds();
 
