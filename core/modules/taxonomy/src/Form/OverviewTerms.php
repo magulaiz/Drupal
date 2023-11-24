@@ -298,18 +298,19 @@ class OverviewTerms extends FormBase {
       );
     }
 
-    // Only allow access to change parents and reorder the tree if there are no
-    // pending revisions and there are no terms with multiple parents.
-    $operations_access = !empty($pending_term_ids) || $vocabulary_hierarchy === VocabularyInterface::HIERARCHY_MULTIPLE;
-    $update_tree_access = AccessResult::allowedIf(!$operations_access
-      && $taxonomy_vocabulary->access('reset all weights', NULL, TRUE));
     $form['help'] = [
       '#type' => 'container',
       'message' => ['#markup' => $help_message],
     ];
 
-    if ($operations_access) {
+    $update_tree_access = AccessResult::neutral();
+    // Only allow access to change parents and reorder the tree if there are no
+    // pending revisions and there are no terms with multiple parents.
+    if (!empty($pending_term_ids) || $vocabulary_hierarchy === VocabularyInterface::HIERARCHY_MULTIPLE) {
       $form['help']['#attributes']['class'] = ['messages', 'messages--warning'];
+    }
+    elseif ($taxonomy_vocabulary->access('reset all weights')) {
+      $update_tree_access = AccessResult::allowed();
     }
 
     $errors = $form_state->getErrors();
