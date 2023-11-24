@@ -50,7 +50,7 @@ class DatabaseStorageTest extends StorageTestBase {
     $default_connection = Database::getConnectionInfo();
     Database::removeConnection('default');
 
-    $time_to_start = microtime(TRUE) + 0.2;
+    $time_to_start = microtime(TRUE) + 1;
 
     // This loop creates a new fork to set or get key values keys.
     foreach ($functions as $i => $function) {

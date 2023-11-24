@@ -329,11 +329,9 @@ JS;
     // FALSE.
     $textfield2->setValue('Llamas say yarhar');
     $textfield3->focus();
-    // Force longer wait.
-    sleep(2);
     $this->assertSession()->assertWaitOnAjaxRequest();
     // Force longer wait.
-    sleep(2);
+    sleep(10);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
