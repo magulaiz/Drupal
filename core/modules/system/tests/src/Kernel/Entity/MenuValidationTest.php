@@ -15,6 +15,13 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static array $optionalPropertyValues = [
+    'description',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
