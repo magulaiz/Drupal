@@ -36,7 +36,6 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
       - ./sites/simpletest/browser_output
-      - /tmp/*.log
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
@@ -147,6 +146,7 @@ variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
     KUBERNETES_CPU_REQUEST: "8"
+    CI_DEBUG_SERVICES: "true"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -173,6 +173,7 @@ variables:
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "3"
+    CI_DEBUG_SERVICES: "true"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -186,7 +187,7 @@ variables:
     - echo "DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=false" >> ./core/.env
     - echo "DRUPAL_TEST_DB_URL='${DRUPAL_TEST_DB_URL}'" >> ./core/.env
     - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='localhost'" >> ./core/.env
-    - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless --log-path=/tmp/chromedriver.log'" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless'" >> ./core/.env
     - echo "DRUPAL_TEST_WEBDRIVER_PORT='9515'" >> ./core/.env
     - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
     - chown -R www-data:www-data ./sites /var/www
@@ -198,7 +199,6 @@ variables:
       junit: ./nightwatch_output/**/*.xml
     paths:
       - ./nightwatch_output
-      - /tmp/*.log
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
