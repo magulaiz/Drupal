@@ -36,7 +36,7 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
       - ./sites/simpletest/browser_output
-      - /builds/*.log
+      - '*.log'
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
@@ -80,7 +80,7 @@ variables:
   entrypoint:
     - chromedriver
     - "--no-sandbox"
-    - "--log-path=/builds/chromedriver.log"
+    - "--log-path=/builds/$CI_PROJECT_PATH/chromedriver.log"
     - "--verbose"
     - "--whitelisted-ips="
 
@@ -198,7 +198,7 @@ variables:
       junit: ./nightwatch_output/**/*.xml
     paths:
       - ./nightwatch_output
-      - /builds/*.log
+      - '*.log'
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
