@@ -330,7 +330,7 @@ class OverviewTerms extends FormBase {
       '#header' => [
         'term' => $this->t('Name'),
         'operations' => $this->t('Operations'),
-        'weight' => !$operations_access ? $this->t('Weight') : NULL,
+        'weight' => $update_tree_access->isAllowed() ? $this->t('Weight') : NULL,
       ],
       '#attributes' => [
         'id' => 'taxonomy',
