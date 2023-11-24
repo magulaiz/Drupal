@@ -82,7 +82,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
     $this->configuration = $configuration;
     $plugin = $this->get($this->instanceId);
     if ($plugin instanceof ConfigurableInterface) {
-      $plugin->setConfiguration($configuration);
+      $plugin->setConfiguration($configuration ?? []);
     }
     return $this;
   }
