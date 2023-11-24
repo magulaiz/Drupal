@@ -81,7 +81,6 @@ variables:
     - chromedriver
     - "--no-sandbox"
     - "--log-path=/builds/chromedriver.log"
-    - "--verbose"
     - "--whitelisted-ips="
 
 .run-tests: &run-tests
