@@ -105,6 +105,7 @@ abstract class ConfigFormBase extends FormBase {
    * @return array
    *   The form element, with its default value populated.
    */
+  #[TrustedCallback]
   public function loadDefaultValuesFromConfig(array $element): array {
     if (array_key_exists('#config_target', $element) && !array_key_exists('#default_value', $element)) {
       $target = $element['#config_target'];
