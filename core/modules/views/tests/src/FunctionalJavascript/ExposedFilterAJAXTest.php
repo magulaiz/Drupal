@@ -115,6 +115,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Reset the form.
     $this->submitForm([], 'Reset');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->pageTextContains('Page One');
     $this->assertSession()->pageTextContains('Page Two');
