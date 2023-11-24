@@ -1021,6 +1021,10 @@ mailer_dsn:
       constraints:
         NotBlank:
           message: 'The mailer DSN must contain a scheme.'
+        Regex:
+          # https://datatracker.ietf.org/doc/html/rfc3986#appendix-A
+          pattern: '/^[a-z][a-z0-9+\-\.]*$/i'
+          message: 'The mailer DSN scheme must start with a letter followed by zero or more letters, numbers, plus (+), minus (-) or periods (.)'
     host:
       type: string
       label: 'Host'
@@ -1043,6 +1047,7 @@ mailer_dsn:
         Range:
           min: 0
           max: 65535
+          message: 'The mailer DSN port must be between 0 and 65535.'
     options:
       type: sequence
       label: 'Options'
