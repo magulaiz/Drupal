@@ -209,14 +209,3 @@ stages:
   variables:
    _TARGET_PHP: "8.1"
    _TARGET_DB: "mariadb-10.3.22"
-  services:
-    - name: dimitriskr/mariadb-10.3.22
-      alias: database
-    - name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
-      alias: chrome
-      entrypoint:
-        - chromedriver
-        - "--no-sandbox"
-        - "--log-path=/tmp/chromedriver.log"
-        - "--verbose"
-        - "--whitelisted-ips="
