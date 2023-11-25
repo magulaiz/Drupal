@@ -44,14 +44,14 @@ abstract class ConfigFormBase extends FormBase {
   ) {
     $this->setConfigFactory($config_factory);
     if ($this->_typedConfigManager === NULL) {
-      @trigger_error('Calling ConfigFormBase::__construct() without the $_typedConfigManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3373502', E_USER_DEPRECATED);
+      @trigger_error('Calling ConfigFormBase::__construct() without the $_typedConfigManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3404140', E_USER_DEPRECATED);
       $this->_typedConfigManager = \Drupal::service('config.typed');
     }
 
     if (property_exists($this, 'typedConfigManager')) {
       $reflection = new \ReflectionProperty($this::class, 'typedConfigManager');
       if (!$reflection->getType() || $reflection->getType()->getName() !== TypedConfigManagerInterface::class) {
-        @trigger_error("Not defining {$this::class}::typedConfigManager type as " . TypedConfigManagerInterface::class . " has been deprecated in drupal:10.2.0 and will not be supported in drupal:11.0.0.", E_USER_DEPRECATED);
+        @trigger_error("Not defining {$this::class}::typedConfigManager type as " . TypedConfigManagerInterface::class . " has been deprecated in drupal:10.2.0 and will not be supported in drupal:11.0.0. See https://www.drupal.org/node/3404140.", E_USER_DEPRECATED);
       }
     }
   }
