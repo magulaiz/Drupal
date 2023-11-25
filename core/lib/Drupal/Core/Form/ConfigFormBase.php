@@ -35,17 +35,24 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface|null $typedConfigManager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface|null $_typedConfigManager
    *   The typed config manager.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    protected ?TypedConfigManagerInterface $typedConfigManager = NULL,
+    private ?TypedConfigManagerInterface $_typedConfigManager = NULL,
   ) {
     $this->setConfigFactory($config_factory);
-    if ($this->typedConfigManager === NULL) {
-      @trigger_error('Calling ConfigFormBase::__construct() without the $typedConfigManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3373502', E_USER_DEPRECATED);
-      $this->typedConfigManager = \Drupal::service('config.typed');
+    if ($this->_typedConfigManager === NULL) {
+      @trigger_error('Calling ConfigFormBase::__construct() without the $_typedConfigManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3373502', E_USER_DEPRECATED);
+      $this->_typedConfigManager = \Drupal::service('config.typed');
+    }
+
+    if (property_exists($this, 'typedConfigManager')) {
+      $reflection = new \ReflectionProperty($this::class, 'typedConfigManager');
+      if (!$reflection->getType() || $reflection->getType()->getName() !== TypedConfigManagerInterface::class) {
+        @trigger_error("Not defining {$this::class}::typedConfigManager type as " . TypedConfigManagerInterface::class . " has been deprecated in drupal:10.2.0 and will not be supported in drupal:11.0.0.", E_USER_DEPRECATED);
+      }
     }
   }
 
@@ -158,13 +165,13 @@ abstract class ConfigFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
+    assert($this->_typedConfigManager instanceof TypedConfigManagerInterface);
 
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
       static::copyFormValuesToConfig($config, $form_state, $form);
-      $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
+      $typed_config = $this->_typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
 
       $violations = $typed_config->validate();
       // Rather than immediately applying all violation messages to the
