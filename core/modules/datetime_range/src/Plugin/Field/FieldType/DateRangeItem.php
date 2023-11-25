@@ -22,7 +22,6 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  *     @Translation("With the date range field, users can easily search and filter content based on specific date criteria."),
  *     @Translation("Field options: </br> <ol><li>Date and Time: Stores date and time component.(E.g Thu, 11/02/2023 - 09:00 - Thu, 11/16/2023 - 17:00).</li><li>Date - Stores date only and time is set 12:00 hrs as default. (E.g Thu, 11/02/2023 - 12:00 - Thu, 11/16/2023 - 12:00).</li><li>All Day -  Stores date and time, starting with 00:00 hrs of start date and 23:59 hrs of end date  (Thu, 11/02/2023 - 00:00 - Thu, 11/16/2023 - 23:59).</li></ol>"),
  *     @Translation("Basic validation that date range provides: </br> <ol><li>If the one date has value then other date cannot be NULL.</li><li>The end date will always be greater than start date.</li></ol>"),
- * 
  *   },
  *   default_widget = "daterange_default",
  *   default_formatter = "daterange_default",
