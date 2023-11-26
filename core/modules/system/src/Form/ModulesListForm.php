@@ -171,6 +171,7 @@ class ModulesListForm extends FormBase {
       '#list_group' => 'details.package-listing',
       '#list_text' => 'label.table-filter-text-source, td.module-list__description summary',
       '#library' => 'core/drupal.list-filter.details',
+      '#minimum_filter_length' => 2,
       '#announce' => [
         'singular' => $this->t('1 module is available in the modified list.'),
         'plural' => $this->t('@count modules are available in the modified list.'),

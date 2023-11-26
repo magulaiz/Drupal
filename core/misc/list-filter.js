@@ -197,27 +197,32 @@
       return;
     }
 
-    this.preFilter();
+    // Filter if the length of the query is at least the minimum number of
+    // characters.
+    if (query.length >= this.listFilterSettings.minimum_filter_length) {
+      this.preFilter();
 
-    let visibleCount = 0;
-    // Search in all of the rows' sources and show or hide accordingly.
-    this.sources.forEach((source, index) => {
-      const match = source.search(re) !== -1;
+      let visibleCount = 0;
 
-      this.$rows.eq(index).toggle(match);
+      // Search in all of the rows' sources and show or hide accordingly.
+      this.sources.forEach((source, index) => {
+        const match = source.search(re) !== -1;
 
-      visibleCount += + match;
-    });
+        this.$rows.eq(index).toggle(match);
 
-    this.hideEmptyGroups();
+        visibleCount += + match;
+      });
 
-    Drupal.announce(
-      Drupal.formatPlural(
-        visibleCount,
-        this.listFilterSettings.announce.singular,
-        this.listFilterSettings.announce.plural,
-      ),
-    );
+      this.hideEmptyGroups();
+
+      Drupal.announce(
+        Drupal.formatPlural(
+          visibleCount,
+          this.listFilterSettings.announce.singular,
+          this.listFilterSettings.announce.plural,
+        ),
+      );
+    }
   };
 
   /**

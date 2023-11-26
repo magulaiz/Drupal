@@ -135,6 +135,7 @@ class ModulesUninstallForm extends FormBase {
       '#list_container_id' => 'system-modules-uninstall',
       '#list_item' => 'tbody tr',
       '#list_text' => 'label.module-name, span.module-description',
+      '#minimum_filter_length' => 2,
       '#announce' => [
         'singular' => $this->t('1 module is available in the modified list.'),
         'plural' => $this->t('@count modules are available in the modified list.'),

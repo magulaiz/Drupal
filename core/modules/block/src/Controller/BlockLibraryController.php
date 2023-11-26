@@ -167,6 +167,7 @@ class BlockLibraryController extends ControllerBase {
       '#list_container_id' => 'block-add-table',
       '#list_item' => 'tbody tr',
       '#list_text' => 'td div.block-filter-text-source',
+      '#minimum_filter_length' => 2,
       '#announce' => [
         'singular' => $this->t('1 block is available in the modified list.'),
         'plural' => $this->t('@count blocks are available in the modified list.'),

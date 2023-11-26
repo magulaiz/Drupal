@@ -225,6 +225,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
         'plural' => $this->t('@count views are available in the modified list.'),
         'all' => $this->t('All available views are listed.'),
       ],
+      '#minimum_filter_length' => 2,
     ];
 
     $list['enabled']['heading']['#markup'] = '<h2>' . $this->t('Enabled', [], ['context' => 'Plural']) . '</h2>';
