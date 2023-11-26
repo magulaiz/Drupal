@@ -176,8 +176,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $this->entityRepository = $entity_repository;
     $this->entityFieldManager = $entity_field_manager;
     if ($entity_type_bundle_info === NULL) {
-       $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-       @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $entity_type_bundle_info argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3380621', E_USER_DEPRECATED);
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $entity_type_bundle_info argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3380621', E_USER_DEPRECATED);
     }
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
 
