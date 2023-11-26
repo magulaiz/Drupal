@@ -21,7 +21,9 @@
    * list_filter render element.
    *
    * Created listFilter instances may be modified with custom behaviors by
-   * overriding the .filterList methods.
+   * overriding the prototype methods. See the core/drupal.list-filter.details
+   * and core/drupal.list-filter.sibling-groups libraries for examples of how to
+   * do this.
    *
    * @type {Drupal~behavior}
    */
@@ -153,9 +155,6 @@
   /**
     * Gets the group index for a row.
     *
-    * This hands over to a helper method based on how groups and rows are
-    * arranged. Override this for custom arrangements.
-    *
     * @param {jQuery} $row
     *  A row jQuery object.
     * @param {jQuery} $groups
@@ -165,21 +164,6 @@
     *  The index for the group the row belongs to.
     */
   Drupal.listFilter.prototype.getRowGroup = function ($row, $groups) {
-    const groupingMethod = this.listFilterSettings.grouping_method;
-
-    return this[groupingMethod]($row, $groups);
-  }
-
-  /**
-   * Gets the group for a row, for rows which are children of groups.
-   *
-   * @param {jQuery} row
-   *   The jQuery object for the row.
-   *
-   * @return {number}
-   *   The index of the group.
-   */
-  Drupal.listFilter.prototype.getRowGroupUsingContainment = function ($row, $groups) {
     let foundIndex = null;
     $groups.each((index, group) => {
       if (jQuery.contains(group, $row[0])) {
@@ -189,33 +173,6 @@
       }
     });
     return foundIndex;
-  }
-
-  /**
-   * Gets the group for a row, for rows which are siblings of groups.
-   *
-   * For example, a table where some table rows are headings and some rows are
-   * items to search.
-   *
-   * @param {jQuery} row
-   *   The jQuery object for the row.
-   *
-   * @return {number}
-   *   The index of the group.
-   */
-  Drupal.listFilter.prototype.getRowGroupUsingPriorSibling = function ($row, $groups) {
-    // Go through previous siblings of the row, until we find a previous sibling
-    // that is a group.
-    let $currentSibling = $row;
-    do {
-      $currentSibling = $currentSibling.prev()
-    } while (!$groups.is($currentSibling) && $currentSibling.length > 0);
-
-    if ($currentSibling.length == 0) {
-      return null;
-    }
-
-    return $groups.index($currentSibling);
   }
 
   /**
@@ -230,7 +187,7 @@
     // Case insensitive expression to find query at the beginning of a word.
     const re = new RegExp(`\\b${query}`, 'i');
 
-    // Reset table when the textbox is cleared.
+    // Reset when the textbox is cleared.
     if (query.length === 0) {
       this.$rows.show();
       this.showAllGroups();
@@ -239,6 +196,8 @@
 
       return;
     }
+
+    this.preFilter();
 
     let visibleCount = 0;
     // Search in all of the rows' sources and show or hide accordingly.
@@ -260,6 +219,13 @@
       ),
     );
   };
+
+  /**
+   * Acts when filter text is entered, before filtering is performed.
+   *
+   * This allows libraries which extend this to act.
+   */
+  Drupal.listFilter.prototype.preFilter = function () { };
 
   /**
    * Hides all groups which have no rows showing for the current filter.

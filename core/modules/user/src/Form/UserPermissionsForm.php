@@ -173,7 +173,7 @@ class UserPermissionsForm extends FormBase {
       '#list_item' => 'tr:has(div.permission)',
       '#list_group' => 'tr:has(td.module)',
       '#list_text' => 'span.table-filter-text-source',
-      '#grouping_method' => 'getRowGroupUsingPriorSibling',
+      '#library' => 'core/drupal.list-filter.sibling-groups',
       '#announce' => [
         'singular' => $this->t('1 permission is available in the modified list.'),
         'plural' => $this->t('@count permissions are available in the modified list.'),

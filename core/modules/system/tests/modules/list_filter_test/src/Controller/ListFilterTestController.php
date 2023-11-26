@@ -135,7 +135,7 @@ class ListFilterTestController {
       '#list_item' => '.filter-item',
       '#list_text' => '.filter-text',
       '#list_group' => 'details',
-      '#grouping_method' => 'getRowGroupUsingContainment',
+      '#library' => 'core/drupal.list-filter.details',
     ];
 
     $build['container'] = [
@@ -200,7 +200,7 @@ class ListFilterTestController {
       '#list_item' => 'tr:has(td.list-text)',
       '#list_group' => 'tr:has(td.list-header)',
       '#list_text' => '.list-text',
-      '#grouping_method' => 'getRowGroupUsingPriorSibling',
+      '#library' => 'core/drupal.list-filter.details',
     ];
 
     $build['container'] = [

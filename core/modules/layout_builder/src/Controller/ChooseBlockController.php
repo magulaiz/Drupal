@@ -138,7 +138,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
       '#list_container_id' => 'block-categories',
       '#list_item' => 'li',
       '#list_group' => 'details',
-      '#grouping_method' => 'getRowGroupUsingContainment',
+      '#library' => 'core/drupal.list-filter.details',
       '#announce' => [
         'singular' => $this->t('1 block is available in the modified list.'),
         'plural' => $this->t('@count blocks are available in the modified list.'),

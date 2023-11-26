@@ -19,14 +19,15 @@ use Drupal\Core\Render\Element;
  * - #list_group: (optional) The CSS selector, relative to the container, for
  *   the groups of items. If omitted, the list is not considered to have
  *   grouping.
- * - #grouping_method: (optional) The name of a method on Drupal.listFilter to
- *   use to associate items into groups. The base library supports the
- *   following values:
- *   - getRowGroupUsingContainment: Item elements are within their group
+ * - #library: (optional) The name of the front-end library to use for the
+ *   filtering behaviour. Core includes the following libraries:
+ *   - core/drupal.list-filter: (default) Supports both no grouping, and groups
+ *     which contain their items.
+ *   - core/drupal.list-filter.details: Additional behaviours for HTML <details>
  *     elements.
- *   - getRowGroupUsingPriorSibling: Item elements are siblings of group
- *     elements. The group of an item is its first prior sibling element that is
- *     a group.
+ *   - core/drupal.list-filter.sibling-groups: Item elements are siblings of
+ *     group elements, rather than child elements. The group of an item is its
+ *     first prior sibling element that is a group.
  * - #announce: (optional) An array of strings to use for accessibility ARIA
  *   announcements when the number of visible items is changed. The keys are:
  *   - singular: Message to announce when only one item is visible.
@@ -58,13 +59,13 @@ class ListFilter extends Search {
       '#list_item' => '.filter-item',
       '#list_text' => '',
       '#list_group' => '',
-      '#grouping_method' => '',
       '#announce' => [
         'singular' => t('1 item is available in the modified list.'),
         'plural' => t('@count items are available in the modified list.'),
         'all' => t('All available items are listed.'),
       ],
       '#debug' => FALSE,
+      '#library' => 'core/drupal.list-filter',
     ];
   }
 
@@ -99,7 +100,6 @@ class ListFilter extends Search {
       '#list_item',
       '#list_text',
       '#list_group',
-      '#grouping_method',
       '#announce',
       '#debug',
     ] as $key) {
@@ -108,7 +108,7 @@ class ListFilter extends Search {
 
     $element['#attached']['drupalSettings']['listFilter'][$list_filter_id] = $settings;
 
-    $element['#attached']['library'][] = 'core/drupal.list-filter';
+    $element['#attached']['library'][] = $element['#library'];
 
     return $element;
   }
