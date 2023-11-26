@@ -8,6 +8,9 @@ parameters:
 
   tmpDir: phpstan-tmp
 
+  checkFunctionArgumentTypes: true
+  checkArgumentsPassedByReference: true
+
   level: 1
 
   checkInternalClassCaseSensitivity: true
