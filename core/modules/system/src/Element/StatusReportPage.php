@@ -53,6 +53,7 @@ class StatusReportPage extends RenderElement {
 
         case 'drupal':
         case 'webserver':
+        case 'drush_version':
         case 'database_system':
         case 'database_system_version':
         case 'php':

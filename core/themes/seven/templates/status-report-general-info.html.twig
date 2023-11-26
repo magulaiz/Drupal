@@ -40,6 +40,10 @@
         {% if drupal.description %}
           <div class="description">{{ drupal.description }}</div>
         {% endif %}
+
+        {% if drush_version.value %}
+        <h4 class="system-status-general-info__sub-item-title">{{ 'Drush'|t }}</h4>{{ drush_version.value }}
+        {% endif %}
       </div>
     </div>
     <div class="system-status-general-info__item">

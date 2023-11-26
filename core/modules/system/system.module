@@ -224,6 +224,7 @@ function system_theme() {
         'php' => [],
         'php_memory_limit' => [],
         'webserver' => [],
+        'drush_version' => [],
       ],
     ],
     'admin_page' => [
