@@ -1011,6 +1011,7 @@ entity_reference_selection.default:
 entity_reference_selection.default:*:
   type: entity_reference_selection.default
 
+# Schema for the configuration of mailer transport DSN.
 mailer_dsn:
   type: mapping
   label: 'Symfony mailer transport DSN'
