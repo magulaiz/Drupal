@@ -19,6 +19,18 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
   protected static $modules = ['editor', 'editor_test', 'filter'];
 
   /**
+   * The config entity mapping properties with >=1 required keys.
+   *
+   * @var string[][]
+   * @see \Drupal\Core\Config\Entity\ConfigEntityType::getPropertiesToExport()
+   * @see ::testRequiredPropertyKeysMissing()
+   */
+  protected static array $propertiesWithRequiredKeys = [
+    'settings' => "'ponies_too' is a required key because editor is unicorn (see config schema type editor.settings.unicorn).",
+    'image_upload' => "'status' is a required key.",
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -151,6 +163,19 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     // Note how this is the same as the initial value. This proves that `status`
     // being FALSE prevents any meaningless key-value pairs to be present, and
     // `status` being TRUE requires those then meaningful pairs to be present.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyKeysMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyKeysMissing([
+      'dependencies' => [
+        // @see ::testInvalidDependencies()
+        // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
+        '' => 'This text editor requires a text format.',
+      ],
+    ]);
   }
 
 }
