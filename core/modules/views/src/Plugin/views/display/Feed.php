@@ -140,7 +140,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
    *
    * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::setHeaders()
    */
-  protected static function setHeaders(CacheableResponse $response, array $headers) {
+  protected static function setHeaders(CacheableResponse $response, array $headers): void {
     foreach ($headers as $values) {
       $name = $values[0];
       $value = $values[1];

@@ -207,7 +207,7 @@ class DisplayFeedTest extends ViewTestBase {
   /**
    * Tests the cacheability of the feed display.
    */
-  public function testFeedCacheability() {
+  public function testFeedCacheability(): void {
     // Test as an anonymous user.
     $this->drupalLogout();
 
