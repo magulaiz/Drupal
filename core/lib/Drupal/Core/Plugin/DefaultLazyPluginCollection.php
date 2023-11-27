@@ -129,7 +129,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    */
   public function setConfiguration($configuration) {
     if ($configuration === NULL) {
-      return;
+      $configuration = [];
     }
 
     // Track each instance ID as it is updated.

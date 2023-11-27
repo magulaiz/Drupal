@@ -80,7 +80,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    */
   public function setConfiguration($configuration) {
     if ($configuration === NULL) {
-      return;
+      $configuration = [];
     }
 
     $this->configuration = $configuration;
