@@ -39,14 +39,29 @@ trait LanguageTestTrait {
    *   The language code to use as default language.
    *
    * @return \Drupal\language\ContentLanguageSettingsInterface
-   *   The content language config entity saved to enable the bundle
-   *   translation.
+   *   The saved content language config entity.
    */
   public static function enableBundleTranslation(string $entity_type_id, string $bundle, ?string $default_langcode = LanguageInterface::LANGCODE_SITE_DEFAULT) {
     return ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle)
       ->setDefaultLangcode($default_langcode)
       ->setLanguageAlterable(TRUE)
       ->save();
+  }
+
+  /**
+   * Disables translations for the given entity type bundle.
+   *
+   * @param string $entity_type_id
+   *   ID of the entity type.
+   * @param string $bundle
+   *   Bundle name.
+   */
+  public static function disableBundleTranslation(string $entity_type_id, string $bundle) {
+    // TODO Why are both a save and a delete needed?
+    $content_language_settings = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
+    $content_language_settings->setLanguageAlterable(FALSE)
+      ->save();
+    $content_language_settings->delete();
   }
 
   /**
