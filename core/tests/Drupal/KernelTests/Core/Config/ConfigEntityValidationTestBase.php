@@ -4,9 +4,14 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Schema\Mapping;
+use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\TypedData\Plugin\DataType\LanguageReference;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstraint;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
@@ -43,6 +48,15 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @var bool
    */
   protected bool $hasLabel = TRUE;
+
+  /**
+   * The config entity mapping properties with >=1 required keys.
+   *
+   * @var string[]
+   * @see \Drupal\Core\Config\Entity\ConfigEntityType::getPropertiesToExport()
+   * @see ::testRequiredPropertyKeysMissing()
+   */
+  protected static array $propertiesWithRequiredKeys = [];
 
   /**
    * {@inheritdoc}
@@ -444,6 +458,119 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       ]);
       $this->entity->set($property_name, $original_value);
     }
+  }
+
+  /**
+   * A property that is required must have a value (i.e. not NULL).
+   *
+   * @param array|null $additional_expected_validation_errors_when_missing
+   *   Some config entity properties with required keys have additional
+   *   validation constraints that cause additional messages to appear.
+   *
+   * @todo Remove this optional parameter in https://www.drupal.org/project/drupal/issues/2820364#comment-15333069
+   *
+   * @return void
+   */
+  public function testRequiredPropertyKeysMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    $config_entity_properties = array_keys($this->entity->getEntityType()->getPropertiesToExport());
+
+    // Guide developers when $additional_expected_validation_errors_when_missing
+    // does not contain sensible values.
+    if (!empty(array_diff(array_keys($additional_expected_validation_errors_when_missing ?? []), $config_entity_properties))) {
+      throw new \LogicException(sprintf('The test %s lists `%s` in $additional_expected_validation_errors_when_missing but it is not a property of the `%s` config entity type.',
+        get_called_class(),
+        implode(',', array_diff(array_keys($additional_expected_validation_errors_when_missing), $config_entity_properties)),
+        $this->entity->getEntityTypeId(),
+      ));
+    }
+
+    $mapping_properties = array_keys(array_filter(
+      ConfigEntityAdapter::createFromEntity($this->entity)->getProperties(FALSE),
+      fn (TypedDataInterface $v) => $v instanceof Mapping
+    ));
+
+    $required_property_keys = $this->getRequiredPropertyKeys();
+    if (!$this->isFullyValidatable() && !empty($required_property_keys)) {
+      throw new \LogicException('No keys can be required when a config entity type is not fully validatable.');
+    }
+
+    $original_entity = clone $this->entity;
+    foreach ($mapping_properties as $property) {
+      $this->entity = clone $original_entity;
+      $this->entity->set($property, []);
+      $expected_validation_errors = array_key_exists($property, $required_property_keys)
+        ? [$property => $required_property_keys[$property]]
+        : [];
+      $this->assertValidationErrors(($additional_expected_validation_errors_when_missing[$property] ?? []) + $expected_validation_errors);
+    }
+  }
+
+  /**
+   * Whether the tested config entity type is fully validatable.
+   *
+   * @return bool
+   *   Whether the tested config entity type is fully validatable.
+   */
+  protected function isFullyValidatable(): bool {
+    $typed_config = $this->container->get('config.typed');
+    assert($typed_config instanceof TypedConfigManagerInterface);
+    // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::getConfigTypedData()
+    $config_entity_type_schema_constraints = $typed_config
+      ->createFromNameAndData(
+        $this->entity->getConfigDependencyName(),
+        $this->entity->toArray()
+      )->getConstraints();
+
+    foreach ($config_entity_type_schema_constraints as $constraint) {
+      if ($constraint instanceof FullyValidatableConstraint) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Determines the config entity mapping properties with required keys.
+   *
+   * @return string[]
+   *   The config entity mapping properties with one or more required keys, plus
+   *   the corresponding expected validation error message.
+   */
+  protected function getRequiredPropertyKeys(): array {
+    // If a config entity type is not fully validatable, no mapping property
+    // keys are required.
+    if (!$this->isFullyValidatable()) {
+      return [];
+    }
+
+    $config_entity_properties = array_keys($this->entity->getEntityType()
+      ->getPropertiesToExport());
+
+    // Otherwise, all mapping property keys are required except for those marked
+    // optional. Rather than inspecting config schema, require authors of tests
+    // to explicitly list optional properties in a `propertiesWithRequiredKeys`
+    // property on this class.
+    // @see \Drupal\KernelTests\Config\Schema\MappingTest::testMappingInterpretation()
+    $class = static::class;
+    $properties_with_required_keys = [];
+    while ($class) {
+      if (property_exists($class, 'propertiesWithRequiredKeys')) {
+        $properties_with_required_keys += $class::$propertiesWithRequiredKeys;
+      }
+      $class = get_parent_class($class);
+    }
+
+    // Guide developers when $propertiesWithRequiredKeys does not contain
+    // sensible values.
+    if (!empty(array_diff(array_keys($properties_with_required_keys), $config_entity_properties))) {
+      throw new \LogicException(sprintf('The %s test class lists %s in $propertiesWithRequiredKeys but it is not a property of the %s config entity type.',
+        get_called_class(),
+        implode(',', array_diff(array_keys($properties_with_required_keys), $config_entity_properties)),
+        $this->entity->getEntityTypeId()
+      ));
+    }
+
+    return $properties_with_required_keys;
   }
 
 }
