@@ -92,7 +92,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     set_announce_feed_test_endpoint($this->updatedJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
 
-    $this->drupalGet('/admin/announcements_feed');
+    $this->drupalGet('admin/announcements_feed');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
     $this->drupalLogout();
 
@@ -102,7 +102,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->clickLink('Announcements');
     set_announce_feed_test_endpoint($this->removed);
     cache_clear_all('announcements_feed', 'cache', TRUE);
-    $this->drupalGet('/admin/announcements_feed');
+    $this->drupalGet('admin/announcements_feed');
     $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
 
     $this->drupalLogout();
@@ -271,7 +271,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $this->drupalLogin($account);
     $this->drupalGet('');
     // Since it is valid login the class should be matches in html.
-    $this->drupalGet('/admin/announcements_feed');
+    $this->drupalGet('admin/announcements_feed');
     $this->assertText('Announcements');
     $this->drupalLogout();
   }
@@ -282,7 +282,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
   public function testAnnounceWithoutPermission() {
     $account = $this->drupalCreateUser(array('access toolbar'));
     $this->drupalLogin($account);
-    $this->drupalGet('/admin/announcements_feed');
+    $this->drupalGet('admin/announcements_feed');
     $this->assertText('You are not authorized to access this page.');
   }
 
@@ -339,7 +339,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     $this->clickLink('Announcements');
     set_announce_feed_test_endpoint($this->unknownJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
-    $this->drupalGet('/admin/announcements_feed');
+    $this->drupalGet('admin/announcements_feed');
     $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
 
     // Test when the JSON feeds are invalid i.e. Json not formatted.
@@ -349,7 +349,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     $this->clickLink('Announcements');
     set_announce_feed_test_endpoint($this->invalidJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
-    $this->drupalGet('/admin/announcements_feed');
+    $this->drupalGet('admin/announcements_feed');
     $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
 
     $this->drupalLogout();
