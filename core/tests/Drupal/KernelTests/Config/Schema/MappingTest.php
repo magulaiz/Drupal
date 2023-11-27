@@ -138,7 +138,7 @@ class MappingTest extends KernelTestBase {
           'editor' => 'ckeditor5',
           'image_upload' => [
             'status' => FALSE,
-          ]
+          ],
         ])->save();
         break;
 
