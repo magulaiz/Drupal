@@ -136,7 +136,9 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
    *   - The header value.
    *   - (optional) Whether to replace a current value with the new one, or add
    *     it to the others. If the value is not replaced, it will be appended,
-   *     resulting in a header like this: 'Header: value1,value2'
+   *     resulting in a header like this: 'Header: value1,value2'.
+   *
+   * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::setHeaders()
    */
   protected static function setHeaders(CacheableResponse $response, array $headers) {
     foreach ($headers as $values) {
