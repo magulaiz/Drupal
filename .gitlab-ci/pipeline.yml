@@ -42,7 +42,7 @@ stages:
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 .with-database: &with-database
-  name: dimitriskr/$_TARGET_DB
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
   alias: database
 
 .with-chrome: &with-chrome
@@ -144,7 +144,7 @@ stages:
   variables:
     <<: *test-variables
     CONCURRENCY: "$CONCURRENCY"
-    KUBERNETES_CPU_REQUEST: "24"
+    KUBERNETES_CPU_REQUEST: "8"
 
 '🩹 Test-only changes':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
