@@ -33,6 +33,9 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = Editor::create([
       'format' => $format->id(),
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $this->entity->save();
   }

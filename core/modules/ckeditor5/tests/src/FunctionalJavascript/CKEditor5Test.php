@@ -93,6 +93,10 @@ class CKEditor5Test extends CKEditor5TestBase {
         'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
+        'max_dimensions' => [
+          'width' => 0,
+          'height' => 0,
+        ],
       ],
     ])->save();
     $this->assertSame([], array_map(
@@ -641,11 +645,15 @@ JS;
               'reversed' => FALSE,
               'startIndex' => FALSE,
             ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
           ],
         ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
       ],
     ])->save();
     $this->assertSame([], array_map(
@@ -768,6 +776,9 @@ JS;
     Editor::create([
       'format' => 'ckeditor5',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
