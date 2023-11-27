@@ -137,8 +137,8 @@
 
       // Filter rows when search text is entered.
       $input.on({
-        keyup: Drupal.debounce(jQuery.proxy(this.filterList, this), 200),
-        click: Drupal.debounce(jQuery.proxy(this.filterList, this), 200),
+        keyup: Drupal.debounce(jQuery.proxy(this.filterUpdate, this), 200),
+        click: Drupal.debounce(jQuery.proxy(this.filterUpdate, this), 200),
         keydown: preventEnterKey,
       });
     }
@@ -176,15 +176,55 @@
   }
 
   /**
-   * Filters the list in response to typing in the search box.
+   * Acts in response to typing in the search box.
    *
    * @param {*} e
    *  The event.
    */
-  Drupal.listFilter.prototype.filterList = function (e) {
+  Drupal.listFilter.prototype.filterUpdate = function (e) {
     const query = e.target.value;
-    var re;
 
+    // Reset when the textbox is cleared.
+    if (query.length === 0) {
+      this.reset();
+      return;
+    }
+
+    // Filter if the length of the query is at least the minimum number of
+    // characters.
+    if (query.length >= this.listFilterSettings.minimum_filter_length) {
+      this.filterList(query);
+      return;
+    }
+  }
+
+  /**
+   * Resets the list to show all items and groups.
+   */
+  Drupal.listFilter.prototype.reset = function () {
+    this.$rows.show();
+    this.showAllGroups();
+
+    Drupal.announce(this.listFilterSettings.announce.all);
+  }
+
+  /**
+   * Acts when filter text is entered, before filtering is performed.
+   *
+   * This allows libraries which extend this to act.
+   */
+  Drupal.listFilter.prototype.preFilter = function () { };
+
+  /**
+   * Filters the list.
+   *
+   * @param {string} query
+   *  The text entered in the filter search box.
+   */
+  Drupal.listFilter.prototype.filterList = function (query) {
+    this.preFilter();
+
+    var re;
     if (this.listFilterSettings.search_start_of_words) {
       // Case insensitive expression to find query at the beginning of a word.
       re = new RegExp(`\\b${query}`, 'i');
@@ -194,50 +234,27 @@
       re = new RegExp(query, 'i');
     }
 
-    // Reset when the textbox is cleared.
-    if (query.length === 0) {
-      this.$rows.show();
-      this.showAllGroups();
+    let visibleCount = 0;
 
-      Drupal.announce(this.listFilterSettings.announce.all);
+    // Search in all of the rows' sources and show or hide accordingly.
+    this.sources.forEach((source, index) => {
+      const match = source.search(re) !== -1;
 
-      return;
-    }
+      this.$rows.eq(index).toggle(match);
 
-    // Filter if the length of the query is at least the minimum number of
-    // characters.
-    if (query.length >= this.listFilterSettings.minimum_filter_length) {
-      this.preFilter();
+      visibleCount += + match;
+    });
 
-      let visibleCount = 0;
+    this.hideEmptyGroups();
 
-      // Search in all of the rows' sources and show or hide accordingly.
-      this.sources.forEach((source, index) => {
-        const match = source.search(re) !== -1;
-
-        this.$rows.eq(index).toggle(match);
-
-        visibleCount += + match;
-      });
-
-      this.hideEmptyGroups();
-
-      Drupal.announce(
-        Drupal.formatPlural(
-          visibleCount,
-          this.listFilterSettings.announce.singular,
-          this.listFilterSettings.announce.plural,
-        ),
-      );
-    }
+    Drupal.announce(
+      Drupal.formatPlural(
+        visibleCount,
+        this.listFilterSettings.announce.singular,
+        this.listFilterSettings.announce.plural,
+      ),
+    );
   };
-
-  /**
-   * Acts when filter text is entered, before filtering is performed.
-   *
-   * This allows libraries which extend this to act.
-   */
-  Drupal.listFilter.prototype.preFilter = function () { };
 
   /**
    * Hides all groups which have no rows showing for the current filter.
