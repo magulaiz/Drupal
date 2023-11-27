@@ -50,7 +50,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * The config entity properties whose values are optional (set to NULL).
    *
    * @var string[]
-   * @see \Drupal\Core\Config\Entity\ConfigEntityType::getPropertiesToExport()
+   * @see \Drupal\Core\Config\Entity\ConfigEntityTypeInterface::getPropertiesToExport()
    * @see ::testRequiredPropertyValuesMissing()
    */
   protected static array $optionalPropertyValues = [
@@ -463,9 +463,11 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * A property that is required must have a value (i.e. not NULL).
    *
-   * @param array|null $additional_expected_validation_errors_when_missing
+   * @param string[]|null $additional_expected_validation_errors_when_missing
    *   Some required config entity properties have additional validation
-   *   constraints that cause additional messages to appear.
+   *   constraints that cause additional messages to appear. Keys must be
+   *   config entity properties, values must be arrays as expected by
+   *   ::assertValidationErrors().
    *
    * @todo Remove this optional parameter in https://www.drupal.org/project/drupal/issues/2820364#comment-15333069
    *
@@ -476,10 +478,11 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     // Guide developers when $additional_expected_validation_errors_when_missing
     // does not contain sensible values.
-    if (!empty(array_diff(array_keys($additional_expected_validation_errors_when_missing ?? []), $config_entity_properties))) {
+    $non_existing_properties = array_diff(array_keys($additional_expected_validation_errors_when_missing ?? []), $config_entity_properties);
+    if ($non_existing_properties) {
       throw new \LogicException(sprintf('The test %s lists `%s` in $additional_expected_validation_errors_when_missing but it is not a property of the `%s` config entity type.',
         __METHOD__,
-        implode(',', array_diff(array_keys($additional_expected_validation_errors_when_missing), $config_entity_properties)),
+        implode(',', $non_existing_properties),
         $this->entity->getEntityTypeId(),
       ));
     }
@@ -546,10 +549,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // `type: required_label`.
     if (!$this->isFullyValidatable()) {
       return array_diff($config_entity_properties, [
-        // @see ::testLangcode()
+        // @see `type: label`
         'langcode',
         'default_langcode',
-        // @see
+        // @see `type: required_label`
         $this->entity->getEntityType()->getKey('label'),
       ]);
     }
@@ -570,10 +573,11 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     // Guide developers when $optionalProperties does not contain sensible
     // values.
-    if (!empty(array_diff($optional_properties, $config_entity_properties))) {
+    $non_existing_properties = array_diff($optional_properties, $config_entity_properties);
+    if ($non_existing_properties) {
       throw new \LogicException(sprintf('The %s test class lists %s in $optionalProperties but it is not a property of the %s config entity type.',
         get_called_class(),
-        implode(',', array_diff($optional_properties, $config_entity_properties)),
+        implode(',', $non_existing_properties),
         $this->entity->getEntityTypeId()
       ));
     }
