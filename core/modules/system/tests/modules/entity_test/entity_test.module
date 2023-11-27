@@ -376,6 +376,7 @@ function entity_test_entity_insert(EntityInterface $entity) {
     $entity->setNewRevision(FALSE);
     $entity->save();
   }
+  _entity_test_post_save($entity);
 }
 
 /**
@@ -384,6 +385,18 @@ function entity_test_entity_insert(EntityInterface $entity) {
 function entity_test_entity_update(EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface) {
     \Drupal::state()->set('entity_test.loadedRevisionId', $entity->getLoadedRevisionId());
+  }
+  _entity_test_post_save($entity);
+}
+
+/**
+ * Common code for hook_entity_insert and hook_entity_update.
+ *
+ * @see \Drupal\KernelTests\Core\Entity\EntityAccessControlHandlerTest::testEntityChangedAndSavedAccessNotCachedInPostSaveHook
+ */
+function _entity_test_post_save(EntityInterface $entity) {
+  if (!empty($entity->_captureEntityTestPostSaveAccessResultDelete)) {
+    \Drupal::state()->set('entity_test.post_save.access_result.delete', $entity->access('delete', \Drupal::currentUser(), TRUE));
   }
 }
 
