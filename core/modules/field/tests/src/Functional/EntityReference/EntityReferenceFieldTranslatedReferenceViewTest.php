@@ -168,10 +168,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $this->assertEntityReferenceFormDisplay();
 
     // Disable translation for referrer content type.
-    $this->drupalLogin($this->rootUser);
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm(['settings[node][referrer][translatable]' => FALSE], 'Save configuration');
-    $this->drupalLogout();
+    self::disableBundleTranslation('node', 'referrer');
 
     // Create a referrer entity without translation.
     $this->referrerEntity = $this->createReferrerEntity(FALSE);
