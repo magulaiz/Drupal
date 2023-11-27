@@ -19,7 +19,7 @@ function shortcut_post_update_fix_empty_titles() {
   if (!empty($shortcuts)) {
     foreach ($shortcuts as $shortcut) {
       if (empty($shortcut->getTitle())) {
-        $shortcut->setTitle('(' . t('empty') . ')');
+        $shortcut->setTitle('(' . t('empty', [], ['langcode' => $shortcut->language()->getId()]) . ')');
         $shortcut->save();
       }
     }
