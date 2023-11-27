@@ -45,6 +45,9 @@ class CKEditor5DialogTest extends CKEditor5TestBase {
           'items' => ['link'],
         ],
       ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
 
     $this->assertSame([], array_map(

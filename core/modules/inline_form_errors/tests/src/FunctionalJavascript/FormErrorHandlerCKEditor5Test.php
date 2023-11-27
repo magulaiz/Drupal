@@ -47,6 +47,9 @@ class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
     Editor::create([
       'format' => 'ckeditor5',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
 
     // Create a node type for testing.
