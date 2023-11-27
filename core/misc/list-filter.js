@@ -183,9 +183,16 @@
    */
   Drupal.listFilter.prototype.filterList = function (e) {
     const query = e.target.value;
+    var re;
 
-    // Case insensitive expression to find query at the beginning of a word.
-    const re = new RegExp(`\\b${query}`, 'i');
+    if (this.listFilterSettings.search_start_of_words) {
+      // Case insensitive expression to find query at the beginning of a word.
+      re = new RegExp(`\\b${query}`, 'i');
+    }
+    else {
+      // Case insensitive expression to find query anywhere in the text.
+      re = new RegExp(query, 'i');
+    }
 
     // Reset when the textbox is cleared.
     if (query.length === 0) {

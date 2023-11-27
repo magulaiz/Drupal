@@ -54,6 +54,7 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
       '#list_item' => 'tbody tr',
       '#list_text' => 'td.table-filter-text-source',
       '#minimum_filter_length' => 2,
+      '#search_start_of_words' => TRUE,
     ];
 
     $build['table']['#attributes']['id'] = 'config-translation-entity-list';

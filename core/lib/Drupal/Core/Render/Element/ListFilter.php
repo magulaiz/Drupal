@@ -18,6 +18,9 @@ use Drupal\Core\Render\Element;
  *   item should be considered searchable text.
  * - #minimum_filter_length: (optional) The minimum length of the typed string
  *   before a filter is triggered. Defaults to 1.
+ * - #search_start_of_words: (optional) Whether the entered filter text will
+ *   search anywhere within words, or only from the start of words. For example,
+ *   if TRUE, typing 'ke' will not filter the word 'cake'. Defaults to FALSE.
  * - #list_group: (optional) The CSS selector, relative to the container, for
  *   the groups of items. If omitted, the list is not considered to have
  *   grouping.
@@ -62,6 +65,7 @@ class ListFilter extends Search {
       '#minimum_filter_length' => 1,
       '#list_text' => '',
       '#list_group' => '',
+      '#search_start_of_words' => FALSE,
       '#announce' => [
         'singular' => t('1 item is available in the modified list.'),
         'plural' => t('@count items are available in the modified list.'),
@@ -102,6 +106,7 @@ class ListFilter extends Search {
       '#list_container_id',
       '#list_item',
       '#minimum_filter_length',
+      '#search_start_of_words',
       '#list_text',
       '#list_group',
       '#announce',

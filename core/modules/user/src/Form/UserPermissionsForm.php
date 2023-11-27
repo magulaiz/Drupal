@@ -173,6 +173,7 @@ class UserPermissionsForm extends FormBase {
       '#list_item' => 'tr:has(div.permission)',
       '#list_group' => 'tr:has(td.module)',
       '#list_text' => 'span.table-filter-text-source',
+      '#search_start_of_words' => TRUE,
       '#library' => 'core/drupal.list-filter.sibling-groups',
       '#announce' => [
         'singular' => $this->t('1 permission is available in the modified list.'),
