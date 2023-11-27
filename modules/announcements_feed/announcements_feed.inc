@@ -22,7 +22,7 @@ function announcements_feed_get_announcements() {
     $announcements = announcements_feed_get_all_announcements();
   }
   catch (Exception $e) {
-    drupal_set_message(t('An error occurred while parsing the announcements feed, check the logs for more information.'), 'error');
+    drupal_set_message(t('An error occurred while parsing the announcements feed, check the logs for more information.' . $e->getMessage()), 'error');
     return array();
   }
   $build = array();
