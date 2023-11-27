@@ -38,9 +38,11 @@ class TestLocalActionWithConfig extends LocalActionDefault {
    *   The route provider to load routes by name.
    * @param \Drupal\Core\Config\Config $config
    *   The 'menu_test.links.action' config.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, Config $config) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, Config $config, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $request);
 
     $this->config = $config;
   }
@@ -54,7 +56,8 @@ class TestLocalActionWithConfig extends LocalActionDefault {
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('config.factory')->get('menu_test.links.action')
+      $container->get('config.factory')->get('menu_test.links.action'),
+      $container->get('request_stack')->getCurrentRequest()
     );
   }
 

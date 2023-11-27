@@ -27,6 +27,13 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
   protected $routeProvider;
 
   /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
    * Constructs a LocalActionDefault object.
    *
    * @param array $configuration
@@ -37,11 +44,14 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->routeProvider = $route_provider;
+    $this->request = $request;
   }
 
   /**
@@ -52,7 +62,8 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('router.route_provider')
+      $container->get('router.route_provider'),
+      $container->get('request_stack')->getCurrentRequest(),
     );
   }
 

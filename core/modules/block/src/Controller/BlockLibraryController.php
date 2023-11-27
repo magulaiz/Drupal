@@ -104,6 +104,14 @@ class BlockLibraryController extends ControllerBase {
     $region = $request->query->get('region');
     $weight = $request->query->get('weight');
 
+    // Add url route parameters to provide correct region setting
+    // after creation.
+    $add_action_url = $build['local_actions']['block_content_add_action']['#link']['url'] ?? NULL;
+    if ($add_action_url instanceof Url) {
+      $add_action_url->setRouteParameter('region', $region);
+      $build['local_actions']['block_content_add_action']['#link']['url'] = $add_action_url;
+    }
+
     // Only add blocks which work without any available context.
     $definitions = $this->blockManager->getFilteredDefinitions('block_ui', $this->contextRepository->getAvailableContexts(), [
       'theme' => $theme,
