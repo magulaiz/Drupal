@@ -77,10 +77,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'content']);
 
     // Display the language selector.
-    $this->drupalLogin($this->administrator);
-    $edit = ['language_configuration[language_alterable]' => TRUE];
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save');
+    self::enableBundleTranslation('node', 'article');
     $this->drupalLogin($this->translator);
   }
 
