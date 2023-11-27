@@ -42,7 +42,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    *
    * @dataProvider providerCheckConfigSchema
    */
-  public function testCheckConfigSchema(string $type_to_validate_against, bool $validate_constraints, array $expectations) {
+  public function testCheckConfigSchema(string $type_to_validate_against, bool $validate_constraints, array|bool $no_data_expectations, array $expectations) {
     // Test a non existing schema.
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
     $this->assertFalse($ret);
@@ -59,6 +59,12 @@ class SchemaCheckTraitTest extends KernelTestBase {
 
     $ret = $this->checkConfigSchema($this->typedConfig, $type_to_validate_against, $config_data, $validate_constraints);
     $this->assertEquals($expectations, $ret);
+
+    // Omit all data, this should trigger validation errors for required keys
+    // missing.
+    $config_data = [];
+    $ret = $this->checkConfigSchema($this->typedConfig, $type_to_validate_against, $config_data, $validate_constraints);
+    $this->assertEquals($no_data_expectations, $ret);
   }
 
   public function providerCheckConfigSchema(): array {
@@ -80,10 +86,12 @@ class SchemaCheckTraitTest extends KernelTestBase {
       'config_test.types, without validation' => [
         'config_test.types',
         FALSE,
+        TRUE,
         $expected_storage_type_check_errors,
       ],
       'config_test.types, with validation' => [
         'config_test.types',
+        TRUE,
         TRUE,
         $expected_storage_type_check_errors + $expected_validation_errors,
       ],
@@ -103,11 +111,26 @@ class SchemaCheckTraitTest extends KernelTestBase {
       'config_test.types.fully_validatable, without validation' => [
         'config_test.types.fully_validatable',
         FALSE,
+        TRUE,
         $expected_storage_type_check_errors,
       ],
       'config_test.types.fully_validatable, with validation' => [
         'config_test.types.fully_validatable',
         TRUE,
+        [
+          "[] 'array' is a required key.",
+          "[] 'boolean' is a required key.",
+          "[] 'exp' is a required key.",
+          "[] 'float' is a required key.",
+          "[] 'float_as_integer' is a required key.",
+          "[] 'hex' is a required key.",
+          "[] 'int' is a required key.",
+          "[] 'string' is a required key.",
+          "[] 'string_int' is a required key.",
+          "[] 'mapping_with_only_required_keys' is a required key.",
+          "[] 'mapping_with_some_required_keys' is a required key.",
+          "[] 'mapping_with_only_optional_keys' is a required key.",
+        ],
         $expected_storage_type_check_errors + $expected_validation_errors + [
           // For `mapping_with_only_required_keys`: errors for all 4 keys.
           3 => "[mapping_with_only_required_keys] 'north' is a required key.",
