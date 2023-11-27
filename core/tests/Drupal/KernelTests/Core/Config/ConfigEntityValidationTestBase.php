@@ -478,7 +478,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // does not contain sensible values.
     if (!empty(array_diff(array_keys($additional_expected_validation_errors_when_missing ?? []), $config_entity_properties))) {
       throw new \LogicException(sprintf('The test %s lists `%s` in $additional_expected_validation_errors_when_missing but it is not a property of the `%s` config entity type.',
-        get_called_class(),
+        __METHOD__,
         implode(',', array_diff(array_keys($additional_expected_validation_errors_when_missing), $config_entity_properties)),
         $this->entity->getEntityTypeId(),
       ));
