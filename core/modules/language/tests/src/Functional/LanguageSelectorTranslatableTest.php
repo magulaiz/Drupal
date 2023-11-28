@@ -8,6 +8,7 @@ use Drupal\Tests\language\Traits\LanguageTestTrait;
 /**
  * Tests the content translation settings language selector options.
  *
+ * @covers \Drupal\language\Form\ContentLanguageSettingsForm
  * @group language
  */
 class LanguageSelectorTranslatableTest extends BrowserTestBase {
