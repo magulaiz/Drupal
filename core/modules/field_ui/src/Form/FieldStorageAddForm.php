@@ -52,6 +52,8 @@ class FieldStorageAddForm extends FormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypePluginManager
    *   The field type plugin manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface|ConfigFactoryInterface $entityFieldManager
    *   (optional) The entity field manager.
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
@@ -64,18 +66,12 @@ class FieldStorageAddForm extends FormBase {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
+    protected ConfigFactoryInterface $config_factory,
     protected EntityFieldManagerInterface|ConfigFactoryInterface $entityFieldManager,
     protected PrivateTempStore $tempStore,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
   ) {
-    if ($this->entityFieldManager instanceof ConfigFactoryInterface) {
-      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $config_factory argument is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3400352', E_USER_DEPRECATED);
-      $this->entityFieldManager = func_get_arg(3);
-      if ($this->tempStore !== NULL && $this->fieldTypeCategoryManager !== NULL) {
-        $this->tempStore = func_get_arg(4);
-        $this->fieldTypeCategoryManager = func_get_arg(5);
-      }
-    }
+    $this->configFactory = $config_factory;
     if ($this->tempStore === NULL) {
       @trigger_error('Calling FieldStorageAddForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
       $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
@@ -100,6 +96,7 @@ class FieldStorageAddForm extends FormBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
+      $container->get('config.factory'),
       $container->get('entity_field.manager'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
@@ -144,7 +141,7 @@ class FieldStorageAddForm extends FormBase {
       '#weight' => -20,
     ];
 
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
+    $field_prefix = $this->configFactory->get('field_ui.settings')->get('field_prefix');
     $form['field_name'] = [
       '#type' => 'machine_name',
       '#field_prefix' => $field_prefix,
@@ -290,7 +287,7 @@ class FieldStorageAddForm extends FormBase {
       // Add the field prefix.
       $field_name = $this->config('field_ui.settings')->get('field_prefix') . $field_name;
       $form_state->setValueForElement($form['field_name'], $field_name);
-      // Set the temp store here, so we can actually see the error oon the modal.
+      // Set the temp store here, so we can actually see the error on the modal.
       $field_storage_type = $form_state->getValue('field_options_wrapper') ?? $form_state->get('field_type');
       $this->setTempStore($this->entityTypeId, $field_storage_type, $this->bundle, $form_state->getValue('label'), $form_state->getValue('field_name'), $form_state->getValue('translatable'));
       if (!empty($this->messenger()->messagesByType('error'))) {
@@ -317,7 +314,8 @@ class FieldStorageAddForm extends FormBase {
    */
   public function fieldNameExists(string $value, array $element, FormStateInterface $form_state): bool {
     // Add the field prefix.
-    $field_name = $this->config('field_ui.settings')->get('field_prefix') . $value;
+    $field_name = $form_state->getValue('field_name');
+    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     return isset($field_storage_definitions[$field_name]);

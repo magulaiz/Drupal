@@ -15,8 +15,8 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  */
 class ManageDisplayTest extends WebDriverTestBase {
 
-  use FieldUiJSTestTrait;
   use FieldUiTestTrait;
+  use FieldUiJSTestTrait;
 
   /**
    * {@inheritdoc}
