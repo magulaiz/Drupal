@@ -30,6 +30,7 @@ class ConfigureSectionForm extends SectionFormBase {
     // exception since the layout may not have a context mapping for a required
     // context slot on creation.
     $this->layout = $section->getLayout();
+    $form_state->setTemporaryValue('gathered_contexts', $this->getPopulatedContexts($this->sectionStorage));
     $form = parent::buildForm($form, $form_state);
 
     if ($this->isUpdate) {
@@ -37,8 +38,6 @@ class ConfigureSectionForm extends SectionFormBase {
         $form['#title'] = $this->t('Configure @section', ['@section' => $label]);
       }
     }
-
-    $form_state->setTemporaryValue('gathered_contexts', $this->getPopulatedContexts($this->sectionStorage));
 
     $target_highlight_id = $this->isUpdate ? $this->sectionUpdateHighlightId($delta) : $this->sectionAddHighlightId($delta);
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
