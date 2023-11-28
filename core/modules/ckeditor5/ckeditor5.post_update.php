@@ -137,49 +137,8 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     }
     $settings = $editor->getSettings();
 
-    // Nothing to do if the numbered list toolbar item is not enabled.
-    if (!in_array('numberedList', $settings['toolbar']['items'], TRUE)) {
-      return FALSE;
-    }
-
-    // Nothing to do if the Source Editing plugin is not enabled.
-    if (!array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
-      return FALSE;
-    }
-
-    $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
-    $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
-
-    // If <ol start> is not allowed through Source Editing (the only way it
-    // could possibly be supported until now), and it is not an unrestricted
-    // text format (such as "Full HTML"), then set the new "startIndex" setting
-    // for the List plugin to false.
-    // Except … that this update path was added too late, and many sites have in
-    // the meantime edited their text editor configuration through the UI, in
-    // which case they may already have set it. If that is the case: do not
-    // override it.
-    $ol_start = HTMLRestrictions::fromString('<ol start>');
-    if (!array_key_exists('ckeditor5_list', $settings['plugins']) || !array_key_exists('startIndex', $settings['plugins']['ckeditor5_list']['properties'])) {
-      $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = $ol_start->diff($source_edited)
-        ->allowsNothing() || $format_restrictions->isUnrestricted();
-    }
-    // Same for <ol reversed> and "reversed".
-    $ol_reversed = HTMLRestrictions::fromString('<ol reversed>');
-    if (!array_key_exists('ckeditor5_list', $settings['plugins']) || !array_key_exists('reversed', $settings['plugins']['ckeditor5_list']['properties'])) {
-      $settings['plugins']['ckeditor5_list']['properties']['reversed'] = $ol_reversed->diff($source_edited)
-        ->allowsNothing() || $format_restrictions->isUnrestricted();
-    }
-    // Match the sort order in ListPlugin::defaultConfiguration().
-    ksort($settings['plugins']['ckeditor5_list']['properties']);
-
-    // Update the Source Editing configuration too.
-    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
-      ->diff($ol_start)
-      ->diff($ol_reversed)
-      ->toCKEditor5ElementsArray();
-
-    $editor->setSettings($settings);
-
-    return TRUE;
+    // @see ckeditor5_editor_presave()
+    return in_array('numberedList', $settings['toolbar']['items'], TRUE)
+      && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']);
   });
 }
