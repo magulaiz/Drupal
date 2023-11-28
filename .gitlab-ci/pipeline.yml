@@ -146,7 +146,7 @@ variables:
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "18"
   services:
     - <<: *with-database
     - <<: *with-chrome
