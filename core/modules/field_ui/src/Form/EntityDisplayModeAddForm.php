@@ -41,7 +41,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     $isViewMode = FALSE;
-    if ($this->displayContext ==='view') {
+    if ($this->displayContext == 'view') {
       $isViewMode = TRUE;
     }
     $command = new RedirectCommand(FieldUI::getDisplayRouteInfo($this->getEntity()->toArray()['targetEntityType'], \Drupal::request()->query->get('parent'), $isViewMode)->toString());

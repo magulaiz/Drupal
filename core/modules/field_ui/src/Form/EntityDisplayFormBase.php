@@ -248,7 +248,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         ];
       }
       $route_name = 'entity.entity_' . $this->displayContext . '_mode.add_form';
-      $route_label = $this->t('Add new @display_context mode',  ['@display_context' => $this->displayContext]);
+      $route_label = $this->t('Add new @display_context mode', ['@display_context' => $this->displayContext]);
 
       $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
 
