@@ -482,7 +482,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     if ($non_existing_properties) {
       throw new \LogicException(sprintf('The test %s lists `%s` in $additional_expected_validation_errors_when_missing but it is not a property of the `%s` config entity type.',
         __METHOD__,
-        implode(',', $non_existing_properties),
+        implode(', ', $non_existing_properties),
         $this->entity->getEntityTypeId(),
       ));
     }
@@ -580,8 +580,8 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $non_existing_properties = array_diff($optional_properties, $config_entity_properties);
     if ($non_existing_properties) {
       throw new \LogicException(sprintf('The %s test class lists %s in $optionalProperties but it is not a property of the %s config entity type.',
-        get_called_class(),
-        implode(',', $non_existing_properties),
+        static::class,
+        implode(', ', $non_existing_properties),
         $this->entity->getEntityTypeId()
       ));
     }
