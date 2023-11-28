@@ -45,16 +45,31 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
 
     // Gather a list of moderation states that don't create a default revision.
     $workflow_non_default_states = [];
+    $relevant_tracked_vids = [];
     foreach ($this->entityTypeManager->getStorage('workflow')->loadByProperties(['type' => 'content_moderation']) as $workflow) {
       /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $workflow_type */
       $workflow_type = $workflow->getTypePlugin();
       // Find all workflows which are moderating entity types of the same type
       // to those that are tracked by the workspace.
-      if (array_intersect($workflow_type->getEntityTypes(), array_keys($tracked_revisions))) {
+      $relevant_entity_type_ids = array_intersect($workflow_type->getEntityTypes(), array_keys($tracked_revisions));
+      if (!empty($relevant_entity_type_ids)) {
+
+        // Gather all revision ids that should be checked for published state in
+        // the content moderation workflow which are tracked in the workspace.
+        // Entity IDs of types that are not moderated are not relevant here.
+        foreach ($relevant_entity_type_ids as $entity_type_id) {
+          $tracked = $this->workspaceAssociation->getTrackedEntities($workspace->id(), $entity_type_id);
+          $relevant_tracked_vids = array_merge(array_keys($tracked[$entity_type_id]), $relevant_tracked_vids);
+        }
+
         $workflow_non_default_states[$workflow->id()] = array_filter(array_map(function (ContentModerationState $state) {
           return !$state->isDefaultRevisionState() ? $state->id() : NULL;
         }, $workflow_type->getStates()));
       }
+    }
+
+    if (!$relevant_tracked_vids) {
+      return;
     }
 
     // Check if any revisions that are about to be published are in a
@@ -62,7 +77,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
     $query = $this->entityTypeManager->getStorage('content_moderation_state')->getQuery()
       ->allRevisions()
       ->accessCheck(FALSE);
-    $query->condition('content_entity_revision_id', $tracked_revision_ids, 'IN');
+    $query->condition('content_entity_revision_id', $relevant_tracked_vids, 'IN');
 
     $workflow_condition_group = $query->orConditionGroup();
     foreach ($workflow_non_default_states as $workflow_id => $non_default_states) {

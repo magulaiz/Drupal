@@ -4,6 +4,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -32,6 +33,13 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   use WorkspaceTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'path_alias',
+  ];
+
+  /**
    * The ID of the revisionable entity type used in the tests.
    *
    * @var string
@@ -43,6 +51,9 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // Ensure path_alias entity schema is installed.
+    $this->installEntitySchema('path_alias');
 
     $this->initializeWorkspacesModule();
     $this->switchToWorkspace('stage');
@@ -89,6 +100,27 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     $this->createContentType(['type' => 'article']);
     $this->addEntityTypeAndBundleToWorkflow($editorial_2, 'node', 'article');
 
+    // Create URL alias that does not have a workflow and ensure the workspace
+    // can be published.
+    $url_alias = PathAlias::create(['path' => '/path-source', 'alias' => '/path-target']);
+    $url_alias->save();
+
+    // Create new revision of URL alias in workspace.
+    $url_alias->save();
+
+    // Create node outside of workspace with same revision ID as URL alias.
+    $non_workspace_node = $this->workspaceManager->executeOutsideWorkspace(function () {
+      $node = Node::create(['type' => 'page', 'title' => 'Test page - non-workspace', 'moderation_state' => 'draft']);
+      $node->save();
+      $node->save();
+      $node->save();
+      return $node;
+    });
+
+    // Ensure non-workspace node has the same revision ID as the URL alias in
+    // the stage workspace.
+    $this->assertEquals($url_alias->getRevisionId(), $non_workspace_node->getRevisionId());
+
     // Create three entities for each bundle, covering all the available
     // moderation states.
     $page_archived = Node::create(['type' => 'page', 'title' => 'Test page - archived', 'moderation_state' => 'archived']);
@@ -114,6 +146,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     // with the same name ('archived'), but with different default revision
     // settings.
     try {
+      $access_handler->resetCache();
       $this->workspaces['stage']->publish();
       $this->fail('The expected exception was not thrown.');
     }
