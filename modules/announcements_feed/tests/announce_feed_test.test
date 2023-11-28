@@ -94,7 +94,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
 
     $this->drupalGet('admin/announcements_feed');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
-    var_dump($this->drupalGetContent());
     $this->drupalLogout();
 
     // Testing the removed json feed.
@@ -125,7 +124,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     // Only no announcements available message should show.
     $this->clickLink('Announcements');
     $this->assertText('No announcements available');
-    var_dump($this->drupalGetContent());
   }
 
 }
