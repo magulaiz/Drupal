@@ -492,6 +492,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // @see ::testImmutableProperties()
     $immutable_properties = $this->entity->getEntityType()->getConstraints()['ImmutableProperties'];
 
+    // To test properties with missing required values, $this->entity must be
+    // modified to be able to use ::assertValidationErrors(). To allow restoring
+    // $this->entity to its original value for each tested property, a clone of
+    // the original entity is needed.
     $original_entity = clone $this->entity;
     foreach ($config_entity_properties as $property) {
       // Do not try to set immutable properties to NULL: their immutability is
