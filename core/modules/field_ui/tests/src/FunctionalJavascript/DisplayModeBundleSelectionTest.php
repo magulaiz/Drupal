@@ -33,6 +33,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalCreateContentType([
       'name' => 'Article',
       'type' => 'article',
@@ -84,13 +85,13 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     // Verify that test display mode is selected for article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test"]');
     $this->assertTrue($checkbox->isChecked());
 
     // Verify that test display mode is not selected for page content type.
     $this->drupalGet("/admin/structure/types/manage/page/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test"]');
     $this->assertFalse($checkbox->isChecked());
 
@@ -109,19 +110,19 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     // Verify that test2 display mode is selected for article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test2"]');
     $this->assertTrue($checkbox->isChecked());
 
     // Verify that test2 display mode is not selected for page content type.
     $this->drupalGet("/admin/structure/types/manage/page/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $checkbox = $page->find('css', '[data-drupal-selector="edit-display-modes-custom-test2"]');
     $this->assertFalse($checkbox->isChecked());
 
     // Verify that display mode is not selected on article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $checkbox = $page->find('css', "[data-drupal-selector='edit-display-modes-custom-$custom_mode']");
     $this->assertFalse($checkbox->isChecked());
 
@@ -135,7 +136,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     // Verify that display mode is selected on article content type.
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $checkbox = $page->find('css', "[data-drupal-selector='edit-display-modes-custom-$custom_mode']");
     $this->assertTrue($checkbox->isChecked());
   }
@@ -166,7 +167,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
     $this->drupalGet("/admin/structure/types/manage/article/$path");
 
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $this->clickLink("Add new $display_mode mode");
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -176,11 +177,13 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $this->assertTrue($checkbox->isChecked());
     $page->find('css', '[data-drupal-selector="edit-label"]')->setValue("test-$display_mode");
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
-    $this->assertNotNull($assert_session->waitForButton('Enable view modes'));
-    $this->assertNotEmpty($this->assertSession()->waitForText("Saved the test-$display_mode $display_mode mode."));
+    $this->assertNotNull($assert_session->waitForButton('Display settings'));
+    $this->assertTrue($this->assertSession()->waitForText("Saved the test-$display_mode $display_mode mode."));
+    // Ensure new display mode is added to the local tasks bar.
+    $assert_session->pageTextMatchesCount(3, "/test-{$display_mode}/");
 
     // Check that the display mode checkbox is checked.
-    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Enable view modes');
+    $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $this->assertTrue($page->find('css', "#edit-display-modes-custom-test-$display_mode")->isChecked());
   }
 
