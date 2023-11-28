@@ -4,6 +4,7 @@ namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
@@ -456,17 +457,17 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
-   * @param string $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use new FormattableMarkup() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    *
    * @internal
    */
-  protected function assertShortcutQuickLink(string $label, int $index = 0, string $message = ''): void {
+  protected function assertShortcutQuickLink(string $label, int $index = 0, string|MarkupInterface $message = ''): void {
     $links = $this->xpath('//a[normalize-space()=:label]', [':label' => $label]);
     $message = ($message ? $message : new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
-    $this->assertArrayHasKey($index, $links, $message);
+    $this->assertArrayHasKey($index, $links, (string) $message);
   }
 
 }

@@ -125,14 +125,14 @@ class CommentThreadingTest extends CommentTestBase {
   /**
    * Asserts that the link to the specified parent comment is present.
    *
-   * @param int $cid
+   * @param string|int $cid
    *   The comment ID to check.
-   * @param int $pid
+   * @param string|int $pid
    *   The expected parent comment ID.
    *
    * @internal
    */
-  protected function assertParentLink(int $cid, int $pid): void {
+  protected function assertParentLink(string|int $cid, string|int $pid): void {
     // This pattern matches a markup structure like:
     // @code
     // <article id="comment-2">
@@ -156,12 +156,12 @@ class CommentThreadingTest extends CommentTestBase {
   /**
    * Asserts that the specified comment does not have a link to a parent.
    *
-   * @param int $cid
+   * @param string|int $cid
    *   The comment ID to check.
    *
    * @internal
    */
-  protected function assertNoParentLink(int $cid): void {
+  protected function assertNoParentLink(string|int $cid): void {
     $pattern = "//article[@id='comment-$cid']";
     // A parent link is always accompanied by the text "In reply to".
     $this->assertSession()->elementTextNotContains('xpath', $pattern, 'In reply to');
