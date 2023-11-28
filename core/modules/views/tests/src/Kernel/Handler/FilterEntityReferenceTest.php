@@ -3,7 +3,7 @@
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -20,7 +20,7 @@ use Drupal\views\Views;
 class FilterEntityReferenceTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use NodeCreationTrait;
   use UserCreationTrait;
 
