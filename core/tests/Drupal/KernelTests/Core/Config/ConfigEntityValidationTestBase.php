@@ -53,7 +53,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @see \Drupal\Core\Config\Entity\ConfigEntityTypeInterface::getPropertiesToExport()
    * @see ::testRequiredPropertyValuesMissing()
    */
-  protected static array $optionalPropertyValues = [
+  protected static array $propertiesWithOptionalValues = [
     '_core',
     'third_party_settings',
   ];
@@ -486,7 +486,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
         $this->entity->getEntityTypeId(),
       ));
     }
-    $optional_properties = $this->getOptionalPropertyValues();
+    $properties_with_optional_values = $this->getPropertiesWithOptionalValues();
 
     // Get the config entity properties that are immutable.
     // @see ::testImmutableProperties()
@@ -503,7 +503,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
       $this->entity = clone $original_entity;
       $this->entity->set($property, NULL);
-      $expected_validation_errors = in_array($property, $optional_properties, TRUE)
+      $expected_validation_errors = in_array($property, $properties_with_optional_values, TRUE)
         ? []
         : [$property => 'This value should not be null.'];
       $this->assertValidationErrors(($additional_expected_validation_errors_when_missing[$property] ?? []) + $expected_validation_errors);
@@ -540,7 +540,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @return string[]
    *   The config entity properties whose values are optional.
    */
-  protected function getOptionalPropertyValues(): array {
+  protected function getPropertiesWithOptionalValues(): array {
     $config_entity_properties = array_keys($this->entity->getEntityType()
       ->getPropertiesToExport());
 
@@ -559,13 +559,13 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     // Otherwise, all properties are required except for those marked
     // optional. Rather than inspecting config schema, require authors of tests
-    // to explicitly list optional properties in a `optionalProperties` property
-    // on this class.
+    // to explicitly list optional properties in a
+    // `propertiesWithOptionalValues` property on this class.
     $class = static::class;
     $optional_properties = [];
     while ($class) {
-      if (property_exists($class, 'optionalPropertyValues')) {
-        $optional_properties = array_merge($optional_properties, $class::$optionalPropertyValues);
+      if (property_exists($class, 'propertiesWithOptionalValues')) {
+        $optional_properties = array_merge($optional_properties, $class::$propertiesWithOptionalValues);
       }
       $class = get_parent_class($class);
     }
