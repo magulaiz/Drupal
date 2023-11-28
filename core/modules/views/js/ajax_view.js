@@ -174,7 +174,7 @@
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
     $('input[type=submit], button[type=submit], input[type=image]', form)
-      .not('[data-drupal-selector=edit-reset]')
+      .not('[data-drupal-selector=edit-reset],[data-drupal-selector^="edit-tab-selector"],.is-entity-browser-submit')
       .each((index, element) => {
         const selfSettings = $.extend({}, this.element_settings, {
           base: $(element).attr('id'),
