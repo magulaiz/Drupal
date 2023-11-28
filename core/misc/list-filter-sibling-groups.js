@@ -22,7 +22,7 @@
       // that is a group.
       let $currentSibling = $row;
       do {
-        $currentSibling = $currentSibling.prev()
+        $currentSibling = $currentSibling.prev();
       } while (!$groups.is($currentSibling) && $currentSibling.length > 0);
 
       if ($currentSibling.length == 0) {
