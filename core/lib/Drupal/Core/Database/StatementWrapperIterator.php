@@ -103,7 +103,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
         $this->connection->getTarget(),
         $this->getQueryString(),
         $args ?? [],
-        $this->connection->findCallerFromDebugBacktrace()
+        $this->connection->findCallerFromDebugBacktrace(DEBUG_BACKTRACE_IGNORE_ARGS)
       );
       $this->connection->dispatchEvent($startEvent);
     }
