@@ -15,7 +15,12 @@ class AssertContentTraitTest extends UnitTestCase {
    * @covers ::getTextContent
    */
   public function testGetTextContent() {
-    $test = new TestClass();
+    $test = new class() {
+      use AssertContentTrait {
+        getTextContent as public;
+        setRawContent as public;
+      }
+    };
     $raw_content = <<<EOT
 
 <Head>
@@ -27,23 +32,10 @@ class AssertContentTraitTest extends UnitTestCase {
 bar
 </body>
 EOT;
-    $test->_setRawContent($raw_content);
-    $this->assertStringNotContainsString('foo', $test->_getTextContent());
-    $this->assertStringNotContainsString('<body>', $test->_getTextContent());
-    $this->assertStringContainsString('bar', $test->_getTextContent());
-  }
-
-}
-
-class TestClass extends UnitTestCase {
-  use AssertContentTrait;
-
-  public function _setRawContent($content) {
-    $this->setRawContent($content);
-  }
-
-  public function _getTextContent() {
-    return $this->getTextContent();
+    $test->setRawContent($raw_content);
+    $this->assertStringNotContainsString('foo', $test->getTextContent());
+    $this->assertStringNotContainsString('<body>', $test->getTextContent());
+    $this->assertStringContainsString('bar', $test->getTextContent());
   }
 
 }
