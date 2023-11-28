@@ -28,7 +28,7 @@ use Drupal\Core\Render\Element;
  *   filtering behaviour. Core includes the following libraries:
  *   - core/drupal.list-filter: (default) Supports both no grouping, and groups
  *     which contain their items.
- *   - core/drupal.list-filter.details: Additional behaviours for HTML <details>
+ *   - core/drupal.list-filter.details: Additional behaviors for HTML <details>
  *     elements.
  *   - core/drupal.list-filter.sibling-groups: Item elements are siblings of
  *     group elements, rather than child elements. The group of an item is its
