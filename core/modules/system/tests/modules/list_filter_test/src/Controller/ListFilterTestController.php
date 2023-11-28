@@ -200,7 +200,7 @@ class ListFilterTestController {
       '#list_item' => 'tr:has(td.list-text)',
       '#list_group' => 'tr:has(td.list-header)',
       '#list_text' => '.list-text',
-      '#library' => 'core/drupal.list-filter.details',
+      '#library' => 'core/drupal.list-filter.sibling-groups',
     ];
 
     $build['container'] = [
