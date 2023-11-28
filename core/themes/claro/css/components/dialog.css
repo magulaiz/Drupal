@@ -28,7 +28,7 @@
   }
 }
 
-.ui-dialog .modal-dialog {
+.ui-dialog.modal-dialog {
   max-width: 100vw;
 }
 
