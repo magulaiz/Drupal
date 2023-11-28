@@ -8,16 +8,14 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
   /**
    * Add filtering for groups that are siblings of their items.
    */
   $.extend(Drupal.listFilter.prototype, {
-
     /**
      * {@inheritdoc}
      */
-    getRowGroup: function ($row, $groups) {
+    getRowGroup($row, $groups) {
       // Go through previous siblings of the row, until we find a previous sibling
       // that is a group.
       let $currentSibling = $row;
@@ -25,14 +23,11 @@
         $currentSibling = $currentSibling.prev();
       } while (!$groups.is($currentSibling) && $currentSibling.length > 0);
 
-      if ($currentSibling.length == 0) {
+      if ($currentSibling.length === 0) {
         return null;
       }
 
       return $groups.index($currentSibling);
     },
-
   });
-
 })(jQuery, Drupal, drupalSettings);
-

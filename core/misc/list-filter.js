@@ -4,7 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
   /**
    * Filter lists or tables of text.
    *
@@ -55,7 +54,6 @@
    *   Settings for the filtering added via the list_filter render element.
    */
   Drupal.listFilter = function ($container, listFilterSettings) {
-
     /**
      * The list filter settings, from the render element.
      */
@@ -281,7 +279,4 @@
   Drupal.listFilter.prototype.showAllGroups = function () {
     this.$groups && this.$groups.show();
   }
-
-
 })(jQuery, Drupal, drupalSettings);
-

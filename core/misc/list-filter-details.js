@@ -4,16 +4,14 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
   /**
    * Add filtering for <details> elements to the listFilter object.
    */
   $.extend(Drupal.listFilter.prototype, {
-
     /**
      * {@inheritdoc}
      */
-    preFilter: function () {
+    preFilter() {
       // Before filtering, open all <details> to be able to use ':visible'.
       // Mark the <details> elements that were closed before filtering, so
       // they can be reclosed when filtering is removed.
@@ -26,7 +24,7 @@
     /**
      * {@inheritdoc}
      */
-    showAllGroups: function () {
+    showAllGroups() {
       // Return <details> elements that had been closed before filtering
       // to a closed state.
       this.$groups
@@ -37,8 +35,5 @@
       // Show all groups.
       this.$groups.show();
     },
-
   });
-
 })(jQuery, Drupal, drupalSettings);
-
