@@ -70,10 +70,10 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
       'access announcements',
     ));
     $this->drupalLogin($this->user);
-    $this->responseJson = $base_url . $base_path . '/announcements-feed-json/community-feeds.json';
-    $this->updatedJson = $base_url . $base_path . '/announcements-feed-json/updated.json';
-    $this->emptyJson = $base_url . $base_path . '/announcements-feed-json/empty.json';
-    $this->removed = $base_url . $base_path . '/announcements-feed-json/removed.json';
+    $this->responseJson = $base_url . $base_path . '/announcements-feed-json/community-feeds';
+    $this->updatedJson = $base_url . $base_path . '/announcements-feed-json/updated';
+    $this->emptyJson = $base_url . $base_path . '/announcements-feed-json/empty';
+    $this->removed = $base_url . $base_path . '/announcements-feed-json/removed';
     set_announce_feed_test_endpoint($this->responseJson);
   }
 
@@ -257,7 +257,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
-    $response_json = $base_url . $base_path . '/announcements-feed-json/community-feeds.json';
+    $response_json = $base_url . $base_path . '/announcements-feed-json/community-feeds';
     set_announce_feed_test_endpoint($response_json);
   }
 
@@ -319,10 +319,10 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
       'access announcements',
     ));
     $this->drupalLogin($this->user);
-    $this->responseJson = $base_url . $base_path . '/announcements-feed-json/community-feeds.json';
+    $this->responseJson = $base_url . $base_path . '/announcements-feed-json/community-feeds';
     // This file not present, to check the URL not found for JSON.
-    $this->unknownJson = $base_url . $base_path . '/announcements-feed-json/unknown.json';
-    $this->invalidJson = $base_url . $base_path . '/announcements-feed-json/invalid-feeds.json';
+    $this->unknownJson = $base_url . $base_path . '/announcements-feed-json/unknown';
+    $this->invalidJson = $base_url . $base_path . '/announcements-feed-json/invalid-feeds';
     set_announce_feed_test_endpoint($this->responseJson);
   }
 
