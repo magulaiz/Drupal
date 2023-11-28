@@ -329,6 +329,7 @@ JS;
     // FALSE.
     $textfield2->setValue('Llamas say yarhar');
     $textfield3->focus();
+    sleep(1);
     $this->assertSession()->assertWaitOnAjaxRequest();
     // Force longer wait.
     sleep(10);
