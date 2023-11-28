@@ -206,10 +206,24 @@ config_test.validation:
             callback: [\Drupal\config_test\ConfigValidation, validateGiraffes]
     uuid:
       type: uuid
-    required_label:
-      type: required_label
-    not_null_required_label:
+
+    # To test the interaction of NotBlank and NotNull.
+    # cspell:ignore allownull
+    string__not_blank:
+      type: string
+      constraints:
+        NotBlank: {}
+    string__not_null__not_blank:
       type: required_label
       constraints:
-        # NotNull in addition to `type: required_label`'s NotBlank
         NotNull: {}
+        NotBlank: {}
+    string__not_null__not_blank_allownull:
+      type: string
+      constraints:
+        NotNull: {}
+        NotBlank:
+          allowNull: true
+    # `type: required_label` should provide the sensible validation errors.
+    required_label:
+      type: required_label

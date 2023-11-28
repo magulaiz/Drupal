@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Config;
 
+// cspell:ignore allownull
+
 use Drupal\Core\Config\Schema\Sequence;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\Config\Schema\TypedConfigInterface;
@@ -126,34 +128,54 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertInstanceOf(ConstraintViolationListInterface::class, $result);
     $this->assertEmpty($result);
 
-    // Validates required label.
+    // Tests the interaction of `NotBlank` and `NotNull`.
     $original = $config->getRawData();
     // Empty string.
-    $config->set('required_label', '');
-    $config->set('not_null_required_label', '');
+    $config->set('string__not_blank', '');
+    $config->set('string__not_null__not_blank', '');
+    $config->set('string__not_null__not_blank_allownull', '');
     $config->save();
     $typed_config = $typed_config_manager->get('config_test.validation');
     $result = $typed_config->validate();
-    $this->assertCount(2, $result);
-    $this->assertSame('required_label', $result->get(0)->getPropertyPath());
+    // All 3 combinations get 1 message each: the one from `NotBlank`.
+    $this->assertCount(3, $result);
+    $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
     $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
-    $this->assertSame('not_null_required_label', $result->get(1)->getPropertyPath());
+    $this->assertSame('string__not_null__not_blank', $result->get(1)->getPropertyPath());
     $this->assertEquals('This value should not be blank.', $result->get(1)->getMessage());
+    $this->assertSame('string__not_null__not_blank_allownull', $result->get(2)->getPropertyPath());
+    $this->assertEquals('This value should not be blank.', $result->get(2)->getMessage());
     // NULL.
+    $config->set('string__not_blank', NULL);
+    $config->set('string__not_null__not_blank', NULL);
+    $config->set('string__not_null__not_blank_allownull', NULL);
+    $config->save();
+    $typed_config = $typed_config_manager->get('config_test.validation');
+    $result = $typed_config->validate();
+    // `NotBlank: {}` only: 1 message.
+    $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
+    $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
+    // `NotBlank: {}` and `NotNull: {}`: 2 messages, one of which is pointless.
+    $this->assertSame('string__not_null__not_blank', $result->get(1)->getPropertyPath());
+    $this->assertEquals('This value should not be null.', $result->get(1)->getMessage());
+    $this->assertSame('string__not_null__not_blank', $result->get(2)->getPropertyPath());
+    $this->assertEquals('This value should not be blank.', $result->get(2)->getMessage());
+    // `NotBlank: {}` and `NotNull: {allowNull: true}`: 1 message.
+    $this->assertSame('string__not_null__not_blank_allownull', $result->get(3)->getPropertyPath());
+    $this->assertEquals('This value should not be null.', $result->get(3)->getMessage());
+    $this->assertCount(4, $result);
+    // Verify the `type: required_label` also gets a single validation error.
+    $config->setData($original);
     $config->set('required_label', NULL);
-    $config->set('not_null_required_label', NULL);
     $config->save();
     $typed_config = $typed_config_manager->get('config_test.validation');
     $result = $typed_config->validate();
     $this->assertSame('required_label', $result->get(0)->getPropertyPath());
     $this->assertEquals('This value should not be null.', $result->get(0)->getMessage());
-    $this->assertSame('not_null_required_label', $result->get(1)->getPropertyPath());
-    $this->assertEquals('This value should not be null.', $result->get(1)->getMessage());
-    $this->assertCount(2, $result);
+    $this->assertCount(1, $result);
     // Prepare for the next test.
     $config->setData($original);
     $config->save();
-
     // Test constraints on primitive types.
     $config->set('llama', 'elephant');
     $config->save();
