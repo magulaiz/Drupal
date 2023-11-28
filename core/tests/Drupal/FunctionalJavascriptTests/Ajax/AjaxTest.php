@@ -300,7 +300,7 @@ JS;
    */
   public function testAjaxFocus() {
     // $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3396536");
-    $this->drupalGet('/ajax_forms_test_get_form');
+    $this->drupalGet('ajax_forms_test_get_form');
 
     $this->assertNotNull($select = $this->assertSession()->elementExists('css', '#edit-select'));
     $select->setValue('green');
