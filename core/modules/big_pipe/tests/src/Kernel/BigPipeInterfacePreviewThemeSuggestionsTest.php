@@ -87,7 +87,6 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
       'big_pipe_interface_preview__block__full',
     ], $suggestions);
 
-
     $test_args = [];
     $test_args['callback'] = 'test_callback_function';
     $test_args['arguments'][] = 'test_arg';
