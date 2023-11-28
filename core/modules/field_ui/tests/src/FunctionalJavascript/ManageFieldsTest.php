@@ -340,7 +340,7 @@ class ManageFieldsTest extends WebDriverTestBase {
       'entity_type' => 'node',
       'bundle' => 'article',
     ])->save();
-    $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_text');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_text');
     $page = $this->getSession()->getPage();
     $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
     $page->findButton('Save settings')->click();
