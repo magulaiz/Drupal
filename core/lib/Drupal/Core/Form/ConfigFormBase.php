@@ -35,7 +35,7 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface|null $_typedConfigManager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface|null $typedConfigManager
    *   The typed config manager.
    */
   public function __construct(
