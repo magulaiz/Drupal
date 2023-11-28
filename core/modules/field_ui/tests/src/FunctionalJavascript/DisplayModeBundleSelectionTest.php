@@ -185,7 +185,6 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     // Ensure new display mode is added to the local tasks bar.
     $assert_session->elementsCount('xpath', '//*[@id="block-tabs-block"]/ul[2]/li/a', $mode_count[1]);
 
-
     // Check that the display mode checkbox is checked.
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $this->assertTrue($page->find('css', "#edit-display-modes-custom-test-$display_mode")->isChecked());
