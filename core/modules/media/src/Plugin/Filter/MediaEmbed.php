@@ -388,6 +388,8 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       return $this->renderer->render($build);
     });
     $result = $result->merge(BubbleableMetadata::createFromRenderArray($build));
+    // Remove new line characters to avoid interference with AutoP.
+    $markup = preg_replace('/\n|&#10/', '', $markup);
     static::replaceNodeContent($node, $markup);
   }
 
