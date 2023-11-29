@@ -112,7 +112,7 @@ default:
 
 .run-on-commit: &run-on-commit
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "issue"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
 
 .run-daily: &run-daily
   rules:
