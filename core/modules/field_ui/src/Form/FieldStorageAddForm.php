@@ -121,7 +121,17 @@ class FieldStorageAddForm extends FormBase {
     $this->bundle = $form_state->get('bundle');
 
     $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $ui_definitions = $this->fieldTypePluginManager->getUiDefinitions();
+    \Drupal::moduleHandler()->invokeAll('field_ui_field_type_ui_definitions_alter', [&$ui_definitions, $entity_type_id]);
+    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+    $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
+    if ($selected_field_type === 'comment' && !array_key_exists($selected_field_type, $ui_definitions)) {
+      // Redirect to the FieldStorageAddController.
+      $controller_resolver = \Drupal::service('controller_resolver');
+      $controller = $controller_resolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldStorageAddController::getFieldSelectionForm');
+      return $controller($entity_type_id, $bundle);
+    }
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($ui_definitions, 'label', 'id');
     // Invoke a hook to get category properties.
     if (array_key_exists($selected_field_type, $grouped_definitions)) {
       $field_types = $grouped_definitions[$selected_field_type];
@@ -210,8 +220,6 @@ class FieldStorageAddForm extends FormBase {
         $form['field_options_wrapper']['fields'] += $group_field_options;
       }
 
-      $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-      $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
       $form['actions']['previous'] = [
         '#type' => 'link',
         '#title' => $this->t('Change field type'),
