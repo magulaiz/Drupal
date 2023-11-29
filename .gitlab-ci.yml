@@ -124,7 +124,7 @@ default:
       when: manual
       allow_failure: true
 
-# Default configuration
+# Default configuration.
 'DEFAULT: PHP 8.2 MySQL 8':
   <<: *default-stage
   variables:
@@ -132,7 +132,7 @@ default:
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
-  # Run on MR, push and performance test.
+  # Run on MR, schedule, push and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
