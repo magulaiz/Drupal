@@ -1032,7 +1032,9 @@
   Drupal.Ajax.prototype.success = function (response, status) {
     // Remove the progress element.
     if (this.progress.element) {
-      $(this.progress.element).remove();
+      $(
+        `.${$(this.progress.element).attr('class').replace(/\s/g, '.')}`,
+      ).remove();
     }
     if (this.progress.object) {
       this.progress.object.stopMonitoring();
