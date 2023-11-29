@@ -16,7 +16,15 @@ class DialogPositionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block'];
+  protected static $modules = [
+    'block',
+    'entity_test',
+    'node',
+    'field',
+    'field_ui',
+    'off_canvas_test',
+    'dialog_renderer_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -24,11 +32,26 @@ class DialogPositionTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(): void {
+    parent::setUp();
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+      'administer entity_test fields',
+    ]);
+    $this->drupalLogin($this->adminUser);
+  }
+
+  /**
    * Tests if the dialog UI works properly with block layout page.
    */
   public function testDialogOpenAndClose() {
-    $admin_user = $this->drupalCreateUser(['administer blocks']);
-    $this->drupalLogin($admin_user);
     $this->drupalGet('admin/structure/block');
     $session = $this->getSession();
     $assert_session = $this->assertSession();
@@ -54,5 +77,30 @@ class DialogPositionTest extends WebDriverTestBase {
     $session->resizeWindow(625, 625);
     usleep(5000);
   }
+
+  /**
+   * Tests dialog resizing on window resize.
+   */
+  public function testModalWidthResizing() {
+    $this->drupalGet('entity_test/structure/entity_test/fields');
+    $page = $this->getSession()->getPage();
+
+    $page->pressButton('List additional actions');
+    $page->findLink('Delete')->click();
+    $this->assertSession()->waitForElementVisible('css', '[role="dialog"]');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $script = <<<SCRIPT
+      (function() {
+        return document.querySelector('.modal-dialog').style.width;
+      }())
+      SCRIPT;
+
+    // Resize the window.
+    $width_before = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->getSession()->resizeWindow(785, 805);
+    $width_after = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->assertEquals($width_before,$width_after);
+  }
+
 
 }
