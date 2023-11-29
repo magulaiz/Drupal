@@ -293,7 +293,7 @@ class FieldStorageAddForm extends FormBase {
         $message = explode(':', $this->messenger()->messagesByType('error')[0])[1];
         $form_state->setErrorByName('drupal-modal', $this->t("There was a problem creating field $label: $message"));
         // We need to clear out the messenger so that we just see the message
-        // on the modal without a redirect.
+        // on the modal and not on the page when it closes.
         $this->messenger()->deleteAll();
       }
     }
