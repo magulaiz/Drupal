@@ -82,9 +82,12 @@ abstract class SourceEditingTestBase extends CKEditor5TestBase {
             'allowed_tags' => ['<div class>'],
           ],
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => FALSE,
-            'styles' => FALSE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+              'styles' => FALSE,
+            ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],

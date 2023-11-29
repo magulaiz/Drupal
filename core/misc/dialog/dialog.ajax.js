@@ -38,8 +38,11 @@
           $dialog.trigger('dialogButtonsChange');
         }
 
-        // Force focus on the modal when the behavior is run.
-        $dialog.dialog('widget').trigger('focus');
+        // If the body element has focus, it means focus was effectively lost.
+        // In these instances, force focus on the dialog.
+        if (document.activeElement === document.body) {
+          $dialog.dialog('widget').trigger('focus');
+        }
       }
 
       const originalClose = settings.dialog.close;
@@ -94,6 +97,7 @@
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
+          'data-once': $originalButton.data('once'),
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
             // event will not simulate a click. Use the click method instead.
@@ -104,8 +108,8 @@
                 .trigger('mousedown')
                 .trigger('mouseup')
                 .trigger('click');
-              e.preventDefault();
             }
+            e.preventDefault();
           },
         });
       });

@@ -23,9 +23,12 @@ class ListPluginTest extends UnitTestCase {
     return [
       'startIndex is false' => [
         [
-          'reversed' => TRUE,
-          'startIndex' => FALSE,
-          'styles' => TRUE,
+          'properties' => [
+            'reversed' => TRUE,
+            'startIndex' => FALSE,
+            'styles' => TRUE,
+          ],
+          'multiBlock' => TRUE,
         ],
         [
           'list' => [
@@ -36,13 +39,18 @@ class ListPluginTest extends UnitTestCase {
                 'useAttribute' => TRUE,
               ],
             ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],
       'reversed is false' => [
         [
-          'reversed' => FALSE,
-          'startIndex' => TRUE,
+          'properties' => [
+            'reversed' => FALSE,
+            'startIndex' => TRUE,
+            'styles' => TRUE,
+          ],
+          'multiBlock' => TRUE,
         ],
         [
           'list' => [
@@ -53,14 +61,18 @@ class ListPluginTest extends UnitTestCase {
                 'useAttribute' => TRUE,
               ],
             ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],
       'styles is false' => [
         [
-          'reversed' => TRUE,
-          'startIndex' => TRUE,
-          'styles' => FALSE,
+          'properties' => [
+            'reversed' => TRUE,
+            'startIndex' => TRUE,
+            'styles' => FALSE,
+          ],
+          'multiBlock' => TRUE,
         ],
         [
           'list' => [
@@ -69,14 +81,18 @@ class ListPluginTest extends UnitTestCase {
               'startIndex' => TRUE,
               'styles' => FALSE,
             ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],
       'all disabled' => [
         [
-          'reversed' => FALSE,
-          'startIndex' => FALSE,
-          'styles' => FALSE,
+          'properties' => [
+            'reversed' => FALSE,
+            'startIndex' => FALSE,
+            'styles' => FALSE,
+          ],
+          'multiBlock' => TRUE,
         ],
         [
           'list' => [
@@ -85,14 +101,18 @@ class ListPluginTest extends UnitTestCase {
               'startIndex' => FALSE,
               'styles' => FALSE,
             ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],
       'all enabled' => [
         [
-          'reversed' => TRUE,
-          'startIndex' => TRUE,
-          'styles' => TRUE,
+          'properties' => [
+            'reversed' => TRUE,
+            'startIndex' => TRUE,
+            'styles' => TRUE,
+          ],
+          'multiBlock' => TRUE,
         ],
         [
           'list' => [
@@ -103,6 +123,7 @@ class ListPluginTest extends UnitTestCase {
                 'useAttribute' => TRUE,
               ],
             ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],
