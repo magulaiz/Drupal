@@ -304,12 +304,13 @@ trait PerformanceTestTrait {
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
       foreach ($query_events as $key => $event) {
-        $query_type = explode(' ', $event->queryString)[0];
-        $query_span = $tracer->spanBuilder($query_type . ' query')
+        // Get the first and third part of the database query, usually query
+        // type and table.
+        $query_span = $tracer->spanBuilder(substr($event->queryString, 0, 64))
           ->setStartTimestamp((int) ($event->startTime * $nanoseconds_per_second))
           ->setAttribute('query.string', $event->queryString)
           ->setAttribute('query.args', var_export($event->args, TRUE))
-          ->setAttribute('caller', var_export($event->caller, TRUE))
+          ->setAttribute('query.caller', var_export($event->caller, TRUE))
           ->startSpan();
         $query_span->end((int) ($event->time * $nanoseconds_per_second));
       }
