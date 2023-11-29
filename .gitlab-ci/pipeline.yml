@@ -57,7 +57,6 @@ default:
       job: '📦️ Yarn'
 
 variables:
-  FF_NETWORK_PER_BUILD: 1
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
   MYSQL_ROOT_PASSWORD: root
