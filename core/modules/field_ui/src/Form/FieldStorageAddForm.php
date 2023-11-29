@@ -147,8 +147,8 @@ class FieldStorageAddForm extends FormBase {
       '#field_prefix' => $field_prefix,
       '#size' => 15,
       '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-          // Calculate characters depending on the length of the field prefix
-          // setting. Maximum length is 32.
+      // Calculate characters depending on the length of the field prefix
+      // setting. Maximum length is 32.
       '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
       '#machine_name' => [
         'source' => ['label'],
@@ -186,7 +186,6 @@ class FieldStorageAddForm extends FormBase {
               '#theme' => 'item_list',
               '#items' => $unique_definitions[$selected_field_type][$option_key]['description'],
             ],
-            // @todo Try removing id.
             '#id' => Html::getClass($option['unique_identifier']),
             '#weight' => $option['weight'],
             '#parents' => ['field_options_wrapper'],
@@ -258,7 +257,6 @@ class FieldStorageAddForm extends FormBase {
     $form['#attached']['library'] = [
       'field_ui/drupal.field_ui',
       'field_ui/drupal.field_ui.manage_fields',
-      'core/drupal.ajax',
       'core/drupal.dialog.ajax',
     ];
     return $form;
@@ -294,6 +292,8 @@ class FieldStorageAddForm extends FormBase {
         $label = $form_state->getValue('label');
         $message = explode(':', $this->messenger()->messagesByType('error')[0])[1];
         $form_state->setErrorByName('drupal-modal', $this->t("There was a problem creating field $label: $message"));
+        // We need to clear out the messenger so that we just see the message
+        // on the modal without a redirect.
         $this->messenger()->deleteAll();
       }
     }

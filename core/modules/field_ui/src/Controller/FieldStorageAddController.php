@@ -40,7 +40,7 @@ final class FieldStorageAddController extends ControllerBase {
   protected $bundle;
 
   /**
-   * FieldConfigAddController constructor.
+   * Constructs a new FieldStorageAddController.
    */
   public function __construct(
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
@@ -80,7 +80,7 @@ final class FieldStorageAddController extends ControllerBase {
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $ui_definitions = $this->fieldTypePluginManager->getUiDefinitions();
-    \Drupal::moduleHandler()->invokeAll('ui_definitions_alter', [&$ui_definitions, $entity_type_id]);
+    $this->moduleHandler()->invokeAll('ui_definitions_alter', [&$ui_definitions, $entity_type_id]);
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($ui_definitions, 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
@@ -99,7 +99,7 @@ final class FieldStorageAddController extends ControllerBase {
     }
     $form['add-label'] = [
       '#type' => 'label',
-      '#title' => t('Choose a type of field'),
+      '#title' => $this->t('Choose a type of field'),
       '#title_display' => 'before',
       '#required' => TRUE,
     ];
@@ -188,7 +188,6 @@ final class FieldStorageAddController extends ControllerBase {
     $form['add']['new_storage_type'] = $field_type_options_radios;
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui.manage_fields';
-    $form['#attached']['library'][] = 'core/drupal.ajax';
     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     return $form;
   }
