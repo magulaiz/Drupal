@@ -164,7 +164,7 @@ default:
 'Automatic PHP 8.1 MySQL 5.7':
   extends: 'DEFAULT: PHP 8.2 MySQL 8'
   needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
-  <<: [ *run-on-commit ]
+  <<: [ *run-on-mr ]
 
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
