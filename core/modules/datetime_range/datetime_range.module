@@ -8,6 +8,7 @@
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -36,4 +37,18 @@ function datetime_range_field_type_category_info_alter(&$definitions) {
   // The `datetime_range` field type belongs in the `general` category, so the
   // libraries need to be attached using an alter hook.
   $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'datetime_range/drupal.datetime_range-icon';
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
+ */
+function datetime_range_field_config_presave(FieldConfigInterface $field) {
+  // Don't change anything during a configuration sync.
+  if ($field->isSyncing()) {
+    return;
+  }
+  $field_settings = $field->getSettings();
+  if (!isset($field_settings['optional_values'])) {
+    @trigger_error("Using the 'datetime_range' field without the 'optional_values' settings is deprecated in drupal:10.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2794481", E_USER_DEPRECATED);
+  }
 }
