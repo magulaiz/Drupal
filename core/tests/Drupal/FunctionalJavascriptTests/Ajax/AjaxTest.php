@@ -328,11 +328,11 @@ JS;
     // Test textfield with 'change' event listener with refocus-blur set to
     // FALSE.
     $textfield2->setValue('Llamas say yarhar');
+    // The above does a blur at the end.
+    $has_focus_id_tmp = $this->getSession()->evaluateScript('document.activeElement.id');
+    var_dump($has_focus_id_tmp);
     $textfield3->focus();
-    sleep(1);
     $this->assertSession()->assertWaitOnAjaxRequest();
-    // Force longer wait.
-    sleep(10);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
