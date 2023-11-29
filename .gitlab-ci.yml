@@ -156,6 +156,7 @@ default:
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':
   <<: [ *default-stage, *run-on-commit ]
+  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
