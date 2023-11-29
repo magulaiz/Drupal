@@ -33,3 +33,11 @@
     margin-block-start: var(--space-l);
   }
 }
+
+/**
+ * Setting max-width of select field.
+ * Fixes the layout breaking due to long select list.
+ */
+.node-form .form-type--select {
+  max-width: 34.3rem;
+}
