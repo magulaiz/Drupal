@@ -156,10 +156,19 @@ default:
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':
   <<: [ *default-stage, *run-on-commit ]
-  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
+
+# This one should not be visible in UI.
+'Automatic PHP 8.1 MySQL 5.7':
+  <<: [ *default-stage, *run-on-commit ]
+  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mysql-5.7"    
 
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
