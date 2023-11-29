@@ -45,6 +45,7 @@
     );
     trigger.setAttribute('aria-label', 'make password visible');
     trigger.setAttribute('role', 'switch');
+    element.setAttribute('aria-label', 'This is a password field');
     trigger.textContent = showPass;
     element.insertAdjacentElement('afterend', wrapperButton);
     trigger.addEventListener('click', () => {
