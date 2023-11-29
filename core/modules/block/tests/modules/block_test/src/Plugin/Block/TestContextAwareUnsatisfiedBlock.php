@@ -15,7 +15,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   admin_label: new TranslatableMarkup("Test context-aware unsatisfied block"),
   context_definitions: [
     'user' => new EntityContextDefinition('entity:foobar'),
-  ]
+  ],
+  category: new TranslatableMarkup("Context"),
 )]
 class TestContextAwareUnsatisfiedBlock extends BlockBase {
 

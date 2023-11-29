@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[Block(
   id: "test_access",
   admin_label: new TranslatableMarkup("Test block access"),
+  category: new TranslatableMarkup("Access"),
 )]
 class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterface {
 

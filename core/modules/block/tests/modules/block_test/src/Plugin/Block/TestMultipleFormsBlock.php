@@ -16,6 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'secondary' => EmptyBlockForm::class,
   ],
   admin_label: new TranslatableMarkup("Multiple forms test block"),
+  category: new TranslatableMarkup("Form"),
 )]
 class TestMultipleFormsBlock extends BlockBase {
 

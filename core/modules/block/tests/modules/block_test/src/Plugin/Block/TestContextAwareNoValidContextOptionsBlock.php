@@ -15,7 +15,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   admin_label: new TranslatableMarkup("Test context-aware block - no valid context options"),
   context_definitions: [
     'user' => new ContextDefinition(data_type: 'email', required: FALSE),
-  ]
+  ],
+  category: new TranslatableMarkup("Context"),
 )]
 class TestContextAwareNoValidContextOptionsBlock extends BlockBase {
 

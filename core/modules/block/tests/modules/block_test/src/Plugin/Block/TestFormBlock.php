@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[Block(
   id: "test_form_in_block",
   admin_label: new TranslatableMarkup("Test form block caching"),
+  category: new TranslatableMarkup("Form"),
 )]
 class TestFormBlock extends BlockBase {
 

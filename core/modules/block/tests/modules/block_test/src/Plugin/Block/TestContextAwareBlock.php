@@ -24,7 +24,8 @@ use Drupal\user\UserInterface;
         "NotNull" => [],
       ]
     ),
-  ]
+  ],
+  category: new TranslatableMarkup("Context"),
 )]
 class TestContextAwareBlock extends BlockBase {
 
