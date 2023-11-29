@@ -6,6 +6,7 @@ use Composer\Util\Filesystem;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 class ManageGitIgnoreTest extends TestCase {
   use ExecTrait;
   use AssertUtilsTrait;
+  use PhpUnitCompatibilityTrait;
 
   /**
    * The root of this project.
@@ -81,7 +83,7 @@ class ManageGitIgnoreTest extends TestCase {
    *   The path to the fixture directory.
    */
   protected function createSutWithGit($fixture_name) {
-    $this->fixturesDir = $this->fixtures->tmpDir($this->getName());
+    $this->fixturesDir = $this->fixtures->tmpDir($this->name());
     $sut = $this->fixturesDir . '/' . $fixture_name;
     $replacements = ['SYMLINK' => 'false', 'PROJECT_ROOT' => $this->projectRoot];
     $this->fixtures->cloneFixtureProjects($this->fixturesDir, $replacements);
