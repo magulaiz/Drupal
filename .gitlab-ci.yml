@@ -135,9 +135,14 @@ default:
   # Run on MR, push and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $PERFORMANCE_TEST == "1"
 
+<<<<<<< HEAD
+=======
+# Special job for MRs for test-only checks.
+>>>>>>> 3596adcd40 (Moving things WIP)
 'DEFAULT: Test-only (PHP 8.2 MySQL 8)':
   <<: [ *default-stage, *with-composer ]
   when: manual
@@ -153,7 +158,9 @@ default:
     include:
       - local: .gitlab-ci/pipeline-test-only.yml
 
-# Jobs available in the MR pipeline.
+# Main listing of jobs.
+# All of these are available on Merge Requests and also work as base jobs for
+# on-commit and daily jobs to extend from.
 'PHP 8.1 MySQL 5.7':
   <<: [ *default-stage, *run-on-mr ]
   variables:
@@ -190,31 +197,31 @@ default:
 # TODO: PREVIOUS ONES
 
 'PHP 8.2 PostgreSQL 15':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-15"
 
 'PHP 8.2 PostgreSQL 16':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-16"
 
 'PHP 8.2 SQLite 3':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
 
 'PHP 8.3 MySQL 8':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "mysql-8"
 
 'PHP 8.3 PostgreSQL 16':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "pgsql-16"
@@ -242,6 +249,45 @@ default:
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "sqlite-3"
+
+# Jobs running on commits.
+# The value set in the "needs" property will determine the order in the sequence.
+'[Commit] PHP 8.1 MySQL 5.7':
+  extends: 'PHP 8.1 MySQL 5.7'
+  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  <<: [ *run-on-commit ]
+
+'[Commit] PHP 8.2 PostgreSQL 16':
+  extends: 'PHP 8.2 PostgreSQL 16'
+  needs: [ '[Commit] PHP 8.1 MySQL 5.7' ]
+  <<: [ *run-on-commit ]
+
+'[Commit] PHP 8.2 SQLite 3':
+  extends: 'PHP 8.2 SQLite 3'
+  needs: [ '[Commit] PHP 8.2 PostgreSQL 16' ]
+  <<: [ *run-on-commit ]
+
+# Jobs running daily.
+# The value set in the "needs" property will determine the order in the sequence.
+'[Daily] PHP 8.2 PostgreSQL 14.1':
+  extends: 'PHP 8.2 PostgreSQL 14.1'
+  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.2 PostgreSQL 15':
+  extends: 'PHP 8.2 PostgreSQL 15'
+  needs: [ '[Daily] PHP 8.2 PostgreSQL 14.1' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.3 MySQL 8':
+  extends: 'PHP 8.3 MySQL 8'
+  needs: [ '[Daily] PHP 8.2 PostgreSQL 15' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.3 PostgreSQL 16':
+  extends: 'PHP 8.3 PostgreSQL 16'
+  needs: [ '[Daily] PHP 8.3 MySQL 8' ]
+  <<: [ *run-daily ]
 
 
 ################
