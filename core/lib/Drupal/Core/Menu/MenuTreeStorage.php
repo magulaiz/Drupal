@@ -1011,7 +1011,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->addField($this->table, 'mlid');
     $query->condition('menu_name', $menu_name);
     $query->range(0, 1);
-    return (bool) $this->safeExecuteSelect($query->countQuery())->fetchField();
+    return (bool) $this->safeExecuteSelect($query)->fetchField();
   }
 
   /**
