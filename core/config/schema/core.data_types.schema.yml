@@ -950,3 +950,15 @@ entity_reference_selection.default:
 # providing a specific schema.
 entity_reference_selection.default:*:
   type: entity_reference_selection.default
+
+entity_reference_selection.default:block:
+  type: entity_reference_selection.default
+  label: 'Selection handler for block selection plugin'
+  mapping:
+    block_categories:
+      type: sequence
+      label: 'Block categories'
+      nullable: true
+      sequence:
+        type: string
+        label: 'Block categories'
