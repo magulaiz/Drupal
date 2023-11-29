@@ -25,6 +25,11 @@ class PerformanceData {
   protected int $queryCount = 0;
 
   /**
+   * The number of cache operations recorded.
+   */
+  protected int $cacheOperationsCount = 0;
+
+  /**
    * The original return value.
    */
   protected $returnValue;
@@ -87,6 +92,26 @@ class PerformanceData {
    */
   public function getQueryCount(): int {
     return $this->queryCount;
+  }
+
+  /**
+   * Sets the cache operations count.
+   *
+   * @param int $count
+   *   The number of cache operations recorded.
+   */
+  public function setCacheOperationsCount(int $count): void {
+    $this->cacheOperationsCount = $count;
+  }
+
+  /**
+   * Gets the cache operations count.
+   *
+   * @return int
+   *   The number of cache operations recorded.
+   */
+  public function getCacheOperationsCount(): int {
+    return $this->cacheOperationsCount;
   }
 
   /**

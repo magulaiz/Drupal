@@ -106,7 +106,21 @@ trait PerformanceTestTrait {
 
     $performance_test_data = $collection->get('performance_test_data');
     if ($performance_test_data) {
-      $performance_data->setQueryCount(count($performance_test_data['database_events']));
+      // Separate queries into two buckets, one for queries from the cache
+      // backend, and one for everything else (including those for cache tags).
+      $query_count = 0;
+      $cache_count = 0;
+      foreach ($performance_test_data['database_events'] as $event) {
+        if (isset($event->caller['class']) && $event->caller['class'] === 'Drupal\\Core\\Cache\\DatabaseBackend') {
+          $cache_count++;
+        }
+        else {
+          $query_count++;
+        }
+      }
+      $performance_data->setQueryCount($query_count);
+      $performance_data->setCacheOperationsCount($cache_count);
+
     }
 
     return $performance_data;

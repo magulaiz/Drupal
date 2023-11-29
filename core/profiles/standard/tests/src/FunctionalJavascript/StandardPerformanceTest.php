@@ -55,8 +55,10 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertGreaterThanOrEqual(484, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(508, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(101, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(101, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(381, $performance_data->getCacheOperationsCount());
+    $this->assertLessThanOrEqual(383, $performance_data->getCacheOperationsCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
@@ -67,8 +69,10 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertGreaterThanOrEqual(174, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(182, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(46, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(46, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(126, $performance_data->getCacheOperationsCount());
+    $this->assertLessThanOrEqual(132, $performance_data->getCacheOperationsCount());
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
@@ -76,12 +80,14 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $user->id());
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertGreaterThanOrEqual(133, $performance_data->getQueryCount());
     // This test observes a variable number of database queries, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertLessThanOrEqual(138, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(40, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(40, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(93, $performance_data->getCacheOperationsCount());
+    $this->assertLessThanOrEqual(94, $performance_data->getCacheOperationsCount());
   }
 
   /**
@@ -105,8 +111,10 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertLessThanOrEqual(89, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(86, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(41, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(40, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(50, $performance_data->getCacheOperationsCount());
+    $this->assertGreaterThanOrEqual(46, $performance_data->getCacheOperationsCount());
   }
 
   /**
@@ -127,8 +135,10 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'pass' => $account->passRaw,
       ], 'Log in');
     });
-    $this->assertLessThanOrEqual(200, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(197, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(75, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(75, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(126, $performance_data->getCacheOperationsCount());
+    $this->assertGreaterThanOrEqual(122, $performance_data->getCacheOperationsCount());
   }
 
   /**
