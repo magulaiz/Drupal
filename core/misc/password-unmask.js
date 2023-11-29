@@ -34,11 +34,11 @@
     wrapperButton.setAttribute('class', 'link password-wrapper');
     const trigger = document.createElement('span');
     wrapperButton.appendChild(trigger);
+    wrapperButton.setAttribute('style', 'margin-inline-start:10px');
     trigger.setAttribute(
       'class',
       'action-link action-link--extrasmall action-link--icon-show toggle-password',
     );
-    wrapperButton.setAttribute('style', 'margin-inline-start:10px');
     trigger.setAttribute(
       'aria-checked',
       element.getAttribute('type') === 'password' ? 'true' : 'false',
