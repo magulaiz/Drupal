@@ -328,11 +328,11 @@ JS;
     // Test textfield with 'change' event listener with refocus-blur set to
     // FALSE.
     $textfield2->setValue('Llamas say yarhar');
-    // The above does a blur at the end.
-    $has_focus_id_tmp = $this->getSession()->evaluateScript('document.activeElement.id');
-    var_dump($has_focus_id_tmp);
-    $textfield3->focus();
+    // The above does a blur at the end, so the focus is gone.
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertNotEquals('edit-textfield-2', $has_focus_id);
     $this->assertSession()->assertWaitOnAjaxRequest();
+    // The focus is now back after the request.
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
