@@ -155,40 +155,8 @@ function ckeditor5_post_update_list_type(&$sandbox = []) {
     }
     $settings = $editor->getSettings();
 
-    // Nothing to do if the List plugin is not enabled.
-    if (!array_key_exists('ckeditor5_list', $settings['plugins'])) {
-      return FALSE;
-    }
-
-    // Nothing to do if the Source Editing plugin is not enabled.
-    if (!array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
-      return FALSE;
-    }
-
-    $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
-    $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
-
-    // If neither <ol type> or <ul type> are allowed through Source Editing (the
-    // only way it could possibly be supported until now), and it is not an
-    // unrestricted text format (such as "Full HTML"), then set the new "styles"
-    // setting for the List plugin to false.
-    $ol_type = HTMLRestrictions::fromString('<ol type>');
-    $ul_type = HTMLRestrictions::fromString('<ul type>');
-    if (!$ol_type->diff($source_edited)->allowsNothing() && !$ul_type->diff($source_edited)->allowsNothing() && !$format_restrictions->isUnrestricted()) {
-      $settings['plugins']['ckeditor5_list']['properties']['styles'] = FALSE;
-    }
-    // Otherwise, if this is a restricted text format and either <ol type> or
-    // <ul type> is allowed through Source Editing, remove them from the Source
-    // Editing configuration and instead enable the native UI functionality.
-    else {
-      $settings['plugins']['ckeditor5_list']['properties']['styles'] = TRUE;
-      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
-        ->diff($ol_type)
-        ->diff($ul_type)
-        ->toCKEditor5ElementsArray();
-    }
-    $editor->setSettings($settings);
-
-    return TRUE;
+    // @see ckeditor5_editor_presave()
+    return array_key_exists('ckeditor5_list', $settings['plugins'])
+      && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']);
   });
 }
