@@ -153,24 +153,41 @@ default:
     include:
       - local: .gitlab-ci/pipeline-test-only.yml
 
-# Run on commit, or manually.
+# Jobs available in the MR pipeline.
 'PHP 8.1 MySQL 5.7':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
 
-# This one should not be visible in UI.
-'Automatic PHP 8.1 MySQL 5.7':
-  extends: 'PHP 8.1 MySQL 5.7'
-  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
-  <<: [ *run-on-mr ]
-
 'PHP 8.2 PostgreSQL 14.1':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-14.1"
+
+'PHP 8.2 PostgreSQL 14.1':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "pgsql-14.1"
+
+# Jobs running on commits.
+# The value set in the "needs" property will determine the order in the sequence.
+'[Commit] PHP 8.1 MySQL 5.7':
+  extends: 'PHP 8.1 MySQL 5.7'
+  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  <<: [ *run-on-commit ]
+
+# Jobs running daily.
+# The value set in the "needs" property will determine the order in the sequence.
+'[Daily] PHP 8.2 PostgreSQL 14.1':
+  extends: 'PHP 8.2 PostgreSQL 14.1'
+  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  <<: [ *run-daily ]
+
+
+# TODO: PREVIOUS ONES
 
 'PHP 8.2 PostgreSQL 15':
   <<: [ *default-stage, *run-daily ]
