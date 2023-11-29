@@ -109,18 +109,36 @@ trait PerformanceTestTrait {
       // Separate queries into two buckets, one for queries from the cache
       // backend, and one for everything else (including those for cache tags).
       $query_count = 0;
-      $cache_count = 0;
+      $cache_get_count = 0;
+      $cache_set_count = 0;
+      $cache_delete_count = 0;
       foreach ($performance_test_data['database_events'] as $event) {
         if (isset($event->caller['class']) && $event->caller['class'] === 'Drupal\\Core\\Cache\\DatabaseBackend') {
-          $cache_count++;
+          $method = strtolower($event->caller['function']);
+          if (str_contains($method, 'get')) {
+            $cache_get_count++;
+          }
+          elseif (str_contains($method, 'set')) {
+            $cache_set_count++;
+          }
+          elseif (str_contains($method, 'delete')) {
+            $cache_delete_count++;
+          }
+          elseif ($event->caller['function'] === 'ensureBinExists') {
+            // Don't record anything for ensureBinExists().
+          }
+          else {
+            throw new \Exception("Tried to record a cache operation but did not recognise {$event->caller['function']}");
+          }
         }
         else {
           $query_count++;
         }
       }
       $performance_data->setQueryCount($query_count);
-      $performance_data->setCacheOperationsCount($cache_count);
-
+      $performance_data->setCacheGetCount($cache_get_count);
+      $performance_data->setCacheSetCount($cache_set_count);
+      $performance_data->setCacheDeleteCount($cache_delete_count);
     }
 
     return $performance_data;

@@ -56,9 +56,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(101, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(101, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(381, $performance_data->getCacheOperationsCount());
-    $this->assertLessThanOrEqual(383, $performance_data->getCacheOperationsCount());
+    $this->assertLessThanOrEqual(113, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(194, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(207, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(174, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(177, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
@@ -71,8 +74,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(46, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(46, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(126, $performance_data->getCacheOperationsCount());
-    $this->assertLessThanOrEqual(132, $performance_data->getCacheOperationsCount());
+    $this->assertGreaterThanOrEqual(107, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(107, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(25, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(25, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
@@ -86,8 +92,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(40, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(40, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(93, $performance_data->getCacheOperationsCount());
-    $this->assertLessThanOrEqual(94, $performance_data->getCacheOperationsCount());
+    $this->assertGreaterThanOrEqual(93, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(94, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(93, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(94, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
 
   /**
@@ -113,8 +122,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertLessThanOrEqual(41, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(40, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(50, $performance_data->getCacheOperationsCount());
-    $this->assertGreaterThanOrEqual(46, $performance_data->getCacheOperationsCount());
+    $this->assertLessThanOrEqual(44, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(43, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(2, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(2, $performance_data->getCacheSetCount());
+    $this->assertSame(1, $performance_data->getCacheDeleteCount());
   }
 
   /**
@@ -135,10 +147,13 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'pass' => $account->passRaw,
       ], 'Log in');
     });
-    $this->assertLessThanOrEqual(75, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(76, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(75, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(126, $performance_data->getCacheOperationsCount());
-    $this->assertGreaterThanOrEqual(122, $performance_data->getCacheOperationsCount());
+    $this->assertLessThanOrEqual(126, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(100, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(100, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(4, $performance_data->getCacheSetCount());
+    $this->assertSame(1, $performance_data->getCacheDeleteCount());
   }
 
   /**

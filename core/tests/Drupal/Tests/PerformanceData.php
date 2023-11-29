@@ -25,9 +25,19 @@ class PerformanceData {
   protected int $queryCount = 0;
 
   /**
-   * The number of cache operations recorded.
+   * The number of cache gets recorded.
    */
-  protected int $cacheOperationsCount = 0;
+  protected int $cacheGetCount = 0;
+
+  /**
+   * The number of cache sets recorded.
+   */
+  protected int $cacheSetCount = 0;
+
+  /**
+   * The number of cache deletes recorded.
+   */
+  protected int $cacheDeleteCount = 0;
 
   /**
    * The original return value.
@@ -95,23 +105,63 @@ class PerformanceData {
   }
 
   /**
-   * Sets the cache operations count.
+   * Sets the cache get count.
    *
    * @param int $count
-   *   The number of cache operations recorded.
+   *   The number of cache gets recorded.
    */
-  public function setCacheOperationsCount(int $count): void {
-    $this->cacheOperationsCount = $count;
+  public function setCacheGetCount(int $count): void {
+    $this->cacheGetCount = $count;
   }
 
   /**
-   * Gets the cache operations count.
+   * Gets the cache get count.
    *
    * @return int
-   *   The number of cache operations recorded.
+   *   The number of cache gets recorded.
    */
-  public function getCacheOperationsCount(): int {
-    return $this->cacheOperationsCount;
+  public function getCacheGetCount(): int {
+    return $this->cacheGetCount;
+  }
+
+  /**
+   * Sets the cache set count.
+   *
+   * @param int $count
+   *   The number of cache sets recorded.
+   */
+  public function setCacheSetCount(int $count): void {
+    $this->cacheSetCount = $count;
+  }
+
+  /**
+   * Gets the cache set count.
+   *
+   * @return int
+   *   The number of cache sets recorded.
+   */
+  public function getCacheSetCount(): int {
+    return $this->cacheSetCount;
+  }
+
+  /**
+   * Sets the cache delete count.
+   *
+   * @param int $count
+   *   The number of cache deletes recorded.
+   */
+  public function setCacheDeleteCount(int $count): void {
+    $this->cacheDeleteCount = $count;
+  }
+
+  /**
+   * Gets the cache delete count.
+   *
+   * @return int
+   *   The number of cache deletes recorded.
+   */
+  public function getCacheDeleteCount(): int {
+    return $this->cacheDeleteCount;
   }
 
   /**
