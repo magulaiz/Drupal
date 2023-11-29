@@ -17,6 +17,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
@@ -604,7 +605,13 @@ function _ckeditor5_theme_css($theme = NULL): array {
     $theme = \Drupal::config('system.theme')->get('default');
   }
   if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
-    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    try {
+      $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    }
+    catch (UnknownExtensionException $e) {
+      // Gracefully degrade if the default theme is not (yet) installed.
+      return $css;
+    }
     if (isset($info['ckeditor5-stylesheets']) && $info['ckeditor5-stylesheets'] !== FALSE) {
       $css = $info['ckeditor5-stylesheets'];
       foreach ($css as $key => $url) {
