@@ -78,9 +78,7 @@
         // Adding the modal-dialog class to take displace into account
         // for width calculation.
         $element.parent()[0].classList.add('modal-dialog');
-      }
-      // Locks the body scroll only when it opens in modal.
-      if (settings.modal) {
+        // Locks the body scroll only when it opens in modal.
         // Locks the body when the dialog opens.
         bodyScrollLock.lock($element.get(0));
       }
