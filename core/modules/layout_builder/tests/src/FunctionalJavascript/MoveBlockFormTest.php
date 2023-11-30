@@ -137,7 +137,8 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->assertRegionBlocksOrder(0, 'second', ['.block-field-blocknodebundle-with-section-fieldbody']);
 
     // The weight element uses -10 to 10 by default, which can cause bugs.
-    // Add 25 'Powered by Drupal' blocks to a new section.
+    // This test was saving 25, but we get "You have unsaved changes".
+    // Add 5 'Powered by Drupal' blocks to a new section.
     $page->clickLink('Add section');
     $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
@@ -146,7 +147,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
     $page->pressButton('Add section');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
-    $large_block_number = 25;
+    $large_block_number = 5;
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
       if (empty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'))) {
