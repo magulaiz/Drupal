@@ -61,7 +61,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertLessThanOrEqual(66, $performance_data->getQueryCount());
 
     $this->assertGreaterThanOrEqual(129, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(130, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(132, $performance_data->getCacheGetCount());
     $this->assertSame(59, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
@@ -76,7 +76,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertSame(87, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(87, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(88, $performance_data->getCacheGetCount());
     $this->assertSame(20, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
