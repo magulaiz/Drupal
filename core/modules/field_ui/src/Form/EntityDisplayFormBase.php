@@ -265,7 +265,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
             'width' => 880,
             'modal' => TRUE,
           ]),
-          // @todo Remove this once https://www.drupal.org/project/drupal/issues/3404559 lands.
+          // @todo Remove this once https://www.drupal.org/project/drupal/issues/2805219 lands.
           // The jQuery UI dialog automatically moves focus to the first
           // :tabbable element of the modal, so we need to disable refocus on
           // the button.
