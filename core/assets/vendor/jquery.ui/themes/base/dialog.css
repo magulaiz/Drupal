@@ -10,10 +10,14 @@
  */
 .ui-dialog {
 	position: absolute;
+  max-width: calc(100vw - var(--drupal-displace-offset-left, 0) - var(--drupal-displace-offset-right, 0));
 	top: 0;
 	left: 0;
 	padding: .2em;
 	outline: 0;
+}
+.ui-dialog.modal-dialog {
+  max-width: 100vw;
 }
 .ui-dialog .ui-dialog-titlebar {
 	padding: .4em 1em;

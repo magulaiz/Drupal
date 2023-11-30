@@ -14,7 +14,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  max-width: calc(100vw - var(--drupal-displace-offset-left, 0) - var(--drupal-displace-offset-right, 0));
   padding: 0;
   border: 0;
   border-radius: var(--jui-dialog-border-radius);
@@ -26,10 +25,6 @@
   .ui-dialog {
     border: 1px solid transparent;
   }
-}
-
-.ui-dialog.modal-dialog {
-  max-width: 100vw;
 }
 
 .ui-dialog:focus {
