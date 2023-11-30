@@ -277,7 +277,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     $this->assertElementExistsAfterWait('css', "#$field_name-media-library-wrapper")
       ->pressButton('Add media');
     if (empty($this->assertSession()->waitForText('Add or select media'))) {
-      var_dump($this->getSession()->getPage()->getHtml());
+      var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
     }
     $this->waitForText('Add or select media');
 

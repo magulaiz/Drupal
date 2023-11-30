@@ -20,7 +20,7 @@ trait OffCanvasTestTrait {
     // The data-resize-done attribute is added by the off_canvas_test module's
     // wrapper around Drupal.offCanvas.resetSize.
     if (empty($this->assertSession()->waitForElementVisible('css', '[data-resize-done="true"]'))) {
-      var_dump($this->getSession()->getPage()->getHtml());
+      var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
     }
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '[data-resize-done="true"]'));
 
