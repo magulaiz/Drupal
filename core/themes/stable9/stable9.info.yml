@@ -300,6 +300,10 @@ libraries-override:
     css:
       theme:
         css/field_ui_display_mode_table.css: css/field_ui/field_ui_display_mode_table.css
+  core/drupal.dialog.ajax:
+    css:
+      component:
+        misc/dialog/dialog.css: css/core/dialog/dialog.css
 
 libraries-extend:
   tour/tour:
