@@ -11,16 +11,13 @@ use Drupal\Tests\UnitTestCase;
  */
 class AssertContentTraitTest extends UnitTestCase {
 
+  use AssertContentTrait;
+
   /**
    * @covers ::getTextContent
    */
   public function testGetTextContent() {
-    $test = new class() {
-      use AssertContentTrait {
-        getTextContent as public;
-        setRawContent as public;
-      }
-    };
+
     $raw_content = <<<EOT
 
 <Head>
@@ -32,10 +29,10 @@ class AssertContentTraitTest extends UnitTestCase {
 bar
 </body>
 EOT;
-    $test->setRawContent($raw_content);
-    $this->assertStringNotContainsString('foo', $test->getTextContent());
-    $this->assertStringNotContainsString('<body>', $test->getTextContent());
-    $this->assertStringContainsString('bar', $test->getTextContent());
+    $this->setRawContent($raw_content);
+    $this->assertStringNotContainsString('foo', $this->getTextContent());
+    $this->assertStringNotContainsString('<body>', $this->getTextContent());
+    $this->assertStringContainsString('bar', $this->getTextContent());
   }
 
 }
