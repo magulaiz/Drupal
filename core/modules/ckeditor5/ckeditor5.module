@@ -613,8 +613,8 @@ function _ckeditor5_theme_css($theme = NULL): array {
       // is fine because `ckeditor5-stylesheets` in a theme is progressive
       // enhancement.) This may occur when:
       // 1. `system.theme:default`:
-      //   - is right, but the theme is not yet installed
-      //   - is wrong (the theme is not installed and never will be)
+      //    - is right, but the theme is not yet installed
+      //    - is wrong (the theme is not installed and never will be)
       // 2. an install profile contains a module provides a `editor.editor.*`
       //    config entity in `config/install` (not `config/optional`). A profile
       //    first get its modules installed, and only then its themes.
