@@ -59,6 +59,21 @@
    */
   Drupal.dialog = function (element, options) {
     let undef;
+
+    // If dialog created from string
+    // core/modules/editor/js/editor.js
+    if (typeof element === 'string') {
+      const placeholder = document.createElement('div');
+      placeholder.insertAdjacentHTML('afterbegin', element);
+      element = placeholder.firstElementChild;
+    }
+
+    // If dialog created with jQuery
+    // core/modules/node/node.preview.js
+    if (element instanceof $) {
+      element = $(element).get(0);
+    }
+
     const $element = $(element);
     const dialog = {
       open: false,

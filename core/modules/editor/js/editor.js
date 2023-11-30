@@ -135,9 +135,7 @@
           '%text_format': $(select).find('option:selected')[0].textContent,
         },
       );
-      const dialog = document.createElement('div');
-      dialog.innerHTML = message;
-      const confirmationDialog = Drupal.dialog(dialog, {
+      const confirmationDialog = Drupal.dialog(`<div>${message}</div>`, {
         title: Drupal.t('Change text format?'),
         classes: {
           'ui-dialog': 'editor-change-text-format-modal',
