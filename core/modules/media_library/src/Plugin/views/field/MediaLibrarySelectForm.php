@@ -28,7 +28,34 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function getValue(ResultRow $row, $field = NULL) {
-    return '<!--form-item-' . $this->options['id'] . '--' . $row->index . '-->';
+    return '<!--form-item-' . $this->options['id'] . '--' . $row->mid . '-->';
+  }
+
+  /**
+   * Return the name of a form field.
+   *
+   * @see /core/modules/views/src/Form/ViewsFormMainForm.php
+   *
+   * @return string
+   *   The form field name.
+   */
+  public function form_element_name() {
+    return $this->field;
+  }
+
+  /**
+   * Return a media entity Id from a views result row.
+   *
+   * @see /core/modules/views/src/Form/ViewsFormMainForm.php
+   *
+   * @param int $row_id
+   *   The index of a views result row.
+   *
+   * @return string
+   *   The Id of a media entity.
+   */
+  public function form_element_row_id($row_id) {
+    return $this->view->result[$row_id]->mid;
   }
 
   /**
@@ -70,7 +97,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
         $form[$this->options['id']][$row_index] = [];
         continue;
       }
-      $form[$this->options['id']][$row_index] = [
+      $form[$this->options['id']][$row->mid] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Select @label', [
           '@label' => $entity->label(),
@@ -140,7 +167,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     $selected_count = count(explode(',', $current_selection));
     if ($available_slots > 0 && $selected_count > $available_slots) {
       $response = new AjaxResponse();
-      $error = \Drupal::translation()->formatPlural($selected_count - $available_slots, 'There are currently @total items selected. The maximum number of items for the field is @max. Remove @count item from the selection.', 'There are currently @total items selected. The maximum number of items for the field is @max. Remove @count items from the selection.', [
+      $error = \Drupal::translation()->formatPlural($selected_count - $available_slots, 'There are currently @total items selected. The maximum number of items for the field is @max. Please remove @count item from the selection.', 'There are currently @total items selected. The maximum number of items for the field is @max. Please remove @count items from the selection.', [
         '@total' => $selected_count,
         '@max' => $available_slots,
       ]);
