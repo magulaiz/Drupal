@@ -128,7 +128,7 @@ trait PerformanceTestTrait {
             // Don't record anything for ensureBinExists().
           }
           else {
-            throw new \Exception("Tried to record a cache operation but did not recognise {$event->caller['function']}");
+            throw new \Exception("Tried to record a cache operation but did not recognize {$event->caller['function']}");
           }
         }
         else {
