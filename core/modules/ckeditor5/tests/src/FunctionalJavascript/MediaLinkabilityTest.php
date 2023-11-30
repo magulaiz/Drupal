@@ -192,6 +192,9 @@ class MediaLinkabilityTest extends MediaTestBase {
     // Tests unlinking media.
     $drupalmedia->click();
     $this->assertEditorButtonEnabled('Link');
+    if ($this->getEditorButton('Link')->getAttribute('aria-pressed') !== 'true') {
+      var_dump($this->getSession()->getPage()->getHtml());
+    }
     $this->assertSame('true', $this->getEditorButton('Link')->getAttribute('aria-pressed'));
     // Assert structure of Drupal media toolbar balloon.
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
