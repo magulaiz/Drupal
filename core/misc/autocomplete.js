@@ -199,6 +199,10 @@
     return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
   }
 
+  function resizeMenu() {
+    this.menu.element.outerWidth(this.element.outerWidth());
+  }
+
   /**
    * Attaches the autocomplete behavior to all required fields.
    *
@@ -226,6 +230,8 @@
           $autocomplete.autocomplete(autocomplete.options).each(function () {
             $(this).data('ui-autocomplete')._renderItem =
               autocomplete.options.renderItem;
+            $(this).data('ui-autocomplete')._resizeMenu =
+              autocomplete.options.resizeMenu;
           });
 
           // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
@@ -270,6 +276,7 @@
       search: searchHandler,
       select: selectHandler,
       renderItem,
+      resizeMenu,
       minLength: 1,
       // Custom options, used by Drupal.autocomplete.
       firstCharacterBlacklist: '',
