@@ -146,19 +146,21 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page->pressButton('Add section');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $large_block_number = 25;
-    // for ($i = 0; $i < $large_block_number; $i++) {
-    //   $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
-    //   if (empty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'))) {
-    //     var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
-    //   }
-    //   $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
-    //   $assert_session->assertWaitOnAjaxRequest();
-    //   $page->clickLink('Powered by Drupal');
-    //   $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
-    //   $assert_session->assertWaitOnAjaxRequest();
-    //   $page->pressButton('Add block');
-    //   $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
-    // }
+
+    for ($i = 0; $i < $large_block_number; $i++) {
+      $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
+      if (empty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'))) {
+        // Check in markup `layout--onecol` class.
+        var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
+      }
+      $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
+      $assert_session->assertWaitOnAjaxRequest();
+      $page->clickLink('Powered by Drupal');
+      $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
+      $assert_session->assertWaitOnAjaxRequest();
+      $page->pressButton('Add block');
+      $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    }
     $first_region_block_locator = '[data-layout-delta="0"].layout--onecol [data-region="content"] [data-layout-block-uuid]';
     $assert_session->elementsCount('css', $first_region_block_locator, $large_block_number);
 
