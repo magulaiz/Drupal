@@ -36,7 +36,7 @@ trait FileValidatorSettingsTrait {
     }
 
     // Restrict empty file.
-    $validators['RestrictZeroByteFile'] = [];
+    $validators['FileZeroByte'] = [];
 
     // There is always a file size limit due to the PHP server limit.
     $validators['FileSizeLimit'] = ['fileLimit' => $maxFilesize];

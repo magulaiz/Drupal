@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 /**
  * Validates the RestrictZeroByteFileConstraint.
  */
-class RestrictZeroByteFileConstraintValidator extends BaseFileConstraintValidator implements ContainerInjectionInterface {
+class FileZeroByteConstraintValidator extends BaseFileConstraintValidator implements ContainerInjectionInterface {
 
   /**
    * Creates a new RestrictZeroByteFileConstraintValidator.
@@ -42,8 +42,8 @@ class RestrictZeroByteFileConstraintValidator extends BaseFileConstraintValidato
    */
   public function validate(mixed $value, Constraint $constraint): void {
     $file = $this->assertValueIsFile($value);
-    if (!$constraint instanceof RestrictZeroByteFileConstraint) {
-      throw new UnexpectedTypeException($constraint, RestrictZeroByteFileConstraint::class);
+    if (!$constraint instanceof FileZeroByteConstraint) {
+      throw new UnexpectedTypeException($constraint, FileZeroByteConstraint::class);
     }
 
     if ($file->getSize() == 0) {

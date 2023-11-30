@@ -203,4 +203,28 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
   }
 
+  /**
+   * Test the scenario when the file is zero bytes.
+   */
+  public function testFileZeroByte() {
+    $type_name = 'article';
+    $field_name = $this->randomMachineName();
+    $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
+
+    $uri = 'public://fiezerobyte.txt';
+    $zero_byte_file = File::create([
+      'uid' => 1,
+      'uri' => $uri,
+      'filename' => 'fiezerobyte.txt',
+      'filemime' => 'text/plain',
+      'filesize' => 0,
+    ]);
+
+    file_put_contents($uri, '');
+
+    // Create a new node with the small file, which should pass.
+    $this->uploadNodeFile($zero_byte_file, $field_name, $type_name);
+    $this->assertSession()->pageTextContains("The file is zero bytes. Please upload a valid file.");
+  }
+
 }
