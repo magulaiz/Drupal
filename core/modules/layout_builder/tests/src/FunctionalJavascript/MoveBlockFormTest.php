@@ -77,7 +77,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $first_region_block_locator = '[data-layout-delta="0"].layout--twocol-section [data-region="first"] [data-layout-block-uuid]';
     $assert_session->elementNotExists('css', $first_region_block_locator);
     $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
     $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Powered by Drupal');
@@ -160,7 +159,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
       $assert_session->assertWaitOnAjaxRequest();
       $page->pressButton('Add block');
       $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
-      $assert_session->assertWaitOnAjaxRequest();
     }
     $first_region_block_locator = '[data-layout-delta="0"].layout--onecol [data-region="content"] [data-layout-block-uuid]';
     $assert_session->elementsCount('css', $first_region_block_locator, $large_block_number);
