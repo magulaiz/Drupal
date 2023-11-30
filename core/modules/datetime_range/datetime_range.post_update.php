@@ -28,10 +28,7 @@ function datetime_range_post_update_add_optional_values(&$sandbox = NULL) {
       return FALSE;
     }
     $settings = $fieldConfig->get('settings');
-    if (!isset($settings['optional_alues'])) {
-      $settings['optional_alues'] = DateRangeItem::OPTIONAL_NONE;
-      $fieldConfig->set('settings', $settings);
-      $fieldConfig->save();
+    if (!isset($settings['optional'])) {
       return TRUE;
     }
     return FALSE;
