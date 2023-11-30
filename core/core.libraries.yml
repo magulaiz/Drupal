@@ -567,6 +567,9 @@ drupal.dialog.ajax:
   version: VERSION
   js:
     misc/dialog/dialog.ajax.js: {}
+  css:
+    component:
+      misc/dialog.css: {}
   dependencies:
     - core/jquery
     - core/drupal

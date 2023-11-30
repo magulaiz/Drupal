@@ -91,22 +91,22 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $script = <<<SCRIPT
       (function() {
-        return document.querySelector('.modal-dialog').clientWidth;
+        return document.querySelector('.ui-dialog').clientWidth;
       }())
       SCRIPT;
 
     // Resize the window.
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
-    $this->assertEquals('880', $width_before);
+    $this->assertEquals('886', $width_before);
     $this->getSession()->resizeWindow(500, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
-    $this->assertEquals('460', $width_after);
+    $this->assertEquals('506', $width_after);
 
     // Resize the window.
     $this->getSession()->resizeWindow(1300, 1300);
     $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
     // Assert that the width is restored to full size.
-    $this->assertStringContainsString('880', $width_after_resize);
+    $this->assertEquals('886', $width_after_resize);
   }
 
 }
