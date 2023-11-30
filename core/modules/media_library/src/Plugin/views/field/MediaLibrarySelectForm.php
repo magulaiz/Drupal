@@ -44,7 +44,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
   }
 
   /**
-   * Return a media entity Id from a views result row.
+   * Return a media entity ID from a views result row.
    *
    * @see /core/modules/views/src/Form/ViewsFormMainForm.php
    *
@@ -52,7 +52,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    *   The index of a views result row.
    *
    * @return string
-   *   The Id of a media entity.
+   *   The ID of a media entity.
    */
   public function form_element_row_id($row_id) {
     return $this->view->result[$row_id]->mid;
