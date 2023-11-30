@@ -299,7 +299,7 @@ JS;
    * Tests ajax focus handling.
    */
   public function testAjaxFocus() {
-    $this->drupalGet('ajax_forms_test_get_form');
+    $this->drupalGet('/ajax_forms_test_get_form');
 
     $this->assertNotNull($select = $this->assertSession()->elementExists('css', '#edit-select'));
     $select->setValue('green');
