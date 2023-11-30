@@ -294,6 +294,7 @@ JS;
     // because this test intentionally does not complete all AJAX requests.
     $this->getSession()->executeScript("delete window.drupalActiveXhrCount");
   }
+  
 
   /**
    * Tests ajax focus handling.
