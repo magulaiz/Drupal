@@ -211,11 +211,11 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
 
-    $uri = 'public://fiezerobyte.txt';
+    $uri = 'public://file_zero_byte.txt';
     $zero_byte_file = File::create([
       'uid' => 1,
       'uri' => $uri,
-      'filename' => 'fiezerobyte.txt',
+      'filename' => 'file_zero_byte.txt',
       'filemime' => 'text/plain',
       'filesize' => 0,
     ]);
@@ -224,7 +224,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Create a new node with the small file, which should pass.
     $this->uploadNodeFile($zero_byte_file, $field_name, $type_name);
-    $this->assertSession()->pageTextContains("The file is zero bytes. Please upload a valid file.");
+    $this->assertSession()->pageTextContains("The file is zero bytes. Upload a new valid file.");
   }
 
 }

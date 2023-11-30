@@ -28,11 +28,11 @@ class FileZeroByteConstraintValidatorTest extends FileValidatorTestBase {
    */
   public function setUp(): void {
     parent::setUp();
-    $uri = 'public://fiezerobyte.txt';
+    $uri = 'public://file_zero_byte.txt';
     $this->fileZeroByte = File::create([
       'uid' => 1,
       'uri' => $uri,
-      'filename' => 'fiezerobyte.txt',
+      'filename' => 'file_zero_byte.txt',
       'filemime' => 'text/plain',
       'filesize' => 0,
     ]);

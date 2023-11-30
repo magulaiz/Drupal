@@ -20,6 +20,6 @@ class FileZeroByteConstraint extends Constraint {
    *
    * @var string
    */
-  public string $zeroByteFileMessage = 'The file is zero bytes. Please upload a valid file.';
+  public string $zeroByteFileMessage = 'The file is zero bytes. Upload a new valid file.';
 
 }
