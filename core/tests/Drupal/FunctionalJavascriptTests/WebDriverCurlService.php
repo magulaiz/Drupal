@@ -47,7 +47,7 @@ class WebDriverCurlService extends CurlService {
       CURLOPT_FAILONERROR => TRUE,
     ];
     $retries = 0;
-    $max_retries = static::$retry ? 20 : 1;
+    $max_retries = static::$retry ? 10 : 1;
     while ($retries < $max_retries) {
       try {
         $customHeaders = [
