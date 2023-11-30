@@ -27,6 +27,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a filter to embed media items using a custom tag.
  *
+ * @Filter(
+ *   id = "media_embed",
+ *   title = @Translation("Embed media"),
+ *   description = @Translation("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+ *   settings = {
+ *     "default_view_mode" = "default",
+ *     "allowed_view_modes" = {},
+ *     "allowed_media_types" = {},
+ *     "show_contextual_links" = 0,
+ *   },
+ *   weight = 100,
+ * )
+ *
  * @internal
  */
 #[Filter(
@@ -182,6 +196,13 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#element_validate' => [[static::class, 'validateOptions']],
     ];
 
+    $form['show_contextual_links'] = [
+      '#title' => $this->t("Show contextual links for embedded media"),
+      '#type' => 'checkbox',
+      '#default_value' => $this->settings['show_contextual_links'],
+      '#description' => $this->t('If selected, displays contextual links to edit/delete/etc. embedded media items.'),
+    ];
+
     return $form;
   }
 
@@ -246,9 +267,11 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     // - caching an embedded media entity separately is unnecessary; the host
     //   entity is already render cached.
     unset($build['#cache']['keys']);
-    // - Contextual Links do not make sense for embedded entities; we only allow
-    //   the host entity to be contextually managed.
-    $build['#pre_render'][] = static::class . '::disableContextualLinks';
+    // - Contextual Links do not always make sense for embedded entities; users
+    //   must opt in to exposing contextual links.
+    if (!$this->settings['show_contextual_links']) {
+      $build['#pre_render'][] = static::class . '::disableContextualLinks';
+    }
     // - default styling may break captioned media embeds; attach asset library
     //   to ensure captions behave as intended. Do not set this at the root
     //   level of the render array, otherwise it will be attached always,
