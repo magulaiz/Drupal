@@ -16,20 +16,6 @@
   width: 100%;
 }
 
-@media (min-width: 43.75rem) {
-  .layout--content-medium,
-  .layout--pass--content-medium > * {
-    grid-column: 2 / 14;
-  }
-}
-
-@media (min-width: 62.5rem) {
-  .layout--content-medium,
-  .layout--pass--content-medium > * {
-    grid-column: 3 / 13;
-  }
-}
-
 /*
   If .layout--content-medium is nested within itself, or an element that's inheriting the
   layout--content-medium styles from its parent region, go full width within its
@@ -37,19 +23,33 @@
 */
 
 @media (min-width: 43.75rem) {
-  .layout--pass--content-medium > * .layout--content-medium,
-  .layout--content-medium .layout--content-medium,
-  .layout--pass--content-medium > * .layout--pass--content-medium > *,
-  .layout--content-medium .layout--pass--content-medium > * {
-    grid-column: 1 / 13;
+.layout--content-medium .layout--content-medium,
+.layout--pass--content-medium > * .layout--content-medium,
+.layout--content-medium .layout--pass--content-medium > *,
+.layout--pass--content-medium > * .layout--pass--content-medium > * {
+  grid-column: 1 / 13;
   }
 }
 
 @media (min-width: 62.5rem) {
-  .layout--pass--content-medium > * .layout--content-medium,
   .layout--content-medium .layout--content-medium,
-  .layout--pass--content-medium > * .layout--pass--content-medium > *,
-  .layout--content-medium .layout--pass--content-medium > * {
+  .layout--pass--content-medium > * .layout--content-medium,
+  .layout--content-medium .layout--pass--content-medium > *,
+  .layout--pass--content-medium > * .layout--pass--content-medium > * {
     grid-column: 1 / 11;
+  }
+}
+
+@media (min-width: 43.75rem) {
+.layout--content-medium,
+.layout--pass--content-medium > * {
+    grid-column: 2 / 14;
+  }
+}
+
+@media (min-width: 62.5rem) {
+.layout--content-medium,
+.layout--pass--content-medium > * {
+  grid-column: 3 / 13;
   }
 }

@@ -119,12 +119,8 @@
   display: block;
   content: "";
 }
-.tabs {
-  &.is-open {
-    & .tabs__tab.is-active::before {
-      border-bottom-left-radius: 0;
-    }
-  }
+.tabs.is-open .tabs__tab.is-active::before {
+  border-bottom-left-radius: 0;
 }
 .tabs--secondary {
   & .tabs__tab:not(.is-active) {
