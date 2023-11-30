@@ -274,14 +274,15 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   The NodeElement found via $after_open_selector.
    */
   protected function openMediaLibraryForField($field_name, $after_open_selector = '.js-media-library-menu') {
+    $assert_session = $this->assertSession();
     $this->assertElementExistsAfterWait('css', "#$field_name-media-library-wrapper")
       ->pressButton('Add media');
+    $assert_session->assertWaitOnAjaxRequest();
     $this->waitForText('Add or select media');
 
     // Assert that the grid display is visible and the links to toggle between
     // the grid and table displays are present.
     $this->assertMediaLibraryGrid();
-    $assert_session = $this->assertSession();
     $assert_session->linkExists('Grid');
     $assert_session->linkExists('Table');
 
