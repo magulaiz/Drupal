@@ -569,7 +569,7 @@ drupal.dialog.ajax:
     misc/dialog/dialog.ajax.js: {}
   css:
     component:
-      misc/dialog.css: {}
+      misc/dialog/dialog.css: {}
   dependencies:
     - core/jquery
     - core/drupal
