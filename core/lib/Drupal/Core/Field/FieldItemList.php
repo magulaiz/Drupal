@@ -416,13 +416,17 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
           return $property !== NULL;
         });
 
+        foreach ($value as &$item) {
+          $item = is_numeric($item) ? (string) $item : $item;
+        }
+
         ksort($value);
       }
     };
     array_walk($value1, $callback);
     array_walk($value2, $callback);
 
-    return $value1 == $value2;
+    return $value1 === $value2;
   }
 
   /**
