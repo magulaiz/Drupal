@@ -94,7 +94,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(74, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(79, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(80, $performance_data->getCacheGetCount());
     $this->assertSame(19, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
