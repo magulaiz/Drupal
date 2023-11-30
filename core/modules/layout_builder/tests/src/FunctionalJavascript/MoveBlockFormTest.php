@@ -114,7 +114,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->openBodyMoveForm(1, 'content', ['Body (current)', 'Links']);
     $page->selectFieldOption('Region', '0:first');
     $this->assertBlockTable(['Powered by Drupal', 'Body (current)']);
-    $this->moveBlockWithKeyboard('up', 'Body', ['Body (current)*', 'Powered by Drupal']);
+    $this->moveBlockWithKeyboard('up', 'Body', ['Body (current) *', 'Powered by Drupal']);
     $page->pressButton('Move');
     $expected_block_order = [
       '.block-field-blocknodebundle-with-section-fieldbody',
@@ -166,7 +166,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $expected_block_table[] = 'Body (current)';
     $this->assertBlockTable($expected_block_table);
     $expected_block_table = array_fill(0, $large_block_number - 1, 'Powered by Drupal');
-    $expected_block_table[] = 'Body (current)*';
+    $expected_block_table[] = 'Body (current) *';
     $expected_block_table[] = 'Powered by Drupal';
     $this->moveBlockWithKeyboard('up', 'Body', $expected_block_table);
     $page->pressButton('Move');
