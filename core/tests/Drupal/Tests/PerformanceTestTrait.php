@@ -93,7 +93,18 @@ trait PerformanceTestTrait {
    *   A PerformanceData value object.
    */
   public function collectPerformanceData(callable $callable, ?string $service_name = NULL): PerformanceData {
-    // Clear all existing performance logs before collecting new data.
+    // Clear all existing performance logs before collecting new data. This is
+    // necessary because responses are returned back to tests prior to image
+    // and asset responses are returning to the browser, and before
+    // post-response tasks are guaranteed to have run. Assume that if there is
+    // no performance data logged by the child request within one second, that
+    // no this means everything has finished.
+    $collection = \Drupal::keyValue('performance_test');
+    while ($collection->get('performance_test_data')) {
+      $collection->deleteAll();
+      sleep(1);
+    }
+
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
     $collection = \Drupal::keyValue('performance_test');

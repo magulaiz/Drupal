@@ -7,10 +7,9 @@ use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
 
 /**
- * Tests that anonymous users are not served any JavaScript.
+ * Tests the performance of basic functionality in the standard profile.
  *
- * This is tested with the core modules that are enabled in the 'standard'
- * profile.
+ * Stark is used as the default theme so that this test is not Olivero specific.
  *
  * @group Common
  */
@@ -37,30 +36,33 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Tests that anonymous users are not served any JavaScript.
+   * Tests performance for anonymous users.
    */
-  public function testNoJavaScript() {
-    // Create a node of content type 'article' that is listed on the frontpage.
+  public function testAnonymous() {
+    // Create two nodes to be shown on the front page.
     $this->drupalCreateNode([
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
     ]);
+    // Request a page that we're not otherwise explicitly testing to warm some
+    // caches.
+    $this->drupalGet('search');
 
     // Test frontpage.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('');
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(101, $performance_data->getQueryCount());
-
     // This test observes a variable number of cache gets and sets, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertGreaterThanOrEqual(193, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(194, $performance_data->getCacheGetCount());
-    $this->assertGreaterThanOrEqual(174, $performance_data->getCacheSetCount());
-    $this->assertLessThanOrEqual(177, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(58, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(66, $performance_data->getQueryCount());
+
+    $this->assertGreaterThanOrEqual(129, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(130, $performance_data->getCacheGetCount());
+    $this->assertSame(59, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test node page.
@@ -68,15 +70,14 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(46, $performance_data->getQueryCount());
+    $this->assertSame(38, $performance_data->getQueryCount());
 
     // This test observes a variable number of cache gets and sets, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertGreaterThanOrEqual(102, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(107, $performance_data->getCacheGetCount());
-    $this->assertSame(25, $performance_data->getCacheSetCount());
+    $this->assertSame(87, $performance_data->getCacheGetCount());
+    $this->assertSame(20, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test user profile page.
@@ -92,7 +93,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(74, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(77, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(79, $performance_data->getCacheGetCount());
     $this->assertSame(19, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
