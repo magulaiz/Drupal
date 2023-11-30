@@ -22,8 +22,6 @@ class DialogPositionTest extends WebDriverTestBase {
     'node',
     'field',
     'field_ui',
-    'off_canvas_test',
-    'dialog_renderer_test',
   ];
 
   /**
@@ -107,6 +105,7 @@ class DialogPositionTest extends WebDriverTestBase {
     $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
     // Assert that the width is restored to full size.
     $this->assertEquals('886', $width_after_resize);
+
   }
 
 }
