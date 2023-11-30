@@ -99,7 +99,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
 
     // Reorder body field in current region.
     $this->openBodyMoveForm(1, 'content', ['Links', 'Body (current)']);
-    $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current)*', 'Links']);
+    $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current) *', 'Links']);
     $page->pressButton('Move');
     $expected_block_order = [
       '.block-field-blocknodebundle-with-section-fieldbody',
