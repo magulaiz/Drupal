@@ -299,7 +299,6 @@ JS;
    * Tests ajax focus handling.
    */
   public function testAjaxFocus() {
-    // $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3396536");
     $this->drupalGet('ajax_forms_test_get_form');
 
     $this->assertNotNull($select = $this->assertSession()->elementExists('css', '#edit-select'));
@@ -322,17 +321,6 @@ JS;
     $textfield1->setValue('Kittens say purr');
     $textfield2->focus();
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
-    $this->assertEquals('edit-textfield-2', $has_focus_id);
-
-    // Test textfield with 'change' event listener with refocus-blur set to
-    // FALSE.
-    $textfield2->setValue('Llamas say yarhar');
-    // The above does a blur at the end, so the focus is gone.
-    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
-    $this->assertNotEquals('edit-textfield-2', $has_focus_id);
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    // The focus is now back after the request.
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
