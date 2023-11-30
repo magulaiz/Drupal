@@ -205,7 +205,7 @@ JS);
    * @return bool
    *   TRUE if found, FALSE if not found.
    */
-  public function waitForText($text, $timeout = 20000) {
+  public function waitForText($text, $timeout = 10000) {
     return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
       $regex = '/' . preg_quote($text, '/') . '/ui';

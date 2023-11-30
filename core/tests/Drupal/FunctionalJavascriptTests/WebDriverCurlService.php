@@ -143,8 +143,7 @@ class WebDriverCurlService extends CurlService {
     if (empty($error)) {
       $error = "Retries: $retries and last result:\n" . ($rawResult ?? '');
     }
-    $args = print_r(func_get_args(), TRUE);
-    throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s\n\nExtra: %s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error, $args));
+    throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
   }
 
 }

@@ -122,7 +122,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       $page->pressButton($button_text);
       // Make sure the changes are present.
       $new_page_text_locator = "$block_selector $label_selector:contains($new_page_text)";
-      sleep(2);
       $this->assertNotEmpty($web_assert->waitForElementVisible('css', $new_page_text_locator));
       // The page is loaded with the new change but make sure page is
       // completely loaded.
@@ -231,7 +230,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * Tests enabling and disabling Edit Mode.
    */
   public function testEditModeEnableDisable() {
-    // $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3317520");
     foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
       $block = $this->placeBlock('system_powered_by_block');
@@ -243,7 +241,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           case 'contextual_link':
             $this->clickContextualLink($this->getBlockSelector($block), "Quick edit");
             $this->waitForOffCanvasToOpen();
-            sleep(10);
             $this->assertEditModeEnabled();
             break;
 
