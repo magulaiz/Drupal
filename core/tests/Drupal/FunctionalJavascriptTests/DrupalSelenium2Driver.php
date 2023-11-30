@@ -115,7 +115,7 @@ class DrupalSelenium2Driver extends Selenium2Driver {
   public function click($xpath) {
     /** @var \Exception $not_clickable_exception */
     $not_clickable_exception = NULL;
-    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath) {
+    $result = $this->waitFor(20, function () use (&$not_clickable_exception, $xpath) {
       try {
         parent::click($xpath);
         return TRUE;
