@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\field\FieldConfigInterface;
 
 /**
