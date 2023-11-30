@@ -57,6 +57,9 @@
 .cke_editable p {
   margin-block-start: var(--sp);
   margin-block-end: var(--sp);
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 .text-content p:first-child,
