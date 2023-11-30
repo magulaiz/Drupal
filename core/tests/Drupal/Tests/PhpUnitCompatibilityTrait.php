@@ -16,6 +16,14 @@ if (FALSE) {
    * Makes Drupal's test API forward compatible with multiple versions of PHPUnit.
    */
   trait PhpUnitCompatibilityTrait {
+
+    /**
+     * Get test name.
+     */
+    public function name(): string {
+      return $this->getName();
+    }
+
   }
 
 }
