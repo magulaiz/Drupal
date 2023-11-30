@@ -792,4 +792,63 @@ JS;
     $assert_session->responseContains('<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
   }
 
+  /**
+   * Ensures that changes are saved in CKEditor 5.
+   */
+  public function testSave(): void {
+    // To replicate the bug from https://www.drupal.org/i/3396742
+    // We need 2 or more text formats and node edit page.
+    FilterFormat::create([
+      'format' => 'ckeditor5',
+      'name' => 'CKEditor 5 HTML',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
+    Editor::create([
+      'format' => 'ckeditor5',
+      'editor' => 'ckeditor5',
+    ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('ckeditor5'),
+        FilterFormat::load('ckeditor5')
+      ))
+    ));
+    FilterFormat::create([
+      'format' => 'ckeditor5_2',
+      'name' => 'CKEditor 5 HTML 2',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
+    Editor::create([
+      'format' => 'ckeditor5_2',
+      'editor' => 'ckeditor5',
+    ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('ckeditor5_2'),
+        FilterFormat::load('ckeditor5_2')
+      ))
+    ));
+    $this->drupalCreateNode([
+      'title' => 'My test content',
+    ]);
+
+    // Add a node with text rendered via the Plain Text format.
+    $this->drupalGet('node/1/edit');
+    $page = $this->getSession()->getPage();
+    $this->waitForEditor();
+
+    $editor = $page->find('css', '.ck-content');
+    $editor->setValue('Very important information');
+
+    $page->pressButton('Save');
+
+    $this->assertSession()->responseContains('Very important information');
+  }
+
 }
