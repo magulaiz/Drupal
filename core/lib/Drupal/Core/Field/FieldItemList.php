@@ -416,9 +416,11 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
           return $property !== NULL;
         });
 
-        foreach ($value as &$item) {
-          $item = is_numeric($item) ? (string) $item : $item;
-        }
+        array_walk_recursive($value, function (&$item) {
+          if (is_numeric($item) || is_bool($item)) {
+            $item = (string) $item;
+          }
+        });
 
         ksort($value);
       }
