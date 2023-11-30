@@ -12,7 +12,6 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -137,7 +136,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'cookies:big_pipe_nojs',
       'session.exists',
       'user.permissions',
-      'user.roles:authenticated',
+      'user.roles',
     ];
 
     // Full node page 1.
