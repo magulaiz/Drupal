@@ -168,13 +168,6 @@ tr .form-item,
 
   & .form-item__label,
   & .form-item__prefix,
-  & .form-item__suffix,
-  & .form-element--editor-format {
-    min-width: 1px;
-  }
-
-  & .form-item__label,
-  & .form-item__prefix,
   & .form-item__suffix {
     margin-inline-end: var(--space-xs);
   }

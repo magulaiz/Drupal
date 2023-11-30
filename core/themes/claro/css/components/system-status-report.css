@@ -38,15 +38,15 @@
 
 .system-status-report__status-icon::before {
   position: absolute;
+  display: inline-block;
   content: "";
   inset-block-start: 1em;
   inset-inline-start: 0.625rem;
-  display: inline-block;
   width: 1.5rem;
   height: 1.5rem;
   margin-inline-end: 0.625rem;
-  background-repeat: no-repeat;
   vertical-align: top;
+  background-repeat: no-repeat;
   background-position: top center;
   background-size: contain;
 }

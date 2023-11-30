@@ -93,7 +93,7 @@ amount of columns within its parent .grid-full.
   - Element that's inheriting the layout--content-narrow styles from its parent region.
   - .layout--content-medium class.
   - Element that's inheriting the layout--content-medium styles from its parent region.
-+*/
+*/
   
 @media (min-width: 43.75rem) {
   .layout--content-narrow .layout--content-narrow,

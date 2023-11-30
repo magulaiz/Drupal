@@ -14,7 +14,7 @@
  */
 .form-item {
   margin-block: var(--sp1);
-}}
+}
 
 /**
  * When a table row or a container-inline has a single form item, prevent it

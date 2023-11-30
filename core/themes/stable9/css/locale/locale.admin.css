@@ -85,8 +85,8 @@
   background: transparent url(../../../misc/menu-collapsed-rtl.png) right 0.6em no-repeat; /* LTR */
 }
 .expanded .locale-translation-update__wrapper {
-  background: transparent url(../../../misc/menu-expanded.png) left 0.6em no-repeat;
   overflow: visible;
+  background: transparent url(../../../misc/menu-expanded.png) left 0.6em no-repeat;
   height: auto;
   white-space: normal;
 }
