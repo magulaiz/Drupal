@@ -106,9 +106,7 @@
         '-',
       )}-${settings.view_display_id.replace(/_/g, '-')}"]`,
     );
-    once('exposed-form', this.$exposed_form).forEach(
-      $.proxy(this.attachExposedFormAjax, this),
-    );
+    this.attachExposedFormAjax();
 
     // Add the ajax to pagers.
     once(
@@ -148,11 +146,14 @@
     )
       .not('[data-drupal-selector=edit-reset]')
       .each(function (index) {
-        const selfSettings = $.extend({}, that.element_settings, {
-          base: $(this).attr('id'),
-          element: this,
-        });
-        that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
+        if (once('exposed-form-ajax', this).length) {
+          // Initialize the Drupal.ajax instance.
+          const selfSettings = $.extend({}, that.element_settings, {
+            base: $(this).attr('id'),
+            element: this,
+          });
+          that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
+        }
       });
   };
 
