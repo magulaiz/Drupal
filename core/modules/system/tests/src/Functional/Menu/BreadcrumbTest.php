@@ -27,11 +27,8 @@ class BreadcrumbTest extends BrowserTestBase {
     'block',
     'dblog',
     'field_ui',
-    'filter',
     'filter_test',
-    'menu_link_content',
     'menu_test',
-    'menu_ui',
     'olivero_test',
   ];
 
