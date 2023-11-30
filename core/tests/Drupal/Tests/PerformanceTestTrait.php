@@ -113,7 +113,7 @@ trait PerformanceTestTrait {
       $cache_set_count = 0;
       $cache_delete_count = 0;
       foreach ($performance_test_data['database_events'] as $event) {
-        if (isset($event->caller['class']) && $event->caller['class'] === 'Drupal\\Core\\Cache\\DatabaseBackend') {
+        if (isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE)) {
           $method = strtolower($event->caller['function']);
           if (str_contains($method, 'get')) {
             $cache_get_count++;
