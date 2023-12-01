@@ -110,7 +110,7 @@ class BookManagerTest extends UnitTestCase {
     ];
     $this->formState = $this->getMockBuilder('Drupal\Core\Form\FormState')
       ->disableOriginalConstructor()->disableOriginalConstructor()
-      ->setMethods(['hasValue', 'getValue'])->getMock();
+      ->onlyMethods(['hasValue', 'getValue'])->getMock();
     $this->formState->expects($this->any())
       ->method('getValue')
       ->willReturn($book_id);
