@@ -193,6 +193,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $drupalmedia->click();
     $this->assertEditorButtonEnabled('Link');
     if ($this->getEditorButton('Link')->getAttribute('aria-pressed') !== 'true') {
+      $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
       var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
     }
     $this->assertSame('true', $this->getEditorButton('Link')->getAttribute('aria-pressed'));

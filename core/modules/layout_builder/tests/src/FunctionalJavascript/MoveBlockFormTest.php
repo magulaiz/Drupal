@@ -150,6 +150,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
       $powered_by_drupal = $assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
       if (empty($powered_by_drupal)) {
+        $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
         var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
       }
       $this->assertNotEmpty($powered_by_drupal);

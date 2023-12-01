@@ -281,6 +281,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
       // Maybe there were more buttons, try another selector.
       $this->getSession()->getPage()->pressButton("{$field_name}-media-library-open-button");
       if (empty($this->assertSession()->waitForText('Add or select media'))) {
+        $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
         var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
       }
     }
