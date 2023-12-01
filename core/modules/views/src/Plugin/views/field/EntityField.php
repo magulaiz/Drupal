@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Utility\HTML;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
@@ -986,7 +987,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
         if (is_array($raw)) {
           if (isset($raw[$id]) && is_scalar($raw[$id])) {
-            $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = Xss::filterAdmin($raw[$id]);
+            $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = HTML::decodeEntities(Xss::filterAdmin($raw[$id]));
           }
           else {
             // Make sure that empty values are replaced as well.
@@ -999,7 +1000,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
           // Check if TypedDataInterface is implemented so we know how to render
           // the item as a string.
           if (!empty($property) && $property instanceof TypedDataInterface) {
-            $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = Xss::filterAdmin($property->getString());
+            $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = HTML::decodeEntities(Xss::filterAdmin($property->getString()));
           }
           else {
             // Make sure that empty values are replaced as well.
