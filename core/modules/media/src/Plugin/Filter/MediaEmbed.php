@@ -33,7 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "default_view_mode" = "default",
  *     "allowed_view_modes" = {},
  *     "allowed_media_types" = {},
- *     "show_contextual_links" = 0,
+ *     "show_contextual_links" = false,
  *   },
  *   weight = 100,
  * )
