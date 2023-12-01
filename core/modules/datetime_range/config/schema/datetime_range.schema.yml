@@ -7,7 +7,7 @@ field.storage_settings.daterange:
   label: 'Date range settings'
 
 field.field_settings.daterange:
-  type: mapping
+  type: field.field_settings.datetime
   label: 'Date range settings'
   mapping:
     optional_values:
