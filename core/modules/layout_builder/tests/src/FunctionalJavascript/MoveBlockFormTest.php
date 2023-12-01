@@ -256,7 +256,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $region_selector = "[data-layout-delta=\"$section_delta\"] [data-region=\"$region\"]";
@@ -289,7 +288,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
 
     $body_field_locator = "[data-layout-delta=\"$delta\"] [data-region=\"$region\"] .block-field-blocknodebundle-with-section-fieldbody";
     $this->clickContextualLink($body_field_locator, 'Move');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['select', 'Region']));
     $assert_session->fieldValueEquals('Region', "$delta:$region");
     $this->assertBlockTable($initial_blocks);
