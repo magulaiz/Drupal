@@ -7,7 +7,9 @@
   Drupal.behaviors.mediaEmbedIntersectionObserver = {
     attach(context) {
       // Select all elements with the class '.media-oembed-content' and the 'data-src' attribute.
-      const elements = context.querySelectorAll('.media-oembed-content[data-src]');
+      const elements = context.querySelectorAll(
+        '.media-oembed-content[data-src]',
+      );
 
       // Check if matching elements exist.
       if (elements.length > 0) {

@@ -308,8 +308,7 @@ class OEmbedFormatter extends FormatterBase {
     ];
     $form['loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the resource until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
     $form['loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download a resource as soon as possible. This is the browser default for legacy reasons. Only use this option when the resource is always expected to render.');
-    $form['loading']['attribute']['intersection']['#description'] = $this->t('Use Javacript Intersection Observer to lazyload the iframe only when in view. Set loading attribute to lazy.');
-
+    $form['loading']['attribute']['intersection']['#description'] = $this->t('Use Javascript Intersection Observer to lazy load the iframe only when in view. Set loading attribute to lazy.');
 
     return $form;
   }
