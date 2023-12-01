@@ -344,7 +344,17 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
     $this->assertSession()->assertExpectedAjaxRequest(1);
-    $page->findButton('Save settings')->click();
+    // If you need the before state, uncomment the following.
+    // $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-before.jpg');
+    try {
+      $page->pressButton('Save settings');
+    }
+    catch (\Throwable $e) {
+      $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-1.jpg');
+      file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '-1.html', $this->getSession()->getPage()->getHtml());
+      file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-ErrorMessage-' . __METHOD__ . '-1.txt', $e->getMessage());
+      throw $e;
+    }
     $this->assertSession()->assertWaitOnAjaxRequest();
     if (strpos($this->getSession()->getPage()->getText(), 'Limit must be higher than or equal to 1') === FALSE) {
       $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-2.jpg');
