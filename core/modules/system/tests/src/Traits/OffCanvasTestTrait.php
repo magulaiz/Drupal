@@ -19,10 +19,11 @@ trait OffCanvasTestTrait {
   protected function waitForOffCanvasArea(): void {
     // The data-resize-done attribute is added by the off_canvas_test module's
     // wrapper around Drupal.offCanvas.resetSize.
-    if (empty($this->assertSession()->waitForElementVisible('css', '[data-resize-done="true"]'))) {
+    $element = $this->assertSession()->waitForElementVisible('css', '[data-resize-done="true"]');
+    if (empty($element)) {
       var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
     }
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '[data-resize-done="true"]'));
+    $this->assertNotEmpty($element);
 
     // Remove the data-resize-done attribute so in scenarios where off-canvas
     // opens yet another off-canvas, waitForOffCanvasArea() is looking for the
