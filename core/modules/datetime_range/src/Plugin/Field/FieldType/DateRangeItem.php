@@ -102,7 +102,7 @@ class DateRangeItem extends DateTimeItem {
     $element['optional_values'] = [
       '#type' => 'radios',
       '#title' => $this->t('End date'),
-      '#description' => $this->t('Applies regardless of whether the field is required.'),
+      '#description' => $this->t('Whether an end date must be provided if a start date is given.'),
       '#default_value' => $this->getSetting('optional_values'),
       '#options' => [
         static::OPTIONAL_NONE => $this->t('Required'),
