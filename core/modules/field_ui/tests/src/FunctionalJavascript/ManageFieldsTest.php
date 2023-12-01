@@ -348,7 +348,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     if (strpos($this->getSession()->getPage()->getText(), 'Limit must be higher than or equal to 1') === FALSE) {
       $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-2.jpg');
-      var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
+      file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '-2.html', $this->getSession()->getPage()->getHtml());
     }
     $this->assertSession()->pageTextContains('Limit must be higher than or equal to 1');
   }

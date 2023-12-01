@@ -22,7 +22,7 @@ trait OffCanvasTestTrait {
     $element = $this->assertSession()->waitForElementVisible('css', '[data-resize-done="true"]');
     if (empty($element)) {
       $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
-      var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
+      file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
     }
     $this->assertNotEmpty($element);
 

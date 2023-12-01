@@ -152,7 +152,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
       $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference.jpg');
       if (empty($powered_by_drupal)) {
         $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-fail.jpg');
-        var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
+        file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
       }
       $this->assertNotEmpty($powered_by_drupal);
       $assert_session->assertWaitOnAjaxRequest();
