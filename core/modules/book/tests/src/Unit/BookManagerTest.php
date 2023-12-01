@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-
 /**
  * @coversDefaultClass \Drupal\book\BookManager
  * @group book
@@ -76,7 +75,7 @@ class BookManagerTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Form\FormState
    */
-  protected $form_state;
+  protected $formState;
 
   /**
    * The mocked node Interface.
@@ -103,17 +102,16 @@ class BookManagerTest extends UnitTestCase {
       'nid' => 'new',
       'has_children' => 0,
       'original_bid' => 0,
-      'parent_depth_limit' => 0,
+      'parent_depth_limit' => 8,
       'bid' => 0,
       'pid' => 0,
       'weight' => 0,
-      'parent_depth_limit' => 8,
       'options' => [],
     ];
-    $this->form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
+    $this->formState = $this->getMockBuilder('Drupal\Core\Form\FormState')
       ->disableOriginalConstructor()->disableOriginalConstructor()
       ->setMethods(['hasValue', 'getValue'])->getMock();
-    $this->form_state->expects($this->any())
+    $this->formState->expects($this->any())
       ->method('getValue')
       ->willReturn($book_id);
     $this->node = $this->getMockBuilder('Drupal\node\NodeInterface')
@@ -194,6 +192,7 @@ class BookManagerTest extends UnitTestCase {
 
   /**
    * Testing the Book Outline form element in node add page form.
+   *
    * When the Book setting is enabled for the Content Type 'Page'.
    */
   public function testAddFormElementsNodeAddWithBook() {
@@ -201,12 +200,13 @@ class BookManagerTest extends UnitTestCase {
     $this->node->expects($this->any())
       ->method('getType')
       ->willReturn('page');
-    $add_form = $this->bookManager->addFormElements($form, $this->form_state, $this->node, $this->account);
+    $add_form = $this->bookManager->addFormElements($form, $this->formState, $this->node, $this->account);
     $this->assertArrayHasKey('book', $add_form);
   }
 
   /**
    * Testing the Book Outline form element in node add article form.
+   *
    * When the Book setting is not enabled for the Content Type 'Article'.
    */
   public function testAddFormElementsNodeAddWithoutBook() {
@@ -214,7 +214,7 @@ class BookManagerTest extends UnitTestCase {
     $this->node->expects($this->any())
       ->method('getType')
       ->willReturn('article');
-    $add_form = $this->bookManager->addFormElements($form, $this->form_state, $this->node, $this->account);
+    $add_form = $this->bookManager->addFormElements($form, $this->formState, $this->node, $this->account);
     $this->assertArrayNotHasKey('book', $form);
   }
 
