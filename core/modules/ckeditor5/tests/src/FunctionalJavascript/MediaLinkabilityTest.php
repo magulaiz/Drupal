@@ -192,6 +192,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     // Tests unlinking media.
     $drupalmedia->click();
     $this->assertEditorButtonEnabled('Link');
+    // @todo: Remove if random errors here no longer happen.
     if ($this->getEditorButton('Link')->getAttribute('aria-pressed') !== 'true') {
       $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
       file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());

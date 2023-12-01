@@ -145,6 +145,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // hard-codes it to 480).
     $inner_frame = "frames[0].document.querySelector('iframe')";
     $inner_frame_width = $session->evaluateScript("$inner_frame.getAttribute('width')");
+    // @todo: Remove if random errors here no longer happen.
     if ($inner_frame_width != '480') {
       $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
     }
