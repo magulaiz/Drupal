@@ -2,16 +2,16 @@
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 
 /**
  * Tests moving blocks via the form.
  *
  * @group layout_builder
  */
-class MoveBlockFormTest extends WebDriverTestBase {
+class MoveBlockFormTest extends OffCanvasTestBase {
 
   use ContextualLinkClickTrait;
 
@@ -149,8 +149,8 @@ class MoveBlockFormTest extends WebDriverTestBase {
 
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
+      $this->waitForOffCanvasToOpen();
       if (empty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'))) {
-        // Check in markup `layout--onecol` class.
         var_dump(htmlentities($this->getSession()->getPage()->getHtml()));
       }
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
