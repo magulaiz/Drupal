@@ -672,7 +672,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * @see batch
  * @see schemaapi
  * @see hook_update_last_removed()
- * @see update_get_update_list()
+ * @see \Drupal\Core\Update\Update::getList()
  * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
  * @see https://www.drupal.org/node/2535316
  */
@@ -846,7 +846,7 @@ function hook_removed_post_updates() {
  *
  * @ingroup update_api
  *
- * @see update_resolve_dependencies()
+ * @see \Drupal\Core\Update\Update::resolveDependencies()
  * @see hook_update_N()
  */
 function hook_update_dependencies() {

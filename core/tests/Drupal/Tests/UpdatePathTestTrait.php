@@ -64,7 +64,7 @@ trait UpdatePathTestTrait {
         switch ($update_type) {
           case 'update':
             drupal_load_updates();
-            $all_updates = update_get_update_list();
+            $all_updates = \Drupal::service('update')->getList();
             break;
 
           case 'post_update':
