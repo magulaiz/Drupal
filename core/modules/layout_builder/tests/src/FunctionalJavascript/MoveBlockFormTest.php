@@ -193,7 +193,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
    */
   protected function assertBlockTable(array $expected_block_labels): void {
     $page = $this->getSession()->getPage();
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $block_tds = $page->findAll('css', '.layout-builder-components-table__block-label');
     $this->assertSameSize($block_tds, $expected_block_labels);
     /** @var \Behat\Mink\Element\NodeElement $block_td */
