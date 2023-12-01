@@ -149,10 +149,16 @@ class MoveBlockFormTest extends WebDriverTestBase {
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
       $powered_by_drupal = $assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
-      $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference.jpg');
+      $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference-1.jpg');
       if (empty($powered_by_drupal)) {
-        $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-fail.jpg');
-        file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
+        // Off-canvas didn't open, try again.
+        $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
+        $powered_by_drupal = $assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
+        $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference-2.jpg');
+        if (empty($powered_by_drupal)) {
+          $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-fail.jpg');
+          file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
+        }
       }
       $this->assertNotEmpty($powered_by_drupal);
       $assert_session->assertWaitOnAjaxRequest();
