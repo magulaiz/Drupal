@@ -41,10 +41,9 @@ media_embed_ckeditor_theme:
   dependencies:
     - core/drupal
 
-drupal.media-icon:
+media_embed_intersection_observer:
   version: VERSION
-  css:
-    theme:
-      css/media.icon.theme.css: {}
+  js:
+    js/media_embed_intersection_observer.js: {}
   dependencies:
-    - field_ui/drupal.field_ui.manage_fields
+    - core/drupal
