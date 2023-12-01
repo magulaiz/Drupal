@@ -139,11 +139,12 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $large_block_number = 25;
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
-      $powered_by_drupal = $assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
+      $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
+      $powered_by_drupal_link = $page->find('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
       // @todo: Remove if random errors here no longer happen.
       // The below should have the off-canvas visible for working tests.
       // $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference-1.jpg');
-      if (empty($powered_by_drupal)) {
+      if (empty($powered_by_drupal_link)) {
         // @todo: Fix this. It usually fails on the 4th attempt.
         // Do we need all of them? Do they all need to be the same?.
         if ($i > 3) {
@@ -155,7 +156,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
         $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-fail.jpg');
         file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '-' . $i . '.html', $this->getSession()->getPage()->getHtml());
       }
-      $this->assertNotEmpty($powered_by_drupal);
+      $this->assertNotEmpty($powered_by_drupal_link);
       $page->clickLink('Powered by Drupal');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
       $page->pressButton('Add block');
