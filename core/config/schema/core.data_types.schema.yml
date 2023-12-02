@@ -178,6 +178,8 @@ config_object:
   type: mapping
   mapping:
     _core:
+      # This only exists for merging configuration; it's not required.
+      requiredKey: false
       type: _core_config_info
     langcode:
       type: langcode
@@ -280,6 +282,9 @@ theme_settings:
           type: boolean
           label: 'Use default'
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension
+      # point.
+      requiredKey: false
       type: sequence
       label: 'Third party settings'
       sequence:
@@ -305,6 +310,8 @@ config_dependencies_base:
   type: mapping
   mapping:
     config:
+      # All dependency keys are optional: this might not depend on any other config.
+      requiredKey: false
       type: sequence
       label: 'Configuration entity dependencies'
       sequence:
@@ -313,11 +320,15 @@ config_dependencies_base:
           NotBlank: []
           ConfigExists: []
     content:
+      # All dependency keys are optional: this might not depend on any content entities.
+      requiredKey: false
       type: sequence
       label: 'Content entity dependencies'
       sequence:
         type: string
     module:
+      # All dependency keys are optional: this might not depend on any modules.
+      requiredKey: false
       type: sequence
       label: 'Module dependencies'
       sequence:
@@ -327,6 +338,8 @@ config_dependencies_base:
           ExtensionName: []
           ExtensionExists: module
     theme:
+      # All dependency keys are optional: this might not depend on any themes.
+      requiredKey: false
       type: sequence
       label: 'Theme dependencies'
       sequence:
@@ -343,6 +356,8 @@ config_dependencies:
   label: 'Configuration dependencies'
   mapping:
     enforced:
+      # All dependency keys are optional: this may have no dependencies at all.
+      requiredKey: false
       type: config_dependencies_base
       label: 'Enforced configuration dependencies'
   constraints:
@@ -363,11 +378,16 @@ config_entity:
       type: config_dependencies
       label: 'Dependencies'
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension
+      # point.
+      requiredKey: false
       type: sequence
       label: 'Third party settings'
       sequence:
         type: '[%parent.%parent.%type].third_party.[%key]'
     _core:
+      # This only exists for merging configuration; it's not required.
+      requiredKey: false
       type: _core_config_info
 
 block.settings.*:
@@ -459,6 +479,7 @@ layout_plugin.settings:
       sequence:
         type: string
 
+# Specify defaults.
 layout_plugin.settings.*:
   type: layout_plugin.settings
 
