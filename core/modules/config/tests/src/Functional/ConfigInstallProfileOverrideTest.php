@@ -84,16 +84,16 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $action = Action::load('user_block_user_action');
     $this->assertEquals('Overridden block the selected user(s)', $action->label());
     $action = Action::load('user_cancel_user_action');
-    $this->assertEquals('Cancel the selected user account(s)', $action->label(), 'Default configuration that is not overridden is not affected.');
+    $this->assertEquals('Cancel the selected user account(s)', $action->label(), 'Default configuration that is not overridden.');
 
     $config_test = \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('install_test');
     $this->assertEquals('Optional configuration can be overridden.', $config_test->label());
     $config_test = \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('install_test2');
-    $this->assertEquals('Optional configuration that is not overridden is not affected.', $config_test->label());
+    $this->assertEquals('Optional configuration that is not overridden.', $config_test->label());
 
     // Ensure the optional configuration is installed. Note that the overridden
-    // ConfigTest install_test has a dependency on this
-    // ConfigTest testing_config_overrides, so it has to exist.
+    // EntityTestBundle config with ID install_test has a dependency on
+    // EntityTestBundle with ID testing_config_overrides, so it has to exist.
     $this->assertInstanceOf(EntityTestBundle::class, \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('testing_config_overrides_module'));
 
     // Ensure that optional configuration from a profile is created if
