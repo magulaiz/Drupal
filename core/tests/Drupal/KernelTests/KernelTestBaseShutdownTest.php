@@ -41,7 +41,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
    */
   public function testShutdownFunction() {
     $this->expectedShutdownCalled = ['shutdownFunction', 'shutdownFunction2'];
-    ShutdownHandler::getInstance()->set([$this, 'shutdownFunction']);
+    ShutdownHandler::getInstance()->add([$this, 'shutdownFunction']);
   }
 
   /**
@@ -56,7 +56,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
    */
   public function shutdownFunction() {
     self::$shutdownCalled[] = 'shutdownFunction';
-    ShutdownHandler::getInstance()->set([$this, 'shutdownFunction2']);
+    ShutdownHandler::getInstance()->add([$this, 'shutdownFunction2']);
   }
 
   /**
