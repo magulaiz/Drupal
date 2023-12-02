@@ -21,6 +21,19 @@
  */
 
 /**
+ * Extension of entity.api.php
+ *
+ *  Hooks invoked during the operation of building a render array:
+ *  - hook_entity_view_mode_alter()
+ *  - hook_ENTITY_TYPE_build_defaults_alter()
+ *  - hook_entity_build_defaults_alter()
+ *
+ *  View builders for some types override these hooks, notably:
+ *  - The Tour view builder does not invoke any hooks. Note that in other view
+ *    builders, the view alter hooks are run later in the process.
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
