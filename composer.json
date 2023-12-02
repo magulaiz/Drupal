@@ -23,7 +23,7 @@
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
-        "mglaman/phpstan-drupal": "^1.2",
+        "mglaman/phpstan-drupal": "^1.2.1",
         "micheh/phpcs-gitlab": "^1.1",
         "mikey179/vfsstream": "^1.6.11",
         "open-telemetry/exporter-otlp": "^1",
@@ -102,6 +102,9 @@
             "Drupal\\Core\\Composer\\": "core/lib/Drupal/Core/Composer",
             "Drupal\\Composer\\": "composer"
         }
+    },
+    "conflict": {
+        "phpstan/phpstan": "1.10.45 || 1.10.46"
     },
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
