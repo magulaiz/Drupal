@@ -38,7 +38,7 @@ class PrivateFileAnonymEditTest extends FileFieldTestBase {
     ]);
 
     // Create a file field on the "Article" node type.
-    $this->fieldName = $this->randomMachineName();
+    $this->fieldName = mb_strtolower($this->randomMachineName());
     $this->createFileField($this->fieldName, 'node', 'article', ['uri_scheme' => 'private'], ['file_extensions' => 'txt png']);
   }
 
