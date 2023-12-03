@@ -7,6 +7,7 @@ use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Error;
+use OpenTelemetry\API\Logs\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
@@ -76,6 +77,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
+      $container->get('logger.channel.mail'),
       $container->get('mailer.transport')
     );
   }
@@ -83,6 +85,8 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Symfony mailer constructor.
    *
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    * @param \Symfony\Component\Mailer\Transport $transport
    *   The Symfony Transport
    * @param \Symfony\Component\Mailer\MailerInterface $mailer
@@ -90,6 +94,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
    *   production.
    */
   public function __construct(
+    protected LoggerInterface $logger,
     protected Transport $transport,
     protected ?MailerInterface $mailer = NULL) {
   }
