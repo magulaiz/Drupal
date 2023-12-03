@@ -1439,7 +1439,7 @@ services:
     class: Drupal\Core\Mail\TransportFactory
     arguments: ['@logger.channel.mail']
     tags:
-      - { name: service_collector, tag: mailer.transport_factory, call: addTransportFactory }
+      - { name: service_collector, tag: 'mailer.transport_factory', call: addTransportFactory }
   mailer.transport:
     factory: ['@mailer.transport_factory', 'createTransport']
   plugin.manager.condition:
