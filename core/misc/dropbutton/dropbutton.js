@@ -5,6 +5,7 @@
 
 
 class DrupalDropbutton extends HTMLElement {
+  // This show up as a syntax error but it works: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks
   static {
     customElements.define('drupal-dropbutton', this);
   }
@@ -49,7 +50,7 @@ class DrupalDropbutton extends HTMLElement {
       case 'focusin': this.hoverIn(); break;
       case 'click':
         event.preventDefault();
-        this.classList.toggle('open');
+        this.toggle();
         break;
     }
   }
