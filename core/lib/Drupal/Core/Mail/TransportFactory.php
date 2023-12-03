@@ -4,6 +4,7 @@ namespace Drupal\Core\Mail;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\TransportFactoryInterface;
 
 /**
  * Defines a transport factory that creates a transport that includes all of the default and custom factories.
@@ -12,15 +13,14 @@ use Symfony\Component\Mailer\Transport;
  */
 class TransportFactory {
 
+    protected array $factories = [];
+
     /**
      * @param LoggerInterface $logger
      *  The logger for mailers
-     * @param \Symfony\Component\Mailer\Transport\TransportFactoryInterface[] $factories
-     *  The tagged transport factories
      */
     public function __construct(
       protected LoggerInterface $logger,
-      protected iterable $factories,
     ) {}
 
     /**
@@ -39,5 +39,9 @@ class TransportFactory {
       // dispatcher.
       $default = Transport::getDefaultFactories(logger: $this->logger);
       return new Transport([...$default, ...$this->factories]);
+    }
+
+    public function addTransportFactory(TransportFactoryInterface $factory) {
+      $this->factories[] = $factory;
     }
 }
