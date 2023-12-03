@@ -8,6 +8,7 @@ use Drupal\Core\Mail\Plugin\Mail\SymfonyMailer;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 
 /**
@@ -51,7 +52,9 @@ class SymfonyMailerTest extends UnitTestCase {
     /** @var \Psr\Log\LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
     $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-    $plugin = new SymfonyMailer($logger, $mailer);
+    $transport = new Transport(Transport::getDefaultFactories(logger: $logger));
+
+    $plugin = new SymfonyMailer($logger, $transport, $mailer);
     $message = $plugin->format($message);
 
     $expect = MailFormatHelper::wrapMail($plain . "\n\n" . strtr($template, $variables) . "\n");
@@ -134,7 +137,9 @@ class SymfonyMailerTest extends UnitTestCase {
     /** @var \Psr\Log\LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
     $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-    $plugin = new SymfonyMailer($logger, $mailer);
+    $transport = new Transport(Transport::getDefaultFactories(logger: $logger));
+
+    $plugin = new SymfonyMailer($logger, $transport, $mailer);
     $this->assertTrue($plugin->mail($message));
   }
 
