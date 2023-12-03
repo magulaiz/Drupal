@@ -7,7 +7,7 @@ use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Error;
-use OpenTelemetry\API\Logs\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
