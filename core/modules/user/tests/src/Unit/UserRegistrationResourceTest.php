@@ -146,7 +146,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
    * @group legacy
    */
   public function testDeprecations() {
-    $this->expectDeprecation('Calling Drupal\user\Plugin\rest\resource\UserRegistrationResource::__construct() without the $password_generator argument is deprecated in drupal:10.0.0 and will be required in drupal:11.0.0.');
+    $this->expectDeprecation('Calling Drupal\user\Plugin\rest\resource\UserRegistrationResource::__construct() without the $password_generator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0.');
     $this->expectException(BadRequestHttpException::class);
 
     $container = new ContainerBuilder();
