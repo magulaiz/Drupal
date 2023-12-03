@@ -1435,13 +1435,14 @@ services:
     class: Drupal\Core\Mail\MailManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@config.factory', '@logger.factory', '@string_translation', '@renderer']
   Drupal\Core\Mail\MailManagerInterface: '@plugin.manager.mail'
-  mail.transport_factory:
+  mailer.transport_factory:
     class: Drupal\Core\Mail\TransportFactory
     arguments: ['@logger.channel.mail']
     tags:
-      - { name: service_collector, tag: 'mail.transport_factory', call: addTransportFactory }
-  mail.transport:
-    factory: ['@mail.transport_factory', 'createTransport']
+      - { name: service_collector, tag: 'mailer.transport_factory', call: addTransportFactory }
+  mailer.transport:
+    class: Symfony\Component\Mailer\Transport
+    factory: ['@mailer.transport_factory', 'createTransport']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     parent: default_plugin_manager
