@@ -1440,9 +1440,11 @@ services:
     arguments: ['@logger.channel.mail']
     tags:
       - { name: service_collector, tag: 'mailer.transport_factory', call: addTransportFactory }
+  Drupal\Core\Mail\TransportFactory: '@mailer.transport_factory'
   mailer.transport:
     class: Symfony\Component\Mailer\Transport
     factory: ['@mailer.transport_factory', 'createTransport']
+  Symfony\Component\Mailer\Transport: '@mailer.transport'
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     parent: default_plugin_manager
