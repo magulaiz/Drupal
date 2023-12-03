@@ -1437,8 +1437,7 @@ services:
   Drupal\Core\Mail\MailManagerInterface: '@plugin.manager.mail'
   mailer.transport_factory:
     class: Drupal\Core\Mail\TransportFactory
-    arguments:
-      - '@logger.channel.mail'
+    arguments: ['@logger.channel.mail']
     tags:
       - { name: service_collector, tag: mailer.transport_factory, call: addTransportFactory }
   mailer.transport:
