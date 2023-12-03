@@ -13,6 +13,9 @@ use Symfony\Component\Mailer\Transport\TransportFactoryInterface;
  */
 class TransportFactory {
 
+  /**
+   * @var \Symfony\Component\Mailer\Transport\TransportFactoryInterface[]
+   */
   protected array $factories = [];
 
   /**
