@@ -211,36 +211,43 @@
       // Perform an AJAX request to let the server render the contextual links
       // for each of the placeholders.
       if (uncachedIDs.length > 0) {
-        $.ajax({
-          url: Drupal.url('contextual/render'),
-          type: 'POST',
-          data: { 'ids[]': uncachedIDs, 'tokens[]': uncachedTokens },
-          dataType: 'json',
-          success(results) {
-            _.each(results, (html, contextualID) => {
-              // Store the metadata.
-              storage.setItem(`Drupal.contextual.${contextualID}`, html);
-              // If the rendered contextual links are empty, then the current
-              // user does not have permission to access the associated links:
-              // don't render anything.
-              if (html.length > 0) {
-                // Update the placeholders to contain its rendered contextual
-                // links. Usually there will only be one placeholder, but it's
-                // possible for multiple identical placeholders exist on the
-                // page (probably because the same content appears more than
-                // once).
-                $placeholders = $context.find(
-                  `[data-contextual-id="${contextualID}"]`,
-                );
+        (async () => {
+          const response = await fetch(Drupal.url('contextual/render'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              'ids[]': uncachedIDs,
+              'tokens[]': uncachedTokens,
+            }),
+          });
 
-                // Initialize the contextual links.
-                for (let i = 0; i < $placeholders.length; i++) {
-                  initContextual($placeholders.eq(i), html);
-                }
+          const results = await response.json();
+
+          _.each(results, (html, contextualID) => {
+            // Store the metadata.
+            storage.setItem(`Drupal.contextual.${contextualID}`, html);
+            // If the rendered contextual links are empty, then the current
+            // user does not have permission to access the associated links:
+            // don't render anything.
+            if (html.length > 0) {
+              // Update the placeholders to contain its rendered contextual
+              // links. Usually there will only be one placeholder, but it's
+              // possible for multiple identical placeholders exist on the
+              // page (probably because the same content appears more than
+              // once).
+              $placeholders = $context.find(
+                `[data-contextual-id="${contextualID}"]`,
+              );
+
+              // Initialize the contextual links.
+              for (let i = 0; i < $placeholders.length; i++) {
+                initContextual($placeholders.eq(i), html);
               }
-            });
-          },
-        });
+            }
+          });
+        })();
       }
     },
   };

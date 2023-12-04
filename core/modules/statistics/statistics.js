@@ -4,12 +4,14 @@
  */
 
 (function ($, drupalSettings) {
-  setTimeout(() => {
-    $.ajax({
-      type: 'POST',
-      cache: false,
-      url: drupalSettings.statistics.url,
-      data: drupalSettings.statistics.data,
+  setTimeout(async () => {
+    await fetch(drupalSettings.statistics.url, {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: drupalSettings.statistics.data,
     });
   });
 })(jQuery, drupalSettings);

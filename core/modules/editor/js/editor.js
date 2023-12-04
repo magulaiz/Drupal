@@ -34,29 +34,38 @@
    *   A callback to be called (with no parameters) after the field's value has
    *   been XSS filtered.
    */
-  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
+  async function filterXssWhenSwitching(
+    field,
+    format,
+    originalFormatID,
+    callback,
+  ) {
     // A text editor that already is XSS-safe needs no additional measures.
     if (format.editor.isXssSafe) {
       callback(field, format);
     }
     // Otherwise, ensure XSS safety: let the server XSS filter this value.
     else {
-      $.ajax({
-        url: Drupal.url(`editor/filter_xss/${format.format}`),
-        type: 'POST',
-        data: {
-          value: field.value,
-          original_format_id: originalFormatID,
+      const response = await fetch(
+        Drupal.url(`editor/filter_xss/${format.format}`),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            value: field.value,
+            original_format_id: originalFormatID,
+          }),
         },
-        dataType: 'json',
-        success(xssFilteredValue) {
-          // If the server returns false, then no XSS filtering is needed.
-          if (xssFilteredValue !== false) {
-            field.value = xssFilteredValue;
-          }
-          callback(field, format);
-        },
-      });
+      );
+
+      const xssFilteredValue = await response.json();
+      if (xssFilteredValue !== false) {
+        field.value = xssFilteredValue;
+      }
+
+      callback(field, format);
     }
   }
 
