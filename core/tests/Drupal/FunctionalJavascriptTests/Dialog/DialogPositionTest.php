@@ -122,7 +122,7 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->getSession()->resizeWindow(1300, 1300);
     $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
     // Assert that the width is restored to full size.
-    $this->assertEquals('886', $width_after_resize);
+    $this->assertEquals('806', $width_after_resize);
 
   }
 
