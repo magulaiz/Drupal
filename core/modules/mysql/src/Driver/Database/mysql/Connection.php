@@ -258,6 +258,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     if ($this->needsCleanup) {
       $this->nextIdDelete();
     }
+    // Ensure all still-open transactions get auto-committed. Usually, this
+    // happens when the Transaction::__destruct() method is invoked, but during
+    // shutdown the object transaction order is unreliable. If the connection
+    // is destroyed first, we need to make sure to auto-commit all still-open
+    // transactions.
+    // Also see https://www.drupal.org/project/drupal/issues/1608374.
+    foreach (array_reverse($this->transactionLayers) as $name => $active) {
+      $this->popTransaction($name);
+    }
     parent::__destruct();
   }
 
