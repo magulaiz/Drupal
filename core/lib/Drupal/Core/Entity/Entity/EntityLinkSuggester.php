@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -84,8 +85,32 @@ class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggeste
   /**
    * {@inheritdoc}
    */
+  public static function isLinkableEntityType(EntityTypeInterface $entity_type): bool {
+    $canonical = $entity_type->getLinkTemplate('canonical');
+    $edit_form = $entity_type->getLinkTemplate('edit-form');
+    return ($canonical !== FALSE && $canonical !== $edit_form) || $entity_type->hasHandlerClass('link_target', 'view');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getEntityTypes(): ?array {
     return $this->entity_types;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllowedBundlesForEntityType(string $entity_type_id): ?array {
+    $filtered = array_filter(
+      $this->entity_types ?? [],
+      fn(array $s) => $s['entity_type'] === $entity_type_id
+    );
+    if (empty($filtered)) {
+      return NULL;
+    }
+    assert(count($filtered) === 1 && array_keys(reset($filtered)) === ['entity_type', 'bundles']);
+    return reset($filtered)['bundles'];
   }
 
   /**
