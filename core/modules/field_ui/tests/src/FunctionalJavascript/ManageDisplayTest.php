@@ -6,7 +6,6 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
-use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the Field UI "Manage display" and "Manage form display" screens.
@@ -15,7 +14,6 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  */
 class ManageDisplayTest extends WebDriverTestBase {
 
-  use FieldUiTestTrait;
   use FieldUiJSTestTrait;
 
   /**
@@ -55,6 +53,8 @@ class ManageDisplayTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('local_actions_block');
 
     // Create a test user.
     $admin_user = $this->drupalCreateUser([

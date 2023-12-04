@@ -36,8 +36,10 @@ trait FieldUiJSTestTrait {
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
     if ($bundle_path !== NULL) {
-      $bundle_path = "$bundle_path/fields/add-field";
+      $bundle_path = "$bundle_path/fields";
       $this->drupalGet($bundle_path);
+      $this->getSession()->getPage()->clickLink('Create a new field');
+      $this->assertSession()->assertWaitOnAjaxRequest();
     }
 
     // First step: 'Add field' page.
@@ -51,8 +53,7 @@ trait FieldUiJSTestTrait {
       $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
       $field_definitions = $field_type_plugin_manager->getUiDefinitions();
       $field_type_label = (string) $field_definitions[$field_type]['label'];
-      $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$field_type_label']]");
-      $link->click();
+      $this->getSession()->getPage()->clickLink($field_type_label);
       $this->assertSession()->assertWaitOnAjaxRequest();
 
       if ($this->getSession()->getPage()->hasField('field_options_wrapper')) {
