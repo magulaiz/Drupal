@@ -81,7 +81,7 @@ class EntityLinkSuggesterForm extends EntityForm {
     $entity_type_labels_default_sort = [];
     $linkable_entity_types = [];
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if (!static::isLinkableEntityType($entity_type)) {
+      if (!$this->entity->isLinkableEntityType($entity_type)) {
         continue;
       }
       $linkable_entity_types[$entity_type_id] = $entity_type;
@@ -203,23 +203,6 @@ class EntityLinkSuggesterForm extends EntityForm {
   }
 
   /**
-   * Whether the given entity type is linkable.
-   *
-   * Entity types must either have links or specify a link_target handler.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type to evaluate.
-   *
-   * @return bool
-   *   TRUE if it is linkable, FALSE if not.
-   */
-  public static function isLinkableEntityType(EntityTypeInterface $entity_type): bool {
-    $canonical = $entity_type->getLinkTemplate('canonical');
-    $edit_form = $entity_type->getLinkTemplate('edit-form');
-    return ($canonical !== FALSE && $canonical !== $edit_form) || $entity_type->hasHandlerClass('link_target', 'view');
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
@@ -252,7 +235,7 @@ class EntityLinkSuggesterForm extends EntityForm {
     // @see `core.entity_link_suggestions.*:entity_types`.
     $linkable_entity_types = array_filter(
       $this->entityTypeManager->getDefinitions(),
-      fn (EntityTypeInterface $e) => self::isLinkableEntityType($e)
+      fn (EntityTypeInterface $e) => $this->entity->isLinkableEntityType($e)
     );
     if (count($linkable_entity_types) == count($entity_types)) {
       $entity_types = NULL;
