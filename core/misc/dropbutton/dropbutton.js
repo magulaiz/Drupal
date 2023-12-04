@@ -17,7 +17,7 @@ class DrupalDropbutton extends HTMLElement {
       ...settings,
     };
 
-    const actions = Array.from(this.querySelectorAll('.dropbutton li'));
+    const actions = this.querySelectorAll('.dropbutton li');
 
     // Add the special dropdown only if there are hidden actions.
     if (actions.length > 1) {
@@ -34,9 +34,8 @@ class DrupalDropbutton extends HTMLElement {
         'afterend',
         DrupalDropbutton.dropbuttonToggle(options),
       );
-      this.toggle = this.querySelector('.dropbutton-toggle');
 
-      this.toggle.addEventListener('click', this);
+      this.addEventListener('click', this);
       this.addEventListener('mouseleave', this);
       this.addEventListener('mouseenter', this);
       this.addEventListener('focusout', this);
@@ -47,7 +46,7 @@ class DrupalDropbutton extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.toggle.removeEventListener('click', this);
+    this.removeEventListener('click', this);
     this.removeEventListener('mouseleave', this);
     this.removeEventListener('mouseenter', this);
     this.removeEventListener('focusout', this);
@@ -55,25 +54,16 @@ class DrupalDropbutton extends HTMLElement {
   }
 
   handleEvent(event) {
-    switch (event.type) {
-      case 'mouseleave':
-        this.hoverOut();
-        break;
-      case 'mouseenter':
-        this.hoverIn();
-        break;
-      case 'focusout':
-        this.hoverOut();
-        break;
-      case 'focusin':
-        this.hoverIn();
-        break;
-      case 'click':
-        event.preventDefault();
-        this.toggle();
-        break;
-      default:
-        break;
+    if (
+      event.type === 'click' &&
+      event.target.matches('[data-drupal-dropbutton-toggle]')
+    ) {
+      event.preventDefault();
+      this.toggle();
+    } else if (['mouseleave', 'focusout'].includes(event.type)) {
+      this.hoverOut();
+    } else if (['mouseenter', 'focusin'].includes(event.type)) {
+      this.hoverIn();
     }
   }
 
@@ -105,7 +95,7 @@ class DrupalDropbutton extends HTMLElement {
    */
   hoverOut() {
     // Wait half a second before closing.
-    this.timerID = window.setTimeout(this.close.bind(this), 500);
+    this.timerID = window.setTimeout(() => this.close(), 500);
   }
 
   /**
@@ -126,6 +116,6 @@ class DrupalDropbutton extends HTMLElement {
     if (Drupal?.theme?.dropbuttonToggle) {
       return Drupal.theme.dropbuttonToggle(options);
     }
-    return `<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
+    return `<li class="dropbutton-toggle" data-drupal-dropbutton-toggle><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
   }
 }
