@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Render\RenderableInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines the entity links suggester configuration entity class.
@@ -54,6 +56,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  */
 class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggesterInterface {
 
+  use StringTranslationTrait;
+
   /**
    * The link suggester machine name.
    *
@@ -82,6 +86,66 @@ class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggeste
    */
   public function getEntityTypes(): ?array {
     return $this->entity_types;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function describe(): RenderableInterface {
+    $entity_types = $this->getEntityTypes();
+    $render_array = [];
+    if ($entity_types === NULL) {
+      $render_array = ['#markup' => '<em>' . $this->t('Everything') . '</em>'];
+    }
+    else {
+      $entity_type_manager = \Drupal::entityTypeManager();
+      $bundle_info = \Drupal::service('entity_type.bundle.info');
+      $items = [];
+      foreach ($entity_types as $entity_type_id => $detailed_settings) {
+        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+        $label = $entity_type->getCollectionLabel();
+        $bundle_labels = $entity_type->getBundleEntityType()
+          ? array_column($bundle_info->getBundleInfo($entity_type_id), 'label')
+          : [];
+        if (!$entity_type->getBundleEntityType()) {
+          $items[] = $entity_type->getCollectionLabel();
+        }
+        else {
+          if ($detailed_settings['bundles'] === NULL) {
+            $items[] = $this->t('@linkable-entity-type-label <small>(<em>all</em> @bundle-label)</small>', [
+              '@linkable-entity-type-label' => $label,
+              '@bundle-label' => $entity_type_manager
+                ->getDefinition($entity_type->getBundleEntityType())
+                ->getPluralLabel(),
+            ]);
+          }
+          else {
+            $items[] = $this->t('@linkable-entity-type-label <small>(only @included-bundle-label-list)</small>', [
+              '@linkable-entity-type-label' => $label,
+              '@included-bundle-label-list' => implode(', ', array_intersect_key($bundle_labels, $detailed_settings['bundles'])),
+            ]);
+          }
+        }
+      }
+      $render_array = [
+        '#list_type' => 'ol',
+        '#theme' => 'item_list',
+        '#items' => $items,
+      ];
+    }
+
+    return new class ($render_array) implements RenderableInterface {
+
+      public function __construct(private array $renderArray) {}
+
+      /**
+       * {@inheritdoc}
+       */
+      public function toRenderable() {
+        return $this->renderArray;
+      }
+
+    };
   }
 
   /**
