@@ -211,11 +211,12 @@ class UnicodeUnitTest extends DrupalUnitTestCase {
       '➼' => '➼',
       '&#10172;' => '➼',
       '&euro;' => '€',
-      NULL => '',
     );
     foreach ($testcase as $input => $output) {
       $this->assertEqual(decode_entities($input), $output, format_string('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
     }
+    // Test NULL value.
+    $this->assertEqual(decode_entities(NULL), '', format_string('Make sure the decoded entity of NULL is empty string'));
   }
 
   /**
