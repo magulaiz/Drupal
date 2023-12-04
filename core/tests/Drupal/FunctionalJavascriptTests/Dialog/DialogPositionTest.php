@@ -110,8 +110,6 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->clickLink('Link 3 (non-modal)');
     $this->assertSession()->waitForElementVisible('css', '[role="dialog"]');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
-    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
 
     // Resize the window.
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
