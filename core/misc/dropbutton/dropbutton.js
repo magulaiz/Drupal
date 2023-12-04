@@ -35,9 +35,9 @@ class DrupalDropbutton extends HTMLElement {
         'afterend',
         DrupalDropbutton.dropbuttonToggle(options),
       );
-      const toggle = this.querySelector('.dropbutton-toggle');
+      this.toggle = this.querySelector('.dropbutton-toggle');
 
-      toggle.addEventListener('click', this);
+      this.toggle.addEventListener('click', this);
       this.addEventListener('mouseleave', this);
       this.addEventListener('mouseenter', this);
       this.addEventListener('focusout', this);
@@ -45,6 +45,14 @@ class DrupalDropbutton extends HTMLElement {
     } else {
       this.classList.add('dropbutton-single');
     }
+  }
+
+  disconnectedCallback() {
+    this.toggle.removeEventListener('click', this);
+    this.removeEventListener('mouseleave', this);
+    this.removeEventListener('mouseenter', this);
+    this.removeEventListener('focusout', this);
+    this.removeEventListener('focusin', this);
   }
 
   handleEvent(event) {
