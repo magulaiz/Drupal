@@ -41,13 +41,6 @@ use Drupal\Core\Action\ActionPluginCollection;
 class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginCollectionInterface {
 
   /**
-   * The name (plugin ID) of the action.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The label of the action.
    *
    * @var string

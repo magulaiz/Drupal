@@ -11,13 +11,6 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityDisplayModeInterface {
 
   /**
-   * The ID of the form or view mode.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable name of the form or view mode.
    *
    * @var string

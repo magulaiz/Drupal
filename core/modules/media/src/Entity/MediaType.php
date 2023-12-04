@@ -67,13 +67,6 @@ use Drupal\media\MediaTypeInterface;
 class MediaType extends ConfigEntityBundleBase implements MediaTypeInterface, EntityWithPluginCollectionInterface {
 
   /**
-   * The machine name of this media type.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable name of the media type.
    *
    * @var string

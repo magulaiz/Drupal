@@ -61,13 +61,6 @@ use Drupal\search\SearchPageInterface;
 class SearchPage extends ConfigEntityBase implements SearchPageInterface, EntityWithPluginCollectionInterface {
 
   /**
-   * The name (plugin ID) of the search page entity.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The label of the search page entity.
    *
    * @var string

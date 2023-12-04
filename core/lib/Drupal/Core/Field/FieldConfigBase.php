@@ -23,7 +23,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  protected $id;
+  protected string $id;
 
   /**
    * The field name.

@@ -50,7 +50,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * The machine name of the entity.
    */
-  protected $id;
+  protected string $id;
 
   /**
    * Constructs an Entity object.

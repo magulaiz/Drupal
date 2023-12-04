@@ -39,13 +39,6 @@ use Drupal\system\MenuInterface;
 class Menu extends ConfigEntityBase implements MenuInterface {
 
   /**
-   * The menu machine name.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable name of the menu entity.
    *
    * @var string

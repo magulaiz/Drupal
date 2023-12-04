@@ -56,13 +56,6 @@ use Drupal\block_content\BlockContentTypeInterface;
 class BlockContentType extends ConfigEntityBundleBase implements BlockContentTypeInterface {
 
   /**
-   * The block type ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The block type label.
    *
    * @var string

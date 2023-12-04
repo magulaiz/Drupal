@@ -631,7 +631,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 }
 
 class EntityBaseTest extends EntityBase {
-  public $id;
   public $langcode;
   public $uuid;
   public $label;

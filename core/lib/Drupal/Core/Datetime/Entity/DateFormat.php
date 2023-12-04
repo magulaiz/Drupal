@@ -32,13 +32,6 @@ use Drupal\Core\Datetime\DateFormatInterface;
 class DateFormat extends ConfigEntityBase implements DateFormatInterface {
 
   /**
-   * The date format machine name.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable name of the date format entity.
    *
    * @var string

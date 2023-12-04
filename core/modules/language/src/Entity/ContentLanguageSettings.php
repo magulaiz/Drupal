@@ -40,10 +40,8 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
 
   /**
    * The id. Combination of $target_entity_type_id.$target_bundle.
-   *
-   * @var string
    */
-  protected $id;
+  protected string $id;
 
   /**
    * The entity type ID (machine name).

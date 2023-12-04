@@ -59,13 +59,6 @@ use Drupal\Core\Url;
 class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface {
 
   /**
-   * The form ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable label of the category.
    *
    * @var string

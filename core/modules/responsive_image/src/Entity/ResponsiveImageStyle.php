@@ -54,13 +54,6 @@ use Drupal\responsive_image\ResponsiveImageStyleInterface;
 class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageStyleInterface {
 
   /**
-   * The responsive image ID (machine name).
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The responsive image label.
    *
    * @var string

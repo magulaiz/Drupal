@@ -40,13 +40,6 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
 class EntityTestBundle extends ConfigEntityBundleBase implements EntityDescriptionInterface {
 
   /**
-   * The machine name.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable name.
    *
    * @var string

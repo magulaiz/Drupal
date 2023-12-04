@@ -69,10 +69,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * The ID consists of 2 parts: the entity type and the field name.
    *
    * Example: node.body, user.field_main_image.
-   *
-   * @var string
    */
-  protected $id;
+  protected string $id;
 
   /**
    * The field name.
