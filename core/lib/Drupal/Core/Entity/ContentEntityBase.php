@@ -1183,7 +1183,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $duplicate = clone $this;
     $entity_type = $this->getEntityType();
     if ($entity_type->hasKey('id')) {
-      $duplicate->{$entity_type->getKey('id')}->value = NULL;
+      $duplicate->id->value = NULL;
     }
     $duplicate->enforceIsNew();
 
