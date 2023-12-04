@@ -22,7 +22,7 @@ class FileExtensionConstraintValidator extends BaseFileConstraintValidator {
     }
 
     // Check if all extensions are allowed.
-    if (empty($constraint->allowAllExtensions)) {
+    if ($constraint->extensions === '') {
       return;
     }
 

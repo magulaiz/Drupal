@@ -33,11 +33,6 @@ class FileExtensionConstraint extends SymfonyConstraint {
   public string $extensions;
 
   /**
-   * Whether to allow all extensions.
-   */
-  public bool $allowAllExtensions = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public function getDefaultOption(): string {

@@ -45,24 +45,6 @@ class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
   }
 
   /**
-   * Tests empty file extensions.
-   */
-  public function testEmptyFileExtensions(): void {
-    $file = File::create([
-      'filename' => 'asdf',
-      'uri' => 'temporary://asdf',
-      'status' => 0,
-    ]);
-    $validators = [
-      'FileExtension' => [
-        'extensions' => '',
-      ],
-    ];
-    $violations = $this->validator->validate($file, $validators);
-    $this->assertCount(0, $violations);
-  }
-
-  /**
    * Data provider for ::testFileExtensionOnUri.
    *
    * @return array[][]
@@ -120,6 +102,11 @@ class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
         'Expected errors' => [
           'Only files with the following extensions are allowed: exe txt.',
         ],
+      ],
+      'Allow all extensions' => [
+        'File properties' => $permanent_png_file_properties,
+        'Allowed_extensions' => [],
+        'Expected errors' => [],
       ],
     ];
   }
