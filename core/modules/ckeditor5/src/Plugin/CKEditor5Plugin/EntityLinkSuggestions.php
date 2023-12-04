@@ -12,7 +12,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\Entity\EntityLinkSuggester;
 use Drupal\Core\Entity\Entity\EntityLinkSuggesterInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -130,7 +129,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
         array_map(
           fn (EntityLinkSuggesterInterface $s) => [
             '#title' => $s->toLink(rel: 'edit-form', options: $modal_dialog_options)->toString(),
-            '#description' => $s->describe(),
+            '#description' => $s->toRenderable(),
           ],
           $link_suggesters
         ),
