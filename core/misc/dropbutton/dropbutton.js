@@ -108,20 +108,6 @@ class DrupalDropbutton extends HTMLElement {
     this.timerID = window.setTimeout(this.close.bind(this), 500);
   }
 
-  /**
-   * @method
-   */
-  open() {
-    this.toggle(true);
-  }
-
-  /**
-   * @method
-   */
-  close() {
-    this.toggle(false);
-  }
-
   static dropbuttonToggle(options) {
     if (Drupal?.theme?.dropbuttonToggle) {
       return Drupal.theme.dropbuttonToggle(options);
