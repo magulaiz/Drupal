@@ -75,7 +75,7 @@ class EntityLinkSuggesterListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     assert($entity instanceof EntityLinkSuggesterInterface);
     $row['admin_label'] = $entity->label();
-    $row['suggestions']['data'] = $entity->describe();
+    $row['suggestions']['data'] = $entity->toRenderable();
     return $row + parent::buildRow($entity);
   }
 

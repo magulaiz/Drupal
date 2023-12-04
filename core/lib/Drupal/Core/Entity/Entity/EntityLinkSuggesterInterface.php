@@ -11,7 +11,7 @@ use Drupal\Core\Render\RenderableInterface;
 /**
  * Provides a common interface for entity link suggesters.
  */
-interface EntityLinkSuggesterInterface extends ConfigEntityInterface {
+interface EntityLinkSuggesterInterface extends ConfigEntityInterface, RenderableInterface {
 
   /**
    * Whether the given entity type is linkable.
@@ -52,9 +52,7 @@ interface EntityLinkSuggesterInterface extends ConfigEntityInterface {
 
   /**
    * Describes which entity types and bundles can be linked.
-   *
-   * @return \Drupal\Core\Render\RenderableInterface
    */
-  public function describe(): RenderableInterface;
+  public function toRenderable();
 
 }
