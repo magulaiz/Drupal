@@ -23,6 +23,7 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
     'node',
     'field_ui',
     'taxonomy',
+    'block',
   ];
 
   /**
@@ -35,6 +36,7 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->drupalPlaceBlock('local_actions_block');
 
     // Create a Content type and two test nodes.
     $this->createContentType(['type' => 'test_content']);
