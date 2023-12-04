@@ -4,7 +4,6 @@
  */
 
 class DrupalDropbutton extends HTMLElement {
-  // @todo check browser support.
   static {
     customElements.define('drupal-dropbutton', this);
   }
