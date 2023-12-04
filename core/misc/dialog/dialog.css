@@ -1,5 +1,5 @@
 .ui-dialog {
-  max-width: calc(100vw - var(--drupal-displace-offset-left, 0) - var(--drupal-displace-offset-right, 0));
+  max-width: calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
 }
 .ui-dialog.modal-dialog {
   max-width: 100vw;
