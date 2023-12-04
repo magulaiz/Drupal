@@ -4,8 +4,7 @@
  */
 
 class DrupalDropbutton extends HTMLElement {
-  // This show up as a syntax error but it works: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks
-  // eslint
+  // @todo check browser support.
   static {
     customElements.define('drupal-dropbutton', this);
   }
