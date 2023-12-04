@@ -112,7 +112,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
     }
 
     $index = $this->getPluralIndex();
-    if ($index == 0 || count($translated_array) == 1) {}
+    if ($index == 0 || count($translated_array) == 1) {
       // Singular form.
       $return = $translated_array[0];
     }
