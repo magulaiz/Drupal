@@ -39,11 +39,6 @@ use Drupal\language\ContentLanguageSettingsInterface;
 class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguageSettingsInterface {
 
   /**
-   * The id. Combination of $target_entity_type_id.$target_bundle.
-   */
-  protected string $id;
-
-  /**
    * The entity type ID (machine name).
    *
    * @var string
