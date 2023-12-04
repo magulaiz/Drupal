@@ -304,6 +304,8 @@ libraries-override:
     css:
       component:
         misc/dialog/dialog.css: css/core/dialog/dialog.css
+        modules/ckeditor5/css/ckeditor5.dialog.fix.css: css/ckeditor5/ckeditor5.dialog.fix.css
+
 
 libraries-extend:
   tour/tour:

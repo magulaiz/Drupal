@@ -27,7 +27,6 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
     'options/drupal.options-icon',
     'telephone/drupal.telephone-icon',
     'datetime_range/drupal.datetime_range-icon',
-    'core/drupal.dialog',
   ];
 
   /**
