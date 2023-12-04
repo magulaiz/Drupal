@@ -32,7 +32,6 @@
         ? 'Password is hidden'
         : 'Password is visible',
     );
-    trigger.setAttribute('aria-label', 'make password visible');
   };
   const unmaskButton = function unmaskButton(element) {
     const wrapperButton = document.createElement('button');
@@ -49,7 +48,7 @@
       'aria-checked',
       element.getAttribute('type') === 'password' ? 'true' : 'false',
     );
-    trigger.setAttribute('aria-label', 'make password visible');
+    trigger.setAttribute('aria-label', Drupal.t('make password visible'));
     trigger.setAttribute('role', 'switch');
     trigger.textContent = showPass;
     element.insertAdjacentElement('afterend', wrapperButton);
