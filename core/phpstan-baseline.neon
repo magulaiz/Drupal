@@ -580,11 +580,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/EntityAutocompleteMatcher.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityBase\\:\\:\\$id\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/EntityBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityConfirmFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/EntityConfirmFormBase.php
