@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Render\RenderableInterface;
 
 /**
  * Provides a common interface for entity link suggesters.
@@ -21,5 +22,12 @@ interface EntityLinkSuggesterInterface extends ConfigEntityInterface {
    * @see core.entity_link_suggestions.*
    */
   public function getEntityTypes(): ?array;
+
+  /**
+   * Describes which entity types and bundles can be linked.
+   *
+   * @return \Drupal\Core\Render\RenderableInterface
+   */
+  public function describe(): RenderableInterface;
 
 }

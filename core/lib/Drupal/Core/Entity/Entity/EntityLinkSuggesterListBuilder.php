@@ -75,44 +75,7 @@ class EntityLinkSuggesterListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     assert($entity instanceof EntityLinkSuggesterInterface);
     $row['admin_label'] = $entity->label();
-    $entity_types = $entity->getEntityTypes();
-    if ($entity_types === NULL) {
-      $row['suggestions']['data'] = ['#markup' => '<em>' . $this->t('Everything') . '</em>'];
-    }
-    else {
-      $items = [];
-      foreach ($entity_types as $entity_type_id => $detailed_settings) {
-        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-        $label = $entity_type->getCollectionLabel();
-        $bundle_labels = $entity_type->getBundleEntityType()
-          ? array_column($this->entityTypeBundleInfo->getBundleInfo($entity_type_id), 'label')
-          : [];
-        if (!$entity_type->getBundleEntityType()) {
-          $items[] = $entity_type->getCollectionLabel();
-        }
-        else {
-          if ($detailed_settings['bundles'] === NULL) {
-            $items[] = $this->t('@linkable-entity-type-label <small>(<em>all</em> @bundle-label)</small>', [
-              '@linkable-entity-type-label' => $label,
-              '@bundle-label' => $this->entityTypeManager
-                ->getDefinition($entity_type->getBundleEntityType())
-                ->getPluralLabel(),
-            ]);
-          }
-          else {
-            $items[] = $this->t('@linkable-entity-type-label <small>(only @included-bundle-label-list)</small>', [
-              '@linkable-entity-type-label' => $label,
-              '@included-bundle-label-list' => implode(', ', array_intersect_key($bundle_labels, $detailed_settings['bundles'])),
-            ]);
-          }
-        }
-      }
-      $row['suggestions']['data'] = [
-        '#list_type' => 'ol',
-        '#theme' => 'item_list',
-        '#items' => $items,
-      ];
-    }
+    $row['suggestions']['data'] = $entity->describe();
     return $row + parent::buildRow($entity);
   }
 
