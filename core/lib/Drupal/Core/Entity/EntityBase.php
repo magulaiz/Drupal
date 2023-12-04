@@ -47,6 +47,8 @@ abstract class EntityBase implements EntityInterface {
    */
   protected $typedData;
 
+  protected string $id;
+
   /**
    * Constructs an Entity object.
    *
