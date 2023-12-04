@@ -22,6 +22,7 @@ class DialogPositionTest extends WebDriverTestBase {
     'node',
     'field',
     'field_ui',
+    'ajax_test',
   ];
 
   /**
@@ -96,6 +97,25 @@ class DialogPositionTest extends WebDriverTestBase {
     // Resize the window.
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('886', $width_before);
+    $this->getSession()->resizeWindow(500, 805);
+    $width_after = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->assertEquals('506', $width_after);
+
+    // Resize the window.
+    $this->getSession()->resizeWindow(1300, 1300);
+    $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
+    // Assert that the width is restored to full size.
+    $this->assertEquals('886', $width_after_resize);
+    $this->drupalGet('ajax-test/dialog');
+    $this->clickLink('Link 3 (non-modal)');
+    $this->assertSession()->waitForElementVisible('css', '[role="dialog"]');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
+    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
+
+    // Resize the window.
+    $width_before = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->assertEquals('806', $width_before);
     $this->getSession()->resizeWindow(500, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('506', $width_after);
