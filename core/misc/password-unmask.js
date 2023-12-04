@@ -26,6 +26,12 @@
         ? 'action-link--icon-hide'
         : 'action-link--icon-show',
     );
+    element.setAttribute(
+      'aria-description',
+      element.getAttribute('type') === 'password'
+        ? 'Password is hidden'
+        : 'Password is visible',
+    );
     trigger.setAttribute('aria-label', 'make password visible');
   };
   const unmaskButton = function unmaskButton(element) {
@@ -45,7 +51,6 @@
     );
     trigger.setAttribute('aria-label', 'make password visible');
     trigger.setAttribute('role', 'switch');
-    element.setAttribute('aria-description', 'This is a password field');
     trigger.textContent = showPass;
     element.insertAdjacentElement('afterend', wrapperButton);
     trigger.addEventListener('click', () => {
