@@ -241,41 +241,9 @@ ckeditor5.plugin.ckeditor5_link_entity_suggestions:
       label: 'Allow download links'
       constraints:
         NotNull: ~
-    suggestions:
+    suggester:
       type: string
-      label: 'The entity link suggestions configuration to use'
+      label: 'The entity link suggester configuration to use'
       constraints:
+        NotNull: ~
         ConfigExists: []
-    suggestions:
-      type: sequence
-      orderby: ~
-      label: 'Allowed linkable entity types'
-      nullable: true
-      constraints:
-        NotBlank:
-          allowNull: true
-          message: "Allow suggestions for at least one entity type, or specify null to allow suggestions for all."
-        UniqueLabelInList:
-          labelKey: entity_type_id
-      sequence:
-        type: mapping
-        mapping:
-          entity_type_id:
-            type: string
-            label: 'Allowed linkable entity type'
-            constraints:
-              PluginExists:
-                manager: entity_type.manager
-          bundles:
-            type: sequence
-            label: 'Allowed bundles (if this entity type supports bundles)'
-            nullable: true
-            constraints:
-              NotBlank:
-                allowNull: true
-            sequence:
-              type: string
-              label: 'Allowed bundle'
-              constraints:
-                # @todo Replace with `EntityBundleExists: '%parent.entity_type_id'` in https://www.drupal.org/project/drupal/issues/3382581
-                Regex: '/^[a-z0-9_]+$/'

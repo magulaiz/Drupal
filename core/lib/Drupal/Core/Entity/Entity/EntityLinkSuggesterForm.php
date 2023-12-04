@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Entity\Entity;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -262,24 +264,41 @@ class EntityLinkSuggesterForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = $this->entity->isNew() ? $this->t('Create') : $this->t('Update');
+    return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function save(array $form, FormStateInterface $form_state) {
     $status = $this->entity->save();
-    $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
-    switch ($status) {
-      case SAVED_NEW:
-        $this->messenger()->addStatus($this->t('Created new link suggester %name.', ['%name' => $this->entity->label()]));
-        $form_state->setRedirectUrl($this->entity->toUrl('collection'));
-        break;
-
-      case SAVED_UPDATED:
-        $this->messenger()->addStatus($this->t('Updated link suggester %name.', ['%name' => $this->entity->label()]));
-        $this->logger('taxonomy')->notice('Updated link suggester %name.', ['%name' => $this->entity->label(), 'link' => $edit_link]);
-        $form_state->setRedirectUrl($this->entity->toUrl('collection'));
-        break;
-    }
+    $this->messenger()->addStatus(match ($status) {
+      SAVED_NEW => $this->t('Created new link suggester %name.', ['%name' => $this->entity->label()]),
+      SAVED_UPDATED => $this->t('Updated link suggester %name.', ['%name' => $this->entity->label()]),
+    });
 
     $form_state->setValue('id', $this->entity->id());
     $form_state->set('id', $this->entity->id());
+
+    $redirect_url = NULL;
+    // If a destination is specified, that serves as the cancel link.
+    if ($this->getRequest()->query->has('destination')) {
+      $options = UrlHelper::parse($this->getRequest()->query->get('destination'));
+      // @todo Revisit this in https://www.drupal.org/node/2418219.
+      try {
+        $redirect_url = Url::fromUserInput('/' . ltrim($options['path'], '/'), $options);
+      }
+      catch (\InvalidArgumentException $e) {
+        // Suppress the exception and fall back to the form's cancel URL.
+      }
+    }
+    if (!$redirect_url) {
+      $redirect_url = $this->entity->toUrl('collection');
+    }
+    $form_state->setRedirectUrl($redirect_url);
 
     return $status;
   }

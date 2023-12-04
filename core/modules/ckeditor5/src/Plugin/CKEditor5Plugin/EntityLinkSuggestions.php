@@ -8,12 +8,15 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\Entity\EntityLinkSuggester;
+use Drupal\Core\Entity\Entity\EntityLinkSuggesterInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -87,8 +90,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   public function defaultConfiguration() {
     return [
       'allow_download_links' => TRUE,
-      // This means all suggestions are allowed.
-      'suggestions' => NULL,
+      'suggester' => NULL,
     ];
   }
 
@@ -146,84 +148,48 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
       '#default_value' => $this->configuration['allow_download_links'],
     ];
 
-    $entity_type_options = [];
-    $common_reference_targets = [];
-    $bundle_entity_type_ids = [];
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if (!static::isLinkableEntityType($entity_type)) {
-        continue;
-      }
-      $entity_type_options[$entity_type_id] = $entity_type->getCollectionLabel();
-      if ($entity_type->isCommonReferenceTarget()) {
-        $common_reference_targets[] = $entity_type_id;
-      }
-      if ($entity_type->getBundleEntityType() !== NULL) {
-        $bundle_entity_type_ids[$entity_type_id] = $entity_type->getBundleEntityType();
-      }
-    }
-
-    $allowed_entity_type_ids = ($this->configuration['suggestions'] !== NULL)
-      // Either use the actually configured
-      ? array_column($this->configuration['suggestions'], 'entity_type_id')
-      // Or fall back to a sensible default when creating a new text editor:
-      // entity types marked as common reference targets.
-      : (
-        $form_state->get('editor')->isNew()
-          ? $common_reference_targets
-          : []
-      );
-
-    // Ensure the checkboxes are presented in alphabetical order rather than the
-    // arbitrary order that the entity type manager returns entity types.
-    natcasesort($entity_type_options);
-    $form['allowed_entity_types'] = [
-      '#title' => $this->t('Provide link suggestions for:'),
-      '#type' => 'checkboxes',
-      '#options' => $entity_type_options,
-      '#default_value' => $allowed_entity_type_ids,
-      '#description' => $this->t('If none are selected, all will be allowed. If an entity type is missing from the above list, it is not linkable. For each entity type that supports <em>bundles</em> and that has at least 2 bundles, it is possible to select which bundles link suggestions should appear for.'),
+    $modal_dialog_options = [
+      'attributes' => [
+        'class' => 'use-ajax',
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode(['width' => '50em']),
+      ],
+      'query' => [
+        'destination' => Url::fromRoute(route_name: '<current>')->toString(),
+      ],
     ];
 
-    $form['per_bundle'] = [
-      '#type' => 'container',
-      '#optional' => TRUE,
-      '#tree' => TRUE,
-    ];
-
-    foreach ($bundle_entity_type_ids as $entity_type_id => $bundle_entity_type_id) {
-      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-      $bundle_entity_type = $this->entityTypeManager->getDefinition($bundle_entity_type_id);
-      $bundles_for_entity_type = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
-      if (count($bundles_for_entity_type) < 2) {
-        continue;
-      }
-      $bundle_type_labels[] = $bundle_entity_type->getSingularLabel();
-      $form['per_bundle'][$entity_type_id] = [
-        '#type' => 'fieldset',
-        '#states' => [
-          'visible' => [
-            ':input[name="editor[settings][plugins][ckeditor5_link_entity_suggestions][allowed_entity_types][' . $entity_type_id . ']"]' => ['checked' => TRUE],
-          ],
-        ],
-        // The per-entity type fieldsets must match the order of the entity type
-        // checkboxes above.
-        '#weight' => array_search($entity_type_id, array_keys($entity_type_options)),
-      ];
-
-      $form['per_bundle'][$entity_type_id]['bundle'] = [
-        '#title' => $this->t('Limit %entity-type-label link suggestions per %bundle-label', [
-          '%entity-type-label' => $entity_type->getCollectionLabel(),
-          '%bundle-label' => $bundle_entity_type->getSingularLabel(),
-        ]),
-        '#type' => 'checkboxes',
-        '#options' => array_combine(
-          array_keys($bundles_for_entity_type),
-          array_column($bundles_for_entity_type, 'label')
+    $link_suggesters = EntityLinkSuggester::loadMultiple();
+    $form['suggester'] = [
+      '#title' => $this->t('Provide link suggestions for'),
+      '#type' => 'radios',
+      '#options' => array_combine(
+        // Keys: config dependency names.
+        array_map(
+          fn (EntityLinkSuggesterInterface $s) => $s->getConfigDependencyName(),
+          $link_suggesters,
         ),
-        '#default_value' => self::getAllowedBundlesForEntityType($this->configuration, $entity_type_id) ?? [],
-        '#description' => $this->t('If none are selected, all will be allowed.'),
-      ];
-    }
+        // Values: render arrays with `#title` and `#description`.
+        array_map(
+          fn (EntityLinkSuggesterInterface $s) => [
+            '#title' => $s->toLink(rel: 'edit-form', options: $modal_dialog_options)->toString(),
+            '#description' => $s->describe(),
+          ],
+          $link_suggesters
+        ),
+      ),
+      '#default_value' => $this->configuration['suggester'],
+    ];
+    // An extra pseudo-option that cannot be selected by the end user, to allow
+    // creating a new link suggester..
+    $form['suggester']['#options'][] = [
+      '#disabled' => TRUE,
+      '#title' => Link::fromTextAndUrl(
+        $this->t('Create new link suggester'),
+        Url::fromRoute('entity.entity_link_suggester.add_form')->setOptions($modal_dialog_options)
+      )->toString(),
+      '#description' => $this->t('If none of the existing link suggesters are a good match, create a new one.'),
+    ];
 
     return $form;
   }
@@ -235,31 +201,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_link_entity_suggestions.
     $form_value = $form_state->getValue('allow_download_links');
     $form_state->setValue('allow_download_links', (bool) $form_value);
-
-    $suggestions = [];
-    $entity_type_ids = Checkboxes::getCheckedCheckboxes($form_state->getValue('allowed_entity_types'));
-    foreach ($entity_type_ids as $entity_type_id) {
-      $suggestion = [
-        'entity_type_id' => $entity_type_id,
-        'bundles' => Checkboxes::getCheckedCheckboxes($form_state->getValue(['per_bundle', $entity_type_id, 'bundle'], [])),
-      ];
-      // When no bundle checkboxes are checked, all bundles are allowed. The
-      // configuration schema requires this to be NULL then instead of the empty
-      // array. This is inspired by the existing `target_bundles` setting in the
-      // default entity reference selection plugin which this functionality very
-      // much relies on.
-      // @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
-      if (empty($suggestion['bundles'])) {
-        $suggestion['bundles'] = NULL;
-      }
-      $suggestions[] = $suggestion;
-    }
-    // Apply the same "NULL when everything is allowed" pattern as above at the
-    // entity type level.
-    if (empty($entity_type_ids)) {
-      $suggestions = NULL;
-    }
-    $form_state->setValue('suggestions', $suggestions);
   }
 
   /**
@@ -267,7 +208,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['allow_download_links'] = $form_state->getValue('allow_download_links');
-    $this->configuration['suggestions'] = $form_state->getValue('suggestions');
+    $this->configuration['suggester'] = $form_state->getValue('suggester');
   }
 
   /**
