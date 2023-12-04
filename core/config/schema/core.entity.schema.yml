@@ -31,7 +31,7 @@ core.entity_link_suggestions.*:
             label: 'Linkable entity type'
             constraints:
               # @todo Validate that this is a linkable entity type.
-              # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::isLinkableEntityType()
+              # @see \Drupal\Core\Entity\Entity\EntityLinkSuggester::isLinkableEntityType()
               PluginExists:
                 manager: entity_type.manager
           bundles:

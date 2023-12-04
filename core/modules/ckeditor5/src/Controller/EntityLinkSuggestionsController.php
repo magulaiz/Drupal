@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Controller;
 
-use Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\Entity\EntityLinkSuggesterInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -119,14 +119,18 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     $suggestions = [];
 
     if ($input) {
-      $plugin_config = $editor->getSettings()['plugins']['ckeditor5_link_entity_suggestions'];
-      $allowed_entity_type_ids = is_array($plugin_config['suggestions'])
+      $link_suggester_id = substr($editor->getSettings()['plugins']['ckeditor5_link_entity_suggestions']['suggester'], 27);
+      $link_suggester = $this->entityTypeManager->getStorage('entity_link_suggester')
+        ->load($link_suggester_id);
+      assert($link_suggester instanceof EntityLinkSuggesterInterface);
+      $allowed_entity_type_ids = $link_suggester->getEntityTypes();
+      $allowed_entity_type_ids = is_array($allowed_entity_type_ids)
         // When configured to an array: suggestions for listed entity types.
-        ? array_column($plugin_config['suggestions'], 'entity_type_id')
+        ? array_column($allowed_entity_type_ids, 'entity_type')
         // When configured to NULL: suggestions for every linkable entity type.
         : array_keys(array_filter(
           $this->entityTypeManager->getDefinitions(),
-          [EntityLinkSuggestions::class, 'isLinkableEntityType']
+          [$link_suggester, 'isLinkableEntityType']
         ));
 
       // First, find suggestions for the host entity type, if the config allows
@@ -134,7 +138,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
       if (in_array($host_entity_type_id, $allowed_entity_type_ids, TRUE)) {
         $suggestions = $this->getSuggestions(
           $host_entity_type_id,
-          EntityLinkSuggestions::getAllowedBundlesForEntityType($plugin_config, $host_entity_type_id),
+          $link_suggester->getAllowedBundlesForEntityType($host_entity_type_id),
           $input,
           $host_entity_langcode
         );
@@ -148,7 +152,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
         if (in_array($entity_type_id, $allowed_entity_type_ids, TRUE)) {
           $suggestions = array_merge($suggestions, $this->getSuggestions(
             $entity_type_id,
-            EntityLinkSuggestions::getAllowedBundlesForEntityType($plugin_config, $entity_type_id),
+            $link_suggester->getAllowedBundlesForEntityType($entity_type_id),
             $input,
             $host_entity_langcode
           ));
