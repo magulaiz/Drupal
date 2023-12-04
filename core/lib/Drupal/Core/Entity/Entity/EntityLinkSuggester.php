@@ -55,7 +55,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   }
  * )
  */
-class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggesterInterface {
+class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggesterInterface, RenderableInterface {
 
   use StringTranslationTrait;
 
@@ -116,7 +116,7 @@ class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggeste
   /**
    * {@inheritdoc}
    */
-  public function describe(): RenderableInterface {
+  public function toRenderable() {
     $entity_types = $this->getEntityTypes();
     $render_array = [];
     if ($entity_types === NULL) {
@@ -158,19 +158,7 @@ class EntityLinkSuggester extends ConfigEntityBase implements EntityLinkSuggeste
         '#items' => $items,
       ];
     }
-
-    return new class ($render_array) implements RenderableInterface {
-
-      public function __construct(private array $renderArray) {}
-
-      /**
-       * {@inheritdoc}
-       */
-      public function toRenderable() {
-        return $this->renderArray;
-      }
-
-    };
+    return $render_array;
   }
 
   /**
