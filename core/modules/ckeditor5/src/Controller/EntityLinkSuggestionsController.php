@@ -144,8 +144,9 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
         );
       }
 
-      // Second, find suggestions for all other entity types.
-      foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
+      // Second, find suggestions for all other entity types, in the specified
+      // order.
+      foreach ($allowed_entity_type_ids as $entity_type_id) {
         if ($host_entity_type_id === $entity_type_id) {
           continue;
         }
