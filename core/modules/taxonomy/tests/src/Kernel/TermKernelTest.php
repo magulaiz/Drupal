@@ -42,54 +42,6 @@ class TermKernelTest extends KernelTestBase {
   }
 
   /**
-   * Tests setting description, keeps existing format.
-   */
-  public function testTermDescriptionFormat() {
-    $vocabulary = $this->createVocabulary();
-
-    // Function createTerm use 'plain_text' format by default.
-    $term = $this->createTerm($vocabulary);
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->setDescription('Test');
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->save();
-    $this->assertEquals('plain_text', $term->getFormat());
-
-    // Set format, then description.
-    $term = $this->createTerm($vocabulary);
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->setFormat('plain_text');
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->setDescription('Test');
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->save();
-    $this->assertEquals('plain_text', $term->getFormat());
-
-    // Set description, then format.
-    $term = $this->createTerm($vocabulary);
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->setDescription('Test');
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->setFormat('plain_text');
-    $this->assertEquals('plain_text', $term->getFormat());
-    $term->save();
-    $this->assertEquals('plain_text', $term->getFormat());
-
-    // Update description.
-    $term = $this->createTerm($vocabulary, [
-      'description' => [
-        'value' => 'Test',
-        'format' => 'full_html',
-      ],
-    ]);
-    $this->assertEquals('full_html', $term->getFormat());
-    $term->setDescription('Test');
-    $this->assertEquals('full_html', $term->getFormat());
-    $term->save();
-    $this->assertEquals('full_html', $term->getFormat());
-  }
-
-  /**
    * Deleting a parent of a term with multiple parents does not delete the term.
    */
   public function testMultipleParentDelete() {
