@@ -7,10 +7,9 @@ use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
 
 /**
- * Tests that anonymous users are not served any JavaScript.
+ * Tests the performance of basic functionality in the standard profile.
  *
- * This is tested with the core modules that are enabled in the 'standard'
- * profile.
+ * Stark is used as the default theme so that this test is not Olivero specific.
  *
  * @group Common
  */
@@ -37,38 +36,50 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Tests that anonymous users are not served any JavaScript.
+   * Tests performance for anonymous users.
    */
-  public function testNoJavaScript() {
-    // Create a node of content type 'article' that is listed on the frontpage.
+  public function testAnonymous() {
+    // Create two nodes to be shown on the front page.
     $this->drupalCreateNode([
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
     ]);
+    // Request a page that we're not otherwise explicitly testing to warm some
+    // caches.
+    $this->drupalGet('search');
 
     // Test frontpage.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('');
     });
     $this->assertNoJavaScript($performance_data);
-    // This test observes a variable number of database queries, so to avoid
+    // This test observes a variable number of cache gets and sets, so to avoid
     // random test failures, assert greater than equal the highest and lowest
-    // number of queries observed during test runs.
+    // number of observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertGreaterThanOrEqual(484, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(508, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(58, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(66, $performance_data->getQueryCount());
+
+    $this->assertGreaterThanOrEqual(129, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(132, $performance_data->getCacheGetCount());
+    $this->assertSame(59, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     });
     $this->assertNoJavaScript($performance_data);
-    // This test observes a variable number of database queries, so to avoid
+    $this->assertSame(38, $performance_data->getQueryCount());
+
+    // This test observes a variable number of cache gets and sets, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertGreaterThanOrEqual(174, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(182, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(87, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(88, $performance_data->getCacheGetCount());
+    $this->assertSame(20, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
@@ -76,37 +87,49 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $user->id());
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertGreaterThanOrEqual(133, $performance_data->getQueryCount());
-    // This test observes a variable number of database queries, so to avoid
+    $this->assertSame(40, $performance_data->getQueryCount());
+
+    // This test observes a variable number of cache gets and sets, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertLessThanOrEqual(138, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(74, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(80, $performance_data->getCacheGetCount());
+    $this->assertSame(19, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
 
   /**
    * Tests the performance of logging in.
    */
   public function testLogin(): void {
-    // Create a user and log them in to warm all caches.
+    // Create a user and log them in to warm all caches. Manually submit the
+    // form so that we repeat the same steps when recording performance data. Do
+    // this twice so that any caches which take two requests to warm are also
+    // covered.
     $account = $this->drupalCreateUser();
-    $this->drupalLogin($account);
-    $this->drupalLogout();
+    foreach (range(0, 1) as $index) {
+      $this->drupalGet('node');
+      $this->drupalGet('user/login');
+      $this->submitLoginForm($account);
+      $this->drupalLogout();
+    }
 
     $this->drupalGet('node');
     $this->drupalGet('user/login');
     $performance_data = $this->collectPerformanceData(function () use ($account) {
-      $this->submitForm([
-        'name' => $account->getAccountName(),
-        'pass' => $account->passRaw,
-      ], 'Log in');
+      $this->submitLoginForm($account);
     });
+
     // This test observes a variable number of database queries, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertLessThanOrEqual(89, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(86, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(40, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(39, $performance_data->getQueryCount());
+    $this->assertSame(28, $performance_data->getCacheGetCount());
+    $this->assertSame(1, $performance_data->getCacheSetCount());
+    $this->assertSame(1, $performance_data->getCacheDeleteCount());
   }
 
   /**
@@ -114,21 +137,45 @@ class StandardPerformanceTest extends PerformanceTestBase {
    */
   public function testLoginBlock(): void {
     $this->drupalPlaceBlock('user_login_block');
-    // Create a user and log them in to warm all caches.
+    // Create a user and log them in to warm all caches. Manually submit the
+    // form so that we repeat the same steps when recording performance data. Do
+    // this twice so that any caches which take two requests to warm are also
+    // covered.
     $account = $this->drupalCreateUser();
-    $this->drupalLogin($account);
     $this->drupalLogout();
+
+    foreach (range(0, 1) as $index) {
+      $this->drupalGet('node');
+      $this->assertSession()->responseContains('Password');
+      $this->submitLoginForm($account);
+      $this->drupalLogout();
+    }
 
     $this->drupalGet('node');
     $this->assertSession()->responseContains('Password');
     $performance_data = $this->collectPerformanceData(function () use ($account) {
-      $this->submitForm([
-        'name' => $account->getAccountName(),
-        'pass' => $account->passRaw,
-      ], 'Log in');
+      $this->submitLoginForm($account);
     });
-    $this->assertLessThanOrEqual(200, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(197, $performance_data->getQueryCount());
+    $this->assertSame(48, $performance_data->getQueryCount());
+    $this->assertSame(30, $performance_data->getCacheGetCount());
+
+    // This test observes a variable number of cache sets, so to avoid random
+    // test failures, assert greater than equal the highest and lowest number
+    // observed during test runs.
+    // See https://www.drupal.org/project/drupal/issues/3402610
+    $this->assertLessThanOrEqual(4, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(1, $performance_data->getCacheSetCount());
+    $this->assertSame(1, $performance_data->getCacheDeleteCount());
+  }
+
+  /**
+   * Submit the user login form.
+   */
+  protected function submitLoginForm($account) {
+    $this->submitForm([
+      'name' => $account->getAccountName(),
+      'pass' => $account->passRaw,
+    ], 'Log in');
   }
 
   /**
