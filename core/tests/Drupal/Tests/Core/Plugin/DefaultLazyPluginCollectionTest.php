@@ -239,7 +239,16 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
     $expected['cherry'] = ['value' => 'kiwi', 'id' => 'cherry'];
     $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, $config);
+  }
 
+  /**
+   * @covers ::setConfiguration
+   * @group legacy
+   */
+  public function testConfigurableSetConfigurationToNull(): void {
+    $this->setupPluginCollection($this->any());
+
+    $this->expectDeprecation('Calling Drupal\Core\Plugin\DefaultLazyPluginCollection::setConfiguration() with NULL is deprecated in drupal:10.3.0 and will fail in drupal:11.0.0. See https://www.drupal.org/node/3406191');
     $this->defaultPluginCollection->setConfiguration(NULL);
     $this->assertSame([], $this->defaultPluginCollection->getConfiguration());
   }
