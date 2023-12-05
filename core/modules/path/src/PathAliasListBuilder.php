@@ -164,8 +164,9 @@ class PathAliasListBuilder extends EntityListBuilder {
     $langcode = $entity->language()->getId();
     $alias = $entity->getAlias();
     $path = $entity->getPath();
-    $url = Url::fromUserInput($path);
-
+    $url = Url::fromUserInput($path, [
+      'language' => $entity->language(),
+    ]);
     $row['data']['alias']['data'] = [
       '#type' => 'link',
       '#title' => Unicode::truncate($alias, 50, FALSE, TRUE),
