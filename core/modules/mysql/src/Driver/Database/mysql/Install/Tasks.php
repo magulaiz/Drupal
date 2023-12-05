@@ -175,6 +175,12 @@ class Tasks extends InstallTasks {
       $form['advanced_options']['port']['#default_value'] = '3306';
     }
 
+    // Add the isolation_level option to settings.php.
+    $form['isolation_level'] = [
+      '#type' => 'value',
+      '#default_value' => $database['isolation_level'] ?? 'READ COMMITTED',
+    ];
+
     return $form;
   }
 
