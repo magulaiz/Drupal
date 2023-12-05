@@ -104,7 +104,8 @@ class TermKernelTest extends KernelTestBase {
     $this->assertNull($term->getFormat());
     $term->setDescription($this->randomMachineName());
     $this->assertNull($term->getFormat());
-
+    $term->save();
+    $this->assertNull($term->getFormat());
   }
 
   /**
