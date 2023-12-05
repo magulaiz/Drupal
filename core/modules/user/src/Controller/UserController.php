@@ -273,7 +273,6 @@ class UserController extends ControllerBase {
     $this->flood->clear('user.password_request_user', $uid);
     return $this->redirect(
       'entity.user.change_pass_form',
-      //entity.user.change_pass_form
       ['user' => $user->id()],
       [
         'query' => ['pass-reset-token' => $token],

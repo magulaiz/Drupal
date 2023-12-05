@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
-use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
@@ -97,14 +96,14 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     // This allows users without email address to be edited and deleted.
     // Also see \Drupal\user\Plugin\Validation\Constraint\UserMailRequired.
     if ($register) {
-        $form['account']['mail'] = [
-            '#type' => 'email',
-            '#title' => $this->t('Email address'),
-            '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
-            '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
-            '#default_value' => (!$register ? $account->getEmail() : ''),
-          ];
-      }
+      $form['account']['mail'] = [
+        '#type' => 'email',
+        '#title' => $this->t('Email address'),
+        '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
+        '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
+        '#default_value' => (!$register ? $account->getEmail() : ''),
+      ];
+    }
 
     // Only show name field on registration form or user can change own username.
     $form['account']['name'] = [
