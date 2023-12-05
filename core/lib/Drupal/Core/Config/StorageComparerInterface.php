@@ -75,10 +75,10 @@ interface StorageComparerInterface {
   public function hasChanges();
 
   /**
-   * Validates that the system.site::uuid in the source and target match.
+   * Validates the source system.site::uuid against target one.
    *
    * @return bool
-   *   TRUE if identical, FALSE if not.
+   *   TRUE if identical or source value is empty, FALSE if not.
    */
   public function validateSiteUuid();
 

@@ -389,9 +389,7 @@ class StorageComparer implements StorageComparerInterface {
   public function validateSiteUuid() {
     $source = $this->sourceStorage->read('system.site');
     $target = $this->targetStorage->read('system.site');
-    // It is possible that the storage does not contain system.site
-    // configuration. In such cases the site UUID cannot be valid.
-    return $source && $target && $source['uuid'] === $target['uuid'];
+    return empty($source['uuid']) || ($source && $target && $source['uuid'] === $target['uuid']);
   }
 
   /**
