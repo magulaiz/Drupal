@@ -116,7 +116,7 @@
       /**
        * Request progress data from server.
        */
-      sendPing() {
+      async sendPing() {
         if (this.timer) {
           clearTimeout(this.timer);
         }
@@ -131,33 +131,40 @@
             uri += '&';
           }
           uri += '_format=json';
-          $.ajax({
-            type: this.method,
-            url: uri,
-            data: '',
-            dataType: 'json',
-            success(progress) {
-              // Display errors.
-              if (progress.status === 0) {
-                pb.displayError(progress.data);
-                return;
-              }
-              // Update display.
-              pb.setProgress(
-                progress.percentage,
-                progress.message,
-                progress.label,
-              );
-              // Schedule next timer.
-              pb.timer = setTimeout(() => {
-                pb.sendPing();
-              }, pb.delay);
+
+          const fetchOptions = {
+            method: this.method,
+            headers: {
+              'Content-Type': 'application/json',
             },
-            error(xmlhttp) {
-              const e = new Drupal.AjaxError(xmlhttp, pb.uri);
-              pb.displayError(`<pre>${e.message}</pre>`);
-            },
-          });
+          };
+
+          try {
+            const response = await fetch(uri, fetchOptions);
+
+            const progress = await response.json();
+
+            // Display errors.
+            if (progress.status === 0) {
+              pb.displayError(progress.data);
+              return;
+            }
+
+            // Update display.
+            pb.setProgress(
+              progress.percentage,
+              progress.message,
+              progress.label,
+            );
+
+            // Schedule next timer.
+            pb.timer = setTimeout(async () => {
+              await pb.sendPing();
+            }, pb.delay);
+          } catch (error) {
+            const e = new Drupal.AjaxError(error, pb.uri);
+            pb.displayError(`<pre>${e.message}</pre>`);
+          }
         }
       },
 
