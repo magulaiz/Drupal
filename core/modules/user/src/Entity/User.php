@@ -42,7 +42,9 @@ use Drupal\user\UserInterface;
  *     "form" = {
  *       "default" = "Drupal\user\ProfileForm",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",
- *       "register" = "Drupal\user\RegisterForm"
+ *       "register" = "Drupal\user\RegisterForm",
+ *       "email" = "Drupal\user\Form\UserEmailChangeForm",
+ *       "pass" = "Drupal\user\Form\UserPasswordChangeForm"
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },

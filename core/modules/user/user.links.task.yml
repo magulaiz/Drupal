@@ -34,10 +34,28 @@ entity.user.canonical:
   route_name: entity.user.canonical
   base_route: entity.user.canonical
   title: View
-entity.user.edit_form:
+
+entity.user.edit_collection:
   route_name: entity.user.edit_form
   base_route: entity.user.canonical
   title: Edit
+
+entity.user.edit_form:
+  route_name: entity.user.edit_form
+  parent_id: entity.user.edit_collection
+  title: Edit Profile
+
+entity.user.change_pass_form:
+  route_name: entity.user.change_pass_form
+  parent_id: entity.user.edit_collection
+  title: Change Password
+  weight: 1
+
+entity.user.change_email_form:
+  route_name: entity.user.change_email_form
+  parent_id: entity.user.edit_collection
+  title: Change Email
+  weight: 2
 
 entity.user.collection:
   title: List

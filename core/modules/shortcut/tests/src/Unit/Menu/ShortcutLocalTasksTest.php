@@ -40,7 +40,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testShortcutPageLocalTasks($route) {
     $tasks = [
-      0 => ['shortcut.set_switch', 'entity.user.canonical', 'entity.user.edit_form'],
+      0 => ['shortcut.set_switch', 'entity.user.canonical', 'entity.user.edit_collection'],
     ];
     $this->assertLocalTasks($route, $tasks);
   }
@@ -51,7 +51,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
   public function getShortcutPageRoutes() {
     return [
       ['entity.user.canonical'],
-      ['entity.user.edit_form'],
+      ['entity.user.edit_collection'],
       ['shortcut.set_switch'],
     ];
   }
