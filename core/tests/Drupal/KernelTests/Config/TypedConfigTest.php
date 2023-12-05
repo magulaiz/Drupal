@@ -2,8 +2,6 @@
 
 namespace Drupal\KernelTests\Config;
 
-// cspell:ignore allownull
-
 use Drupal\Core\Config\Schema\Sequence;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\Config\Schema\TypedConfigInterface;
@@ -97,7 +95,7 @@ class TypedConfigTest extends KernelTestBase {
     $typed_config_manager = \Drupal::service('config.typed');
     $typed_config = $typed_config_manager->createFromNameAndData('config_test.validation', \Drupal::configFactory()->get('config_test.validation')->get());
     $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
-    $this->assertEquals(['_core', 'llama', 'cat', 'giraffe', 'uuid', 'langcode', 'string__not_blank', 'required_label'], array_keys($typed_config->getElements()));
+    $this->assertEquals(['_core', 'llama', 'cat', 'giraffe', 'uuid', 'langcode', 'string__not_blank'], array_keys($typed_config->getElements()));
     $this->assertSame('config_test.validation', $typed_config->getName());
     $this->assertSame('config_test.validation', $typed_config->getPropertyPath());
     $this->assertSame('config_test.validation.llama', $typed_config->get('llama')->getPropertyPath());
@@ -115,6 +113,34 @@ class TypedConfigTest extends KernelTestBase {
   }
 
   /**
+   * Tests the behavior of `NotBlank` on required data.
+   *
+   * @testWith ["", false, "This value should not be blank."]
+   *           ["", true, "This value should not be blank."]
+   *           [null, false, "This value should not be blank."]
+   *           [null, true, "This value should not be null."]
+   *
+   * @see \Drupal\Core\TypedData\DataDefinition::getConstraints()
+   * @see \Drupal\Core\TypedData\DataDefinitionInterface::isRequired()
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraint
+   * @see \Symfony\Component\Validator\Constraints\NotBlank::$allowNull
+   */
+  public function testNotBlankInteractionWithNotNull(?string $value, bool $is_required, string $expected_message): void {
+    \Drupal::configFactory()->getEditable('config_test.validation')
+      ->set('string__not_blank', $value)
+      ->save();
+
+    $typed_config = \Drupal::service('config.typed')->get('config_test.validation');
+    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired($is_required);
+    $result = $typed_config->validate();
+
+    // One validation error message expected: the one from `NotBlank`.
+    $this->assertCount(1, $result);
+    $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
+    $this->assertEquals($expected_message, $result->get(0)->getMessage());
+  }
+
+  /**
    * Tests config validation via the Typed Data API.
    */
   public function testSimpleConfigValidation() {
@@ -128,47 +154,6 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertInstanceOf(ConstraintViolationListInterface::class, $result);
     $this->assertEmpty($result);
 
-    // Tests the behavior of `NotBlank` on required data.
-    // @see \Drupal\Core\TypedData\DataDefinition::getConstraints()
-    // @see \Drupal\Core\TypedData\DataDefinitionInterface::isRequired()
-    // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraint
-    // @see \Symfony\Component\Validator\Constraints\NotBlank::$allowNull
-    $original = $config->getRawData();
-    // @todo Remove next line in https://www.drupal.org/project/drupal/issues/3364109
-    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired(TRUE);
-    // Empty string.
-    $config->set('string__not_blank', '')->save();
-    $typed_config = $typed_config_manager->get('config_test.validation');
-    // @todo Remove next line in https://www.drupal.org/project/drupal/issues/3364109
-    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired(TRUE);
-    $result = $typed_config->validate();
-    // One validation error message expected: the one from `NotBlank`.
-    $this->assertCount(1, $result);
-    $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
-    $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
-    // NULL.
-    $config->set('string__not_blank', NULL)->save();
-    $typed_config = $typed_config_manager->get('config_test.validation');
-    // @todo Remove next line in https://www.drupal.org/project/drupal/issues/3364109
-    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired(TRUE);
-    $result = $typed_config->validate();
-    // One validation error message expected: the one from `NotNull`.
-    $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
-    $this->assertEquals('This value should not be null.', $result->get(0)->getMessage());
-    // Verify the `type: required_label` also gets a single validation error.
-    $config->setData($original);
-    $config->set('required_label', NULL);
-    $config->save();
-    $typed_config = $typed_config_manager->get('config_test.validation');
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3364109
-    $typed_config->get('required_label')->getDataDefinition()->setRequired(TRUE);
-    $result = $typed_config->validate();
-    $this->assertSame('required_label', $result->get(0)->getPropertyPath());
-    $this->assertEquals('This value should not be null.', $result->get(0)->getMessage());
-    $this->assertCount(1, $result);
-    // Prepare for the next test.
-    $config->setData($original);
-    $config->save();
     // Test constraints on primitive types.
     $config->set('llama', 'elephant');
     $config->save();

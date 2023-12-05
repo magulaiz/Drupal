@@ -207,10 +207,8 @@ config_test.validation:
     uuid:
       type: uuid
 
-    # To test the interaction of NotBlank and DataDefinition::isRequired().
+    # @see \Drupal\KernelTests\Config\TypedConfigTest::testNotBlankInteractionWithNotNull()
     string__not_blank:
       type: string
       constraints:
         NotBlank: {}
-    required_label:
-      type: required_label
