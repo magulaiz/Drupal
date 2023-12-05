@@ -43,8 +43,8 @@ function datetime_range_field_type_category_info_alter(&$definitions) {
  * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
  */
 function datetime_range_field_config_presave(FieldConfigInterface $field) {
-  // Don't change anything during a configuration sync.
-  if ($field->isSyncing()) {
+  // Don't do anything during a configuration sync or if the field is not a date range field.
+  if ($field->isSyncing() || $field->getType() !== 'daterange') {
     return;
   }
   $field_settings = $field->getSettings();
