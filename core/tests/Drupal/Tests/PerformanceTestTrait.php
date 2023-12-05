@@ -98,7 +98,7 @@ trait PerformanceTestTrait {
     // and asset responses are returning to the browser, and before
     // post-response tasks are guaranteed to have run. Assume that if there is
     // no performance data logged by the child request within one second, that
-    // no this means everything has finished.
+    // this means everything has finished.
     $collection = \Drupal::keyValue('performance_test');
     while ($collection->get('performance_test_data')) {
       $collection->deleteAll();
