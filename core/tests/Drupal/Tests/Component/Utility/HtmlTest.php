@@ -27,8 +27,7 @@ class HtmlTest extends TestCase {
     parent::setUp();
 
     $property = new \ReflectionProperty('Drupal\Component\Utility\Html', 'seenIdsInit');
-    $property->setAccessible(TRUE);
-    $property->setValue(NULL);
+    $property->setValue(NULL, NULL);
   }
 
   /**
@@ -301,6 +300,7 @@ class HtmlTest extends TestCase {
       ['→', '→'],
       ['➼', '➼'],
       ['€', '€'],
+      // cspell:disable-next-line
       ['Drup�al', "Drup\x80al"],
     ];
   }
@@ -379,6 +379,7 @@ class HtmlTest extends TestCase {
         "$tag_name, srcset, $base_path: root-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, {$base_path}root-relative 300w\">root-relative test</$tag_name>", 'http://example.com', "<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}root-relative 300w\">root-relative test</$tag_name>"],
         "$tag_name, srcset, $base_path: protocol-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, //example.com{$base_path}protocol-relative 300w\">protocol-relative test</$tag_name>", 'http://example.com', FALSE],
         "$tag_name, srcset, $base_path: absolute" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}absolute 300w\">absolute test</$tag_name>", 'http://example.com', FALSE],
+        "$tag_name, empty srcset" => ["<$tag_name srcset=\"\">empty test</$tag_name>", 'http://example.com', FALSE],
       ];
 
       foreach (['href', 'poster', 'src', 'cite', 'data', 'action', 'formaction', 'about'] as $attribute) {

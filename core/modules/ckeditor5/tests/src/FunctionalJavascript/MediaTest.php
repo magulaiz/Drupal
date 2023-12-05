@@ -26,6 +26,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
 class MediaTest extends WebDriverTestBase {
@@ -273,6 +274,64 @@ class MediaTest extends WebDriverTestBase {
     $this->waitForEditor();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
     $assert_session->elementExists('css', '.ck-widget.drupal-media');
+  }
+
+  /**
+   * Tests adding media to a list does not split the list.
+   */
+  public function testMediaSplitList() {
+    $assert_session = $this->assertSession();
+
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+
+    // Add lists to the editor.
+    $settings['plugins']['ckeditor5_list'] = [
+      'reversed' => FALSE,
+      'startIndex' => FALSE,
+    ];
+    $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], ['bulletedList', 'numberedList']);
+    $editor->setSettings($settings);
+    $editor->save();
+
+    // Add lists to the filter.
+    $filter_format = $editor->getFilterFormat();
+    $filter_format->setFilterConfig('filter_html', [
+      'status' => TRUE,
+      'settings' => [
+        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <ol> <ul> <li>',
+      ],
+    ]);
+    $filter_format->save();
+
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
+    // Wrap the media with a list item.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = '<ol><li>' . $original_value . '</li></ol>';
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+
+    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media'));
+
+    // Confirm the media is wrapped by the list item on the editing view.
+    $assert_session->elementExists('css', 'li > .drupal-media');
+    // Confirm the media is not adjacent to the list on the editing view.
+    $assert_session->elementNotExists('css', 'ol + .drupal-media');
+
+    $editor_dom = new \DOMXPath($this->getEditorDataAsDom());
+    // Confirm drupal-media is wrapped by the list item.
+    $this->assertNotEmpty($editor_dom->query('//li/drupal-media'));
+    // Confirm the media is not adjacent to the list.
+    $this->assertEmpty($editor_dom->query('//ol/following-sibling::drupal-media'));
   }
 
   /**
@@ -633,6 +692,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Ensure that caption can be linked.
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $figcaption->click();
     $this->selectTextInsideElement('.drupal-media figcaption');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
     $this->pressEditorButton('Link');
@@ -1059,6 +1119,12 @@ class MediaTest extends WebDriverTestBase {
 
     $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
     $drupalmedia->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+
+    // Turn off caption, so we don't accidentally put our link in that text
+    // field instead of on the actual media.
+    $this->getBalloonButton('Toggle caption off')->click();
+    $assert_session->assertNoElementAfterWait('css', 'figure.drupal-media > figcaption');
 
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('Link media')->click();
@@ -1501,7 +1567,7 @@ class MediaTest extends WebDriverTestBase {
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
-    $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
+    $assert_session->waitForElement('css', 'article.media--view-mode-view-mode-1');
 
     // Test that setting allowed_view_modes back to two items restores the
     // field.
@@ -1544,7 +1610,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View Mode 1')->click();
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
-    $assert_session->elementExists('css', 'article.media--view-mode-_2222');
+    $assert_session->waitForElement('css', 'article.media--view-mode-_2222');
     $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
 
     // Test that a media with no view modes configured will be
@@ -1664,6 +1730,27 @@ class MediaTest extends WebDriverTestBase {
 })()
 JS;
     return $this->getSession()->evaluateScript($javascript);
+  }
+
+  /**
+   * Ensure media preview isn't clickable.
+   */
+  public function testMediaPointerEvent() {
+    $entityViewDisplay = EntityViewDisplay::load('media.image.view_mode_1');
+    $thumbnail = $entityViewDisplay->getComponent('thumbnail');
+    $thumbnail['settings']['image_link'] = 'file';
+    $entityViewDisplay->setComponent('thumbnail', $thumbnail);
+    $entityViewDisplay->save();
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $url = $this->host->toUrl('edit-form');
+    $this->drupalGet($url);
+    $this->waitForEditor();
+    $assert_session->waitForLink('default alt');
+    $page->find('css', '.ck .drupal-media')->click();
+    // Assert that the media preview is not clickable by comparing the URL.
+    $this->assertEquals($url->toString(), $this->getUrl());
   }
 
 }
