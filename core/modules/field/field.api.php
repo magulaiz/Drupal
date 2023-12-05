@@ -401,10 +401,10 @@ function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig 
  * field info cache has been cleared, this hook is invoked on all modules to
  * allow them to respond to the field being purged.
  *
- * @param $field
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   The field being purged.
  */
-function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
+function hook_field_purge_field(\Drupal\Core\Field\FieldDefinitionInterface $field) {
   \Drupal::database()->delete('my_module_field_info')
     ->condition('id', $field->id())
     ->execute();
