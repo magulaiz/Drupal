@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Kernel;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
@@ -53,7 +54,7 @@ class TermKernelTest extends KernelTestBase {
     // Function createTerm use 'plain_text' format by default.
     $term = $this->createTerm($vocabulary);
     $this->assertEquals('plain_text', $term->getFormat());
-    $term->setDescription('Test');
+    $term->setDescription($this->randomMachineName());
     $this->assertEquals('plain_text', $term->getFormat());
     $term->save();
     $this->assertEquals('plain_text', $term->getFormat());
@@ -63,7 +64,7 @@ class TermKernelTest extends KernelTestBase {
     $this->assertEquals('plain_text', $term->getFormat());
     $term->setFormat('plain_text');
     $this->assertEquals('plain_text', $term->getFormat());
-    $term->setDescription('Test');
+    $term->setDescription($this->randomMachineName());
     $this->assertEquals('plain_text', $term->getFormat());
     $term->save();
     $this->assertEquals('plain_text', $term->getFormat());
@@ -71,7 +72,7 @@ class TermKernelTest extends KernelTestBase {
     // Set description, then format.
     $term = $this->createTerm($vocabulary);
     $this->assertEquals('plain_text', $term->getFormat());
-    $term->setDescription('Test');
+    $term->setDescription($this->randomMachineName());
     $this->assertEquals('plain_text', $term->getFormat());
     $term->setFormat('plain_text');
     $this->assertEquals('plain_text', $term->getFormat());
@@ -81,15 +82,30 @@ class TermKernelTest extends KernelTestBase {
     // Update description.
     $term = $this->createTerm($vocabulary, [
       'description' => [
-        'value' => 'Test',
+        'value' => $this->randomMachineName(),
         'format' => 'full_html',
       ],
     ]);
     $this->assertEquals('full_html', $term->getFormat());
-    $term->setDescription('Test');
+    $term->setDescription($this->randomMachineName());
     $this->assertEquals('full_html', $term->getFormat());
     $term->save();
     $this->assertEquals('full_html', $term->getFormat());
+
+    // Description without format.
+    $term = Term::create([
+      'name' => $this->randomMachineName(),
+      'description' => [
+        'value' => $this->randomMachineName(),
+      ],
+      'vid' => $vocabulary->id(),
+    ]);
+    $this->assertNull($term->getFormat());
+    $term->save();
+    $this->assertNull($term->getFormat());
+    $term->setDescription($this->randomMachineName());
+    $this->assertNull($term->getFormat());
+
   }
 
   /**
