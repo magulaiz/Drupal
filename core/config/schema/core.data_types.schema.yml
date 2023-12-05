@@ -77,7 +77,6 @@ required_label:
   type: label
   label: 'Label'
   constraints:
-    NotNull: {}
     NotBlank: {}
 
 # String containing plural variants, separated by EXT.

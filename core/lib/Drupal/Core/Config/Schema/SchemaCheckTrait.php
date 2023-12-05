@@ -49,7 +49,7 @@ trait SchemaCheckTrait {
       //   https://drupal.org/i/3380475.
       // @see search.schema.yml
       'label' => [
-        'This value should not be null.',
+        'This value should not be blank.',
       ],
     ],
   ];

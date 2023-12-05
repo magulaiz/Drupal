@@ -128,46 +128,40 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertInstanceOf(ConstraintViolationListInterface::class, $result);
     $this->assertEmpty($result);
 
-    // Tests the interaction of `NotBlank` and `NotNull`.
+    // Tests the behavior of `NotBlank` on required data.
+    // @see \Drupal\Core\TypedData\DataDefinition::getConstraints()
+    // @see \Drupal\Core\TypedData\DataDefinitionInterface::isRequired()
+    // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraint
+    // @see \Symfony\Component\Validator\Constraints\NotBlank::$allowNull
     $original = $config->getRawData();
+    // @todo Remove next line in https://www.drupal.org/project/drupal/issues/3364109
+    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired(TRUE);
     // Empty string.
-    $config->set('string__not_blank', '');
-    $config->set('string__not_null__not_blank', '');
-    $config->set('string__not_null__not_blank_allownull', '');
-    $config->save();
+    $config->set('string__not_blank', '')->save();
     $typed_config = $typed_config_manager->get('config_test.validation');
+    // @todo Remove next line in https://www.drupal.org/project/drupal/issues/3364109
+    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired(TRUE);
     $result = $typed_config->validate();
-    // All 3 combinations get 1 message each: the one from `NotBlank`.
-    $this->assertCount(3, $result);
+    // One validation error message expected: the one from `NotBlank`.
+    $this->assertCount(1, $result);
     $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
     $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
-    $this->assertSame('string__not_null__not_blank', $result->get(1)->getPropertyPath());
-    $this->assertEquals('This value should not be blank.', $result->get(1)->getMessage());
-    $this->assertSame('string__not_null__not_blank_allownull', $result->get(2)->getPropertyPath());
-    $this->assertEquals('This value should not be blank.', $result->get(2)->getMessage());
     // NULL.
-    $config->set('string__not_blank', NULL);
-    $config->set('string__not_null__not_blank', NULL);
-    $config->set('string__not_null__not_blank_allownull', NULL);
-    $config->save();
+    $config->set('string__not_blank', NULL)->save();
     $typed_config = $typed_config_manager->get('config_test.validation');
+    // @todo Remove next line in https://www.drupal.org/project/drupal/issues/3364109
+    $typed_config->get('string__not_blank')->getDataDefinition()->setRequired(TRUE);
     $result = $typed_config->validate();
-    // `NotBlank: {}` only: 1 message.
+    // One validation error message expected: the one from `NotNull`.
     $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
-    $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
-    // `NotBlank: {}` and `NotNull: {}`: 1 message, thanks to automatic fixing.
-    // @see \Drupal\Core\TypedData\Validation\TypedDataMetadata::getConstraints()
-    $this->assertSame('string__not_null__not_blank', $result->get(1)->getPropertyPath());
-    $this->assertEquals('This value should not be null.', $result->get(1)->getMessage());
-    // `NotBlank: {}` and `NotNull: {allowNull: true}`: 1 message.
-    $this->assertSame('string__not_null__not_blank_allownull', $result->get(2)->getPropertyPath());
-    $this->assertEquals('This value should not be null.', $result->get(2)->getMessage());
-    $this->assertCount(3, $result);
+    $this->assertEquals('This value should not be null.', $result->get(0)->getMessage());
     // Verify the `type: required_label` also gets a single validation error.
     $config->setData($original);
     $config->set('required_label', NULL);
     $config->save();
     $typed_config = $typed_config_manager->get('config_test.validation');
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3364109
+    $typed_config->get('required_label')->getDataDefinition()->setRequired(TRUE);
     $result = $typed_config->validate();
     $this->assertSame('required_label', $result->get(0)->getPropertyPath());
     $this->assertEquals('This value should not be null.', $result->get(0)->getMessage());
