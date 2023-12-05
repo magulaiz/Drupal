@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\taxonomy\Kernel;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
