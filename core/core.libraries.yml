@@ -423,7 +423,7 @@ loadjs:
     url: https://raw.githubusercontent.com/muicss/loadjs/4.2.0/LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/loadjs/loadjs.min.js: { minified: true }
+    assets/vendor/loadjs/loadjs.min.js: { minified: true, weight: -1 }
 
 drupal.autocomplete:
   version: VERSION
