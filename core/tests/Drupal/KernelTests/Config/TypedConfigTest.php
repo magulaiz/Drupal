@@ -134,7 +134,7 @@ class TypedConfigTest extends KernelTestBase {
     $typed_config->get('string__not_blank')->getDataDefinition()->setRequired($is_required);
     $result = $typed_config->validate();
 
-    // One validation error message expected: the one from `NotBlank`.
+    // Expect 1 validation error message: the one from `NotBlank` or `NotNull`.
     $this->assertCount(1, $result);
     $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
     $this->assertEquals($expected_message, $result->get(0)->getMessage());
