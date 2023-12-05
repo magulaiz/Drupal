@@ -155,15 +155,14 @@ class TypedConfigTest extends KernelTestBase {
     // `NotBlank: {}` only: 1 message.
     $this->assertSame('string__not_blank', $result->get(0)->getPropertyPath());
     $this->assertEquals('This value should not be blank.', $result->get(0)->getMessage());
-    // `NotBlank: {}` and `NotNull: {}`: 2 messages, one of which is pointless.
+    // `NotBlank: {}` and `NotNull: {}`: 1 message, thanks to automatic fixing.
+    // @see \Drupal\Core\TypedData\Validation\TypedDataMetadata::getConstraints()
     $this->assertSame('string__not_null__not_blank', $result->get(1)->getPropertyPath());
     $this->assertEquals('This value should not be null.', $result->get(1)->getMessage());
-    $this->assertSame('string__not_null__not_blank', $result->get(2)->getPropertyPath());
-    $this->assertEquals('This value should not be blank.', $result->get(2)->getMessage());
     // `NotBlank: {}` and `NotNull: {allowNull: true}`: 1 message.
-    $this->assertSame('string__not_null__not_blank_allownull', $result->get(3)->getPropertyPath());
-    $this->assertEquals('This value should not be null.', $result->get(3)->getMessage());
-    $this->assertCount(4, $result);
+    $this->assertSame('string__not_null__not_blank_allownull', $result->get(2)->getPropertyPath());
+    $this->assertEquals('This value should not be null.', $result->get(2)->getMessage());
+    $this->assertCount(3, $result);
     // Verify the `type: required_label` also gets a single validation error.
     $config->setData($original);
     $config->set('required_label', NULL);

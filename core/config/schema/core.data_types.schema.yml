@@ -78,9 +78,7 @@ required_label:
   label: 'Label'
   constraints:
     NotNull: {}
-    # Prevent a validation error from NotBlank when NotNull already generates one.
-    NotBlank:
-      allowNull: true
+    NotBlank: {}
 
 # String containing plural variants, separated by EXT.
 plural_label:
