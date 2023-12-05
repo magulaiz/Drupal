@@ -19,11 +19,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
   protected static $modules = ['editor', 'editor_test', 'filter'];
 
   /**
-   * The config entity mapping properties with >=1 required keys.
-   *
-   * @var string[][]
-   * @see \Drupal\Core\Config\Entity\ConfigEntityType::getPropertiesToExport()
-   * @see ::testRequiredPropertyKeysMissing()
+   * {@inheritdoc}
    */
   protected static array $propertiesWithRequiredKeys = [
     'settings' => "'ponies_too' is a required key because editor is unicorn (see config schema type editor.settings.unicorn).",

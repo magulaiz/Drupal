@@ -190,6 +190,41 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Tests ValidKeys constraint validator detecting unknown and required keys.
+   *
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMissingRequiredKeyMessage
+   */
+  public function testBothUnknownAndDynamicallyRequiredKeys(): void {
+    // Start from the valid config.
+    $this->assertEmpty($this->config->validate());
+
+    // Then modify only one thing: the block plugin that is being used.
+    $data = $this->config->toArray();
+    $data['plugin'] = 'local_tasks_block';
+    $this->config = $this->container->get('config.typed')
+      ->createFromNameAndData('block.block.branding', $data);
+
+    // Now 3 validation errors should be triggered: one for each of the settings
+    // that exist in the "branding" block but not the "powered by" block.
+    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
+    $this->assertSame(
+      [
+        "'use_site_logo' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+        "'use_site_name' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+        "'use_site_slogan' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+        "'primary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+        "'secondary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+      ],
+      array_map(
+        fn (ConstraintViolation $v) => (string) $v->getMessage(),
+        iterator_to_array($this->config->validate()),
+      )
+    );
+  }
+
+  /**
    * Tests the ValidKeys constraint validator.
    */
   public function testValidation(): void {
@@ -213,6 +248,9 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
     // Passing a non-array value should raise an exception.
     try {
+      // TRICKY: we must clone the definition because the instance is modified
+      // when processing.
+      // @see \Drupal\Core\Config\Schema\Mapping::processRequiredKeyFlags()
       $typed_config->create(clone $definition, 2501)->validate();
       $this->fail('Expected an exception but none was raised.');
     }
@@ -305,6 +343,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
     // Reference to the mapping in the schema, to allow adjusting it for testing
     // purposes.
+    assert($this->config->getDataDefinition() instanceof MapDataDefinition);
     $mapping = $this->config->getDataDefinition()['mapping'];
 
     // Removing a key-value pair should trigger a validation error.

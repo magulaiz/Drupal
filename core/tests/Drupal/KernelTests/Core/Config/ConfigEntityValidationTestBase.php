@@ -52,9 +52,16 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * The config entity mapping properties with >=1 required keys.
    *
+   * All top-level properties of a config entity are guaranteed to be defined
+   * (since they are defined as properties on the corresponding PHP class). That
+   * is why they can never trigger "required key" validation errors. Only for
+   * non-top-level properties can such validation errors be triggered, and hence
+   * that is only possible on top-level properties of `type: mapping`.
+   *
    * @var string[]
    * @see \Drupal\Core\Config\Entity\ConfigEntityType::getPropertiesToExport()
    * @see ::testRequiredPropertyKeysMissing()
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraintValidator
    */
   protected static array $propertiesWithRequiredKeys = [];
 

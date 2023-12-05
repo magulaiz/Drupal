@@ -43,7 +43,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     }
     elseif (is_array($constraint->allowedKeys)) {
       if (!empty(array_diff($constraint->allowedKeys, $mapping->getValidKeys()))) {
-        throw new \InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(sprintf(
           'The type \'%s\' explicitly specifies the allowed keys (%s), but they are not a subset of the statically defined mapping keys in the schema (%s).',
           $mapping->getDataDefinition()->getDataType(),
           implode(', ', $constraint->allowedKeys),
@@ -57,8 +57,6 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       throw new InvalidArgumentException("'$constraint->allowedKeys' is not a valid set of allowed keys.");
     }
 
-    $mapping = $this->context->getObject();
-    assert($mapping instanceof Mapping);
     $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
     $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
 
@@ -166,6 +164,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
 
     // $original_type must be a dynamic type and the resolved type must be
     // different and not be dynamic.
+    // @see \Drupal\Core\Config\TypedConfigManager::buildDataDefinition()
     assert(strpos($original_type, ']'));
     assert($original_type !== $resolved_type);
     assert(!strpos($resolved_type, ']'));
