@@ -16,6 +16,7 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Tests\Traits\Core\LoggingTrait;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
@@ -93,6 +94,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
+  use LoggingTrait;
 
   /**
    * {@inheritdoc}
@@ -602,6 +604,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
+
+    $container
+      ->register('kernel_test.assertable_logger', AssertableLogger::class)
+      ->addTag('logger');
   }
 
   /**
@@ -627,6 +633,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * {@inheritdoc}
    */
   protected function assertPostConditions(): void {
+    $this->assertLogExpectationsMet();
+
     // Execute registered Drupal shutdown functions prior to tearing down.
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();
@@ -1008,6 +1016,15 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    */
   public function __sleep() {
     return [];
+  }
+
+  /**
+   * Get the AssertableLogger.
+   *
+   * @return \Drupal\KernelTests\AssertableLogger|null
+   */
+  protected function getAssertableLogger(): ?AssertableLogger {
+    return $this->container ? $this->container->get('kernel_test.assertable_logger') : NULL;
   }
 
 }
