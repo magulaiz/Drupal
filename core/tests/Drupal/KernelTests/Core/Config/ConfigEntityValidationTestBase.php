@@ -490,8 +490,8 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     ));
 
     $required_property_keys = $this->getRequiredPropertyKeys();
-    if (!$this->isFullyValidatable() && !empty($required_property_keys)) {
-      throw new \LogicException('No keys can be required when a config entity type is not fully validatable.');
+    if ($this->isFullyValidatable()) {
+      $this->assertEmpty($required_property_keys, 'No keys can be required when a config entity type is not fully validatable.');
     }
 
     $original_entity = clone $this->entity;

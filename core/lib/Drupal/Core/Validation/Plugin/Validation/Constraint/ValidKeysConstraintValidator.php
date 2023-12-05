@@ -45,7 +45,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       if (!empty(array_diff($constraint->allowedKeys, $mapping->getValidKeys()))) {
         throw new \InvalidArgumentException(sprintf(
           'The type \'%s\' explicitly specifies the allowed keys (%s), but they are not a subset of the statically defined mapping keys in the schema (%s).',
-          $this->context->getObject()->getDataDefinition()->getDataType(),
+          $mapping->getDataDefinition()->getDataType(),
           implode(', ', $constraint->allowedKeys),
           implode(', ', $mapping->getValidKeys())
         ));
@@ -194,7 +194,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
     $property_path_parts = explode('.', $property_path_mapping);
     // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
-    assert(!in_array('%type', $instructions));
+    assert(!in_array('%type', $instructions, TRUE));
 
     // The %key instruction can only be used on its own. In this case, there is
     // no need to fetch a value, only the string that was used as the key is
