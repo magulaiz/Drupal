@@ -185,6 +185,8 @@ function viewToModelStyleAttribute(styles, modelAttribute) {
  *             attributeName: 'data-view-mode'
  *             attributeValue: 'full'
  *             modelElements: [ 'drupalMedia' ]
+ *             modelAttributes:
+ *               drupalMediaType: ['image']
  *           - name: 'compact view mode'
  *             title: 'Compact view mode'
  *             attributeName: 'data-view-mode'
@@ -224,6 +226,9 @@ export default class DrupalElementStyleEditing extends Plugin {
      *   The value of the attribute in view.
      * @prop {string[]} modelElements
      *   A list of model elements that the style can be attached to.
+     * @prop {object} modelAttributes
+     *   An object containing the supported attributes on the model element or
+     *   elements.
      * @prop {string} [icon]
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
