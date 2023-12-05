@@ -38,18 +38,13 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
   protected static $modules = [
     'big_pipe',
     'block',
-    'block_content',
     'comment',
-    'config',
     'editor',
     'filter',
     'language',
     'help',
-    'menu_ui',
     'node',
-    'page_cache',
     'search',
-    'user',
     'views',
   ];
 
