@@ -343,6 +343,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @return string
    *   The value the expression resolves to, or the given expression if it
    *   cannot be resolved.
+   *
+   * @todo Validate the expression in https://www.drupal.org/project/drupal/issues/3392903
    */
   protected function resolveExpression(string $expression, array $data): string {
     assert(!str_contains($expression, '[') && !str_contains($expression, ']'));
