@@ -108,7 +108,7 @@ class MessageForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function resetForm(array $form, FormStateInterface $form_state) {
+  public function resetForm(array $form, FormStateInterface $form_state): void {
     $_SESSION['migration_messages_overview_filter'] = [];
   }
 

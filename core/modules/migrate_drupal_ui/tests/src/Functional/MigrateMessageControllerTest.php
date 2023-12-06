@@ -73,7 +73,7 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
    * - No source database connection with message tables.
    * - A source database connection with message tables.
    */
-  public function testOverview() {
+  public function testOverview(): void {
     $session = $this->assertSession();
 
     // First, test with no source database or message tables.
@@ -120,7 +120,7 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
    *   that does not have a description for a source ID in the values returned
    *   from fields().
    */
-  public function testDetail() {
+  public function testDetail(): void {
     $session = $this->assertSession();
 
     // Details page with invalid migration.
@@ -205,7 +205,7 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
    *
    * @see \Drupal\migrate\Plugin\migrate\id_map\Sql::ensureTables
    */
-  protected function createMigrateTables($migration_ids) {
+  protected function createMigrateTables(array $migration_ids): void {
     foreach ($migration_ids as $migration_id) {
       $map_table_name = "migrate_map_$migration_id";
       $message_table_name = "migrate_message_$migration_id";
@@ -387,7 +387,7 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
   /**
    * Create source tables.
    */
-  protected function createSourceTables() {
+  protected function createSourceTables(): void {
     $this->sourceDatabase->schema()->createTable('menu_custom', [
       'fields' => [
         'menu_name' => [

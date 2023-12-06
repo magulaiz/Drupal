@@ -55,7 +55,7 @@ class MigrateMessageControllerTest extends BrowserTestBase {
    * - No message tables.
    * - With message tables.
    */
-  public function testOverview() {
+  public function testOverview(): void {
     $session = $this->assertSession();
 
     // First, test with no source database or message tables.
@@ -85,7 +85,7 @@ class MigrateMessageControllerTest extends BrowserTestBase {
    *   that does not have a description for a source ID in the values returned
    *   from fields().
    */
-  public function testDetail() {
+  public function testDetail(): void {
     $session = $this->assertSession();
 
     // Details page with invalid migration.

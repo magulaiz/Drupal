@@ -7,11 +7,11 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseConnectionRefusedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Plugin\MigrationPluginManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 // cspell:ignore sourceid
@@ -22,44 +22,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class MigrateMessageController extends ControllerBase {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The migration plugin manager.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   */
-  protected $migrationPluginManager;
-
-  /**
    * Constructs a MigrateController.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   A database connection.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder service.
-   * @param \Drupal\migrate\Plugin\MigrationPluginManager $migration_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrationPluginManager
    *   The migration plugin manager.
    */
-  public function __construct(Connection $database, FormBuilderInterface $form_builder, MigrationPluginManager $migration_plugin_manager) {
-    $this->database = $database;
-    $this->formBuilder = $form_builder;
-    $this->migrationPluginManager = $migration_plugin_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database'),
-      $container->get('form_builder'),
-      $container->get('plugin.manager.migration'),
-    );
+  public function __construct(protected Connection $database, FormBuilderInterface $formBuilder, protected MigrationPluginManagerInterface $migrationPluginManager) {
+    $this->formBuilder = $formBuilder;
   }
 
   /**
@@ -69,7 +42,7 @@ class MigrateMessageController extends ControllerBase {
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  public function overview() {
+  public function overview(): array {
     // Check if there are migrate_message tables.
     $tables = $this->database->schema()->findTables('migrate_message_%');
     if (empty($tables)) {
@@ -134,7 +107,7 @@ class MigrateMessageController extends ControllerBase {
    * @return array
    *   A render array.
    */
-  public function details($migration_id) {
+  public function details(string $migration_id): array {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->migrationPluginManager->createInstance($migration_id);
 
@@ -263,7 +236,7 @@ class MigrateMessageController extends ControllerBase {
    *   An associative array with keys 'where' and 'args' or NULL if there were
    *   no filters set.
    */
-  protected function buildFilterQuery() {
+  protected function buildFilterQuery(): ?array {
     if (empty($_SESSION['migration_messages_overview_filter'])) {
       return NULL;
     }
@@ -312,7 +285,7 @@ class MigrateMessageController extends ControllerBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The translated title.
    */
-  public function title($migration_id) {
+  public function title(string $migration_id): TranslatableMarkup {
     return $this->t(
       'Messages of %migration',
       ['%migration' => $migration_id]
