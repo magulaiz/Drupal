@@ -34,12 +34,42 @@
     );
   };
   const unmaskButton = function unmaskButton(element) {
+    const trigger = Drupal.theme.triggerElement(element);
+    const wrapperButton = Drupal.theme.buttonWrapper(trigger);
+    element.insertAdjacentElement('afterend', wrapperButton);
+    trigger.addEventListener('click', () => {
+      return unmaskClickHandler(element, trigger);
+    });
+  };
+  /**
+   * Theme function for a button-wrapper.
+   *
+   * @param {HTMLElement} triggerElement
+   *   The trigger element.
+   *
+   * @return {HTMLElement}
+   *   A DOM Node.
+   */
+  Drupal.theme.buttonWrapper = (triggerElement) => {
     const wrapperButton = document.createElement('button');
     wrapperButton.setAttribute('type', 'button');
     wrapperButton.setAttribute('class', 'link password-wrapper');
-    const trigger = document.createElement('span');
-    wrapperButton.appendChild(trigger);
+    wrapperButton.appendChild(triggerElement);
     wrapperButton.setAttribute('style', 'margin-inline-start:10px');
+    return wrapperButton;
+  };
+
+  /**
+   * Theme function for a trigger element.
+   *
+   * @param {HTMLElement} element
+   *   The input element.
+   *
+   * @return {HTMLElement}
+   *   A DOM Node.
+   */
+  Drupal.theme.triggerElement = (element) => {
+    const trigger = document.createElement('span');
     trigger.setAttribute(
       'class',
       'action-link action-link--extrasmall action-link--icon-show toggle-password',
@@ -51,11 +81,9 @@
     trigger.setAttribute('aria-label', Drupal.t('make password visible'));
     trigger.setAttribute('role', 'switch');
     trigger.textContent = showPass;
-    element.insertAdjacentElement('afterend', wrapperButton);
-    trigger.addEventListener('click', () => {
-      return unmaskClickHandler(element, trigger);
-    });
+    return trigger;
   };
+
   Drupal.behaviors.passwordUnmask = {
     attach: function attach(context) {
       once(
