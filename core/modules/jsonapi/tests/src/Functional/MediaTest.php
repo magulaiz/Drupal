@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -369,6 +370,22 @@ class MediaTest extends ResourceTestBase {
       $parent->addCacheContexts(['user']);
     }
     return $parent->addCacheTags(['media:1']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+    $cache_contexts = [
+      // Cache contexts for JSON:API URL query parameters.
+      'url.query_args:fields',
+      'url.query_args:include',
+      // Drupal defaults.
+      'url.site',
+      'user',
+    ];
+    $entity_type = $this->entity->getEntityType();
+    return Cache::mergeContexts($cache_contexts, $entity_type->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
   }
 
   /**
