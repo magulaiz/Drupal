@@ -29,10 +29,11 @@
                 if (textFormat && maxSize) {
                   if (fileSize > maxSize) {
                     const maxSizeMB = maxSize / 1024 / 1024;
-                    // eslint-disable-next-line no-alert
-                    alert(
-                      `File size exceeds the allowed limit ${maxSizeMB} MB. Please select a smaller file`,
+                    const alertMessage = Drupal.t(
+                      'File size exceeds the allowed limit @size MB',
+                      { '@size': maxSizeMB },
                     );
+                    alert(alertMessage);
                     $(event.target).val('');
                   }
                 }
