@@ -5,6 +5,8 @@
  * Field API documentation.
  */
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+
 /**
  * @addtogroup hooks
  * @{
@@ -404,7 +406,7 @@ function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig 
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   The field being purged.
  */
-function hook_field_purge_field(\Drupal\Core\Field\FieldDefinitionInterface $field) {
+function hook_field_purge_field(FieldDefinitionInterface $field) {
   \Drupal::database()->delete('my_module_field_info')
     ->condition('id', $field->id())
     ->execute();
