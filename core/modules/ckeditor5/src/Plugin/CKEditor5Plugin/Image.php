@@ -28,6 +28,10 @@ class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     $config = $static_plugin_config;
     if ($editor->getImageUploadSettings()['status'] === TRUE) {
+      $image_upload_settings = $editor->getImageUploadSettings();
+      if (!empty($image_upload_settings['max_size'])) {
+        $image_upload_settings['max_size'] = min(Bytes::toNumber($image_upload_settings['max_size']), Environment::getUploadMaxSize());
+      }
       $config += [
         'drupalImageUpload' => [
           'uploadUrl' => self::getUrlWithReplacedCsrfTokenPlaceholder(
@@ -36,6 +40,7 @@ class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
           ),
           'withCredentials' => TRUE,
           'headers' => ['Accept' => 'application/json', 'text/javascript'],
+          'imageUploadSettings' => $image_upload_settings,
         ],
       ];
     }
