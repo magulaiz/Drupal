@@ -192,10 +192,7 @@ class FieldStorageAddForm extends FormBase {
             '#type' => 'radio',
             '#theme_wrappers' => ['form_element__new_storage_type'],
             '#title' => $option['label'],
-            '#description' => [
-              '#theme' => 'item_list',
-              '#items' => $unique_definitions[$selected_field_type][$option_key]['description'],
-            ],
+            '#description' => $this->getTextDescription($unique_definitions[$selected_field_type][$option_key]['description']),
             '#id' => Html::getClass($option['unique_identifier']),
             '#weight' => $option['weight'],
             '#parents' => ['field_options_wrapper'],
@@ -353,6 +350,23 @@ class FieldStorageAddForm extends FormBase {
       'entity_type' => $this->entityTypeId,
     ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
     return Url::fromRoute("field_ui.field_add_{$this->entityTypeId}", $route_parameters);
+  }
+
+  /**
+   * Constructs the string block from the list.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $text_list
+   *   The field name.
+   *
+   * @return string
+   *   The string block for description.
+   */
+  private function getTextDescription(array $text_list): string {
+    $string_block = "";
+    foreach ($text_list as $item) {
+      $string_block = $string_block . "• " . $item->getUntranslatedString() . "\n";
+    }
+    return nl2br($string_block);
   }
 
   /**
