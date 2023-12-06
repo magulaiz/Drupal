@@ -32,6 +32,15 @@ function template_preprocess_select(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id', 'name', 'size']);
   RenderElement::setAttributes($element, ['form-select']);
+  // If the element is not rendered through form api, then '#value' attribute
+  // won't be set.
+  // @see \Drupal\Core\Form\FormBuilder::handleInputElement.
+  // However, the '#value' attribute is required by the form_select_options
+  // to set the default value for the select element if specified. Set '#value'
+  // to '#default_value' to handle such cases.
+  if (!array_key_exists('#value', $element) && !empty($element['#default_value'])) {
+    $element['#value'] = $element['#default_value'];
+  }
 
   $variables['attributes'] = $element['#attributes'];
   $variables['options'] = form_select_options($element);
