@@ -4,6 +4,7 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Site\Settings;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
@@ -66,8 +67,9 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
 
     try {
+      $timeout = Settings::get('http_client_config')['timeout'] ?? 5;
       $response = $this->httpClient->request('GET', $url, [
-        RequestOptions::TIMEOUT => 5,
+        RequestOptions::TIMEOUT => $timeout,
       ]);
     }
     catch (TransferException $e) {

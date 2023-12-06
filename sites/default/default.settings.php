@@ -306,6 +306,23 @@ $settings['update_free_access'] = FALSE;
 # $settings['update_fetch_with_http_fallback'] = TRUE;
 
 /**
+ * Outgoing HTTP request timeout in seconds.
+ *
+ * The default for all requests using the HTTP Client is 0, which means
+ * the requests will never time out. Requests for oEmbed resources are
+ * set to 5 second timeout by default. Setting this value overrides the
+ * default timeout for all HTTP Client requests, including those for
+ * oEmbed resources. For oEmbed resources, some custom providers may require
+ * a longer timeout than the default 5 seconds.
+ * - $settings['http_client_config']['timeout'] = 10; Would increase this to
+ *   10 seconds as well as setting a default timeout for all HTTP Client
+ *   requests.
+ * You could conditionally set this to higher for CLI commands by checking
+ * if PHP_SAPI === 'cli'.
+ */
+# $settings['http_client_config']['timeout'] = 0;
+
+/**
  * External access proxy settings:
  *
  * If your site must access the Internet via a web proxy then you can enter the
