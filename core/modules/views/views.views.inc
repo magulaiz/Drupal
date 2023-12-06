@@ -99,6 +99,14 @@ function views_views_data() {
     ],
   ];
 
+  $data['views']['result_plural'] = [
+    'title' => t('Result summary (plural)'),
+    'help' => t('Shows result summary, for example the items per page, with support for having singular and plural text depending on the number of results.'),
+    'area' => [
+      'id' => 'result_plural',
+    ],
+  ];
+
   $data['views']['messages'] = [
     'title' => t('Messages'),
     'help' => t('Displays messages in an area.'),
