@@ -286,7 +286,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *
    * The configuration type name may contain one or more expressions to be
    * replaced, enclosed in square brackets like '[name]' or '[%parent.id]' and
-   * will follow the replacement rules defined by the …replaceVariable() method.
+   * will follow the replacement rules defined by the resolveExpression()
+   * method.
    *
    * @param string $type
    *   Configuration type, potentially with expressions in square brackets.
