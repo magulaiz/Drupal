@@ -105,17 +105,19 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
   }
 
   /**
-   * Computes message parameters for $conditionalMessage.
+   * Computes message parameters for dynamic type violations.
    *
    * @param \Drupal\Core\Config\Schema\Mapping $mapping
    *   A `type: mapping` instance, with values.
    *
    * @return array
    *   An array containing the following message parameters:
-   *   - '@original_dynamic_type': original dynamic type
+   *   - '@unresolved_dynamic_type': unresolved dynamic type
    *   - '@resolved_dynamic_type': resolved dynamic type
    *   - '@dynamic_type_property_path': (relative) property path of the condition
    *   - '@dynamic_type_property_value': value of the condition
+   *
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
    */
   protected static function getDynamicMessageParameters(Mapping $mapping): array {
     $definition = $mapping->getDataDefinition();
@@ -123,27 +125,29 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     $definition = $definition->toArray();
     assert(array_key_exists('mapping', $definition));
 
-    // The original mapping definition is used to determine the original type.
-    // e.g.:
-    // 1. `type: editor.settings.[%parent.editor]`
-    // 2. `type: editor.image_upload_settings.[status]`.
+    // The original mapping definition is used to determine the unresolved type.
+    // e.g. if $unresolved_type is …
+    // 1. `editor.settings.[%parent.editor]`, then $resolved_type could perhaps
+    //    `editor.settings.ckeditor5`, `editor.settings.unicorn`, etc.
+    // 2. `block.settings.[%parent.plugin]`, then $resolved_type could perhaps
+    //    be `block.settings.*`, `block.settings.system_branding_block`, etc.
     $parent_data_def = $mapping->getParent()->getDataDefinition();
-    $original_type = match (TRUE) {
+    $unresolved_type = match (TRUE) {
       $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$mapping->getName()]['type'],
       $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
       default => throw new \LogicException('Invalid config schema detected.'),
     };
     $resolved_type = $definition['type'];
 
-    // $original_type must be a dynamic type and the resolved type must be
+    // $unresolved_type must be a dynamic type and the resolved type must be
     // different and not be dynamic.
     // @see \Drupal\Core\Config\TypedConfigManager::buildDataDefinition()
-    assert(strpos($original_type, ']'));
-    assert($original_type !== $resolved_type);
+    assert(strpos($unresolved_type, ']'));
+    assert($unresolved_type !== $resolved_type);
     assert(!strpos($resolved_type, ']'));
 
     $message_parameters = [
-      '@original_dynamic_type' => $original_type,
+      '@unresolved_dynamic_type' => $unresolved_type,
       '@resolved_dynamic_type' => $resolved_type,
     ];
 
@@ -157,7 +161,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // Extract the variable values stored in the dynamic type.
     $matches = [];
     // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
-    assert(preg_match("/\[(.*)\]/U", $original_type, $matches) === 1);
+    assert(preg_match("/\[(.*)\]/U", $unresolved_type, $matches) === 1);
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
     $variable_value = $matches[1];
     // From the variable value, extract the instructions for where to retrieve a
