@@ -297,6 +297,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *   Resolved configuration type with all expressions resolved.
    */
   protected function resolveDynamicTypeName(string $type, array $data): string {
+    // Parse the expressions in the dynamic type, if any.
     if (preg_match_all("/\[(.*)\]/U", $type, $matches)) {
       // Build our list of '[value]' => replacement.
       $replace = [];
@@ -306,6 +307,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       return strtr($type, $replace);
     }
     else {
+      // No expressions: nothing to resolve.
       return $type;
     }
   }
