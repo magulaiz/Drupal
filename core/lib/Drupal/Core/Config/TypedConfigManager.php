@@ -294,7 +294,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *   Configuration data for the element.
    *
    * @return string
-   *   Resolved configuration type with all expressions resolved.
+   *   Configuration type name with all expressions resolved.
    */
   protected function resolveDynamicTypeName(string $type, array $data): string {
     // Parse the expressions in the dynamic type, if any.
