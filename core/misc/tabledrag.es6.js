@@ -467,12 +467,12 @@
     const self = this;
     const $item = $(item);
     // Add a class to the title link.
-    $item.find('td:first-of-type').find('a').addClass('menu-item__link');
+    $item.find('> td:first-of-type').find('a').addClass('menu-item__link');
     // Create the handle.
     const $handle = $(Drupal.theme('tableDragHandle'));
     // Insert the handle after indentations (if any).
     const $indentationLast = $item
-      .find('td:first-of-type')
+      .find('> td:first-of-type')
       .find('.js-indentation')
       .eq(-1);
     if ($indentationLast.length) {
