@@ -3,7 +3,6 @@
 namespace Drupal\Core\Security;
 
 use Drupal\Component\Utility\UrlHelper;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -57,7 +56,7 @@ class RequestSanitizer {
         'cookies' => 'Potentially unsafe keys removed from cookie parameters: %s',
       ];
       foreach ($bags as $bag => $message) {
-        if (static::processParameterBag($request->$bag, $safe_keys, $log_sanitized_keys, $bag, $message)) {
+        if (static::processParameterBag($request, $safe_keys, $log_sanitized_keys, $bag, $message)) {
           $update_globals = TRUE;
         }
       }
@@ -72,8 +71,8 @@ class RequestSanitizer {
   /**
    * Processes a request parameter bag.
    *
-   * @param \Symfony\Component\HttpFoundation\ParameterBag $bag
-   *   The parameter bag to process.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
    * @param string[] $safe_keys
    *   An array of keys to consider safe.
    * @param bool $log_sanitized_keys
@@ -87,9 +86,10 @@ class RequestSanitizer {
    * @return bool
    *   TRUE if the parameter bag has been sanitized, FALSE if not.
    */
-  protected static function processParameterBag(ParameterBag $bag, array $safe_keys, $log_sanitized_keys, $bag_name, $message) {
+  protected static function processParameterBag(Request $request, $safe_keys, $log_sanitized_keys, $bag_name, $message) {
     $sanitized = FALSE;
     $sanitized_keys = [];
+    $bag = $request->$bag_name;
     $bag->replace(static::stripDangerousValues($bag->all(), $safe_keys, $sanitized_keys));
     if (!empty($sanitized_keys)) {
       $sanitized = TRUE;
@@ -114,11 +114,23 @@ class RequestSanitizer {
       // Sanitize the destination parameter (which is often used for redirects)
       // to prevent open redirect attacks leading to other domains.
       if (UrlHelper::isExternal($destination)) {
-        // The destination is removed because it is an external URL.
-        $bag->remove('destination');
-        $sanitized = TRUE;
-        if ($log_sanitized_keys) {
-          trigger_error(sprintf('Potentially unsafe destination removed from %s parameter bag because it points to an external URL.', $bag_name));
+        // Under certain conditions, for example domain based language
+        // negotiation, the destination might be an absolute URL pointing to the
+        // same domain as the request. In these cases the destination should not
+        // be stripped.
+        try {
+          $is_local = UrlHelper::externalIsLocal($destination, $request->getSchemeAndHttpHost());
+        }
+        catch (\InvalidArgumentException $e) {
+          $is_local = FALSE;
+        }
+        if (!$is_local) {
+          // The destination is removed because it is an external URL.
+          $bag->remove('destination');
+          $sanitized = TRUE;
+          if ($log_sanitized_keys) {
+            trigger_error(sprintf('Potentially unsafe destination removed from %s parameter bag because it points to an external URL.', $bag_name));
+          }
         }
       }
     }

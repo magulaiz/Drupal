@@ -286,6 +286,41 @@ class RequestSanitizerTest extends UnitTestCase {
   }
 
   /**
+   * Tests that absolute destinations matching the current http host is allowed.
+   *
+   * Domain based URL language negotiation causes all destinations to be
+   * absolute.
+   */
+  public function testLocalAbsoluteDestination() {
+    $request = $this->createRequestForTesting(['destination' => 'http://example.com/redirect']);
+    $request->server->set('SERVER_NAME', 'example.com');
+    $request->server->set('HTTP_HOST', 'example.com');
+    $request->server->set('SERVER_PORT', 80);
+
+    $request = RequestSanitizer::sanitize($request, [], TRUE);
+
+    $this->assertNull($request->request->get('destination', NULL));
+    $this->assertSame('http://example.com/redirect', $request->query->get('destination', NULL));
+    $this->assertArrayNotHasKey('destination', $_POST);
+    $this->assertArrayHasKey('destination', $_REQUEST);
+    $this->assertArrayHasKey('destination', $_GET);
+
+    // Ensure you can redirect from http to https.
+    $request = $this->createRequestForTesting(['destination' => 'https://example.com/redirect']);
+    $request->server->set('SERVER_NAME', 'example.com');
+    $request->server->set('HTTP_HOST', 'example.com');
+    $request->server->set('SERVER_PORT', 80);
+
+    $request = RequestSanitizer::sanitize($request, [], TRUE);
+
+    $this->assertNull($request->request->get('destination', NULL));
+    $this->assertSame('https://example.com/redirect', $request->query->get('destination', NULL));
+    $this->assertArrayNotHasKey('destination', $_POST);
+    $this->assertArrayHasKey('destination', $_REQUEST);
+    $this->assertArrayHasKey('destination', $_GET);
+  }
+
+  /**
    * Creates a request and sets PHP globals for testing.
    *
    * @param array $query
