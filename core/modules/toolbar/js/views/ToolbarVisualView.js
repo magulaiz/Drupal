@@ -115,6 +115,7 @@
       this.$el.toggleClass('toolbar-oriented', isOriented);
     },
     updateTrayOrientation: function updateTrayOrientation() {
+      var _this = this;
       var orientation = this.model.get('orientation');
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
       $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
@@ -124,9 +125,11 @@
       var iconAntiClass = "toolbar-icon-toggle-".concat(antiOrientation);
       var $orientationToggle = this.$el.find('.toolbar-toggle-orientation').toggle(this.model.get('isTrayToggleVisible'));
       var $orientationToggleButton = $orientationToggle.find('button');
-      $orientationToggleButton[0].value = antiOrientation;
+      $orientationToggleButton.each(function (index, item) {
+        item.value = antiOrientation;
+        item.textContent = _this.strings[antiOrientation];
+      });
       $orientationToggleButton.attr('title', this.strings[antiOrientation]).removeClass(iconClass).addClass(iconAntiClass);
-      $orientationToggleButton[0].textContent = this.strings[antiOrientation];
       var dir = document.documentElement.dir;
       var edge = dir === 'rtl' ? 'right' : 'left';
       $trays.removeAttr('data-offset-left data-offset-right data-offset-top');

@@ -289,12 +289,14 @@
           .find('.toolbar-toggle-orientation')
           .toggle(this.model.get('isTrayToggleVisible'));
         const $orientationToggleButton = $orientationToggle.find('button');
-        $orientationToggleButton[0].value = antiOrientation;
+        $orientationToggleButton.each((index, item) => {
+          item.value = antiOrientation;
+          item.textContent = this.strings[antiOrientation];
+        });
         $orientationToggleButton
           .attr('title', this.strings[antiOrientation])
           .removeClass(iconClass)
           .addClass(iconAntiClass);
-        $orientationToggleButton[0].textContent = this.strings[antiOrientation];
 
         // Update data offset attributes for the trays.
         const dir = document.documentElement.dir;
