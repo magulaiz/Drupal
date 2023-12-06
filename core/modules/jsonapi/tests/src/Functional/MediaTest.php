@@ -31,6 +31,13 @@ class MediaTest extends ResourceTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The entity storage.
+   *
+   * @var \Drupal\Core\Entity\RevisionableStorageInterface
+   */
+  protected $entityStorage;
+
+  /**
    * {@inheritdoc}
    */
   protected static $entityTypeId = 'media';
