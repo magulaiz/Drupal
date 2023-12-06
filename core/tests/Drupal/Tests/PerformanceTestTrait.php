@@ -344,8 +344,7 @@ trait PerformanceTestTrait {
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
       foreach ($query_events as $key => $event) {
-        // Get the first and third part of the database query, usually query
-        // type and table.
+        // Use the first part of the database query for the span name.
         $query_span = $tracer->spanBuilder(substr($event->queryString, 0, 64))
           ->setStartTimestamp((int) ($event->startTime * $nanoseconds_per_second))
           ->setAttribute('query.string', $event->queryString)
