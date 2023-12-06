@@ -240,13 +240,6 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           $component['#attributes']['data-layout-block-uuid'] = $uuid;
           $component['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
           $component['#contextual_links'] = [
-          $component = &$build[$region][$uuid];
-
-          $component['#attributes']['class'][] = 'js-layout-builder-block';
-          $component['#attributes']['class'][] = 'layout-builder-block';
-          $component['#attributes']['data-layout-block-uuid'] = $uuid;
-          $component['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
-          $component['#contextual_links'] = [
             'layout_builder_block' => [
               'route_parameters' => [
                 'section_storage_type' => $storage_type,
