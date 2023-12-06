@@ -9,6 +9,8 @@
   --is-wide: clamp(0px, var(--base-size) - var(--breakpoint-wide), 1px);
   --is-medium: calc(clamp(0px, var(--base-size) - var(--breakpoint-medium), 1px) - var(--is-wide));
   --is-small: calc(1px - (var(--is-medium) + var(--is-wide)));
+  
+  position: relative;
 }
 
 .ck.ck-responsive-form.ck-text-alternative-form--with-decorative-toggle {
@@ -19,10 +21,6 @@
   width: 100%;
 }
 
-.ck .image,
-.ck .image-inline {
-  position: relative;
-}
 .ck .image-alternative-text-missing-wrapper {
   position: absolute;
   right: 10px;
