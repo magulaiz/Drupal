@@ -103,12 +103,11 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     // 'view own unpublished media' permission.
     $this->grantPermissions($role, ['view media']);
     $this->drupalGet('media/' . $user_media->id());
-    $this->assertNoCacheContext('user');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $user_media->setUnpublished()->save();
     $this->drupalGet('media/' . $user_media->id());
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(403);
     $access_result = $user_media->access('view', NULL, TRUE);
     $this->assertSame("The user must be the owner and the 'view own unpublished media' permission is required when the media item is unpublished.", $access_result->getReason());
@@ -131,10 +130,10 @@ class MediaAccessTest extends MediaFunctionalTestBase {
 
     // Test 'edit own BUNDLE media' and 'delete own BUNDLE media' permissions.
     $this->drupalGet('media/' . $user_media->id() . '/edit');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(403);
     $this->drupalGet('media/' . $user_media->id() . '/delete');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(403);
     $permissions = [
       'edit own ' . $user_media->bundle() . ' media',
@@ -152,10 +151,10 @@ class MediaAccessTest extends MediaFunctionalTestBase {
 
     // Test 'edit any BUNDLE media' and 'delete any BUNDLE media' permissions.
     $this->drupalGet('media/' . $media->id() . '/edit');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(403);
     $this->drupalGet('media/' . $media->id() . '/delete');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(403);
     $permissions = [
       'edit any ' . $media->bundle() . ' media',
@@ -399,11 +398,11 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $assert_session->pageTextNotContains($child_title);
 
     // User with just the 'view media' permission should not be able to see the
-    // child media item. The 'user' cache context should not be added in this
-    // case.
+    // child media item. The 'user' cache context should be added in this
+    // case because unpublished media can be viewed by their owners.
     $this->drupalLogin($view_user);
     $this->drupalGet($media_parent->toUrl());
-    $this->assertNoCacheContext('user');
+    $this->assertCacheContext('user');
     $assert_session->pageTextNotContains($child_title);
   }
 
