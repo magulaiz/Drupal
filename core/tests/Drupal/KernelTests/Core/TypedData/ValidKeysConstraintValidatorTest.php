@@ -68,7 +68,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests ValidKeys constraint validator detecting unsupported keys.
+   * Tests detecting unsupported keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$invalidKeyMessage
    */
@@ -98,7 +98,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests ValidKeys constraint validator detecting unknown keys.
+   * Tests detecting unknown keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
    */
@@ -191,8 +191,10 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     $violations = $typed_config->create(clone $definition, $value)->validate();
     $this->assertCount(0, $violations);
 
-    // If in the mapping definition some keys that do NOT have
-    // `requiredKey: false` set, then they MUST be set.
+    // If, in the mapping definition, some keys do NOT have
+    // `requiredKey: false` set, then they MUST be set. In other
+    // words, all keys are required unless they individually
+    // specify otherwise.
     // First test without changing the value: no error should occur because all
     // keys passed to the ValidKeys constraint have a value.
     unset($definition['mapping']['south']['requiredKey']);

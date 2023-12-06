@@ -79,8 +79,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
     // For example, `block.block.*:settings` has the following dynamically valid
     // keys when the block plugin is `system_branding_block`: use_site_logo,
-    // use_site_name and use_site_slogan. But if the used block plugin is
-    // `local_tasks_block`, then the dynamically valid keys are: primary,
+    // use_site_name and use_site_slogan. But if the `local_tasks_block`
+    // plugin is being used, then the dynamically valid keys are: primary,
     // secondary.
     // @see \Drupal\KernelTests\Config\Schema\MappingTest::providerMappingInterpretation()
     $dynamically_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
@@ -109,7 +109,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     assert(array_key_exists('mapping', $definition));
 
     // The original mapping definition is used to determine the original type.
-    // f.e.:
+    // e.g.:
     // 1. `type: editor.settings.[%parent.editor]`
     // 2. `type: editor.image_upload_settings.[status]`.
     $parent_data_def = $mapping->getParent()->getDataDefinition();
