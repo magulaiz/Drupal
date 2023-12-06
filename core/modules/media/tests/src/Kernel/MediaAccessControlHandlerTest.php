@@ -160,7 +160,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions','user'],
+      ['user.permissions', 'user'],
       ['media:1'],
       TRUE,
     ];
