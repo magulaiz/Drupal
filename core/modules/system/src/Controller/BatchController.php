@@ -55,6 +55,10 @@ class BatchController implements ContainerInjectionInterface {
       return $output;
     }
     elseif (isset($output)) {
+      $output['batch_messages'] = [
+        '#type' => 'status_messages',
+        '#include_fallback' => TRUE,
+      ];
       $title = $output['#title'] ?? NULL;
       $page = [
         '#type' => 'page',
