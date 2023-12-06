@@ -539,9 +539,13 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * Determines the config entity mapping properties with required keys.
    *
+   * This refers only to the top-level properties of the config entity which are expected to be mappings, and of those mappings, only the ones which have required keys.
+   *
    * @return string[]
-   *   The config entity mapping properties with one or more required keys, plus
-   *   the corresponding expected validation error message.
+   *   An array of key-value pairs, with:
+   *   - keys: names of the config entity properties which are mappings that
+   *     contain required keys.
+   *   - values: the corresponding expected validation error message.
    */
   protected function getRequiredPropertyKeys(): array {
     // If a config entity type is not fully validatable, no mapping property
