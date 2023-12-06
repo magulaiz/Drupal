@@ -101,7 +101,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
           ['entity.user.edit_form'],
           ['entity.user.change_pass_form'],
           ['entity.user.change_email_form'],
-        ]
+        ],
       ],
     ];
   }
