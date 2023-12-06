@@ -36,6 +36,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
 
     $mapping = $this->context->getObject();
     assert($mapping instanceof Mapping);
+    $resolved_type = $mapping->getDataDefinition()->getDataType();
 
     if ($constraint->allowedKeys === '<infer>') {
       $valid_keys = $mapping->getValidKeys();
@@ -45,7 +46,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       if (!empty(array_diff($constraint->allowedKeys, $valid_keys))) {
         throw new InvalidArgumentException(sprintf(
           'The type \'%s\' explicitly specifies the allowed keys (%s), but they are not a subset of the statically defined mapping keys in the schema (%s).',
-          $mapping->getDataDefinition()->getDataType(),
+          $resolved_type,
           implode(', ', $constraint->allowedKeys),
           implode(', ', $valid_keys)
         ));
@@ -56,8 +57,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       throw new InvalidArgumentException("'$constraint->allowedKeys' is not a valid set of allowed keys.");
     }
 
-    $dynamically_valid_keys = array_merge(...array_values($mapping->getDynamicallyValidKeys()));
-    $other_type_valid_keys = array_diff($dynamically_valid_keys, $valid_keys);
+    $dynamically_valid_keys = $mapping->getDynamicallyValidKeys();
+    $all_dynamically_valid_keys = array_merge(...array_values($dynamically_valid_keys));
 
     // Statically valid: keys that are valid for all possible types matching the
     // type definition of this mapping.
@@ -65,7 +66,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // keys: id, label, label_display, provider, status, info, view_mode and
     // context_mapping.
     // @see \Drupal\KernelTests\Config\Schema\MappingTest::providerMappingInterpretation()
-    $invalid_keys = array_diff(array_keys($value), $valid_keys, $other_type_valid_keys);
+    $invalid_keys = array_diff(array_keys($value), $valid_keys, $all_dynamically_valid_keys);
     foreach ($invalid_keys as $key) {
       $this->context->buildViolation($constraint->invalidKeyMessage)
         ->setParameter('@key', $key)
@@ -77,15 +78,29 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // for the actually resolved type definition of this mapping (in addition to
     // the statically valid keys).
     // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
-    // For example, `block.block.*:settings` has the following dynamically valid
-    // keys when the block plugin is `system_branding_block`: use_site_logo,
-    // use_site_name and use_site_slogan. But if the `local_tasks_block`
-    // plugin is being used, then the dynamically valid keys are: primary,
-    // secondary.
-    // @see \Drupal\KernelTests\Config\Schema\MappingTest::providerMappingInterpretation()
-    $dynamically_invalid_keys = array_intersect(array_keys($value), $other_type_valid_keys);
-    foreach ($dynamically_invalid_keys as $key) {
-      $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
+    if (!empty($all_dynamically_valid_keys)) {
+      // For example, `block.block.*:settings` has the following dynamically valid
+      // keys when the block plugin is `system_branding_block`:
+      // - use_site_logo
+      // - use_site_name
+      // - use_site_slogan
+      // @see \Drupal\KernelTests\Config\Schema\MappingTest::providerMappingInterpretation()
+      $resolved_type_dynamically_valid_keys = $dynamically_valid_keys[$resolved_type] ?? [];
+      // But if the `local_tasks_block` plugin is being used, then the
+      // dynamically valid keys are:
+      // - primary
+      // - secondary
+      // And for the `block.settings.search_form_block` plugin the dynamically
+      // valid keys are:
+      // - page_id
+      // To help determine which keys are dynamically invalid, gather all keys
+      // except for those for the actual resolved type of this mapping.
+      // @see \Drupal\Core\Config\Schema\Mapping::getPossibleTypes()
+      $other_types_valid_keys = array_diff($all_dynamically_valid_keys, $resolved_type_dynamically_valid_keys);
+      $dynamically_invalid_keys = array_intersect(array_keys($value), $other_types_valid_keys);
+      foreach ($dynamically_invalid_keys as $key) {
+        $this->context->addViolation($constraint->dynamicInvalidKeyMessage, ['@key' => $key] + self::getDynamicMessageParameters($mapping));
+      }
     }
   }
 
