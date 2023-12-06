@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
@@ -30,7 +31,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user'];
+  protected static $modules = ['user', 'language'];
 
   /**
    * {@inheritdoc}
@@ -38,6 +39,8 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
+    // Make the site multilingual to have a working language field handler.
+    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spainish title'])->save();
     $this->installEntitySchema('user');
 
     $role_with_access = Role::create([

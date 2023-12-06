@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\RoleInterface;
 
 /**
@@ -227,6 +228,64 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/edit');
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/delete');
     }
+    // Ensure that both the language table column as well as the language
+    // exposed filter are just visible on multilingual sites.
+    $this->assertSession()->fieldNotExists('langcode');
+    $this->assertEquals(0, count($this->cssSelect('td.views-field-langcode')));
+    $this->assertEquals(0, count($this->cssSelect('td.views-field-langcode')));
+  }
+
+  /**
+   * Tests content admin page multilingual.
+   */
+  public function testContentAdminPageMultilingual() {
+    $this->drupalLogin($this->adminUser);
+
+    \Drupal::service('module_installer')->install(['language']);
+    ConfigurableLanguage::create([
+      'id' => 'es',
+      'label' => 'Spain',
+    ])->save();
+
+    $this->drupalCreateNode(['type' => 'page', 'title' => 'English title'])
+      ->addTranslation('es')
+      ->setTitle('Spanish title')
+      ->save();
+
+    $this->drupalGet('admin/content');
+
+    // Ensure that both the language table column as well as the language
+    // exposed filter are visible on multilingual sites.
+    $this->assertSession()->fieldExists('langcode');
+    $this->assertEquals(2, count($this->cssSelect('td.views-field-langcode')));
+    $this->assertEquals(2, count($this->cssSelect('td.views-field-langcode')));
+
+    $this->assertSession()->pageTextContains('English title');
+    $this->assertSession()->pageTextContains('Spanish title');
+
+    $this->drupalGet('admin/content', ['query' => ['langcode' => '***LANGUAGE_site_default***']]);
+    $this->assertSession()->pageTextContains('English title');
+    $this->assertSession()->pageTextNotContains('Spanish title');
+
+    $this->drupalGet('admin/content', ['query' => ['langcode' => 'en']]);
+    $this->assertSession()->pageTextContains('English title');
+    $this->assertSession()->pageTextNotContains('Spanish title');
+
+    $this->drupalGet('admin/content', ['query' => ['langcode' => 'und']]);
+    $this->assertSession()->pageTextNotContains('English title');
+    $this->assertSession()->pageTextNotContains('Spanish title');
+
+    $this->drupalGet('admin/content', ['query' => ['langcode' => 'zxx']]);
+    $this->assertSession()->pageTextNotContains('English title');
+    $this->assertSession()->pageTextNotContains('Spanish title');
+
+    $this->drupalGet('admin/content', ['query' => ['langcode' => html_entity_decode('***LANGUAGE_language_interface***')]]);
+    $this->assertSession()->pageTextContains('English title');
+    $this->assertSession()->pageTextNotContains('Spanish title');
+
+    $this->drupalGet('es/admin/content', ['query' => ['langcode' => html_entity_decode('***LANGUAGE_language_interface***')]]);
+    $this->assertSession()->pageTextNotContains('English title');
+    $this->assertSession()->pageTextContains('Spanish title');
   }
 
 }
