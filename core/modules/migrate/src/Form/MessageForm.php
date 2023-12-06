@@ -34,6 +34,7 @@ class MessageForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $session_filters = $this->getRequest()->getSession()->get('migration_messages_overview_filter', []);
     $form['filters'] = [
       '#type' => 'details',
       '#open' => TRUE,
@@ -43,12 +44,12 @@ class MessageForm extends FormBase {
     $form['filters']['message'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Message'),
-      '#default_value' => $_SESSION['migration_messages_overview_filter']['message']['value'] ?? '',
+      '#default_value' => $session_filters['message']['value'] ?? '',
     ];
     $form['filters']['severity'] = [
       '#type' => 'select',
       '#title' => $this->t('Severity level'),
-      '#default_value' => $_SESSION['migration_messages_overview_filter']['severity']['value'] ?? [],
+      '#default_value' => $session_filters['severity']['value'] ?? [],
       '#options' => [
         MigrationInterface::MESSAGE_ERROR => $this->t('Error'),
         MigrationInterface::MESSAGE_WARNING => $this->t('Warning'),
@@ -89,15 +90,17 @@ class MessageForm extends FormBase {
       'where' => 'msg.level = ?',
       'type' => 'array',
     ];
+    $session_filters = $this->getRequest()->getSession()->get('migration_messages_overview_filter', []);
     foreach ($filters as $name => $filter) {
       if ($form_state->hasValue($name)) {
-        $_SESSION['migration_messages_overview_filter'][$name] = [
+        $session_filters[$name] = [
           'where' => $filter['where'],
           'value' => $form_state->getValue($name),
           'type' => $filter['type'],
         ];
       }
     }
+    $this->getRequest()->getSession()->set('migration_messages_overview_filter', $session_filters);
   }
 
   /**

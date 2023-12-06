@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 // cspell:ignore sourceid
@@ -103,11 +104,13 @@ class MigrateMessageController extends ControllerBase {
    *
    * @param string $migration_id
    *   A migration ID.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
    *
    * @return array
    *   A render array.
    */
-  public function details(string $migration_id): array {
+  public function details(string $migration_id, Request $request): array {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->migrationPluginManager->createInstance($migration_id);
 
@@ -182,7 +185,7 @@ class MigrateMessageController extends ControllerBase {
     $query->leftJoin($map_table, 'map', 'msg.source_ids_hash = map.source_ids_hash');
     $query->fields('msg');
     $query->fields('map');
-    $filter = $this->buildFilterQuery();
+    $filter = $this->buildFilterQuery($request);
     if (!empty($filter['where'])) {
       $query->where($filter['where'], $filter['args']);
     }
@@ -232,18 +235,22 @@ class MigrateMessageController extends ControllerBase {
   /**
    * Builds a query for migrate message administration.
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
    * @return array|null
    *   An associative array with keys 'where' and 'args' or NULL if there were
    *   no filters set.
    */
-  protected function buildFilterQuery(): ?array {
-    if (empty($_SESSION['migration_messages_overview_filter'])) {
+  protected function buildFilterQuery(Request $request): ?array {
+    $session_filters = $request->getSession()->get('migration_messages_overview_filter', []);
+    if (empty($session_filters)) {
       return NULL;
     }
 
     // Build query.
     $where = $args = [];
-    foreach ($_SESSION['migration_messages_overview_filter'] as $filter) {
+    foreach ($session_filters as $filter) {
       $filter_where = [];
 
       switch ($filter['type']) {
