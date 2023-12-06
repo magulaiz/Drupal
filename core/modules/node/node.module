@@ -6,6 +6,7 @@
  *
  * Modules and scripts may programmatically submit nodes using the usual form
  * API pattern.
+ * An extra line.
  */
 
 use Drupal\Component\Utility\Environment;
