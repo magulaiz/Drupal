@@ -18,7 +18,7 @@ class MigrateMessageController extends BaseMessageController {
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  public function overview() {
+  public function overview(): array {
     $build = parent::overview();
 
     $description['help'] = [
