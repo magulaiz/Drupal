@@ -13,6 +13,8 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 
+// cspell:ignore Anmelden
+
 /**
  * Tests BrowserTestBase functionality.
  *
@@ -32,6 +34,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
     'form_test',
     'system_test',
     'node',
+    'language',
+    'locale',
   ];
 
   /**
@@ -170,6 +174,55 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->getSession()->getPage()->fillField('edit-title-0-value--2', 'form2');
     $this->submitForm([], 'Save', 'node-page-form--2');
     $this->assertSession()->pageTextContains('Page form2 has been created.');
+  }
+
+  /**
+   * Tests drupalLogin() when the site has more than one language.
+   */
+  public function testDrupalLoginMultiLanguage() {
+    $account = $this->drupalCreateUser([
+      'administer languages',
+      'translate interface',
+    ]);
+    $this->drupalLogin($account);
+
+    $langcode = 'de';
+    $edit = [
+      'predefined_langcode' => $langcode,
+    ];
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
+
+    // Change the default language.
+    $edit = [
+      'site_default_language' => 'de',
+    ];
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm($edit, 'Save configuration');
+
+    // Add string.
+    t('Log in', [], ['langcode' => $langcode])->render();
+    // Reset locale cache.
+    $this->container->get('string_translation')->reset();
+    // Add string.
+    $search = [
+      'string' => 'Log in',
+      'langcode' => 'de',
+      'translation' => 'untranslated',
+    ];
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
+    $this->assertSession()->pageTextContains('Log in');
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
+    $lid = $textarea->getAttribute('name');
+    $edit = [
+      $lid => 'Anmelden',
+    ];
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
+
+    $this->drupalLogout();
+    $this->drupalLogin($account);
   }
 
   /**
