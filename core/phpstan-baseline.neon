@@ -345,7 +345,7 @@ parameters:
 			path: lib/Drupal/Core/Config/ExtensionInstallStorage.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Config\\\\TypedConfigManager\\:\\:replaceVariable\\(\\) should return string but return statement is missing\\.$#"
+			message: "#^Method Drupal\\\\Core\\\\Config\\\\TypedConfigManager\\:\\:resolveExpression\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Config/TypedConfigManager.php
 
