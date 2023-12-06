@@ -26,7 +26,11 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
+ *   constraints = {
+ *    "ReferenceAccess" = {},
+ *    "FileValidation" = {},
+ *    "FileDescriptionRequired" = {},
+ *   },
  * )
  */
 class FileItem extends EntityReferenceItem {
@@ -51,7 +55,8 @@ class FileItem extends EntityReferenceItem {
       'file_extensions' => 'txt',
       'file_directory' => '[date:custom:Y]-[date:custom:m]',
       'max_filesize' => '',
-      'description_field' => 0,
+      'description_field' => FALSE,
+      'description_field_required' => FALSE,
     ] + parent::defaultFieldSettings();
   }
 
@@ -192,6 +197,18 @@ class FileItem extends EntityReferenceItem {
       '#default_value' => $settings['description_field'] ?? '',
       '#description' => $this->t('The description field allows users to enter a description about the uploaded file.'),
       '#weight' => 11,
+    ];
+
+    $element['description_field_required'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Require the <em>Description</em> field'),
+      '#default_value' => $settings['description_field_required'] ?? FALSE,
+      '#weight' => 12,
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[description_field]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
     return $element;
