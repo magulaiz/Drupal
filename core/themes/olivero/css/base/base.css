@@ -156,6 +156,3 @@ ul {
   list-style-image: none;
 }
 
-ul:not([type]) {
-  list-style-type: disc;
-}

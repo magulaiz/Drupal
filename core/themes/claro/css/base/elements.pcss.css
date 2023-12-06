@@ -157,17 +157,11 @@ ul {
   margin-inline: 1.5em 0;
   padding-inline-start: 0;
   list-style-image: none;
-  &:not([type]) {
-     list-style-type: disc;
-  }
 }
 ol {
   margin-block: 0.25em;
   margin-inline: 2em 0;
   padding: 0;
-  &:not([type]) {
-    list-style-type: decimal;
-  }
 }
 
 /**

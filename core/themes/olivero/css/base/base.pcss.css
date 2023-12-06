@@ -136,7 +136,4 @@ ul {
   margin-inline-end: 0;
   padding-inline-start: 0;
   list-style-image: none;
-  &:not([type]) {
-     list-style-type: disc;
-  }
 }
