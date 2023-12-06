@@ -22,17 +22,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserPasswordChangeForm extends ContentEntityForm {
 
   /**
-     * The Password Hasher.
-     *
-     * @var \Drupal\Core\Password\PasswordInterface
-     */
+   * The Password Hasher.
+   *
+   * @var \Drupal\Core\Password\PasswordInterface
+   */
   protected $passwordHasher;
 
   /**
    * Constructs a UserPasswordForm object.
    *
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\Password $password_hasher
    *   The password hasher.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(EntityRepositoryInterface $entity_repository, PasswordInterface $password_hasher, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
@@ -95,7 +101,7 @@ class UserPasswordChangeForm extends ContentEntityForm {
       $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
         '%pass' => $this->t('Password'),
         ':url' => Url::fromRoute('user.pass')->toString(),
-        ]);
+      ]);
     }
 
     $form['account']['pass'] = [
