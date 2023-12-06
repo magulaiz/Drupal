@@ -72,7 +72,6 @@ class UserTimeZoneTest extends BrowserTestBase {
 
     // Change user time zone to Santiago time.
     $edit = [];
-    $edit['mail'] = $web_user->getEmail();
     $edit['timezone'] = 'America/Santiago';
     $this->drupalGet("user/" . $web_user->id() . "/edit");
     $this->submitForm($edit, 'Save');

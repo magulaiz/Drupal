@@ -44,7 +44,7 @@ use Drupal\user\UserInterface;
  *       "cancel" = "Drupal\user\Form\UserCancelForm",
  *       "register" = "Drupal\user\RegisterForm",
  *       "email" = "Drupal\user\Form\UserEmailChangeForm",
- *       "pass" = "Drupal\user\Form\UserPasswordChangeForm"
+ *       "pass" = "Drupal\user\Form\UserPasswordChangeForm",
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },
