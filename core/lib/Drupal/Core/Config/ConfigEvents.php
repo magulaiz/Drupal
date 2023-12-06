@@ -88,8 +88,13 @@ final class ConfigEvents {
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber::onConfigImporterValidate().
    *
    * @var string
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *    Use \Drupal\Core\Config\ConfigImporterEvents::IMPORT_VALIDATE instead.
+   *
+   * @see https://www.drupal.org/node/3406105
    */
-  const IMPORT_VALIDATE = 'config.importer.validate';
+  const IMPORT_VALIDATE = ConfigImporterEvents::IMPORT_VALIDATE;
 
   /**
    * Name of the event fired when importing configuration to target storage.
@@ -105,8 +110,13 @@ final class ConfigEvents {
    * @see \Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber::onConfigImporterImport().
    *
    * @var string
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *    Use \Drupal\Core\Config\ConfigImporterEvents::IMPORT instead.
+   *
+   * @see https://www.drupal.org/node/3406105
    */
-  const IMPORT = 'config.importer.import';
+  const IMPORT = ConfigImporterEvents::IMPORT;
 
   /**
    * Name of event fired when missing content dependencies are detected.
@@ -122,8 +132,14 @@ final class ConfigEvents {
    *
    * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
    * @see \Drupal\Core\Config\Importer\MissingContentEvent
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *    Use \Drupal\Core\Config\ConfigImporterEvents::IMPORT_MISSING_CONTENT
+   *    instead.
+   *
+   * @see https://www.drupal.org/node/3406105
    */
-  const IMPORT_MISSING_CONTENT = 'config.importer.missing_content';
+  const IMPORT_MISSING_CONTENT = ConfigImporterEvents::IMPORT_MISSING_CONTENT;
 
   /**
    * Name of event fired to collect information on all config collections.
@@ -173,8 +189,14 @@ final class ConfigEvents {
    * @see \Drupal\Core\Config\ImportStorageTransformer::transform
    *
    * @var string
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *    Use \Drupal\Core\Config\ConfigImporterEvents::STORAGE_TRANSFORM_IMPORT
+   *    instead.
+   *
+   * @see https://www.drupal.org/node/3406105
    */
-  const STORAGE_TRANSFORM_IMPORT = 'config.transform.import';
+  const STORAGE_TRANSFORM_IMPORT = ConfigImporterEvents::STORAGE_TRANSFORM_IMPORT;
 
   /**
    * Name of the event fired when the export storage is used.
@@ -200,7 +222,13 @@ final class ConfigEvents {
    * @see \Drupal\Core\Config\ExportStorageManager::getStorage
    *
    * @var string
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *    Use \Drupal\Core\Config\ConfigImporterEvents::STORAGE_TRANSFORM_EXPORT
+   *    instead.
+   *
+   * @see https://www.drupal.org/node/3406105
    */
-  const STORAGE_TRANSFORM_EXPORT = 'config.transform.export';
+  const STORAGE_TRANSFORM_EXPORT = ConfigImporterEvents::STORAGE_TRANSFORM_EXPORT;
 
 }
