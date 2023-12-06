@@ -518,4 +518,17 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     $this->processPostTransactionCallbacks();
   }
 
+  /**
+   * Destroys all the items in the stack.
+   *
+   * This is used by \Drupal\Core\Database\Connection::__destruct()
+   *
+   * @internal
+   */
+  public function destroyStack(): void {
+    foreach (array_reverse($this->stack()) as $id => $item) {
+      $this->removeStackItem($id);
+    }
+  }
+
 }
