@@ -39,7 +39,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * @return string
    *   The form field name.
    */
-  public function form_element_name() {
+  public function form_element_name(): string {
     return $this->field;
   }
 
@@ -54,7 +54,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * @return string
    *   The ID of a media entity.
    */
-  public function form_element_row_id($row_id) {
+  public function form_element_row_id(int $row_id): string {
     return $this->view->result[$row_id]->mid;
   }
 
