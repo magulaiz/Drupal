@@ -655,7 +655,7 @@ function template_preprocess_views_view_table(&$variables) {
 
   // Add the caption to the list if set.
   if (!empty($handler->options['caption'])) {
-    $variables['caption'] = ['#markup' => $handler->options['caption']];
+    $variables['caption'] = ['#markup' => $handler->getCaption()];
     $variables['caption_needed'] = TRUE;
   }
   elseif (!empty($variables['title'])) {
