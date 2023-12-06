@@ -86,13 +86,11 @@
     position: absolute;
     inset-block-start: 0;
     inset-inline: 0;
+    z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
   }
   & .toolbar-tray {
     position: absolute;
     inset-inline: 0;
-  }
-  & .toolbar-bar {
-    z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
   }
   & .toolbar-tray-vertical {
     position: absolute;
@@ -165,11 +163,10 @@
 .toolbar-oriented .toolbar-tray-horizontal li {
   float: left; /* LTR */
 }
-[dir="rtl"] {
-  & .toolbar-oriented .toolbar-bar .toolbar-tab,
-  & .toolbar-oriented .toolbar-tray-horizontal li {
-    float: right;
-  }
+
+[dir="rtl"] .toolbar-oriented .toolbar-bar .toolbar-tab,
+[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal li {
+  float: right;
 }
 
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
@@ -199,12 +196,8 @@
   display: block;
 }
 /* Bring the tray into the viewport. By default it is just off-screen. */
-.toolbar-oriented {
-  & .toolbar-tray-vertical {
-    &.is-active {
-      inset-inline-start: 0;
-    }
-  }
+.toolbar-oriented .toolbar-tray-vertical.is-active {
+  inset-inline-start: 0;
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
@@ -223,51 +216,33 @@
  */
 /* Hide the orientation toggle when the configured narrow breakpoint is not
  * active. */
-.toolbar {
-  & .toolbar-tray {
-    & .toolbar-toggle-orientation {
-      display: none;
-    }
+ .toolbar .toolbar-tray .toolbar-toggle-orientation {
+    display: none;
   }
-}
 /* Show the orientation toggle when the configured narrow breakpoint is
  * active. */
-.toolbar-oriented {
-  & .toolbar-tray {
-    & .toolbar-toggle-orientation {
-      display: block;
-    }
-  }
-  & .toolbar-tray-horizontal {
-    & .toolbar-toggle-orientation {
-      position: absolute;
-      inset-block-start: auto;
-      inset-inline-end: 0;
-      inset-block-end: 0;
-    }
-  }
-  & .toolbar-tray-vertical {
-    & .toolbar-toggle-orientation {
-      float: right; /* LTR */
-      width: 100%;
-    }
-  }
+.toolbar-oriented .toolbar-tray .toolbar-toggle-orientation {
+  display: block;
 }
-[dir="rtl"] {
-  & .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
-    float: left;
-  }
+.toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
+  position: absolute;
+  inset-block-start: auto;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+}
+.toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+  float: right; /* LTR */
+  width: 100%;
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+  float: left;
 }
 
 /**
  * Toolbar home button toggle.
  */
-.toolbar {
-  & .toolbar-bar {
-    & .home-toolbar-tab {
-      display: none;
-    }
-  }
+.toolbar .toolbar-bar .home-toolbar-tab {
+  display: none;
 }
 
 .path-admin {

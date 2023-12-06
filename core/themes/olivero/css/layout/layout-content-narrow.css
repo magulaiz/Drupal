@@ -14,61 +14,12 @@
 .layout--pass--content-narrow > * {
   grid-column: 1 / 7;
   width: 100%;
+
+  /*
+    Special grid-breaking treatment for text-content elements that
+    reside in a content-narrow layout.
+  */
 }
-
-@media (min-width: 43.75rem) {
-  .layout--content-narrow,
-  .layout--pass--content-narrow > * {
-    grid-column: 2 / 14;
-  }
-}
-
-@media (min-width: 62.5rem) {
-  .layout--content-narrow,
-  .layout--pass--content-narrow > * {
-    grid-column: 3 / 11;
-  }
-}
-
-/*
-  If .layout--content-narrow is nested within any of the following, allocate the appropriate
-  amount of columns within its parent .grid-full.
-    - .layout--content-narrow class.
-    - Element that's inheriting the layout--content-narrow styles from its parent region.
-    - .layout--content-medium class.
-    - Element that's inheriting the layout--content-medium styles from its parent region.
-*/
-
-@media (min-width: 43.75rem) {
-  .layout--content-narrow .layout--content-narrow,
-  .layout--pass--content-narrow > * .layout--content-narrow,
-  .layout--content-medium .layout--content-narrow,
-  .layout--pass--content-medium > * .layout--content-narrow,
-  .layout--content-narrow .layout--pass--content-narrow > *,
-  .layout--pass--content-narrow > * .layout--pass--content-narrow > *,
-  .layout--content-medium .layout--pass--content-narrow > *,
-  .layout--pass--content-medium > * .layout--pass--content-narrow > * {
-    grid-column: 1 / 13;
-  }
-}
-
-@media (min-width: 62.5rem) {
-  .layout--content-narrow .layout--content-narrow,
-  .layout--pass--content-narrow > * .layout--content-narrow,
-  .layout--content-medium .layout--content-narrow,
-  .layout--pass--content-medium > * .layout--content-narrow,
-  .layout--content-narrow .layout--pass--content-narrow > *,
-  .layout--pass--content-narrow > * .layout--pass--content-narrow > *,
-  .layout--content-medium .layout--pass--content-narrow > *,
-  .layout--pass--content-medium > * .layout--pass--content-narrow > * {
-    grid-column: 1 / 9;
-  }
-}
-
-/*
-  Special grid-breaking treatment for text-content elements that
-  reside in a content-narrow layout.
-*/
 
 @media (min-width: 43.75rem) {
   .layout--content-narrow.text-content blockquote::before,
@@ -118,6 +69,55 @@
   .layout--pass--content-narrow > * .text-content pre {
     width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
     margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
+  }
+}
+
+@media (min-width: 43.75rem) {
+  .layout--content-narrow,
+  .layout--pass--content-narrow > * {
+    grid-column: 2 / 14;
+  }
+}
+
+@media (min-width: 62.5rem) {
+  .layout--content-narrow,
+  .layout--pass--content-narrow > * {
+    grid-column: 3 / 11;
+  }
+}
+
+/*
+If .layout--content-narrow is nested within any of the following, allocate the appropriate
+amount of columns within its parent .grid-full.
+  - .layout--content-narrow class.
+  - Element that's inheriting the layout--content-narrow styles from its parent region.
+  - .layout--content-medium class.
+  - Element that's inheriting the layout--content-medium styles from its parent region.
++*/
+  
+@media (min-width: 43.75rem) {
+  .layout--content-narrow .layout--content-narrow,
+  .layout--pass--content-narrow > * .layout--content-narrow,
+  .layout--content-medium .layout--content-narrow,
+  .layout--pass--content-medium > * .layout--content-narrow,
+  .layout--content-narrow .layout--pass--content-narrow > *,
+  .layout--pass--content-narrow > * .layout--pass--content-narrow > *,
+  .layout--content-medium .layout--pass--content-narrow > *,
+  .layout--pass--content-medium > * .layout--pass--content-narrow > * {
+    grid-column: 1 / 13;
+  }
+}
+
+@media (min-width: 62.5rem) {
+  .layout--content-narrow .layout--content-narrow,
+  .layout--pass--content-narrow > * .layout--content-narrow,
+  .layout--content-medium .layout--content-narrow,
+  .layout--pass--content-medium > * .layout--content-narrow,
+  .layout--content-narrow .layout--pass--content-narrow > *,
+  .layout--pass--content-narrow > * .layout--pass--content-narrow > *,
+  .layout--content-medium .layout--pass--content-narrow > *,
+  .layout--pass--content-medium > * .layout--pass--content-narrow > * {
+    grid-column: 1 / 9;
   }
 }
 

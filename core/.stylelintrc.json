@@ -15,7 +15,7 @@
     "hue-degree-notation": "number",
     "import-notation": "string",
     "no-descending-specificity": null,
-    "no-duplicate-selectors": null,
+    "no-duplicate-selectors": true,
     "no-unknown-animations": true,
     "max-line-length": null,
     "media-feature-name-no-unknown": [true, {
