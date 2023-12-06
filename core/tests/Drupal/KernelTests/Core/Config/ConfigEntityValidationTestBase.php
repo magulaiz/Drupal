@@ -486,7 +486,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     if (!empty(array_diff(array_keys($additional_expected_validation_errors_when_missing ?? []), $config_entity_properties))) {
       throw new \LogicException(sprintf('The test %s lists `%s` in $additional_expected_validation_errors_when_missing but it is not a property of the `%s` config entity type.',
         get_called_class(),
-        implode(',', array_diff(array_keys($additional_expected_validation_errors_when_missing), $config_entity_properties)),
+        implode(', ', array_diff(array_keys($additional_expected_validation_errors_when_missing), $config_entity_properties)),
         $this->entity->getEntityTypeId(),
       ));
     }
@@ -572,7 +572,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     if (!empty(array_diff(array_keys($properties_with_required_keys), $config_entity_properties))) {
       throw new \LogicException(sprintf('The %s test class lists %s in $propertiesWithRequiredKeys but it is not a property of the %s config entity type.',
         get_called_class(),
-        implode(',', array_diff(array_keys($properties_with_required_keys), $config_entity_properties)),
+        implode(', ', array_diff(array_keys($properties_with_required_keys), $config_entity_properties)),
         $this->entity->getEntityTypeId()
       ));
     }
