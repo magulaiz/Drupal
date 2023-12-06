@@ -439,7 +439,7 @@ class ExposedFormTest extends ViewTestBase {
    *   The form ID.
    */
   protected function getExpectedExposedFormId(ViewExecutable $view) {
-    return Html::cleanCssIdentifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
+    return Html::getId('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
   }
 
   /**
