@@ -14,15 +14,34 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class PagerParametersTest extends UnitTestCase {
 
   /**
+   * @covers ::getQueryParameters
+   */
+  public function testGetQueryParameters() {
+    $request_stack = new RequestStack();
+    $request_stack->push(new Request());
+    $parameters = new PagerParameters($request_stack);
+    $query = $request_stack->getCurrentRequest()->query;
+    $this->assertEquals([], $parameters->getQueryParameters());
+    $query->set('page', 1);
+    $this->assertEquals(['page' => 1], $query->all(), 'page query set correctly');
+    $this->assertEquals([], $parameters->getQueryParameters(), 'Pager filtered from empty parameters');
+    $query->set('test', 1);
+    $this->assertEquals(['page' => 1, 'test' => 1], $query->all(), 'test value set correctly');
+    $this->assertEquals(['test' => 1], $parameters->getQueryParameters(), 'Pager filtered with another parameter');
+  }
+
+  /**
    * @covers ::findPage
    * @dataProvider providePagerQueries
    */
-  public function testFindPage($raw_query, $parameter, $query) {
+  public function testFindPage($raw_query, $parameter, $expected_query) {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $parameters = new PagerParameters($request_stack);
     $request_stack->getCurrentRequest()->query->set('page', $raw_query);
-    foreach ($query as $key => $value) {
+    // Ensure findPage finds 0 when the query is actually empty or invalid.
+    $expected_query = $expected_query ?: [0];
+    foreach ($expected_query as $key => $value) {
       $this->assertSame($value, $parameters->findPage($key));
     }
   }
@@ -31,21 +50,20 @@ class PagerParametersTest extends UnitTestCase {
    * @covers ::getPagerQuery
    * @dataProvider providePagerQueries
    */
-  public function testGetPagerQuery($raw_query, $parameter, $query) {
+  public function testGetPagerQuery($raw_query, $parameter, $expected_query) {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $parameters = new PagerParameters($request_stack);
     $request_stack->getCurrentRequest()->query->set('page', $raw_query);
-    $this->assertEquals($query, $parameters->getPagerQuery());
+    $this->assertEquals($expected_query, $parameters->getPagerQuery());
   }
 
   /**
    * Ensure missing request is handled cleanly.
    *
    * @covers ::getPagerParameter
-   * @dataProvider providePagerQueries
    */
-  public function testGetPagerParameterNoRequest($raw_query, $parameter) {
+  public function testGetPagerParameterNoRequest() {
     $request_stack = new RequestStack();
     $parameters = new PagerParameters($request_stack);
     $this->assertSame('', $parameters->getPagerParameter());
@@ -65,20 +83,24 @@ class PagerParametersTest extends UnitTestCase {
 
   public function providePagerQueries() {
     return [
-      [NULL, '', [0]],
+      'defensive null page value' => [NULL, '', []],
       // Array values aren't supported, so they default to empty.
-      [[], '', [0]],
-      [[1, 2, 3], '', [0]],
-      ['', '', [0]],
-      ['0', '0', [0]],
-      ['1', '1', [1]],
-      [0, '0', [0]],
-      [
+      'invalid empty page array' => [[], '', []],
+      'invalid populated array' => [[1, 2, 3], '', []],
+      // Nothing to
+      'empty string' => ['', '', []],
+      // Conventional but "zero" page values.
+      'page 0 as a string' => ['0', '0', [0]],
+      'page 0 as a integer' => [0, '0', [0]],
+
+      // Conventional pager values.
+      'page 1' => ['1', '1', [1]],
+      'simple list of page values' => [
         '1,2,3,4',
         '1,2,3,4',
         [1, 2, 3, 4],
       ],
-      [
+      'reversed list of page values' => [
         '4,3,2,1',
         '4,3,2,1',
         [4, 3, 2, 1],
