@@ -34,7 +34,7 @@
                       { '@size': maxSizeMB },
                     );
                     alert(alertMessage);
-                    $(event.target).val('');
+                    event.target.value = '';
                   }
                 }
               }
