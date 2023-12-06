@@ -7,7 +7,6 @@ namespace Drupal\KernelTests\Core\TypedData;
 use Drupal\block\Entity\Block;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
@@ -76,24 +75,16 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // Start from the valid config.
     $this->assertEmpty($this->config->validate());
 
-    // Then modify only one thing: generate a non-existent `label_display`
-    // setting.
+    // Then modify only one thing: generate a non-existent `foobar` setting.
     $data = $this->config->toArray();
     $data['settings']['foobar'] = TRUE;
-    $this->config = $this->container->get('config.typed')
-      ->createFromNameAndData('block.block.branding', $data);
-
-    // Now 1 validation error should be triggered: one for the unsupported key.
-    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
-    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
+    $this->assertValidationErrors('block.block.branding', $data,
+      // Now 1 validation error should be triggered: one for the unsupported key.
+      // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+      // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
       [
-        "'foobar' is not a supported key.",
+        'settings.foobar' => "'foobar' is not a supported key.",
       ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
     );
   }
 
@@ -109,23 +100,19 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // Then modify only one thing: the block plugin that is being used.
     $data = $this->config->toArray();
     $data['plugin'] = 'system_powered_by_block';
-    $this->config = $this->container->get('config.typed')
-      ->createFromNameAndData('block.block.branding', $data);
-
-    // Now 3 validation errors should be triggered: one for each of the settings
-    // that exist in the "branding" block but not the "powered by" block.
-    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
-    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
+    $this->assertValidationErrors('block.block.branding', $data,
+      // Now 3 validation errors should be triggered: one for each of the
+      // settings that exist in the "branding" block but not the "powered by"
+      // block.
+      // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+      // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
       [
-        "'use_site_logo' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-        "'use_site_name' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-        "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+        'settings' => [
+          "'use_site_logo' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+          "'use_site_name' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+          "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+        ],
       ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
     );
   }
 
@@ -230,6 +217,45 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       ->addConstraint('ValidKeys', 'infer');
     $this->expectExceptionMessage("'infer' is not a valid set of allowed keys.");
     $config->validate();
+  }
+
+  /**
+   * Asserts a set of validation errors is raised when the config is validated.
+   *
+   * @param string $config_name
+   *   The machine name of the configuration.
+   * @param array $config_data
+   *   The data associated with the configuration. Note: This configuration
+   *   doesn't yet have to be stored.
+   * @param array<string, string|string[]> $expected_messages
+   *   The expected validation error messages. Keys are property paths, values
+   *   are the expected messages: a string if a single message is expected, an
+   *   array of strings if multiple are expected.
+   */
+  protected function assertValidationErrors(string $config_name, array $config_data, array $expected_messages): void {
+    $violations = $this->container->get('config.typed')
+      ->createFromNameAndData($config_name, $config_data)
+      ->validate();
+
+    $actual_messages = [];
+    foreach ($violations as $violation) {
+      $property_path = $violation->getPropertyPath();
+
+      if (!isset($actual_messages[$property_path])) {
+        $actual_messages[$property_path] = (string) $violation->getMessage();
+      }
+      else {
+        // Transform value from string to array.
+        if (is_string($actual_messages[$property_path])) {
+          $actual_messages[$property_path] = (array) $actual_messages[$violation->getPropertyPath()];
+        }
+        // And append.
+        $actual_messages[$property_path][] = (string) $violation->getMessage();
+      }
+    }
+    ksort($expected_messages);
+    ksort($actual_messages);
+    $this->assertSame($expected_messages, $actual_messages);
   }
 
 }
