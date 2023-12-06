@@ -204,6 +204,8 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
     $this->assertBlockOnRegion($fakeBlock3->id(), 'breadcrumb');
 
+    $this->getSession()->getPage()->find('css', '.js-input-filter-goto-element')
+      ->click();
     $this->getSession()
       ->getPage()
       ->clickLink('Toggle blocks on region breadcrumb');
@@ -214,7 +216,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertFalse($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]')->isVisible());
     $this->assertTrue($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-breadcrumb-message"]')->isVisible());
 
-    // Save blocks and test if was saved in the correction region.
+    // Save blocks and test if was saved in the correct region.
     $this->submitForm([], 'Save blocks');
     $this->assertSession()->pageTextContains('The block settings have been updated.');
     $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
