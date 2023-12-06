@@ -133,7 +133,10 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     ];
 
     $config = $mapping->getRoot();
+    // Every config object is a mapping.
+    assert($config instanceof Mapping);
     // Find the relative property path where this mapping starts.
+    assert(str_starts_with($mapping->getPropertyPath(), $config->getName() . '.'));
     $property_path_mapping = substr($mapping->getPropertyPath(), strlen($config->getName()) + 1);
 
     // Extract the variable values stored in the dynamic type.
