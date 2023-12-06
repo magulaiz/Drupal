@@ -382,6 +382,9 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         }
       }
     }
+
+    // Satisfy PHPStan, which cannot interpret the loop.
+    return $expression;
   }
 
   /**
