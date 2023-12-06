@@ -81,7 +81,7 @@ class PagerParametersTest extends UnitTestCase {
     $this->assertSame($parameter, $parameters->getPagerParameter());
   }
 
-  public function providePagerQueries() {
+  public static function providePagerQueries() {
     return [
       'defensive null page value' => [NULL, '', []],
       // Array values aren't supported, so they default to empty.
