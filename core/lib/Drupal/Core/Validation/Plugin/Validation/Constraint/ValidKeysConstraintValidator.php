@@ -41,15 +41,16 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       $valid_keys = $mapping->getValidKeys();
     }
     elseif (is_array($constraint->allowedKeys)) {
-      if (!empty(array_diff($constraint->allowedKeys, $mapping->getValidKeys()))) {
+      $valid_keys = $mapping->getValidKeys();
+      if (!empty(array_diff($constraint->allowedKeys, $valid_keys))) {
         throw new InvalidArgumentException(sprintf(
           'The type \'%s\' explicitly specifies the allowed keys (%s), but they are not a subset of the statically defined mapping keys in the schema (%s).',
           $mapping->getDataDefinition()->getDataType(),
           implode(', ', $constraint->allowedKeys),
-          implode(', ', $mapping->getValidKeys())
+          implode(', ', $valid_keys)
         ));
       }
-      $valid_keys = array_intersect($mapping->getValidKeys(), $constraint->allowedKeys);
+      $valid_keys = array_intersect($valid_keys, $constraint->allowedKeys);
     }
     else {
       throw new InvalidArgumentException("'$constraint->allowedKeys' is not a valid set of allowed keys.");
