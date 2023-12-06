@@ -2,8 +2,9 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * A base entity storage class.
@@ -96,8 +97,10 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   The entity type definition.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID service.
    */
-  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache) {
+  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache, UuidInterface $uuid_service = NULL) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->baseEntityClass = $entity_type->getClass();
@@ -106,6 +109,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
+
+    if (!$uuid_service) {
+      @trigger_error('Calling EntityStorageBase::__construct() without the $uuid_service argument is deprecated in drupal:9.4.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3268812', E_USER_DEPRECATED);
+      $uuid_service = \Drupal::service('uuid');
+    }
+    $this->uuidService = $uuid_service;
   }
 
   /**
@@ -286,6 +295,56 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function doCreate(array $values) {
     $entity_class = $this->getEntityClass();
     return new $entity_class($values, $this->entityTypeId);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createDuplicate(EntityInterface $entity) {
+    $entity_class = $this->getEntityClass();
+    $entity_class::preDuplicate($this, $entity);
+
+    $duplicate = $this->doCreateDuplicate($entity);
+    $duplicate->enforceIsNew();
+
+    $duplicate->postDuplicate($this);
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+
+    // Method ::invokeHook() cannot be used, as it does not allow passing
+    // more than one parameter.
+    $hook = 'duplicate_create';
+
+    // Invoke the hook.
+    $this->moduleHandler()->invokeAll($this->getEntityTypeId() . '_' . $hook, [$entity, $duplicate]);
+    // Invoke the respective entity-level hook.
+    $this->moduleHandler()->invokeAll('entity_' . $hook, [$entity, $duplicate]);
+
+    return $duplicate;
+  }
+
+  /**
+   * Performs storage-specific duplication of entities.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be duplicated.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   */
+  public function doCreateDuplicate(EntityInterface $entity) {
+    $duplicate = clone $entity;
+
+    // Reset the entity ID and indicate that this is a new entity.
+    $duplicate->set($this->idKey, NULL);
+    $duplicate->enforceIsNew();
+
+    // Assign a new UUID if there is none yet.
+    if ($this->uuidKey) {
+      $duplicate->set($this->uuidKey, $this->uuidService->generate());
+    }
+
+    return $duplicate;
   }
 
   /**
