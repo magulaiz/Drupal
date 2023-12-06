@@ -127,6 +127,7 @@ class UserPasswordChangeForm extends ContentEntityForm {
         $form_state->setErrorByName('current_pass', t('Your current password is incorrect.'));
       }
     }
+    return $this->entity;
   }
 
   /**
