@@ -55,7 +55,7 @@ class PagerParameters implements PagerParametersInterface {
    */
   public function getPagerQuery() {
     $query = $this->getPagerParameter();
-    return $query ? array_map('intval', explode(',', $query)) : [];
+    return isset($query) ? array_map('intval', explode(',', $query)) : [];
   }
 
   /**

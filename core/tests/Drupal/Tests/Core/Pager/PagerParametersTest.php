@@ -66,7 +66,7 @@ class PagerParametersTest extends UnitTestCase {
   public function providePagerQueries() {
     return [
       [NULL, '', [0]],
-      // Array values aren't supported so they default to empty.
+      // Array values aren't supported, so they default to empty.
       [[], '', [0]],
       [[1, 2, 3], '', [0]],
       ['', '', [0]],
