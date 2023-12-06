@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\filter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -73,11 +74,19 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
   public function query() {
     // Don't filter by language in case the site is not multilingual, because
     // there is no point in doing so.
-    if (!$this->languageManager->isMultilingual()) {
+    if (!$this->languageManager->isMultilingual() || !$this->access($this->view->getUser())) {
       return;
     }
 
     parent::query();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
+    // Check if the user has access to the language filter.
+    return $this->languageManager->isMultilingual() && parent::access($account);
   }
 
 }
