@@ -59,6 +59,22 @@
   &:active {
     background-color: var(--button--active-bg-color);
   }
+
+  /**
+  * Disabled state styles as last.
+  *
+  * Overrides every definitions before, including variants.
+  */
+  &:is(:disabled, .is-disabled) {
+    color: var(--button--disabled-fg-color);
+    background-color: var(--button--disabled-bg-color);
+  }
+
+  /* Make disabled <link> behave like a [disabled] <input> or <button>. */
+  &.is-disabled {
+    user-select: none;
+    pointer-events: none;
+  }
 }
 
 /* Common styles for small buttons. */
@@ -110,24 +126,6 @@
   &:is(:hover, :active) {
     color: var(--button-fg-color--danger);
     background-color: var(--button--hover-bg-color--danger);
-  }
-}
-
-/**
- * Disabled state styles as last.
- *
- * Overrides every definitions before, including variants.
- */
-.button {
-  &:is(:disabled, .is-disabled) {
-    color: var(--button--disabled-fg-color);
-    background-color: var(--button--disabled-bg-color);
-  }
-
-  /* Make disabled <link> behave like a [disabled] <input> or <button>. */
-  &.is-disabled {
-    user-select: none;
-    pointer-events: none;
   }
 }
 

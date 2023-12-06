@@ -10,6 +10,10 @@
  * Styles for jQuery UI dialog.
  */
 
+.ui-dialog {
+  z-index: 1260;
+}
+
 .ui-dialog .ui-dialog-buttonpane {
   padding-inline-start: 0.2em;
   padding-inline-end: 0.2em;
@@ -28,8 +32,4 @@
 
 .ui-widget-overlay {
   z-index: 1259;
-}
-
-.ui-dialog {
-  z-index: 1260;
 }

@@ -135,7 +135,6 @@ details.fieldset-no-legend {
   margin-left: 0;
 }
 
-.views-admin-dependent .form-item .form-item,
 .views-admin-dependent .form-type-checkboxes,
 .views-admin-dependent .form-type-radios,
 .views-admin-dependent .form-item .form-item,
@@ -369,9 +368,6 @@ details.fieldset-no-legend {
 
 .views-tabs .action-list li {
   display: block;
-}
-
-.views-tabs .action-list li {
   border-width: 0 1px;
   border-style: solid;
   border-color: #cbcbcb;

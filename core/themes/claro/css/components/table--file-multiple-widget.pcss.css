@@ -38,6 +38,8 @@
 
 .table-file-multiple-widget td {
   height: calc(var(--space-m) * 3);
+  padding-top: var(--space-m);
+  padding-bottom: var(--space-m);
 }
 
 .table-file-multiple-widget td > :first-child {
@@ -56,11 +58,6 @@
   color: var(--color-gray-800);
   background: var(--color-gray-050);
   font-size: var(--font-size-s);
-}
-
-.table-file-multiple-widget td {
-  padding-top: var(--space-m);
-  padding-bottom: var(--space-m);
 }
 
 .table-file-multiple-widget .tabledrag-cell {

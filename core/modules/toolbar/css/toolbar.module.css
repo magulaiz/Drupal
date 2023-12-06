@@ -70,6 +70,8 @@
  * screens, the components of the admin toolbar are positioned statically. */
 .toolbar-oriented .toolbar-bar {
   position: absolute;
+  /* Layer the bar just above the trays and above contextual link triggers. */
+  z-index: 502;
   top: 0;
   right: 0;
   left: 0;
@@ -80,10 +82,6 @@
   left: 0;
 }
 
-/* Layer the bar just above the trays and above contextual link triggers. */
-.toolbar-oriented .toolbar-bar {
-  z-index: 502;
-}
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
 .toolbar-fixed .toolbar-oriented .toolbar-bar {

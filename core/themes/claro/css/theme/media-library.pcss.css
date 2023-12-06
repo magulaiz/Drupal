@@ -718,6 +718,12 @@
 
 .media-library-item__edit {
   right: 40px; /* LTR */
+  /* !important to override button class border. */
+  border: 1px solid var(--color-gray-200) !important;
+  background-image: url("../../images/icons/545560/pencil.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
 }
 [dir="rtl"] .media-library-item__edit {
   right: auto;
@@ -732,14 +738,6 @@
   left: 10px;
 }
 
-.media-library-item__edit {
-  /* !important to override button class border. */
-  border: 1px solid var(--color-gray-200) !important;
-  background-image: url("../../images/icons/545560/pencil.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px;
-}
 .media-library-item__edit:active {
   background-image: url("../../../../misc/icons/ffffff/pencil.svg");
 }
