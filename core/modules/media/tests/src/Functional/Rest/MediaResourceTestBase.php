@@ -311,6 +311,16 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getExpectedCacheContexts() {
+    return [
+      'url.site',
+      'user',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function testPost() {
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
 
