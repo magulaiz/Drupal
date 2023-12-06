@@ -112,7 +112,7 @@ class MessageForm extends FormBase {
    *   The current state of the form.
    */
   public function resetForm(array $form, FormStateInterface $form_state): void {
-    $_SESSION['migration_messages_overview_filter'] = [];
+    $this->getRequest()->getSession()->remove('migration_messages_overview_filter');
   }
 
 }
