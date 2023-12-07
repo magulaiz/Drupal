@@ -11,8 +11,7 @@
  */
 
 .ui-dialog .ui-dialog-buttonpane {
-  padding-inline-start: 0.2em;
-  padding-inline-end: 0.2em;
+  padding-inline: 0.2em;
 }
 
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
@@ -34,7 +33,6 @@
   z-index: 1260;
 }
 
-
 .ui-dialog .ui-dialog-content {
   padding: 0;
 }
@@ -44,7 +42,7 @@
 }
 
 .ui-dialog-content #media-library-content {
-  padding: 0 16px;
+  padding: 0 1rem;
 }
 
 .ui-dialog-content #media-library-wrapper .js-media-library-menu {
@@ -52,12 +50,13 @@
 }
 
 .ui-dialog-content #media-library-wrapper .js-media-library-menu li a {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 .ui-dialog-content #media-library-wrapper .js-media-library-menu li {
-  margin-bottom: 8px;
-  padding: 8px 24px;
+  margin-block-end: 0.5rem;
+  padding: 0.5rem 1.5rem;
   list-style-type: none;
   background-color: #e9e9e9;
 }
