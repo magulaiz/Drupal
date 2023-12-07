@@ -476,7 +476,7 @@ class DateHelper {
   public static function daysInYear($date = NULL) {
     $date = $date ?? 'now';
     if (!$date instanceof DrupalDateTime) {
-      $date = new DrupalDateTime($date);
+      $date = new DrupalDateTime();
     }
     if (!$date->hasErrors()) {
       if ($date->format('L')) {
