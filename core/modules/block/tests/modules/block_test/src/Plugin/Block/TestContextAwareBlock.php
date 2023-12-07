@@ -25,7 +25,6 @@ use Drupal\user\UserInterface;
       ]
     ),
   ],
-  category: new TranslatableMarkup("Context"),
 )]
 class TestContextAwareBlock extends BlockBase {
 
