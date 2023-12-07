@@ -793,6 +793,17 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the fromUri() method with a tel: URI starting with a phone number.
+   *
+   * @covers ::fromUri
+   */
+  public function testFromUriTelephoneNumber() {
+    $url = Url::fromUri('tel:123-4567-8901');
+    $this->assertSame($url->toUriString(), 'tel:123-4567-8901');
+    $this->assertTrue($url->isExternal());
+  }
+
+  /**
    * Tests the toUriString() method with route: URIs.
    *
    * @covers ::toUriString
