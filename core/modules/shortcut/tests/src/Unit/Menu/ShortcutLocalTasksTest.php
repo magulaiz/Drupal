@@ -54,7 +54,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
   public function getShortcutPageRoutes() {
     return [
       ['entity.user.canonical'],
-      ['entity.user.edit_form', ['entity.user.edit_form', 'entity.user.change_pass_form', 'entity.user.change_email_form']],
+      ['entity.user.edit_form', ['entity.user.edit_form', 'entity.user.edit_pass', 'entity.user.edit_email']],
       ['shortcut.set_switch'],
     ];
   }

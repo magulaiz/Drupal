@@ -54,7 +54,7 @@ class UserRouteProvider implements EntityRouteProviderInterface {
       ->setOption('_admin_route', TRUE)
       ->setRequirement('user', '\d+')
       ->setRequirement('_entity_access', 'user.update');
-    $route_collection->add('entity.user.change_email_form', $route);
+    $route_collection->add('entity.user.edit_email', $route);
 
     $route = (new Route('/user/{user}/edit-pass'))
       ->setDefaults([
@@ -64,7 +64,7 @@ class UserRouteProvider implements EntityRouteProviderInterface {
       ->setOption('_admin_route', TRUE)
       ->setRequirement('user', '\d+')
       ->setRequirement('_entity_access', 'user.update');
-    $route_collection->add('entity.user.change_pass_form', $route);
+    $route_collection->add('entity.user.edit_pass', $route);
 
     return $route_collection;
   }
