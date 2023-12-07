@@ -78,7 +78,6 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
     $this->config = $config;
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
-    $this->negotiator->setCurrentUser($current_user);
     $this->configSubscriber = $config_subscriber;
   }
 

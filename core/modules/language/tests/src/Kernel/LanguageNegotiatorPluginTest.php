@@ -41,7 +41,6 @@ class LanguageNegotiatorPluginTest extends KernelTestBase {
     ]);
     $config->save();
     $languageNegotiator = $this->container->get('language_negotiator');
-    $languageNegotiator->setCurrentUser($this->prophesize('Drupal\Core\Session\AccountInterface')->reveal());
     try {
       $languageNegotiator->initializeType(LanguageInterface::TYPE_URL);
     }
