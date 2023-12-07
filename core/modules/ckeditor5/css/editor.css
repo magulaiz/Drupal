@@ -29,3 +29,11 @@
 .ck-toolbar__items .ck.ck-button.ck-on {
   border: 1px solid var(--ck-color-button-on-color);
 }
+
+[data-drupal-calibrate-width] [data-drupal-ckeditor5-cell] {
+  display: none;
+}
+
+[data-drupal-calibrate-width] td:not([data-drupal-ckeditor5-cell]) {
+  display: inline-block
+}

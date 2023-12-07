@@ -454,9 +454,42 @@
           });
 
           const isOffCanvas = element.closest('#drupal-off-canvas');
+          const isInsideTabledrag = element.closest('table.draggable-table');
 
           if (isOffCanvas) {
             offCanvasCss(element);
+          }
+          if (isInsideTabledrag) {
+            // CKEditor 5 has difficulty determining if the toolbar is too wide
+            // for its container when that container is in a table - the table
+            // will readjust its width to accomodate the too-wide editor.
+            // To work around this, we temporarily hide the cell with the editor,
+            // get the widths of the sibling cells, then set the editor cell
+            // max-width to the row width minus the sibling widths. By setting
+            // this max-width, CKEditor 5 has the contraints necessary to see if
+            // it must collapse excess toolbar items.
+            // @see https://github.com/ckeditor/ckeditor5/issues/11334.
+            const editorFitInTable = () => {
+              const parentCell = element.closest('td');
+              const parentRow = element.closest('tr');
+
+              parentCell.setAttribute('data-drupal-ckeditor5-cell', '');
+              isInsideTabledrag.setAttribute('data-drupal-calibrate-width', '');
+              let widths = 0;
+              let sibling = parentCell.parentNode.firstChild;
+              do {
+                if (sibling.nodeType === 1 && sibling.tagName === 'TD') {
+                  widths += sibling.getBoundingClientRect().width;
+                }
+                sibling = sibling.nextSibling;
+              } while (sibling);
+              const maxWidth = parentRow.getBoundingClientRect().width - widths;
+              parentCell.style['max-width'] = `${maxWidth}px`;
+              isInsideTabledrag.removeAttribute('data-drupal-calibrate-width');
+              parentCell.removeAttribute('data-drupal-ckeditor5-cell');
+            };
+            editorFitInTable();
+            window.ddEventListener('resize', editorFitInTable);
           }
         })
         .catch((error) => {
