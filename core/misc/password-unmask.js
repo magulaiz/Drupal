@@ -41,6 +41,7 @@
       return unmaskClickHandler(element, trigger);
     });
   };
+
   /**
    * Theme function for a button-wrapper.
    *
