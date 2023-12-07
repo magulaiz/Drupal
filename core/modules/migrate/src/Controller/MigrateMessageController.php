@@ -220,6 +220,7 @@ class MigrateMessageController extends ControllerBase {
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No messages for this migration.'),
+      '#attributes' => ['id' => 'admin-migrate-msg', 'class' => ['admin-migrate-msg']],
     ];
     $build['message_pager'] = ['#type' => 'pager'];
 

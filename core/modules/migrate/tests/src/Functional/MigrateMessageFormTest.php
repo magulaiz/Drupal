@@ -1,0 +1,110 @@
+<?php
+
+namespace Drupal\Tests\migrate\Functional;
+
+use Drupal\migrate\Plugin\MigrationInterface;
+
+/**
+ * Tests for the MessageForm class.
+ *
+ * @group migrate
+ */
+class MigrateMessageFormTest extends MigrateMessageTestBase {
+
+  /**
+   * Tests the message form.
+   */
+  public function testFilter(): void {
+    $session = $this->assertSession();
+
+    // Create map and message tables.
+    $this->createTables($this->migrationIds);
+
+    // Expected counts for each error level.
+    $exepected = [
+      MigrationInterface::MESSAGE_ERROR => 3,
+      MigrationInterface::MESSAGE_WARNING => 0,
+      MigrationInterface::MESSAGE_NOTICE => 0,
+      MigrationInterface::MESSAGE_INFORMATIONAL => 1,
+    ];
+
+    // Confirm that all the entries are displayed.
+    $this->drupalGet('/admin/reports/migration-messages/custom_test');
+    $session->statusCodeEquals(200);
+    $messages = $this->getMessages();
+    $this->assertCount(4, $messages);
+
+    // Set the filter to match each of the two filter-type attributes and
+    // confirm the correct number of entries are displayed.
+    foreach ($exepected as $level => $expected_count) {
+      $edit['severity[]'] = $level;
+      $this->submitForm($edit, 'Filter');
+      $count = $this->getLevelCounts($exepected);
+      $this->assertEquals($expected_count, $count[$level], sprintf('Count for level %s failed', $level));
+    }
+
+    // Reset the filter
+    $this->submitForm([], 'Reset');
+    $messages = $this->getMessages();
+    $this->assertCount(4, $messages);
+  }
+
+  /**
+   * Gets the count of migration messages by level.
+   *
+   * @param array $levels
+   *   The error levels for search for.
+   *
+   * @return array
+   *   The count of each error level keyed by the error leve.
+   */
+  protected function getLevelCounts(array $levels): array {
+    $entries = $this->getMessages();
+    $count = array_fill(1, count($levels), 0);
+    foreach ($entries as $entry) {
+      foreach (array_keys($levels) as $level) {
+        if ($entry['severity'] == $level) {
+          $count[$level]++;
+          break;
+        }
+      }
+    }
+    return $count;
+  }
+
+  /**
+   * Gets the migrate messages.
+   *
+   * @return array
+   *   List of log events where each event is an array with following keys:
+   *   - msg_id: (string) A message id.
+   *   - severity: (int) The MigrationInterface error level.
+   *   - message: (string) The migration message.
+   */
+  protected function getMessages(): array {
+    $levels = [
+      MigrationInterface::MESSAGE_ERROR => 'Error',
+      MigrationInterface::MESSAGE_WARNING => 'Warning',
+      MigrationInterface::MESSAGE_NOTICE => 'Notice',
+      MigrationInterface::MESSAGE_INFORMATIONAL => 'Info',
+    ];
+    $entries = [];
+    $table = $this->xpath('.//table[@id="admin-migrate-msg"]/tbody/tr');
+    if ($table) {
+      foreach ($table as $row) {
+        $entry = [];
+        $cells = $row->findAll('css', 'td');
+        if (count($cells) == 3) {
+          $entry = [
+            'id' => $cells[0]->getText(),
+            'severity' => array_search($cells[1]->getText(), $levels),
+            'message' => $cells[2]->getText(),
+          ];
+          $entries[] = $entry;
+        }
+      }
+    }
+    return $entries;
+  }
+
+}
