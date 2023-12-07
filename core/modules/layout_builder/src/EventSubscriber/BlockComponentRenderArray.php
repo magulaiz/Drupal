@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
@@ -35,13 +36,23 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
   protected $currentUser;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Creates a BlockComponentRenderArray object.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(AccountInterface $current_user) {
+  public function __construct(AccountInterface $current_user, ModuleHandlerInterface $module_handler = NULL) {
     $this->currentUser = $current_user;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -150,6 +161,13 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         $build['#contextual_links'] = $content['#contextual_links'];
       }
       $build['content'] = $content;
+
+      // If an alter hook wants to modify the block contents, it can append
+      // another #pre_render hook.
+      if (isset($this->moduleHandler)) {
+        $base_id = $block->getBaseId();
+        $this->moduleHandler->alter(['block_build', "block_build_$base_id"], $build, $block);
+      }
 
       if ($event->inPreview()) {
         if ($block instanceof PreviewFallbackInterface) {
