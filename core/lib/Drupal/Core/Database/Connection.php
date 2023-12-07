@@ -289,7 +289,7 @@ abstract class Connection {
   public function __destruct() {
     if ($this->transactionManager()) {
       assert($this->transactionManager() instanceof TransactionManagerBase, 'The transaction manager must extend TransactionManagerBase');
-      $this->transactionManager()->destroyStack();
+      $this->transactionManager()->unPileStack();
     }
     // Ensure all still-open transactions get auto-committed. Usually, this
     // happens when the Transaction::__destruct() method is invoked, but during

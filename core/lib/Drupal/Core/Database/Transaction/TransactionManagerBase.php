@@ -519,15 +519,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
-   * Destroys all the items in the stack.
+   * Removes all the Drupal transactions from the stack.
    *
    * This is used by \Drupal\Core\Database\Connection::__destruct()
    *
    * @internal
    */
-  public function destroyStack(): void {
+  public function unPileStack(): void {
     foreach (array_reverse($this->stack()) as $id => $item) {
-      $this->removeStackItem($id);
+      $this->unpile($item->name, $id);
     }
   }
 
