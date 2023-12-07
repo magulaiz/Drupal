@@ -43,8 +43,6 @@
   & p {
     margin-block-start: var(--sp);
     margin-block-end: var(--sp);
-    word-wrap: break-word;
-    hyphens: auto;
 
     &:first-child {
       margin-block-start: 0;
