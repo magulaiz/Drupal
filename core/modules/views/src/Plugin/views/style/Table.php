@@ -453,6 +453,9 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
   /**
    * Return the token replaced caption.
+   *
+   * @return string
+   *   A stripped tokenized caption.
    */
   public function getCaption() {
     $caption = $this->options['caption'];
@@ -464,9 +467,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
   }
 
   /**
-   * Return TRUE if this style uses tokens.
-   *
-   * Used to ensure we don't fetch tokens when not needed for performance.
+   * {@inheritdoc}
    */
   public function usesTokens() {
     $usesTokens = parent::usesTokens();
@@ -481,7 +482,6 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
     return $usesTokens;
   }
-
 
   /**
    * {@inheritdoc}
