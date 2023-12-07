@@ -11,7 +11,6 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * Processes the inbound path using path alias lookups.
