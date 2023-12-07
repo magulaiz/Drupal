@@ -31,9 +31,7 @@ class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
     $config = $static_plugin_config;
     if ($editor->getImageUploadSettings()['status'] === TRUE) {
       $image_upload_settings = $editor->getImageUploadSettings();
-      if (!empty($image_upload_settings['max_size'])) {
-        $image_upload_settings['max_size'] = min(Bytes::toNumber($image_upload_settings['max_size']), Environment::getUploadMaxSize());
-      }
+      $image_upload_settings['max_size'] = empty($image_upload_settings['max_size']) ? Environment::getUploadMaxSize() : min(Bytes::toNumber($image_upload_settings['max_size']), Environment::getUploadMaxSize());
       $config += [
         'drupalImageUpload' => [
           'uploadUrl' => self::getUrlWithReplacedCsrfTokenPlaceholder(

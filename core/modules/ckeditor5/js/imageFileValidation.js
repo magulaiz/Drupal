@@ -1,4 +1,4 @@
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal) {
   Drupal.behaviors.ckeditorImageFileUploadValidation = {
     attach(context, settings) {
       // Using native javascript listener to intercept creditor's listening.
@@ -45,4 +45,4 @@
       );
     },
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal);
