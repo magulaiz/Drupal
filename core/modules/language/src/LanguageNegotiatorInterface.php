@@ -115,7 +115,7 @@ interface LanguageNegotiatorInterface {
    *   The current active user.
    *
    * @deprecated Deprecated in 10.3.0 and is removed from 11.0.0. 
-   * Inject the current user through a constructor instead.
+   *   Inject the current user through a constructor instead.
    * 
    * @see https://www.drupal.org/project/drupal/issues/2494703
    */
