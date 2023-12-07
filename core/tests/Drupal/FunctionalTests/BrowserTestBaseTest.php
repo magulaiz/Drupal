@@ -48,8 +48,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSame([], $this->getDrupalSettings());
 
     // Now try the same 403 as an authenticated user and verify that Drupal
-    // settings do show up. This ensures we do not regress from the bug in issue
-    // https://www.drupal.org/project/drupal/issues/3379220.
+    // settings do show up.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $this->drupalGet('admin');

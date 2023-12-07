@@ -138,6 +138,7 @@ trait AssertPageCacheContextsAndTagsTrait {
         if (!in_array('user.roles', $expected_contexts)) {
           // The system_page_attachments() hook is only called when dealing with
           // the HtmlRenderer, so check the Content-Type header.
+          // @see \Drupal\Core\Render\MainContent\HtmlRenderer::invokePageAttachmentHooks()
           if ($this->getSession()->getResponseHeader('Content-Type') === 'text/html; charset=UTF-8') {
             $default_contexts[] = 'user.roles:authenticated';
           }
