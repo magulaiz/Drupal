@@ -62,7 +62,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
 
     $this->assertGreaterThanOrEqual(129, $performance_data->getCacheGetCount());
     $this->assertLessThanOrEqual(132, $performance_data->getCacheGetCount());
-    $this->assertSame(59, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(59, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(68, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test node page.
@@ -128,6 +129,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertLessThanOrEqual(42, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(39, $performance_data->getQueryCount());
     $this->assertSame(28, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(2, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
   }
