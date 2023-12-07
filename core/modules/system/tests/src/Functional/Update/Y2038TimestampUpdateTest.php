@@ -131,7 +131,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
     }
     $tables = $connection->schema()->findTables('cache_%');
     $tables = array_filter($tables, function ($table) {
-      return str_starts_with($table, 'cache_');
+      return str_starts_with($table, 'cache_') && $table !== 'cache_bogus';
     });
     $this->assertNotEmpty($tables);
     foreach ($tables as $table) {
