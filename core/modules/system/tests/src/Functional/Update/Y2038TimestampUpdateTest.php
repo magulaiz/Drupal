@@ -95,6 +95,17 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
       $this->markTestSkipped("This test does not support the SQLite database driver.");
     }
 
+    // Create a table starting with cache that is not a cache bin.
+    \Drupal::service('database')->schema()->createTable('cache_bogus', [
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id'],
+    ]);
+
     $this->collectTimestampFieldsFromDatabase();
     // PostgreSQL returns the value 'integer' instead of 'int' when queried
     // about the column type. Some PostgreSQL tables are already of the type
