@@ -95,14 +95,9 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
   public function getUserPageRoutes() {
     return [
       ['entity.user.canonical'],
-      [
-        'entity.user.edit_collection',
-        [
-          ['entity.user.edit_form'],
-          ['entity.user.change_pass_form'],
-          ['entity.user.change_email_form'],
-        ],
-      ],
+      ['entity.user.edit_form', ['entity.user.edit_form', 'entity.user.change_pass_form', 'entity.user.change_email_form']],
+      ['entity.user.change_pass_form', ['entity.user.edit_form', 'entity.user.change_pass_form', 'entity.user.change_email_form']],
+      ['entity.user.change_email_form', ['entity.user.edit_form', 'entity.user.change_pass_form', 'entity.user.change_email_form']],
     ];
   }
 
