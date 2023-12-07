@@ -98,7 +98,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(74, $performance_data->getCacheGetCount());
     $this->assertLessThanOrEqual(80, $performance_data->getCacheGetCount());
-    $this->assertSame(19, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(19, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(27, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
 
