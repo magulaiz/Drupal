@@ -31,6 +31,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     'history',
     'field_ui',
     'datetime',
+    'language',
   ];
 
   /**

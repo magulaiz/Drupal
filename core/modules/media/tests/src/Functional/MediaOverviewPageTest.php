@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media\Functional;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -23,6 +24,8 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Make the site multilingual to have a working language field handler.
+    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
     $this->drupalLogin($this->nonAdminUser);
   }
 

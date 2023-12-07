@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
  *
  * @ViewsField("field_language")
  */
-class FieldLanguage extends FieldPluginBase {
+class FieldLanguage extends LanguageField {
 
   /**
    * The language manager.

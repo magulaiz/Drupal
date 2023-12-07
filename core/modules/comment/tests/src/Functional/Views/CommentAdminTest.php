@@ -7,6 +7,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\comment\Functional\CommentTestBase as CommentBrowserTestBase;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
@@ -30,6 +31,8 @@ class CommentAdminTest extends CommentBrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Make the site multilingual to have a working language field handler.
+    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
     \Drupal::service('module_installer')->install(['views']);
     $view = Views::getView('comment');
     $view->storage->enable()->save();
