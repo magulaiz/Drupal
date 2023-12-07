@@ -113,6 +113,7 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
   $form['editor']['editor'] = [
     '#type' => 'select',
     '#title' => t('Text editor'),
+    '#description' => t('Select the editor plugin to use with this text format.'),
     '#options' => $editor_options,
     '#empty_option' => t('None'),
     '#default_value' => $editor ? $editor->getEditor() : '',
