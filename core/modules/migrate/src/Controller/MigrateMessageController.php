@@ -32,7 +32,11 @@ class MigrateMessageController extends ControllerBase {
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrationPluginManager
    *   The migration plugin manager.
    */
-  public function __construct(protected Connection $database, FormBuilderInterface $formBuilder, protected MigrationPluginManagerInterface $migrationPluginManager) {
+  public function __construct(
+    protected Connection $database,
+    FormBuilderInterface $formBuilder,
+    protected MigrationPluginManagerInterface $migrationPluginManager,
+  ) {
     $this->formBuilder = $formBuilder;
   }
 

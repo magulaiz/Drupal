@@ -53,20 +53,17 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
    * Gets the count of migration messages by level.
    *
    * @param array $levels
-   *   The error levels for search for.
+   *   The error levels to check.
    *
    * @return array
-   *   The count of each error level keyed by the error leve.
+   *   The count of each error level keyed by the error level.
    */
   protected function getLevelCounts(array $levels): array {
     $entries = $this->getMessages();
     $count = array_fill(1, count($levels), 0);
     foreach ($entries as $entry) {
-      foreach (array_keys($levels) as $level) {
-        if ($entry['severity'] == $level) {
-          $count[$level]++;
-          break;
-        }
+      if (array_key_exists($entry['severity'], $levels)) {
+        $count[$entry['severity']]++;
       }
     }
     return $count;
@@ -75,7 +72,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
   /**
    * Gets the migrate messages.
    *
-   * @return array
+   * @return string|int[][]
    *   List of log events where each event is an array with following keys:
    *   - msg_id: (string) A message id.
    *   - severity: (int) The MigrationInterface error level.
@@ -90,18 +87,14 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
     ];
     $entries = [];
     $table = $this->xpath('.//table[@id="admin-migrate-msg"]/tbody/tr');
-    if ($table) {
-      foreach ($table as $row) {
-        $entry = [];
-        $cells = $row->findAll('css', 'td');
-        if (count($cells) == 3) {
-          $entry = [
-            'id' => $cells[0]->getText(),
-            'severity' => array_search($cells[1]->getText(), $levels),
-            'message' => $cells[2]->getText(),
-          ];
-          $entries[] = $entry;
-        }
+    foreach ($table as $row) {
+      $cells = $row->findAll('css', 'td');
+      if (count($cells) === 3) {
+        $entries[] = [
+          'msg_id' => $cells[0]->getText(),
+          'severity' => array_search($cells[1]->getText(), $levels, TRUE),
+          'message' => $cells[2]->getText(),
+        ];
       }
     }
     return $entries;

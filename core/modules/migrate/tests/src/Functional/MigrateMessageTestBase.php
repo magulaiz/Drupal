@@ -9,7 +9,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 // cspell:ignore destid sourceid
 
 /**
- * Tests for the MessageForm class.
+ * Provides base class for testing migrate messages.
  *
  * @group migrate
  */
