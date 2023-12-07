@@ -62,15 +62,9 @@ class UserAccountFormPasswordResetTest extends KernelTestBase {
     $token = 'VALID_TOKEN';
     $session->set('pass_reset_1', $token);
 
-    // Set token in query string.
-    $request->query->set('pass-reset-token', $token);
-    $form = $this->buildAccountForm('default');
-    // User shouldn't see current password field.
-    $this->assertFalse($form['account']['current_pass']['#access']);
-
     $request->query->set('pass-reset-token', NULL);
     $request->attributes->set('pass-reset-token', $token);
-    $form = $this->buildAccountForm('default');
+    $form = $this->buildAccountForm('pass');
     $this->assertTrue($form['account']['current_pass']['#access']);
   }
 
