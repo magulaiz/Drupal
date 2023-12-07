@@ -3,7 +3,6 @@
 namespace Drupal\language\EventSubscriber;
 
 use Drupal\Core\DrupalKernelInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\LanguageNegotiatorInterface;
