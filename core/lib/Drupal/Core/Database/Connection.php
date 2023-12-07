@@ -287,9 +287,9 @@ abstract class Connection {
    * Ensures that the client connection can be garbage collected.
    */
   public function __destruct() {
-    if ($this->transactionManager) {
-      assert($this->transactionManager instanceof TransactionManagerBase, 'The transaction manager must extend TransactionManagerBase');
-      $this->transactionManager->destroyStack();
+    if ($this->transactionManager()) {
+      assert($this->transactionManager() instanceof TransactionManagerBase, 'The transaction manager must extend TransactionManagerBase');
+      $this->transactionManager()->destroyStack();
     }
     // Ensure all still-open transactions get auto-committed. Usually, this
     // happens when the Transaction::__destruct() method is invoked, but during
