@@ -462,11 +462,11 @@
           if (isInsideTabledrag) {
             // CKEditor 5 has difficulty determining if the toolbar is too wide
             // for its container when that container is in a table - the table
-            // will readjust its width to accomodate the too-wide editor.
+            // will readjust its width to accommodate the too-wide editor.
             // To work around this, we temporarily hide the cell with the editor,
             // get the widths of the sibling cells, then set the editor cell
             // max-width to the row width minus the sibling widths. By setting
-            // this max-width, CKEditor 5 has the contraints necessary to see if
+            // this max-width, CKEditor 5 has the constraints necessary to see if
             // it must collapse excess toolbar items.
             // @see https://github.com/ckeditor/ckeditor5/issues/11334.
             const editorFitInTable = () => {
