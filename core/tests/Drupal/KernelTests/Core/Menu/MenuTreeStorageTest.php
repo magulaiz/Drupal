@@ -293,6 +293,26 @@ class MenuTreeStorageTest extends KernelTestBase {
   }
 
   /**
+   * Test the loadTreeData with menuTreeParameters set to onlyEnabledLinks().
+   */
+  public function testLoadTreeWithOnlyEnabledLinks() {
+    $this->addMenuLink('test1', '');
+    $this->addMenuLink('test2', '');
+    $this->addMenuLink('test3', '', '<front>', [], 'tools', ['enabled' => 0]);
+    $this->addMenuLink('test3a', 'test3');
+
+    $parameters = new MenuTreeParameters();
+    $parameters->onlyEnabledLinks();
+    $data = $this->treeStorage->loadTreeData('tools', $parameters);
+
+    $this->assertCount(2, $data['tree']);
+    $this->assertArrayHasKey('test1', $data['tree']);
+    $this->assertArrayHasKey('test2', $data['tree']);
+    $this->assertArrayNotHasKey('test3a', $data['tree']);
+    $this->assertArrayNotHasKey('test3', $data['tree']);
+  }
+
+  /**
    * Tests finding the subtree height with content menu links.
    */
   public function testSubtreeHeight() {
