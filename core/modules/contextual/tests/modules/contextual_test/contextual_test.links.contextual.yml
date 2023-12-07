@@ -10,3 +10,7 @@ contextual_test_ajax:
     attributes:
       class: ['use-ajax']
       data-dialog-type: 'modal'
+contextual_test_link:
+  title: 'Another block link'
+  route_name: 'entity.block.edit_form'
+  group: 'block'

@@ -10,6 +10,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_toolbar().
@@ -66,7 +67,11 @@ function contextual_page_attachments(array &$page) {
     return;
   }
 
+  $definitions = \Drupal::service('plugin.manager.menu.contextual_link')->getDefinitions();
+  ksort($definitions);
+
   $page['#attached']['library'][] = 'contextual/drupal.contextual-links';
+  $page['#attached']['drupalSettings']['contextual']['linkDefinitionsHash'] = hash('sha256', Settings::getHashSalt() . implode(':', array_keys($definitions)));
 }
 
 /**

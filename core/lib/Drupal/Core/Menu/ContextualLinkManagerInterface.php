@@ -2,10 +2,12 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
+
 /**
  * Provides an object which returns the available contextual links.
  */
-interface ContextualLinkManagerInterface {
+interface ContextualLinkManagerInterface extends PluginManagerInterface {
 
   /**
    * Gets the contextual link plugins by contextual link group.
