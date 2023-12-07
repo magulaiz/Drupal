@@ -231,7 +231,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     ];
 
     if ($this->usesFields()) {
-      $form['caption']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" with values from the first row of results.');
+      $form['caption']['#description'] .= ' ' . $this->t('You may use field tokens as per the "Replacement patterns" used in "Rewrite the output of this field" with values from the first row of results.');
     }
 
     $form['accessibility_details'] = [
