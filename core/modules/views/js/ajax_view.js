@@ -140,6 +140,12 @@
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     const that = this;
     this.exposedFormAjax = [];
+
+    // Add exposed_form_display option to the request.
+    if (that.element_settings.submit) {
+      that.element_settings.submit.exposed_form_display = 1;
+    }
+
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
     $(
