@@ -53,13 +53,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     });
     $this->assertNoJavaScript($performance_data);
-    // This test observes a variable number of cache gets and sets, so to avoid
-    // random test failures, assert greater than equal the highest and lowest
-    // number of observed during test runs.
+    // This test observes a variable number of cache operations and database
+    // queies, so to avoid  random test failures, assert greater than equal
+    // the highest and lowest number of observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(58, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(67, $performance_data->getQueryCount());
-
     $this->assertGreaterThanOrEqual(129, $performance_data->getCacheGetCount());
     $this->assertLessThanOrEqual(132, $performance_data->getCacheGetCount());
     $this->assertGreaterThanOrEqual(59, $performance_data->getCacheSetCount());
@@ -71,12 +70,14 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(38, $performance_data->getQueryCount());
 
-    // This test observes a variable number of cache gets and sets, so to avoid
-    // random test failures, assert greater than equal the highest and lowest
-    // number of queries observed during test runs.
+    // This test observes a variable number of cache operations and database
+    // queies, so to avoid  random test failures, assert greater than equal
+    // the highest and lowest number of observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
+
+    $this->assertGreaterThanOrEqual(38, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(39, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(87, $performance_data->getCacheGetCount());
     $this->assertLessThanOrEqual(88, $performance_data->getCacheGetCount());
     $this->assertSame(20, $performance_data->getCacheSetCount());
