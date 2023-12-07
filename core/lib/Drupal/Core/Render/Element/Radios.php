@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Properties:
  * - #options: An associative array or enum, where the keys are the returned
  *   values for each radio button, and the values are the labels next to each
- *   radio button. In case of using an enum it needs to be a backend enum, see
+ *   radio button. In case of using an enum it needs to be a backed enum, see
  *   https://www.php.net/manual/en/language.enumerations.backed.php. The name
  *   of each case is used as storage, and the value as the visible option.
  *

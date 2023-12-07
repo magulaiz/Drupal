@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   for each checkbox, and whose values are the labels next to each checkbox.
  *   The #options array cannot have a 0 key, as it would not be possible to
  *   discern checked and unchecked states.
- *   In case of using an enum it needs to be a backend enum, see
+ *   In case of using an enum it needs to be a backed enum, see
  *   https://www.php.net/manual/en/language.enumerations.backed.php. The name of
  *   each case is used as storage, and the value as the visible option.
  *

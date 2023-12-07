@@ -27,7 +27,7 @@ use Drupal\Core\Render\Element;
  *     is ignored, and the contents of the 'option' property are interpreted as
  *     an array of options to be merged with any other regular options and
  *     option groups found in the outer array.
- *   - In case of using an enum it needs to be a backend enum, see
+ *   - In case of using an enum it needs to be a backed enum, see
  *     https://www.php.net/manual/en/language.enumerations.backed.php. The name
  *     of each case is used as storage, and the value as the visible option.
  * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
