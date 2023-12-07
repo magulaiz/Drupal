@@ -113,6 +113,9 @@ interface LanguageNegotiatorInterface {
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.
+   * 
+   * @deprecated Deprecated in Drupal 10.3.0. Scheduled for removal in Drupal
+   *   11.0.0. Inject the current user through a constructor instead.
    */
   public function setCurrentUser(AccountInterface $current_user);
 

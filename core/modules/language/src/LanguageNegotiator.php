@@ -118,6 +118,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    * {@inheritdoc}
    */
   public function setCurrentUser(AccountInterface $current_user) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2494703', E_USER_DEPRECATED);
     $this->currentUser = $current_user;
     $this->reset();
   }
