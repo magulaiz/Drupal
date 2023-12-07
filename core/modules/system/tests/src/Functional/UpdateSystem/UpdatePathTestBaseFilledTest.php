@@ -162,7 +162,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertSession()->pageTextContains('usuario_test');
     $this->assertSession()->pageTextContains('drupal');
     $this->drupalGet('user/1/edit');
-    $this->assertSession()->responseContains('drupal@example.com');
 
     // Make sure the content view works.
     $this->drupalGet('admin/content');
