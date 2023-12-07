@@ -258,7 +258,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     if ($this->needsCleanup) {
       $this->nextIdDelete();
     }
-
     parent::__destruct();
   }
 
