@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
@@ -28,7 +32,7 @@ class FilterTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'node'];
+  protected static $modules = ['views_ui', 'node', 'options'];
 
   /**
    * {@inheritdoc}
@@ -222,6 +226,164 @@ class FilterTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/nid');
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
+  }
+
+  /**
+   * Tests filtering when there are to 'in' filters on the same table.
+   */
+  public function testDoubleInFilter() {
+    $field_values = [
+      $this->randomMachineName(),
+      $this->randomMachineName(),
+      $this->randomMachineName(),
+    ];
+
+    // Create two field entities.
+    FieldStorageConfig::create([
+      'field_name' => 'field_test_list_string',
+      'entity_type' => 'node',
+      'type' => 'list_string',
+      'cardinality' => 1,
+      'settings' => [
+        'allowed_values' => [
+          $field_values[0] => $field_values[0],
+          $field_values[1] => $field_values[1],
+          $field_values[2] => $field_values[2],
+        ],
+      ],
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_test_list_string',
+      'entity_type' => 'node',
+      'label' => 'Test options list field',
+      'bundle' => 'article',
+    ])->save();
+
+    $node1 = $this->drupalCreateNode([
+      'type' => 'article',
+      'field_test_list_string' => $field_values[0],
+    ]);
+    $node2 = $this->drupalCreateNode([
+      'type' => 'article',
+      'field_test_list_string' => $field_values[2],
+    ]);
+
+    $view = Views::getView('test_filter_in_operator_ui');
+    $view->initDisplay();
+
+    // Change the filtering.
+    $filters = [
+      'field_test_list_string_value' => [
+        'id' => 'field_test_list_string_value',
+        'table' => 'node__field_test_list_string',
+        'field' => 'field_test_list_string_value',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'plugin_id' => 'list_field',
+        'operator' => 'or',
+        'value' => [
+          $field_values[0] => $field_values[0],
+          $field_values[1] => $field_values[1],
+          $field_values[2] => $field_values[2],
+        ],
+        'group' => 1,
+        'exposed' => false,
+        'expose' => [
+          'operator_id' => '',
+          'label' => '',
+          'description' => '',
+          'use_operator' => false,
+          'operator' => '',
+          'operator_limit_selection' => false,
+          'operator_list' => [],
+          'identifier' => '',
+          'required' => false,
+          'remember' => false,
+          'multiple' => false,
+          'remember_roles' => [
+            'authenticated' => 'authenticated'
+          ],
+          'reduce' => false
+        ],
+        'is_grouped' => false,
+        'group_info' => [
+          'label' => '',
+          'description' => '',
+          'identifier' => '',
+          'optional' => true,
+          'widget' => 'select',
+          'multiple' => false,
+          'remember' => false,
+          'default_group' => 'All',
+          'default_group_multiple' => [],
+          'group_items' => []
+        ],
+        'reduce_duplicates' => false
+      ],
+      'field_test_list_string_value_1' => [
+        'id' => 'field_test_list_string_value_1',
+        'table' => 'node__field_test_list_string',
+        'field' => 'field_test_list_string_value',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'plugin_id' => 'list_field',
+        'operator' => 'or',
+        'value' => [
+          $field_values[0] => $field_values[0],
+          $field_values[1] => $field_values[1],
+          $field_values[2] => $field_values[2],
+        ],
+        'group' => 1,
+        'exposed' => true,
+        'expose' => [
+          'operator_id' => 'field_test_list_string_value_1_op',
+          'label' => 'Difficulty (field_test_list_string)',
+          'description' => '',
+          'use_operator' => false,
+          'operator' => 'field_test_list_string_value_1_op',
+          'operator_limit_selection' => false,
+          'operator_list' => [],
+          'identifier' => 'field_test_list_string_value_1',
+          'required' => false,
+          'remember' => false,
+          'multiple' => false,
+          'remember_roles' => [
+            'authenticated' => 'authenticated',
+            'anonymous' => '0',
+            'administrator' => '0',
+            'author' => '0',
+            'editor' => '0'
+          ],
+          'reduce' => false
+        ],
+        'is_grouped' => false,
+        'group_info' => [
+          'label' => '',
+          'description' => '',
+          'identifier' => '',
+          'optional' => true,
+          'widget' => 'select',
+          'multiple' => false,
+          'remember' => false,
+          'default_group' => 'All',
+          'default_group_multiple' => [],
+          'group_items' => []
+        ],
+        'reduce_duplicates' => false
+      ],
+    ];
+
+    $view->displayHandlers->get('default')->overrideOption('filters', $filters);
+
+    $view->setExposedInput(['field_test_list_string_value_1' => [$field_values[2]]]);
+    $this->executeView($view);
+
+    $expected_results = [
+      $node2->id()
+    ];
+    $this->assertIdenticalResultset($view, $expected_results);
   }
 
 }
