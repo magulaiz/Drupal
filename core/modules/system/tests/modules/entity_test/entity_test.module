@@ -257,6 +257,16 @@ function entity_test_entity_bundle_info_alter(&$bundles) {
 }
 
 /**
+ * Implements hook_data_type_info_alter().
+ */
+function entity_test_data_type_info_alter(&$data_types) {
+  $entity_test_data_types = \Drupal::state()->get('entity_test.data_type_info');
+  if ($entity_test_data_types) {
+    $data_types = array_merge_recursive($data_types, $entity_test_data_types);
+  }
+}
+
+/**
  * Implements hook_entity_view_mode_info_alter().
  */
 function entity_test_entity_view_mode_info_alter(&$view_modes) {
