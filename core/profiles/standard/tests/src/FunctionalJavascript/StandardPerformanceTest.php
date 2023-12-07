@@ -72,7 +72,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertNoJavaScript($performance_data);
 
     // This test observes a variable number of cache operations and database
-    // queies, so to avoid  random test failures, assert greater than equal
+    // queries, so to avoid  random test failures, assert greater than equal
     // the highest and lowest number of observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
 
