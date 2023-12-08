@@ -822,6 +822,7 @@ trait FunctionalTestSetupTrait {
 
     switch ($connection_info['default']['driver']) {
       case 'mysql':
+      case 'Drupal\mysql\Driver\Database\mysql':
         $tables = \Drupal::database()
           ->query("SHOW TABLES LIKE '$this->databasePrefix%'")
           ->fetchCol();
@@ -847,6 +848,7 @@ trait FunctionalTestSetupTrait {
 
     switch ($connection_info['default']['driver']) {
       case 'mysql':
+      case 'Drupal\mysql\Driver\Database\mysql':
         exec("sed 's/default_db_prefix_/$this->databasePrefix/' $this->dumpFile | mysql -u$user -p$pass -h $host $db");
         break;
 
