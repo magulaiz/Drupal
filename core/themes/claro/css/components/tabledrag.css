@@ -73,6 +73,10 @@ body.drag {
   display: none;
 }
 
+.button.region-filter-control:active {
+  background-color: #adaeb2;
+}
+
 .button.region-filter-control.region-filtered {
   display: inline-block;
 }
@@ -103,7 +107,7 @@ body.drag {
   display: none;
   margin: 0;
   padding: 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 400;
   font-style: italic;
 }
@@ -111,6 +115,14 @@ body.drag {
 .js-input-filter-goto-element.has-block-results {
   cursor: pointer;
   color: var(--color-link);
+}
+
+/* Make sure of the disabled block has the success style when filtered. */
+
+.block-disabled.js-filter-block-visible.color-success {
+  color: #325e1c;
+  background-color: #f3faef;
+  opacity: 1;
 }
 
 /* Empty region message row in table. */

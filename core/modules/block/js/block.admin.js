@@ -214,7 +214,7 @@
               );
             }
             filteredRegionStatus.textContent = Drupal.t(
-              '@invisible filtered this region',
+              '@invisible filtered',
               { '@invisible': invisible },
             );
           }

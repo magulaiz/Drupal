@@ -204,11 +204,10 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
     $this->assertBlockOnRegion($fakeBlock3->id(), 'breadcrumb');
 
-    $this->getSession()->getPage()->find('css', '.js-input-filter-goto-element')
+    $page = $this->getSession()->getPage();
+    $page->find('css', '.js-input-filter-goto-element')
       ->click();
-    $this->getSession()
-      ->getPage()
-      ->clickLink('Toggle blocks on region breadcrumb');
+    $page->clickLink('Toggle blocks on region breadcrumb');
 
     $this->moveBlock($fakeBlock3->id(), 'highlighted');
     $this->moveBlock('claro-breadcrumbs', 'highlighted');
