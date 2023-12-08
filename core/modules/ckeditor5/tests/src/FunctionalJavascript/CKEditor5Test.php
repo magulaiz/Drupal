@@ -806,6 +806,18 @@ JS;
     Editor::create([
       'format' => 'ckeditor5',
       'editor' => 'ckeditor5',
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [],
+          ],
+        ],
+      ],
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
@@ -838,17 +850,24 @@ JS;
       'title' => 'My test content',
     ]);
 
-    // Add a node with text rendered via the Plain Text format.
+    // Test that entered text is saved.
     $this->drupalGet('node/1/edit');
     $page = $this->getSession()->getPage();
     $this->waitForEditor();
-
     $editor = $page->find('css', '.ck-content');
     $editor->setValue('Very important information');
-
     $page->pressButton('Save');
-
     $this->assertSession()->responseContains('Very important information');
+
+    // Test that changes only in source are saved.
+    $this->drupalGet('node/1/edit');
+    $page = $this->getSession()->getPage();
+    $this->waitForEditor();
+    $this->pressEditorButton('Source');
+    $editor = $page->find('css', '.ck-source-editing-area textarea');
+    $editor->setValue('Text hidden in the source');
+    $page->pressButton('Save');
+    $this->assertSession()->responseContains('Text hidden in the source');
   }
 
 }
