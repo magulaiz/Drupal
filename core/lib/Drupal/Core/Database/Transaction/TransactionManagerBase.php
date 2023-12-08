@@ -256,7 +256,9 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // $voidedItems, so we can remove it from there.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
       assert(isset($this->voidedItems[$id]), "Transaction {$id}/{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
-      unset($this->voidedItems[$id]);
+      if ($onDestruct) {
+        unset($this->voidedItems[$id]);
+      }
       return;
     }
 
