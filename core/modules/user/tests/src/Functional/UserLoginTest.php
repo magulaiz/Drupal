@@ -217,15 +217,14 @@ class UserLoginTest extends BrowserTestBase {
     $uid = $account->id();
     $edit = [
       'current_pass' => $current_password,
-      'mail' => $account->getEmail(),
       'pass[pass1]' => $new_password,
       'pass[pass2]' => $new_password,
     ];
 
     // Change the password.
-    $this->drupalGet("user/$uid/edit");
+    $this->drupalGet("user/$uid/edit-pass");
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('The changes have been saved.');
+    $this->assertSession()->pageTextContains('Password changed successfully.');
     $this->drupalLogout();
 
     // Login with new password.
