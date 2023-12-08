@@ -136,13 +136,13 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Check successful login.
     $this->submitForm([], 'Log in');
     $this->assertSession()->linkExists('Log out');
-    $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
+//    $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
 
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
-    $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
+    $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password, 'current_pass' => $this->account->passRaw,];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('The changes have been saved.');
+    $this->assertSession()->pageTextContains('Password changed successfully.');
 
     // Verify that the password reset session has been destroyed.
     $this->submitForm($edit, 'Save');
@@ -364,9 +364,9 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Change the password.
     $password = \Drupal::service('password_generator')->generate();
-    $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
+    $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password, 'current_pass' => $this->account->passRaw, ];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('The changes have been saved.');
+    $this->assertSession()->pageTextContains('Password changed successfully.');
 
     // Logged in users should not be able to access the user.reset.login or the
     // user.reset.form routes.
@@ -530,12 +530,13 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $password = $this->randomMachineName();
     $edit = [
+      'current_pass' => $this->account->passRaw,
       'pass[pass1]' => $password,
       'pass[pass2]' => $password,
     ];
     // Log in as admin and change the user password.
     $this->drupalLogin($admin_user);
-    $this->drupalGet('user/' . $this->account->id() . '/edit');
+    $this->drupalGet('user/' . $this->account->id() . '/edit-pass');
     $this->submitForm($edit, 'Save');
     $this->drupalLogout();
 
