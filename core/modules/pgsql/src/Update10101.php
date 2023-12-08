@@ -150,6 +150,7 @@ class Update10101 implements ContainerInjectionInterface {
                 $this->updateSequenceOwnership($sequence_name, $table_info['table'], $table_info['column']);
 
                 $sandbox['fixed']++;
+                $transaction->commit();
               }
               catch (DatabaseExceptionWrapper $e) {
                 $transaction->rollBack();

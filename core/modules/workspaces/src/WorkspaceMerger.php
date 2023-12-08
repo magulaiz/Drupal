@@ -119,6 +119,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         $this->cacheTagsInvalidator->invalidateTags($entity_type->getListCacheTags());
       }
+      $transaction->commit();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {

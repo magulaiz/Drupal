@@ -119,6 +119,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         }
         $insert_query->execute();
       }
+
+      $transaction->commit();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {

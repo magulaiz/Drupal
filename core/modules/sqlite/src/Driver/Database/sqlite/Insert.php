@@ -75,6 +75,7 @@ class Insert extends QueryInsert {
             $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $insert_values, $this->queryOptions);
           }
         }
+        $transaction->commit();
       }
       // Re-initialize the values array so that we can re-use this query.
       $this->insertValues = [];
