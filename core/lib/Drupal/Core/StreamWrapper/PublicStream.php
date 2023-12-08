@@ -56,7 +56,9 @@ class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
    */
   public function getUrl() : Url {
     $path = str_replace('\\', '/', $this->getTarget());
-    return Url::fromUri(static::baseUrl() . '/' . $path);
+    // UnroutedUrlAssembler adds script when page is being accessed with
+    // a script name in the URL, but this is a file - no script is needed.
+    return Url::fromUri(static::baseUrl() . '/' . $path, ['script' => '']);
   }
 
   /**
