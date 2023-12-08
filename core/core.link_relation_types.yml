@@ -309,3 +309,9 @@ working-copy:
 working-copy-of:
   description: "Points to the versioned resource from which this working copy was obtained."
   reference: '[RFC5829]'
+edit-pass:
+  description: "The target IRI points to a resource where a submission form for editing associated resource can be obtained."
+  reference: '[RFC6861]'
+edit-email:
+  description: "The target IRI points to a resource where a submission form for editing associated resource can be obtained."
+  reference: '[RFC6861]'
