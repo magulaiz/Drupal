@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
@@ -77,9 +78,16 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * A memory cache backend to statically cache target configuration data.
    *
-   * @var \Drupal\Core\Cache\MemoryBackend
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $targetCacheStorage;
+
+  /**
+   * Indicates whether the target storage should be wrapped in a cache.
+   *
+   * @var bool
+   */
+  protected bool $writeMode = FALSE;
 
   /**
    * Constructs the Configuration storage comparer.
@@ -97,18 +105,16 @@ class StorageComparer implements StorageComparerInterface {
       $target_storage = $target_storage->createCollection(StorageInterface::DEFAULT_COLLECTION);
     }
 
-    // Wrap the storages in a static cache so that multiple reads of the same
-    // raw configuration object are not costly.
+    // Wrap the source storage in a static cache so that multiple reads of the
+    // same raw configuration object are not costly.
     $this->sourceCacheStorage = new MemoryBackend();
     $this->sourceStorage = new CachedStorage(
       $source_storage,
       $this->sourceCacheStorage
     );
+
     $this->targetCacheStorage = new MemoryBackend();
-    $this->targetStorage = new CachedStorage(
-      $target_storage,
-      $this->targetCacheStorage
-    );
+    $this->targetStorage = $target_storage;
     $this->changelist[StorageInterface::DEFAULT_COLLECTION] = $this->getEmptyChangelist();
   }
 
@@ -132,14 +138,35 @@ class StorageComparer implements StorageComparerInterface {
    */
   public function getTargetStorage($collection = StorageInterface::DEFAULT_COLLECTION) {
     if (!isset($this->targetStorages[$collection])) {
-      if ($collection == StorageInterface::DEFAULT_COLLECTION) {
-        $this->targetStorages[$collection] = $this->targetStorage;
+      $target = $this->targetStorage;
+      if ($collection !== StorageInterface::DEFAULT_COLLECTION) {
+        $target = $target->createCollection($collection);
       }
-      else {
-        $this->targetStorages[$collection] = $this->targetStorage->createCollection($collection);
+      // If we're in not in write mode wrap the storage in a static cache so
+      // that multiple reads of the same configuration object are cheap.
+      if (!$this->writeMode) {
+        $target = new CachedStorage(
+          $target,
+          $this->targetCacheStorage
+        );
       }
+      $this->targetStorages[$collection] = $target;
     }
     return $this->targetStorages[$collection];
+  }
+
+  /**
+   * @todo
+   *
+   * @return $this
+   */
+  public function writeMode() {
+    if (!$this->writeMode) {
+      $this->writeMode = TRUE;
+      $this->targetCacheStorage = new NullBackend('storage_comparer');
+      $this->targetStorages = [];
+    }
+    return $this;
   }
 
   /**
