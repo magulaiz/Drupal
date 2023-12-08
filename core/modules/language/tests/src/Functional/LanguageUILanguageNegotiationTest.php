@@ -139,7 +139,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');
 
-    // Now the t()'ed string is in db so switch the language back to default.
+    // Now the  string is in db so switch the language back to default.
     // This will rebuild the container so we need to rebuild the container in
     // the test environment.
     $this->config('system.site')->set('default_langcode', $default_language->getId())->save();

@@ -122,7 +122,7 @@ PO;
     $this->assertEquals('Anonymous es', $override_es->get('anonymous'));
 
     // Test translation from locale_test module.
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']));
+    $this->assertEquals('Montag', 'Monday', [], ['langcode' => 'de']);
   }
 
   /**

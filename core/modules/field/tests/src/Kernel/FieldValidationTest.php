@@ -59,7 +59,7 @@ class FieldValidationTest extends FieldKernelTestBase {
     // Check that the expected constraint violations are reported.
     $this->assertCount(1, $violations);
     $this->assertEquals('', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('%name: this field cannot hold more than @count values.', ['%name' => $this->fieldTestData->field->getLabel(), '@count' => $cardinality]), $violations[0]->getMessage());
+    $this->assertEquals(''.$this->fieldTestData->field->getLabel().': this field cannot hold more than '.$cardinality.' values.', $violations[0]->getMessage());
   }
 
   /**
@@ -81,7 +81,7 @@ class FieldValidationTest extends FieldKernelTestBase {
       }
       else {
         $value = -1;
-        $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', ['%name' => $this->fieldTestData->field->getLabel()]);
+        $expected_violations[$delta . '.value'][] = ''.$this->fieldTestData->field->getLabel().' does not accept the value -1.';
       }
       $entity->{$this->fieldTestData->field_name}[] = $value;
     }
