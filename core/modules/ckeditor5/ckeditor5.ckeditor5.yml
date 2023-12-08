@@ -548,7 +548,7 @@ ckeditor5_imageResize:
       - image.ImageResize
     config:
       image:
-        resizeUnit: '%'
+        resizeUnit: 'px'
         resizeOptions:
           -
             name: 'resizeImage:original'
