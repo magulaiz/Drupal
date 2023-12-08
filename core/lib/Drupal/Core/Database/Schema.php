@@ -513,7 +513,9 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @return array
    *   A schema array with the following keys: 'primary key', 'unique keys' and
-   *   'indexes', and values as arrays of database columns.
+   *   'indexes', and values as arrays of database columns. Note this array may
+   *   not contain a full list of columns that contribute to any functional
+   *   indexes, e.g. those which index a substring.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.

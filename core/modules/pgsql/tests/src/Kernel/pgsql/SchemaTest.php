@@ -307,4 +307,21 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertPrefixedColumnIndex(string $table_name, string $index_key, string $column): void {
+    $full_name = str_replace('"', '', $this->connection->prefixTables('{' . $table_name . '}'));
+    $result = $this->connection->query("SELECT * FROM pg_indexes where tablename = :table_name", [
+      ':table_name' => $full_name,
+    ])->fetchAll();
+    foreach ($result as $row) {
+      if (str_contains($row->indexdef, sprintf('substr(%s, 1', $column))) {
+        $this->assertTrue(str_contains($row->indexname, $index_key));
+        return;
+      }
+    }
+    $this->assertTrue(FALSE, sprintf('Column %s was not indexed via %s on table %s.', $column, $index_key, $table_name));
+  }
+
 }

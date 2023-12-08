@@ -1313,6 +1313,59 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
   }
 
   /**
+   * Tests the alternative syntax for creating indexes.
+   */
+  public function testAlternativeIndexSyntax(): void {
+    $specification = [
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique ID.',
+        ],
+        'text' => [
+          'type' => 'text',
+          'description' => 'A text field',
+        ],
+      ],
+      'indexes' => [
+        'prefixed_column' => [
+          ['text', 2],
+        ],
+      ],
+      'primary key' => ['id'],
+    ];
+    $table_name = 'index_with_prefix';
+    $this->schema->createTable($table_name, $specification);
+    $this->assertPrefixedColumnIndex($table_name, 'prefixed_column', 'text');
+  }
+
+  /**
+   * Assert an index created with prefixed syntax was successfully created.
+   *
+   * Support for prefixed indexes (functional indexes) by database drivers is
+   * optional. If the driver indexed the full field value, it will appear in
+   * the usual list of introspected indexes. If the driver does indeed support
+   * indexing on a substring of a field, its test class must override this
+   * method to run an appropriate query to verify the index was created.
+   */
+  protected function assertPrefixedColumnIndex(string $table_name, string $index_key, string $column): void {
+    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $introspected = $introspect_index_schema->invoke($this->schema, $table_name);
+    $this->assertArrayHasKey(
+      $index_key,
+      $introspected['indexes'],
+      sprintf(
+        'Index %s not found during introspection. If the database driver supports substring functional indexes, it must override %s::%s.',
+        $index_key,
+        __CLASS__,
+        __FUNCTION__
+      )
+    );
+    $this->assertContains($column, $introspected['indexes'][$index_key]);
+  }
+
+  /**
    * Tests changing a field length.
    */
   public function testChangeSerialFieldLength(): void {
