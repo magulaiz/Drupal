@@ -87,7 +87,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @var bool
    */
-  protected bool $writeMode = FALSE;
+  protected bool $writeMode = TRUE;
 
   /**
    * Constructs the Configuration storage comparer.
