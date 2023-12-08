@@ -16,7 +16,7 @@ interface StreamWrapperGetUrlInterface {
    *
    * This function returns a URL object that can be turned into a string that
    * can be embedded in a webpage and accessed from a browser. For example a
-   * stream wrapper for the URI "youtube://xIpLd0WQKCY" might return a URL
+   * stream wrapper for the URI "youtube://ABCdefGH" might return a URL
    * object for "http://www.youtube.com/watch?v=xIpLd0WQKCY".
    *
    * @return \Drupal\Core\Url

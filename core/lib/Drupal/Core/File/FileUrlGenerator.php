@@ -103,7 +103,7 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
       if ($wrapper instanceof StreamWrapperGetUrlInterface) {
         return $wrapper->getUrl()->setAbsolute(!$relative)->toString();
       }
-      @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '. See ', E_USER_DEPRECATED);
+      @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '. See https://www.drupal.org/', E_USER_DEPRECATED);
       // Attempt to return an external URL using the appropriate wrapper.
       $externalUrl = $wrapper->getExternalUrl();
       return $relative ? $this->transformRelative($externalUrl) : $externalUrl;
@@ -195,7 +195,7 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
         // Relative URL is being expected for local URLs (matching domain).
         return $wrapper->getUrl()->setAbsolute(FALSE);
       }
-      @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '. See ', E_USER_DEPRECATED);
+      @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '.  See https://www.drupal.org/', E_USER_DEPRECATED);
       $external_url = $wrapper->getExternalUrl();
       $options = UrlHelper::parse($external_url);
 
