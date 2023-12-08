@@ -831,7 +831,7 @@ trait FunctionalTestSetupTrait {
         break;
 
       default:
-        throw new \LogicException('This database driver is not supported yet.');
+        throw new \LogicException("The database driver {$connection_info['default']['driver']} is not supported yet.");
     }
   }
 
@@ -853,7 +853,7 @@ trait FunctionalTestSetupTrait {
         break;
 
       default:
-        throw new \LogicException('This database driver is not supported yet.');
+        throw new \LogicException("The database driver {$connection_info['default']['driver']} is not supported yet.");
     }
   }
 
