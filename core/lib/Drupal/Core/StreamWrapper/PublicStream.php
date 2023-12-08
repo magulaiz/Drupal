@@ -56,10 +56,7 @@ class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
    */
   public function getUrl() : Url {
     $path = str_replace('\\', '/', $this->getTarget());
-    // We must replace the base URL with "base:" so that link modification works correctly
-    // downstream, but we can't change static::baseUrl because it might be relied on by others.
-    $base_url = str_replace($GLOBALS['base_url'], "base:", static::baseUrl());
-    return Url::fromUri($base_url . '/' . $path);
+    return Url::fromUri(static::baseUrl() . '/' . $path);
   }
 
   /**
@@ -80,7 +77,7 @@ class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
       return (string) $settings_base_url;
     }
     else {
-      return $GLOBALS['base_url'] . '/' . static::basePath();
+      return 'base:/' . static::basePath();
     }
   }
 

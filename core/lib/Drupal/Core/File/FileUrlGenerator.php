@@ -192,7 +192,8 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
     }
     elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
       if ($wrapper instanceof StreamWrapperGetUrlInterface) {
-        return $wrapper->getUrl();
+        // Relative URL is being expected for local URLs (matching domain).
+        return $wrapper->getUrl()->setAbsolute(FALSE);
       }
       @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '. See ', E_USER_DEPRECATED);
       $external_url = $wrapper->getExternalUrl();
