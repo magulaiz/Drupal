@@ -166,7 +166,7 @@ class MatcherDumper implements MatcherDumperInterface {
         // Insert all new routes.
         $insert->execute();
       }
-
+      $transaction->commit();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {

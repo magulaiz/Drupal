@@ -262,6 +262,10 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       return;
     }
 
+    if ($onDestruct) {
+      @trigger_error('Database commit by letting a Transaction object go out of scope is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Commit explicitly via Transaction::commit() instead. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+    }
+
     // If we are not releasing the last savepoint but an earlier one, or
     // committing a root transaction while savepoints are active, all
     // subsequent savepoints will be released as well. The stack must be

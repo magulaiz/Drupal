@@ -145,6 +145,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
           }
         }
       });
+      $transaction->commit();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
