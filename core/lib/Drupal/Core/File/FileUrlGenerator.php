@@ -5,6 +5,7 @@ namespace Drupal\Core\File;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Url;
@@ -99,6 +100,10 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
       return $relative ? $this->transformRelative($uri) : $uri;
     }
     elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
+      if ($wrapper instanceof StreamWrapperGetUrlInterface) {
+        return $wrapper->getUrl()->setAbsolute(!$relative)->toString();
+      }
+      @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '. See ', E_USER_DEPRECATED);
       // Attempt to return an external URL using the appropriate wrapper.
       $externalUrl = $wrapper->getExternalUrl();
       return $relative ? $this->transformRelative($externalUrl) : $externalUrl;
@@ -186,6 +191,10 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
       return Url::fromUri(urldecode($options['path']), $options);
     }
     elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
+      if ($wrapper instanceof StreamWrapperGetUrlInterface) {
+        return $wrapper->getUrl();
+      }
+      @trigger_error('Implementing \Drupal\Core\StreamWrapper\StreamWrapperInterface without implementing \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Implement \Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface for ' . get_class($wrapper) . '. See ', E_USER_DEPRECATED);
       $external_url = $wrapper->getExternalUrl();
       $options = UrlHelper::parse($external_url);
 

@@ -11,7 +11,7 @@ use Drupal\Core\Url;
  * Provides support for storing privately accessible files with the Drupal file
  * interface.
  */
-class PrivateStream extends LocalStream {
+class PrivateStream extends LocalStream implements StreamWrapperGetUrlInterface {
 
   /**
    * {@inheritdoc}
@@ -45,8 +45,15 @@ class PrivateStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
+    return $this->getUrl()->toString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrl() : Url {
     $path = str_replace('\\', '/', $this->getTarget());
-    return Url::fromRoute('system.private_file_download', ['filepath' => $path], ['absolute' => TRUE, 'path_processing' => FALSE])->toString();
+    return Url::fromRoute('system.private_file_download', ['filepath' => $path], ['absolute' => TRUE, 'path_processing' => FALSE]);
   }
 
   /**
