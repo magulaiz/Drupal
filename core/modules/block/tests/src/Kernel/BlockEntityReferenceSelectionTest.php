@@ -102,7 +102,6 @@ class BlockEntityReferenceSelectionTest extends KernelTestBase {
   public function providerTestCases(): array {
     return [
       ['test', 'CONTAINS', 5, [
-        'Test context-aware block',
         'Test context-aware block - no valid context options',
         'Test context-aware unsatisfied block',
         'Test form block caching',
@@ -116,7 +115,6 @@ class BlockEntityReferenceSelectionTest extends KernelTestBase {
       ],
       ['block', 'ENDS_WITH', 5, [
         'Test context-aware unsatisfied block',
-        'Test context-aware block',
         'Multiple forms test block',
       ],
       ],
