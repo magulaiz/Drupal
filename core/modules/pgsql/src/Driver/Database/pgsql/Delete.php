@@ -24,14 +24,16 @@ class Delete extends QueryDelete {
    */
   public function execute() {
     if ($this->connection->inTransaction()) {
-      $savepoint = $this->connection->startTransaction('mimic_implicit_commit');
       try {
+        $savepoint = $this->connection->startTransaction('mimic_implicit_commit');
         $result = parent::execute();
         $savepoint->commit();
         return $result;
       }
       catch (\Exception $e) {
-        $savepoint->rollback();
+        if (isset($savepoint)) {
+          $savepoint->rollback();
+        }
         throw $e;
       }
     }
