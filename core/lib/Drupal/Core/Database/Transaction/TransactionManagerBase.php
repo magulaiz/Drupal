@@ -330,11 +330,13 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       // Release the client transaction savepoint in case the Drupal
       // transaction is not a root one.
       $this->releaseClientSavepoint($name);
+      return;
     }
     elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
       // If this was the root Drupal transaction, we can commit the client
       // transaction.
       $this->processRootCommit();
+      return;
     }
 
     // The stack got corrupted.
