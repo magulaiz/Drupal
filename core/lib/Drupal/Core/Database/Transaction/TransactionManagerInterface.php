@@ -53,8 +53,8 @@ interface TransactionManagerInterface {
    * Removes a Drupal transaction from the stack.
    *
    * The unpiled item does not necessarily need to be the last on the stack.
-   * This method should only be called by a Transaction object going out of
-   * scope.
+   * This method should only be called by a Transaction object's ::commit()
+   * method.
    *
    * This method should only be called internally by a database driver.
    *
@@ -62,16 +62,13 @@ interface TransactionManagerInterface {
    *   The name of the transaction.
    * @param string $id
    *   The id of the transaction.
-   * @param bool $onDestruct
-   *   Indicates if the method is being called from Transaction::__destruct or
-   *   not.
    *
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    *   If a Drupal Transaction with the specified name does not exist.
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
    *   If the commit of the root transaction failed.
    */
-  public function unpile(string $name, string $id, bool $onDestruct): void;
+  public function unpile(string $name, string $id): void;
 
   /**
    * Rolls back a Drupal transaction.

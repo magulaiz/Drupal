@@ -85,7 +85,7 @@ class Transaction {
 
   public function __destruct() {
     if ($this->connection->transactionManager()) {
-      $this->connection->transactionManager()->unpile($this->name, $this->id, TRUE);
+      $this->connection->transactionManager()->purge($this->name, $this->id);
       return;
     }
     // Start of BC layer.
@@ -118,7 +118,7 @@ class Transaction {
       throw new TransactionException('Can not commit a Transaction object when no TransactionManager is available');
     }
     // End of BC layer.
-    $this->connection->transactionManager()->unpile($this->name, $this->id, FALSE);
+    $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 
   /**
@@ -126,7 +126,8 @@ class Transaction {
    *
    * Depending on the state of the transaction stack, this leads to a ROLLBACK
    * operation (if this transaction is a root one), or to a ROLLBACK TO
-   * SAVEPOINT operation (if this transaction is a savepoint one).
+   * SAVEPOINT + a RELEASE SAVEPOINT operations (if this transaction is a
+   * savepoint one).
    */
   public function rollBack() {
     if ($this->connection->transactionManager()) {
