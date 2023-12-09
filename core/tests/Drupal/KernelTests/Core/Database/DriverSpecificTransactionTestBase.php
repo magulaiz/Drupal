@@ -659,7 +659,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('inner');
     // Now rollback the inner transaction.
     $transaction2->rollBack();
-    $transaction2->commit();
+    unset($transaction2);
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
     $this->insertRow('outer-after-inner-rollback');

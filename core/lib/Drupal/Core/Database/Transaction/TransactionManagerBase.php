@@ -270,7 +270,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // DDL statement breaking an active transaction). That should be listed in
     // $voidedItems, so we can remove it from there.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      assert(isset($this->voidedItems[$id]), "Transaction {$id}/{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
+      assert(isset($this->voidedItems[$id]), "Transaction {$id}\\{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
       unset($this->voidedItems[$id]);
       return;
     }
@@ -289,7 +289,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // If there is no $id to commit, or if $id does not correspond to the one
     // in the stack for that $name, the commit is out of order.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      throw new TransactionOutOfOrderException("Error attempting commit of {$id}/{$name}. Active stack: " . $this->dumpStackItemsAsString());
+      throw new TransactionOutOfOrderException("Error attempting commit of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
     }
 
     // Commit the transaction.
@@ -315,7 +315,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   protected function commit(string $name, string $id): void {
     if ($this->getConnectionTransactionState() !== ClientConnectionTransactionState::Active) {
       // The stack got corrupted.
-      throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
+      throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
     }
 
     // If we are not releasing the last savepoint but an earlier one, or
@@ -340,7 +340,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     }
 
     // The stack got corrupted.
-    throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
+    throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
   }
 
   /**
