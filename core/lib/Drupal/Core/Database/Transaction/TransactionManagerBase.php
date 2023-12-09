@@ -275,38 +275,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       return;
     }
 
-    // If we are not releasing the last savepoint but an earlier one, or
-    // committing a root transaction while savepoints are active, all
-    // subsequent savepoints will be released as well. The stack must be
-    // diminished accordingly.
-    while (($i = array_key_last($this->stack())) != $id) {
-      $this->voidStackItem((string) $i);
-    }
+    // Commit the transaction.
+    $this->commit($name, $id);
 
-    if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Active) {
-      if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
-        // Release the client transaction savepoint in case the Drupal
-        // transaction is not a root one.
-        $this->releaseClientSavepoint($name);
-      }
-      elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
-        // If this was the root Drupal transaction, we can commit the client
-        // transaction.
-        $this->processRootCommit();
-      }
-      else {
-        // The stack got corrupted.
-        throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
-      }
-
-      // Remove the transaction from the stack.
-      $this->removeStackItem($id);
-
-      return;
-    }
-
-    // The stack got corrupted.
-    throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
+    // Remove the transaction from the stack.
+    $this->removeStackItem($id);
   }
 
   /**
@@ -319,6 +292,32 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       throw new TransactionOutOfOrderException("Error attempting commit of {$id}/{$name}. Active stack: " . $this->dumpStackItemsAsString());
     }
 
+    // Commit the transaction.
+    $this->commit($name, $id);
+
+    // Void the transaction stack item.
+    $this->voidStackItem($id);
+  }
+
+  /**
+   * Commits a Drupal transaction.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   * @param string $id
+   *   The id of the transaction.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   */
+  protected function commit(string $name, string $id): void {
+    if ($this->getConnectionTransactionState() !== ClientConnectionTransactionState::Active) {
+      // The stack got corrupted.
+      throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
+    }
+
     // If we are not releasing the last savepoint but an earlier one, or
     // committing a root transaction while savepoints are active, all
     // subsequent savepoints will be released as well. The stack must be
@@ -327,26 +326,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $this->voidStackItem((string) $i);
     }
 
-    if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Active) {
-      if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
-        // Release the client transaction savepoint in case the Drupal
-        // transaction is not a root one.
-        $this->releaseClientSavepoint($name);
-      }
-      elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
-        // If this was the root Drupal transaction, we can commit the client
-        // transaction.
-        $this->processRootCommit();
-      }
-      else {
-        // The stack got corrupted.
-        throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
-      }
-
-      // Void the transaction stack item.
-      $this->voidStackItem($id);
-
-      return;
+    if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
+      // Release the client transaction savepoint in case the Drupal
+      // transaction is not a root one.
+      $this->releaseClientSavepoint($name);
+    }
+    elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
+      // If this was the root Drupal transaction, we can commit the client
+      // transaction.
+      $this->processRootCommit();
     }
 
     // The stack got corrupted.

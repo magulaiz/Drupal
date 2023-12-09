@@ -342,7 +342,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     }
     catch (\Exception $e) {
       $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
-      $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction/", $e->getMessage());
+      $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction/", $e->getMessage());
     }
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
