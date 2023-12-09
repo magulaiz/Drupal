@@ -391,7 +391,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
+    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter/index.js > junit.xml
 
   artifacts:
     reports:
