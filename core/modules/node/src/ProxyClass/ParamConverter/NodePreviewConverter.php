@@ -15,7 +15,7 @@ namespace Drupal\node\ProxyClass\ParamConverter {
     /**
      * Provides a proxy class for \Drupal\node\ParamConverter\NodePreviewConverter.
      *
-     * @see \Drupal\Component\ProxyBuilder
+     * @see \Drupal\Component\ProxyBuilder\ProxyBuilder
      */
     class NodePreviewConverter implements ParamConverterInterface
     {
