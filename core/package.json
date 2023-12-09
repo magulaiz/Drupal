@@ -93,7 +93,7 @@
     "stylelint": "^16.0.1",
     "stylelint-checkstyle-formatter": "^0.1.2",
     "stylelint-config-standard": "^35.0.0",
-    "stylelint-formatter-gitlab": "^1.0.2",
+    "stylelint-junit-formatter": "^0.2.2",
     "stylelint-order": "^6.0.3",
     "tabbable": "^6.1.2",
     "terser": "^5.19.0",

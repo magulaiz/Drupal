@@ -391,10 +391,11 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab/index.js
+    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
+
   artifacts:
     reports:
-      codequality: stylelint-quality-report.json
+      junit: phpstan-junit.xml
 
 '🧹 Compilation check':
   <<: [ *with-yarn, *default-job-settings-lint ]
