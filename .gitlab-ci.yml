@@ -392,7 +392,6 @@ default:
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter/index.js > junit.xml
-
   artifacts:
     reports:
       junit: phpstan-junit.xml
