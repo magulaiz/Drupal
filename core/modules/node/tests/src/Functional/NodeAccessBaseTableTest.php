@@ -143,7 +143,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           'title[0][value]' => "$type Article created by " . $this->webUser->getAccountName(),
         ];
         if ($is_private) {
-          $edit['private[0][value]'] = TRUE;
+          $edit['private[0][value]'] = 1;
           $edit['body[0][value]'] = 'private node';
           $edit['field_tags[target_id]'] = 'private';
         }
