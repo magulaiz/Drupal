@@ -69,8 +69,7 @@ class DateFormatFormatTest extends KernelTestBase {
     $entity->save();
   }
 
-  public function provideLocked(): array
-  {
+  public function provideLocked(): array {
     return [
       [TRUE],
       [FALSE],
