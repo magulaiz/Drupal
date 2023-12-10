@@ -113,11 +113,10 @@ class Transaction {
    * operation (if this transaction is a savepoint one).
    */
   public function commit(): void {
-    // Start of BC layer.
     if (!$this->connection->transactionManager()) {
-      throw new TransactionException('Can not commit a Transaction object when no TransactionManager is available');
+      @trigger_error('Calling ' . __METHOD__ . '() with no TransactionManager available is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Ensure the database driver implements a TransactionManager. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+      return;
     }
-    // End of BC layer.
     $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 
