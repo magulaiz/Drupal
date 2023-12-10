@@ -5,18 +5,18 @@ namespace Drupal\action_bulk_test\Plugin\Action;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Session\AccountInterface;
 
 /**
  * Test action.
- *
- * @Action(
- *   id = "test_action",
- *   label = @Translation("Test action"),
- *   type = "node",
- *   confirm_form_route_name = "action_bulk_test.action.confirm",
- * )
  */
+ #[Action(
+  id: 'test_action',
+  label: 'Test action',
+  type: 'node',
+  confirm_form_route_name: 'action_bulk_test.action.confirm'
+)]
 class TestAction extends ActionBase {
 
   /**
