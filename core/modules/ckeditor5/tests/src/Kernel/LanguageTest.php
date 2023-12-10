@@ -72,7 +72,8 @@ class LanguageTest extends KernelTestBase {
   public function test(string $drupal_langcode, string $cke5_langcode, bool $is_missing_mapping = FALSE): void {
     $editor = Editor::load('basic_html');
 
-    $new_language = ConfigurableLanguage::createFromLangcode($drupal_langcode)->save();
+    $new_language = ConfigurableLanguage::createFromLangcode($drupal_langcode);
+    $new_language->save();
     $this->config('system.site')->set('default_langcode', $drupal_langcode)->save();
     \Drupal::service('language.default')->set($new_language);
     \Drupal::languageManager()->reset()->init();
