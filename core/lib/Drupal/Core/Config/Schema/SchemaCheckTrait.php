@@ -204,7 +204,19 @@ trait SchemaCheckTrait {
       return [];
     }
 
-    if ($element && is_scalar($value) || $value === NULL) {
+    if ($element instanceof Enum) {
+      // At this point $value stores the scalar representation of the enum case,
+      // thus we're reverting to enum case in order to do a proper check.
+      $enum = $data_definition->getEnum();
+      $case = call_user_func([$enum, 'tryFrom'], $value);
+      if (!is_a($case, $enum)) {
+        $type = gettype($value);
+        // Be more specific.
+        $type = $type === 'object' ? get_class($value) : $type;
+        return [$error_key => "variable type is $type but it should be a case of $enum enum"];
+      }
+    }
+    elseif ($element && is_scalar($value) || $value === NULL) {
       $success = FALSE;
       $type = gettype($value);
       if ($element instanceof PrimitiveInterface) {

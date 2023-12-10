@@ -60,6 +60,11 @@ sequence:
 
 # Simple extended data types:
 
+enum:
+  label: 'Enum'
+  class: '\Drupal\Core\Config\Schema\Enum'
+  definition_class: '\Drupal\Core\Config\Schema\EnumDataDefinition'
+
 # Human readable string that must be plain text and editable with a text field.
 label:
   type: string
