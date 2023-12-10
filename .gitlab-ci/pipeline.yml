@@ -26,8 +26,8 @@ stages:
   retry:
     max: 2
     when:
-      - unknown_failure
-      - api_failure
+      - 
+      - 
       - stuck_or_timeout_failure
       - runner_system_failure
       - scheduler_failure
@@ -193,9 +193,9 @@ stages:
   services:
     # There are some unit tests that need a database.
     # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
-    - <<: *with-database
+    - <<: 
   variables:
-    <<: *test-variables
+    <<: 
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "16"
@@ -205,7 +205,7 @@ stages:
   stage: 🗜️ Test
   parallel: 6
   variables:
-    <<: *test-variables
+    <<: 
     TESTSUITE: PHPUnit-Functional
     CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "24"
@@ -221,7 +221,6 @@ stages:
   variables:
     <<: *test-variables
   services:
-    - <<: *with-database
     - <<: *with-chrome
   script:
     #  Determine DB driver.
@@ -268,7 +267,7 @@ stages:
     CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "16"
   services:
-    - <<: *with-database
+    - <<: 
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
