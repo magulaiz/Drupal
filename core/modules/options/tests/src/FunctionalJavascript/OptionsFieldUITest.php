@@ -341,7 +341,7 @@ JS;
     $type_cases = [
       'List integer' => [
         'list_integer',
-        [1 => 'First', 2 => 'Second', 3 => 'Third'],
+        ['1' => 'First', '2' => 'Second', '3' => 'Third'],
         FALSE,
       ],
       'List float' => [
