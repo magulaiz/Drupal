@@ -11,7 +11,10 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
  * Defines a config storage comparer.
  */
 class StorageComparer implements StorageComparerInterface {
-  use DependencySerializationTrait;
+  use DependencySerializationTrait {
+    __sleep as defaultSleep;
+    __wakeup as defaultWakeup;
+  }
 
   /**
    * The source storage used to discover configuration changes.
@@ -87,7 +90,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @var bool
    */
-  protected bool $writeMode = TRUE;
+  protected bool $writeMode = FALSE;
 
   /**
    * Constructs the Configuration storage comparer.
@@ -156,7 +159,11 @@ class StorageComparer implements StorageComparerInterface {
   }
 
   /**
-   * @todo
+   * Changes the StorageComparer to write mode.
+   *
+   * In write mode the StorageComparer no longer wraps the target storage in a
+   * static cache. When writing to active configuration, the target storage must
+   * reflect any secondary writes to configuration that occur.
    *
    * @return $this
    */
@@ -483,6 +490,22 @@ class StorageComparer implements StorageComparerInterface {
       array_unshift($collections, StorageInterface::DEFAULT_COLLECTION);
     }
     return $collections;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    return array_diff($this->defaultSleep(), ['targetStorages']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __wakeup() {
+    $this->defaultWakeup();
+    $this->targetStorages = [];
+    $this->targetCacheStorage->deleteAll();
   }
 
 }

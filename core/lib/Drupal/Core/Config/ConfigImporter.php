@@ -1135,6 +1135,8 @@ class ConfigImporter {
     // the new container.
     $this->__sleep();
     $this->__wakeup();
+    $this->storageComparer->__sleep();
+    $this->storageComparer->__wakeup();
   }
 
 }
