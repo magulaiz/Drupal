@@ -41,7 +41,7 @@ class ContentNegotiationTest extends BrowserTestBase {
       'Android #2 (2012)' => 'text/xml,text/html,application/xhtml+xml,image/png,text/plain,*/*;q=0.8',
     ];
     foreach ($tests as $case => $header) {
-      $this->drupalGet('', [], ['Accept: ' . $header]);
+      $this->drupalGet('', [], ['Accept' => $header]);
       $this->assertSession()->pageTextNotContains('Unsupported Media Type');
       $this->assertSession()->pageTextContains('Log in');
     }
