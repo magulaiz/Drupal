@@ -93,8 +93,8 @@ trait UiHelperTrait {
         $value = (bool) $value;
       }
 
-      // Behat only allows strings for text and radio button values.
-      if ($field_type === 'text' || $field_type === 'radio') {
+      // Mink only allows strings for text, number and radio button values.
+      if ($field_type === 'text' || $field_type === 'number' || $field_type === 'radio') {
         $value = (string) $value;
       }
 
