@@ -74,6 +74,7 @@ class LanguageTest extends KernelTestBase {
 
     ConfigurableLanguage::createFromLangcode($drupal_langcode)->save();
     $this->config('system.site')->set('default_langcode', $drupal_langcode)->save();
+    \Drupal::service('language.default')->set($drupal_langcode);
     \Drupal::languageManager()->reset()->init();
 
     if ($is_missing_mapping) {
