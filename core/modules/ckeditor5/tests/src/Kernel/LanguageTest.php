@@ -74,7 +74,7 @@ class LanguageTest extends KernelTestBase {
 
     ConfigurableLanguage::createFromLangcode($drupal_langcode)->save();
     $this->config('system.site')->set('default_langcode', $drupal_langcode)->save();
-    \Drupal::languageManager()->reset();
+    \Drupal::languageManager()->reset()->init();
 
     if ($is_missing_mapping) {
       // CKEditor 5's UI language falls back to English, until the language
