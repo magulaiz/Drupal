@@ -163,6 +163,16 @@ class Schema extends DatabaseSchema {
         $sql .= ' COLLATE ascii_general_ci';
       }
     }
+    elseif ($spec['mysql_type'] == 'ENUM') {
+      // Build a string of the enum items like "('a','b','c')".
+      $sql .= '(';
+      foreach ($spec['enum'] as $enum) {
+        $sql .= "'" . $enum . "',";
+      }
+      // Remove the final trailing comma.
+      $sql = trim($sql, ",");
+      $sql .= ')';
+    }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
     }
@@ -269,6 +279,10 @@ class Schema extends DatabaseSchema {
       'float:normal'    => 'FLOAT',
 
       'numeric:normal'  => 'DECIMAL',
+
+      'timestamp:normal' => 'TIMESTAMP',
+
+      'enum:normal'     => 'ENUM',
 
       'blob:big'        => 'LONGBLOB',
       'blob:normal'     => 'BLOB',
