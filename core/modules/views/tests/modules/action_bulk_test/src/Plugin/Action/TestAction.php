@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Test action.
  */
- #[Action(
+#[Action(
   id: 'test_action',
   label: 'Test action',
   type: 'node',
