@@ -85,7 +85,7 @@ class Transaction {
 
   public function __destruct() {
     if ($this->connection->transactionManager()) {
-      $this->connection->transactionManager()->unpile($this->name, $this->id, TRUE);
+      $this->connection->transactionManager()->purge($this->name, $this->id);
       return;
     }
     // Start of BC layer.
@@ -113,12 +113,11 @@ class Transaction {
    * operation (if this transaction is a savepoint one).
    */
   public function commit(): void {
-    // Start of BC layer.
     if (!$this->connection->transactionManager()) {
-      throw new TransactionException('Can not commit a Transaction object when no TransactionManager is available');
+      @trigger_error('Calling ' . __METHOD__ . '() with no TransactionManager available is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Ensure the database driver implements a TransactionManager. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+      return;
     }
-    // End of BC layer.
-    $this->connection->transactionManager()->unpile($this->name, $this->id, FALSE);
+    $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 
   /**
@@ -126,7 +125,8 @@ class Transaction {
    *
    * Depending on the state of the transaction stack, this leads to a ROLLBACK
    * operation (if this transaction is a root one), or to a ROLLBACK TO
-   * SAVEPOINT operation (if this transaction is a savepoint one).
+   * SAVEPOINT + a RELEASE SAVEPOINT operations (if this transaction is a
+   * savepoint one).
    */
   public function rollBack() {
     if ($this->connection->transactionManager()) {

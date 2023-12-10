@@ -247,23 +247,77 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Purges a Drupal transaction from the manager.
+   *
+   * This is only called by a Transaction object's ::__destruct() method and
+   * should only be called internally by a database driver.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   * @param string $id
+   *   The id of the transaction.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   *
+   * @internal
    */
-  public function unpile(string $name, string $id, bool $onDestruct): void {
+  public function purge(string $name, string $id): void {
     // If the $id does not correspond to the one in the stack for that $name,
     // we are facing an orphaned Transaction object (for example in case of a
     // DDL statement breaking an active transaction). That should be listed in
     // $voidedItems, so we can remove it from there.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      assert(isset($this->voidedItems[$id]), "Transaction {$id}/{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
-      if ($onDestruct) {
-        unset($this->voidedItems[$id]);
-      }
+      assert(isset($this->voidedItems[$id]), "Transaction {$id}\\{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
+      unset($this->voidedItems[$id]);
       return;
     }
 
-    if ($onDestruct) {
-      @trigger_error('Database commit by letting a Transaction object go out of scope is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Commit explicitly via Transaction::commit() instead. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+    @trigger_error('Database commit by letting a Transaction object go out of scope is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Commit explicitly via Transaction::commit() instead. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+
+    // Commit the transaction.
+    $this->commit($name, $id);
+
+    // Remove the transaction from the stack.
+    $this->removeStackItem($id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unpile(string $name, string $id): void {
+    // If there is no $id to commit, or if $id does not correspond to the one
+    // in the stack for that $name, the commit is out of order.
+    if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
+      throw new TransactionOutOfOrderException("Error attempting commit of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
+    }
+
+    // Commit the transaction.
+    $this->commit($name, $id);
+
+    // Void the transaction stack item.
+    $this->voidStackItem($id);
+  }
+
+  /**
+   * Commits a Drupal transaction.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   * @param string $id
+   *   The id of the transaction.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   */
+  protected function commit(string $name, string $id): void {
+    if ($this->getConnectionTransactionState() !== ClientConnectionTransactionState::Active) {
+      // The stack got corrupted.
+      throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
     }
 
     // If we are not releasing the last savepoint but an earlier one, or
@@ -274,33 +328,21 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $this->voidStackItem((string) $i);
     }
 
-    if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Active) {
-      if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
-        // Release the client transaction savepoint in case the Drupal
-        // transaction is not a root one.
-        $this->releaseClientSavepoint($name);
-      }
-      elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
-        // If this was the root Drupal transaction, we can commit the client
-        // transaction.
-        $this->processRootCommit();
-      }
-      else {
-        // The stack got corrupted.
-        throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
-      }
-
-      // Remove the transaction from the stack.
-      match ($onDestruct) {
-        TRUE => $this->removeStackItem($id),
-        FALSE => $this->voidStackItem($id),
-      };
-
+    if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
+      // Release the client transaction savepoint in case the Drupal
+      // transaction is not a root one.
+      $this->releaseClientSavepoint($name);
+      return;
+    }
+    elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
+      // If this was the root Drupal transaction, we can commit the client
+      // transaction.
+      $this->processRootCommit();
       return;
     }
 
     // The stack got corrupted.
-    throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
+    throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
   }
 
   /**
@@ -330,9 +372,13 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Active) {
       if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
         // Rollback the client transaction to the savepoint when the Drupal
-        // transaction is not a root one. The savepoint and therefore the
-        // client connection remain active.
+        // transaction is not a root one. Then, release the savepoint too. The
+        // client connection remains active.
         $this->rollbackClientSavepoint($name);
+        $this->releaseClientSavepoint($name);
+        // The Transaction object remains open, and when it will get destructed
+        // no commit should happen. Void the stack item.
+        $this->voidStackItem($id);
       }
       elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
         // If this was the root Drupal transaction, we can rollback the client
