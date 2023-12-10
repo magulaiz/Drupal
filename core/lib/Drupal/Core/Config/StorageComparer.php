@@ -88,6 +88,10 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * Indicates whether the target storage should be wrapped in a cache.
    *
+   * In write mode the StorageComparer no longer wraps the target storage in a
+   * static cache. When writing to active configuration, the target storage must
+   * reflect any secondary writes to configuration that occur.
+   *
    * @var bool
    */
   protected bool $writeMode = FALSE;
@@ -159,15 +163,9 @@ class StorageComparer implements StorageComparerInterface {
   }
 
   /**
-   * Changes the StorageComparer to write mode.
-   *
-   * In write mode the StorageComparer no longer wraps the target storage in a
-   * static cache. When writing to active configuration, the target storage must
-   * reflect any secondary writes to configuration that occur.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
-  public function writeMode() {
+  public function writeMode(): static {
     if (!$this->writeMode) {
       $this->writeMode = TRUE;
       $this->targetCacheStorage = new NullBackend('storage_comparer');
