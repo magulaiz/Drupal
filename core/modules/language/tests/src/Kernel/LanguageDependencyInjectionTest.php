@@ -34,6 +34,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
     $fr = ConfigurableLanguage::createFromLangcode('fr');
     $fr->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();
+    \Drupal::languageManager()->reset();
 
     // The language system creates a Language object which contains the
     // same properties as the new default language object.
