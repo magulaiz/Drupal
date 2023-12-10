@@ -93,6 +93,11 @@ trait UiHelperTrait {
         $value = (bool) $value;
       }
 
+      // Behat only allows strings for radio button values.
+      if ($field_type === 'radio') {
+        $value = (string) $value;
+      }
+
       $field->setValue($value);
     }
 

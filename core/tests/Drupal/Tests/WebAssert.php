@@ -67,6 +67,17 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function responseHeaderEquals(string $name, $value) {
+    if (is_null($value)) {
+      $this->responseHeaderDoesNotExist($name);
+      return;
+    }
+    parent::responseHeaderEquals($name, $value);
+  }
+
+  /**
    * Asserts that the current response header has a specific entry.
    *
    * @param string $name
