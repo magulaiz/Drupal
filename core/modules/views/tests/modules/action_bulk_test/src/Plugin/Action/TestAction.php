@@ -7,13 +7,14 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Test action.
  */
 #[Action(
   id: 'test_action',
-  label: 'Test action',
+  label: new TranslatableMarkup('Test action'),
   type: 'node',
   confirm_form_route_name: 'action_bulk_test.action.confirm'
 )]
