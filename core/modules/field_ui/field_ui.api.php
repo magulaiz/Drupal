@@ -130,7 +130,7 @@ function hook_field_widget_settings_summary_alter(array &$summary, array $contex
  * @param string $entity_type_id
  *   The entity type id.
  *
- * @see \Drupal\field_ui\Controller\FieldStorageAddController::getFieldSelectionForm
+ * @see \Drupal\field_ui\Controller\FieldStorageAddController::getFieldSelectionLinks
  */
 function hook_field_ui_field_type_ui_definitions_alter(array &$ui_definitions, string $entity_type_id) {
 }

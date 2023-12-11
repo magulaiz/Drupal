@@ -18,7 +18,7 @@ use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Controller for building the field instance form.
+ * Controller for building the field type links.
  *
  * @internal
  */
@@ -60,7 +60,7 @@ final class FieldStorageAddController extends ControllerBase {
   }
 
   /**
-   * Builds the field selection form.
+   * Builds the field selection links.
    *
    * @param string|null $entity_type_id
    *   The name of the entity type.
@@ -70,10 +70,10 @@ final class FieldStorageAddController extends ControllerBase {
    *   The field name.
    *
    * @return array
-   *   The field selection form.
+   *   The field selection links.
    */
-  public function getFieldSelectionForm(string $entity_type_id = NULL, string $bundle = NULL, string $field_name = NULL) {
-    $form = [];
+  public function getFieldSelectionLinks(string $entity_type_id = NULL, string $bundle = NULL, string $field_name = NULL) {
+    $build = [];
     if (!empty($field_name)) {
       $this->tempStore->delete("$entity_type_id:$field_name");
     }
@@ -97,14 +97,14 @@ final class FieldStorageAddController extends ControllerBase {
         }
       }
     }
-    $form['add-label'] = [
+    $build['add-label'] = [
       '#type' => 'label',
       '#title' => $this->t('Choose a type of field'),
       '#title_display' => 'before',
       '#required' => TRUE,
     ];
 
-    $form['add'] = [
+    $build['add'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => 'add-field-container',
@@ -185,11 +185,11 @@ final class FieldStorageAddController extends ControllerBase {
       }
     }
     uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
-    $form['add']['new_storage_type'] = $field_type_options_radios;
-    $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
-    $form['#attached']['library'][] = 'field_ui/drupal.field_ui.manage_fields';
-    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
-    return $form;
+    $build['add']['new_storage_type'] = $field_type_options_radios;
+    $build['#attached']['library'][] = 'field_ui/drupal.field_ui';
+    $build['#attached']['library'][] = 'field_ui/drupal.field_ui.manage_fields';
+    $build['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    return $build;
   }
 
 }
