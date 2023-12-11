@@ -255,6 +255,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     //   instead of only when #access allows this media to be viewed and hence
     //   only when media is actually rendered.
     $build[':media_embed']['#attached']['library'][] = 'media/filter.caption';
+    $build[':media_embed']['#attached']['library'][] = 'media/media.inline';
 
     return $build;
   }
@@ -338,6 +339,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         else {
           $build['#attributes'][$attribute->nodeName] = $attribute->nodeValue;
         }
+      }
+
+      if ($node->tagName == 'drupal-media-inline') {
+        $build['#attributes']['class'][] = 'media-embedded-inline';
       }
 
       $this->renderIntoDomNode($build, $node, $result);
