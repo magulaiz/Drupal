@@ -409,6 +409,17 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $row->setIdMap($id_map);
       }
 
+      // Do not waste time preparing a row if it is going to be skipped anyway.
+      // If the row has already been migrated, but doesn't need to be updated,
+      // and change tracking is inactive, and the row is not above the high
+      // water mark, then we can be sure that there is no reason to process it.
+      if (!empty($row->getIdMap()['sourceid1'])
+        && !$row->needsUpdate()
+        && !$this->aboveHighwater($row)
+        && !$this->trackChanges) {
+        continue;
+      }
+
       // Clear any previous messages for this row before potentially adding
       // new ones.
       if (!empty($this->currentSourceIds)) {
