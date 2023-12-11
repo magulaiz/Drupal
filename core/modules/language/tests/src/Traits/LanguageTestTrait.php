@@ -8,7 +8,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
- * Helper functions around language.
+ * Provides an API to programmatically manage langauges in tests.
  */
 trait LanguageTestTrait {
 
@@ -19,7 +19,7 @@ trait LanguageTestTrait {
    *   The language code to use to create the object.
    *
    * @return \Drupal\Core\Language\ConfigurableLanguageInterface
-   *   Created language.
+   *   The created language.
    *
    * @see \Drupal\Core\Language\LanguageManager::getStandardLanguageList()
    */
@@ -32,11 +32,11 @@ trait LanguageTestTrait {
    * Enables translations for the given entity type bundle.
    *
    * @param string $entity_type_id
-   *   ID of the entity type.
+   *   The ID of the entity type.
    * @param string $bundle
-   *   Bundle name.
+   *   The bundle name.
    * @param string $default_langcode
-   *   The language code to use as default language.
+   *   The language code to use as the default language.
    *
    * @return \Drupal\language\ContentLanguageSettingsInterface
    *   The saved content language config entity.
@@ -52,9 +52,9 @@ trait LanguageTestTrait {
    * Disables translations for the given entity type bundle.
    *
    * @param string $entity_type_id
-   *   ID of the entity type.
+   *   The ID of the entity type.
    * @param string $bundle
-   *   Bundle name.
+   *   The bundle name.
    */
   public static function disableBundleTranslation(string $entity_type_id, string $bundle) {
     // TODO Why are both a save and a delete needed?
@@ -65,14 +65,14 @@ trait LanguageTestTrait {
   }
 
   /**
-   * Set and save a given field instance translation status.
+   * Sets and saves a given field instance translation status.
    *
    * @param string $entity_type_id
-   *   ID of the entity type.
+   *   The ID of the entity type.
    * @param string $bundle
-   *   Bundle name.
+   *   The bundle name.
    * @param string $field_name
-   *   Name of the field.
+   *   The name of the field.
    * @param bool $status
    *   Whether the field should be translatable or not.
    */
