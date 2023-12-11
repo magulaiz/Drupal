@@ -12,6 +12,7 @@ use Drupal\views\Plugin\ViewsHandlerManager;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsData;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -24,7 +25,6 @@ class ManyToOneHelperTest extends UnitTestCase {
    * @covers ::addTable
    */
   public function testAddTable() {
-    $handler = $this->prophesize(HandlerBase::class);
     $view = $this->prophesize(ViewExecutable::class);
     $join = $this->prophesize(JoinPluginBase::class);
     $query = $this->prophesize(Sql::class);
@@ -41,13 +41,7 @@ class ManyToOneHelperTest extends UnitTestCase {
       ],
     ];
 
-    $handler->getJoin()->willReturn($join->reveal());
-    $handler->relationship = 'relationship';
-    $handler->table = 'table';
-    $handler->field = 'field';
-    $handler->value = 'value';
-    $handler->view = $view->reveal();
-    $handler->query = $query->reveal();
+    $handler = $this->getHandlerWithRelationship($join, $view, $query);
 
     $many_to_one_helper = new ManyToOneHelper($handler->reveal());
     $this->assertEquals('alias', $many_to_one_helper->addTable());
@@ -64,7 +58,6 @@ class ManyToOneHelperTest extends UnitTestCase {
     $container->set('views.views_data', $views_data->reveal());
     \Drupal::setContainer($container);
 
-    $handler = $this->prophesize(HandlerBase::class);
     $view = $this->prophesize(ViewExecutable::class);
     $join = $this->prophesize(JoinPluginBase::class);
     $query = $this->prophesize(Sql::class);
@@ -81,18 +74,12 @@ class ManyToOneHelperTest extends UnitTestCase {
       ],
     ];
 
-    $handler->getJoin()->willReturn($join->reveal());
-    $handler->relationship = 'relationship';
-    $handler->table = 'table';
-    $handler->field = 'field';
-    $handler->value = 'value';
-    $handler->view = $view->reveal();
-    $handler->query = $query->reveal();
+    $handler = $this->getHandlerWithRelationship($join, $view, $query);
 
     $this->expectException(InvalidViewsDataException::class);
     $many_to_one_helper = new ManyToOneHelper($handler->reveal());
 
-    // Test that an exception is thrown when using a non existing table.
+    // Test that an exception is thrown when using a non-existing table.
     $many_to_one_helper->addTable();
   }
 
@@ -117,7 +104,6 @@ class ManyToOneHelperTest extends UnitTestCase {
 
     \Drupal::setContainer($container);
 
-    $handler = $this->prophesize(HandlerBase::class);
     $view = $this->prophesize(ViewExecutable::class);
     $query = $this->prophesize(Sql::class);
 
@@ -130,6 +116,30 @@ class ManyToOneHelperTest extends UnitTestCase {
       ],
     ];
 
+    $handler = $this->getHandlerWithRelationship($join, $view, $query);
+
+    $this->expectException(InvalidViewsDataException::class);
+    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
+
+    // Test that an exception is thrown when an infinite loop is caused.
+    $many_to_one_helper->addTable();
+  }
+
+  /**
+   * Builds a handler with a relationship.
+   *
+   * @param \Prophecy\Prophecy\ObjectProphecy $join
+   *   The join to use for the relationship.
+   * @param \Prophecy\Prophecy\ObjectProphecy $view
+   *   The View to use in the handler.
+   * @param \Prophecy\Prophecy\ObjectProphecy $query
+   *   The query to use in the handler.
+   *
+   * @return \Prophecy\Prophecy\ObjectProphecy
+   *   Returns a handler wih a relationship.
+   */
+  protected function getHandlerWithRelationship(ObjectProphecy $join, ObjectProphecy $view, ObjectProphecy $query) {
+    $handler = $this->prophesize(HandlerBase::class);
     $handler->getJoin()->willReturn($join->reveal());
     $handler->relationship = 'relationship';
     $handler->table = 'table';
@@ -137,12 +147,7 @@ class ManyToOneHelperTest extends UnitTestCase {
     $handler->value = 'value';
     $handler->view = $view->reveal();
     $handler->query = $query->reveal();
-
-    $this->expectException(InvalidViewsDataException::class);
-    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
-
-    // Test that an exception is thrown when an infinite loop is caused.
-    $many_to_one_helper->addTable();
+    return $handler;
   }
 
 }
