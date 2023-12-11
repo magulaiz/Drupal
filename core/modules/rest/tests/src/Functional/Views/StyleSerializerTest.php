@@ -408,7 +408,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->submitForm([], 'Save');
 
     // Should return a 406. Emulates a sample Firefox header.
-    $this->drupalGet('test/serialize/field', [], ['Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
+    $this->drupalGet('test/serialize/field', [], ['Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
     $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=UTF-8');
     $this->assertSession()->statusCodeEquals(406);
 
