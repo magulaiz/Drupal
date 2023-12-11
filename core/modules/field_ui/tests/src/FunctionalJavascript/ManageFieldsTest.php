@@ -179,13 +179,13 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/types/manage/article/fields');
     $this->clickLink('Create a new field');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $field_name = 'test_field_1';
 
     $this->clickLink('Number');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Add field: Number');
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -194,25 +194,25 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="field_options_wrapper"].error');
     $page->fillField('label', $field_name);
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
 
     $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementNotExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="field_options_wrapper"].error');
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Change field type');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Try adding a field using a grouped field type.
     $this->clickLink('Email');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Choose a field type');
     $assert_session->elementExists('css', '[name="label"]');
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Change field type');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->clickLink('Plain text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -223,9 +223,9 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="field_options_wrapper"][value="string"]')->isSelected());
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
@@ -290,7 +290,7 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Change field type');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($test_field = $page->find('xpath', '//*[text() = "Test field"]')->getParent());
     $test_field->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -298,10 +298,10 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->fillField('label', $field_name);
     $assert_session->pageTextNotContains('Choose a field type');
 
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
-    $assert_session->assertWaitOnAjaxRequest();
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Save');
     $this->assertTrue($assert_session->waitForText('Saved ' . $field_name . ' configuration.'));
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
