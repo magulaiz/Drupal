@@ -136,6 +136,8 @@ class RssFields extends RowPluginBase {
     $item->description = is_array($field) ? $field : ['#markup' => $field];
 
     $item->elements = [
+      // Default rendering of date fields adds a <time> tag and whitespace, we
+      // want to remove these because this breaks RSS feeds.
       ['key' => 'pubDate', 'value' => trim(strip_tags($this->getField($row_index, $this->options['date_field'])))],
       [
         'key' => 'dc:creator',
