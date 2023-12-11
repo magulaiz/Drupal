@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\ConfigTestTrait;
@@ -342,15 +343,31 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * Bootstraps a kernel for a test.
    */
   protected function bootKernel() {
-    $this->setSetting('container_yamls', []);
+    $test_container_yamls = [];
+    $this->setSetting('container_yamls', $test_container_yamls);
     // Allow for test-specific overrides.
     $settings_services_file = $this->root . '/sites/default/testing.services.yml';
     if (file_exists($settings_services_file)) {
       // Copy the testing-specific service overrides in place.
       $testing_services_file = $this->siteDirectory . '/services.yml';
       copy($settings_services_file, $testing_services_file);
-      $this->setSetting('container_yamls', [$testing_services_file]);
+      $test_container_yamls[] = $testing_services_file;
     }
+
+    // Allow 'vfs' protocol for testing purposes.
+    $core_services = Yaml::decode(file_get_contents($this->root . '/core/core.services.yml'));
+    $core_services['parameters']['filter_protocols'][] = 'vfs';
+
+    $vfs_services_file = $this->siteDirectory . '/vfs.services.yml';
+    $vfs_services_content = [
+      'parameters' => [
+        'filter_protocols' => $core_services['parameters']['filter_protocols'],
+      ],
+    ];
+    file_put_contents($vfs_services_file, Yaml::encode($vfs_services_content));
+    $test_container_yamls[] = $vfs_services_file;
+
+    $this->setSetting('container_yamls', $test_container_yamls);
 
     // Allow for global test environment overrides.
     if (file_exists($test_env = $this->root . '/sites/default/testing.services.yml')) {

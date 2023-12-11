@@ -64,6 +64,9 @@ class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
       // must be encoded as Url::fromUri() expects correct URL.
       $uri = $settings_base_url . '/' . UrlHelper::encodePath($path);
     }
+    elseif (str_starts_with(static::basePath(), 'vfs://')) {
+      $uri = static::basePath() . '/' . $path;
+    }
     else {
       $uri = 'base:/' . static::basePath() . '/' . $path;
     }
