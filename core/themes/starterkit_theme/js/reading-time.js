@@ -3,7 +3,7 @@
  * Defines a custom behavior.
  */
 
-(function (Drupal, drupalSettings, once) {
+((Drupal, drupalSettings, once) => {
   // Constant variables for consistency.
   const onceName = 'readingTime';
 
@@ -75,7 +75,7 @@
         );
       });
     },
-    detach(context, settings, trigger) {
+    detach(context, trigger) {
       if (trigger === 'unload') {
         // Remove processing mark so that content can be processed again.
         // The text might have change after an Ajax call so reading time
