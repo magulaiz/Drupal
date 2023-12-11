@@ -372,6 +372,7 @@
         const { ClassicEditor } = editorClassic;
 
         ClassicEditor.create(element, editorConfig).then((editor) => {
+
           /**
            * Injects a temporary <p> into CKEditor and then calculates the entire
            * height of the amount of the <p> tags from the passed in rows value.

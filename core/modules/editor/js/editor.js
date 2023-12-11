@@ -302,12 +302,12 @@
       Drupal.editors[format.editor]
         .attach(field, format)
         .then((editor) => {
-            $(document).trigger('editor:attached', [editor]);
-          })
+          $(document).trigger('editor:attached', [editor]);
+        })
         .catch((error) => {
-            // eslint-disable-next-line no-console
-              console.log(`Failed to attach editor.\n${error}`);
-          });
+          // eslint-disable-next-line no-console
+          console.log(`Failed to attach editor.\n${error}`);
+        });
 
       // Ensures form.js' 'formUpdated' event is triggered even for changes that
       // happen within the text editor.
