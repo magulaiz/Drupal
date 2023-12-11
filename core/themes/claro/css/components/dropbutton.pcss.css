@@ -95,6 +95,7 @@
  */
 .js .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
 [dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: 0;
@@ -104,6 +105,7 @@
 /* First dropbutton list item variants */
 .js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
 [dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: 0;
@@ -112,6 +114,7 @@
 
 .js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
 [dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: 0;
