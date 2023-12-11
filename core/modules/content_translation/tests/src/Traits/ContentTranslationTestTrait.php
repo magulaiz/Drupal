@@ -21,10 +21,8 @@ trait ContentTranslationTestTrait {
    *   Bundle name.
    * @param string $default_langcode
    *   The language code to use as default language.
-   *
-   * @return null
    */
-  public function enableContentTranslation(string $entity_type_id, string $bundle, ?string $default_langcode = LanguageInterface::LANGCODE_SITE_DEFAULT) {
+  public function enableContentTranslation(string $entity_type_id, string $bundle, ?string $default_langcode = LanguageInterface::LANGCODE_SITE_DEFAULT): void {
     self::enableBundleTranslation($entity_type_id, $bundle, $default_langcode);
     $content_translation_manager = $this->container->get('content_translation.manager');
     $content_translation_manager->setEnabled($entity_type_id, $bundle, TRUE);

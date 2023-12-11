@@ -75,10 +75,8 @@ trait LanguageTestTrait {
    *   Name of the field.
    * @param bool $status
    *   Whether the field should be translatable or not.
-   *
-   * @return null
    */
-  public static function setFieldTranslatable(string $entity_type_id, string $bundle, string $field_name, bool $status) {
+  public static function setFieldTranslatable(string $entity_type_id, string $bundle, string $field_name, bool $status): void {
     FieldConfig::loadByName($entity_type_id, $bundle, $field_name)
       ->setTranslatable($status)
       ->save();
