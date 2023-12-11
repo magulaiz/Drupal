@@ -75,7 +75,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
     $output = $view->preview('feed_2');
     $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('<link>' . $node_url . '</link>', $output);
-    $this->assertStringContainsString('<pubDate>' . $date . PHP_EOL . '</pubDate>', $output);
+    $this->assertStringContainsString('<pubDate>' . $date . '</pubDate>', $output);
   }
 
 }

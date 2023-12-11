@@ -136,7 +136,7 @@ class RssFields extends RowPluginBase {
     $item->description = is_array($field) ? $field : ['#markup' => $field];
 
     $item->elements = [
-      ['key' => 'pubDate', 'value' => strip_tags($this->getField($row_index, $this->options['date_field']))],
+      ['key' => 'pubDate', 'value' => trim(strip_tags($this->getField($row_index, $this->options['date_field'])))],
       [
         'key' => 'dc:creator',
         'value' => $this->getField($row_index, $this->options['creator_field']),
