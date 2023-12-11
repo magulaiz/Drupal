@@ -8,6 +8,8 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 
+// cspell:ignore português
+
 /**
  * Tests the feed display plugin with translated content.
  *

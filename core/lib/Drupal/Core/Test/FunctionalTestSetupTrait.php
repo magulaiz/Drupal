@@ -330,7 +330,14 @@ trait FunctionalTestSetupTrait {
     // some tests expect to be able to test mail system implementations.
     $config->getEditable('system.mail')
       ->set('interface.default', 'test_mail_collector')
-      ->set('mailer_dsn', 'null://null')
+      ->set('mailer_dsn', [
+        'scheme' => 'null',
+        'host' => 'null',
+        'user' => NULL,
+        'password' => NULL,
+        'port' => NULL,
+        'options' => [],
+      ])
       ->save();
 
     // By default, verbosely display all errors and disable all production
@@ -626,8 +633,6 @@ trait FunctionalTestSetupTrait {
     $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
-    // TestRunnerKernel expects the working directory to be DRUPAL_ROOT.
-    chdir(DRUPAL_ROOT);
     $kernel->boot();
     $kernel->preHandle($request);
     $this->prepareDatabasePrefix();
