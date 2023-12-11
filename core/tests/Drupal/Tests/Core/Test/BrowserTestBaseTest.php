@@ -53,10 +53,9 @@ class BrowserTestBaseTest extends UnitTestCase {
     $driver = new BrowserKitDriver($browserkit_client);
     $btb = $this->mockBrowserTestBaseWithDriver($driver);
 
-    $ref_gethttpclient = new \ReflectionMethod($btb, 'getHttpClient');
-    $ref_gethttpclient->setAccessible(TRUE);
+    $reflected_get_http_client = new \ReflectionMethod($btb, 'getHttpClient');
 
-    $this->assertSame(get_class($expected), get_class($ref_gethttpclient->invoke($btb)));
+    $this->assertSame(get_class($expected), get_class($reflected_get_http_client->invoke($btb)));
   }
 
   /**
@@ -67,12 +66,11 @@ class BrowserTestBaseTest extends UnitTestCase {
     // RuntimeException.
     $btb = $this->mockBrowserTestBaseWithDriver(new \stdClass());
 
-    $ref_gethttpclient = new \ReflectionMethod($btb, 'getHttpClient');
-    $ref_gethttpclient->setAccessible(TRUE);
+    $reflected_get_http_client = new \ReflectionMethod($btb, 'getHttpClient');
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('The Mink client type stdClass does not support getHttpClient().');
-    $ref_gethttpclient->invoke($btb);
+    $reflected_get_http_client->invoke($btb);
   }
 
   /**
@@ -89,7 +87,6 @@ class BrowserTestBaseTest extends UnitTestCase {
       ->getMockForAbstractClass();
     $btb->expects($this->never())->method($method);
     $ref_tearDown = new \ReflectionMethod($btb, 'tearDown');
-    $ref_tearDown->setAccessible(TRUE);
     $ref_tearDown->invoke($btb);
   }
 
