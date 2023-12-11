@@ -463,7 +463,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testTransactionWithDdlStatement() {
     // First, test that a commit works normally, even with DDL statements.
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('row');
     $this->executeDDLStatement();
     $transaction->commit();
@@ -471,7 +471,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     // Even in different order.
     $this->cleanUp();
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->executeDDLStatement();
     $this->insertRow('row');
     $transaction->commit();
@@ -479,7 +479,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     // Even with stacking.
     $this->cleanUp();
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $transaction2 = $this->connection->startTransaction();
     $this->executeDDLStatement();
     unset($transaction2);
@@ -491,7 +491,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     // A transaction after a DDL statement should still work the same.
     $this->cleanUp();
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $transaction2 = $this->connection->startTransaction();
     $this->executeDDLStatement();
     unset($transaction2);
@@ -507,7 +507,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // For database servers that support transactional DDL, a rollback
       // of a transaction including DDL statements should be possible.
       $this->cleanUp();
-      $transaction = $this->createRootTransaction(NULL, FALSE);
+      $transaction = $this->createRootTransaction('', FALSE);
       $this->insertRow('row');
       $this->executeDDLStatement();
       $transaction->rollBack();
@@ -516,7 +516,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       // Including with stacking.
       $this->cleanUp();
-      $transaction = $this->createRootTransaction(NULL, FALSE);
+      $transaction = $this->createRootTransaction('', FALSE);
       $transaction2 = $this->connection->startTransaction();
       $this->executeDDLStatement();
       $transaction2->commit();
@@ -531,7 +531,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // For database servers that do not support transactional DDL,
       // the DDL statement should commit the transaction stack.
       $this->cleanUp();
-      $transaction = $this->createRootTransaction(NULL, FALSE);
+      $transaction = $this->createRootTransaction('', FALSE);
       $this->insertRow('row');
       $this->executeDDLStatement();
 
@@ -622,7 +622,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testTransactionStacking() {
     // Standard case: pop the inner transaction before the outer transaction.
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('outer');
     $transaction2 = $this->connection->startTransaction();
     $this->insertRow('inner');
@@ -637,7 +637,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     // Rollback the inner transaction.
     $this->cleanUp();
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('outer');
     $transaction2 = $this->connection->startTransaction();
     $this->insertRow('inner');
@@ -850,7 +850,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   /**
    * Create a root Drupal transaction.
    */
-  protected function createRootTransaction(?string $name = NULL, bool $writeRow = TRUE): Transaction {
+  protected function createRootTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
     $this->assertFalse($this->connection->inTransaction());
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
 
@@ -861,7 +861,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
 
     // Insert a single row into the testing table.
-    if ($writeRow) {
+    if ($insertRow) {
       $this->insertRow('David');
       $this->assertRowPresent('David');
     }
@@ -873,7 +873,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests for transaction names.
    */
   public function testTransactionName(): void {
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->assertSame('drupal_transaction', $transaction->name());
 
     $savepoint1 = $this->connection->startTransaction();
@@ -896,7 +896,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests post-transaction callback executes after transaction commit.
    */
   public function testRootTransactionEndCallbackCalledOnCommit(): void {
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
@@ -910,7 +910,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests post-transaction callback executes after transaction rollback.
    */
   public function testRootTransactionEndCallbackCalledOnRollback(): void {
-    $transaction = $this->createRootTransaction(NULL, FALSE);
+    $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
