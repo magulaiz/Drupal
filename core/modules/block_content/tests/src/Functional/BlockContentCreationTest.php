@@ -80,8 +80,12 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
     $this->assertSession()->addressEquals('/admin/content/block/' . $block->id() . '/edit');
 
-    // Enabled standalone_url setting
-    $this->config('block_content.settings')->set('standalone_url', TRUE)->save();
+    // Enable standalone_url setting.
+    $this->drupalGet('/admin/config/block-content/block-content-settings');
+    $this->submitForm(['standalone_url' => TRUE], 'Save');
+
+    $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
+    $this->assertSession()->linkByHrefExists('/admin/content/block/' . $block->id());
     $this->assertSession()->pageTextContains('Test Block');
     $this->assertSession()->pageTextContains($body);
   }
