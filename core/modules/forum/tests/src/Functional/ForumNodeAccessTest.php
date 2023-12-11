@@ -65,7 +65,7 @@ class ForumNodeAccessTest extends BrowserTestBase {
     $edit = [
       'title[0][value]' => $private_node_title,
       'body[0][value]' => $this->randomMachineName(200),
-      'private[0][value]' => 1,
+      'private[0][value]' => TRUE,
     ];
     $this->drupalGet('node/add/forum', ['query' => ['forum_id' => 1]]);
     $this->submitForm($edit, 'Save');
