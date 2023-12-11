@@ -22,7 +22,7 @@ class BlockContentAddLocalAction extends LocalActionDefault {
     }
 
     // If the current request has a region, append it to the query string.
-    if ($region = $this->request->query->get('region')) {
+    if ($region = $this->requestStack->getCurrentRequest()->query->get('region')) {
       $options['query']['region'] = $region;
     }
 

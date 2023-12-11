@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginBase;
@@ -11,6 +13,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a default implementation for local action plugins.
@@ -18,20 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 class LocalActionDefault extends PluginBase implements LocalActionInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
 
   use DependencySerializationTrait;
-
-  /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
 
   /**
    * Constructs a LocalActionDefault object.
@@ -42,16 +31,13 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider to load routes by name.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The current request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, Request $request) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected RouteProviderInterface $routeProvider, protected RequestStack $requestStack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeProvider = $route_provider;
-    $this->request = $request;
   }
 
   /**
@@ -63,21 +49,21 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('request_stack')->getCurrentRequest(),
+      $container->get('request_stack'),
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getRouteName() {
+  public function getRouteName(): string {
     return $this->pluginDefinition['route_name'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle(Request $request = NULL): string {
     // Subclasses may pull in the request or specific attributes as parameters.
     // The title from YAML file discovery may be a TranslatableMarkup object.
     return (string) $this->pluginDefinition['title'];
