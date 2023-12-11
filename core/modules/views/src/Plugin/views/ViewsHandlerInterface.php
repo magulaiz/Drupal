@@ -85,9 +85,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    * @param string $base_table
    *   The table to join to.
    *
-   * @return \Drupal\views\Plugin\views\join\JoinPluginBase|null
-   *   A JoinPlugin if a join can be found, or NULL if there is no know data for
-   *   the passed table.
+   * @return \Drupal\views\Plugin\views\join\JoinPluginBase
    */
   public static function getTableJoin($table, $base_table);
 

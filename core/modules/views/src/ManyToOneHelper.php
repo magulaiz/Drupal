@@ -113,6 +113,7 @@ class ManyToOneHelper {
       }
       $traced[$r_join->leftTable] = TRUE;
       $r_join = HandlerBase::getTableJoin($r_join->leftTable, $base_table);
+      // @phpstan-ignore-next-line
       if (empty($r_join)) {
         // No join was found, this means the views data is broken.
         throw new InvalidViewsDataException('Invalid views data found while trying to find a relationship to ' . $base_table);
