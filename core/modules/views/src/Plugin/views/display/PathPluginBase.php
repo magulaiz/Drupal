@@ -152,17 +152,16 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       // routes (defined via {}). As a name for the parameter use arg_$key, so
       // it can be pulled in the views controller from the request.
       foreach ($bits as $pos => $bit) {
-        if ($bit == '%') {
-          // Generate the name of the parameter using the key of the argument
-          // handler.
+        if (strpos($bit, '%') === 0) {
+          // Use the name defined in the path. If no name is given then default to
+          // the base entity type for this view.
           $arg_id = 'arg_' . $arg_counter++;
-          $bits[$pos] = '{' . $arg_id . '}';
-          $argument_map[$arg_id] = $arg_id;
-        }
-        elseif (strpos($bit, '%') === 0) {
-          // Use the name defined in the path.
-          $parameter_name = substr($bit, 1);
-          $arg_id = 'arg_' . $arg_counter++;
+          if ($bit !== '%') {
+            $parameter_name = substr($bit, 1);
+          }
+          else {
+            $parameter_name = !empty($this->view->getBaseEntityType()) ? $this->view->getBaseEntityType()->id() : $arg_id;
+          }
           $argument_map[$arg_id] = $parameter_name;
           $bits[$pos] = '{' . $parameter_name . '}';
         }
