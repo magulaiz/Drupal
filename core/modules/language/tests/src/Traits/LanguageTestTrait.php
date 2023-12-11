@@ -4,6 +4,8 @@ namespace Drupal\Tests\language\Traits;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\language\ConfigurableLanguageInterface;
+use Drupal\language\ContentLanguageSettingsInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 
@@ -23,9 +25,10 @@ trait LanguageTestTrait {
    *
    * @see \Drupal\Core\Language\LanguageManager::getStandardLanguageList()
    */
-  public static function createLanguageFromLangcode(string $langcode) {
-    return ConfigurableLanguage::createFromLangcode($langcode)
-      ->save();
+  public static function createLanguageFromLangcode(string $langcode): ConfigurableLanguageInterface {
+    $configurable_language = ConfigurableLanguage::createFromLangcode($langcode);
+    $configurable_language->save();
+    return $configurable_language;
   }
 
   /**
@@ -41,11 +44,12 @@ trait LanguageTestTrait {
    * @return \Drupal\language\ContentLanguageSettingsInterface
    *   The saved content language config entity.
    */
-  public static function enableBundleTranslation(string $entity_type_id, string $bundle, ?string $default_langcode = LanguageInterface::LANGCODE_SITE_DEFAULT) {
-    return ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle)
+  public static function enableBundleTranslation(string $entity_type_id, string $bundle, ?string $default_langcode = LanguageInterface::LANGCODE_SITE_DEFAULT): ContentLanguageSettingsInterface {
+    $content_language_settings = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle)
       ->setDefaultLangcode($default_langcode)
-      ->setLanguageAlterable(TRUE)
-      ->save();
+      ->setLanguageAlterable(TRUE);
+    $content_language_settings->save();
+    return $content_language_settings;
   }
 
   /**
