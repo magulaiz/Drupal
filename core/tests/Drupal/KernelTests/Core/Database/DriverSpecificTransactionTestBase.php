@@ -152,6 +152,50 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   }
 
   /**
+   * Create a root Drupal transaction.
+   */
+  protected function createRootTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction($name);
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a single row into the testing table.
+    if ($insertRow) {
+      $this->insertRow('David');
+      $this->assertRowPresent('David');
+    }
+
+    return $transaction;
+  }
+
+  /**
+   * Create a Drupal savepoint transaction after root.
+   */
+  protected function createFirstSavepointTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database. The name can be changed by the $name argument.
+    $savepoint = $this->connection->startTransaction($name);
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a single row into the testing table.
+    if ($insertRow) {
+      $this->insertRow('Roger');
+      $this->assertRowPresent('Roger');
+    }
+
+    return $savepoint;
+  }
+
+  /**
    * Tests root transaction rollback.
    */
   public function testRollbackRoot() {
@@ -170,17 +214,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testRollbackRootAfterSavepointRollback() {
     $transaction = $this->createRootTransaction();
-
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a single row into the testing table.
-    $this->insertRow('Roger');
-    $this->assertRowPresent('David');
-    $this->assertRowPresent('Roger');
+    $savepoint = $this->createFirstSavepointTransaction();
 
     // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
     // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
@@ -203,14 +237,9 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testRollbackRootWithActiveSavepoint() {
     $transaction = $this->createRootTransaction();
+    $savepoint = $this->createFirstSavepointTransaction();
 
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Try to rollback root. Since we a savepoint is active, this should fail.
+    // Try to rollback root. Since a savepoint is active, this should fail.
     $this->expectException(TransactionOutOfOrderException::class);
     $this->expectExceptionMessageMatches("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .*\\\\drupal_transaction > .*\\\\savepoint_1/");
     $transaction->rollBack();
@@ -221,17 +250,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testRollbackSavepoint() {
     $transaction = $this->createRootTransaction();
-
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a row.
-    $this->insertRow('Roger');
-    $this->assertRowPresent('David');
-    $this->assertRowPresent('Roger');
+    $savepoint = $this->createFirstSavepointTransaction();
 
     // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
     // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
@@ -258,17 +277,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testCommitAfterRollbackSameSavepoint() {
     $transaction = $this->createRootTransaction();
-
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a row.
-    $this->insertRow('Roger');
-    $this->assertRowPresent('David');
-    $this->assertRowPresent('Roger');
+    $savepoint = $this->createFirstSavepointTransaction();
 
     // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
     // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
@@ -310,17 +319,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testRollbackAfterCommitSameSavepoint() {
     $transaction = $this->createRootTransaction();
-
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a row.
-    $this->insertRow('Roger');
-    $this->assertRowPresent('David');
-    $this->assertRowPresent('Roger');
+    $savepoint = $this->createFirstSavepointTransaction();
 
     // Commit savepoint. It should get released too. Corresponds to 'RELEASE
     // savepoint_1' on the database.
@@ -362,17 +361,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testRollbackTwiceSameSavepoint() {
     $transaction = $this->createRootTransaction();
-
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a row.
-    $this->insertRow('Roger');
-    $this->assertRowPresent('David');
-    $this->assertRowPresent('Roger');
+    $savepoint = $this->createFirstSavepointTransaction();
 
     // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
     // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
@@ -406,20 +395,10 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testRollbackSavepointWithLaterSavepoint() {
     $transaction = $this->createRootTransaction();
+    $savepoint1 = $this->createFirstSavepointTransaction();
 
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint1 = $this->connection->startTransaction();
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a row.
-    $this->insertRow('Roger');
-    $this->assertRowPresent('David');
-    $this->assertRowPresent('Roger');
-
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
-    // on the database.
+    // Starts another savepoint transaction. Corresponds to 'SAVEPOINT
+    // savepoint_2' on the database.
     $savepoint2 = $this->connection->startTransaction();
     $this->assertTrue($this->connection->inTransaction());
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
@@ -624,7 +603,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // Standard case: pop the inner transaction before the outer transaction.
     $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('outer');
-    $transaction2 = $this->connection->startTransaction();
+    $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->insertRow('inner');
     // Pop the inner transaction.
     $transaction2->commit();
@@ -639,7 +618,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('outer');
-    $transaction2 = $this->connection->startTransaction();
+    $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->insertRow('inner');
     // Now rollback the inner transaction.
     $transaction2->rollBack();
@@ -777,11 +756,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testReleaseIntermediateSavepoint(): void {
     $transaction = $this->createRootTransaction();
+    $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
 
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint1 = $this->connection->startTransaction();
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
     // on the database.
     $savepoint2 = $this->connection->startTransaction();
@@ -818,11 +794,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testCommitWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
+    $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
 
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
-    // on the database.
-    $savepoint1 = $this->connection->startTransaction();
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
     // on the database.
     $savepoint2 = $this->connection->startTransaction();
@@ -848,35 +821,13 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * Create a root Drupal transaction.
-   */
-  protected function createRootTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
-    $this->assertFalse($this->connection->inTransaction());
-    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
-
-    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
-    // database.
-    $transaction = $this->connection->startTransaction($name);
-    $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
-
-    // Insert a single row into the testing table.
-    if ($insertRow) {
-      $this->insertRow('David');
-      $this->assertRowPresent('David');
-    }
-
-    return $transaction;
-  }
-
-  /**
    * Tests for transaction names.
    */
   public function testTransactionName(): void {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->assertSame('drupal_transaction', $transaction->name());
 
-    $savepoint1 = $this->connection->startTransaction();
+    $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
     $this->assertSame('savepoint_1', $savepoint1->name());
 
     $this->expectException(TransactionNameNonUniqueException::class);
