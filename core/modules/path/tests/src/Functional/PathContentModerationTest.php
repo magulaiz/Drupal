@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\path\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
@@ -40,7 +39,7 @@ class PathContentModerationTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    ConfigurableLanguage::createFromLangcode('fr')->save();
+    static::createLanguageFromLangcode('fr');
     $this->rebuildContainer();
 
     // Created a content type.

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\node\Functional\NodeTestBase;
@@ -48,7 +47,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     parent::setUp();
     $langcodes = ['de', 'fr'];
     foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
+      static::createLanguageFromLangcode($langcode);
     }
     $this->drupalPlaceBlock('local_tasks_block');
     $user = $this->drupalCreateUser([

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\Tests\node\Functional\NodeTestBase;
 use Drupal\user\Entity\Role;
@@ -57,7 +56,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // Enable additional languages.
     $langcodes = ['es', 'ast'];
     foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
+      static::createLanguageFromLangcode($langcode);
     }
 
     // Enable translation for the current entity type and ensure the change is

@@ -288,7 +288,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Setup languages.
     $langcodes = ['de'];
     foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
+      static::createLanguageFromLangcode($langcode);
     }
     array_unshift($langcodes, \Drupal::languageManager()->getDefaultLanguage()->getId());
 
