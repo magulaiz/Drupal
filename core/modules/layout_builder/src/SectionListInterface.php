@@ -20,13 +20,13 @@ interface SectionListInterface extends \Countable {
   /**
    * Gets a domain object for the layout section.
    *
-   * @param int $delta
-   *   The delta of the section.
+   * @param int|string $uuid
+   *   The uuid of the section.
    *
    * @return \Drupal\layout_builder\Section
    *   The layout section.
    */
-  public function getSection($delta);
+  public function getSection($uuid);
 
   /**
    * Appends a new section to the end of the list.
@@ -54,17 +54,17 @@ interface SectionListInterface extends \Countable {
   public function insertSection($delta, Section $section);
 
   /**
-   * Removes the section at the given delta.
+   * Removes the section at the given uuid.
    *
-   * As sections are stored sequentially and numerically this will re-key every
+   * As sections are stored sequentially this will re-key every
    * subsequent section, shifting them forward.
    *
-   * @param int $delta
-   *   The delta of the section.
+   * @param int|string $uuid
+   *   The uuid of the section.
    *
    * @return $this
    */
-  public function removeSection($delta);
+  public function removeSection($uuid);
 
   /**
    * Removes all of the sections.
