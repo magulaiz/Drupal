@@ -274,7 +274,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   The NodeElement found via $after_open_selector.
    */
   protected function openMediaLibraryForField($field_name, $after_open_selector = '.js-media-library-menu') {
-    $this->assertElementExistsAfterWait('css', "#$field_name-media-library-wrapper")
+    $this->assertElementExistsAfterWait('css', "#$field_name-media-library-wrapper.js-media-library-widget")
       ->pressButton('Add media');
 
     if (empty($this->assertSession()->waitForText('Add or select media'))) {

@@ -67,7 +67,7 @@ trait FieldUiJSTestTrait {
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
       // Second step: Save field settings.
-      $page->pressButton('Save settings');
+      $page->findButton('Save settings')->click();
       $assert_session->pageTextContains("Saved $label configuration.");
 
       // Check that the field appears in the overview form.
