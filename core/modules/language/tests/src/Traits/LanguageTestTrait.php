@@ -12,7 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
- * Provides an API to programmatically manage langauges in tests.
+ * Provides an API to programmatically manage languages in tests.
  */
 trait LanguageTestTrait {
 
