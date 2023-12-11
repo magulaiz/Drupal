@@ -48,23 +48,24 @@ class InputRequired extends ExposedFormPluginBase {
 
   protected function exposedFilterApplied() {
     static $cache = NULL;
-    if (!isset($cache)) {
+    $display = $this->view->current_display;
+    if (!isset($cache[$display])) {
       $view = $this->view;
       if (is_array($view->filter) && count($view->filter)) {
         foreach ($view->filter as $filter) {
           if ($filter->isExposed()) {
             $identifier = $filter->options['expose']['identifier'];
             if (isset($view->getExposedInput()[$identifier])) {
-              $cache = TRUE;
-              return $cache;
+              $cache[$display] = TRUE;
+              return $cache[$display];
             }
           }
         }
       }
-      $cache = FALSE;
+      $cache[$display] = FALSE;
     }
 
-    return $cache;
+    return $cache[$display];
   }
 
   public function preRender($values) {
