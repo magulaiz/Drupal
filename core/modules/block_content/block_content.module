@@ -68,12 +68,6 @@ function block_content_entity_type_alter(array &$entity_types) {
   unset($constraints['EntityChanged']);
   $constraints['BlockContentEntityChanged'] = NULL;
   $entity_types['block_content']->setConstraints($constraints);
-
-  if (\Drupal::config('block_content.settings')->get('standalone_url')) {
-    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
-    $entity_type = $entity_types['block_content'];
-    $entity_type->setLinkTemplate('canonical', '/admin/content/block/{block_content}');
-  }
 }
 
 /**

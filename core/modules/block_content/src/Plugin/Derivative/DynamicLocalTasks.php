@@ -63,21 +63,19 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     // Provide an edit_form task if standalone block_content URLs are enabled.
-    $this->derivatives["entity.block_content.canonical"] = [
-      'route_name' => "entity.block_content.canonical",
+    $this->derivatives["entity.block_content.edit_form"] = [
+      'route_name' => "entity.block_content.edit_form",
       'title' => $this->t('Edit'),
-      'base_route' => "entity.block_content.canonical",
-      'weight' => 1,
+      'base_route' => 'entity.block_content.canonical',
+      'weight' => 2,
     ] + $base_plugin_definition;
 
     if ($this->config->get('standalone_url')) {
-      $this->derivatives["entity.block_content.canonical"]['title'] = $this->t('View');
-
-      $this->derivatives["entity.block_content.edit_form"] = [
-        'route_name' => "entity.block_content.edit_form",
-        'title' => $this->t('Edit'),
-        'base_route' => 'entity.block_content.canonical',
-        'weight' => 2,
+      $this->derivatives["entity.block_content.canonical"] = [
+        'route_name' => "entity.block_content.canonical",
+        'title' => $this->t('View'),
+        'base_route' => "entity.block_content.canonical",
+        'weight' => 1,
       ] + $base_plugin_definition;
     }
 
