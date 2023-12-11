@@ -51,7 +51,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
     ]);
 
     // Add a second language.
-    self::createLanguageFromLangcode('de');
+    static::createLanguageFromLangcode('de');
 
     // Create an account and login.
     $user = $this->drupalCreateUser([
@@ -70,8 +70,8 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
     $this->drupalLogin($user);
 
     // Enable translation for page nodes and menu link content.
-    self::enableBundleTranslation('node', 'page');
-    self::enableBundleTranslation('menu_link_content', 'menu_link_content');
+    static::enableBundleTranslation('node', 'page');
+    static::enableBundleTranslation('menu_link_content', 'menu_link_content');
   }
 
   /**

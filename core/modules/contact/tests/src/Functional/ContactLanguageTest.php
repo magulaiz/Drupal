@@ -58,7 +58,7 @@ class ContactLanguageTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('edit-langcode-0-value');
 
     // Enable translations for feedback contact messages.
-    self::enableBundleTranslation('contact_message', 'feedback');
+    static::enableBundleTranslation('contact_message', 'feedback');
 
     // Ensure that contact form now shows the language select.
     $this->drupalGet('contact');

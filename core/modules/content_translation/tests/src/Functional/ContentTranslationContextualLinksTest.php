@@ -70,7 +70,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
     parent::setUp();
     // Set up an additional language.
     $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId(), 'es'];
-    self::createLanguageFromLangcode('es');
+    static::createLanguageFromLangcode('es');
 
     // Create a content type.
     $this->bundle = $this->randomMachineName();
@@ -116,7 +116,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
     $this->drupalCreateNode(['type' => $this->bundle, 'title' => $title, 'langcode' => 'en']);
     $node = $this->drupalGetNodeByTitle($title);
 
-    self::enableContentTranslation('node', $this->bundle);
+    static::enableContentTranslation('node', $this->bundle);
 
     // Check that the link leads to the translate page.
     $this->drupalLogin($this->translator);

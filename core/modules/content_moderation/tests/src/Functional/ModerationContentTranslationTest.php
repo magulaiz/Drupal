@@ -47,7 +47,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
     // Create an Article content type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article'])->save();
-    self::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('fr');
     // Enable content translation on articles.
     $this->enableContentTranslation('node', 'article');
     // Adding languages requires a container rebuild in the test running

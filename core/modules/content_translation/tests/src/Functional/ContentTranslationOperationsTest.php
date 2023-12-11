@@ -132,7 +132,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
-    self::disableBundleTranslation('node', 'article');
+    static::disableBundleTranslation('node', 'article');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
   }

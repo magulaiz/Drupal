@@ -63,7 +63,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
 
     $this->langcodes = ['es', 'pt-br'];
     foreach ($this->langcodes as $langcode) {
-      self::createLanguageFromLangcode($langcode);
+      static::createLanguageFromLangcode($langcode);
     }
 
     $admin_user = $this->drupalCreateUser([
@@ -79,7 +79,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Enable translation for page.
-    self::enableContentTranslation('node', 'page');
+    static::enableContentTranslation('node', 'page');
 
     // Rebuild the container so that the new languages are picked up by services
     // that hold a list of languages.

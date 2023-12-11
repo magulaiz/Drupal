@@ -71,8 +71,8 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second and third language.
-    self::createLanguageFromLangcode('fr');
-    self::createLanguageFromLangcode('nl');
+    static::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('nl');
   }
 
   /**
@@ -81,7 +81,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
   public function testSyncedImages() {
     // Enable translation for "Basic page" nodes.
     $this->enableContentTranslation('node', 'basic_page');
-    self::setFieldTranslatable('node', 'basic_page', $this->fieldName, TRUE);
+    static::setFieldTranslatable('node', 'basic_page', $this->fieldName, TRUE);
 
     // Verify that the image field on the "Basic basic" node type is
     // translatable.

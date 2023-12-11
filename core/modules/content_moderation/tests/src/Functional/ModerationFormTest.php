@@ -286,7 +286,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalLogin($this->rootUser);
 
     // Add French language.
-    self::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('fr');
 
     // Enable content translation on moderated_content.
     $this->enableContentTranslation('node', 'moderated_content');

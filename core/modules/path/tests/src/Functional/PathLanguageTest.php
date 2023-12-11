@@ -60,7 +60,7 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalLogin($this->webUser);
 
     // Enable French language.
-    self::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('fr');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
@@ -68,8 +68,8 @@ class PathLanguageTest extends PathTestBase {
     $this->submitForm($edit, 'Save settings');
 
     // Enable translation for page node.
-    self::enableContentTranslation('node', 'page');
-    self::setFieldTranslatable('node', 'page', 'body', TRUE);
+    static::enableContentTranslation('node', 'page');
+    static::setFieldTranslatable('node', 'page', 'body', TRUE);
 
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $this->assertTrue($definitions['path']->isTranslatable(), 'Node path is translatable.');

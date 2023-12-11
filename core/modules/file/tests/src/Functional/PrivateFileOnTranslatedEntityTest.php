@@ -60,11 +60,11 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second language.
-    self::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('fr');
 
     // Enable translation for "Basic page" nodes.
-    self::enableContentTranslation('node', 'page');
-    self::setFieldTranslatable('node', 'page', $this->fieldName, 1);
+    static::enableContentTranslation('node', 'page');
+    static::setFieldTranslatable('node', 'page', $this->fieldName, 1);
   }
 
   /**

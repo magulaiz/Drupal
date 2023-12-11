@@ -43,8 +43,8 @@ class ModerationLocaleTest extends ModerationStateTestBase {
     $this->createContentTypeFromUi('Article', 'article', TRUE);
 
     // Add French and Italian languages.
-    self::createLanguageFromLangcode('fr');
-    self::createLanguageFromLangcode('it');
+    static::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('it');
 
     // Enable content translation on articles.
     $this->enableContentTranslation('node', 'article');

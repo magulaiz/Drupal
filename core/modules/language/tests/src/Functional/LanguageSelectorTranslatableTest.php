@@ -73,7 +73,7 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
    */
   public function testLanguageStringSelector() {
     // Add another language.
-    self::createLanguageFromLangcode('es');
+    static::createLanguageFromLangcode('es');
 
     // Translate the string English in Spanish (Inglés). Override config entity.
     $name_translation = 'Inglés';

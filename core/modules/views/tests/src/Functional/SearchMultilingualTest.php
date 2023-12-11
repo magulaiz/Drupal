@@ -45,11 +45,11 @@ class SearchMultilingualTest extends ViewTestBase {
    */
   public function testMultilingualSearchFilter() {
     // Add Spanish language programmatically.
-    self::createLanguageFromLangcode('es');
+    static::createLanguageFromLangcode('es');
 
     // Create a content type and make it translatable.
     $type = $this->drupalCreateContentType();
-    self::enableBundleTranslation('node', $type->id());
+    static::enableBundleTranslation('node', $type->id());
 
     // Add a node in English, with title "sandwich".
     $values = [

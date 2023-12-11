@@ -71,10 +71,10 @@ class RouteCachingLanguageTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
 
     // Enable French language.
-    self::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('fr');
 
     // Enable translation for page node.
-    self::enableContentTranslation('node', 'page');
+    static::enableContentTranslation('node', 'page');
 
     // Create a field with settings to validate.
     $field_storage = FieldStorageConfig::create([

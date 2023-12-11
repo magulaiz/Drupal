@@ -77,7 +77,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'content']);
 
     // Display the language selector.
-    self::enableBundleTranslation('node', 'article');
+    static::enableBundleTranslation('node', 'article');
     $this->drupalLogin($this->translator);
   }
 
@@ -564,7 +564,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->submitForm($edit, 'Save');
 
     // Make the image field non-translatable.
-    self::setFieldTranslatable('node', 'article', 'field_image', FALSE);
+    static::setFieldTranslatable('node', 'article', 'field_image', FALSE);
 
     // Create a node.
     $nid = $this->createEntity(['title' => 'Node with multi-value image field en title'], 'en');

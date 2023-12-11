@@ -41,7 +41,7 @@ class PathWorkspacesTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    self::createLanguageFromLangcode('ro');
+    static::createLanguageFromLangcode('ro');
     $this->rebuildContainer();
 
     // Create a content type.
@@ -58,7 +58,7 @@ class PathWorkspacesTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
 
     // Enable translation for article node.
-    self::enableContentTranslation('node', 'article');
+    static::enableContentTranslation('node', 'article');
 
     $this->setupWorkspaceSwitcherBlock();
 
