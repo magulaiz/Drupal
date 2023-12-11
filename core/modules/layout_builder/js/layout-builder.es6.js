@@ -295,7 +295,6 @@
             window.scrollBy({
               top: scrollAmount,
               left: 0,
-              behavior: 'smooth',
             });
           } else {
             window.scrollBy(0, scrollAmount);
