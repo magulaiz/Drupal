@@ -278,14 +278,15 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
 
-    if (stristr($text, '<drupal-media') === FALSE) {
+    if (stristr($text, '<drupal-media') === FALSE && stristr($text, '<drupal-media-inline') === FALSE) {
       return $result;
     }
 
     $dom = Html::load($text);
     $xpath = new \DOMXPath($dom);
+    $matched_attributes = '@data-entity-type="media" and normalize-space(@data-entity-uuid)!=""';
 
-    foreach ($xpath->query('//drupal-media[@data-entity-type="media" and normalize-space(@data-entity-uuid)!=""]') as $node) {
+    foreach ($xpath->query('//drupal-media[' . $matched_attributes . ']|//drupal-media-inline[' . $matched_attributes . ']') as $node) {
       /** @var \DOMElement $node */
       $uuid = $node->getAttribute('data-entity-uuid');
       $view_mode_id = $node->getAttribute('data-view-mode') ?: $this->settings['default_view_mode'];
