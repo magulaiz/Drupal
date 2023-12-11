@@ -7,7 +7,6 @@ namespace Drupal\Tests\views\Functional\Plugin;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
@@ -288,38 +287,38 @@ class FilterTest extends ViewTestBase {
           $field_values[2] => $field_values[2],
         ],
         'group' => 1,
-        'exposed' => false,
+        'exposed' => FALSE,
         'expose' => [
           'operator_id' => '',
           'label' => '',
           'description' => '',
-          'use_operator' => false,
+          'use_operator' => FALSE,
           'operator' => '',
-          'operator_limit_selection' => false,
+          'operator_limit_selection' => FALSE,
           'operator_list' => [],
           'identifier' => '',
-          'required' => false,
-          'remember' => false,
-          'multiple' => false,
+          'required' => FALSE,
+          'remember' => FALSE,
+          'multiple' => FALSE,
           'remember_roles' => [
-            'authenticated' => 'authenticated'
+            'authenticated' => 'authenticated',
           ],
-          'reduce' => false
+          'reduce' => FALSE,
         ],
-        'is_grouped' => false,
+        'is_grouped' => FALSE,
         'group_info' => [
           'label' => '',
           'description' => '',
           'identifier' => '',
-          'optional' => true,
+          'optional' => TRUE,
           'widget' => 'select',
-          'multiple' => false,
-          'remember' => false,
+          'multiple' => FALSE,
+          'remember' => FALSE,
           'default_group' => 'All',
           'default_group_multiple' => [],
-          'group_items' => []
+          'group_items' => [],
         ],
-        'reduce_duplicates' => false
+        'reduce_duplicates' => FALSE,
       ],
       'field_test_list_string_value_1' => [
         'id' => 'field_test_list_string_value_1',
@@ -336,42 +335,42 @@ class FilterTest extends ViewTestBase {
           $field_values[2] => $field_values[2],
         ],
         'group' => 1,
-        'exposed' => true,
+        'exposed' => TRUE,
         'expose' => [
           'operator_id' => 'field_test_list_string_value_1_op',
           'label' => 'Difficulty (field_test_list_string)',
           'description' => '',
-          'use_operator' => false,
+          'use_operator' => FALSE,
           'operator' => 'field_test_list_string_value_1_op',
-          'operator_limit_selection' => false,
+          'operator_limit_selection' => FALSE,
           'operator_list' => [],
           'identifier' => 'field_test_list_string_value_1',
-          'required' => false,
-          'remember' => false,
-          'multiple' => false,
+          'required' => FALSE,
+          'remember' => FALSE,
+          'multiple' => FALSE,
           'remember_roles' => [
             'authenticated' => 'authenticated',
             'anonymous' => '0',
             'administrator' => '0',
             'author' => '0',
-            'editor' => '0'
+            'editor' => '0',
           ],
-          'reduce' => false
+          'reduce' => FALSE,
         ],
-        'is_grouped' => false,
+        'is_grouped' => FALSE,
         'group_info' => [
           'label' => '',
           'description' => '',
           'identifier' => '',
-          'optional' => true,
+          'optional' => TRUE,
           'widget' => 'select',
-          'multiple' => false,
-          'remember' => false,
+          'multiple' => FALSE,
+          'remember' => FALSE,
           'default_group' => 'All',
           'default_group_multiple' => [],
-          'group_items' => []
+          'group_items' => [],
         ],
-        'reduce_duplicates' => false
+        'reduce_duplicates' => FALSE,
       ],
     ];
 
@@ -381,7 +380,7 @@ class FilterTest extends ViewTestBase {
     $this->executeView($view);
 
     $expected_results = [
-      $node2->id()
+      $node2->id(),
     ];
     $this->assertIdenticalResultset($view, $expected_results);
   }
