@@ -142,7 +142,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
       'menu_parent' => $menu_id . ':' . $parent,
       'weight[0][value]' => $weight,
     ];
-    if($this->config('system.theme')->get('default') !== 'stark') {
+    if ($this->config('system.theme')->get('default') !== 'stark') {
       $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-menu-link-description"]')->pressButton('Description');
       $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-menu-link-display-settings"]')->pressButton('Display settings');
     }
