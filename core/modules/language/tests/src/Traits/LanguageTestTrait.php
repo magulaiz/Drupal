@@ -35,7 +35,7 @@ trait LanguageTestTrait {
    *   The ID of the entity type.
    * @param string $bundle
    *   The bundle name.
-   * @param string $default_langcode
+   * @param string|null $default_langcode
    *   The language code to use as the default language.
    *
    * @return \Drupal\language\ContentLanguageSettingsInterface

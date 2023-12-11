@@ -19,7 +19,7 @@ trait ContentTranslationTestTrait {
    *   The ID of the entity type.
    * @param string $bundle
    *   The bundle name.
-   * @param string $default_langcode
+   * @param string|null $default_langcode
    *   The language code to use as the default language.
    */
   public function enableContentTranslation(string $entity_type_id, string $bundle, ?string $default_langcode = LanguageInterface::LANGCODE_SITE_DEFAULT): void {
