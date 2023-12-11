@@ -107,7 +107,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
         $this->assertAllowValuesRowCount($expected_rows);
         $enter_element_name = $key_element_name;
         $this->assertHasFocusByAttribute('name', $key_element_name);
-        $page->fillField($key_element_name, (string) $option_key);
+        $page->fillField($key_element_name, $option_key);
         $this->assertSession()->assertWaitOnAjaxRequest();
       }
       else {
@@ -237,7 +237,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     // Assert that no validation is performed.
     $assert_session->statusMessageNotContains('Value field is required.');
-    $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue('1');
+    $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue(1);
     $assert_session->assertWaitOnAjaxRequest();
     $page->findField('set_default_value')->setValue(TRUE);
     // Assert that the option added in the subform is available to the default
@@ -341,7 +341,7 @@ JS;
     $type_cases = [
       'List integer' => [
         'list_integer',
-        [1 => 'First', 2 => 'Second', 3 => 'Third'],
+        ['1' => 'First', '2' => 'Second', '3' => 'Third'],
         FALSE,
       ],
       'List float' => [
