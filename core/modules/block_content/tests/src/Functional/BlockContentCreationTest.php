@@ -76,9 +76,12 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Content Block found in database.');
 
-    // Check that view mode works.
+    // Check that the view mode isn't accessible without standalone_url enabled.
     $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
-    $this->assertSession()->addressEquals('/admin/content/block/' . $block->id());
+    $this->assertSession()->addressEquals('/admin/content/block/' . $block->id() . '/edit');
+
+    // Enabled standalone_url setting
+    $this->config('block_content.settings')->set('standalone_url', TRUE)->save();
     $this->assertSession()->pageTextContains('Test Block');
     $this->assertSession()->pageTextContains($body);
   }

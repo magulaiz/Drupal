@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Routing;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -11,7 +12,7 @@ use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Subscriber for Block content BC routes.
+ * Subscriber for Block content routes.
  */
 class RouteSubscriber extends RouteSubscriberBase {
 
@@ -58,16 +59,26 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $controller;
 
   /**
+   * The block_content settings config.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $config;
+
+  /**
    * Constructs a RouteSubscriber object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
+    $this->config = $config_factory->get('block_content.settings');
   }
 
   /**
@@ -87,6 +98,20 @@ class RouteSubscriber extends RouteSubscriberBase {
         $this->addRedirectRoute($route_name);
       }
     }
+
+    if ($this->config->get('standalone_url') && $route = $collection->get('entity.block_content.canonical')) {
+      $route->setPath('/admin/content/block/{block_content}');
+      $defaults = $route->getDefaults();
+      unset($defaults['_entity_form']);
+      $defaults = [
+        '_controller' => "\Drupal\block_content\Controller\BlockContentController::buildView",
+        '_title_callback' => "\Drupal\Core\Entity\Controller\EntityController::title",
+      ];
+      $route->setDefaults($defaults);
+      $route->setOption('_admin_route', FALSE);
+      $route->setRequirement('_entity_access', 'block_content.update');
+    }
+
   }
 
   /**

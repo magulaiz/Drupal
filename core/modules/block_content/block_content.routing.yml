@@ -45,14 +45,14 @@ block_content.add_form:
     _entity_create_access: 'block_content:{block_content_type}'
 
 entity.block_content.canonical:
-  path: '/admin/content/block/{block_content}'
+  path: '/admin/content/block/{block_content}/edit'
   defaults:
-    _controller: '\Drupal\block_content\Controller\BlockContentController::buildView'
+    _entity_form: 'block_content.edit'
     _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
   options:
-    _admin_route: FALSE
+    _admin_route: TRUE
   requirements:
-    _entity_access: 'block_content.view'
+    _entity_access: 'block_content.update'
     block_content: \d+
 
 entity.block_content.edit_form:
@@ -97,7 +97,7 @@ entity.block_content.delete_form:
 entity.block_content.delete_form.bc:
   path: '/block/{block_content}/delete'
   defaults:
-    _controller: '\Drupal\block_content\Controller\BlockContentController::deleteRedirect'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::editRedirect'
   options:
     _admin_route: TRUE
   requirements:
@@ -130,3 +130,11 @@ entity.block_content.collection.bc:
     _controller: '\Drupal\block_content\Controller\BlockContentController::blockLibraryRedirect'
   requirements:
     _permission: 'access block library+administer block content'
+
+block_content.settings:
+  path: '/admin/config/block-content/block-content-settings'
+  defaults:
+    _form: '\Drupal\block_content\Form\BlockContentSettingsForm'
+    _title: 'Block Content settings'
+  requirements:
+    _permission: 'administer block content'
