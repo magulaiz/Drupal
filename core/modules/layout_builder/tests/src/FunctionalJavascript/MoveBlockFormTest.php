@@ -142,16 +142,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
       $this->assertSession()->assertExpectedAjaxRequest(1);
-      $powered_by_drupal_link = $page->find('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
-      // @todo: Remove if random errors here no longer happen.
-      // The below should have the off-canvas visible for working tests.
-      // $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference-1.jpg');
-      if (empty($powered_by_drupal_link)) {
-        // @todo: Remove if random errors here no longer happen.
-        $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-fail.jpg');
-        file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '-' . $i . '.html', $this->getSession()->getPage()->getHtml());
-      }
-      $this->assertNotEmpty($powered_by_drupal_link);
+      $this->assertNotEmpty($page->find('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
       $page->clickLink('Powered by Drupal');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
       $page->pressButton('Add block');

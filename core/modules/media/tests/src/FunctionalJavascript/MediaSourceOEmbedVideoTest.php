@@ -144,18 +144,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // correctly, regardless of whatever its width attribute may be (the fixture
     // hard-codes it to 480).
     $inner_frame = "frames[0].document.querySelector('iframe')";
-    try {
-      $inner_frame_width = $session->evaluateScript("$inner_frame.getAttribute('width')");
-    }
-    catch (\Throwable $th) {
-      $inner_frame_width = NULL;
-    }
-    // @todo: Remove if random errors here no longer happen.
-    if ($inner_frame_width != '480') {
-      $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
-      file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
-    }
-    $this->assertSame('480', $inner_frame_width);
+    $this->assertSame('480', $session->evaluateScript("$inner_frame.getAttribute('width')"));
     $this->assertLessThanOrEqual(240, $session->evaluateScript("$inner_frame.clientWidth"));
 
     // The oEmbed content iFrame should be visible.
