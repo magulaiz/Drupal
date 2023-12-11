@@ -5,7 +5,7 @@ namespace Drupal\Tests\views\Unit;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Exception\InvalidViewsDataException;
 use Drupal\views\ManyToOneHelper;
-use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\ViewsHandlerManager;
@@ -139,7 +139,7 @@ class ManyToOneHelperTest extends UnitTestCase {
    *   Returns a handler wih a relationship.
    */
   protected function getHandlerWithRelationship(ObjectProphecy $join, ObjectProphecy $view, ObjectProphecy $query) {
-    $handler = $this->prophesize(HandlerBase::class);
+    $handler = $this->prophesize(FilterPluginBase::class);
     $handler->getJoin()->willReturn($join->reveal());
     $handler->relationship = 'relationship';
     $handler->table = 'table';
