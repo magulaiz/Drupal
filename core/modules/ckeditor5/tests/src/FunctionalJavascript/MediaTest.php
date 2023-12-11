@@ -15,7 +15,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore layercake
+// cspell:ignore hurlant layercake tatou
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
@@ -81,8 +81,11 @@ class MediaTest extends MediaTestBase {
 
     // Add lists to the editor.
     $settings['plugins']['ckeditor5_list'] = [
-      'reversed' => FALSE,
-      'startIndex' => FALSE,
+      'properties' => [
+        'reversed' => FALSE,
+        'startIndex' => FALSE,
+      ],
+      'multiBlock' => TRUE,
     ];
     $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], ['bulletedList', 'numberedList']);
     $editor->setSettings($settings);

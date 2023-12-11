@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Traits;
 
 use Behat\Mink\Exception\ElementNotFoundException;
@@ -84,10 +86,23 @@ trait FieldUiTestTrait {
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
 
+      // Ensure that each array key in $storage_edit is prefixed with field_storage.
+      $prefixed_storage_edit = [];
+      foreach ($storage_edit as $key => $value) {
+        if (str_starts_with($key, 'field_storage')) {
+          $prefixed_storage_edit[$key] = $value;
+          continue;
+        }
+        // If the key starts with settings, it needs to be prefixed differently.
+        if (str_starts_with($key, 'settings[')) {
+          $prefixed_storage_edit[str_replace('settings[', 'field_storage[subform][settings][', $key)] = $value;
+          continue;
+        }
+        $prefixed_storage_edit['field_storage[subform][' . $key . ']'] = $value;
+      }
+
       // Second step: 'Storage settings' form.
-      $this->submitForm($storage_edit, 'Continue');
-      // Assert that the field is not created.
-      $this->assertFieldDoesNotExist($bundle_path, $label);
+      $this->submitForm($prefixed_storage_edit, 'Update settings');
 
       // Third step: 'Field settings' form.
       $this->submitForm($field_edit, 'Save settings');
@@ -152,8 +167,10 @@ trait FieldUiTestTrait {
    *   The label of the field.
    * @param string $bundle_label
    *   The label of the bundle.
+   * @param string $source_label
+   *   (optional) The label of the source entity type bundle.
    */
-  public function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
+  public function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label, string $source_label = '') {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
     $this->assertSession()->pageTextContains("Are you sure you want to delete the field $label");
@@ -163,7 +180,7 @@ trait FieldUiTestTrait {
 
     // Submit confirmation form.
     $this->submitForm([], 'Delete');
-    $this->assertSession()->pageTextContains("The field $label has been deleted from the $bundle_label content type.");
+    $this->assertSession()->pageTextContains("The field $label has been deleted from the $bundle_label $source_label");
 
     // Check that the field does not appear in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery('//table[@id="field-overview"]//span[@class="label-field" and text()= :label]', [
@@ -178,8 +195,8 @@ trait FieldUiTestTrait {
    * @param string $field_type
    *   The name of the field type.
    *
-   * @returns string
-   *  Group name
+   * @return string
+   *   Group name
    */
   public function getFieldFromGroup($field_type) {
     $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
