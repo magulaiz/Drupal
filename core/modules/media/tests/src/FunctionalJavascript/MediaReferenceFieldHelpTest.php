@@ -45,7 +45,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
       'Media',
     ];
 
-    $help_text = 'Use Media reference fields for most files, images, audio, videos, and remote media. Use File or Image reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.';
+    $help_text = 'Use Media reference fields for most files, images, audio, videos, and remote media. Use File or Image reference fields when creating your own media types, or for legacy files and images created before installing the Media module.';
 
     // Choose a boolean field, none of the description containers should be
     // visible.
