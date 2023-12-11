@@ -338,7 +338,7 @@ class FilterTest extends ViewTestBase {
         'exposed' => TRUE,
         'expose' => [
           'operator_id' => 'field_test_list_string_value_1_op',
-          'label' => 'Difficulty (field_test_list_string)',
+          'label' => 'field_test_list_string',
           'description' => '',
           'use_operator' => FALSE,
           'operator' => 'field_test_list_string_value_1_op',
