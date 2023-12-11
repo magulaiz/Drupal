@@ -87,8 +87,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
    * Tests moving a block.
    */
   public function testMoveBlock() {
-    $this->markTestSkipped("Skipped temporarily for random fails.");
-
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -141,19 +139,12 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $large_block_number = 25;
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
-      $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
+      $this->assertSession()->assertExpectedAjaxRequest(1);
       $powered_by_drupal_link = $page->find('css', '#drupal-off-canvas a:contains("Powered by Drupal")');
       // @todo: Remove if random errors here no longer happen.
       // The below should have the off-canvas visible for working tests.
       // $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-reference-1.jpg');
       if (empty($powered_by_drupal_link)) {
-        // @todo: Fix this. It usually fails on the 4th attempt.
-        // Do we need all of them? Do they all need to be the same?.
-        if ($i > 3) {
-          $large_block_number = $i;
-          continue;
-        }
-
         // @todo: Remove if random errors here no longer happen.
         $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '-' . $i . '-fail.jpg');
         file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '-' . $i . '.html', $this->getSession()->getPage()->getHtml());
