@@ -96,4 +96,19 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertTrue($user->hasPermission('access block library'));
   }
 
+  /**
+   * Tests the block_content.settings is added.
+   *
+   * @see block_content_post_update_add_settings()
+   */
+  public function testAddSettingsUpdate(): void {
+    $config = $this->config('block_content.settings');
+    $this->assertNull($config->get('standalone_url'));
+
+    $this->runUpdates();
+
+    $config = $this->config('block_content.settings');
+    $this->assertFalse($config->get('standalone_url'));
+  }
+
 }

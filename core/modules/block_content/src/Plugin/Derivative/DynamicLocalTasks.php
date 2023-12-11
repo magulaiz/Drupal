@@ -7,7 +7,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,15 +33,12 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   /**
    * Creates a DynamicLocalTasks object.
    *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
-    $this->stringTranslation = $string_translation;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->config = $config_factory->get('block_content.settings');
   }
@@ -52,7 +48,6 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('string_translation'),
       $container->get('entity_type.manager'),
       $container->get('config.factory')
     );
