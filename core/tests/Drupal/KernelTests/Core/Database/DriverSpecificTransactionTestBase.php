@@ -865,6 +865,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('David');
       $this->assertRowPresent('David');
     }
+
+    return $transaction;
   }
 
   /**
