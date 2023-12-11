@@ -17,12 +17,12 @@ class FileUrlTest extends FileManagedUnitTestBase {
   public function testFilesUrlWithDifferentHostName() {
     $test_base_url = 'http://www.example.com/cdn';
     $this->setSetting('file_public_base_url', $test_base_url);
-    $filepath = \Drupal::service('file_system')->createFilename('test.txt', '');
+    $filepath = \Drupal::service('file_system')->createFilename('test with spaces.txt', '');
     $directory_uri = 'public://' . dirname($filepath);
     \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, 'public');
     $url = $file->createFileUrl(FALSE);
-    $expected_url = $test_base_url . '/' . basename($filepath);
+    $expected_url = $test_base_url . '/' . rawurlencode(basename($filepath));
     $this->assertSame($url, $expected_url);
   }
 

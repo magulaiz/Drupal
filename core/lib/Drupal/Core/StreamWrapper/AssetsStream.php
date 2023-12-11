@@ -55,7 +55,7 @@ class AssetsStream extends PublicStream {
       $base_url = PublicStream::baseUrl();
     }
     else {
-      $base_url = 'base:/' . $path;
+      $base_url = $GLOBALS['base_url'] . '/' . $path;
     }
 
     return $base_url;

@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
@@ -56,9 +57,22 @@ class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
    */
   public function getUrl() : Url {
     $path = str_replace('\\', '/', $this->getTarget());
+
+    $settings_base_url = Settings::get('file_public_base_url', '');
+    if ($settings_base_url) {
+      // When file_public_base_url is set, the URI will become full URL, so it's
+      // must be encoded as Url::fromUri() expects correct URL.
+      $uri = $settings_base_url . '/' . UrlHelper::encodePath($path);
+    }
+    else {
+      $uri = 'base:/' . static::basePath() . '/' . $path;
+    }
+
     // UnroutedUrlAssembler adds script when page is being accessed with
     // a script name in the URL, but this is a file - no script is needed.
-    return Url::fromUri(static::baseUrl() . '/' . $path, ['script' => '']);
+    $options = ['script' => ''];
+
+    return Url::fromUri($uri, $options);
   }
 
   /**
@@ -79,7 +93,7 @@ class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
       return (string) $settings_base_url;
     }
     else {
-      return 'base:/' . static::basePath();
+      return $GLOBALS['base_url'] . '/' . static::basePath();
     }
   }
 
