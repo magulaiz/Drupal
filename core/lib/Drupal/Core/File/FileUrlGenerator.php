@@ -99,6 +99,9 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
       // implement getExternalUrl() for the HTTP and data schemes.
       return $relative ? $this->transformRelative($uri) : $uri;
     }
+    elseif ($scheme === 'vfs') {
+      return $uri;
+    }
     elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
       if ($wrapper instanceof StreamWrapperGetUrlInterface) {
         return $wrapper->getUrl()->setAbsolute(!$relative)->toString();
