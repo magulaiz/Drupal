@@ -1,0 +1,148 @@
+<?php
+
+namespace Drupal\Tests\views\Unit;
+
+use Drupal\Tests\UnitTestCase;
+use Drupal\views\Exception\InvalidViewsDataException;
+use Drupal\views\ManyToOneHelper;
+use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Plugin\views\join\JoinPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\Plugin\ViewsHandlerManager;
+use Drupal\views\ViewExecutable;
+use Drupal\views\ViewsData;
+use Prophecy\Argument;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+/**
+ * @coversDefaultClass \Drupal\views\ManyToOneHelper
+ * @group views
+ */
+class ManyToOneHelperTest extends UnitTestCase {
+
+  /**
+   * @covers ::addTable
+   */
+  public function testAddTable() {
+    $handler = $this->prophesize(HandlerBase::class);
+    $view = $this->prophesize(ViewExecutable::class);
+    $join = $this->prophesize(JoinPluginBase::class);
+    $query = $this->prophesize(Sql::class);
+
+    $join->leftTable = 'base_table';
+    $join->table = 'base_table';
+
+    $query->addTable('table', 'relationship', Argument::any(), NULL)
+      ->willReturn('alias');
+
+    $query->relationships = [
+      'relationship' => [
+        'base' => 'base_table',
+      ],
+    ];
+
+    $handler->getJoin()->willReturn($join->reveal());
+    $handler->relationship = 'relationship';
+    $handler->table = 'table';
+    $handler->field = 'field';
+    $handler->value = 'value';
+    $handler->view = $view->reveal();
+    $handler->query = $query->reveal();
+
+    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
+    $this->assertEquals('alias', $many_to_one_helper->addTable());
+  }
+
+  /**
+   * @covers ::addTable
+   */
+  public function testAddTableWithNonExistingTable() {
+    $container = new ContainerBuilder();
+    $views_data = $this->prophesize(ViewsData::class);
+    // Test a non-existent table.
+    $views_data->get('non_existing_left_table')->willReturn('');
+    $container->set('views.views_data', $views_data->reveal());
+    \Drupal::setContainer($container);
+
+    $handler = $this->prophesize(HandlerBase::class);
+    $view = $this->prophesize(ViewExecutable::class);
+    $join = $this->prophesize(JoinPluginBase::class);
+    $query = $this->prophesize(Sql::class);
+
+    $join->leftTable = 'non_existing_left_table';
+    $join->table = 'base_table';
+
+    $query->addTable('table', 'relationship', Argument::any(), NULL)
+      ->willReturn('alias');
+
+    $query->relationships = [
+      'relationship' => [
+        'base' => 'base_table',
+      ],
+    ];
+
+    $handler->getJoin()->willReturn($join->reveal());
+    $handler->relationship = 'relationship';
+    $handler->table = 'table';
+    $handler->field = 'field';
+    $handler->value = 'value';
+    $handler->view = $view->reveal();
+    $handler->query = $query->reveal();
+
+    $this->expectException(InvalidViewsDataException::class);
+    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
+
+    // Test that an exception is thrown when using a non existing table.
+    $many_to_one_helper->addTable();
+  }
+
+  /**
+   * @covers ::addTable
+   */
+  public function testAddTableWithCorruptData() {
+    $join = $this->prophesize(JoinPluginBase::class);
+    $join->leftTable = 'corrupt_left_table';
+    $join->table = 'corrupt_left_table';
+
+    $container = new ContainerBuilder();
+    $views_data = $this->prophesize(ViewsData::class);
+    // Test a non-existent table.
+    $views_data->get('corrupt_left_table')->willReturn(['table' => ['join' => ['base_table' => []]]]);
+
+    $views_join_plugin_manager = $this->prophesize(ViewsHandlerManager::class);
+    $views_join_plugin_manager->createInstance(Argument::any(), Argument::any())->willReturn($join->reveal());
+
+    $container->set('views.views_data', $views_data->reveal());
+    $container->set('plugin.manager.views.join', $views_join_plugin_manager->reveal());
+
+    \Drupal::setContainer($container);
+
+    $handler = $this->prophesize(HandlerBase::class);
+    $view = $this->prophesize(ViewExecutable::class);
+    $query = $this->prophesize(Sql::class);
+
+    $query->addTable('table', 'relationship', Argument::any(), NULL)
+      ->willReturn('alias');
+
+    $query->relationships = [
+      'relationship' => [
+        'base' => 'base_table',
+      ],
+    ];
+
+    $handler->getJoin()->willReturn($join->reveal());
+    $handler->relationship = 'relationship';
+    $handler->table = 'table';
+    $handler->field = 'field';
+    $handler->value = 'value';
+    $handler->view = $view->reveal();
+    $handler->query = $query->reveal();
+
+    $this->expectException(InvalidViewsDataException::class);
+    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
+
+    // Test that an exception is thrown when an infinite loop is caused.
+    $many_to_one_helper->addTable();
+  }
+
+}

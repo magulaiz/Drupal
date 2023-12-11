@@ -3,6 +3,7 @@
 namespace Drupal\views;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Exception\InvalidViewsDataException;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\ViewsHandlerInterface;
 
@@ -72,10 +73,14 @@ class ManyToOneHelper {
   /**
    * Add a table to the query.
    *
-   * This is an advanced concept; not only does it add a new instance of the table,
-   * but it follows the relationship path all the way down to the relationship
-   * link point and adds *that* as a new relationship and then adds the table to
-   * the relationship, if necessary.
+   * This is an advanced concept; not only does it add a new instance of the
+   * table, but it follows the relationship path all the way down to the
+   * relationship link point and adds *that* as a new relationship and then
+   * adds the table to the relationship, if necessary.
+   *
+   * @throws \Drupal\views\Exception\InvalidViewsDataException
+   *   Thrown when invalid views data is found when trying to find a matching
+   *   relationship.
    */
   public function addTable($join = NULL, $alias = NULL) {
     // This is used for lookups in the many_to_one table.
@@ -100,11 +105,21 @@ class ManyToOneHelper {
     // Cycle through the joins. This isn't as error-safe as the normal
     // ensurePath logic. Perhaps it should be.
     $r_join = clone $join;
+    $traced = [];
     while ($r_join->leftTable != $base_table) {
+      if (isset($traced[$r_join->leftTable])) {
+        // We are in a loop, this means the views data is broken.
+        throw new InvalidViewsDataException('Invalid views data found while trying to find a relationship to ' . $base_table);
+      }
+      $traced[$r_join->leftTable] = TRUE;
       $r_join = HandlerBase::getTableJoin($r_join->leftTable, $base_table);
+      if (empty($r_join)) {
+        // No join was found, this means the views data is broken.
+        throw new InvalidViewsDataException('Invalid views data found while trying to find a relationship to ' . $base_table);
+      }
     }
     // If we found that there are tables in between, add the relationship.
-    if ($r_join->table != $join->table) {
+    if (!empty($r_join) && $r_join->table != $join->table) {
       $relationship = $this->handler->query->addRelationship($this->handler->table . '_' . $r_join->table, $r_join, $r_join->table, $this->handler->relationship);
     }
 
