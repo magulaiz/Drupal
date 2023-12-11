@@ -17,12 +17,12 @@
 #}
 {% extends '@claro/form/form-two-columns.html.twig' %}
 {% block main %}
-  {{ form|without('advanced', 'menu_parent', 'actions') }}
+  {{ form|without('advanced', 'wrapper', 'actions') }}
 {% endblock %}
 
 {% block secondary %}
 <div class="entity-meta">
-  {{ form.menu_parent }}
+  {{ form.wrapper}}
   {{ form.advanced }}
 </div>
 {% endblock %}
