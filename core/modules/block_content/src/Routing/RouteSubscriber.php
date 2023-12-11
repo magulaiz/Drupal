@@ -99,19 +99,22 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
     }
 
-    if ($this->config->get('standalone_url') && $route = $collection->get('entity.block_content.canonical')) {
-      $route->setPath('/admin/content/block/{block_content}');
-      $defaults = $route->getDefaults();
-      unset($defaults['_entity_form']);
-      $defaults = [
-        '_controller' => "\Drupal\block_content\Controller\BlockContentController::buildView",
-        '_title_callback' => "\Drupal\Core\Entity\Controller\EntityController::title",
-      ];
-      $route->setDefaults($defaults);
-      $route->setOption('_admin_route', FALSE);
-      $route->setRequirement('_entity_access', 'block_content.update');
+    if ($route = $collection->get('entity.block_content.canonical')) {
+      if ($this->config->get('standalone_url')) {
+        $defaults = $route->getDefaults();
+        unset($defaults['_entity_form']);
+        $defaults = [
+          '_controller' => "\Drupal\block_content\Controller\BlockContentController::buildView",
+          '_title_callback' => "\Drupal\Core\Entity\Controller\EntityController::title",
+        ];
+        $route->setDefaults($defaults);
+        $route->setOption('_admin_route', FALSE);
+        $route->setRequirement('_entity_access', 'block_content.update');
+      }
+      else {
+        $route->setPath('/admin/content/block/{block_content}/edit');
+      }
     }
-
   }
 
   /**
