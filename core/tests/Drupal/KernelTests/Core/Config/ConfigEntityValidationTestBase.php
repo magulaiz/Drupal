@@ -560,10 +560,12 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // `type: required_label`.
     if (!$this->isFullyValidatable()) {
       return array_diff($config_entity_properties, [
-        // @see `type: label`
+        // @see `type: langcode`
+        // @see \Symfony\Component\Validator\Constraints\NotNull
         'langcode',
         'default_langcode',
         // @see `type: required_label`
+        // @see \Symfony\Component\Validator\Constraints\NotBlank
         $this->entity->getEntityType()->getKey('label'),
       ]);
     }
