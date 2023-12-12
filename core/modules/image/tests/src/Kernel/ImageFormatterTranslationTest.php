@@ -22,7 +22,7 @@ class ImageFormatterTranslationTest extends EntityLanguageTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'image', 'content_translation'];
+  protected static $modules = ['file', 'image', 'content_translation'];
 
   /**
    * Our test entity.
