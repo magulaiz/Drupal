@@ -211,16 +211,16 @@
       // Perform an AJAX request to let the server render the contextual links
       // for each of the placeholders.
       if (uncachedIDs.length > 0) {
+        const params = new URLSearchParams();
+        params.append('ids[]', uncachedIDs);
+        params.append('tokens[]', uncachedTokens);
         (async () => {
           const response = await fetch(Drupal.url('contextual/render'), {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: JSON.stringify({
-              'ids[]': uncachedIDs,
-              'tokens[]': uncachedTokens,
-            }),
+            body: params.toString(),
           });
 
           const results = await response.json();

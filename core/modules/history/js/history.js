@@ -38,15 +38,16 @@
         callback();
         return;
       }
-
+      const params = new URLSearchParams();
+      params.append('node_ids', nodeIDs);
       const response = await fetch(
         Drupal.url('history/get_node_read_timestamps'),
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify({ node_ids: nodeIDs }),
+          body: params.toString(),
         },
       );
 

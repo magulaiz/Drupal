@@ -35,6 +35,8 @@
       values.push(Drupal.checkPlain(this.value));
     });
 
+    const params = new URLSearchParams();
+    params.append('menus[]', values);
     const response = await fetch(
       `${window.location.protocol}//${window.location.host}${Drupal.url(
         'admin/structure/menu/parents',
@@ -44,7 +46,7 @@
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ 'menus[]': values }),
+        body: params.toString(),
       },
     );
 

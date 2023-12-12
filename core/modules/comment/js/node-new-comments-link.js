@@ -133,17 +133,17 @@
     if (drupalSettings.comment && drupalSettings.comment.newCommentsLinks) {
       render(drupalSettings.comment.newCommentsLinks.node[fieldName]);
     } else {
+      const params = new URLSearchParams();
+      params.append('node_ids[]', nodeIDs);
+      params.append('field_name', fieldName);
       const response = await fetch(
         Drupal.url('comments/render_new_comments_node_links'),
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify({
-            'node_ids[]': nodeIDs,
-            field_name: fieldName,
-          }),
+          body: params.toString(),
         },
       );
 

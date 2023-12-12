@@ -46,17 +46,17 @@
     }
     // Otherwise, ensure XSS safety: let the server XSS filter this value.
     else {
+      const params = new URLSearchParams();
+      params.append('value', field.value);
+      params.append('original_format_id', originalFormatID);
       const response = await fetch(
         Drupal.url(`editor/filter_xss/${format.format}`),
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify({
-            value: field.value,
-            original_format_id: originalFormatID,
-          }),
+          body: params.toString(),
         },
       );
 

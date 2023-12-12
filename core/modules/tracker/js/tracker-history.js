@@ -49,15 +49,16 @@
     if (nodeIDs.length === 0) {
       return;
     }
-
+    const params = new URLSearchParams();
+    params.append('node_ids[]', nodeIDs);
     const response = await fetch(
       Drupal.url('comments/render_new_comments_node_links'),
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ 'node_ids[]': nodeIDs }),
+        body: params.toString(),
       },
     );
 
