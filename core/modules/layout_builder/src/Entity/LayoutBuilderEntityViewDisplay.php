@@ -322,8 +322,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     $build = [];
     if ($storage) {
-      foreach ($storage->getSections() as $delta => $section) {
-        $build[$delta] = $section->toRenderArray($contexts);
+      foreach ($storage->getSections() as $uuid => $section) {
+        $build[$uuid] = $section->toRenderArray($contexts);
       }
     }
     // The render array is built based on decisions made by @SectionStorage
@@ -465,11 +465,13 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     }
 
     // Return the first section.
-    foreach ($this->getSections() as $section) {
+    $section_uuid = '';
+    foreach ($this->getSections() as $uuid => $section) {
       if ($section->getWeight() === 0) {
-        return $section;
+        $section_uuid = $uuid;
       }
     }
+    return $this->getSection($section_uuid);
   }
 
   /**
