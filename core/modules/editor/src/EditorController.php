@@ -30,7 +30,8 @@ class EditorController extends ControllerBase {
    * @see editor_filter_xss()
    */
   public function filterXss(Request $request, FilterFormatInterface $filter_format) {
-    $value = $request->request->get('value');
+    $request_body = json_decode($request->getContent(), TRUE);
+    $value = $request_body['value'];
     if (!isset($value)) {
       throw new NotFoundHttpException();
     }
