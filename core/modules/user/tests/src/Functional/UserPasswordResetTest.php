@@ -136,7 +136,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Check successful login.
     $this->submitForm([], 'Log in');
     $this->assertSession()->linkExists('Log out');
-    $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
+    $this->assertSession()->titleEquals('Change password' . ' | Drupal');
 
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
@@ -219,7 +219,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
     $this->assertSession()->linkExists('Log out');
-    $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
+    $this->assertSession()->titleEquals('Change password' . ' | Drupal');
 
     // Ensure blocked and deleted accounts can't access the user.reset.login
     // route.
@@ -488,7 +488,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
     $this->assertSession()->linkExists('Log out');
-    $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
+    $this->assertSession()->titleEquals('Change password' . ' | Drupal');
     $this->drupalLogout();
 
     // The next request should *not* trigger flood control, since a successful
