@@ -17,6 +17,7 @@
         "guzzlehttp/guzzle": "~7.8.0",
         "guzzlehttp/promises": "~2.0.1",
         "guzzlehttp/psr7": "~2.6.1",
+        "laravel/serializable-closure": "~v1.3.3",
         "masterminds/html5": "~2.8.1",
         "mck89/peast": "~v1.15.4",
         "pear/archive_tar": "~1.4.14",
