@@ -95,19 +95,19 @@ class MenuLinkContentForm extends ContentEntityForm {
     $menu_id = $this->entity->getMenuName();
     $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
     if ($this->entity->isNew()) {
-      $form['wrapper']['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
+      $form['menu_parent_wrapper']['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
         $menu_id => $menu->label(),
       ]);
     }
     else {
       $form += $this->menuParentSelector->menuSelectElement($form_state->getValue('menu') ?: $menu_id . ':');
-      $form['wrapper']['menu_parent'] += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default, $id, $form_state->getValue('menus') ?: [$menu_id => $menu->label()]);
+      $form['menu_parent_wrapper']['menu_parent'] += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default, $id, $form_state->getValue('menus') ?: [$menu_id => $menu->label()]);
     }
-    $form['wrapper']['menu_parent']['#weight'] = 10;
-    $form['wrapper']['menu_parent']['#title'] = $this->t('Parent link');
-    $form['wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-    $form['wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
-    $form['wrapper']['menu_parent']['#attributes']['data-drupal-select-menu_parent'] = TRUE;
+    $form['menu_parent_wrapper']['menu_parent']['#weight'] = 10;
+    $form['menu_parent_wrapper']['menu_parent']['#title'] = $this->t('Parent link');
+    $form['menu_parent_wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
+    $form['menu_parent_wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+
     return $form;
   }
 

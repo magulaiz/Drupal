@@ -79,6 +79,11 @@ interface MenuParentFormSelectorInterface {
    *   A form element to choose a menu, or an empty array if no possible
    *   menu exist for the given parameters. The resulting form value will be
    *   a single string containing the chosen menu name.
+   *
+   * @todo why are we introducing a new method? Is this strictly required?
+   *   Couldn't we return both elements from ::parentSelectElement? If we want
+   *   to retain BC, we could add a new optional parameter to allow turning on
+   *   this new functionality.
    */
   public function menuSelectElement($menu_id, array $menus = NULL);
 

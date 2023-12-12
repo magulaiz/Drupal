@@ -103,10 +103,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         '#title' => $this->t('Menu'),
         '#type' => 'select',
         '#options' => $options,
-        '#attributes' => [
-          'class' => ['menu-title-select'],
-          'data-drupal-select-menu' => TRUE,
-        ],
+        '#attributes' => ['class' => ['menu-title-select']],
         '#ajax' => [
           'callback' => [$this, 'updateParentLinks'],
           'wrapper' => $menu_parent_wrapper,
@@ -129,14 +126,11 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
           'wrapper' => $menu_parent_wrapper,
         ],
       ];
-      $elements['menu_parent'] = [
-        '#prefix' => '<div id= "' . $menu_parent_wrapper . '" >',
-        '#suffix' => '</div>',
-      ];
+      $elements['menu_parent'] = [];
       $elements_wrapper = [
-        'wrapper' => [
-          '#prefix' => '<div id= "' . $menu_parent_wrapper . '" >',
-          '#suffix' => '</div>',
+        'menu_parent_wrapper' => [
+          '#type' => 'container',
+          '#attributes' => ['id' => $menu_parent_wrapper],
           'menu_parent' => $elements['menu_parent'],
           'menu' => $elements['menu'],
           'submit' => $elements['menu_submit'],
@@ -183,14 +177,15 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * AJAX callback for updating menu parent options.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
-    return $form['menu_link_selection']['wrapper'];
+    return $form['menu_parent_wrapper'];
   }
 
   /**
    * Submit handler for the 'Change menu' element.
    */
   public function updateParentLinksSubmit(array $form, FormStateInterface $form_state) : void {
-    $menu_name = rtrim($form_state->getValue('menu_link_selection')['wrapper']['menu'], ':');
+    // @todo why do we need to rtrim?
+    $menu_name = rtrim($form_state->getValue('menu'), ':');
     $form_state->setValue('menus', $this->getMenuOptions([$menu_name]));
     $form_state->setRebuild();
   }

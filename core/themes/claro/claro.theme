@@ -691,16 +691,9 @@ function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $for
     '#accordion' => TRUE,
   ];
 
-  $form['menu_link_selection'] = [
-    '#type' => 'details',
-    '#group' => 'advanced',
-    '#title' => t('Menu link selection'),
-    '#attributes' => ['class' => ['entity-meta__options']],
-    '#tree' => TRUE,
-    '#accordion' => TRUE,
-    '#open' => TRUE,
-    'wrapper' => $form['wrapper'],
-  ];
+  $form['menu_parent_wrapper']['#group'] = 'advanced';
+  $form['menu_parent_wrapper']['#attributes']['class'][] = 'entity-meta__header';
+
   $form['menu_link_display_settings'] = [
     '#type' => 'details',
     '#group' => 'advanced',

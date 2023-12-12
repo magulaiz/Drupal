@@ -141,14 +141,15 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
     $default_menu_id = $this->menuLink->getMenuName();
     $default_menu = $this->entityTypeManager->getStorage('menu')->load($default_menu_id);
+    // @todo I don't think we should do a union with the return value of
+    //   ::menuSelectElement() because it adds unnecessary brittleness.
     $form += $this->menuParentSelector->menuSelectElement($form_state->getValue('menu') ?: $default_menu_id . ':');
 
-    $form['wrapper']['menu_parent'] += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $menu_parent, $this->menuLink->getPluginId(), $form_state->getValue('menus') ?: [$default_menu_id => $default_menu->label()]);
-    $form['wrapper']['menu_parent']['#title'] = $this->t('Parent link');
-    $form['wrapper']['menu_parent']['#weight'] = 10;
-    $form['wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-    $form['wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
-    $form['wrapper']['menu_parent']['#attributes']['data-drupal-select-menu_parent'] = TRUE;
+    $form['menu_parent_wrapper']['menu_parent'] = $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $menu_parent, $this->menuLink->getPluginId(), $form_state->getValue('menus') ?: [$default_menu_id => $default_menu->label()]);
+    $form['menu_parent_wrapper']['menu_parent']['#title'] = $this->t('Parent link');
+    $form['menu_parent_wrapper']['menu_parent']['#weight'] = 10;
+    $form['menu_parent_wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
+    $form['menu_parent_wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [
