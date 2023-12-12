@@ -268,6 +268,24 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Retrieve labels from views configuration.
+   */
+  public function getLabelElements() {
+    static $labelElements = NULL;
+    if (!isset($labelElements)) {
+      $labelElements = [
+        'h3' => $this
+          ->t('- Use default -'),
+        '' => $this
+          ->t('- None (No wrapping HTML) -'),
+      ];
+      $labelElements += \Drupal::config('views.settings')
+        ->get('field_rewrite_elements');
+    }
+    return $labelElements;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
@@ -298,7 +316,8 @@ abstract class StylePluginBase extends PluginBase {
         // Add a form for every grouping, plus one.
         for ($i = 0; $i <= $c; $i++) {
           $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
-          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE];
+          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
+
           $form['grouping'][$i]['field'] = [
             '#type' => 'select',
             '#title' => $this->t('Grouping field Nr.@number', ['@number' => $i + 1]),
@@ -521,6 +540,12 @@ abstract class StylePluginBase extends PluginBase {
       }
 
       $single_output['#grouping_level'] = $level;
+      if ($this->options['grouping']) {
+        $single_output['#grouping_label_element'] = $this->options['grouping'][$level]['grouping_label_element'];
+      }
+      else {
+        $single_output['#grouping_label_element'] = '';
+      }
       $single_output['#title'] = $set['group'];
       $output[] = $single_output;
     }
@@ -591,6 +616,7 @@ abstract class StylePluginBase extends PluginBase {
           $field = $info['field'];
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
+          $grouping_label_element = $info['grouping_label_element'];
           $grouping = '';
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
@@ -622,6 +648,7 @@ abstract class StylePluginBase extends PluginBase {
           if (empty($set[$grouping])) {
             $set[$grouping]['group'] = $group_content;
             $set[$grouping]['level'] = $level;
+            $set[$grouping]['grouping_label_element'] = $grouping_label_element;
             $set[$grouping]['rows'] = [];
           }
 
