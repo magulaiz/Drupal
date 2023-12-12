@@ -89,8 +89,7 @@ class RenderTest extends KernelTestBase {
     $renderer = $this->container->get('bare_html_page_renderer');
     $response = $renderer->renderBarePage($build, '', 'maintenance_page');
     $headers = $response->headers->all();
-    $count_links = array_count_values($headers['link']);
-    $this->assertEquals(1, $count_links[$header]);
+    $this->assertCount(1, $headers['link']);
   }
 
 }
