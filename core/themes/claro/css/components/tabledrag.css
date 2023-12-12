@@ -390,3 +390,13 @@ body.drag {
 .tree-child-horizontal path.tree__item-horizontal {
   display: block;
 }
+
+/**
+ * Use the scripting media features for modern browsers to reduce layout shifts.
+ */
+
+@media (scripting: enabled) {
+  .tabledrag-hide {
+    display: none;
+  }
+}
