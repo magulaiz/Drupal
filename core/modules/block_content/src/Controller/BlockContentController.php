@@ -238,6 +238,26 @@ class BlockContentController extends ControllerBase {
   }
 
   /**
+   * Provides a redirect to block edit page.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   A route match object, used for the route name and the parameters.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   The block to be edited.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function canonicalRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
+    $helper = new PathChangedHelper($route_match, $request);
+    if (!$this->config('block_content.settings')->get('standalone_url')) {
+      return $helper->redirect();
+    }
+    return new RedirectResponse($helper->oldPath());
+  }
+
+  /**
    * Provides renders array to preview a block_content without placing on a page.
    *
    * @param Drupal\block_content\BlockContentInterface $block_content
