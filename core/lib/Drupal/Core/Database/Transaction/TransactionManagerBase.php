@@ -96,7 +96,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * When destructing, $stack must have been already emptied.
    */
   public function __destruct() {
-    assert($this->stack === [], "Transaction \$stack was not empty. Active stack: " . $this->dumpStackItemsAsString());
+    // Ensure all still-open transactions get auto-committed. Usually, this
+    // happens when the Transaction::__destruct() method is invoked, but during
+    // shutdown the object transaction order is unreliable. If this object
+    // is destroyed first, we need to make sure to auto-commit the root
+    // transaction.
+    // Also see https://www.drupal.org/project/drupal/issues/1608374.
+    if (!empty($this->stack)) {
+      $this->processRootCommit();
+    }
   }
 
   /**
@@ -382,6 +390,10 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    */
   protected function setConnectionTransactionState(ClientConnectionTransactionState $state): void {
     $this->connectionTransactionState = $state;
+    match ($state) {
+      ClientConnectionTransactionState::Active => $this->connection->setTransactionManagerStackState(TRUE),
+      default => $this->connection->setTransactionManagerStackState(FALSE),
+    };
   }
 
   /**

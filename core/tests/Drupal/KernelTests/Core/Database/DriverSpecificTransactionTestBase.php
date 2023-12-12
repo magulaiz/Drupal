@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Transaction\ClientConnectionTransactionState;
 use Drupal\Core\Database\Transaction\StackItem;
 use Drupal\Core\Database\Transaction\StackItemType;
 use Drupal\Core\Database\TransactionExplicitCommitNotAllowedException;
@@ -879,17 +880,19 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   /**
    * Tests TransactionManager failure.
    */
-  public function testTransactionManagerFailureOnPendingStackItems(): void {
+  public function testConnectionDestructionWithPendingStackItems(): void {
     $connectionInfo = Database::getConnectionInfo();
     Database::addConnectionInfo('default', 'test_fail', $connectionInfo['default']);
     $testConnection = Database::getConnection('test_fail');
 
-    // Add a fake item to the stack.
-    $reflectionMethod = new \ReflectionMethod(get_class($testConnection->transactionManager()), 'addStackItem');
-    $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Savepoint));
+    // Add a fake item to the stack, and pretend we have a transaction
+    // active.
+    $transactionManager = get_class($testConnection->transactionManager());
+    $reflectionAddStackItem = new \ReflectionMethod($transactionManager, 'addStackItem');
+    $reflectionAddStackItem->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Root));
+    $reflectionSetConnectionTransactionState = new \ReflectionMethod($transactionManager, 'setConnectionTransactionState');
+    $reflectionSetConnectionTransactionState->invoke($testConnection->transactionManager(), ClientConnectionTransactionState::Active);
 
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
     unset($testConnection);
     Database::closeConnection('test_fail');
   }
