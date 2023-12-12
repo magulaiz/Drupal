@@ -180,14 +180,14 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * AJAX callback for updating menu parent options.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
-    return $form['wrapper'];
+    return $form['menu_link_selection']['wrapper'];
   }
 
   /**
    * Submit handler for the 'Change menu' element.
    */
   public function updateParentLinksSubmit(array $form, FormStateInterface $form_state) : void {
-    $menu_name = rtrim($form_state->getValue('menu'), ':');
+    $menu_name = rtrim($form_state->getValue('menu_link_selection')['wrapper']['menu'], ':');
     $form_state->setValue('menus', $this->getMenuOptions([$menu_name]));
     $form_state->setRebuild();
   }
