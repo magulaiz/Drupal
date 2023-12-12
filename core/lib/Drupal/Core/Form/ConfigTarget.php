@@ -34,24 +34,6 @@ final class ConfigTarget {
   public readonly array $propertyPaths;
 
   /**
-   * Transforms a value loaded from config before it gets displayed by the form.
-   *
-   * @var \Closure|null
-   *
-   * @see ::getValue()
-   */
-  public readonly ?\Closure $fromConfig;
-
-  /**
-   * Transforms a value submitted by the form before it is set in the config.
-   *
-   * @var \Closure|null
-   *
-   * @see ::setValue()
-   */
-  public readonly ?\Closure $toConfig;
-
-  /**
    * Constructs a ConfigTarget object.
    *
    * @param string $configName
@@ -59,13 +41,13 @@ final class ConfigTarget {
    *   `system.site`.
    * @param string|array $propertyPath
    *   The property path(s) being read or written, e.g., `page.front`.
-   * @param callable|null $fromConfig
+   * @param string|null $fromConfig
    *   (optional) A callback which should transform the value loaded from
    *   config before it gets displayed by the form. If NULL, no transformation
    *   will be done. The callback will receive all of the values loaded from
    *   config as separate arguments, in the order specified by
    *   $this->propertyPaths. Defaults to NULL.
-   * @param callable|null $toConfig
+   * @param string|null $toConfig
    *   (optional) A callback which should transform the value submitted by the
    *   form before it is set in the config object. If NULL, no transformation
    *   will be done. The callback will receive the value submitted through the
@@ -83,12 +65,9 @@ final class ConfigTarget {
   public function __construct(
     public readonly string $configName,
     string|array $propertyPath,
-    ?callable $fromConfig = NULL,
-    ?callable $toConfig = NULL,
+    public readonly ?string $fromConfig = NULL,
+    public readonly ?string $toConfig = NULL,
   ) {
-    $this->fromConfig = $fromConfig ? $fromConfig(...) : NULL;
-    $this->toConfig = $toConfig ? $toConfig(...) : NULL;
-
     if (is_string($propertyPath)) {
       $propertyPath = [$propertyPath];
     }
@@ -96,6 +75,19 @@ final class ConfigTarget {
       throw new \LogicException('The $fromConfig and $toConfig arguments must be passed to ' . __METHOD__ . '() if multiple property paths are targeted.');
     }
     $this->propertyPaths = array_values($propertyPath);
+    // If they're passed at all, $fromConfig and $toConfig need to be string
+    // callables in order to guarantee that this object can be serialized as
+    // part of a larger form array. If these could be arrays, then they could be
+    // in the form of [$object, 'method'], which would break serialization if
+    // $object was not serializable. This is also why we don't type hint these
+    // parameters as ?callable, since that would allow closures (which can't
+    // be serialized).
+    if ($fromConfig) {
+      assert(is_callable($fromConfig));
+    }
+    if ($toConfig) {
+      assert(is_callable($toConfig));
+    }
   }
 
   /**
