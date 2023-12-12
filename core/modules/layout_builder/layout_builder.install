@@ -29,7 +29,7 @@ function layout_builder_install() {
       $field_layout += ['settings' => []];
       $display
         ->enableLayoutBuilder()
-        ->appendSection(new Section($field_layout['id'], $field_layout['settings']))
+        ->appendSection((new Section($field_layout['id'], $field_layout['settings']))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0))
         ->save();
       $display_changed = TRUE;
     }
