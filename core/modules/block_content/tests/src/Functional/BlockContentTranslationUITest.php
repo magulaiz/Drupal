@@ -35,9 +35,12 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
+    'session',
     'theme',
-    'url.query_args:_wrapper_format',
+    'url.path',
+    'url.query_args',
     'user.permissions',
+    'user.roles:authenticated',
   ];
 
   /**
@@ -127,7 +130,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
 
     // Check that the translate operation link is shown.
     $this->drupalGet('admin/content/block');
-    $this->assertSession()->linkByHrefExists('admin/content/block/' . $entity->id() . '/translations');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $entity->id() . '/edit/translations');
   }
 
   /**
