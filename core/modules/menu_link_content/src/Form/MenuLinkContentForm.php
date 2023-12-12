@@ -107,7 +107,7 @@ class MenuLinkContentForm extends ContentEntityForm {
     $form['wrapper']['menu_parent']['#title'] = $this->t('Parent link');
     $form['wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
     $form['wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
-
+    $form['wrapper']['menu_parent']['#attributes']['data-drupal-select-menu_parent'] = TRUE;
     return $form;
   }
 

@@ -103,7 +103,10 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         '#title' => $this->t('Menu'),
         '#type' => 'select',
         '#options' => $options,
-        '#attributes' => ['class' => ['menu-title-select']],
+        '#attributes' => [
+          'class' =>['menu-title-select'],
+          'data-drupal-select-menu' =>TRUE,
+        ],
         '#ajax' => [
           'callback' => [$this, 'updateParentLinks'],
           'wrapper' => $menu_parent_wrapper,

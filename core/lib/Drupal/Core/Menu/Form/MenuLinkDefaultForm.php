@@ -148,6 +148,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $form['wrapper']['menu_parent']['#weight'] = 10;
     $form['wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
     $form['wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+    $form['wrapper']['menu_parent']['#attributes']['data-drupal-select-menu_parent'] = TRUE;
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [
