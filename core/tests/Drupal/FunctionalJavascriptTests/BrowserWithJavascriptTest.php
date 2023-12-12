@@ -27,7 +27,7 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
     $this->drupalGet('<front>');
     $session = $this->getSession();
 
-    $session->resizeWindow(400, 300);
+    $session->resizeWindow(400, 400);
     $javascript = <<<JS
     (function(){
         var w = window,
