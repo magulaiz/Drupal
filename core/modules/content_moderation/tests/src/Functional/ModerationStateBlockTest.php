@@ -105,7 +105,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->assertSession()->pageTextContains($updated_body);
 
     // Publish the block so we can create a pending revision.
-    $this->drupalGet('admin/content/block/' . $block->id() . '/edit');
+    $this->drupalGet('admin/content/block/' . $block->id());
     $this->submitForm(['moderation_state[0][state]' => 'published'], 'Save');
 
     // Create a pending revision.
@@ -127,7 +127,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $edit = [
       'new_state' => 'published',
     ];
-    $this->drupalGet('admin/content/block/' . $block->id() . '/latest');
+    $this->drupalGet('admin/content/block/' . $block->id() . '/edit/latest');
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('The moderation state has been updated.');
 
