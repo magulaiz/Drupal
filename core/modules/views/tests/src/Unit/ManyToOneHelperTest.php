@@ -41,9 +41,7 @@ class ManyToOneHelperTest extends UnitTestCase {
       ],
     ];
 
-    $handler = $this->getHandlerWithRelationship($join, $view, $query);
-
-    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
+    $many_to_one_helper = $this->getManyToOneHelperWithRelationship($join, $view, $query);
     $this->assertEquals('alias', $many_to_one_helper->addTable());
   }
 
@@ -74,10 +72,8 @@ class ManyToOneHelperTest extends UnitTestCase {
       ],
     ];
 
-    $handler = $this->getHandlerWithRelationship($join, $view, $query);
-
+    $many_to_one_helper = $this->getManyToOneHelperWithRelationship($join, $view, $query);
     $this->expectException(InvalidViewsDataException::class);
-    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
 
     // Test that an exception is thrown when using a non-existing table.
     $many_to_one_helper->addTable();
@@ -116,17 +112,16 @@ class ManyToOneHelperTest extends UnitTestCase {
       ],
     ];
 
-    $handler = $this->getHandlerWithRelationship($join, $view, $query);
+    $many_to_one_helper = $this->getManyToOneHelperWithRelationship($join, $view, $query);
 
     $this->expectException(InvalidViewsDataException::class);
-    $many_to_one_helper = new ManyToOneHelper($handler->reveal());
 
     // Test that an exception is thrown when an infinite loop is caused.
     $many_to_one_helper->addTable();
   }
 
   /**
-   * Builds a handler with a relationship.
+   * Builds a ManyToOneHelper with a relationship handler.
    *
    * @param \Prophecy\Prophecy\ObjectProphecy $join
    *   The join to use for the relationship.
@@ -135,10 +130,10 @@ class ManyToOneHelperTest extends UnitTestCase {
    * @param \Prophecy\Prophecy\ObjectProphecy $query
    *   The query to use in the handler.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy
-   *   Returns a handler wih a relationship.
+   * @return \Drupal\views\ManyToOneHelper
+   *   Returns a ManyToOneHelper.
    */
-  protected function getHandlerWithRelationship(ObjectProphecy $join, ObjectProphecy $view, ObjectProphecy $query) {
+  protected function getManyToOneHelperWithRelationship(ObjectProphecy $join, ObjectProphecy $view, ObjectProphecy $query): ManyToOneHelper {
     $handler = $this->prophesize(FilterPluginBase::class);
     $handler->getJoin()->willReturn($join->reveal());
     $handler->relationship = 'relationship';
@@ -147,7 +142,7 @@ class ManyToOneHelperTest extends UnitTestCase {
     $handler->value = 'value';
     $handler->view = $view->reveal();
     $handler->query = $query->reveal();
-    return $handler;
+    return new ManyToOneHelper($handler->reveal());
   }
 
 }
