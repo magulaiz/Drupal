@@ -1681,6 +1681,23 @@ function hook_entity_prepare_view($entity_type_id, array $entities, array $displ
 }
 
 /**
+ * Change the view mode of an particular entity type that is being displayed.
+ *
+ * @param string $view_mode
+ *   The view_mode that is to be used to display the entity.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity that is being viewed.
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInterface $entity) {
+  // Change the view mode to teaser.
+  if ($view_mode == 'full') {
+    $view_mode = 'teaser';
+  }
+}
+
+/**
  * Change the view mode of an entity that is being displayed.
  *
  * @param string $view_mode
