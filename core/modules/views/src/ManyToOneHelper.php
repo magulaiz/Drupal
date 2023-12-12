@@ -116,11 +116,11 @@ class ManyToOneHelper {
       // @phpstan-ignore-next-line
       if (empty($r_join)) {
         // No join was found, this means the views data is broken.
-        throw new InvalidViewsDataException('Invalid views data found while trying to find a relationship to ' . $base_table);
+        throw new InvalidViewsDataException(sprintf('Invalid views data found while trying to find a relationship to %s', $base_table));
       }
     }
     // If we found that there are tables in between, add the relationship.
-    if (!empty($r_join) && $r_join->table != $join->table) {
+    if ($r_join->table != $join->table) {
       $relationship = $this->handler->query->addRelationship($this->handler->table . '_' . $r_join->table, $r_join, $r_join->table, $this->handler->relationship);
     }
 

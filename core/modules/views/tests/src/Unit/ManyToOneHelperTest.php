@@ -24,7 +24,7 @@ class ManyToOneHelperTest extends UnitTestCase {
   /**
    * @covers ::addTable
    */
-  public function testAddTable() {
+  public function testAddTable(): void {
     $view = $this->prophesize(ViewExecutable::class);
     $join = $this->prophesize(JoinPluginBase::class);
     $query = $this->prophesize(Sql::class);
@@ -50,7 +50,7 @@ class ManyToOneHelperTest extends UnitTestCase {
   /**
    * @covers ::addTable
    */
-  public function testAddTableWithNonExistingTable() {
+  public function testAddTableWithNonExistingTable(): void {
     $container = new ContainerBuilder();
     $views_data = $this->prophesize(ViewsData::class);
     // Test a non-existent table.
@@ -86,7 +86,7 @@ class ManyToOneHelperTest extends UnitTestCase {
   /**
    * @covers ::addTable
    */
-  public function testAddTableWithCorruptData() {
+  public function testAddTableWithCorruptData(): void {
     $join = $this->prophesize(JoinPluginBase::class);
     $join->leftTable = 'corrupt_left_table';
     $join->table = 'corrupt_left_table';
