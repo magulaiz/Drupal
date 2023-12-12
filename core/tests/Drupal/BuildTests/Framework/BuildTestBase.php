@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\BuildTests\Framework;
 
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -536,9 +538,8 @@ abstract class BuildTestBase extends TestCase {
    * Use this method to copy the current codebase, including any patched
    * changes, into the workspace.
    *
-   * By default, the copy will exclude sites/default/settings.php,
-   * sites/default/files, and vendor/. Use the $iterator parameter to override
-   * this behavior.
+   * By default, the copy will exclude site-specific and build-related files and
+   * directories. Use the $iterator parameter to override this behavior.
    *
    * @param \Iterator|null $iterator
    *   (optional) An iterator of all the files to copy. Default behavior is to
@@ -568,6 +569,10 @@ abstract class BuildTestBase extends TestCase {
    * - Call the method to get a default Finder object which can then be
    *   modified for other purposes.
    *
+   * Note that the vendor directory is deliberately not included in the
+   * directory exclusions here, so that packages are copied and composer does
+   * not attempt to download them from packagist/github during test runs.
+   *
    * @return \Symfony\Component\Finder\Finder
    *   A Finder object ready to iterate over core codebase.
    */
@@ -578,7 +583,7 @@ abstract class BuildTestBase extends TestCase {
       ->in($this->getDrupalRoot())
       ->notPath('#^sites/default/files#')
       ->notPath('#^sites/simpletest#')
-      ->notPath('#^vendor#')
+      ->notPath('#^core/node_modules#')
       ->notPath('#^sites/default/settings\..*php#')
       ->ignoreDotFiles(FALSE)
       ->ignoreVCS(FALSE);
