@@ -6,6 +6,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Config;
+use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * Represents the mapping of a config property to a form element.
@@ -36,20 +37,20 @@ final class ConfigTarget {
   /**
    * Transforms a value loaded from config before it gets displayed by the form.
    *
-   * @var \Closure|null
+   * @var \Laravel\SerializableClosure\SerializableClosure|null
    *
    * @see ::getValue()
    */
-  public readonly ?\Closure $fromConfig;
+  public readonly ?SerializableClosure $fromConfig;
 
   /**
    * Transforms a value submitted by the form before it is set in the config.
    *
-   * @var \Closure|null
+   * @var \Laravel\SerializableClosure\SerializableClosure|null
    *
    * @see ::setValue()
    */
-  public readonly ?\Closure $toConfig;
+  public readonly ?SerializableClosure $toConfig;
 
   /**
    * Constructs a ConfigTarget object.
@@ -86,8 +87,8 @@ final class ConfigTarget {
     ?callable $fromConfig = NULL,
     ?callable $toConfig = NULL,
   ) {
-    $this->fromConfig = $fromConfig ? $fromConfig(...) : NULL;
-    $this->toConfig = $toConfig ? $toConfig(...) : NULL;
+    $this->fromConfig = $fromConfig ? new SerializableClosure($fromConfig(...)) : NULL;
+    $this->toConfig = $toConfig ? new SerializableClosure($toConfig(...)) : NULL;
 
     if (is_string($propertyPath)) {
       $propertyPath = [$propertyPath];
@@ -184,8 +185,8 @@ final class ConfigTarget {
 
     if ($this->fromConfig) {
       $value = $is_multi_target
-        ? ($this->fromConfig)(...$value)
-        : ($this->fromConfig)($value);
+        ? $this->fromConfig->getClosure()(...$value)
+        : $this->fromConfig->getClosure()($value);
     }
     return $value;
   }
@@ -215,7 +216,7 @@ final class ConfigTarget {
 
     $is_multi_target = $this->isMultiTarget();
     if ($this->toConfig) {
-      $value = ($this->toConfig)($value, $form_state);
+      $value = $this->toConfig->getClosure()($value, $form_state);
       if ($is_multi_target) {
         // If we're targeting multiple property paths, $value needs to be an array
         // with every targeted property path.
