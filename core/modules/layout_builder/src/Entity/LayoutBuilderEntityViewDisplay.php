@@ -240,7 +240,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function getDefaultRegion() {
     if ($this->hasSection(0)) {
-      return $this->getSection(0)->getDefaultRegion();
+      foreach ($this->getSections() as $section) {
+        if ($section->getWeight() === 0) {
+          return $section->getDefaultRegion();
+        }
+      }
     }
 
     return parent::getDefaultRegion();
@@ -383,13 +387,13 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     // Loop through all sections and determine if the removed dependencies are
     // used by their layout plugins.
-    foreach ($this->getSections() as $delta => $section) {
+    foreach ($this->getSections() as $section_uuid => $section) {
       $layout_dependencies = $this->getPluginDependencies($section->getLayout());
       $layout_removed_dependencies = $this->getPluginRemovedDependencies($layout_dependencies, $dependencies);
       if ($layout_removed_dependencies) {
         // @todo Allow the plugins to react to their dependency removal in
         //   https://www.drupal.org/project/drupal/issues/2579743.
-        $this->removeSection($delta);
+        $this->removeSection($section_uuid);
         $changed = TRUE;
       }
       // If the section is not removed, loop through all components.
@@ -461,7 +465,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     }
 
     // Return the first section.
-    return $this->getSection(0);
+    foreach ($this->getSections() as $section) {
+      if ($section->getWeight() === 0) {
+        return $section;
+      }
+    }
   }
 
   /**
