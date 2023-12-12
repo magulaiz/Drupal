@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Drupal\Tests\UnitTestCase;
+use Laravel\SerializableClosure\SerializableClosure;
 use Prophecy\Argument;
 
 /**
@@ -320,7 +321,12 @@ class ConfigTargetTest extends UnitTestCase {
     $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
   }
 
+  /**
+   * @runInSeparateProcess
+   */
   public function testSerialization(): void {
+    SerializableClosure::setSecretKey(random_bytes(16));
+
     $config_target = new ConfigTarget(
       'foo.settings',
       'something',

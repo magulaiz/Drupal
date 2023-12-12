@@ -6,7 +6,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Config;
-use Laravel\SerializableClosure\SerializableClosure;
+use Laravel\SerializableClosure\Serializers\Signed as SignedSerializableClosure;
 
 /**
  * Represents the mapping of a config property to a form element.
@@ -278,8 +278,8 @@ final class ConfigTarget {
    * {@inheritdoc}
    */
   public function __sleep(): array {
-    $this->toConfigSerialized = $this->toConfig !== NULL ? serialize(new SerializableClosure($this->toConfig)) : NULL;
-    $this->fromConfigSerialized = $this->fromConfig !== NULL ? serialize(new SerializableClosure($this->fromConfig)) : NULL;
+    $this->toConfigSerialized = $this->toConfig !== NULL ? serialize(new SignedSerializableClosure($this->toConfig)) : NULL;
+    $this->fromConfigSerialized = $this->fromConfig !== NULL ? serialize(new SignedSerializableClosure($this->fromConfig)) : NULL;
     $vars = get_object_vars($this);
     unset($vars['toConfig'], $vars['fromConfig']);
     return array_keys($vars);
