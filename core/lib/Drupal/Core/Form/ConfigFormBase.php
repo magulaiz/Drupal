@@ -149,6 +149,12 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
+      elseif ($target->toConfig !== NULL || $target->fromConfig !== NULL) {
+        // If the form is using toConfig or fromConfig callables the form cannot
+        // be cached.
+        $form_state->disableCache();
+      }
+
       foreach ($target->propertyPaths as $property_path) {
         if (isset($map[$target->configName][$property_path])) {
           throw new \LogicException(sprintf('Two #config_targets both target "%s" in the "%s" config: `%s` and `%s`.',

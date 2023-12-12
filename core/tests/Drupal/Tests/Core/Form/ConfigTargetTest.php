@@ -60,6 +60,47 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
+   * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
+   *
+   * @testWith [true, null, null]
+   *           [false, "intval", null]
+   *           [false, null, "boolval"]
+   *           [false, "intval", "boolval"]
+   */
+  public function testFormCacheable(bool $expected, ?callable $fromConfig, ?callable $toConfig): void {
+    $form = [
+      'test' => [
+        '#type' => 'text',
+        '#default_value' => 'A test',
+        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', $fromConfig, $toConfig),
+        '#name' => 'test',
+        '#array_parents' => ['test'],
+      ],
+    ];
+
+    $test_form = new class(
+      $this->prophesize(ConfigFactoryInterface::class)->reveal(),
+      $this->prophesize(TypedConfigManagerInterface::class)->reveal(),
+    ) extends ConfigFormBase {
+      use RedundantEditableConfigNamesTrait;
+
+      public function getFormId() {
+        return 'test';
+      }
+
+    };
+    $form_state = new FormState();
+    // Make the form cacheable.
+    $form_state
+      ->setRequestMethod('POST')
+      ->setCached();
+
+    $test_form->storeConfigKeyToFormElementMap($form, $form_state);
+
+    $this->assertSame($expected, $form_state->isCached());
+  }
+
+  /**
    * @covers ::fromForm
    * @covers ::fromString
    */
