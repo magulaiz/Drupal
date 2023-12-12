@@ -320,4 +320,31 @@ class ConfigTargetTest extends UnitTestCase {
     $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
   }
 
+  public function testSerialization(): void {
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      'something',
+      fromConfig: fn (int $first): string => "$first",
+    );
+
+    /** @var \Drupal\Core\Form\ConfigTarget $config_target */
+    $config_target = unserialize(serialize($config_target));
+
+    $this->assertSame('1', ($config_target->fromConfig)(1));
+    $this->assertNull($config_target->toConfig);
+
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      'something',
+      toConfig: fn (int $first): string => "$first",
+    );
+
+    /** @var \Drupal\Core\Form\ConfigTarget $config_target */
+    $config_target = unserialize(serialize($config_target));
+
+    $this->assertSame('1', ($config_target->toConfig)(1));
+    $this->assertNull($config_target->fromConfig);
+
+  }
+
 }
