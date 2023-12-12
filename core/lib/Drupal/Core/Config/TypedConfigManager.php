@@ -314,6 +314,32 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   }
 
   /**
+   * Replaces dynamic type expressions in configuration type.
+   *
+   * The configuration type name may contain one or more expressions to be
+   * replaced, enclosed in square brackets like '[name]' or '[%parent.id]' and
+   * will follow the replacement rules defined by the resolveExpression()
+   * method.
+   *
+   * @param string $name
+   *   Configuration type, potentially with expressions in square brackets.
+   * @param array $data
+   *   Configuration data for the element.
+   *
+   * @return string
+   *   Configuration type name with all expressions resolved.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   ::resolveDynamicTypeName() instead.
+   *
+   * @see https://www.drupal.org/node/3408266
+   */
+  protected function replaceName($name, $data) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use ::resolveDynamicTypeName() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
+    return $this->resolveDynamicTypeName($name, $data);
+  }
+
+  /**
    * Resolves a dynamic type expression using configuration data.
    *
    * Dynamic type names are nested configuration keys containing expressions to
@@ -386,6 +412,48 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
 
     // Satisfy PHPStan, which cannot interpret the loop.
     return $expression;
+  }
+
+  /**
+   * Resolves a dynamic type expression using configuration data.
+   *
+   * Dynamic type names are nested configuration keys containing expressions to
+   * be replaced by the value at the property path that the expression is
+   * pointing at. The expression may contain the following special strings:
+   * - '%key', will be replaced by the element's key.
+   * - '%parent', to reference the parent element.
+   * - '%type', to reference the schema definition type. Can only be used in
+   *   combination with %parent.
+   *
+   * There may be nested configuration keys separated by dots or more complex
+   * patterns like '%parent.name' which references the 'name' value of the
+   * parent element.
+   *
+   * Example expressions:
+   * - 'name.subkey', indicates a nested value of the current element.
+   * - '%parent.name', will be replaced by the 'name' value of the parent.
+   * - '%parent.%key', will be replaced by the parent element's key.
+   * - '%parent.%type', will be replaced by the schema type of the parent.
+   * - '%parent.%parent.%type', will be replaced by the schema type of the
+   *   parent's parent.
+   *
+   * @param string $value
+   *   Expression to be resolved.
+   * @param array $data
+   *   Configuration data for the element.
+   *
+   * @return string
+   *   The value the expression resolves to, or the given expression if it
+   *   cannot be resolved.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   ::resolveExpression() instead.
+   *
+   * @see https://www.drupal.org/node/3408266
+   */
+  protected function replaceVariable($value, $data) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use ::resolveExpression() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
+    return $this->resolveExpression($value, $data);
   }
 
   /**
