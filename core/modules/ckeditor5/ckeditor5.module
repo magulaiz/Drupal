@@ -91,6 +91,9 @@ function ckeditor5_theme() {
     'ckeditor5_settings_toolbar' => [
       'render element' => 'form',
     ],
+    'field__ckeditor_inline' => [
+      'base hook' => 'field',
+    ],
   ];
 }
 

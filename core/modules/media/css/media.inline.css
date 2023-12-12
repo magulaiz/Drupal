@@ -6,3 +6,9 @@
 .media-embedded-inline {
   display: inline-block;
 }
+
+.media-embedded-inline video,
+.media-embedded-inline img,
+.media-embedded-inline audio {
+  display: inline-block;
+}

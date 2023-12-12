@@ -320,6 +320,19 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         ? $this->renderMedia($media, $view_mode_id, $langcode)
         : $this->renderMissingMediaIndicator();
 
+      if ($node->tagName == 'drupal-media-inline') {
+        // For media that's embedded inline, we render only the source field, as
+        // we want to render as little markup as possible to get markup that is
+        // valid inside a flow content element. If we render <div> elements for
+        // example, this won't render properly inside a <p> tag and results in
+        // invalid HTML.
+        $field_definition = $media->getSource()
+          ->getSourceFieldDefinition($media->get('bundle')->entity);
+        $field_view = $media->get($field_definition->getName())->view('ckeditor_inline');
+        $field_view['#theme'] = 'field__ckeditor_inline';
+        $build = $field_view;
+      }
+
       if (empty($build['#attributes']['class'])) {
         $build['#attributes']['class'] = [];
       }
