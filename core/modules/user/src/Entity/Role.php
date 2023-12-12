@@ -120,7 +120,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
     if ($this->isAdmin()) {
       return TRUE;
     }
-    return in_array($permission, $this->permissions);
+    return in_array($permission, !empty($this->permissions) ? $this->permissions: []);
   }
 
   /**
