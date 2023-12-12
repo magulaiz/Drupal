@@ -510,6 +510,13 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       $expected_validation_errors = in_array($property, $properties_with_optional_values, TRUE)
         ? []
         : [$property => 'This value should not be null.'];
+
+      // @see `type: required_label`
+      // @see \Symfony\Component\Validator\Constraints\NotBlank
+      if (!$this->isFullyValidatable() && $this->entity->getEntityType()->getKey('label') == $property) {
+        $expected_validation_errors = [$property => 'This value should not be blank.'];
+      }
+
       $this->assertValidationErrors(($additional_expected_validation_errors_when_missing[$property] ?? []) + $expected_validation_errors);
     }
   }
