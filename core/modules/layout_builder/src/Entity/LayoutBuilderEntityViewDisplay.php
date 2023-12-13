@@ -240,11 +240,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function getDefaultRegion() {
     if ($this->hasSection(0)) {
-      foreach ($this->getSections() as $section) {
-        if ($section->getWeight() === 0) {
-          return $section->getDefaultRegion();
-        }
-      }
+      return $this->getSectionByDelta(0)->getDefaultRegion();
     }
 
     return parent::getDefaultRegion();
@@ -461,17 +457,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   protected function getDefaultSection() {
     // If no section exists, append a new one.
     if (!$this->hasSection(0)) {
-      $this->appendSection((new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate()));
+      $this->appendSection((new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0));
     }
 
     // Return the first section.
-    $section_uuid = '';
-    foreach ($this->getSections() as $uuid => $section) {
-      if ($section->getWeight() === 0) {
-        $section_uuid = $uuid;
-      }
-    }
-    return $this->getSection($section_uuid);
+    return $this->getSectionByDelta(0);
   }
 
   /**

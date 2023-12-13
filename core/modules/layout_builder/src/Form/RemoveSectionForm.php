@@ -24,7 +24,7 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    $configuration = $this->sectionStorage->getSection($this->delta)->getLayoutSettings();
+    $configuration = $this->sectionStorage->getSectionByDelta($this->delta)->getLayoutSettings();
     // Layouts may choose to use a class that might not have a label
     // configuration.
     if (!empty($configuration['label'])) {

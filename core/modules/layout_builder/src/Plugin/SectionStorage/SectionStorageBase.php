@@ -60,6 +60,13 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   /**
    * {@inheritdoc}
    */
+  public function getSectionByDelta($delta) {
+    return $this->getSectionList()->getSectionByDelta($delta);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function appendSection(Section $section) {
     $this->getSectionList()->appendSection($section);
     return $this;
