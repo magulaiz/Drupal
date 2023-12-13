@@ -10,8 +10,8 @@
 
 use Drupal\file\Entity\File;
 
-const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
-const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
+const FILE_URL_TEST_CDN_1 = 'https://cdn1.example.com';
+const FILE_URL_TEST_CDN_2 = 'https://cdn2.example.com';
 
 /**
  * Reset/initialize the history of calls to the file_* hooks.

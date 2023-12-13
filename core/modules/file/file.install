@@ -98,10 +98,10 @@ function file_requirements($phase) {
     }
     elseif (!$implementation) {
       $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.');
+      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="https://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.');
     }
     elseif ($implementation == 'uploadprogress') {
-      $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
+      $value = t('Enabled (<a href="https://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
     }
     $requirements['file_progress'] = [
       'title' => t('Upload progress'),
