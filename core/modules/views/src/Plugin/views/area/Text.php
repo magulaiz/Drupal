@@ -47,10 +47,12 @@ class Text extends TokenizeAreaPluginBase {
    * {@inheritdoc}
    */
   public function preQuery() {
-    $content = $this->options['content']['value'];
-    // Check for tokens that require a total row count.
-    if (strpos($content, '[view:page-count]') !== FALSE || strpos($content, '[view:total-rows]') !== FALSE) {
-      $this->view->get_total_rows = TRUE;
+    if (is_array($this->options['content'])) {
+      $content = $this->options['content']['value'];
+      // Check for tokens that require a total row count.
+      if (strpos($content, '[view:page-count]') !== FALSE || strpos($content, '[view:total-rows]') !== FALSE) {
+        $this->view->get_total_rows = TRUE;
+      }
     }
   }
 
@@ -59,7 +61,7 @@ class Text extends TokenizeAreaPluginBase {
    */
   public function render($empty = FALSE) {
     $format = $this->options['content']['format'] ?? filter_default_format();
-    if (!$empty || !empty($this->options['empty'])) {
+    if (is_array($this->options['content']) && (!$empty || !empty($this->options['empty']))) {
       return [
         '#type' => 'processed_text',
         '#text' => $this->tokenizeValue($this->options['content']['value']),
@@ -71,3 +73,4 @@ class Text extends TokenizeAreaPluginBase {
   }
 
 }
+
