@@ -27,6 +27,15 @@ class CommentAdminTest extends CommentBrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Modules to install.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'language',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
