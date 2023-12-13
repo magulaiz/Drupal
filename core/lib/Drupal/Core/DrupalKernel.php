@@ -601,7 +601,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     UrlHelper::setAllowedProtocols($this->container->getParameter('filter_protocols'));
 
     // Configure Serializable Closure signing for security.
-    SerializableClosure::setSecretKey(Settings::getHashSalt() . $this->container->get('private_key')->get());
+    // @todo Use hash salt and private key - but it is not always available
+    //   here.
+    SerializableClosure::setSecretKey('find_a_way_make_this_secure');
 
     $this->prepared = TRUE;
   }

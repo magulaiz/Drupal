@@ -48,7 +48,7 @@ final class ConfigTarget {
    *
    * @var string|null
    */
-  private ?string $fromConfigSerialized;
+  private ?string $fromConfigSerialized = NULL;
 
   /**
    * Transforms a value submitted by the form before it is set in the config.
@@ -64,7 +64,7 @@ final class ConfigTarget {
    *
    * @var string|null
    */
-  private ?string $toConfigSerialized;
+  private ?string $toConfigSerialized = NULL;
 
   /**
    * Constructs a ConfigTarget object.
@@ -278,10 +278,21 @@ final class ConfigTarget {
    * {@inheritdoc}
    */
   public function __sleep(): array {
-    $this->toConfigSerialized = $this->toConfig !== NULL ? serialize(new SignedSerializableClosure($this->toConfig)) : NULL;
-    $this->fromConfigSerialized = $this->fromConfig !== NULL ? serialize(new SignedSerializableClosure($this->fromConfig)) : NULL;
     $vars = get_object_vars($this);
-    unset($vars['toConfig'], $vars['fromConfig']);
+    if ($this->toConfig instanceof \Closure) {
+      $this->toConfigSerialized = serialize(new SignedSerializableClosure($this->toConfig));
+      unset($vars['toConfig']);
+    }
+    else {
+      unset($vars['toConfigSerialized']);
+    }
+    if ($this->fromConfig instanceof \Closure) {
+      $this->fromConfigSerialized = serialize(new SignedSerializableClosure($this->fromConfig));
+      unset($vars['fromConfig']);
+    }
+    else {
+      unset($vars['fromConfigSerialized']);
+    }
     return array_keys($vars);
   }
 
@@ -289,8 +300,12 @@ final class ConfigTarget {
    * {@inheritdoc}
    */
   public function __wakeup(): void {
-    $this->toConfig = $this->toConfigSerialized !== NULL ? unserialize($this->toConfigSerialized)->getClosure() : NULL;
-    $this->fromConfig = $this->fromConfigSerialized !== NULL ? unserialize($this->fromConfigSerialized)->getClosure() : NULL;
+    if ($this->toConfigSerialized !== NULL) {
+      $this->toConfig = unserialize($this->toConfigSerialized)->getClosure();
+    }
+    if ($this->fromConfigSerialized !== NULL) {
+      $this->fromConfig = unserialize($this->fromConfigSerialized)->getClosure();
+    }
   }
 
 }

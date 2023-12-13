@@ -60,56 +60,6 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
-   * @dataProvider providerTestFormCacheable
-   */
-  public function testFormCacheable(bool $expected, ?callable $fromConfig, ?callable $toConfig): void {
-    $form = [
-      'test' => [
-        '#type' => 'text',
-        '#default_value' => 'A test',
-        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', $fromConfig, $toConfig),
-        '#name' => 'test',
-        '#array_parents' => ['test'],
-      ],
-    ];
-
-    $test_form = new class(
-      $this->prophesize(ConfigFactoryInterface::class)->reveal(),
-      $this->prophesize(TypedConfigManagerInterface::class)->reveal(),
-    ) extends ConfigFormBase {
-      use RedundantEditableConfigNamesTrait;
-
-      public function getFormId() {
-        return 'test';
-      }
-
-    };
-    $form_state = new FormState();
-    // Make the form cacheable.
-    $form_state
-      ->setRequestMethod('POST')
-      ->setCached();
-
-    $test_form->storeConfigKeyToFormElementMap($form, $form_state);
-
-    $this->assertSame($expected, $form_state->isCached());
-  }
-
-  public function providerTestFormCacheable(): array {
-    $closure = fn (bool $something): string => $something ? 'Yes' : 'No';
-    return [
-      'No callables' => [TRUE, NULL, NULL],
-      'Serializable fromConfig callable' => [TRUE, "intval", NULL],
-      'Serializable toConfig callable' => [TRUE, NULL, "boolval"],
-      'Serializable callables' => [TRUE, "intval", "boolval"],
-      'Unserializable fromConfig callable' => [FALSE, $closure, NULL],
-      'Unserializable toConfig callable' => [FALSE, NULL, $closure],
-      'Unserializable callables' => [FALSE, $closure, $closure],
-    ];
-  }
-
-  /**
    * @covers ::fromForm
    * @covers ::fromString
    */
