@@ -22,6 +22,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 class TelephoneItem extends FieldItemBase {
 
+  const MAX_LENGTH = 256;
+
   /**
    * The maximum length for a telephone value.
    */
