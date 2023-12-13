@@ -357,9 +357,9 @@
   /**
    * Accepts a list of subtree menu elements.
    *
-   * A deferred object that is resolved by an inlined JavaScript callback.
+   * A promise object that is resolved by an inlined JavaScript callback.
    *
-   * @type {jQuery.Deferred}
+   * @type {Promise}
    *
    * @see toolbar_subtrees_jsonp().
    */
