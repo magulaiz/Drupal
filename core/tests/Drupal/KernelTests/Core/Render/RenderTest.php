@@ -83,7 +83,6 @@ class RenderTest extends KernelTestBase {
       ],
       TRUE,
     ];
-    $header = '</not/fade/away>; rel="re-record"';
     $build['#attached']['html_head_link'][] = $link;
     $build['#attached']['html_head_link'][] = $link;
     $renderer = $this->container->get('bare_html_page_renderer');
