@@ -240,6 +240,13 @@ class SectionComponent {
    *   The plugin.
    */
   public function getPlugin(array $contexts = []) {
+    // Workaround for issue: https://www.drupal.org/project/drupal/issues/3400026
+    if ($this->configuration["id"] == 'field_block:commerce_product:default:variations'
+      && !isset($this->configuration["context_mapping"]['entity'])
+    ) {
+      $this->configuration["context_mapping"]['entity'] = 'layout_builder.entity';
+    }
+
     $plugin = $this->pluginManager()->createInstance($this->getPluginId(), $this->getConfiguration());
     if ($contexts && $plugin instanceof ContextAwarePluginInterface) {
       $this->contextHandler()->applyContextMapping($plugin, $contexts);
