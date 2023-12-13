@@ -25,6 +25,8 @@ class ConfigTargetTest extends WebDriverTestBase {
 
   /**
    * Tests #config_target with no callbacks.
+   *
+   * If a #config_target has no callbacks, the form can be cached.
    */
   public function testTree(): void {
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable */
@@ -53,6 +55,8 @@ class ConfigTargetTest extends WebDriverTestBase {
 
   /**
    * Tests #config_target with callbacks.
+   *
+   * If a #config_target has closures as callbacks, form cache will be disabled.
    */
   public function testNested(): void {
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable */
