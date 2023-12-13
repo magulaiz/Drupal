@@ -31,7 +31,7 @@ class MigrateEventsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['migrate', 'migrate_events_test', 'node',];
+  protected static $modules = ['migrate', 'migrate_events_test', 'node'];
 
   /**
    * {@inheritdoc}
@@ -237,7 +237,6 @@ class MigrateEventsTest extends KernelTestBase {
       'process' => ['title' => 'field1', 'body' => 'field2'],
       'destination' => ['plugin' => 'entity:node', 'default_bundle' => 'page'],
     ];
-
 
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
     $executable = new MigrateExecutable($migration);
