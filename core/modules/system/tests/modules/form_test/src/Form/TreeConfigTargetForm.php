@@ -25,10 +25,6 @@ class TreeConfigTargetForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $element = $form_state->getTriggeringElement();
-    if ($element) {
-
-    }
     $form['vegetables'] = [
       '#type' => 'details',
       '#open' => TRUE,
