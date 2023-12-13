@@ -221,12 +221,14 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     if (!empty($attached['http_header'])) {
       // Remove duplicate headers for links.
       foreach ($attached['http_header'] as $header_key => $header_value) {
-        if ($header_value[0] === 'Link' && in_array($header_value[1], $this->linkHeaders, TRUE)) {
-          assert(isset($attached['http_header'][$header_key]), 'Duplicate header ' . $header_value[1] . ' found.');
-          unset($attached['http_header'][$header_key]);
-        }
-        else {
-          $this->linkHeaders[] = $header_value[1];
+        if ($header_value[0] === 'Link') {
+          if (in_array($header_value[1], $this->linkHeaders, TRUE)) {
+            assert(isset($attached['http_header'][$header_key]), 'Duplicate header ' . $header_value[1] . ' found.');
+            unset($attached['http_header'][$header_key]);
+          }
+          else {
+            $this->linkHeaders[] = $header_value[1];
+          }
         }
       }
 
