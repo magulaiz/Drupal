@@ -60,6 +60,13 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
   protected $language;
 
   /**
+   * The default language object.
+   *
+   * @var \Drupal\Core\Language\LanguageInterface
+   */
+  protected $defaultLanguage;
+
+  /**
    * Constructs the LanguageConfigFactoryOverride object.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
@@ -78,13 +85,15 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
     // Prior to negotiation the override language should be the default
     // language.
     $this->language = $default_language->get();
+    $this->defaultLanguage = $default_language->get();
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    if ($this->language) {
+    // The default language should have no overrides and can skip loading.
+    if ($this->language && $this->language->getId() !== $this->defaultLanguage->getId()) {
       $storage = $this->getStorage($this->language->getId());
       return $storage->readMultiple($names);
     }
