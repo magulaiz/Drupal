@@ -52,11 +52,10 @@ class ConfigTargetTest extends UnitTestCase {
 
     };
     $form_state = new FormState();
-    $test_form->storeConfigKeyToFormElementMap($form['test'], $form_state);
 
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('Two #config_targets both target "admin_compact_mode" in the "system.site" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
-    $test_form->storeConfigKeyToFormElementMap($form['duplicate'], $form_state);
+    $test_form->storeConfigKeyToFormElementMap($form, $form_state);
   }
 
   /**

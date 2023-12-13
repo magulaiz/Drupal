@@ -47,7 +47,6 @@ class TreeConfigTargetForm extends ConfigFormBase {
     $form['test1'] = [
       '#type' => 'select',
       '#title' => $this->t('Test 1'),
-      '#required' => TRUE,
       '#options' => [
         'option1' => $this->t('Option 1'),
         'option2' => $this->t('Option 2'),
