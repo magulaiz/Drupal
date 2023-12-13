@@ -62,7 +62,6 @@ class ErrorTestController extends ControllerBase {
    */
   public function generateFatals() {
     throw new \Error('Throw an error at runtime');
-    return [];
   }
 
   /**
