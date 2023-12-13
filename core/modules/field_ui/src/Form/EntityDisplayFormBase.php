@@ -184,6 +184,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
       '#attributes' => [
         'class' => ['field-ui-overview'],
         'id' => 'field-display-overview',
+        'data-drag-orientation' => 'drag-y',
       ],
       '#tabledrag' => [
         [
