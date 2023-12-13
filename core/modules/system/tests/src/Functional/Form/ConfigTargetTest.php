@@ -22,6 +22,16 @@ class ConfigTargetTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // For realism, log in: config forms are never exposed to anonymous users.
+    $this->drupalLogin($this->drupalCreateUser());
+  }
+
+  /**
    * Tests #config_target where #tree is set to TRUE.
    */
   public function testTree(): void {

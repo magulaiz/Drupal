@@ -28,8 +28,9 @@ class ConfigTargetTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // Not interested in page caching and it breaks the tests.
-    \Drupal::service('module_installer')->uninstall(['page_cache', 'dynamic_page_cache']);
+
+    // For realism, log in: config forms are never exposed to anonymous users.
+    $this->drupalLogin($this->drupalCreateUser());
   }
 
   /**
