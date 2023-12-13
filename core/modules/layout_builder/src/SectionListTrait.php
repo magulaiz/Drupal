@@ -41,7 +41,7 @@ trait SectionListTrait {
    */
   public function getSection($uuid) {
     if (is_int($uuid)) {
-      @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid or if you want to get section by delta then use \Drupal\layout_builder\SectionListTrait::getSectionByDelta($delta). See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
     }
     if (Uuid::isValid($uuid)) {
       foreach ($this->getSections() as $section) {
@@ -52,6 +52,20 @@ trait SectionListTrait {
     }
 
     throw new \Exception(sprintf('Invalid uuid "%s"', $uuid));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSectionByDelta($delta) {
+    if ($this->hasSection($delta)) {
+      foreach ($this->getSections() as $section) {
+        if ($section->getWeight() == $delta) {
+          return $section;
+        }
+      }
+    }
+    throw new \OutOfBoundsException(sprintf('Invalid delta "%s"', $delta));
   }
 
   /**
@@ -127,7 +141,7 @@ trait SectionListTrait {
       throw new \Exception('A blank section must only be added to an empty list');
     }
 
-    $this->appendSection((new Section('layout_builder_blank'))->setUuid(\Drupal::service('uuid')->generate()));
+    $this->appendSection((new Section('layout_builder_blank'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0));
     return $this;
   }
 
@@ -146,7 +160,7 @@ trait SectionListTrait {
   protected function hasBlankSection() {
     // A blank section will only ever exist when the delta is 0, as added by
     // ::removeSection().
-    return $this->hasSection(0) && $this->getSection(0)->getLayoutId() === 'layout_builder_blank';
+    return $this->hasSection(0) && $this->getSectionByDelta(0)->getLayoutId() === 'layout_builder_blank';
   }
 
   /**

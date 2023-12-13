@@ -219,7 +219,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
   protected function buildAdministrativeSection(SectionStorageInterface $section_storage, $delta) {
     $storage_type = $section_storage->getStorageType();
     $storage_id = $section_storage->getStorageId();
-    $section = $section_storage->getSection($delta);
+    $section = $section_storage->getSectionByDelta($delta);
 
     $layout = $section->getLayout($this->getPopulatedContexts($section_storage));
     $layout_settings = $section->getLayoutSettings();

@@ -29,6 +29,17 @@ interface SectionListInterface extends \Countable {
   public function getSection($uuid);
 
   /**
+   * Gets a domain object for the layout section by delta.
+   *
+   * @param int $delta
+   *   The delta of the section.
+   *
+   * @return \Drupal\layout_builder\Section
+   *   The layout section.
+   */
+  public function getSectionByDelta($delta);
+
+  /**
    * Appends a new section to the end of the list.
    *
    * @param \Drupal\layout_builder\Section $section
