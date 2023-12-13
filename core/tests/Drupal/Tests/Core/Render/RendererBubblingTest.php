@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererBubblingTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\CacheableMetadata;
@@ -452,9 +447,6 @@ class RendererBubblingTest extends RendererTestBase {
     // Mock the State service.
     $memory_state = new State(new KeyValueMemoryFactory());
     \Drupal::getContainer()->set('state', $memory_state);
-    $this->controllerResolver->expects($this->any())
-      ->method('getControllerFromDefinition')
-      ->willReturnArgument(0);
 
     // Simulate the theme system/Twig: a recursive call to Renderer::render(),
     // just like the theme system or a Twig template would have done.
@@ -479,7 +471,7 @@ class RendererBubblingTest extends RendererTestBase {
     );
 
     // Simulate the rendering of an entire response (i.e. a root call).
-    $output = $this->renderer->renderRoot($test_element);
+    $output = (string) $this->renderer->renderRoot($test_element);
 
     // First, assert the render array is of the expected form.
     $this->assertEquals('Cache context!Cache tag!Asset!Placeholder!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
