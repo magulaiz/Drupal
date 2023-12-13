@@ -158,19 +158,18 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     assert(str_starts_with($mapping->getPropertyPath(), $config->getName() . '.'));
     $property_path_mapping = substr($mapping->getPropertyPath(), strlen($config->getName()) + 1);
 
-    // Extract the variable values stored in the dynamic type.
+    // Extract the expressions stored in the dynamic type name.
     $matches = [];
-    // @see \Drupal\Core\Config\TypedConfigManager::replaceName()
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceDynamicTypeName()
     assert(preg_match("/\[(.*)\]/U", $unresolved_type, $matches) === 1);
-    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
-    $variable_value = $matches[1];
-    // From the variable value, extract the instructions for where to retrieve a
-    // value.
-    $instructions = explode('.', $variable_value);
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceExpression()
+    $expression = $matches[1];
+    // From the expression, extract the instructions for where to retrieve a value.
+    $instructions = explode('.', $expression);
 
     // Determine the property path to the configuration key that has determined
     // this type.
-    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceExpression()
     $property_path_parts = explode('.', $property_path_mapping);
     // @see \Drupal\Core\Config\Schema\Mapping::getDynamicallyValidKeys()
     assert(!in_array('%type', $instructions, TRUE));
@@ -209,7 +208,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
 
     // Determine the corresponding value for that property path.
     $val = $config->get($resolved_property_path)->getValue();
-    // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+    // @see \Drupal\Core\Config\TypedConfigManager::replaceExpression()
     $val = is_bool($val) ? (int) $val : $val;
     return $message_parameters + [
       '@dynamic_type_property_value' => $val,
