@@ -88,7 +88,7 @@ class RearrangeFilter extends ViewsFormBase {
      */
 
     $grouping = count(array_keys($groups['groups'])) > 1;
-    $form['dragY'] = TRUE;
+    $form['#attributes']['dragY'] = TRUE;
     $form['filter_groups']['#tree'] = TRUE;
     $form['filter_groups']['operator'] = [
       '#type' => 'select',
