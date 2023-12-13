@@ -136,11 +136,18 @@ abstract class ConfigFormBase extends FormBase {
    *   The element being processed.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
+   * @param bool $recursion
+   *   (internal) Used to determine if the call is due to recursion.
    *
    * @return array
    *   The processed element.
    */
-  public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
+  public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state, bool $recursion = FALSE): array {
+    if (!$recursion) {
+      // Empty the map of the first call to ensure the information is always
+      // correct after rebuilding the form.
+      $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, []);
+    }
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
@@ -169,7 +176,7 @@ abstract class ConfigFormBase extends FormBase {
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
-      $element[$key] = $this->storeConfigKeyToFormElementMap($element[$key], $form_state);
+      $element[$key] = $this->storeConfigKeyToFormElementMap($element[$key], $form_state, TRUE);
     }
     return $element;
   }
