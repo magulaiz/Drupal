@@ -78,16 +78,42 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @covers ::getSection
    */
   public function testGetSection() {
-    $this->assertInstanceOf(Section::class, $this->sectionList->getSection(0));
+    $this->assertInstanceOf(Section::class, $this->sectionList->getSection('11000000-0000-1000-a000-000000000000'));
+  }
+
+  /**
+   * @covers ::getSectionByDelta
+   */
+  public function testGetSectionByDelta() {
+    $this->assertInstanceOf(Section::class, $this->sectionList->getSectionByDelta(0));
+  }
+
+  /**
+   * @covers ::getSectionByDelta
+   */
+  public function testGetSectionByDeltaInvalidDelta() {
+    $this->expectException(\OutOfBoundsException::class);
+    $this->expectExceptionMessage('Invalid delta "2"');
+    $this->sectionList->getSectionByDelta(2);
   }
 
   /**
    * @covers ::getSection
    */
-  public function testGetSectionInvalidDelta() {
-    $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid delta "2"');
-    $this->sectionList->getSection(2);
+  public function testGetSectionInvalidUuid() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "uuid"');
+    //expect a deprecation also.
+    $this->sectionList->getSection('uuid');
+  }
+
+  /**
+   * @covers ::getSection
+   */
+  public function testGetSectionWithDelta() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "0"');
+    $this->sectionList->getSection(0);
   }
 
   /**
