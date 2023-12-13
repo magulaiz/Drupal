@@ -5,6 +5,8 @@
  * Test module for testing the book module breadcrumb.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Session\AccountInterface;

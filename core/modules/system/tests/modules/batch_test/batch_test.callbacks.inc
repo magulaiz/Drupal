@@ -5,6 +5,8 @@
  * Batch callbacks for the Batch API tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;

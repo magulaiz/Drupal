@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\database_statement_monitoring_test\pgsql;
 
 use Drupal\pgsql\Driver\Database\pgsql\Connection as BaseConnection;
