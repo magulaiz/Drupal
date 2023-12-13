@@ -60,11 +60,7 @@ class ConfigTargetTest extends UnitTestCase {
 
   /**
    * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
-   *
-   * @testWith [true, null, null]
-   *           [false, "intval", null]
-   *           [false, null, "boolval"]
-   *           [false, "intval", "boolval"]
+   * @dataProvider providerTestFormCacheable
    */
   public function testFormCacheable(bool $expected, ?callable $fromConfig, ?callable $toConfig): void {
     $form = [
@@ -97,6 +93,19 @@ class ConfigTargetTest extends UnitTestCase {
     $test_form->storeConfigKeyToFormElementMap($form, $form_state);
 
     $this->assertSame($expected, $form_state->isCached());
+  }
+
+  public function providerTestFormCacheable(): array {
+    $closure = fn (bool $something): string => $something ? 'Yes' : 'No';
+    return [
+      'No callables' => [TRUE, NULL, NULL],
+      'Serializable fromConfig callable' => [TRUE, "intval", NULL],
+      'Serializable toConfig callable' => [TRUE, NULL, "boolval"],
+      'Serializable callables' => [TRUE, "intval", "boolval"],
+      'Unserializable fromConfig callable' => [FALSE, $closure, NULL],
+      'Unserializable toConfig callable' => [FALSE, NULL, $closure],
+      'Unserializable callables' => [FALSE, $closure, $closure],
+    ];
   }
 
   /**
