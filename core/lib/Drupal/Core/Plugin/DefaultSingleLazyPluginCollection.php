@@ -79,8 +79,8 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   public function setConfiguration($configuration) {
-    if ($configuration === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() with NULL is deprecated in drupal:10.3.0 and will fail in drupal:11.0.0. See https://www.drupal.org/node/3406191', E_USER_DEPRECATED);
+    if (!is_array($configuration)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a non-array argument is deprecated in drupal:10.3.0 and will fail in drupal:11.0.0. See https://www.drupal.org/node/3406191', E_USER_DEPRECATED);
       $configuration = [];
     }
 
