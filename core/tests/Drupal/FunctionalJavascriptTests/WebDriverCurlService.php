@@ -117,7 +117,15 @@ class WebDriverCurlService extends CurlService {
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
-        $rawResult = trim(curl_exec($curl));
+        $curl_result = curl_exec($curl);
+        if ($curl_result === FALSE) {
+          if (array_key_exists(CURLOPT_FAILONERROR, $extraOptions) && $extraOptions[CURLOPT_FAILONERROR] && CURLE_GOT_NOTHING !== ($errno = curl_errno($curl)) && $error = curl_error($curl)) {
+            curl_close($curl);
+
+            throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
+          }
+        }
+        $rawResult = trim($curl_result);
 
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
