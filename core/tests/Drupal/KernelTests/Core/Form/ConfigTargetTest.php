@@ -32,7 +32,7 @@ class ConfigTargetTest extends KernelTestBase {
   }
 
   /**
-   * Tests config target with a callable.
+   * Tests config target with a closure.
    */
   public function testSerialization(): void {
     $test_form = new class(
@@ -48,15 +48,11 @@ class ConfigTargetTest extends KernelTestBase {
           '#config_target' => new ConfigTarget(
             'system.site',
             'name',
-            fromConfig: static::class . '::siteNameFromConfig',
+            fromConfig: fn ($value) => $value ?: 'Kittens',
           ),
         ];
 
         return $form;
-      }
-
-      public static function siteNameFromConfig($value) {
-        return $value ?: 'Kittens';
       }
 
       public function getFormId() {
@@ -69,6 +65,9 @@ class ConfigTargetTest extends KernelTestBase {
     $form_state = new FormState();
     $built_form = $form_builder->getForm($test_form, $form_state);
     $form_builder->setCache($built_form['#build_id'], $built_form, $form_state);
+
+    $cached_form = $form_builder->getCache($built_form['#build_id'], $form_state);
+    $this->assertSame('Kittens', ($cached_form['site_name']['#config_target']->fromConfig)(FALSE));
   }
 
 }
