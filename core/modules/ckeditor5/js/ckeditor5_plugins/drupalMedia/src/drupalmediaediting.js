@@ -213,7 +213,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     schema.register('drupalMediaInline', {
       inheritAllFrom: '$inlineObject',
-      allowIn: ['$root', '$container', '$text'],
+      allowIn: ['$block', '$container', '$text'],
       allowAttributes: Object.keys(this.attrs),
     });
 
