@@ -25,6 +25,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     'node',
     'options',
     'field_ui',
+    'block',
   ];
 
   /**
@@ -65,6 +66,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->drupalPlaceBlock('local_actions_block');
 
     // Create test user.
     $admin_user = $this->drupalCreateUser([
@@ -169,7 +171,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
       $this->assertHasFocusByAttribute('name', $key_element_name);
       $this->assertAllowValuesRowCount($expected_rows);
     }
-    $page->pressButton('Save');
+    $page->pressButton('Save settings');
+    $this->assertTrue($this->assertSession()->waitForText('Saved field_options_text configuration.'));
 
     // Test the order of the option list on node form.
     $this->drupalGet($this->nodeFormPath);
@@ -184,7 +187,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Change the order the items appear.
     $drag_handle->dragTo($target);
     $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
-    $page->pressButton('Save');
+    $page->pressButton('Save settings');
+    $this->assertTrue($this->assertSession()->waitForText('Saved field_options_text configuration.'));
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', 'Second', 'Third', 'First']);
@@ -198,7 +202,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->pressButton('remove_row_button__1');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertOrder(['Second', 'First', ''], $is_string_option);
-    $page->pressButton('Save');
+    $page->pressButton('Save settings');
+    $this->assertTrue($this->assertSession()->waitForText('Saved field_options_text configuration.'));
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', 'Second', 'First']);
@@ -223,31 +228,36 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->findField('set_default_value')->setValue(TRUE);
     // Assert that the option added in the subform is available to the default
     // value field.
-    $this->assertSession()->optionExists('default_value_input[field_test_string_list]', 'first');
+    $this->assertSession()->waitForElement('css', '[name="default_value_input[field_test_int_list]"] option:contains("first")');
     $page->pressButton('Add another item');
-    $this->assertNotNull($assert_session->waitForElement('css', "[name='field_storage[subform][settings][allowed_values][table][1][item][label]']"));
-    $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForField('field_storage[subform][settings][allowed_values][table][1][item][label]');
+    $field_input = $page->find('css', '[name="field_storage[subform][settings][allowed_values][table][1][item][label]"]');
+    $field_input->setValue('second');
+    $this->assertNotNull($assert_session->waitForElement('css', '[name="default_value_input[field_test_string_list]"] option:contains("second")'));
     $assert_session->optionExists('default_value_input[field_test_string_list]', 'second');
     $page->selectFieldOption('default_value_input[field_test_string_list]', 'second');
-    $page->pressButton('Save settings');
-    $assert_session->pageTextContains('Saved Test string list configuration.');
+    $page->find('css', '.ui-dialog-buttonset button:contains("Save")')->press();
+    $this->assertTrue($assert_session->waitForText('Saved Test string list configuration.'));
 
     // Create a field of type list:integer.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
     $assert_session->assertWaitOnAjaxRequest();
+    $page->findField('set_default_value')->setValue(TRUE);
+    $page->selectFieldOption('default_value_input[field_test_int_list]', 'first');
     // Assert that no validation is performed.
     $assert_session->statusMessageNotContains('Value field is required.');
-    $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue(1);
-    $assert_session->assertWaitOnAjaxRequest();
-    $page->findField('set_default_value')->setValue(TRUE);
+    $field_input = $page->find('css', '[name="field_storage[subform][settings][allowed_values][table][0][item][key]"]');
+    $field_input->setValue(1);
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $page->checkField('set_default_value');
+    $this->assertSession()->waitForElement('css', '[name="default_value_input[field_test_int_list]"] option:contains("first")');
     // Assert that the option added in the subform is available to the default
     // value field.
     $this->assertSession()->optionExists('default_value_input[field_test_int_list]', 'first');
     $page->selectFieldOption('default_value_input[field_test_int_list]', 'first');
-    $page->pressButton('Save settings');
-    $assert_session->pageTextContains('Saved Test int list configuration.');
+    $page->find('css', '.ui-dialog-buttonset button:contains("Save")')->press();
+    $this->assertTrue($this->assertSession()->waitForText('Saved Test int list configuration.'));
   }
 
   /**

@@ -142,10 +142,10 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->assertNull(FieldStorageConfig::loadByName('node', "field_test_field"));
 
     $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     $this->assertSession()->statusMessageNotContains('Saved');
@@ -160,10 +160,10 @@ class ManageFieldsTest extends BrowserTestBase {
 
     // Try creating a field with the same machine name.
     $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     // Assert that the values in the field storage form are reset.
@@ -172,7 +172,7 @@ class ManageFieldsTest extends BrowserTestBase {
     // Assert that the field is created with the new settings.
     $this->submitForm([], 'Update settings');
     $this->assertSession()->statusMessageNotContains('Saved');
-    $this->submitForm([], 'Save settings');
+    $this->submitForm([], 'Save');
     $this->assertSession()->statusMessageContains('Saved');
 
     $this->assertEquals(1, FieldStorageConfig::loadByName('node', 'field_test_field')->getCardinality());
@@ -193,10 +193,10 @@ class ManageFieldsTest extends BrowserTestBase {
     // Start adding a field as user 1, stop prior to saving, but keep the URL.
     $this->drupalLogin($user1);
     $this->drupalGet($bundle_path . '/fields/add-field');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     // Make changes to the storage form.
@@ -208,10 +208,10 @@ class ManageFieldsTest extends BrowserTestBase {
     // Actually add a field as user 2.
     $this->drupalLogin($user2);
     $this->drupalGet($bundle_path . '/fields/add-field');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     $allowed_no_of_values = $page->findField('field_storage[subform][cardinality_number]')->getValue();
@@ -219,7 +219,7 @@ class ManageFieldsTest extends BrowserTestBase {
     // the field is saved.
     $this->assertEquals(1, $allowed_no_of_values);
     $this->submitForm(['field_storage[subform][cardinality_number]' => 2], 'Update settings');
-    $this->submitForm([], 'Save settings');
+    $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains("Saved Test field configuration.");
     $this->drupalLogout();
 
@@ -229,7 +229,7 @@ class ManageFieldsTest extends BrowserTestBase {
     // Assert that the user can go on with configuring a field with a machine
     // that is already taken.
     $this->assertSession()->pageTextNotContains('error');
-    $this->submitForm([], 'Save settings');
+    $this->submitForm([], 'Save');
     // An error is thrown only after the final 'Save'.
     $this->assertSession()->statusMessageContains("An error occurred while saving the field: 'field_storage_config' entity with ID 'node.field_test_field' already exists.");
   }
@@ -246,10 +246,10 @@ class ManageFieldsTest extends BrowserTestBase {
     // Start adding a field but stop prior to saving.
     $this->drupalLogin($user);
     $this->drupalGet($bundle_path . '/fields/add-field');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
 
