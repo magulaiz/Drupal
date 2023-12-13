@@ -1,11 +1,3 @@
 id: install_test
 label: Optional configuration can be overridden.
 description: ''
-# The enforced dependency ensures that profile configuration in config/install
-# can depend on optional configuration of modules and themes it installs.
-dependencies:
-  module:
-    - testing_config_overrides_module
-  enforced:
-    config:
-      - entity_test.entity_test_bundle.testing_config_overrides_module
