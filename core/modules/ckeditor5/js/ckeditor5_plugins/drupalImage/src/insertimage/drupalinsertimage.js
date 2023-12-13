@@ -12,6 +12,8 @@ class DrupalInsertImage extends Plugin {
    */
   init() {
     const { editor } = this;
+    // This component is a shell around CKEditor 5 upstream insertImage button
+    // to retain backwards compatibility.
     editor.ui.componentFactory.add('drupalInsertImage', () => {
       return editor.ui.componentFactory.create('insertImage');
     });
