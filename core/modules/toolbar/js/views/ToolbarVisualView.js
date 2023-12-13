@@ -372,7 +372,7 @@
             subtreesHash === cachedSubtreesHash &&
             cachedSubtrees
           ) {
-            Drupal.toolbar.setSubtrees.resolve(cachedSubtrees);
+            Drupal.toolbar.setSubtreesResolve(cachedSubtrees);
           }
           // Only make the call to get the subtrees if the orientation of the
           // toolbar is vertical.
