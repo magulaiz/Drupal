@@ -125,7 +125,7 @@ class WebDriverCurlService extends CurlService {
             throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
           }
         }
-        $rawResult = trim($curl_result);
+        $rawResult = is_string($curl_result) ? trim($curl_result) : '';
 
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
