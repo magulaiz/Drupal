@@ -160,7 +160,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   public function set($property_name, $value) {
     if ($this instanceof EntityWithPluginCollectionInterface) {
       $plugin_collections = $this->getPluginCollections();
-      if (isset($plugin_collections[$property_name]) && is_array($value)) {
+      if (isset($plugin_collections[$property_name])) {
         // If external code updates the settings, pass it along to the plugin.
         $plugin_collections[$property_name]->setConfiguration($value);
       }

@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Config;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\TypedData\Plugin\DataType\LanguageReference;
@@ -506,7 +507,14 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       }
 
       $this->entity = clone $original_entity;
-      $this->entity->set($property, NULL);
+      $this->entity->set($property,
+        // Never try to set NULL on a plugin collection property, this
+        // cause the config entity property and the plugin collection to get out
+        // of sync.
+        $this->entity instanceof EntityWithPluginCollectionInterface && array_key_exists($property, $this->entity->getPluginCollections())
+        ? []
+        : NULL
+      );
       $expected_validation_errors = in_array($property, $properties_with_optional_values, TRUE)
         ? []
         : [$property => 'This value should not be null.'];
