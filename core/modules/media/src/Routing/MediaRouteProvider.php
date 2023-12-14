@@ -41,7 +41,7 @@ class MediaRouteProvider extends AdminHtmlRouteProvider {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function getCollectionRoute(EntityTypeInterface $entity_type) {
     if ($route = parent::getCollectionRoute($entity_type)) {
