@@ -330,14 +330,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
       $connection->update('tracker_node')
         ->fields([
           'changed' => $changed,
-          'published' => $node->isPublished(),
-        ])
-        ->condition('nid', $nid)
-        ->execute();
-      $connection->update('tracker_node')
-        ->fields([
-          'changed' => $changed,
-          'published' => $node->isPublished(),
+          'published' => (int) $node->isPublished(),
         ])
         ->condition('nid', $nid)
         ->execute();
