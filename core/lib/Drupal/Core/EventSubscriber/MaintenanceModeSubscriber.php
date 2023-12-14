@@ -130,7 +130,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         // Display a message if the logged in user has access to the site in
         // maintenance mode. However, suppress it on the maintenance mode
         // settings page.
-        if ($route_match->getRouteName() != 'system.site_maintenance_mode') {
+        if (!in_array($route_match->getRouteName(), ['system.site_maintenance_mode', 'system.batch_page.html'])) {
           if ($this->account->hasPermission('administer site configuration')) {
             $this->messenger->addMessage($this->t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => $this->urlGenerator->generate('system.site_maintenance_mode')]), 'status', FALSE);
           }
