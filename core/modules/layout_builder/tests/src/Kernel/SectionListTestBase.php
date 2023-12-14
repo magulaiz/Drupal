@@ -103,16 +103,18 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testGetSectionInvalidUuid() {
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('Invalid uuid "uuid"');
-    //expect a deprecation also.
     $this->sectionList->getSection('uuid');
   }
 
   /**
    * @covers ::getSection
+   *
+   * @group legacy
    */
   public function testGetSectionWithDelta() {
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('Invalid uuid "0"');
+    $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid or if you want to get section by delta then use \Drupal\layout_builder\SectionListTrait::getSectionByDelta($delta). See https://www.drupal.org/node/3401886');
     $this->sectionList->getSection(0);
   }
 
@@ -167,7 +169,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       $this->sectionList->removeAllSections();
     }
     elseif ($set_blank === TRUE) {
-      $expected_section = $this->sectionList->removeAllSections($set_blank)->getSection(0);
+      $expected_section = $this->sectionList->removeAllSections($set_blank)->getSectionByDelta(0);
       $expected = [
         $expected_section->getUuid() => $expected_section,
       ];
@@ -195,17 +197,38 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       ]))->setUuid('22000000-0000-1000-a000-000000000000'),
     ];
 
-    $this->sectionList->removeSection(0);
+    $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
     $this->assertSections($expected);
   }
 
   /**
    * @covers ::removeSection
    */
+  public function testRemoveSectionInvalidUuid() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "uuid"');
+    $this->sectionList->removeSection('uuid');
+  }
+
+  /**
+   * @covers ::removeSection
+   *
+   * @group legacy
+   */
+  public function testRemoveSectionWithDelta() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "0"');
+    $this->expectDeprecation('Calling removeSection() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886');
+    $this->sectionList->removeSection(0);
+  }
+
+  /**
+   * @covers ::removeSection
+   */
   public function testRemoveMultipleSections() {
-    $this->sectionList->removeSection(0);
-    $this->sectionList->removeSection(0);
-    $expected_section = $this->sectionList->getSection(0);
+    $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
+    $this->sectionList->removeSection('22000000-0000-1000-a000-000000000000');
+    $expected_section = $this->sectionList->getSectionByDelta(0);
     $expected = [
       $expected_section->getUuid() => $expected_section,
     ];
@@ -216,11 +239,11 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * Tests __clone().
    */
   public function testClone() {
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSectionByDelta(0)->getLayoutSettings());
 
     $new_section_storage = clone $this->sectionList;
-    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'qwer']);
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
+    $new_section_storage->getSectionByDelta(0)->setLayoutSettings(['asdf' => 'qwer']);
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSectionByDelta(0)->getLayoutSettings());
   }
 
   /**

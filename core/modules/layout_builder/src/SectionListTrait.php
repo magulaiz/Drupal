@@ -177,7 +177,7 @@ trait SectionListTrait {
       }
 
       $sections = $this->getSections();
-      foreach (array_values($sections) as $section_uuid => $section) {
+      foreach ($sections as $section_uuid => $section) {
         if ($section_uuid == $uuid) {
           unset($sections[$uuid]);
         }
