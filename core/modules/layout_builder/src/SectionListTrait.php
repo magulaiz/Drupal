@@ -45,7 +45,7 @@ trait SectionListTrait {
     }
     if (Uuid::isValid($uuid)) {
       foreach ($this->getSections() as $section) {
-        if ($section->getUuid() == $uuid) {
+        if ($section->getUuid() === $uuid) {
           return $section;
         }
       }
@@ -60,7 +60,7 @@ trait SectionListTrait {
   public function getSectionByDelta($delta) {
     if ($this->hasSection($delta)) {
       foreach ($this->getSections() as $section) {
-        if ($section->getWeight() == $delta) {
+        if ($section->getWeight() === $delta) {
           return $section;
         }
       }
@@ -178,7 +178,7 @@ trait SectionListTrait {
 
       $sections = $this->getSections();
       foreach ($sections as $section_uuid => $section) {
-        if ($section_uuid == $uuid) {
+        if ($section_uuid === $uuid) {
           unset($sections[$uuid]);
         }
       }

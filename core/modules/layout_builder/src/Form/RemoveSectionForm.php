@@ -44,7 +44,7 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   protected function handleSectionStorage(SectionStorageInterface $section_storage, FormStateInterface $form_state) {
-    $section_storage->removeSection($this->delta);
+    $section_storage->removeSection($section_storage->getSectionByDelta($this->delta)->getUuid());
   }
 
 }
