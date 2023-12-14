@@ -270,7 +270,7 @@
    * @param {object} [settings]
    *   Dialog settings.
    */
-  window.addEventListener('dialogAftercreate', (event) => {
+  window.addEventListener('dialog:aftercreate', (event) => {
     const $element = $(event.target);
     const dialog = event.detail.dialog;
     $element.on('click.dialog', '.dialog-cancel', (e) => {
@@ -290,7 +290,7 @@
    * @param {jQuery} $element
    *   jQuery collection of the dialog element.
    */
-  window.addEventListener('dialogBeforeclose', (e) => {
+  window.addEventListener('dialog:beforeclose', (e) => {
     const $element = $(e.target);
     $element.off('.dialog');
   });

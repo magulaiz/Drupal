@@ -650,7 +650,7 @@
   );
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
-  window.addEventListener('dialogBeforecreate', () => {
+  window.addEventListener('dialog:beforecreate', () => {
     const dialogLoading = document.querySelector('.ckeditor5-dialog-loading');
 
     if (dialogLoading) {

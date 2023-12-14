@@ -60,21 +60,9 @@
   Drupal.dialog = function (element, options) {
     let undef;
 
-    // If dialog created from string
-    // core/modules/editor/js/editor.js
-    if (typeof element === 'string') {
-      const placeholder = document.createElement('div');
-      placeholder.insertAdjacentHTML('afterbegin', element);
-      element = placeholder.firstElementChild;
-    }
-
-    // If dialog created with jQuery
-    // core/modules/node/node.preview.js
-    if (element instanceof $) {
-      element = $(element).get(0);
-    }
-
     const $element = $(element);
+    const domElement = $element.get(0);
+
     const dialog = {
       open: false,
       returnValue: undef,
@@ -83,8 +71,8 @@
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      element.dispatchEvent(
-        new CustomEvent('dialogBeforecreate', {
+      domElement.dispatchEvent(
+        new CustomEvent('dialog:beforecreate', {
           bubbles: true,
           detail: {
             dialog,
@@ -98,11 +86,11 @@
       // Locks the body scroll only when it opens in modal.
       if (settings.modal) {
         // Locks the body when the dialog opens.
-        bodyScrollLock.lock(element);
+        bodyScrollLock.lock(domElement);
       }
 
-      element.dispatchEvent(
-        new CustomEvent('dialogAftercreate', {
+      domElement.dispatchEvent(
+        new CustomEvent('dialog:aftercreate', {
           bubbles: true,
           detail: {
             dialog,
@@ -113,8 +101,8 @@
     }
 
     function closeDialog(value) {
-      element.dispatchEvent(
-        new CustomEvent('dialogBeforeclose', {
+      domElement.dispatchEvent(
+        new CustomEvent('dialog:beforeclose', {
           bubbles: true,
           detail: {
             dialog,
@@ -129,7 +117,7 @@
       dialog.returnValue = value;
       dialog.open = false;
 
-      element.dispatchEvent(
+      domElement.dispatchEvent(
         new CustomEvent('dialogAfterclose', {
           bubbles: true,
           detail: {

@@ -113,7 +113,7 @@
       .trigger('dialogContentResize');
   }
 
-  window.addEventListener('dialogAftercreate', (e) => {
+  window.addEventListener('dialog:aftercreate', (e) => {
     const autoResize = debounce(resetSize, 20);
     const $element = $(e.target);
     const settings = e.detail.settings;
@@ -135,7 +135,7 @@
     }
   });
 
-  window.addEventListener('dialogBeforeclose', () => {
+  window.addEventListener('dialog:beforeclose', () => {
     $(window).off('.dialogResize');
     $(document).off('.dialogResize');
   });

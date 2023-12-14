@@ -20,7 +20,7 @@
       if (!once('media-library-selection-info-claro-event', 'html').length) {
         return;
       }
-      window.addEventListener('dialogAftercreate', (e) => {
+      window.addEventListener('dialog:aftercreate', (e) => {
         const $element = $(e.target);
         // Since the dialog HTML is not part of the context, we can't use
         // context here.

@@ -382,7 +382,7 @@
       if (!once('media-library-selection-info', 'html').length) {
         return;
       }
-      window.addEventListener('dialogAftercreate', () => {
+      window.addEventListener('dialog:aftercreate', () => {
         // Since the dialog HTML is not part of the context, we can't use
         // context here.
         const $buttonPane = $(

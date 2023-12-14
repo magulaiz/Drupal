@@ -342,7 +342,7 @@
         return;
       }
 
-      window.addEventListener('dialogBeforecreate', (e) => {
+      window.addEventListener('dialog:beforecreate', (e) => {
         const $element = $(e.target);
         if (Drupal.offCanvas.isOffCanvas($element)) {
           Drupal.offCanvas.beforeCreate({
@@ -353,7 +353,7 @@
         }
       });
 
-      window.addEventListener('dialogAftercreate', (e) => {
+      window.addEventListener('dialog:aftercreate', (e) => {
         const $element = $(e.target);
         if (Drupal.offCanvas.isOffCanvas($element)) {
           Drupal.offCanvas.render({
@@ -369,7 +369,7 @@
         }
       });
 
-      window.addEventListener('dialogBeforeclose', (e) => {
+      window.addEventListener('dialog:beforeclose', (e) => {
         const $element = $(e.target);
         if (Drupal.offCanvas.isOffCanvas($element)) {
           Drupal.offCanvas.beforeClose({

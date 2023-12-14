@@ -219,7 +219,7 @@
   };
 
   // After a dialog opens, highlight element that the dialog is acting on.
-  window.addEventListener('dialogAftercreate', (e) => {
+  window.addEventListener('dialog:aftercreate', (e) => {
     const $element = $(e.target);
     if (Drupal.offCanvas.isOffCanvas($element)) {
       // Start by removing any existing highlighted elements.

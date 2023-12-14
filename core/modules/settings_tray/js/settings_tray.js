@@ -237,7 +237,7 @@
   };
 
   // Manage Active editable class on opening and closing of the dialog.
-  window.addEventListener('dialogBeforecreate', (e) => {
+  window.addEventListener('dialog:beforecreate', (e) => {
     if (e.target.id === 'drupal-off-canvas') {
       $('body .settings-tray-active-editable').removeClass(
         'settings-tray-active-editable',
@@ -250,7 +250,7 @@
       }
     }
   });
-  window.addEventListener('dialogBeforeclose', (e) => {
+  window.addEventListener('dialog:beforeclose', (e) => {
     if (e.target.id === 'drupal-off-canvas') {
       $('body .settings-tray-active-editable').removeClass(
         'settings-tray-active-editable',
