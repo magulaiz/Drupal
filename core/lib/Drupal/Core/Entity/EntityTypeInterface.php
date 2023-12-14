@@ -280,6 +280,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getRouteProviderClasses();
 
   /**
+   * Indicates if this entity type has a link provider.
+   *
+   * @return bool
+   *   TRUE if the entity type has a link provider handler; FALSE otherwise.
+   */
+  public function hasLinkProvider();
+
+  /**
    * Gets the list class.
    *
    * @return string

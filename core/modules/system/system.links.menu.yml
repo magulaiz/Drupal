@@ -154,3 +154,9 @@ system.status:
   description: 'Get a status report about your site''s operation.'
   route_name: system.status
   weight: -60
+
+# Menu links for entity types, derived by their link_provider handlers.
+# This is in system module rather than in the Entity component, because YAML
+# plugin discovery doesn't look there.
+system.entity:
+  deriver: \Drupal\Core\Entity\Plugin\Derivative\EntityMenuLinkDeriver
