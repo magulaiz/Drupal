@@ -398,12 +398,6 @@
     response,
     status,
   ) {
-    return new Promise((resolve, reject) => {
-      try {
-        resolve(response.subtrees);
-      } catch (error) {
-        reject(error);
-      }
-    });
+    Drupal.toolbar.setSubtreesResolve(response.subtrees);
   };
 })(jQuery, Drupal, drupalSettings);
