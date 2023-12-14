@@ -191,41 +191,41 @@ class MenuAccessTest extends BrowserTestBase {
       'access grand child1 test page',
       'access grand child2 test page',
       'access grand child3 test page',
+      'access great grand child1 test page',
     ]);
 
     // Users that do not have access to any of the 'grand_child' routes will
     // not have access to any of the routes in the tree.
-    $this->assertUserRoutesAccess($parentUser, [], ...$tree_routes);
-    $this->assertUserRoutesAccess($childOnlyUser, [], ...$tree_routes);
-
+    //print_r($tree_routes);
+    $this->assertUserRoutesAccess($parentUser, [], $tree_routes);
+    $this->assertUserRoutesAccess($childOnlyUser, [], $tree_routes);
     // A user that does not have access to the top level parent but has access
     // to all the other routes will have access to all routes except the parent
     // and 'menu_test.child3_test_block', because it has no items underneath in the
     // menu.
     $this->assertUserRoutesAccess(
       $noParentAccessUser,
-      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test_block', 'menu_test.child4_test_overview']),
-      ...$tree_routes
+      array_diff($tree_routes, ['menu_test.parent_test','menu_test.child3_test_block', 'menu_test.child4_test_overview']),
+      $tree_routes
     );
     // @todo Add comment about grand child logic with overview.
     $this->assertUserRoutesAccess(
       $grandChild1User,
       ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.grand_child1_test'],
-      ...$tree_routes);
+      $tree_routes);
     // Users who have only access to one grand child route should have access
     // only to that route and its parents.
     $this->assertUserRoutesAccess(
       $grandChild2User,
       ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.grand_child2_test'],
-      ...$tree_routes);
+      $tree_routes);
     $this->assertUserRoutesAccess(
       $grandChild3User,
       // The 'menu_test.grand_child3_test' menu item is nested under
       // 'menu_test.child2_test' to ensure access is correct when there are
       // multiple items nested at the same level.
       ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.grand_child3_test'],
-      ...$tree_routes);
-
+      $tree_routes);
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);
     $this->assertMenuItemRoutesAccess(403, Url::fromRoute('menu_test.parent_test_param', ['param' => 'param-in-menu']));
@@ -299,29 +299,58 @@ class MenuAccessTest extends BrowserTestBase {
       // We don't use \Behat\Mink\WebAssert::statusCodeEquals() here because it
       // would not allow us to know which path failed.
       $this->assertSame($expected_status, $this->getSession()->getStatusCode(), "Route $path has expected status code");
-      $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
     }
   }
+
+  protected function zzdrupalGet(
+    $path,
+    array $options = [],
+    array $headers = []
+  ) {
+    $return = parent::drupalGet($path, $options, $headers);
+    $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+    return $return;
+  }
+
 
   /**
    * Asserts which routes a user has access to.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The user account for which to check access.
-   * @param array $accessibleRoutes
+   * @param array $expectedAccessibleRoutes
    *   The routes the user should have access to.
    * @param string ...$allRoutes
    *   The routes to check.
    */
-  private function assertUserRoutesAccess(AccountInterface $user, array $accessibleRoutes, string ...$allRoutes): void {
-    $this->drupalLogin($user);
-    $this->assertEmpty(array_diff($accessibleRoutes, $allRoutes));
+  private function assertUserRoutesAccess(AccountInterface $user, array $expectedAccessibleRoutes, array $allRoutes): void {
+    //$this->drupalLogin($user);
+    $expectedInaccessibleRoutes = array_diff($allRoutes, $expectedAccessibleRoutes);
+    $this->assertEmpty(array_diff($expectedAccessibleRoutes, $allRoutes));
+    $actualAccessibleRoutes = [];
+    $actualInaccessibleRoutes = [];
     foreach ($allRoutes as $route) {
-      $this->assertMenuItemRoutesAccess(
-        in_array($route, $accessibleRoutes, TRUE) ? 200 : 403,
-        Url::fromRoute($route)
-      );
+      $this->drupalGet(Url::fromRoute($route));
+      switch ($this->getSession()->getStatusCode()) {
+        case 200:
+          $actualAccessibleRoutes[] = $route;
+          break;
+
+        case 403:
+          $actualInaccessibleRoutes[] = $route;
+          break;
+
+        default:
+          //throw new \UnexpectedValueException("Unexpected status code {$this->getStatus()} for route $route");
+
+      }
     }
+    $this->assertSession()->pageTextContains('NO it does not');
+    $this->assertSession()->assert();
+    $this->assertSame('asdf', 'asdf1');
+    $debug = fn($accessibleRoutes, $inaccessibleRoutes) => "\nAccessible routes: " . implode(', ', $accessibleRoutes) . "\nInaccessible routes: " . implode(', ', $inaccessibleRoutes);
+    $this->assertSame($debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes), $debug($actualAccessibleRoutes, $actualInaccessibleRoutes));
+
   }
 
 }
