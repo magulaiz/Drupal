@@ -16,9 +16,10 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
   /**
    * Indicates that the file is permanent and should not be deleted.
    *
-   * Temporary files older than the system.file.temporary_maximum_age will be
-   * removed during cron runs if cleanup is not disabled. (Permanent files will
-   * not be removed during the file garbage collection process.)
+   * Temporary files older than the system.file.temporary_maximum_age (in seconds)
+   * will be removed during cron runs if cleanup is not disabled.
+   * (Permanent files will not be removed during the file garbage collection
+   * process.)
    */
   const STATUS_PERMANENT = 1;
 

@@ -262,7 +262,7 @@ system.file:
           label: 'Temporary directory'
     temporary_maximum_age:
       type: integer
-      label: 'Maximum age for temporary files'
+      label: 'Maximum age (in seconds) for temporary files'
 
 system.image:
   type: config_object
