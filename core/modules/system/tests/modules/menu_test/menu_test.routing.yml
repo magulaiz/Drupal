@@ -69,7 +69,7 @@ menu_test.child3_test_block:
     _access: 'TRUE'
 
 menu_test.child4_test_overview:
-  path: '/parent_test/child3_test'
+  path: '/parent_test/child4_test'
   defaults:
     _controller: '\Drupal\system\Controller\SystemController::overview'
     link_id: 'menu_test.parent_test.child4_test'
