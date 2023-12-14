@@ -4,7 +4,9 @@ namespace Drupal\editor\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
+use Drupal\filter\FilterFormatInterface;
 
 /**
  * Defines an interface for configurable text editors.
@@ -27,11 +29,16 @@ interface EditorPluginInterface extends PluginInspectionInterface, PluginFormInt
   /**
    * Returns the default settings for this configurable text editor.
    *
+   * @param \Drupal\filter\FilterFormatInterface $textformat
+   *   (optional) The text format for which to compute smart default settings.
+   * @param \Drupal\editor\EditorInterface $old_text_editor
+   *   (optional) A configured text editor object.
+   *
    * @return array
    *   An array of settings as they would be stored by a configured text editor
    *   entity (\Drupal\editor\Entity\Editor).
    */
-  public function getDefaultSettings();
+  public function getDefaultSettings(FilterFormatInterface $textformat = NULL, EditorInterface $old_text_editor = NULL);
 
   /**
    * Returns JavaScript settings to be attached.
