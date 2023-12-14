@@ -1171,6 +1171,7 @@ sqlusername
 squaresmall
 squiz
 squizlabs
+srclang
 srcset
 ssess
 ssid
@@ -1331,6 +1332,7 @@ threadentry
 threadingrendererentry
 threecol
 tids
+timecode
 timecurrent
 timeframe
 timegate
@@ -1517,6 +1519,7 @@ webserver
 webservers
 webtest
 webuser
+webvtt
 wellformedwebentry
 wellformedwebrendererentry
 whitespaces
