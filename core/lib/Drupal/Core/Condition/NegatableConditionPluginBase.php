@@ -12,6 +12,7 @@ namespace Drupal\Core\Condition;
  * @ingroup plugin_api
  */
 abstract class NegatableConditionPluginBase extends ConditionPluginBase implements NegatableConditionInterface {
+
   /**
    * {@inheritdoc}
    */
