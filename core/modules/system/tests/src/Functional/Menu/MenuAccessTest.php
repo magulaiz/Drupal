@@ -80,6 +80,7 @@ class MenuAccessTest extends BrowserTestBase {
    * @covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
    */
   public function testSystemAdminMenuBlockAccessCheck(): void {
+    $this->assertSession()->assert(TRUE, 'asdf');
     // Create an admin user.
     $adminUser = $this->drupalCreateUser([], NULL, TRUE);
 
@@ -213,6 +214,7 @@ class MenuAccessTest extends BrowserTestBase {
       $grandChild1User,
       ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.grand_child1_test'],
       $tree_routes);
+    $this->assertSame('asdf', 'asdf1');
     // Users who have only access to one grand child route should have access
     // only to that route and its parents.
     $this->assertUserRoutesAccess(
@@ -324,13 +326,14 @@ class MenuAccessTest extends BrowserTestBase {
    *   The routes to check.
    */
   private function assertUserRoutesAccess(AccountInterface $user, array $expectedAccessibleRoutes, array $allRoutes): void {
-    //$this->drupalLogin($user);
+    $this->drupalLogin($user);
     $expectedInaccessibleRoutes = array_diff($allRoutes, $expectedAccessibleRoutes);
     $this->assertEmpty(array_diff($expectedAccessibleRoutes, $allRoutes));
     $actualAccessibleRoutes = [];
     $actualInaccessibleRoutes = [];
     foreach ($allRoutes as $route) {
-      $this->drupalGet(Url::fromRoute($route));
+      $this->drupalGet(Url::fromRoute($route)->toString());
+      //$this->drupalGet(Url::fromRoute($route));
       switch ($this->getSession()->getStatusCode()) {
         case 200:
           $actualAccessibleRoutes[] = $route;
@@ -345,9 +348,6 @@ class MenuAccessTest extends BrowserTestBase {
 
       }
     }
-    $this->assertSession()->pageTextContains('NO it does not');
-    $this->assertSession()->assert();
-    $this->assertSame('asdf', 'asdf1');
     $debug = fn($accessibleRoutes, $inaccessibleRoutes) => "\nAccessible routes: " . implode(', ', $accessibleRoutes) . "\nInaccessible routes: " . implode(', ', $inaccessibleRoutes);
     $this->assertSame($debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes), $debug($actualAccessibleRoutes, $actualInaccessibleRoutes));
 
