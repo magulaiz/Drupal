@@ -90,6 +90,7 @@ small .admin-link::after {
   width: 25%;
 }
 .system-modules td {
+  padding-left: 0; /* LTR */
   vertical-align: top;
 }
 .system-modules label,
@@ -128,9 +129,6 @@ small .admin-link::after {
   cursor: default;
   text-transform: none;
   font-weight: normal;
-}
-.system-modules td {
-  padding-left: 0; /* LTR */
 }
 [dir="rtl"] .system-modules td {
   padding-right: 0;

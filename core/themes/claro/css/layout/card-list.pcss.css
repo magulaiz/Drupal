@@ -38,11 +38,9 @@
   .card-list--four-cols .card-list__item {
     flex-basis: var(--cards-two-cols-width);
     max-width: var(--cards-two-cols-width);
-  }
-
-  .card-list--four-cols .card-list__item {
     margin-right: var(--card-list-spacing);
   }
+  
   [dir="rtl"] .card-list--four-cols .card-list__item {
     margin-right: 0;
     margin-left: var(--card-list-spacing);
