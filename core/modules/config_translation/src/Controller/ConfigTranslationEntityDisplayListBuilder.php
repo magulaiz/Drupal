@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the config translation list builder for entity display entities.
@@ -30,6 +31,21 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   protected $currentUser;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    $entity_type_manager = $container->get('entity_type.manager');
+    $entity_type_bundle_info = $container->get('entity_type.bundle.info');
+    return new static(
+      $entity_type,
+      $entity_type_manager->getStorage($entity_type->id()),
+      $entity_type_manager,
+      $entity_type_bundle_info,
+      $container->get('current_user')
+    );
+  }
+
+  /**
    * Constructs a new ConfigTranslationEntityDisplayListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -45,7 +61,8 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, AccountInterface $current_user) {
     parent::__construct($entity_type, $storage, $entity_type_manager, $entity_type_bundle_info);
-    // @todo There must be a better way to get this information?
+    // Property displayContext from $this->entityType is protected,
+    // so recreate it from its ID.
     $this->displayContext = preg_replace('/^entity_(.+)_display$/', '\1', $this->entityType->id());
     $this->currentUser = $current_user;
   }
@@ -53,7 +70,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   /**
    * {@inheritdoc}
    */
-  public function load() {
+  public function load(): ?array {
     // It is not possible to use the standard load method, because this needs
     // all display entities only for the given baseEntityType.
     $ids = \Drupal::entityQuery($this->entityType->id())
@@ -66,7 +83,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   /**
    * {@inheritdoc}
    */
-  public function getFilterLabels() {
+  public function getFilterLabels(): array {
     $info = parent::getFilterLabels();
     $bundle = $this->baseEntityInfo->getBundleLabel() ?: $this->t('Bundle');
     $bundle = mb_strtolower($bundle);
@@ -82,7 +99,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   /**
    * {@inheritdoc}
    */
-  public function buildRow(EntityInterface $entity) {
+  public function buildRow(EntityInterface $entity): array {
     $row = parent::buildRow($entity);
     $row['label']['data'] = $entity->getMode() == 'default' ? $this->t('Default') : $this->entityTypeManager
       ->getStorage('entity_' . $this->displayContext . '_mode')
@@ -94,7 +111,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   /**
    * {@inheritdoc}
    */
-  public function buildHeader() {
+  public function buildHeader(): array {
     $header = parent::buildHeader();
     $header['label'] = $this->entityType->getLabel();
     return $header;
@@ -103,7 +120,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
   /**
    * {@inheritdoc}
    */
-  public function getOperations(EntityInterface $entity) {
+  public function getOperations(EntityInterface $entity): array {
     if ($this->currentUser->hasPermission('translate configuration')) {
       // Entity displays have no canonical no direct edit-form links so we
       // hard-code the route to the translation operation.

@@ -88,9 +88,8 @@ function field_ui_config_schema_info_alter(&$definitions) {
     'core.entity_view_display.*.*.*' => EntityDisplayElement::class,
   ];
 
-  // Enhance the text and date type definitions with classes to generate proper
-  // form elements in ConfigTranslationFormBase. Other translatable types will
-  // appear as a one line textfield.
+  // Enhance entity view and form display definitions with above class
+  // in order to generate translatable labels.
   foreach ($definitions as $type => &$definition) {
     if (isset($map[$type]) && !isset($definition['form_element_class'])) {
       $definition['form_element_class'] = $map[$type];

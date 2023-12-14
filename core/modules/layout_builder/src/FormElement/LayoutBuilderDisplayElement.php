@@ -23,7 +23,7 @@ class LayoutBuilderDisplayElement extends ListElement {
     $translation_config,
     array $parents,
     $base_key = NULL
-  ) {
+  ): array {
     $parent_build = parent::getTranslationBuild($source_language, $translation_language,
       $source_config, $translation_config, $parents,
       $base_key);
@@ -151,14 +151,14 @@ class LayoutBuilderDisplayElement extends ListElement {
   /**
    * Set element names.
    */
-  public static function setElementNames($data) {
+  public static function setElementNames($data): array {
     return self::$data = $data;
   }
 
   /**
    * Get element names.
    */
-  public static function getElementNames() {
+  public static function getElementNames(): ?array {
     return self::$data;
   }
 

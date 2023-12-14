@@ -13,7 +13,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
   /**
    * {@inheritdoc}
    */
-  public function getBaseRouteParameters() {
+  public function getBaseRouteParameters(): array {
     $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
     $bundle_parameter_key = $base_entity_info->getBundleEntityType() ?: 'bundle';
 
@@ -27,14 +27,14 @@ class EntityDisplayMapper extends ConfigEntityMapper {
   /**
    * {@inheritdoc}
    */
-  public function getOverviewRouteName() {
+  public function getOverviewRouteName(): string {
     return "entity.{$this->entityType}.config_translation_overview.{$this->pluginDefinition['base_entity_type']}";
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTitle() {
+  public function getTitle(): string {
     $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
     $bundle = $base_entity_info->getLabel();
     if ($bundle_type = $base_entity_info->getBundleEntityType()) {
@@ -67,7 +67,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
   /**
    * {@inheritdoc}
    */
-  public function getTypeLabel() {
+  public function getTypeLabel(): string {
     $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
 
     if ($this->entityType == 'entity_view_display') {
@@ -86,7 +86,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
   /**
    * {@inheritdoc}
    */
-  public function populateFromRouteMatch(RouteMatchInterface $route_match) {
+  public function populateFromRouteMatch(RouteMatchInterface $route_match): void {
     $bundle_entity_type = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type'])->getBundleEntityType();
     $bundle = $route_match->getParameter($bundle_entity_type ?: 'bundle') ?: $this->pluginDefinition['base_entity_type'];
     $mode = $route_match->getParameter($this->pluginDefinition['display_context'] . '_mode_name') ?: 'default';

@@ -493,7 +493,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Test entity form translation operation.
    */
-  public function doEntityFormTest() {
+  public function doEntityFormTest(): void {
     $content_type = $this->drupalCreateContentType([
       'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
@@ -520,7 +520,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Test entity view display translation operation.
    */
-  public function doViewDisplayTest() {
+  public function doViewDisplayTest(): void {
     $content_type = $this->drupalCreateContentType([
       'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
@@ -532,10 +532,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/types/manage/$id/fields/add-field");
     $this->submitForm([
       'new_storage_type' => 'boolean',
+    ], 'Continue');
+    $this->submitForm([
       'label' => 'Bool field label',
       'field_name' => 'boolean',
     ], 'Continue');
-    $this->getSession()->getPage()->pressButton('Continue');
     $this->getSession()->getPage()->pressButton('Save settings');
 
     // Before layout builder is enabled.
@@ -548,7 +549,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $xpath = new \DOMXPath(Html::load($this->getSession()->getPage()->getHtml()));
     $element = $xpath->query('//details/summary[text()=" format settings"]')->item(0)->parentNode;
     foreach ($expected_labels as $expected_label) {
-      $this->assertTrue(str_starts_with($element->nodeValue, $expected_label));
+      $this->assertTrue(str_starts_with(trim($element->nodeValue), $expected_label));
       $element = $element->parentNode;
     }
 
@@ -593,7 +594,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Initially select the deepest element.
     $element = $xpath->query('//details/summary[text()=" format settings"]')->item(0)->parentNode;
     foreach ($expected_labels as $expected_label) {
-      $this->assertTrue(str_starts_with($element->nodeValue, $expected_label));
+      $this->assertTrue(str_starts_with(trim($element->nodeValue), $expected_label));
       $element = $element->parentNode;
     }
 

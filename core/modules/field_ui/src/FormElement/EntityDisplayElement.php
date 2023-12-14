@@ -2,11 +2,9 @@
 
 namespace Drupal\field_ui\FormElement;
 
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\config_translation\FormElement\ListElement;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\layout_builder\FormElement\LayoutBuilderDisplayElement;
 
 /**
  * Adds translatable labels to entity_display elements.
@@ -23,7 +21,7 @@ class EntityDisplayElement extends ListElement {
     $translation_config,
     array $parents,
     $base_key = NULL
-  ) {
+  ): array {
     $parent_build = parent::getTranslationBuild($source_language, $translation_language,
       $source_config, $translation_config, $parents,
       $base_key);
@@ -43,16 +41,6 @@ class EntityDisplayElement extends ListElement {
       $element_names = array_intersect(array_keys($components), Element::children($parent_build['content']), array_keys($field_definitions));
     }
 
-    // Don't provide duplicate settings for fields under layout builder.
-    $layout_element_names = LayoutBuilderDisplayElement::getElementNames();
-    if ($layout_element_names) {
-      foreach ($layout_element_names as $value) {
-        [,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $value, 3);
-        $element_names = array_diff($element_names, [$field_name]);
-        unset($parent_build['content'][$field_name]);
-      }
-    }
-
     if (empty($element_names)) {
       unset($parent_build['content']);
       return $parent_build;
@@ -69,7 +57,7 @@ class EntityDisplayElement extends ListElement {
    * @param array $parent_build
    *   Parent translation build data.
    * @param array $element_names
-   *   Associative array of element names and layout builder flag.
+   *   Associative array of element names.
    * @param array $components
    *   The components.
    * @param string $target_type_id
@@ -93,7 +81,6 @@ class EntityDisplayElement extends ListElement {
     $field_definitions = $field_manager->getFieldDefinitions($target_type_id, $bundle_name);
 
     foreach ($element_names as $component_name) {
-      // Not considering the layout builder case.
       $item = &$parent_build['content'][$component_name];
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $definition */
       $definition = $field_definitions[$component_name] ?? NULL;
