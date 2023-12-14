@@ -27,6 +27,9 @@ default:
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - echo "SIMPLETEST_DB = $SIMPLETEST_DB"
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
+    # Create an empty file to ensure there is at least one log artifact. It is
+    # a hidden file so apache will not serve it in tests.
+    - touch .gitlab-ci.empty.log
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:
