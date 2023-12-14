@@ -60,7 +60,7 @@ trait SectionListTrait {
   public function getSectionByDelta($delta) {
     if ($this->hasSection($delta)) {
       foreach ($this->getSections() as $section) {
-        if ($section->getWeight() === $delta) {
+        if ($section->getWeight() == $delta) {
           return $section;
         }
       }
@@ -86,7 +86,7 @@ trait SectionListTrait {
     }
     else {
       foreach ($sections as $original_section) {
-        if ($original_section->getWeight() === $delta) {
+        if ($original_section->getWeight() == $delta) {
           // @todo Use https://www.drupal.org/node/66183 once resolved.
           $start = array_slice($sections, 0, $delta);
           $end = array_slice($sections, $delta + 1);
