@@ -22,7 +22,7 @@ menu_test.parent_test:
   parent: system.admin
 menu_test.parent_test.child1_test:
   title: 'Menu child1'
-  description: 'Menu item description child1'
+  description: 'Menu child1: uses SystemController::overview'
   route_name: menu_test.child1_test
   parent: menu_test.parent_test
 menu_test.parent_test.child2_test:
@@ -42,7 +42,7 @@ menu_test.parent_test.child4_test:
   parent: menu_test.parent_test
 menu_test.parent_test.child_test.grand_child1_test:
   title: 'Menu grand child1'
-  description: 'Menu item description grand child1'
+  description: 'Menu grand child1: direct parent uses SystemController::overview'
   route_name: menu_test.grand_child1_test
   parent: menu_test.parent_test.child1_test
 menu_test.parent_test.child_test.grand_child2_test:
@@ -57,7 +57,7 @@ menu_test.parent_test.child_test.grand_child3_test:
   parent: menu_test.parent_test.child2_test
 menu_test.parent_test.child_test.great_grand_child1_test:
   title: 'Menu great grand child1'
-  description: 'Menu item description great grand child1'
+  description: 'Menu great grand child1: grand parent uses SystemController::overview'
   route_name: menu_test.great_grand_child1_test
   parent: menu_test.parent_test.child_test.grand_child1_test
 menu_test.menu_parent_test_param:
