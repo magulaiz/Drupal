@@ -46,6 +46,10 @@
   background-color: var(--color-white);
   box-shadow: var(--details-box-shadow);
 
+  &.hidden {
+    display: none;
+  }
+
   /*
    * The following width and min-width values ensure that the <details> element
    * does not shift widths when opening, in the event that a parent table
