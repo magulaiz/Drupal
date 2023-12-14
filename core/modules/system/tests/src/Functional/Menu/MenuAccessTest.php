@@ -207,12 +207,13 @@ class MenuAccessTest extends BrowserTestBase {
       array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test_block', 'menu_test.child4_test_overview']),
       ...$tree_routes
     );
-    // Users who have only access to one grand child route should have access
-    // only to that route and its parents.
+    // @todo Add comment about grand child logic with overview.
     $this->assertUserRoutesAccess(
       $grandChild1User,
       ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.grand_child1_test'],
       ...$tree_routes);
+    // Users who have only access to one grand child route should have access
+    // only to that route and its parents.
     $this->assertUserRoutesAccess(
       $grandChild2User,
       ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.grand_child2_test'],
@@ -292,13 +293,13 @@ class MenuAccessTest extends BrowserTestBase {
   private function assertMenuItemRoutesAccess(int $expected_status, string|Url ...$paths): void {
     foreach ($paths as $path) {
       $this->drupalGet($path);
-      try {
-        $this->assertSession()->statusCodeEquals($expected_status);
-        $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
+      if (!is_string($path)) {
+        $path = $path->toString();
       }
-      catch (\Throwable) {
-        $an = 'd';
-      }
+      // We don't use \Behat\Mink\WebAssert::statusCodeEquals() here because it
+      // would not allow us to know which path failed.
+      $this->assertSame($expected_status, $this->getSession()->getStatusCode(), "Route $path has expected status code");
+      $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
     }
   }
 
@@ -314,6 +315,7 @@ class MenuAccessTest extends BrowserTestBase {
    */
   private function assertUserRoutesAccess(AccountInterface $user, array $accessibleRoutes, string ...$allRoutes): void {
     $this->drupalLogin($user);
+    $this->assertEmpty(array_diff($accessibleRoutes, $allRoutes));
     foreach ($allRoutes as $route) {
       $this->assertMenuItemRoutesAccess(
         in_array($route, $accessibleRoutes, TRUE) ? 200 : 403,
