@@ -64,7 +64,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   public function testConfigInstall() {
     /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display */
     $display = LayoutBuilderEntityViewDisplay::load('entity_test.bundle_with_extra_fields.default');
-    $section = $display->getSection(0);
+    $section = $display->getSectionByDelta(0);
     $this->assertInstanceOf(Section::class, $section);
     $this->assertEquals('layout_twocol_section', $section->getLayoutId());
     $this->assertEquals([
