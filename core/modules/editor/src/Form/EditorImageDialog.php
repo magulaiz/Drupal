@@ -99,8 +99,10 @@ class EditorImageDialog extends FormBase {
     $max_filesize = min(Bytes::toNumber($image_upload['max_size']), Environment::getUploadMaxSize());
     $existing_file = isset($image_element['data-entity-uuid']) ? \Drupal::service('entity.repository')->loadEntityByUuid('file', $image_element['data-entity-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;
+    $is_media_as_image_case = is_null($fid) && ($image_element['src'] != '');
 
     $form['fid'] = [
+      '#access' => $is_media_as_image_case ? FALSE : TRUE,
       '#title' => $this->t('Image'),
       '#type' => 'managed_file',
       '#upload_location' => $image_upload['scheme'] . '://' . $image_upload['directory'],
@@ -110,7 +112,7 @@ class EditorImageDialog extends FormBase {
         'file_validate_size' => [$max_filesize],
         'file_validate_image_resolution' => [$max_dimensions],
       ],
-      '#required' => TRUE,
+      '#required' => $is_media_as_image_case ? FALSE : TRUE,
     ];
 
     $form['attributes']['src'] = [

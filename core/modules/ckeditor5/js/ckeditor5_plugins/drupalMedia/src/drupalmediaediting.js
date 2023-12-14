@@ -34,12 +34,16 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
+      drupalMediaSrc: 'src',
+      drupalMediaSrcType: 'src-type',
     };
     this.converterAttributes = [
       'drupalMediaEntityUuid',
       'drupalElementStyleViewMode',
       'drupalMediaEntityType',
       'drupalMediaAlt',
+      'drupalMediaSrc',
+      'drupalMediaSrcType',
     ];
   }
 
