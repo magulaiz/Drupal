@@ -40,26 +40,26 @@ menu_test.parent_test.child4_test:
   description: 'Menu item description child4'
   route_name: menu_test.child4_test_overview
   parent: menu_test.parent_test
-menu_test.parent_test.child_test.super_child1_test:
-  title: 'Menu super child1'
-  description: 'Menu item description super child1'
-  route_name: menu_test.super_child1_test
+menu_test.parent_test.child_test.grand_child1_test:
+  title: 'Menu grand child1'
+  description: 'Menu item description grand child1'
+  route_name: menu_test.grand_child1_test
   parent: menu_test.parent_test.child1_test
-menu_test.parent_test.child_test.super_child2_test:
-  title: 'Menu super child2'
-  description: 'Menu item description super child2'
-  route_name: menu_test.super_child2_test
+menu_test.parent_test.child_test.grand_child2_test:
+  title: 'Menu grand child2'
+  description: 'Menu item description grand child2'
+  route_name: menu_test.grand_child2_test
   parent: menu_test.parent_test.child2_test
-menu_test.parent_test.child_test.super_child3_test:
-  title: 'Menu super child3'
-  description: 'Menu item description super child3'
-  route_name: menu_test.super_child3_test
+menu_test.parent_test.child_test.grand_child3_test:
+  title: 'Menu grand child3'
+  description: 'Menu item description grand child3'
+  route_name: menu_test.grand_child3_test
   parent: menu_test.parent_test.child2_test
-menu_test.parent_test.child_test.super_duper_child1_test:
-  title: 'Menu super duper child1'
-  description: 'Menu item description super duper child1'
-  route_name: menu_test.super_duper_child1_test
-  parent: menu_test.parent_test.child_test.super_child1_test
+menu_test.parent_test.child_test.great_grand_child1_test:
+  title: 'Menu great grand child1'
+  description: 'Menu item description great grand child1'
+  route_name: menu_test.great_grand_child1_test
+  parent: menu_test.parent_test.child_test.grand_child1_test
 menu_test.menu_parent_test_param:
   title: 'Menu Parent Param'
   description: 'Menu item description parent'
