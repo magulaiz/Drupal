@@ -50,7 +50,16 @@ class FailureMarkerRequirementTest extends BrowserTestBase {
 
     $failure_marker = $this->container->get(FailureMarker::class);
     $message = $this->t('Package Manager is here to wreck your day.');
-    $failure_marker->write($this->createMock(StageBase::class), $message);
+    $stage = new class() extends StageBase {
+
+      public function __construct() {}
+
+      /**
+       * {@inheritdoc}
+       */
+      protected string $type = 'test';
+    };
+    $failure_marker->write($stage, $message);
     $path = $failure_marker->getPath();
     $this->assertFileExists($path);
     $this->assertStringStartsWith($fake_project_root, $path);

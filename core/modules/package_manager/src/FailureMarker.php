@@ -66,6 +66,7 @@ final class FailureMarker implements EventSubscriberInterface {
   public function write(StageBase $stage, TranslatableMarkup $message, \Throwable $throwable = NULL): void {
     $data = [
       'stage_class' => get_class($stage),
+      'stage_type' => $stage->getType(),
       'stage_file' => (new \ReflectionObject($stage))->getFileName(),
       'message' => (string) $message,
       'throwable_class' => $throwable ? get_class($throwable) : FALSE,

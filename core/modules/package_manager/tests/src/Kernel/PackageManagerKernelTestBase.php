@@ -461,6 +461,11 @@ class TestStage extends StageBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected string $type = 'package_manager:test';
+
+  /**
+   * {@inheritdoc}
    *
    * TRICKY: without this, any failed ::assertStatusCheckResults()
    * will fail, because PHPUnit will want to serialize all arguments in the call

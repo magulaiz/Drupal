@@ -136,9 +136,8 @@ services:
   Drupal\package_manager\PackageManagerUninstallValidator:
     tags:
       - { name: module_install.uninstall_validator }
-    parent: container.trait
-    calls:
-      - ['setContainer', ['@service_container']]
+    arguments:
+      $eventDispatcher: '@event_dispatcher'
     lazy: true
   Drupal\package_manager\Validator\SettingsValidator:
     tags:

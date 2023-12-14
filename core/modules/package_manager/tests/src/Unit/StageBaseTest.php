@@ -120,4 +120,32 @@ class StageBaseTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * @covers ::getType
+   */
+  public function testTypeMustBeExplicitlyOverridden(): void {
+    $good_grandchild = new class () extends ChildStage {
+
+      /**
+       * {@inheritdoc}
+       */
+      protected string $type = 'package_manager:good_grandchild';
+
+    };
+    $this->assertSame('package_manager:good_grandchild', $good_grandchild->getType());
+
+    $bad_grandchild = new class () extends ChildStage {};
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage(get_class($bad_grandchild) . ' must explicitly override the $type property.');
+    $bad_grandchild->getType();
+  }
+
+}
+
+class ChildStage extends StageBase {
+
+  public function __construct() {}
+
+  protected string $type = 'package_manager:child';
+
 }

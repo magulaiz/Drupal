@@ -6,6 +6,9 @@ namespace Drupal\package_manager\Validator;
 
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\package_manager\Event\PreApplyEvent;
+use Drupal\package_manager\Event\PreCreateEvent;
+use Drupal\package_manager\Event\PreOperationStageEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -59,17 +62,17 @@ class PhpExtensionsValidator implements EventSubscriberInterface {
   }
 
   /**
-   * Flags a warning if the OpenSSL extension is not installed.
+   * Flags an error if the OpenSSL extension is not installed.
    *
-   * @param \Drupal\package_manager\Event\StatusCheckEvent $event
+   * @param \Drupal\package_manager\Event\PreOperationStageEvent $event
    *   The event object.
    */
-  public function validateOpenSsl(StatusCheckEvent $event): void {
+  public function validateOpenSsl(PreOperationStageEvent $event): void {
     if (!$this->isExtensionLoaded('openssl')) {
       $message = $this->t('The OpenSSL extension is not enabled, which is a security risk. See <a href=":url">the PHP documentation</a> for information on how to enable this extension.', [
         ':url' => 'https://www.php.net/manual/en/openssl.installation.php',
       ]);
-      $event->addWarning([$message]);
+      $event->addError([$message]);
     }
   }
 
@@ -97,6 +100,8 @@ class PhpExtensionsValidator implements EventSubscriberInterface {
         ['validateXdebug'],
         ['validateOpenSsl'],
       ],
+      PreCreateEvent::class => ['validateOpenSsl'],
+      PreApplyEvent::class => ['validateOpenSsl'],
     ];
   }
 
