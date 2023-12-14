@@ -62,6 +62,8 @@ class FileWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $element['progress_indicator'] = [
       '#type' => 'radios',
       '#title' => $this->t('Progress indicator'),
@@ -81,7 +83,7 @@ class FileWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
     $summary[] = $this->t('Progress indicator: @progress_indicator', ['@progress_indicator' => $this->getSetting('progress_indicator')]);
     return $summary;
   }
@@ -175,10 +177,17 @@ class FileWidget extends WidgetBase {
       // The group of elements all-together need some extra functionality after
       // building up the full list (like draggable table rows).
       $elements['#file_upload_delta'] = $delta;
-      $elements['#type'] = 'details';
       $elements['#open'] = TRUE;
-      $elements['#theme'] = 'file_widget_multiple';
-      $elements['#theme_wrappers'] = ['details'];
+      if ($this->getSetting('orderable')) {
+        $elements['#type'] = 'details';
+        $elements['#theme'] = 'file_widget_multiple';
+        $elements['#theme_wrappers'] = ['details'];
+      }
+      else {
+        $elements['#theme'] = 'field_multiple_value_without_order_form';
+        $elements['#cardinality_multiple'] = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
+      }
+
       $elements['#process'] = [[static::class, 'processMultiple']];
       $elements['#title'] = $title;
 

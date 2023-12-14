@@ -33,6 +33,8 @@ class TelephoneDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $element['placeholder'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Placeholder'),
@@ -46,7 +48,7 @@ class TelephoneDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
 
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
