@@ -272,7 +272,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
       ->save();
 
     $entity = EntityTest::create();
-    $entity->set(OverridesSectionStorage::FIELD_NAME, [new Section('layout_onecol')]);
+    $entity->set(OverridesSectionStorage::FIELD_NAME, [(new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0)]);
     $entity->save();
     $entity = EntityTest::load($entity->id());
 
@@ -280,7 +280,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->plugin->setContext('entity', $context);
 
     $this->assertTrue($this->plugin->isOverridden());
-    $this->plugin->removeSection(0);
+    $this->plugin->removeSection($this->plugin->getSectionByDelta(0)->getUuid());
     $this->assertTrue($this->plugin->isOverridden());
     $this->plugin->removeAllSections(TRUE);
     $this->assertTrue($this->plugin->isOverridden());
