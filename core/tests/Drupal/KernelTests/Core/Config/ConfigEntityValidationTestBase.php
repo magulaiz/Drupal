@@ -493,6 +493,15 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // @see ::testImmutableProperties()
     $immutable_properties = $this->entity->getEntityType()->getConstraints()['ImmutableProperties'];
 
+    // Config entity properties containing plugin collections are special cases:
+    // setting them to NULL would cause them to get out of sync with the plugin
+    // collection.
+    // @see \Drupal\Core\Config\Entity\ConfigEntityBase::set()
+    // @see \Drupal\Core\Config\Entity\ConfigEntityBase::preSave()
+    $plugin_collection_properties = $this->entity instanceof EntityWithPluginCollectionInterface
+      ? array_keys($this->entity->getPluginCollections())
+      : [];
+
     // To test properties with missing required values, $this->entity must be
     // modified to be able to use ::assertValidationErrors(). To allow restoring
     // $this->entity to its original value for each tested property, a clone of
@@ -506,15 +515,13 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
         continue;
       }
 
+      // Do not try to set plugin collection properties to NULL.
+      if (in_array($property, $plugin_collection_properties, TRUE)) {
+        continue;
+      }
+
       $this->entity = clone $original_entity;
-      $this->entity->set($property,
-        // Never try to set NULL on a plugin collection property, this
-        // cause the config entity property and the plugin collection to get out
-        // of sync.
-        $this->entity instanceof EntityWithPluginCollectionInterface && array_key_exists($property, $this->entity->getPluginCollections())
-        ? []
-        : NULL
-      );
+      $this->entity->set($property, NULL);
       $expected_validation_errors = in_array($property, $properties_with_optional_values, TRUE)
         ? []
         : [$property => 'This value should not be null.'];
