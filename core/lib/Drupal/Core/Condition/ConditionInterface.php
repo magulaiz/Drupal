@@ -65,17 +65,6 @@ interface ConditionInterface extends ExecutableInterface, PluginFormInterface, C
   public function evaluate();
 
   /**
-   * Negate the condition result.
-   *
-   * @param bool $evaluation_result
-   *   Condition evaluation result boolean.
-   *
-   * @return bool
-   *   TRUE if the result is FALSE, FALSE otherwise.
-   */
-  public function evaluateIsNegated($evaluation_result);
-
-  /**
    * Provides a human readable summary of the condition's configuration.
    */
   public function summary();

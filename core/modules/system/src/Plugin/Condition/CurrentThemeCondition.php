@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Plugin\Condition;
 
-use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Condition\NegatableConditionPluginBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Current Theme"),
  * )
  */
-class CurrentThemeCondition extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+class CurrentThemeCondition extends NegatableConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The theme manager.

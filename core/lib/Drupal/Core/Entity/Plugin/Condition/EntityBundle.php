@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Entity\Plugin\Condition;
 
-use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Condition\NegatableConditionPluginBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   deriver = "\Drupal\Core\Entity\Plugin\Condition\Deriver\EntityBundle",
  * )
  */
-class EntityBundle extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+class EntityBundle extends NegatableConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity type bundle info service.

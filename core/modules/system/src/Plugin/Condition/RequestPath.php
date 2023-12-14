@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Plugin\Condition;
 
-use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Condition\NegatableConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *   label = @Translation("Request Path"),
  * )
  */
-class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+class RequestPath extends NegatableConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * An alias manager to find the alias for the current system path.

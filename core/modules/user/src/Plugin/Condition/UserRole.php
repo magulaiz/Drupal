@@ -3,7 +3,7 @@
 namespace Drupal\user\Plugin\Condition;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Condition\NegatableConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -19,7 +19,7 @@ use Drupal\user\RoleInterface;
  *   }
  * )
  */
-class UserRole extends ConditionPluginBase {
+class UserRole extends NegatableConditionPluginBase {
 
   /**
    * {@inheritdoc}

@@ -2,7 +2,7 @@
 
 namespace Drupal\language\Plugin\Condition;
 
-use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Condition\NegatableConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class Language extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+class Language extends NegatableConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The Language manager.

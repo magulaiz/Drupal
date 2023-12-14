@@ -80,13 +80,6 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
   /**
    * {@inheritdoc}
    */
-  public function evaluateIsNegated($evaluation_result): bool {
-    return $this->isNegated() ? !$evaluation_result : $evaluation_result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function execute() {
     return $this->executableManager->execute($this);
   }
