@@ -199,7 +199,18 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
+        // Populate request attributes temporarily with ajax_page_state theme
+        // and theme_token for theme negotiation.
+        $theme_keys = [
+          'theme' => TRUE,
+          'theme_token' => TRUE,
+        ];
+        if (is_array($existing_page_state) &&
+            ($temp_attributes = array_intersect_key($existing_page_state, $theme_keys))) {
+          $request->attributes->set(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER, $temp_attributes);
+        }
         $preview = $view->preview($display_id, $args);
+        $request->attributes->remove(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);
