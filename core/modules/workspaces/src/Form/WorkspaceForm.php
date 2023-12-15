@@ -4,6 +4,8 @@ namespace Drupal\workspaces\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceManagerInterface;
@@ -44,25 +46,6 @@ class WorkspaceForm extends ContentEntityForm {
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit workspace %label', ['%label' => $workspace->label()]);
     }
-    $form['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#maxlength' => 255,
-      '#default_value' => $workspace->label(),
-      '#required' => TRUE,
-    ];
-
-    $form['id'] = [
-      '#type' => 'machine_name',
-      '#title' => $this->t('Workspace ID'),
-      '#maxlength' => 255,
-      '#default_value' => $workspace->id(),
-      '#disabled' => !$workspace->isNew(),
-      '#machine_name' => [
-        'exists' => '\Drupal\workspaces\Entity\Workspace::load',
-      ],
-      '#element_validate' => [],
-    ];
 
     return parent::form($form, $form_state);
   }
