@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -564,7 +565,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     // Checks whether entity render array with matching cache keys is being
     // recursively rendered. If not already being rendered, add an entry to track
     // that it is.
-    $recursion_key = implode(':', $build['#cache']['keys'] ?? []);
+    $recursion_key = $this->getRenderRecursionKey($build);
     if (isset($this->recursionKeys[$recursion_key])) {
       $this->getLogger('entity')
         ->error('Recursive rendering attempt aborted for %key. In progress: %guards', [
@@ -585,10 +586,41 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   public function unsetRecursiveRenderProtection(string $renderedEntity, array $build): string {
     // Removes rendered entity matching cache keys from recursive render
     // tracking, once the entity has been rendered.
-    $recursion_key = implode(':', $build['#cache']['keys'] ?? []);
+    $recursion_key = $this->getRenderRecursionKey($build);
     unset($this->recursionKeys[$recursion_key]);
 
     return $renderedEntity;
+  }
+
+  /**
+   * Generates a key for an entity render array for recursion protection.
+   *
+   * @param array $build
+   *   The entity render array.
+   *
+   * @return string
+   *   The key to ID the build array within recursion tracking.
+   */
+  protected function getRenderRecursionKey(array $build): string {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = $build['#' . $this->entityTypeId];
+    // If entity is new and has no ID, generate a unique random string.
+    if ($entity->id()) {
+      $entity_id = $entity->id();
+    }
+    else {
+      if (!$entity->_tempRecursionRenderId) {
+        $entity->_tempRecursionRenderId = (new Random())->string(8, TRUE);
+      }
+      $entity_id = $entity->_tempRecursionRenderId;
+    }
+    // It seems very unlikely that the same entity displayed in the same view
+    // mode would be recursively nested and meant to be displayed differently,
+    // so a key made up of the entity type ID, entity ID, and view mode should
+    // suffice for recursion detection
+    return $entity->getEntityTypeId()
+      . $entity_id
+      . $build['#view_mode'];
   }
 
 }
