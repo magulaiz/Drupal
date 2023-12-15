@@ -197,7 +197,6 @@ class SchemaCheckTraitTest extends KernelTestBase {
           7 => "[mapping_with_some_required_keys] 'north' is a required key.",
           8 => "[mapping_with_some_required_keys] 'south' is a required key.",
         ],
-        $expected_storage_type_check_errors + $expected_validation_errors,
       ],
     ];
 
