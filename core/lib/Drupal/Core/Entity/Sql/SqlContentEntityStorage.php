@@ -14,10 +14,10 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityBundleListenerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -505,8 +505,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     foreach ($values as $id => $entity_values) {
       $bundle = $this->bundleKey ? $entity_values[$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : NULL;
       // Turn the record into an entity class.
+      /** @var \Drupal\Core\Entity\ContentEntityInterface::class $entity_class */
       $entity_class = $this->getEntityClass($bundle);
-      $entities[$id] = new $entity_class($entity_values, $this->entityTypeId, $bundle, array_keys($translations[$id]));
+      $entities[$id] = $entity_class::createInstance($this->container, $entity_values, $this->entityTypeId, $bundle, array_keys($translations[$id]));
     }
 
     return $entities;
