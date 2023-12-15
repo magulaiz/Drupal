@@ -263,7 +263,7 @@ class ConfigureSectionForm extends FormBase {
   public function getCurrentSection(): Section {
     if (!isset($this->section)) {
       if ($this->isUpdate) {
-        $this->section = $this->sectionStorage->getSectionByDelta($this->delta);
+        $this->section = $this->sectionStorage->getSections()[$this->delta];
       }
       else {
         $this->section = (new Section($this->pluginId))->setUuid(\Drupal::service('uuid')->generate());

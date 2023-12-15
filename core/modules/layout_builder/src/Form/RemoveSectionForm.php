@@ -24,7 +24,7 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    $configuration = $this->sectionStorage->getSectionByDelta($this->delta)->getLayoutSettings();
+    $configuration = $this->sectionStorage->getSections()[$this->delta]->getLayoutSettings();
     // Layouts may choose to use a class that might not have a label
     // configuration.
     if (!empty($configuration['label'])) {
@@ -44,7 +44,7 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   protected function handleSectionStorage(SectionStorageInterface $section_storage, FormStateInterface $form_state) {
-    $section_storage->removeSection($section_storage->getSectionByDelta($this->delta)->getUuid());
+    $section_storage->removeSection($section_storage->getSections()[$this->delta]->getUuid());
   }
 
 }

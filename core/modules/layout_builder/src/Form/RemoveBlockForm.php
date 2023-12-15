@@ -32,7 +32,7 @@ class RemoveBlockForm extends LayoutRebuildConfirmFormBase {
    */
   public function getQuestion() {
     $label = $this->sectionStorage
-      ->getSectionByDelta($this->delta)
+      ->getSections()[$this->delta]
       ->getComponent($this->uuid)
       ->getPlugin()
       ->label();
@@ -67,7 +67,7 @@ class RemoveBlockForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   protected function handleSectionStorage(SectionStorageInterface $section_storage, FormStateInterface $form_state) {
-    $section_storage->getSectionByDelta($this->delta)->removeComponent($this->uuid);
+    $section_storage->getSections()[$this->delta]->removeComponent($this->uuid);
   }
 
 }
