@@ -12,13 +12,13 @@ interface PathMatcherInterface {
    *
    * @param string $path
    *   The path to match.
-   * @param string $patterns
-   *   A set of patterns separated by a newline.
+   * @param string|string[] $patterns
+   *   A single pattern, or set of patterns to match.
    *
    * @return bool
    *   TRUE if the path matches a pattern, FALSE otherwise.
    */
-  public function matchPath($path, $patterns);
+  public function matchPath(string $path, string|array $patterns): bool;
 
   /**
    * Checks if the current page is the front page.

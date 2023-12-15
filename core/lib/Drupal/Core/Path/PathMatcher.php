@@ -62,27 +62,36 @@ class PathMatcher implements PathMatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function matchPath($path, $patterns) {
-
-    if (!isset($this->regexes[$patterns])) {
-      // Convert path settings to a regular expression.
-      $to_replace = [
-        // Replace newlines with a logical 'or'.
-        '/(\r\n?|\n)/',
-        // Quote asterisks.
-        '/\\\\\*/',
-        // Quote <front> keyword.
-        '/(^|\|)\\\\<front\\\\>($|\|)/',
-      ];
-      $replacements = [
-        '|',
-        '.*',
-        '\1' . preg_quote($this->getFrontPagePath(), '/') . '\2',
-      ];
-      $patterns_quoted = preg_quote($patterns, '/');
-      $this->regexes[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
+  public function matchPath(string $path, string|array $patterns): bool {
+    if (is_string($patterns)) {
+      // Convert newlines to array.
+      $patterns = preg_split('/(\r\n?|\n)/', $patterns);
     }
-    return (bool) preg_match($this->regexes[$patterns], $path);
+
+    foreach ($patterns as $pattern) {
+      if (!isset($this->regexes[$pattern])) {
+        // Convert path settings to a regular expression.
+        $to_replace = [
+          // Replace newlines with a logical 'or'.
+          '/(\r\n?|\n)/',
+          // Quote asterisks.
+          '/\\\\\*/',
+          // Quote <front> keyword.
+          '/(^|\|)\\\\<front\\\\>($|\|)/',
+        ];
+        $replacements = [
+          '|',
+          '.*',
+          '\1' . preg_quote($this->getFrontPagePath(), '/') . '\2',
+        ];
+        $pattern_quoted = preg_quote($pattern, '/');
+        $this->regexes[$pattern] = '/^(' . preg_replace($to_replace, $replacements, $pattern_quoted) . ')$/';
+      }
+      if ((bool) preg_match($this->regexes[$pattern], $path)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**

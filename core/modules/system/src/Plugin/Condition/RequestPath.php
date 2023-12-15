@@ -145,6 +145,8 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     if (!$pages) {
       return TRUE;
     }
+    // Split pages into an array of patterns.
+    $patterns = preg_split('/(\r\n?|\n)/', $pages);
 
     $request = $this->requestStack->getCurrentRequest();
     // Compare the lowercase path alias (if any) and internal path.
@@ -153,7 +155,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     $path = $path === '/' ? $path : rtrim($path, '/');
     $path_alias = mb_strtolower($this->aliasManager->getAliasByPath($path));
 
-    return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
+    return $this->pathMatcher->matchPath($path_alias, $patterns) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $patterns));
   }
 
   /**

@@ -40,10 +40,10 @@ class PathMatcherTest extends UnitTestCase {
    *
    * @dataProvider getMatchPathData
    */
-  public function testMatchPath($patterns, $paths) {
+  public function testMatchPath(string|array $patterns, array $paths) {
     foreach ($paths as $path => $expected_result) {
       $actual_result = $this->pathMatcher->matchPath($path, $patterns);
-      $this->assertEquals($actual_result, $expected_result, "Tried matching the path '$path' to the pattern '$patterns'.");
+      $this->assertEquals($actual_result, $expected_result, sprintf("Tried matching the path '%s' to the pattern '%s'.", $path, json_encode($patterns)));
     }
   }
 
@@ -121,6 +121,18 @@ class PathMatcherTest extends UnitTestCase {
         ],
       ],
       [
+        // Multiple paths as an array.
+        ["/node/*", "/node/*/edit"],
+        [
+          '/node/1' => TRUE,
+          '/node/view' => TRUE,
+          '/node/32/edit' => TRUE,
+          '/node/delete/edit' => TRUE,
+          '/node/50/delete' => TRUE,
+          '/test/example' => FALSE,
+        ],
+      ],
+      [
         // Multiple paths with the \r delimiter.
         "/user/*\r/example/*",
         [
@@ -136,6 +148,15 @@ class PathMatcherTest extends UnitTestCase {
       [
         // Multiple paths with the \r\n delimiter.
         "/test\r\n<front>",
+        [
+          '/test' => TRUE,
+          '/dummy' => TRUE,
+          '/example' => FALSE,
+        ],
+      ],
+      [
+        // Multiple paths as array with <front>.
+        ["/test", "<front>"],
         [
           '/test' => TRUE,
           '/dummy' => TRUE,
