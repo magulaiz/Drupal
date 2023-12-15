@@ -32,8 +32,8 @@
   }
 
   /* When the layout has vertical tabs */
-  .layout-region--main:has(.vertical-tabs),
-  .layout-region--main:has(.vertical-tabs) ~ .layout-region--footer {
+  .layout-region--node-main:has(.vertical-tabs),
+  .layout-region--node-main:has(.vertical-tabs) ~ .layout-region--node-footer {
     width: var(--layout-region-edit-extended-width);
   }
 
