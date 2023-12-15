@@ -47,4 +47,5 @@ function drupal_rebuild($class_loader, Request $request) {
   // @see \Drupal\Core\DrupalKernel::boot()
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');
+  drupal_register_shutdown_function('_drupal_shutdown_handler');
 }
