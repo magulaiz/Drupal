@@ -495,7 +495,6 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $media_field = $assert_session->elementExists('css', '.field--name-field-unlimited-media #field_unlimited_media-media-library-wrapper');
     $this->assertTrue($media_field->hasClass('error'));
 
-
     // Open the media library, select an item and save the node.
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->selectMediaItem(0);
