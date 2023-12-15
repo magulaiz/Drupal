@@ -4,7 +4,6 @@ namespace Drupal\workspaces\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -69,55 +68,8 @@ class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit workspace %label', ['%label' => $workspace->label()]);
     }
-    $form['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#maxlength' => 255,
-      '#default_value' => $workspace->label(),
-      '#required' => TRUE,
-    ];
-
-    $form['id'] = [
-      '#type' => 'machine_name',
-      '#title' => $this->t('Workspace ID'),
-      '#maxlength' => 255,
-      '#default_value' => $workspace->id(),
-      '#disabled' => !$workspace->isNew(),
-      '#machine_name' => [
-        'exists' => '\Drupal\workspaces\Entity\Workspace::load',
-      ],
-      '#element_validate' => [],
-    ];
 
     return parent::form($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditedFieldNames(FormStateInterface $form_state) {
-    return array_merge([
-      'label',
-      'id',
-    ], parent::getEditedFieldNames($form_state));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function flagViolations(EntityConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
-    // Manually flag violations of fields not handled by the form display. This
-    // is necessary as entity form displays only flag violations for fields
-    // contained in the display.
-    $field_names = [
-      'label',
-      'id',
-    ];
-    foreach ($violations->getByFields($field_names) as $violation) {
-      [$field_name] = explode('.', $violation->getPropertyPath(), 2);
-      $form_state->setErrorByName($field_name, $violation->getMessage());
-    }
-    parent::flagViolations($violations, $form, $form_state);
   }
 
   /**

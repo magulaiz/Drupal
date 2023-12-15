@@ -76,21 +76,23 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests creating a workspace with special characters.
    */
-  public function testSpecialCharacters() {
+  public function testWorkspaceCreate() {
     $this->drupalLogin($this->editor1);
-
-    // Test a valid workspace name.
-    $this->createWorkspaceThroughUi('Workspace 1', 'a0_$()+-/');
-
-    // Test and invalid workspace name.
-    $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->assertSession()->statusCodeEquals(200);
-
     $page = $this->getSession()->getPage();
-    $page->fillField('label', 'workspace2');
-    $page->fillField('id', 'A!"£%^&*{}#~@?');
-    $page->findButton('Save')->click();
-    $page->hasContent("This value is not valid");
+
+    // Test a valid workspace ID.
+    $workspace = $this->createWorkspaceThroughUi('Workspace 1', 'workspace_1');
+    $this->assertEquals('workspace_1', $workspace->id());
+
+    // Test an invalid workspace ID.
+    $workspace = $this->createWorkspaceThroughUi('Workspace 2', 'workspace A@-');
+    $this->assertNull($workspace);
+    $this->assertTrue($page->hasContent('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+    $page = $this->getSession()->getPage();
+
+    // Test a duplicate workspace ID.
+    $this->createWorkspaceThroughUi('Workspace 1 again', 'workspace_1');
+    $this->assertTrue($page->hasContent('A workspace with Workspace ID workspace_1 already exists.'));
   }
 
   /**
@@ -99,11 +101,7 @@ class WorkspaceTest extends BrowserTestBase {
   public function testWorkspaceToolbar() {
     $this->drupalLogin($this->editor1);
 
-    $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm([
-      'id' => 'test_workspace',
-      'label' => 'Test workspace',
-    ], 'Save');
+    $this->createWorkspaceThroughUi('Test workspace', 'test_workspace');
 
     // Activate the test workspace.
     $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/activate');
@@ -116,7 +114,7 @@ class WorkspaceTest extends BrowserTestBase {
 
     // Change the workspace label.
     $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/edit');
-    $this->submitForm(['label' => 'New name'], 'Save');
+    $this->submitForm(['label[0][value]' => 'New name'], 'Save');
 
     $this->drupalGet('<front>');
     $page = $this->getSession()->getPage();
@@ -130,11 +128,7 @@ class WorkspaceTest extends BrowserTestBase {
   public function testWorkspaceOwner() {
     $this->drupalLogin($this->editor1);
 
-    $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm([
-      'id' => 'test_workspace',
-      'label' => 'Test workspace',
-    ], 'Save');
+    $this->createWorkspaceThroughUi('Test workspace', 'test_workspace');
 
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
     $test_workspace = $storage->load('test_workspace');
@@ -306,11 +300,7 @@ class WorkspaceTest extends BrowserTestBase {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->drupalLogin($this->rootUser);
 
-    $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm([
-      'id' => 'test_workspace',
-      'label' => 'Test workspace',
-    ], 'Save');
+    $this->createWorkspaceThroughUi('Test workspace', 'test_workspace');
 
     // Activate the test workspace.
     $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/activate');
