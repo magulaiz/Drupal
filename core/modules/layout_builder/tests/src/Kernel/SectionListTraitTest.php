@@ -69,8 +69,19 @@ class TestSectionList implements SectionListInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
-    return $this->sections;
+  public function getSections(bool $key_by_uuid = FALSE) {
+    $sections = $this->sections;
+    if ($key_by_uuid) {
+      return $sections;
+    }
+    else {
+      $sections_numerically_keyed = [];
+      /** @var Section $section */
+      foreach ($sections as $section){
+        $sections_numerically_keyed[$section->getWeight()] = $section;
+      }
+      return $sections_numerically_keyed;
+    }
   }
 
 }

@@ -101,12 +101,22 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
+  public function getSections(bool $key_by_uuid = FALSE) {
     if (is_null($this->sections)) {
       $sections = $this->configFactory->get($this->getConfigName())->get('sections') ?: [];
       $this->setSections(array_map([Section::class, 'fromArray'], $sections));
     }
-    return $this->sections;
+    if ($key_by_uuid) {
+      return $this->sections;
+    }
+    else {
+      $sections_numerically_keyed = [];
+      /** @var Section $section */
+      foreach ($this->sections as $section){
+        $sections_numerically_keyed[$section->getWeight()] = $section;
+      }
+      return $sections_numerically_keyed;
+    }
   }
 
   /**

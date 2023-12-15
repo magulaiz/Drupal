@@ -46,8 +46,8 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
-    return $this->getSectionList()->getSections();
+  public function getSections(bool $key_by_uuid = FALSE) {
+    return $this->getSectionList()->getSections($key_by_uuid);
   }
 
   /**
