@@ -83,6 +83,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       ],
       '#attributes' => [
         'id' => 'image-style-effects',
+        'data-drag-orientation' => 'drag-y',
       ],
       '#empty' => $this->t('There are currently no effects in this style. Add one by selecting an option below.'),
       // Render effects below parent elements.

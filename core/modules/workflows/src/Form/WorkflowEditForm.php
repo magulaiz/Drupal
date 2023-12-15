@@ -96,6 +96,9 @@ class WorkflowEditForm extends EntityForm {
           'group' => 'state-weight',
         ],
       ],
+      '#attributes' => [
+        'data-drag-orientation' => 'drag-y',
+      ],
     ];
 
     $states = $workflow->getTypePlugin()->getStates();
@@ -172,6 +175,9 @@ class WorkflowEditForm extends EntityForm {
           'relationship' => 'sibling',
           'group' => 'transition-weight',
         ],
+      ],
+      '#attributes' => [
+        'data-drag-orientation' => 'drag-y',
       ],
     ];
 

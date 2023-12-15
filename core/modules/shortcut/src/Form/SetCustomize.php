@@ -35,7 +35,10 @@ class SetCustomize extends EntityForm {
       '#type' => 'table',
       '#header' => [$this->t('Name'), $this->t('Weight'), $this->t('Operations')],
       '#empty' => $this->t('No shortcuts available. <a href=":link">Add a shortcut</a>', [':link' => Url::fromRoute('shortcut.link_add', ['shortcut_set' => $this->entity->id()])->toString()]),
-      '#attributes' => ['id' => 'shortcuts'],
+      '#attributes' => [
+        'id' => 'shortcuts',
+        'data-drag-orientation' => 'drag-y',
+      ],
       '#tabledrag' => [
         [
           'action' => 'order',
