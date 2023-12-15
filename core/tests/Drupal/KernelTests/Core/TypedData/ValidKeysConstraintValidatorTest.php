@@ -47,6 +47,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       'plugin' => 'system_branding_block',
       'theme' => 'stark',
       'status' => TRUE,
+      'weight' => 0,
+      'provider' => 'system',
       'settings' => [
         'use_site_logo' => TRUE,
         'use_site_name' => TRUE,
