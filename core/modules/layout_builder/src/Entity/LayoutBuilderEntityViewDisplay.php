@@ -250,7 +250,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function getDefaultRegion() {
     if ($this->hasSection(0)) {
-      return $this->getSectionByDelta(0)->getDefaultRegion();
+      return $this->getSections()[0]->getDefaultRegion();
     }
 
     return parent::getDefaultRegion();
@@ -471,7 +471,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     }
 
     // Return the first section.
-    return $this->getSectionByDelta(0);
+    return $this->getSections()[0];
   }
 
   /**

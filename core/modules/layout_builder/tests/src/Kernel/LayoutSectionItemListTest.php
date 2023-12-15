@@ -54,12 +54,12 @@ class LayoutSectionItemListTest extends SectionListTestBase {
    * @covers ::equals
    */
   public function testEquals() {
-    $this->sectionList->getSectionByDelta(0)->setLayoutSettings(['foo' => 1]);
+    $this->sectionList->getSections()[0]->setLayoutSettings(['foo' => 1]);
 
     $second_section_storage = clone $this->sectionList;
     $this->assertTrue($this->sectionList->equals($second_section_storage));
 
-    $second_section_storage->getSectionByDelta(0)->setLayoutSettings(['foo' => '1']);
+    $second_section_storage->getSections()[0]->setLayoutSettings(['foo' => '1']);
     $this->assertFalse($this->sectionList->equals($second_section_storage));
   }
 

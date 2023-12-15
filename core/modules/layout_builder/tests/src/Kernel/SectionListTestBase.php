@@ -98,22 +98,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   }
 
   /**
-   * @covers ::getSectionByDelta
-   */
-  public function testGetSectionByDelta() {
-    $this->assertInstanceOf(Section::class, $this->sectionList->getSectionByDelta(0));
-  }
-
-  /**
-   * @covers ::getSectionByDelta
-   */
-  public function testGetSectionByDeltaInvalidDelta() {
-    $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid delta "2"');
-    $this->sectionList->getSectionByDelta(2);
-  }
-
-  /**
    * @covers ::getSection
    */
   public function testGetSectionInvalidUuid() {
@@ -130,7 +114,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testGetSectionWithDelta() {
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('Invalid uuid "0"');
-    $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid or if you want to get section by delta then use \Drupal\layout_builder\SectionListTrait::getSectionByDelta($delta). See https://www.drupal.org/node/3401886');
+    $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886');
     $this->sectionList->getSection(0);
   }
 
@@ -185,7 +169,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       $this->sectionList->removeAllSections();
     }
     elseif ($set_blank === TRUE) {
-      $expected = [$this->sectionList->removeAllSections($set_blank)->getSectionByDelta(0)];
+      $expected = [$this->sectionList->removeAllSections($set_blank)->getSections()[0]];
     }
     else {
       $this->sectionList->removeAllSections($set_blank);
@@ -241,7 +225,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testRemoveMultipleSections() {
     $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
     $this->sectionList->removeSection('22000000-0000-1000-a000-000000000000');
-    $expected = $this->sectionList->getSectionByDelta(0);
+    $expected = $this->sectionList->getSections()[0];
     $this->assertSections([$expected]);
   }
 
@@ -249,11 +233,11 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * Tests __clone().
    */
   public function testClone() {
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSectionByDelta(0)->getLayoutSettings());
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections()[0]->getLayoutSettings());
 
     $new_section_storage = clone $this->sectionList;
-    $new_section_storage->getSectionByDelta(0)->setLayoutSettings(['asdf' => 'qwer']);
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSectionByDelta(0)->getLayoutSettings());
+    $new_section_storage->getSections()[0]->setLayoutSettings(['asdf' => 'qwer']);
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections()[0]->getLayoutSettings());
   }
 
   /**
