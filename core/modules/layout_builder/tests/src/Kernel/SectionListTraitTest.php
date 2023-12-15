@@ -76,8 +76,7 @@ class TestSectionList implements SectionListInterface {
     }
     else {
       $sections_numerically_keyed = [];
-      /** @var Section $section */
-      foreach ($sections as $section){
+      foreach ($sections as $section) {
         $sections_numerically_keyed[$section->getWeight()] = $section;
       }
       return $sections_numerically_keyed;

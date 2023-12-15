@@ -87,7 +87,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       ]))->setUuid('22000000-0000-1000-a000-000000000000')
         ->setWeight(1),
     ];
-    $this->assertSections($expected,TRUE);
+    $this->assertSections($expected, TRUE);
   }
 
   /**
