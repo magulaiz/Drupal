@@ -242,8 +242,8 @@ class ImageItem extends FileItem {
       '#default_value' => $settings['resize_policy'] ?? FALSE,
       '#weight' => 4.11,
       '#options' => [
-        'resize_larger_images' => $this->t('Resize larger images in a proportional way'),
-        'reject_larger_images_with_error' => $this->t('Reject larger images with an error message'),
+        'resize_larger_images' => $this->t('Resize proportionally'),
+        'reject_larger_images_with_error' => $this->t('Reject'),
       ],
       '#states' => [
         'visible' => [
