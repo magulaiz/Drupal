@@ -186,6 +186,12 @@ class MenuAccessTest extends BrowserTestBase {
       'access child2 test page',
       'access grand child3 test page',
     ]);
+    $greatGrandChild1User = $this->drupalCreateUser([
+      'access parent test page',
+      'access child1 test page',
+      'access grand child1 test page',
+      'access great grand child1 test page',
+    ]);
     $noParentAccessUser = $this->drupalCreateUser([
       'access child1 test page',
       'access child2 test page',
@@ -209,12 +215,16 @@ class MenuAccessTest extends BrowserTestBase {
       array_diff($tree_routes, ['menu_test.parent_test','menu_test.child3_test_block', 'menu_test.child4_test_overview']),
       $tree_routes
     );
+
     // @todo Add comment about grand child logic with overview.
     $this->assertUserRoutesAccess(
       $grandChild1User,
+      [],
+      $tree_routes);
+    $this->assertUserRoutesAccess(
+      $greatGrandChild1User,
       ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.grand_child1_test'],
       $tree_routes);
-    $this->assertSame('asdf', 'asdf1');
     // Users who have only access to one grand child route should have access
     // only to that route and its parents.
     $this->assertUserRoutesAccess(
@@ -349,8 +359,10 @@ class MenuAccessTest extends BrowserTestBase {
       }
     }
     $debug = fn($accessibleRoutes, $inaccessibleRoutes) => "\nAccessible routes: " . implode(', ', $accessibleRoutes) . "\nInaccessible routes: " . implode(', ', $inaccessibleRoutes);
-    $this->assertSame($debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes), $debug($actualAccessibleRoutes, $actualInaccessibleRoutes));
-
+    $expected = $debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes);
+    $actual = $debug($actualAccessibleRoutes, $actualInaccessibleRoutes);
+    $this->assertSession()->assert($expected === $actual, "Routes do not match. \nExpected routes:$expected\nActual routes: $actual");
+    //$this->assertSame($debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes), $debug($actualAccessibleRoutes, $actualInaccessibleRoutes));
   }
 
 }
