@@ -150,7 +150,7 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {
@@ -381,24 +381,21 @@ class FieldStorageAddForm extends FormBase {
    */
   protected function validateAddNew(array $form, FormStateInterface $form_state) {
     // Validate if any information was provided in the 'add new field' case.
-    if ($form_state->getValue('new_storage_type')) {
-      // Missing label.
-      if (!$form_state->getValue('label')) {
-        $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
-      }
+    // Missing label.
+    if (!$form_state->getValue('label')) {
+      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
+    }
+    // Missing field name.
+    if (!$form_state->getValue('field_name')) {
+      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
+    }
+    // Field name validation.
+    else {
+      $field_name = $form_state->getValue('field_name');
 
-      // Missing field name.
-      if (!$form_state->getValue('field_name')) {
-        $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-      }
-      // Field name validation.
-      else {
-        $field_name = $form_state->getValue('field_name');
-
-        // Add the field prefix.
-        $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
-        $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
-      }
+      // Add the field prefix.
+      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
+      $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
     }
   }
 
