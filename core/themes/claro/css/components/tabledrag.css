@@ -229,7 +229,7 @@ body.drag {
 }
 
 .tabledrag-cell-content .tree {
-  min-height: 100%;
+  flex-grow: 1;
 }
 
 .tabledrag-cell-content .tabledrag-handle::after {
@@ -265,6 +265,7 @@ body.drag {
   /* Fixes Safari bug (16.1 at least) where table rows are overly large when
       using indentation (e.g. re-ordering menu items. */
   display: inline-flex;
+  flex-direction: column;
   float: none;
   overflow: hidden;
   height: 100%;
