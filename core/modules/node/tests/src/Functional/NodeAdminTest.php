@@ -236,7 +236,7 @@ class NodeAdminTest extends NodeTestBase {
   }
 
   /**
-   * Tests content admin page multilingual.
+   * Tests content admin page for multilingual site.
    */
   public function testContentAdminPageMultilingual() {
     $this->drupalLogin($this->adminUser);
@@ -244,7 +244,7 @@ class NodeAdminTest extends NodeTestBase {
     \Drupal::service('module_installer')->install(['language']);
     ConfigurableLanguage::create([
       'id' => 'es',
-      'label' => 'Spain',
+      'label' => 'Spainish',
     ])->save();
 
     $this->drupalCreateNode(['type' => 'page', 'title' => 'English title'])

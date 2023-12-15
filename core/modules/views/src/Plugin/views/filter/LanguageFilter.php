@@ -74,7 +74,7 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
   public function query() {
     // Don't filter by language in case the site is not multilingual, because
     // there is no point in doing so.
-    if (!$this->languageManager->isMultilingual() || !$this->access($this->view->getUser())) {
+    if (!$this->languageManager->isMultilingual()) {
       return;
     }
 
@@ -85,8 +85,12 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    // Check if the user has access to the language filter.
-    return $this->languageManager->isMultilingual() && parent::access($account);
+    if (!parent::access($account)) {
+      return FALSE;
+    }
+    // The user will have access to the language filter only if the site is
+    // multilingual.
+    return $this->languageManager->isMultilingual();
   }
 
 }
