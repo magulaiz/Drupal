@@ -32,20 +32,6 @@
   --size-summary-border-radius: calc(var(--details-border-size-radius) - var(--details-border-size));
   --summary-accordion-padding-vertical: calc(var(--space-l) + ((var(--space-m) - var(--space-l)) / 2));
   --summary-accordion-line-height: var(--space-l);
-  --details-bg-color: rgba(243, 244, 249, 0.4);
-  --details-border-color: var(--color-gray-100);
-  --details-summary-shadow-color: var(--color-focus);
-  --details-summary-focus-border-size: var(--focus-border-size);
-  --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));
-  --details-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --details-border-size: 1px;
-  --details-border-size-radius: 2px;
-  --details-accordion-border-size-radius: var(--base-border-radius);
-  --details-spread-box-shadow-radius: 2px;
-  --details-bg-color-transition-duration: 0.12s;
-  --details-box-shadow-transition-duration: 0.2s;
-  --details-transform-transition-duration: 0.12s;
-  --details-line-height: 1.295rem;
 }
 
 .claro-details {
