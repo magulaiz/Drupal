@@ -3,10 +3,11 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workspaces\Entity\Handler\BlockContentWorkspaceHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,30 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityTypeInfo implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager service.
+   * The workspace information service.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\workspaces\WorkspaceInformationInterface
    */
-  protected $entityTypeManager;
-
-  /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
+  protected $workspaceInfo;
 
   /**
    * Constructs a new EntityTypeInfo instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
-   *   The workspace manager service.
+   * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
+   *   The workspace information service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(WorkspaceInformationInterface $workspace_information) {
+    $this->workspaceInfo = $workspace_information;
   }
 
   /**
@@ -51,13 +42,12 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager'),
-      $container->get('workspaces.manager')
+      $container->get('workspaces.information')
     );
   }
 
   /**
-   * Adds the "EntityWorkspaceConflict" constraint to eligible entity types.
+   * Adds workspace support info to eligible entity types.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   An associative array of all entity type definitions, keyed by the entity
@@ -67,9 +57,26 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    */
   public function entityTypeBuild(array &$entity_types) {
     foreach ($entity_types as $entity_type) {
-      if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
+      if ($entity_type->entityClassImplements(EntityPublishedInterface::class) && $entity_type->isRevisionable()) {
+        if (!$entity_type->get('workspace')) {
+          // Revisionable and publishable entity types are always supported.
+          $entity_type->set('workspace', WorkspaceInformationInterface::SUPPORTED);
+
+          // Support for custom blocks has to be determined on a per-entity basis.
+          if ($entity_type->id() === 'block_content') {
+            $entity_type->set('workspace', WorkspaceInformationInterface::SUPPORTED_CUSTOM);
+            $entity_type->setHandlerClass('workspace', BlockContentWorkspaceHandler::class);
+          }
+        }
+
         $entity_type->addConstraint('EntityWorkspaceConflict');
         $entity_type->setRevisionMetadataKey('workspace', 'workspace');
+      }
+
+      // Internal entity types are allowed to perform CRUD operations inside a
+      // workspace.
+      if ($entity_type->isInternal() && !$entity_type->get('workspace')) {
+        $entity_type->set('workspace', WorkspaceInformationInterface::IGNORED);
       }
     }
   }
@@ -123,7 +130,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @see hook_entity_base_field_info()
    */
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
-    if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
+    if ($this->workspaceInfo->isEntityTypeSupported($entity_type)) {
       $field_name = $entity_type->getRevisionMetadataKey('workspace');
       $fields[$field_name] = BaseFieldDefinition::create('entity_reference')
         ->setLabel(new TranslatableMarkup('Workspace'))
