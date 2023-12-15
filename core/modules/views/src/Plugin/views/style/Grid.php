@@ -14,8 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "grid",
  *   title = @Translation("Grid"),
  *   help = @Translation("Displays rows in a grid."),
- *   theme = "views_view_grid",
- *   display_types = {"normal"}
+ *   theme = "views_view_grid"
  * )
  */
 class Grid extends StylePluginBase {

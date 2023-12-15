@@ -13,8 +13,7 @@ namespace Drupal\views\Plugin\views\style;
  *   id = "default",
  *   title = @Translation("Unformatted list"),
  *   help = @Translation("Displays rows one after another."),
- *   theme = "views_view_unformatted",
- *   display_types = {"normal"}
+ *   theme = "views_view_unformatted"
  * )
  */
 class DefaultStyle extends StylePluginBase {

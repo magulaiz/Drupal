@@ -53,7 +53,7 @@ class DisplayFeedTest extends UITestBase {
     // all displays.
     $this->assertSession()->pageTextContains($view_name);
 
-    // Check the attach TO interface.
+    // Check the attach-to interface.
     $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
     // Display labels should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
@@ -85,6 +85,13 @@ class DisplayFeedTest extends UITestBase {
     $this->submitForm(['displays[default]' => 'default'], 'Apply');
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');
     $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Multiple displays');
+
+    // Check the available row options only contain feed plugins.
+    $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/row');
+    $this->assertSession()->fieldExists('edit-row-type-rss-fields');
+    $this->assertSession()->fieldExists('edit-row-type-opml-fields');
+    // The standard 'fields' row plugin should not be available.
+    $this->assertSession()->fieldNotExists('edit-row-type-fields');
   }
 
 }
