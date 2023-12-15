@@ -28,7 +28,7 @@
   .layout-region--footer {
     grid-column: 1;
     margin-inline: auto;
-    width: min(52rem, 100%);
+    width: min(65rem, 100%);
   }
 
   /* Push sidebar down to horizontal align with form section. */
