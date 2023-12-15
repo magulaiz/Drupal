@@ -80,7 +80,6 @@ class MenuAccessTest extends BrowserTestBase {
    * @covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
    */
   public function testSystemAdminMenuBlockAccessCheck(): void {
-    $this->assertSession()->assert(TRUE, 'asdf');
     // Create an admin user.
     $adminUser = $this->drupalCreateUser([], NULL, TRUE);
 
@@ -203,7 +202,6 @@ class MenuAccessTest extends BrowserTestBase {
 
     // Users that do not have access to any of the 'grand_child' routes will
     // not have access to any of the routes in the tree.
-    //print_r($tree_routes);
     $this->assertUserRoutesAccess($parentUser, [], $tree_routes);
     $this->assertUserRoutesAccess($childOnlyUser, [], $tree_routes);
     // A user that does not have access to the top level parent but has access
@@ -314,16 +312,14 @@ class MenuAccessTest extends BrowserTestBase {
     }
   }
 
-  protected function zzdrupalGet(
-    $path,
-    array $options = [],
-    array $headers = []
-  ) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function drupalGet($path, array $options = [], array $headers = []) {
     $return = parent::drupalGet($path, $options, $headers);
     $this->assertSession()->pageTextNotContains('You do not have any administrative items.');
     return $return;
   }
-
 
   /**
    * Asserts which routes a user has access to.
@@ -332,7 +328,7 @@ class MenuAccessTest extends BrowserTestBase {
    *   The user account for which to check access.
    * @param array $expectedAccessibleRoutes
    *   The routes the user should have access to.
-   * @param string ...$allRoutes
+   * @param array  $allRoutes
    *   The routes to check.
    */
   private function assertUserRoutesAccess(AccountInterface $user, array $expectedAccessibleRoutes, array $allRoutes): void {
@@ -342,8 +338,7 @@ class MenuAccessTest extends BrowserTestBase {
     $actualAccessibleRoutes = [];
     $actualInaccessibleRoutes = [];
     foreach ($allRoutes as $route) {
-      $this->drupalGet(Url::fromRoute($route)->toString());
-      //$this->drupalGet(Url::fromRoute($route));
+      $this->drupalGet(Url::fromRoute($route));
       switch ($this->getSession()->getStatusCode()) {
         case 200:
           $actualAccessibleRoutes[] = $route;
@@ -354,7 +349,7 @@ class MenuAccessTest extends BrowserTestBase {
           break;
 
         default:
-          //throw new \UnexpectedValueException("Unexpected status code {$this->getStatus()} for route $route");
+          throw new \UnexpectedValueException("Unexpected status code {$this->getStatus()} for route $route");
 
       }
     }
@@ -362,7 +357,6 @@ class MenuAccessTest extends BrowserTestBase {
     $expected = $debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes);
     $actual = $debug($actualAccessibleRoutes, $actualInaccessibleRoutes);
     $this->assertSession()->assert($expected === $actual, "Routes do not match. \nExpected routes:$expected\nActual routes: $actual");
-    //$this->assertSame($debug($expectedAccessibleRoutes, $expectedInaccessibleRoutes), $debug($actualAccessibleRoutes, $actualInaccessibleRoutes));
   }
 
 }
