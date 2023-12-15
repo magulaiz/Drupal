@@ -141,13 +141,13 @@
     content: "";
   }
   .ui-dialog .ui-icon.ui-icon-closethick::before {
-    top: -40%;
-    left: 60%;
+    top: -39%;
+    left: 62%;
     transform: rotate(45deg);
     border-bottom: 2px white solid;
   }
   .ui-dialog .ui-icon.ui-icon-closethick::after {
-    top: -78%;
+    top: -77%;
     left: 60%;
     transform: rotate(-45deg);
     border-top: 2px white solid;
