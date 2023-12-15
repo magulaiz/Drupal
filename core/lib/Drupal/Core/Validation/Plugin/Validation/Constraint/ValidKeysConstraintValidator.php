@@ -9,7 +9,6 @@ use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
@@ -38,25 +37,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     assert($mapping instanceof Mapping);
     $resolved_type = $mapping->getDataDefinition()->getDataType();
 
-    if ($constraint->allowedKeys === '<infer>') {
-      $valid_keys = $mapping->getValidKeys();
-    }
-    elseif (is_array($constraint->allowedKeys)) {
-      $valid_keys = $mapping->getValidKeys();
-      if (!empty(array_diff($constraint->allowedKeys, $valid_keys))) {
-        throw new InvalidArgumentException(sprintf(
-          'The type \'%s\' explicitly specifies the allowed keys (%s), but they are not a subset of the statically defined mapping keys in the schema (%s).',
-          $resolved_type,
-          implode(', ', $constraint->allowedKeys),
-          implode(', ', $valid_keys)
-        ));
-      }
-      $valid_keys = array_intersect($valid_keys, $constraint->allowedKeys);
-    }
-    else {
-      throw new InvalidArgumentException("'$constraint->allowedKeys' is not a valid set of allowed keys.");
-    }
-
+    $valid_keys = $constraint->getAllowedKeys($this->context);
     $dynamically_valid_keys = $mapping->getDynamicallyValidKeys();
     $all_dynamically_valid_keys = array_merge(...array_values($dynamically_valid_keys));
 
