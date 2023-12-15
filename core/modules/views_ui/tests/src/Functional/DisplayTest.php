@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Core\Template\Attribute;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
@@ -228,17 +229,21 @@ class DisplayTest extends UITestBase {
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
       $escaped = views_ui_truncate($input, 25);
-      $this->assertSession()->assertEscaped($escaped);
+      $this->assertSession()->responseContains($escaped);
       $this->assertSession()->responseNotContains($xss_markup);
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
-      $this->assertSession()->assertEscaped("View $escaped");
+      $this->assertSession()->responseContains("View $escaped");
       $this->assertSession()->responseNotContains("View $xss_markup");
-      $this->assertSession()->assertEscaped("Duplicate $escaped");
+      // Button attribute value truncated and escaped.
+      $attribute_escaped = new Attribute(['value' => $escaped]);
+      $this->assertSession()->responseContains('Duplicate ' . $attribute_escaped['value']);
       $this->assertSession()->responseNotContains("Duplicate $xss_markup");
-      $this->assertSession()->assertEscaped("Delete $escaped");
+      $this->assertSession()->responseContains('Delete ' . $attribute_escaped['value']);
       $this->assertSession()->responseNotContains("Delete $xss_markup");
     }
+    // Check there are no alerts on the page.
+    $this->assertSession()->responseNotContains('<script>alert');
   }
 
   /**
