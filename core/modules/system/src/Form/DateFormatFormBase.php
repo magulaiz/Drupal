@@ -78,6 +78,7 @@ abstract class DateFormatFormBase extends EntityForm {
       '#title' => 'Name',
       '#maxlength' => 100,
       '#description' => $this->t('Name of the date format'),
+      '#required' => TRUE,
       '#default_value' => $this->entity->label(),
     ];
 
