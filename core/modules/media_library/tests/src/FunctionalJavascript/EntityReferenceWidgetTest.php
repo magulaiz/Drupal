@@ -490,7 +490,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains(sprintf('%s field is required.', $field_config->label()));
 
     // Check if 'error' class has been added to media field.
-    $media_field = $assert_session->elementExists('css', '.field--name-field-unlimited-media #field_unlimited_media-media-library-wrapper');
+    $media_field = $assert_session->elementExists('css', '#field_unlimited_media-media-library-wrapper');
     $this->assertTrue($media_field->hasClass('error'));
 
     // Open the media library, select an item and save the node.
