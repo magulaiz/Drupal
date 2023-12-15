@@ -210,7 +210,7 @@ class MenuAccessTest extends BrowserTestBase {
     // menu.
     $this->assertUserRoutesAccess(
       $noParentAccessUser,
-      array_diff($tree_routes, ['menu_test.parent_test','menu_test.child3_test_block', 'menu_test.child4_test_overview']),
+      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test_block', 'menu_test.child4_test_overview']),
       $tree_routes
     );
 
@@ -328,7 +328,7 @@ class MenuAccessTest extends BrowserTestBase {
    *   The user account for which to check access.
    * @param array $expectedAccessibleRoutes
    *   The routes the user should have access to.
-   * @param array  $allRoutes
+   * @param array $allRoutes
    *   The routes to check.
    */
   private function assertUserRoutesAccess(AccountInterface $user, array $expectedAccessibleRoutes, array $allRoutes): void {
