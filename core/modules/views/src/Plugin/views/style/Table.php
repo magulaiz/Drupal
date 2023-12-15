@@ -453,14 +453,17 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
   /**
    * Return the token replaced caption.
+   * 
+   * @param integer $row_index
+   *   Index of the row to get tokens from.
    *
    * @return string
    *   A stripped tokenized caption.
    */
-  public function getCaption() {
+  public function getCaption($row_index) {
     $caption = $this->options['caption'];
     if ($this->usesTokens() && $this->usesFields() && $this->view->field) {
-      $caption = strip_tags($this->tokenizeValue($caption, 0));
+      $caption = strip_tags($this->tokenizeValue($caption, $row_index));
     }
 
     return $caption;
