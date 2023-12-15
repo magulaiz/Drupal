@@ -72,6 +72,43 @@
       });
     }
   };
+  behaviors.layoutBuilderMapSectionRegions = {
+    attach: function attach(context) {
+      var regionMapperSelector = '.js-layout-builder-region-mapping';
+      Array.prototype.forEach.call(context.querySelectorAll(regionMapperSelector), function (regionMapper) {
+        var $valuesElement = $('[data-drupal-selector="edit-region-mapping-values"]', regionMapper).hide();
+        var $visualElement = $('[data-drupal-selector="edit-region-mapping-visual"]', regionMapper);
+        var $toggleWrapper = $(Drupal.theme('layoutBuilderMapSectionRegionsToggle'));
+        var $toggleButton = $toggleWrapper.find('[data-drupal-selector="layout-builder-region-mapping-toggle"]');
+        $toggleButton.get(0).textContent = Drupal.t('Toggle visual region mapper');
+        var visual = true;
+        $toggleButton.click(function (evt) {
+          visual = !visual;
+          $visualElement.toggle(visual);
+          $valuesElement.toggle(!visual);
+        });
+        $toggleWrapper.insertAfter($(regionMapper).find('legend'));
+        var regionSelector = '.js-layout-builder-region-mapping-region';
+        Array.prototype.forEach.call(regionMapper.querySelectorAll(regionSelector), function (region) {
+          Sortable.create(region, {
+            draggable: '.js-layout-builder-region-mapping-block',
+            ghostClass: 'ui-state-drop',
+            group: 'builder-region-mapping',
+            onEnd: function onEnd(event) {
+              var oldRegion = event.item.getAttribute('data-old-region');
+              var newRegion = event.to.getAttribute('data-new-region');
+              $("select[data-region=\"".concat(oldRegion, "\"]")).get(0).value = newRegion;
+            }
+          });
+        });
+      });
+    }
+  };
+
+  Drupal.theme.layoutBuilderMapSectionRegionsToggle = function () {
+    return "<div class=\"layout_builder__region-mapping__toggle-wrapper\" data-drupal-selector=\"layout-builder-region-mapping-toggle-wrapper\">\n      <button type=\"button\" class=\"link layout_builder__region-mapping__toggle\" data-drupal-selector=\"layout-builder-region-mapping-toggle\"></button>\n    </div>";
+  };
+
   behaviors.layoutBuilderDisableInteractiveElements = {
     attach: function attach() {
       var $blocks = $('#layout-builder [data-layout-block-uuid]');
