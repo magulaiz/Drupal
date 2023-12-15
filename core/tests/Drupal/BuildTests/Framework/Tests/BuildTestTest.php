@@ -90,10 +90,13 @@ class BuildTestTest extends BuildTestBase {
     // Mock BuildTestBase so that it thinks our VFS is the Drupal root.
     /** @var \PHPUnit\Framework\MockObject\MockBuilder|\Drupal\BuildTests\Framework\BuildTestBase $base */
     $base = $this->getMockBuilder(BuildTestBase::class)
-      ->onlyMethods(['getDrupalRoot'])
+      ->onlyMethods(['getDrupalRoot', 'getComposerRoot'])
       ->getMockForAbstractClass();
-    $base->expects($this->exactly(2))
+    $base->expects($this->exactly(1))
       ->method('getDrupalRoot')
+      ->willReturn(vfsStream::url('drupal'));
+    $base->expects($this->exactly(3))
+      ->method('getComposerRoot')
       ->willReturn(vfsStream::url('drupal'));
 
     $base->setUp();
