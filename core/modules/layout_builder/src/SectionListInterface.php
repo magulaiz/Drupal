@@ -12,10 +12,13 @@ interface SectionListInterface extends \Countable {
   /**
    * Gets the layout sections.
    *
-   * @return \Drupal\layout_builder\Section[]
-   *   A sequentially and numerically keyed array of section objects.
+   * @param bool $key_by_uuid
+   *  (optional) Whether to return the section keyed by uuid. Defaults to FALSE.
+   *
+   * @return Section[]
+   *   An array of section objects.
    */
-  public function getSections();
+  public function getSections(bool $key_by_uuid = FALSE);
 
   /**
    * Gets a domain object for the layout section.

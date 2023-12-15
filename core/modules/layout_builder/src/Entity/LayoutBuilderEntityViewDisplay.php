@@ -99,8 +99,19 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
-    return $this->getThirdPartySetting('layout_builder', 'sections', []);
+  public function getSections(bool $key_by_uuid = FALSE) {
+    $sections = $this->getThirdPartySetting('layout_builder', 'sections', []);
+    if ($key_by_uuid) {
+      return $sections;
+    }
+    else {
+      $sections_numerically_keyed = [];
+      /** @var Section $section */
+      foreach ($sections as $section){
+        $sections_numerically_keyed[$section->getWeight()] = $section;
+      }
+      return $sections_numerically_keyed;
+    }
   }
 
   /**
@@ -318,7 +329,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     $build = [];
     if ($storage) {
-      foreach ($storage->getSections() as $uuid => $section) {
+      foreach ($storage->getSections(TRUE) as $uuid => $section) {
         $build[$uuid] = $section->toRenderArray($contexts);
       }
     }
@@ -383,7 +394,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     // Loop through all sections and determine if the removed dependencies are
     // used by their layout plugins.
-    foreach ($this->getSections() as $section_uuid => $section) {
+    foreach ($this->getSections(TRUE) as $section_uuid => $section) {
       $layout_dependencies = $this->getPluginDependencies($section->getLayout());
       $layout_removed_dependencies = $this->getPluginRemovedDependencies($layout_dependencies, $dependencies);
       if ($layout_removed_dependencies) {

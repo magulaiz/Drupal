@@ -63,6 +63,22 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testGetSections() {
     $expected = [
+      0 => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
+      ]))->setUuid('11000000-0000-1000-a000-000000000000'),
+      1 => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000')
+        ->setWeight(1),
+    ];
+    $this->assertSections($expected);
+  }
+
+  /**
+   * Tests ::getSections().
+   */
+  public function testGetSectionsByUuid() {
+    $expected = [
       '11000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]))->setUuid('11000000-0000-1000-a000-000000000000'),
@@ -71,7 +87,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       ]))->setUuid('22000000-0000-1000-a000-000000000000')
         ->setWeight(1),
     ];
-    $this->assertSections($expected);
+    $this->assertSections($expected,TRUE);
   }
 
   /**
@@ -123,12 +139,12 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testInsertSection() {
     $expected = [
-      '11000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]))->setUuid('11000000-0000-1000-a000-000000000000'),
-      '33000000-0000-1000-a000-000000000000' => (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000')
+      (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000')
         ->setWeight(1),
-      '22000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]))->setUuid('22000000-0000-1000-a000-000000000000')
         ->setWeight(2),
@@ -143,14 +159,14 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testAppendSection() {
     $expected = [
-      '11000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]))->setUuid('11000000-0000-1000-a000-000000000000'),
-      '22000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]))->setUuid('22000000-0000-1000-a000-000000000000')
         ->setWeight(1),
-      '33000000-0000-1000-a000-000000000000' => (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000')
+      (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000')
         ->setWeight(2),
     ];
 
@@ -169,10 +185,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       $this->sectionList->removeAllSections();
     }
     elseif ($set_blank === TRUE) {
-      $expected_section = $this->sectionList->removeAllSections($set_blank)->getSectionByDelta(0);
-      $expected = [
-        $expected_section->getUuid() => $expected_section,
-      ];
+      $expected = [$this->sectionList->removeAllSections($set_blank)->getSectionByDelta(0)];
     }
     else {
       $this->sectionList->removeAllSections($set_blank);
@@ -192,7 +205,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testRemoveSection() {
     $expected = [
-      '22000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]))->setUuid('22000000-0000-1000-a000-000000000000'),
     ];
@@ -228,11 +241,8 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testRemoveMultipleSections() {
     $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
     $this->sectionList->removeSection('22000000-0000-1000-a000-000000000000');
-    $expected_section = $this->sectionList->getSectionByDelta(0);
-    $expected = [
-      $expected_section->getUuid() => $expected_section,
-    ];
-    $this->assertSections($expected);
+    $expected = $this->sectionList->getSectionByDelta(0);
+    $this->assertSections([$expected]);
   }
 
   /**
@@ -251,9 +261,11 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    *
    * @param \Drupal\layout_builder\Section[] $expected
    *   The expected sections.
+   * @param bool $sections_keyed_by_uuid
+   *   Whether the sections are keyed by uuid. Defaults to FALSE.
    */
-  protected function assertSections(array $expected) {
-    $result = $this->sectionList->getSections();
+  protected function assertSections(array $expected, bool $sections_keyed_by_uuid = FALSE) {
+    $result = $this->sectionList->getSections($sections_keyed_by_uuid);
     $this->assertEquals($expected, $result);
     $this->assertSame(array_keys($expected), array_keys($result));
   }
