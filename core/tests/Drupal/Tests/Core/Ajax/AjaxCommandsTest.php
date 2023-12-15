@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AnnounceCommand;
+use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Ajax\AddCssCommand;
@@ -493,6 +494,30 @@ class AjaxCommandsTest extends UnitTestCase {
       'selector' => '#drupal-modal',
       'settings' => NULL,
       'data' => 'rendered content',
+      'dialogOptions' => [
+        'url' => 'example',
+        'width' => 500,
+        'title' => 'Title',
+        'modal' => TRUE,
+      ],
+    ];
+    $this->assertEquals($expected, $command->render());
+  }
+
+  /**
+   * @covers \Drupal\Core\Ajax\OpenModalDialogWithUrl
+   */
+  public function testOpenModalDialogWithUrl() {
+    $command = new OpenModalDialogWithUrl('http://example.com',
+      [
+        'url' => 'example',
+        'width' => 500,
+        'title' => 'Title',
+        'modal' => TRUE,
+      ]);
+    $expected = [
+      'command' => 'openDialogWithUrl',
+      'url' => 'http://example.com',
       'dialogOptions' => [
         'url' => 'example',
         'width' => 500,
