@@ -31,3 +31,10 @@
     </button>
   {% endif %}
 </li>
+{% if level == 'secondary' %}
+  {% if is_active %}
+    <option value="{{ link['#url'] }}" selected>{{ link['#title'] }}</option>
+  {% else %}
+    <option value="{{ link['#url'] }}" abc>{{ link['#title'] }}</option>
+  {% endif %}
+{% endif %}
