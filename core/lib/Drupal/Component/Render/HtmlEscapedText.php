@@ -24,10 +24,18 @@ class HtmlEscapedText implements MarkupInterface, \Countable {
   /**
    * Constructs an HtmlEscapedText object.
    *
-   * @param $string
+   * @param mixed $string
    *   The string to escape. This value will be cast to a string.
    */
   public function __construct($string) {
+    if (is_object($string)) {
+      if (method_exists($string, 'toString')) {
+        $string = $string->toString();
+      }
+      else {
+        $string = '';
+      }
+    }
     $this->string = (string) $string;
   }
 
