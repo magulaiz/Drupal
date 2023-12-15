@@ -96,9 +96,9 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->assertEquals('886', $width_before);
 
     // Resize the window.
-    $this->getSession()->resizeWindow(500, 805);
+    $this->getSession()->resizeWindow(870, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
-    $this->assertEquals('506', $width_after);
+    $this->assertEquals('876', $width_after);
 
     // Resize the window.
     $this->getSession()->resizeWindow(1300, 1300);
@@ -112,9 +112,9 @@ class DialogPositionTest extends WebDriverTestBase {
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('806', $width_before);
     // Resize the window.
-    $this->getSession()->resizeWindow(500, 805);
+    $this->getSession()->resizeWindow(870, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
-    $this->assertEquals('506', $width_after);
+    $this->assertEquals('876', $width_after);
 
     // Resize the window.
     $this->getSession()->resizeWindow(1300, 1300);
