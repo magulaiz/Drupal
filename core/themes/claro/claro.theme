@@ -822,7 +822,6 @@ function claro_preprocess_views_exposed_form(&$variables) {
           $form[$child_key][$attr_key]['class'][] = 'container-inline';
         }
         $last_key = $child_key;
-        $last_key = $child_key;
       }
     }
   }
