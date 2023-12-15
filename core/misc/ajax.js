@@ -714,7 +714,7 @@
       );
       // For consistency, return a rejected Deferred (i.e., jqXHR's superclass)
       // so that calling code can take appropriate action.
-      return $.Deferred().reject();
+      return Promise.reject();
     }
   };
 
