@@ -20,7 +20,6 @@ class DialogPositionTest extends WebDriverTestBase {
     'block',
     'entity_test',
     'node',
-    'field',
     'field_ui',
     'ajax_test',
   ];
@@ -93,10 +92,10 @@ class DialogPositionTest extends WebDriverTestBase {
         return document.querySelector('.ui-dialog').clientWidth;
       }())
       SCRIPT;
-
-    // Resize the window.
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('886', $width_before);
+
+    // Resize the window.
     $this->getSession()->resizeWindow(500, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('506', $width_after);
@@ -110,10 +109,9 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->clickLink('Link 3 (non-modal)');
     $this->assertSession()->waitForElementVisible('css', '[role="dialog"]');
     $this->assertSession()->assertWaitOnAjaxRequest();
-
-    // Resize the window.
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('806', $width_before);
+    // Resize the window.
     $this->getSession()->resizeWindow(500, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('506', $width_after);
