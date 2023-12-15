@@ -209,13 +209,39 @@ class ImageItem extends FileItem {
 
     $settings = $this->getSettings();
 
-    // Add maximum and minimum dimensions settings.
+    // Add minimum and maximum dimensions settings.
+    $min_resolution = explode('x', $settings['min_resolution']) + ['', ''];
+    $element['min_resolution'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Minimum image dimensions'),
+      '#element_validate' => [[static::class, 'validateResolution']],
+      '#weight' => 4.1,
+      '#description' => $this->t('The minimum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
+    ];
+    $element['min_resolution']['x'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Minimum width'),
+      '#title_display' => 'invisible',
+      '#default_value' => $min_resolution[0],
+      '#min' => 1,
+      '#field_suffix' => ' × ',
+      '#prefix' => '<div class="form--inline clearfix">',
+    ];
+    $element['min_resolution']['y'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Minimum height'),
+      '#title_display' => 'invisible',
+      '#default_value' => $min_resolution[1],
+      '#min' => 1,
+      '#field_suffix' => ' ' . $this->t('pixels'),
+      '#suffix' => '</div>',
+    ];
     $max_resolution = explode('x', $settings['max_resolution']) + ['', ''];
     $element['max_resolution'] = [
       '#type' => 'item',
       '#title' => $this->t('Maximum image dimensions'),
       '#element_validate' => [[static::class, 'validateResolution']],
-      '#weight' => 4.1,
+      '#weight' => 4.2,
       '#description' => $this->t('The maximum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction.'),
     ];
     $element['max_resolution']['x'] = [
@@ -240,7 +266,7 @@ class ImageItem extends FileItem {
       '#title' => $this->t('Image resize policy'),
       '#type' => 'radios',
       '#default_value' => $settings['resize_policy'] ?? FALSE,
-      '#weight' => 4.11,
+      '#weight' => 4.3,
       '#options' => [
         'resize_larger_images' => $this->t('Resize proportionally'),
         'reject_larger_images_with_error' => $this->t('Reject'),
@@ -251,32 +277,6 @@ class ImageItem extends FileItem {
           ':input[name="settings[max_resolution][y]"]' => ['!value' => ''],
         ],
       ],
-    ];
-    $min_resolution = explode('x', $settings['min_resolution']) + ['', ''];
-    $element['min_resolution'] = [
-      '#type' => 'item',
-      '#title' => $this->t('Minimum image dimensions'),
-      '#element_validate' => [[static::class, 'validateResolution']],
-      '#weight' => 4.2,
-      '#description' => $this->t('The minimum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
-    ];
-    $element['min_resolution']['x'] = [
-      '#type' => 'number',
-      '#title' => $this->t('Minimum width'),
-      '#title_display' => 'invisible',
-      '#default_value' => $min_resolution[0],
-      '#min' => 1,
-      '#field_suffix' => ' × ',
-      '#prefix' => '<div class="form--inline clearfix">',
-    ];
-    $element['min_resolution']['y'] = [
-      '#type' => 'number',
-      '#title' => $this->t('Minimum height'),
-      '#title_display' => 'invisible',
-      '#default_value' => $min_resolution[1],
-      '#min' => 1,
-      '#field_suffix' => ' ' . $this->t('pixels'),
-      '#suffix' => '</div>',
     ];
 
     // Remove the description option.
