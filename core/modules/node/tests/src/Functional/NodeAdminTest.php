@@ -244,7 +244,7 @@ class NodeAdminTest extends NodeTestBase {
     \Drupal::service('module_installer')->install(['language']);
     ConfigurableLanguage::create([
       'id' => 'es',
-      'label' => 'Spainish',
+      'label' => 'Spanish',
     ])->save();
 
     $this->drupalCreateNode(['type' => 'page', 'title' => 'English title'])
