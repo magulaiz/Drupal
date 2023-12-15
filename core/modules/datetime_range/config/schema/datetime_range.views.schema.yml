@@ -1,0 +1,31 @@
+views.filter.datetime_range:
+  type: views_filter
+  label: 'Date range'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        start_placeholder:
+          type: label
+          label: 'Start date placeholder'
+        end_placeholder:
+          type: label
+          label: 'End date placeholder'
+        placeholder:
+          type: label
+          label: 'Placeholder'
+
+views.filter_value.datetime_range:
+  type: mapping
+  label: 'Date range'
+  mapping:
+    start:
+      type: string
+      label: 'Start date value'
+    end:
+      type: string
+      label: 'End date value'
+    value:
+      type: string
+      label: 'Value'
