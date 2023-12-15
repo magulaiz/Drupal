@@ -111,8 +111,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
     }
     else {
       $sections_numerically_keyed = [];
-      /** @var Section $section */
-      foreach ($this->sections as $section){
+      foreach ($this->sections as $section) {
         $sections_numerically_keyed[$section->getWeight()] = $section;
       }
       return $sections_numerically_keyed;

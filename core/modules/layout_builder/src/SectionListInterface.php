@@ -13,7 +13,7 @@ interface SectionListInterface extends \Countable {
    * Gets the layout sections.
    *
    * @param bool $key_by_uuid
-   *  (optional) Whether to return the section keyed by uuid. Defaults to FALSE.
+   *   (optional) Whether to return the section keyed by uuid. Defaults to FALSE.
    *
    * @return Section[]
    *   An array of section objects.
