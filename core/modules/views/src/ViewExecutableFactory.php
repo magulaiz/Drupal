@@ -2,6 +2,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -40,6 +41,13 @@ class ViewExecutableFactory {
   protected $routeProvider;
 
   /**
+   * The display plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface;
+   */
+  protected $displayPluginManager;
+
+  /**
    * Constructs a new ViewExecutableFactory.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
@@ -51,11 +59,12 @@ class ViewExecutableFactory {
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    */
-  public function __construct(AccountInterface $user, RequestStack $request_stack, ViewsData $views_data, RouteProviderInterface $route_provider) {
+  public function __construct(AccountInterface $user, RequestStack $request_stack, ViewsData $views_data, RouteProviderInterface $route_provider, PluginManagerInterface $display_plugin_manager) {
     $this->user = $user;
     $this->requestStack = $request_stack;
     $this->viewsData = $views_data;
     $this->routeProvider = $route_provider;
+    $this->displayPluginManager = $display_plugin_manager;
   }
 
   /**
@@ -68,7 +77,7 @@ class ViewExecutableFactory {
    *   A ViewExecutable instance.
    */
   public function get(ViewEntityInterface $view) {
-    $view_executable = new ViewExecutable($view, $this->user, $this->viewsData, $this->routeProvider);
+    $view_executable = new ViewExecutable($view, $this->user, $this->viewsData, $this->routeProvider, $this->displayPluginManager);
     $view_executable->setRequest($this->requestStack->getCurrentRequest());
     return $view_executable;
   }

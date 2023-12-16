@@ -2,6 +2,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Tags;
@@ -471,14 +472,20 @@ class ViewExecutable {
    *   The views data.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_plugin_manager
+   *    The plugin manager for display.
    */
-  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider) {
+  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider, PluginManagerInterface $display_plugin_manager) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
     $this->user = $user;
     $this->viewsData = $views_data;
     $this->routeProvider = $route_provider;
+
+    // Initialize the display cache array.
+    $this->displayHandlers = new DisplayPluginCollection($this, Views::pluginManager('display'));
+
   }
 
   /**
@@ -738,9 +745,6 @@ class ViewExecutable {
     if (isset($this->current_display)) {
       return TRUE;
     }
-
-    // Initialize the display cache array.
-    $this->displayHandlers = new DisplayPluginCollection($this, Views::pluginManager('display'));
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers->get('default');
