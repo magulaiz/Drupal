@@ -560,8 +560,12 @@ function template_preprocess_views_view_table(&$variables) {
         $column_reference['attributes'] = [];
       }
 
-      if ($classes = $fields[$field]->elementClasses($num)) {
-        $column_reference['attributes']['class'][] = $classes;
+      if ($wrapper_element = $fields[$field]->elementWrapperType(TRUE, TRUE)) {
+        $column_reference['wrapper_element'] = $wrapper_element;
+      }
+
+      if ($wrapper_classes = $fields[$field]->elementWrapperClasses($num)) {
+        $column_reference['attributes']['class'][] = $wrapper_classes;
       }
 
       // Add responsive header classes.
@@ -576,7 +580,6 @@ function template_preprocess_views_view_table(&$variables) {
 
       if (!empty($fields[$field])) {
         $field_output = $handler->getField($num, $field);
-        $column_reference['wrapper_element'] = $fields[$field]->elementType(TRUE, TRUE);
         if (!isset($column_reference['content'])) {
           $column_reference['content'] = [];
         }
@@ -584,14 +587,23 @@ function template_preprocess_views_view_table(&$variables) {
         // Only bother with separators and stuff if the field shows up.
         // Place the field into the column, along with an optional separator.
         if (trim($field_output) != '') {
+          $element_type = $fields[$field]->elementType(TRUE, TRUE);
+          $element_classes = $fields[$field]->elementClasses($num);
+          $element_attributes = new Attribute();
+          $element_attributes->addClass(preg_split('/\s+/', $element_classes));
+
           if (!empty($column_reference['content']) && !empty($options['info'][$column]['separator'])) {
             $column_reference['content'][] = [
               'separator' => ['#markup' => $options['info'][$column]['separator']],
+              'element_type' => $element_type,
+              'element_attributes' => $element_attributes,
               'field_output' => ['#markup' => $field_output],
             ];
           }
           else {
             $column_reference['content'][] = [
+              'element_type' => $element_type,
+              'element_attributes' => $element_attributes,
               'field_output' => ['#markup' => $field_output],
             ];
           }
