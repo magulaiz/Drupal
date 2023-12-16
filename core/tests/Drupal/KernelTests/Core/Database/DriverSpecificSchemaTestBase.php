@@ -1377,10 +1377,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       'indexes' => [
         'text_column_index' => new IndexSpecification(
           ['text'],
-          ['pgsql' => [
-            'type' => IndexTypes::GIST,
-            'operator' => 'gist_trgm_ops',
-          ]]
+          [
+            'pgsql' => [
+              'type' => IndexTypes::GIST,
+              'operator' => 'gist_trgm_ops',
+            ],
+          ]
         ),
       ],
       'primary key' => ['id'],
