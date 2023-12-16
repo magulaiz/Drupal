@@ -473,7 +473,7 @@ class ViewExecutable {
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $display_plugin_manager
-   *    The plugin manager for display.
+   *   The plugin manager for display.
    */
   public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider, PluginManagerInterface $display_plugin_manager) {
     // Reference the storage and the executable to each other.
