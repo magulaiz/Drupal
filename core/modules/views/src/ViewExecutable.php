@@ -462,6 +462,13 @@ class ViewExecutable {
   protected $serializationData;
 
   /**
+   * The display plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface;
+   */
+  protected $displayPluginManager;
+
+  /**
    * Constructs a new ViewExecutable object.
    *
    * @param \Drupal\views\ViewEntityInterface $storage
@@ -484,7 +491,7 @@ class ViewExecutable {
     $this->routeProvider = $route_provider;
 
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayPluginCollection($this, Views::pluginManager('display'));
+    $this->displayHandlers = new DisplayPluginCollection($this, $display_plugin_manager);
 
   }
 
