@@ -110,7 +110,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     for ($i = 0; $i < 3; $i++) {
       for ($j = 0; $j <= $i; $j++) {
         $option = $result[$counter++];
-        $prefix = $this->terms[$i][$j]->parent->target_id ? '-' : '';
+        $prefix = $this->terms[$i][$j]->parent->target_id ? "\u{B7}\u{2003}" : '';
         $tid = $option->getAttribute('value');
 
         $this->assertEquals($prefix . $this->terms[$i][$j]->getName(), $option->getText());
