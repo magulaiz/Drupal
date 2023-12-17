@@ -2792,8 +2792,9 @@ function menu_rebuild() {
 
   try {
     list($menu, $masks) = menu_router_build();
-    _menu_router_save($menu, $masks);
-    _menu_navigation_links_rebuild($menu);
+    $menu_needs_rebuild = _menu_router_save($menu, $masks);
+    _menu_navigation_links_rebuild($menu_needs_rebuild);
+    _menu_navigation_links_cleanup($menu);
     // Clear the menu, page and block caches.
     menu_cache_clear_all();
     _menu_clear_page_cache();
@@ -2913,11 +2914,7 @@ function _menu_navigation_links_rebuild($menu) {
     array_multisort($sort, SORT_NUMERIC, $menu_links);
 
     foreach ($menu_links as $key => $item) {
-      $existing_item = db_select('menu_links')
-        ->fields('menu_links')
-        ->condition('link_path', $item['path'])
-        ->condition('module', 'system')
-        ->execute()->fetchAssoc();
+      $existing_item = empty($item['_existing_item']) ? _menu_rebuild_get_existing_item($item['path']) : $item['_existing_item'];
       if ($existing_item) {
         $item['mlid'] = $existing_item['mlid'];
         // A change in hook_menu may move the link to a different menu
@@ -2944,6 +2941,14 @@ function _menu_navigation_links_rebuild($menu) {
       }
     }
   }
+}
+
+/**
+ * Find new router paths where necessary and delete obsolete links.
+ *
+ * @param $menu
+ */
+function _menu_navigation_links_cleanup($menu) {
   $paths = array_keys($menu);
   // Updated and customized items whose router paths are gone need new ones.
   $result = db_select('menu_links', NULL, array('fetch' => PDO::FETCH_ASSOC))
@@ -3626,6 +3631,15 @@ function _menu_router_build($callbacks) {
   // matching. Calculate fitness, and fill some default values.
   $menu = array();
   $masks = array();
+  $link_fields = array_flip(drupal_schema_fields_sql('menu_links'));
+  unset($link_fields['weight'], $link_fields['module']);
+  $link_field_defaults = array(
+    'node' => array('menu_name' => 'navigation'),
+    'admin' => array('menu_name' => 'management'),
+    'user' => array('menu_name' => 'user-menu'),
+    'user/logout' => array('menu_name' => 'user-menu'),
+    'user/%user' => array('menu_name' => 'navigation'),
+  );
   foreach ($callbacks as $path => $item) {
     $load_functions = array();
     $to_arg_functions = array();
@@ -3688,11 +3702,24 @@ function _menu_router_build($callbacks) {
       '_number_parts' => $number_parts,
       '_parts' => $parts,
       '_fit' => $fit,
+      '_keep' => FALSE,
     );
     $item += array(
       '_visible' => (bool) ($item['type'] & MENU_VISIBLE_IN_BREADCRUMB),
       '_tab' => (bool) ($item['type'] & MENU_IS_LOCAL_TASK),
     );
+    $link_fields_set = array_intersect_key($item, $link_fields);
+    if ($link_fields_set) {
+      if (isset($link_field_defaults[$path]) && $link_fields_set === $link_field_defaults[$path]) {
+        // Nothing to be done.
+      }
+      elseif ($item['_existing_item'] = _menu_rebuild_get_existing_item($path)) {
+        $item['_keep'] = (bool) drupal_array_diff_assoc_recursive($link_fields_set, $item['_existing_item']);
+      }
+      elseif ($item['_visible']) {
+        $item['_keep'] = TRUE;
+      }
+    }
     if ($move) {
       $new_path = implode('/', $item['_parts']);
       $menu[$new_path] = $item;
@@ -3735,6 +3762,9 @@ function _menu_router_build($callbacks) {
           }
           // If the parent item defines a menu name, inherit it.
           if (!empty($parent['menu_name'])) {
+            if (!empty($parent['_keep'])) {
+              $item['_keep'] = TRUE;
+            }
             $item['menu_name'] = $parent['menu_name'];
           }
         }
@@ -3850,6 +3880,12 @@ function _menu_router_build($callbacks) {
  */
 function _menu_router_save($menu, $masks) {
   // Delete the existing router since we have some data to replace it.
+  $fields = drupal_schema_fields_sql('menu_router');
+  db_truncate('menu_router_old')->execute();
+  db_insert('menu_router_old')
+    ->fields($fields)
+    ->from(db_select('menu_router', 'r')->fields('r', $fields))
+    ->execute();
   db_truncate('menu_router')->execute();
 
   // Prepare insert object.
@@ -3882,7 +3918,11 @@ function _menu_router_save($menu, $masks) {
 
   $num_records = 0;
 
+  $keep = array();
   foreach ($menu as $path => $item) {
+    if (!empty($item['_keep'])) {
+      $keep[$path] = TRUE;
+    }
     // Fill in insert object values.
     $insert->values(array(
       'path' => $item['path'],
@@ -3922,7 +3962,17 @@ function _menu_router_save($menu, $masks) {
   // Store the masks.
   variable_set('menu_masks', $masks);
 
-  return $menu;
+  $query = db_select('menu_router', 'new', array('fetch' => PDO::FETCH_ASSOC));
+  // Weight is not necessary but we need path in the key of the resulting array
+  // and using fetchAllKeyed() is the cheapest way to do it.
+  $query->fields('new', array('path', 'weight'));
+  $query->leftJoin('menu_router_old', 'old', 'new.path = old.path');
+  $or = db_or()->isNull('old.path');
+  foreach ($fields as $field) {
+    $or->where("new.$field != old.$field");
+  }
+  $query->condition($or);
+  return array_intersect_key($menu, $keep + $query->execute()->fetchAllKeyed());
 }
 
 /**
@@ -3963,6 +4013,21 @@ function _menu_site_is_offline($check_only = FALSE) {
     }
   }
   return FALSE;
+}
+
+/**
+ * Gets an existing item for rebuild purposes.
+ *
+ * @param $path
+ *
+ * @return bool
+ */
+function _menu_rebuild_get_existing_item($path) {
+  return db_select('menu_links')
+    ->fields('menu_links')
+    ->condition('link_path', $path)
+    ->condition('module', 'system')
+    ->execute()->fetchAssoc();
 }
 
 /**
