@@ -45,7 +45,10 @@ class FormTestClickedButtonForm extends FormBase {
     foreach ($args as $arg) {
       $name = 'button' . ++$i;
       // 's', 'b', or 'i' in the argument define the button type wanted.
-      if (str_contains($arg, 's')) {
+      if (!is_string($arg)) {
+        $type = NULL;
+      }
+      elseif (str_contains($arg, 's')) {
         $type = 'submit';
       }
       elseif (str_contains($arg, 'b')) {
@@ -53,9 +56,6 @@ class FormTestClickedButtonForm extends FormBase {
       }
       elseif (str_contains($arg, 'i')) {
         $type = 'image_button';
-      }
-      else {
-        $type = NULL;
       }
       if (isset($type)) {
         $form[$name] = [
