@@ -1,0 +1,9 @@
+name: Checkboxes Filter
+description: Provides the ability to filter checkboxes on the checkboxes field.
+type: module
+core_version_requirement: ^8 || ^9
+
+# Information added by Drupal.org packaging script on 2022-03-19
+version: '1.0.0'
+project: 'checkboxes_filter'
+datestamp: 1647711563

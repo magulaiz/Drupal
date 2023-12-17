@@ -1,0 +1,6 @@
+filter_checkboxes:
+  js:
+    js/filter_checkboxes.js: { }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
