@@ -327,13 +327,13 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $storage->resetCache();
     $entities = $storage->loadMultiple($entity_ids);
 
-    $build = $view_builder->viewMultiple($entities, 'full');
+    $build = $view_builder->viewMultiple($entities, 'entity_test.vm_alter_test');
     foreach ($build as $key => $entity_build) {
       if (!is_numeric($key)) {
         continue;
       }
       $this->assertArrayHasKey('#view_mode', $entity_build);
-      $this->assertEquals('teaser', $entity_build['#view_mode']);
+      $this->assertEquals('entity_test.vm_alter_full', $entity_build['#view_mode']);
     }
   }
 
