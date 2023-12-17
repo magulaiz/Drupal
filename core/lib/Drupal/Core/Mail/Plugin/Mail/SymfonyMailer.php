@@ -5,6 +5,7 @@ namespace Drupal\Core\Mail\Plugin\Mail;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
+use Drupal\Core\Mail\TransportFactoryManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
@@ -77,7 +78,8 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('logger.channel.mail')
+      $container->get('logger.channel.mail'),
+      $container->get('mail.transport_factory_manager')
     );
   }
 
@@ -86,12 +88,15 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
+   * @param \Drupal\Core\Mail\TransportFactoryManagerInterface $transportFactoryManager
+   *   Manages any custom transports for Symfony Mailer.
    * @param \Symfony\Component\Mailer\MailerInterface $mailer
    *   The mailer service. Only specify an instance in unit tests, pass NULL in
    *   production.
    */
   public function __construct(
     protected LoggerInterface $logger,
+    protected TransportFactoryManagerInterface $transportFactoryManager,
     protected ?MailerInterface $mailer = NULL) {
   }
 
@@ -162,7 +167,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
       // Therefore, this plugin deliberately refrains from injecting the event
       // dispatcher.
       $factories = Transport::getDefaultFactories(logger: $this->logger);
-      $transportFactory = new Transport($factories);
+      $transportFactory = new Transport([...$factories, ...$this->transportFactoryManager->getTransportFactories()]);
       $transport = $transportFactory->fromDsnObject($dsnObject);
       $this->mailer = new Mailer($transport);
     }
