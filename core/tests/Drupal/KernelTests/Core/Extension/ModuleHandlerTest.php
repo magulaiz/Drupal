@@ -30,7 +30,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * @group legacy
    */
   public function testGetNameDeprecation() {
-    $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::getName() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017');
+    $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::getName() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017');
     $this->assertNotNull(\Drupal::service('module_handler')->getName('module_test'));
   }
 

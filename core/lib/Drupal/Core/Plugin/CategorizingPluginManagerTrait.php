@@ -63,13 +63,13 @@ trait CategorizingPluginManagerTrait {
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler.
    *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3310017
    */
   public function getModuleHandler() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
     // If the class has an injected module handler, use it. Otherwise fall back
     // to fetch it from the service container.
     if (isset($this->moduleHandler)) {
