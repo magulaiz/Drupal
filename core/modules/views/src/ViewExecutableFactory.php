@@ -2,9 +2,9 @@
 
 namespace Drupal\views;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\ViewsPluginManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -43,7 +43,7 @@ class ViewExecutableFactory {
   /**
    * The display plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface;
+   * @var \Drupal\views\Plugin\ViewsPluginManager
    */
   protected $displayPluginManager;
 
@@ -58,10 +58,10 @@ class ViewExecutableFactory {
    *   The views data.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_plugin_manager
+   * @param \Drupal\views\Plugin\ViewsPluginManager $display_plugin_manager
    *   The plugin manager for display.
    */
-  public function __construct(AccountInterface $user, RequestStack $request_stack, ViewsData $views_data, RouteProviderInterface $route_provider, PluginManagerInterface $display_plugin_manager) {
+  public function __construct(AccountInterface $user, RequestStack $request_stack, ViewsData $views_data, RouteProviderInterface $route_provider, ViewsPluginManager $display_plugin_manager) {
     $this->user = $user;
     $this->requestStack = $request_stack;
     $this->viewsData = $views_data;
