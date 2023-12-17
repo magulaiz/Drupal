@@ -142,6 +142,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     // Update the changed timestamp of the entity.

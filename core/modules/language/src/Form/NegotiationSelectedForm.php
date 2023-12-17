@@ -5,6 +5,7 @@ namespace Drupal\language\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Configure the selected language negotiation method for this site.
@@ -45,6 +46,7 @@ class NegotiationSelectedForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.negotiation')
       ->set('selected_langcode', $form_state->getValue('selected_langcode'))

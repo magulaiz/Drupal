@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -65,6 +66,7 @@ class FormTestInputForgeryForm extends FormBase implements TrustedCallbackInterf
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     return new JsonResponse($form_state->getValues());
   }

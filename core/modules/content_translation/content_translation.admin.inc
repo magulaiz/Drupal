@@ -164,7 +164,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
   }
 
   $form['#validate'][] = [ContentTranslationFormCallbacks::class, 'formLanguageContentSettingsValidate'];
-  $form['#submit'][] = 'content_translation_form_language_content_settings_submit';
+  $form['#submit'][] = [ContentTranslationFormCallbacks::class, 'formLanguageContentSettingsSubmit'];
 }
 
 /**
@@ -310,13 +310,12 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
 /**
  * Form validation handler for content_translation_admin_settings_form().
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
  *   ContentTranslationFormCallbacks::formLanguageContentSettingsValidate()
  *   instead.
  *
  * @todo Replace with CR url for issue 2966711
  * @see https://www.drupal.org/project/drupal/issues/2966711
- * @see content_translation_admin_settings_form_submit()
  */
 function content_translation_form_language_content_settings_validate(array $form, FormStateInterface $form_state) {
   ContentTranslationFormCallbacks::formLanguageContentSettingsValidate($form, $form_state);
@@ -325,67 +324,13 @@ function content_translation_form_language_content_settings_validate(array $form
 /**
  * Form submission handler for content_translation_admin_settings_form().
  *
- * @see content_translation_admin_settings_form_validate()
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   ContentTranslationFormCallbacks::formLanguageContentSettingsSubmit()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function content_translation_form_language_content_settings_submit(array $form, FormStateInterface $form_state) {
-  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
-  $content_translation_manager = \Drupal::service('content_translation.manager');
-  $entity_types = $form_state->getValue('entity_types');
-  $settings = &$form_state->getValue('settings');
-
-  // If an entity type is not translatable all its bundles and fields must be
-  // marked as non-translatable. Similarly, if a bundle is made non-translatable
-  // all of its fields will be not translatable.
-  foreach ($settings as $entity_type_id => &$entity_settings) {
-    foreach ($entity_settings as $bundle => &$bundle_settings) {
-      $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
-      if (!empty($bundle_settings['translatable'])) {
-        $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type_id];
-      }
-      if (!empty($bundle_settings['fields'])) {
-        foreach ($bundle_settings['fields'] as $field_name => $translatable) {
-          $translatable = $translatable && $bundle_settings['translatable'];
-          // If we have column settings and no column is translatable, no point
-          // in making the field translatable.
-          if (isset($bundle_settings['columns'][$field_name]) && !array_filter($bundle_settings['columns'][$field_name])) {
-            $translatable = FALSE;
-          }
-          $field_config = $fields[$field_name]->getConfig($bundle);
-          if ($field_config->isTranslatable() != $translatable) {
-            $field_config
-              ->setTranslatable($translatable)
-              ->save();
-          }
-        }
-      }
-      if (isset($bundle_settings['translatable'])) {
-        // Store whether a bundle has translation enabled or not.
-        $content_translation_manager->setEnabled($entity_type_id, $bundle, $bundle_settings['translatable']);
-
-        // Store any other bundle settings.
-        if ($content_translation_manager instanceof BundleTranslationSettingsInterface) {
-          $content_translation_manager->setBundleTranslationSettings($entity_type_id, $bundle, $bundle_settings['settings']['content_translation']);
-        }
-
-        // Save translation_sync settings.
-        if (!empty($bundle_settings['columns'])) {
-          foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
-            $field_config = $fields[$field_name]->getConfig($bundle);
-            if ($field_config->isTranslatable()) {
-              $field_config->setThirdPartySetting('content_translation', 'translation_sync', $column_settings);
-            }
-            // If the field does not have translatable enabled we need to reset
-            // the sync settings to their defaults.
-            else {
-              $field_config->unsetThirdPartySetting('content_translation', 'translation_sync');
-            }
-            $field_config->save();
-          }
-        }
-      }
-    }
-  }
-
-  // Ensure menu router information is correctly rebuilt.
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  ContentTranslationFormCallbacks::formLanguageContentSettingsSubmit($form, $form_state);
 }

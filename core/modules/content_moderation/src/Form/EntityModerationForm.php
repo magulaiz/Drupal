@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\content_moderation\StateTransitionValidationInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\workflows\Transition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -139,6 +140,7 @@ class EntityModerationForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->get('entity');

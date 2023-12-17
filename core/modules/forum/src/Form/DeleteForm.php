@@ -4,6 +4,7 @@ namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
 
@@ -61,6 +62,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->taxonomyTerm->delete();
     $this->messenger()->addStatus($this->t('The forum %label and all sub-forums have been deleted.', ['%label' => $this->taxonomyTerm->label()]));

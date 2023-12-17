@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -366,6 +367,7 @@ class CommentForm extends ContentEntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function preview(array &$form, FormStateInterface $form_state) {
     $comment_preview = comment_preview($this->entity, $form_state);
     $comment_preview['#title'] = $this->t('Preview comment');

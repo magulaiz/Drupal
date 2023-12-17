@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form to test whether GET forms have a CSRF token.
@@ -34,6 +35,7 @@ class FormTestGetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus('The form_test_get_form form has been submitted successfully.');
   }

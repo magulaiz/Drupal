@@ -179,6 +179,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->getBuildInfo()['args'][0];
 

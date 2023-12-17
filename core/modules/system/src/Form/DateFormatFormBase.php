@@ -137,6 +137,7 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setValue('pattern', trim($form_state->getValue('date_format_pattern')));
     parent::submitForm($form, $form_state);

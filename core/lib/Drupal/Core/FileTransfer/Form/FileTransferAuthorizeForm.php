@@ -188,6 +188,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_connection_settings = $form_state->getValue('connection_settings');
     switch ($form_state->getTriggeringElement()['#name']) {

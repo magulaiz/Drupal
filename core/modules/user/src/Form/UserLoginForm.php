@@ -148,6 +148,7 @@ class UserLoginForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if (empty($uid = $form_state->get('uid'))) {
       return;

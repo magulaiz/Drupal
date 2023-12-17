@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\locale\PoDatabaseReader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -136,6 +137,7 @@ class ExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // If template is required, language code is not given.
     if ($form_state->getValue('langcode') != LanguageInterface::LANGCODE_SYSTEM) {

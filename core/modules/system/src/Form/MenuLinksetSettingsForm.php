@@ -7,6 +7,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -75,6 +76,7 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.feature_flags')
       ->set('linkset_endpoint', $form_state->getValue('enable_endpoint'))

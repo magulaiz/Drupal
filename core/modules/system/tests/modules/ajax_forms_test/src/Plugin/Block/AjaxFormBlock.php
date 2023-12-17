@@ -143,6 +143,7 @@ class AjaxFormBlock extends BlockBase implements FormInterface, ContainerFactory
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger->addStatus('Submission successful.');
   }

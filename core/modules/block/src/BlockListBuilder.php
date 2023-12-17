@@ -383,6 +383,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $blocks = $form_state->getValue('blocks');
     $entities = $this->storage->loadMultiple(array_keys($blocks));

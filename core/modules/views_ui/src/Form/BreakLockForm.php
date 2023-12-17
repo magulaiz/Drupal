@@ -5,6 +5,7 @@ namespace Drupal\views_ui\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -107,6 +108,7 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->tempStore->delete($this->entity->id());
     $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));

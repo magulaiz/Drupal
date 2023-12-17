@@ -267,6 +267,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $operation = $form_state->getValue('operation');
     $cids = $form_state->getValue('comments');

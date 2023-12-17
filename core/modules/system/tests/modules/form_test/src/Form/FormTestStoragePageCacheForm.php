@@ -85,6 +85,7 @@ class FormTestStoragePageCacheForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Nothing must happen.
   }

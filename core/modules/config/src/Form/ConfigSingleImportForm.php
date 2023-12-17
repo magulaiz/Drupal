@@ -415,6 +415,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // If this form has not yet been confirmed, store the values and rebuild.
     if (!$this->data) {

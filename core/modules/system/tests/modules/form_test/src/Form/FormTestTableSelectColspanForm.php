@@ -3,6 +3,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Builds a form to test table selects with different column spans.
@@ -44,6 +45,7 @@ class FormTestTableSelectColspanForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

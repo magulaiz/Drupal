@@ -4,6 +4,7 @@ namespace Drupal\node\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -51,6 +52,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     node_access_rebuild(TRUE);
     $form_state->setRedirectUrl($this->getCancelUrl());

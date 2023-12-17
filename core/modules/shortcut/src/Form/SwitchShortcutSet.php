@@ -171,6 +171,7 @@ class SwitchShortcutSet extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $this->currentUser();
 

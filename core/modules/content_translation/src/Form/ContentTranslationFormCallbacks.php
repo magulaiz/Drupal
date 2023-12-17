@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation\Form;
 
+use Drupal\content_translation\BundleTranslationSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Security\Attribute\TrustedCallback;
@@ -37,13 +38,31 @@ class ContentTranslationFormCallbacks {
       // property is already available, otherwise this breaks
       // the form submit function.
       if (isset($form['actions'][$submit_name]['#submit'])) {
-        $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
+        $form['actions'][$submit_name]['#submit'][] = [static::class , 'languageConfigurationElementSubmit'];
       }
       else {
-        $form['#submit'][] = 'content_translation_language_configuration_element_submit';
+        $form['#submit'][] = [static::class , 'languageConfigurationElementSubmit'];
       }
     }
     return $element;
+  }
+
+  /**
+   * Form submission handler for element added with TrustedFormCallbacks::languageConfigurationElementProcess().
+   *
+   * Stores the content translation settings.
+   *
+   * @see ::languageConfigurationElementValidate()
+   */
+  public static function languageConfigurationElementSubmit(array $form, FormStateInterface $form_state) {
+    $key = $form_state->get(['content_translation', 'key']);
+    $context = $form_state->get(['language', $key]);
+    $enabled = $form_state->getValue([$key, 'content_translation']);
+
+    if (\Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) != $enabled) {
+      \Drupal::service('content_translation.manager')->setEnabled($context['entity_type'], $context['bundle'], $enabled);
+      \Drupal::service('router.builder')->setRebuildNeeded();
+    }
   }
 
   /**
@@ -54,7 +73,7 @@ class ContentTranslationFormCallbacks {
    * be enabled.
    *
    * @see static::languageConfigurationElementProcess()
-   * @see content_translation_language_configuration_element_submit()
+   * @see static::languageConfigurationElementSubmit()
    */
   #[TrustedCallback]
   public static function languageConfigurationElementValidate(array $element, FormStateInterface $form_state, array $form) {
@@ -75,7 +94,7 @@ class ContentTranslationFormCallbacks {
   /**
    * Implements #validate handler for content_translation_admin_settings_form().
    *
-   * @see content_translation_admin_settings_form_submit()
+   * @see static::formLanguageContentSettingsSubmit()
    */
   #[TrustedCallback]
   public static function formLanguageContentSettingsValidate(array $form, FormStateInterface $form_state) {
@@ -102,6 +121,74 @@ class ContentTranslationFormCallbacks {
         }
       }
     }
+  }
+
+  /**
+   * Form submission handler for content_translation_admin_settings_form().
+   *
+   * @see static::formLanguageContentSettingsValidate()
+   */
+  public static function formLanguageContentSettingsSubmit(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
+    $content_translation_manager = \Drupal::service('content_translation.manager');
+    $entity_types = $form_state->getValue('entity_types');
+    $settings = &$form_state->getValue('settings');
+
+    // If an entity type is not translatable all its bundles and fields must be
+    // marked as non-translatable. Similarly, if a bundle is made non-translatable
+    // all of its fields will be not translatable.
+    foreach ($settings as $entity_type_id => &$entity_settings) {
+      foreach ($entity_settings as $bundle => &$bundle_settings) {
+        $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
+        if (!empty($bundle_settings['translatable'])) {
+          $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type_id];
+        }
+        if (!empty($bundle_settings['fields'])) {
+          foreach ($bundle_settings['fields'] as $field_name => $translatable) {
+            $translatable = $translatable && $bundle_settings['translatable'];
+            // If we have column settings and no column is translatable, no point
+            // in making the field translatable.
+            if (isset($bundle_settings['columns'][$field_name]) && !array_filter($bundle_settings['columns'][$field_name])) {
+              $translatable = FALSE;
+            }
+            $field_config = $fields[$field_name]->getConfig($bundle);
+            if ($field_config->isTranslatable() != $translatable) {
+              $field_config
+                ->setTranslatable($translatable)
+                ->save();
+            }
+          }
+        }
+        if (isset($bundle_settings['translatable'])) {
+          // Store whether a bundle has translation enabled or not.
+          $content_translation_manager->setEnabled($entity_type_id, $bundle, $bundle_settings['translatable']);
+
+          // Store any other bundle settings.
+          if ($content_translation_manager instanceof BundleTranslationSettingsInterface) {
+            $content_translation_manager->setBundleTranslationSettings($entity_type_id, $bundle, $bundle_settings['settings']['content_translation']);
+          }
+
+          // Save translation_sync settings.
+          if (!empty($bundle_settings['columns'])) {
+            foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
+              $field_config = $fields[$field_name]->getConfig($bundle);
+              if ($field_config->isTranslatable()) {
+                $field_config->setThirdPartySetting('content_translation', 'translation_sync', $column_settings);
+              }
+              // If the field does not have translatable enabled we need to reset
+              // the sync settings to their defaults.
+              else {
+                $field_config->unsetThirdPartySetting('content_translation', 'translation_sync');
+              }
+              $field_config->save();
+            }
+          }
+        }
+      }
+    }
+
+    // Ensure menu router information is correctly rebuilt.
+    \Drupal::service('router.builder')->setRebuildNeeded();
   }
 
 }

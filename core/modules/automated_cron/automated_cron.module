@@ -5,6 +5,7 @@
  * Provides an automated cron by executing it at the end of a response.
  */
 
+use Drupal\automated_cron\Form\AutomatedCronFormCallbacks;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -45,7 +46,7 @@ function automated_cron_form_system_cron_settings_alter(&$form, &$form_state) {
   ];
 
   // Add submit callback.
-  $form['#submit'][] = 'automated_cron_settings_submit';
+  $form['#submit'][] = [AutomatedCronFormCallbacks::class, 'settingsSubmit'];
 
   // Theme this form as a config form.
   $form['#theme'] = 'system_config_form';
@@ -53,9 +54,14 @@ function automated_cron_form_system_cron_settings_alter(&$form, &$form_state) {
 
 /**
  * Form submission handler for system_cron_settings().
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *     \Drupal\automated_cron\Form\AutomatedCronFormCallbacks::settingsSubmit()
+ *     instead.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo Replace with CR url for issue 2966711
  */
 function automated_cron_settings_submit(array $form, FormStateInterface $form_state) {
-  \Drupal::configFactory()->getEditable('automated_cron.settings')
-    ->set('interval', $form_state->getValue('interval'))
-    ->save();
+  AutomatedCronFormCallbacks::settingsSubmit($form, $form_state);
 }

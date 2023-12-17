@@ -3,6 +3,7 @@
 namespace Drupal\dblog\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -65,6 +66,7 @@ class DblogClearLogConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->getRequest()->getSession()->remove('dblog_overview_filter');
     $this->connection->truncate('watchdog')->execute();

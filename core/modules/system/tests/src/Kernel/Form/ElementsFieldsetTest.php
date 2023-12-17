@@ -100,6 +100,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**

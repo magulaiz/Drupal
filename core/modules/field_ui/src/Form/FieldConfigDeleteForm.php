@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -100,6 +101,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $target_entity_type_id = $this->entity->getTargetEntityTypeId();

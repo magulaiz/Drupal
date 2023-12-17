@@ -140,6 +140,7 @@ class FormTestStorageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus("Title: " . Html::escape($form_state->getValue('title')));
     $this->messenger()->addStatus("Form constructions: " . $this->getRequest()->getSession()->get('constructions'));

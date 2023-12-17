@@ -304,6 +304,7 @@ abstract class ConfigFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {

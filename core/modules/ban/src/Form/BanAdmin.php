@@ -118,6 +118,7 @@ class BanAdmin extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state->getValue('ip'));
     $this->ipManager->banIp($ip);

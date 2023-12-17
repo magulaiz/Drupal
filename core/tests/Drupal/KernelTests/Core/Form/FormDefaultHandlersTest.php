@@ -64,6 +64,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $test_handlers = $form_state->get('test_handlers');
     $test_handlers['submit'][] = __FUNCTION__;

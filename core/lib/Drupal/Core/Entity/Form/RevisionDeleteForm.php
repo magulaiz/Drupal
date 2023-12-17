@@ -15,6 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -138,6 +139,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $entityTypeId = $this->revision->getEntityTypeId();
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage */

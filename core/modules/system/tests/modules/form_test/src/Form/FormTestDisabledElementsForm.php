@@ -5,6 +5,7 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -262,6 +263,7 @@ class FormTestDisabledElementsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setResponse(new JsonResponse($form_state->getValues()));
   }

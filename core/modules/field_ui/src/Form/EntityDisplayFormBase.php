@@ -18,6 +18,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\field_ui\FieldUI;
 
 /**
@@ -542,6 +543,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // If the main "Save" button was submitted while a field settings subform
     // was being edited, update the new incoming settings when rebuilding the
@@ -640,6 +642,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
   /**
    * Form submission handler for multistep buttons.
    */
+  #[TrustedCallback]
   public function multistepSubmit($form, FormStateInterface $form_state) {
     $trigger = $form_state->getTriggeringElement();
     $op = $trigger['#op'];

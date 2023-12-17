@@ -389,6 +389,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

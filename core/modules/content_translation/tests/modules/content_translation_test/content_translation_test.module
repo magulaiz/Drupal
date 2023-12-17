@@ -5,6 +5,7 @@
  * Helper module for the Content Translation tests.
  */
 
+use Drupal\content_translation_test\Entity\Form\ContentTranslationTestFormCallbacks;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -54,7 +55,7 @@ function content_translation_test_form_node_form_alter(&$form, FormStateInterfac
 
     foreach (array_keys($form['actions']) as $action) {
       if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
-        $form['actions'][$action]['#submit'][] = 'content_translation_test_form_node_form_submit';
+        $form['actions'][$action]['#submit'][] = [ContentTranslationTestFormCallbacks::class, 'testFormNodeFormSubmit'];
       }
     }
   }
@@ -64,9 +65,16 @@ function content_translation_test_form_node_form_alter(&$form, FormStateInterfac
  * Form submission handler for custom field added based on a request parameter.
  *
  * @see content_translation_test_form_node_article_form_alter()
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   ContentTranslationTestFormCallbacks::testFormNodeFormSubmit()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function content_translation_test_form_node_form_submit($form, FormStateInterface $form_state) {
-  \Drupal::state()->set('test_field_only_en_fr', $form_state->getValue('test_field_only_en_fr'));
+  ContentTranslationTestFormCallbacks::testFormNodeFormSubmit($form, $form_state);
 }
 
 /**

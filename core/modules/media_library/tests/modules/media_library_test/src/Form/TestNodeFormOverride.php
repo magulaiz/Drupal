@@ -3,6 +3,7 @@
 namespace Drupal\media_library_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\node\NodeForm;
 
 /**
@@ -13,6 +14,7 @@ class TestNodeFormOverride extends NodeForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $triggering_element = $form_state->getTriggeringElement();
     if (in_array('open_button', $triggering_element['#parents'], TRUE)) {

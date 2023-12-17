@@ -4,7 +4,9 @@ namespace Drupal\language_elements_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\language\Form\LanguageFormCallbacks;
 
 /**
  * A form containing a language configuration element.
@@ -39,13 +41,14 @@ class LanguageConfigurationElement extends FormBase {
       '#type' => 'submit',
       '#value' => 'Save',
     ];
-    $form['#submit'][] = 'language_configuration_element_submit';
+    $form['#submit'][] = [LanguageFormCallbacks::class, 'configurationElementSubmit'];
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

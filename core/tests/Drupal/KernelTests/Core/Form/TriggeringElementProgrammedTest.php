@@ -62,6 +62,7 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

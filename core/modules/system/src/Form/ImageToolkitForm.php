@@ -116,6 +116,7 @@ class ImageToolkitForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Call the form submit handler for each of the toolkits.
     foreach ($this->availableToolkits as $toolkit) {

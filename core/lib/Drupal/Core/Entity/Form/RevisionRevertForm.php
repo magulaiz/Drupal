@@ -17,6 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -155,6 +156,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $revisionId = $this->revision->getRevisionId();
     $revisionLabel = $this->revision->label();
@@ -297,6 +299,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function save(array $form, FormStateInterface $form_state) {
     return $this->revision->save();
   }

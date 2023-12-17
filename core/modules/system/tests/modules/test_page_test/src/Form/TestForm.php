@@ -4,6 +4,7 @@ namespace Drupal\test_page_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Defines a test form for testing assertions.
@@ -102,6 +103,7 @@ class TestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Empty on purpose, we just want to test the rendered form elements.
   }

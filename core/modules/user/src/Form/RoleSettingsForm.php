@@ -4,6 +4,7 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\user\RoleInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -90,6 +91,7 @@ class RoleSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->hasValue('user_admin_role')) {
       $admin_roles = $this->roleStorage->getQuery()

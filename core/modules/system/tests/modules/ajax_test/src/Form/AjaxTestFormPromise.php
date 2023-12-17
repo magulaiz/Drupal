@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Test form for ajax_test_form_promise.
@@ -66,6 +67,7 @@ class AjaxTestFormPromise extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // An empty implementation, as we never submit the actual form.
   }

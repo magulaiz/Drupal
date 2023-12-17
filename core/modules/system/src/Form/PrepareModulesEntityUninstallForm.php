@@ -6,6 +6,7 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -180,6 +181,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $entity_type_id = $form_state->getValue('entity_type_id');
 

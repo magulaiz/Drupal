@@ -4,6 +4,7 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Creates a form to delete an image style.
@@ -59,6 +60,7 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save a selected replacement in the image style storage. It will be used
     // later, in the same request, when resolving dependencies.

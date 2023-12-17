@@ -172,6 +172,7 @@ class ImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('locale', 'translation.inc');
     // Add language, if not yet supported.

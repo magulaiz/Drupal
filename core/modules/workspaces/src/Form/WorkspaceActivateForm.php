@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -105,6 +106,7 @@ class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceFo
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
       $this->workspaceManager->setActiveWorkspace($this->entity);

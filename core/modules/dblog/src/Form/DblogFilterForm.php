@@ -78,6 +78,7 @@ class DblogFilterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $filters = dblog_filters();
     $session_filters = $this->getRequest()->getSession()->get('dblog_overview_filter', []);
@@ -97,6 +98,7 @@ class DblogFilterForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function resetForm(array &$form, FormStateInterface $form_state) {
     $this->getRequest()->getSession()->remove('dblog_overview_filter');
   }

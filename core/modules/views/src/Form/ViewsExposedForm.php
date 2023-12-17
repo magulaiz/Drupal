@@ -174,6 +174,7 @@ class ViewsExposedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Form input keys that will not be included in $view->exposed_raw_data.
     $exclude = ['submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset'];

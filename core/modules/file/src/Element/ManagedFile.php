@@ -15,6 +15,7 @@ use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\file\Form\FileFormCallbacks;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore filefield
@@ -251,7 +252,7 @@ class ManagedFile extends FormElementBase {
       '#value' => t('Upload'),
       '#attributes' => ['class' => ['js-hide']],
       '#validate' => [],
-      '#submit' => ['file_managed_file_submit'],
+      '#submit' => [[FileFormCallbacks::class, 'managedFileSubmit']],
       '#limit_validation_errors' => [$element['#parents']],
       '#ajax' => $ajax_settings,
       '#weight' => -5,
@@ -267,7 +268,7 @@ class ManagedFile extends FormElementBase {
       '#type' => 'submit',
       '#value' => $element['#multiple'] ? t('Remove selected') : t('Remove'),
       '#validate' => [],
-      '#submit' => ['file_managed_file_submit'],
+      '#submit' => [[FileFormCallbacks::class, 'managedFileSubmit']],
       '#limit_validation_errors' => [$element['#parents']],
       '#ajax' => $ajax_settings,
       '#weight' => 1,

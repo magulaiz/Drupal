@@ -187,6 +187,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_object = $this->getFormObject($form_state);
     $form_object->submitForm($form, $form_state);

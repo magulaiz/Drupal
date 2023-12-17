@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -158,6 +159,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

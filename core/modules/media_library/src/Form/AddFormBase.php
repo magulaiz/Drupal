@@ -673,6 +673,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->getAddedMediaItems($form_state) as $delta => $media) {
       EntityFormDisplay::collectRenderDisplay($media, 'media_library')

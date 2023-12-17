@@ -106,6 +106,7 @@ class BookAdminEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save elements in the same order as defined in post rather than the form.
     // This ensures parents are updated before their children, preventing orphans.

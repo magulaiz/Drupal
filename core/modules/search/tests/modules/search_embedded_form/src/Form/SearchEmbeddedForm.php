@@ -4,6 +4,7 @@ namespace Drupal\search_embedded_form\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form controller for search_embedded_form form.
@@ -46,6 +47,7 @@ class SearchEmbeddedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $state = \Drupal::state();
     $submit_count = $state->get('search_embedded_form.submit_count', 0);

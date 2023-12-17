@@ -158,6 +158,7 @@ class UpdateManagerInstall extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $local_cache = NULL;
     $all_files = $this->getRequest()->files->get('files', []);

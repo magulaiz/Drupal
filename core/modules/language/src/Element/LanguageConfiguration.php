@@ -8,6 +8,8 @@ use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
+use Drupal\language\Form\LanguageFormCallbacks;
+
 /**
  * Defines an element for language configuration for a single field.
  */
@@ -74,11 +76,11 @@ class LanguageConfiguration extends FormElementBase {
       // @todo Form API: Allow form widgets/sections to declare #submit
       //   handlers.
       $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-      if (isset($form['actions'][$submit_name]['#submit']) && array_search('language_configuration_element_submit', $form['actions'][$submit_name]['#submit']) === FALSE) {
-        $form['actions'][$submit_name]['#submit'][] = 'language_configuration_element_submit';
+      if (isset($form['actions'][$submit_name]['#submit']) && array_search([LanguageFormCallbacks::class, 'configurationElementSubmit'], $form['actions'][$submit_name]['#submit'], TRUE) === FALSE) {
+        $form['actions'][$submit_name]['#submit'][] = [LanguageFormCallbacks::class, 'configurationElementSubmit'];
       }
-      elseif (array_search('language_configuration_element_submit', $form['#submit']) === FALSE) {
-        $form['#submit'][] = 'language_configuration_element_submit';
+      elseif (array_search([LanguageFormCallbacks::class, 'configurationElementSubmit'], $form['#submit'], TRUE) === FALSE) {
+        $form['#submit'][] = [LanguageFormCallbacks::class, 'configurationElementSubmit'];
       }
     }
     return $element;

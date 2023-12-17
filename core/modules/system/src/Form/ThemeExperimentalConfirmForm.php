@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -132,6 +133,7 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $args = $form_state->getBuildInfo()['args'];
     $theme = $args[0] ?? NULL;

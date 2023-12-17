@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
@@ -150,6 +151,7 @@ class Rearrange extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
     $display_id = $form_state->get('display_id');

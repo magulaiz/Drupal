@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\language\Form\LanguageFormCallbacks;
 
 /**
  * The block content type entity form.
@@ -80,7 +81,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
         '#default_value' => $language_configuration,
       ];
 
-      $form['#submit'][] = 'language_configuration_element_submit';
+      $form['#submit'][] = [LanguageFormCallbacks::class, 'configurationElementSubmit'];
     }
 
     $form['actions'] = ['#type' => 'actions'];

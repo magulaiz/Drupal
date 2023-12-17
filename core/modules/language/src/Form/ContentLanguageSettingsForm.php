@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -190,6 +191,7 @@ class ContentLanguageSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $entity_types = $form_state->getValue('entity_types');
     foreach ($form_state->getValue('settings') as $entity_type => $entity_settings) {

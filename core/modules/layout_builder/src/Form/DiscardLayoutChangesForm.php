@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -95,6 +96,7 @@ class DiscardLayoutChangesForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->layoutTempstoreRepository->delete($this->sectionStorage);
 

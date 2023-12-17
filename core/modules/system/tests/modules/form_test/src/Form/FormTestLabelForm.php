@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * A form for testing form labels and required marks.
@@ -180,6 +181,7 @@ class FormTestLabelForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

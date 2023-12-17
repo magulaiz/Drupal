@@ -9,6 +9,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -162,6 +163,7 @@ class PerformanceForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->cssCollectionOptimizer->deleteAll();
     $this->jsCollectionOptimizer->deleteAll();

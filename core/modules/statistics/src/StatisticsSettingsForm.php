@@ -7,6 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -89,6 +90,7 @@ class StatisticsSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('statistics.settings')
       ->set('count_content_views', $form_state->getValue('statistics_count_content_views'))

@@ -96,6 +96,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\EntityInterface $entity_1 */
     $entity_1 = $form_state->get('entity_1');

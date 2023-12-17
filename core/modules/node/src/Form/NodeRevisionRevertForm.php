@@ -7,6 +7,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -121,6 +122,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // The revision timestamp will be updated when the revision is saved. Keep
     // the original one for the confirmation message.

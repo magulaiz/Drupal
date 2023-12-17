@@ -4,6 +4,7 @@ namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\taxonomy\TermStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -78,6 +79,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $this->termStorage->resetWeights($this->entity->id());

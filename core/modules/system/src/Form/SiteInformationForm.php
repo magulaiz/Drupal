@@ -203,6 +203,7 @@ class SiteInformationForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
       ->set('name', $form_state->getValue('site_name'))

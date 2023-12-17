@@ -230,6 +230,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save all the values in an expirable key value store.
     $modules = $form_state->getValue('uninstall');

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a generic base class for a content entity deletion form.
@@ -55,6 +56,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->getEntity();

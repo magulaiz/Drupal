@@ -135,6 +135,7 @@ trait FieldLayoutEntityDisplayFormTrait {
   /**
    * Submit handler for the non-JS case.
    */
+  #[TrustedCallback]
   public function settingsAjaxSubmit($form, FormStateInterface $form_state) {
     $form_state->set('layout_plugin', NULL);
     $form_state->setRebuild();
@@ -157,6 +158,7 @@ trait FieldLayoutEntityDisplayFormTrait {
   /**
    * Overrides \Drupal\field_ui\Form\EntityDisplayFormBase::submitForm().
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -241,6 +242,7 @@ class FieldStorageReuseForm extends FormBase {
    * @throws \Exception
    *   Thrown when there is an error re-using the field.
    */
+  #[TrustedCallback]
   public function reuseCallback(array $form, FormStateInterface $form_state) {
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $field_name = $form_state->getTriggeringElement()['#name'];
@@ -285,6 +287,7 @@ class FieldStorageReuseForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // This is no-op because there is no single submit action on the form. All
     // the actions are handled by a callback attached to individual buttons.

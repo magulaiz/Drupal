@@ -319,6 +319,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
   /**
    * Submission handler for the "Add another item" button.
    */
+  #[TrustedCallback]
   public static function addMoreSubmit(array $form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
 
@@ -378,6 +379,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public static function deleteSubmit(&$form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
     $delta = (int) $button['#delta'];

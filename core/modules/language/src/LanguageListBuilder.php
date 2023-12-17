@@ -154,6 +154,7 @@ class LanguageListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

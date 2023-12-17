@@ -242,6 +242,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Update image effect weights.

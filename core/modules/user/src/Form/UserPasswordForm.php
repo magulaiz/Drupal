@@ -199,6 +199,7 @@ class UserPasswordForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $form_state->getValue('account');
     if ($account) {

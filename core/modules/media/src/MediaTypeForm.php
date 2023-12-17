@@ -295,6 +295,7 @@ class MediaTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setValue('field_map', array_filter(
       $form_state->getValue('field_map', []),

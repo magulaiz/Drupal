@@ -211,6 +211,8 @@ function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_stat
       '#options' => [t('Disabled'), t('Enabled')],
     ];
     // Add a custom submit handler to save the array of types back to the config file.
+    //  Mark your handler as trusted with the #[TrustedCallback]
+    // attribute.
     $form['actions']['submit']['#submit'][] = 'my_module_upload_enabled_types_submit';
   }
 }

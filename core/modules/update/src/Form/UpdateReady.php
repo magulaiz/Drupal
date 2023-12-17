@@ -6,6 +6,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -117,6 +118,7 @@ class UpdateReady extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $session = $this->getRequest()->getSession();
     // Store maintenance_mode setting so we can restore it when done.

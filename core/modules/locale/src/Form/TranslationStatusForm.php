@@ -277,6 +277,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('locale', 'fetch.inc');
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');

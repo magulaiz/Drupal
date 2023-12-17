@@ -4,6 +4,7 @@ namespace Drupal\search\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -58,6 +59,7 @@ class ReindexConfirm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form['confirm']) {
       // Ask each active search page to mark itself for re-index.

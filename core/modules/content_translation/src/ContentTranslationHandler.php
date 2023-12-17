@@ -761,6 +761,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * Updates metadata fields, which should be updated only after the validation
    * has run and before the entity is saved.
    */
+  #[TrustedCallback]
   public function entityFormSubmit($form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
@@ -784,6 +785,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Takes care of the source language change.
    */
+  #[TrustedCallback]
   public function entityFormSourceChange($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();
@@ -804,6 +806,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Takes care of entity deletion.
    */
+  #[TrustedCallback]
   public function entityFormDelete($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();

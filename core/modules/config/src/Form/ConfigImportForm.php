@@ -116,6 +116,7 @@ class ConfigImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($path = $form_state->getValue('import_tarball')) {
       $this->configStorage->deleteAll();

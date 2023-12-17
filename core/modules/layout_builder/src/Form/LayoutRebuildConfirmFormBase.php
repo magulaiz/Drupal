@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -98,6 +99,7 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->handleSectionStorage($this->sectionStorage, $form_state);
 

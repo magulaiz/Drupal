@@ -5,6 +5,7 @@ namespace Drupal\Core\Installer\Form;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -145,6 +146,7 @@ class SelectProfileForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $install_state;
     $profile = $form_state->getValue('profile');

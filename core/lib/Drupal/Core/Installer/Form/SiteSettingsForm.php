@@ -228,6 +228,7 @@ class SiteSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $install_state;
 

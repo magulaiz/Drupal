@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form builder for testing hook_form_alter() and hook_form_FORM_ID_alter().
@@ -32,6 +33,7 @@ class FormTestAlterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

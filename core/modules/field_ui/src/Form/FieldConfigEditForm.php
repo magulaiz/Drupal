@@ -389,6 +389,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -518,6 +519,7 @@ class FieldConfigEditForm extends EntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();

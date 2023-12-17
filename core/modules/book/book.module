@@ -6,6 +6,7 @@
  */
 
 use Drupal\book\BookManager;
+use Drupal\book\Form\BookFormCallbacks;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -152,7 +153,7 @@ function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form
     $form['book']['pick-book'] = [
       '#type' => 'submit',
       '#value' => t('Change book (update list of parents)'),
-      '#submit' => ['book_pick_book_nojs_submit'],
+      '#submit' => [[BookFormCallbacks::class, 'pickBookNoJsSubmit']],
       '#weight' => 20,
       '#attributes' => [
         'class' => [
@@ -189,11 +190,16 @@ function book_node_builder($entity_type, NodeInterface $entity, &$form, FormStat
  *
  * @see book_form_update()
  * @see book_form_node_form_alter()
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   BookFormCallbacks::pickBookNoJsSubmit()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function book_pick_book_nojs_submit($form, FormStateInterface $form_state) {
-  $node = $form_state->getFormObject()->getEntity();
-  $node->book = $form_state->getValue('book');
-  $form_state->setRebuild();
+  BookFormCallbacks::pickBookNoJsSubmit($form, $form_state);
 }
 
 /**

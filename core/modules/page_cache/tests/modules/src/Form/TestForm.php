@@ -4,6 +4,7 @@ namespace Drupal\page_cache_form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * A form to test page cache.
@@ -30,6 +31,7 @@ class TestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
 }

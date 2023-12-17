@@ -172,6 +172,7 @@ class TranslateEditForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $langcode = $form_state->getValue('langcode');
     $updated = [];

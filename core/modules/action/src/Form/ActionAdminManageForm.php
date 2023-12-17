@@ -5,6 +5,7 @@ namespace Drupal\action\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -82,6 +83,7 @@ class ActionAdminManageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('action')) {
       $form_state->setRedirect(

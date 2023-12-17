@@ -5,6 +5,7 @@ namespace Drupal\ban\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\ban\BanIpManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -97,6 +98,7 @@ class BanDelete extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->ipManager->unbanIp($this->banIp);
     $this->logger('user')->notice('Deleted %ip', ['%ip' => $this->banIp]);

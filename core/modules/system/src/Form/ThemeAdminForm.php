@@ -4,6 +4,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form to select the administration theme.
@@ -55,6 +56,7 @@ class ThemeAdminForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $this->config('system.theme')->set('admin', $form_state->getValue('admin_theme'))->save();

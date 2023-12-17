@@ -202,6 +202,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**

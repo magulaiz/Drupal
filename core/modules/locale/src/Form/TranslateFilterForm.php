@@ -3,6 +3,7 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a filtered translation edit form.
@@ -82,6 +83,7 @@ class TranslateFilterForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $filters = $this->translateFilters();
     $session_filters = $this->getRequest()->getSession()->get('locale_translate_filter', []);

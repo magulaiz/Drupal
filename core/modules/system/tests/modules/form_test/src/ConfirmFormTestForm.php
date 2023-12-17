@@ -4,6 +4,7 @@ namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -67,6 +68,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
     $form_state->setRedirect('<front>');

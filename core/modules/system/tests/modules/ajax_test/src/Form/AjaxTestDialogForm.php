@@ -68,6 +68,7 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('ajax_test.dialog_contents');
   }

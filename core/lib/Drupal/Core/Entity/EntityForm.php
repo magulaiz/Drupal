@@ -283,6 +283,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove button and internal Form API values from submitted values.
     $form_state->cleanValues();

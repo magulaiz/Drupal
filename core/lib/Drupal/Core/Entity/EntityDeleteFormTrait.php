@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -118,6 +119,7 @@ trait EntityDeleteFormTrait {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->getEntity()->delete();
     $this->messenger()->addStatus($this->getDeletionMessage());

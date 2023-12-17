@@ -5,6 +5,7 @@ namespace Drupal\form_test\Form;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Builds a simple form to test vertical tabs.
@@ -51,6 +52,7 @@ class FormTestVerticalTabsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
     // This won't have a proper JSON header, but Drupal doesn't check for that

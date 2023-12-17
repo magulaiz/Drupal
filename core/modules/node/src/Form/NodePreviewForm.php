@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -127,6 +128,7 @@ class NodePreviewForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $route_parameters = [
       'node_preview' => $form_state->getValue('uuid'),

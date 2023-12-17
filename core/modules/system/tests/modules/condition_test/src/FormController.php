@@ -78,6 +78,7 @@ class FormController implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $subformState = SubformState::createForSubform($form['entity_bundle'], $form, $form_state);
     $this->condition->submitConfigurationForm($form['entity_bundle'], $subformState);

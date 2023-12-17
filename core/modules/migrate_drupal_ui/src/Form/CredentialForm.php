@@ -395,6 +395,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->store->set('step', 'idconflict');
     $form_state->setRedirect('migrate_drupal_ui.upgrade_idconflict');

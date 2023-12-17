@@ -50,6 +50,7 @@ class TestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('Your email address is @email', ['@email' => $form['email']['#value']]));
   }

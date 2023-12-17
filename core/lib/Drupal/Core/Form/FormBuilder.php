@@ -475,6 +475,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm($form_arg, FormStateInterface &$form_state, mixed ...$args) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {

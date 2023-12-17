@@ -745,6 +745,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    *
    * @see static::fieldSettingsForm()
    */
+  #[TrustedCallback]
   public static function settingsAjaxSubmit($form, FormStateInterface $form_state) {
     $form_storage = &$form_state->getStorage();
     unset($form_storage['default_value_widget']);

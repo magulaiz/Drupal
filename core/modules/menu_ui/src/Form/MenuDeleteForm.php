@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -75,6 +76,7 @@ class MenuDeleteForm extends EntityDeleteForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Locked menus may not be deleted.
     if ($this->entity->isLocked()) {

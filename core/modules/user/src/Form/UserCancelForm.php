@@ -4,6 +4,7 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a confirmation form for cancelling user account.
@@ -132,6 +133,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Cancel account immediately, if the current user has administrative
     // privileges, no confirmation mail shall be sent, and the user does not

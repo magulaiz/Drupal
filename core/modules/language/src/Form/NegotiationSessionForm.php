@@ -4,6 +4,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Configure the session language negotiation method for this site.
@@ -46,6 +47,7 @@ class NegotiationSessionForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.negotiation')
       ->set('session.parameter', $form_state->getValue('language_negotiation_session_param'))

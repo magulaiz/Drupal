@@ -4,6 +4,7 @@ namespace Drupal\forum;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Configure forum settings for this site.
@@ -68,6 +69,7 @@ class ForumSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('forum.settings')
       ->set('topics.hot_threshold', $form_state->getValue('forum_hot_topic'))

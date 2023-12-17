@@ -116,6 +116,7 @@ abstract class ImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
 

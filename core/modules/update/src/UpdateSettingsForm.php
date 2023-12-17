@@ -4,6 +4,7 @@ namespace Drupal\update;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
@@ -102,6 +103,7 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
     // See if the update_check_disabled setting is being changed, and if so,

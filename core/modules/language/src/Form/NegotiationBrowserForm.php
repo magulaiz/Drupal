@@ -190,6 +190,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $mappings = $form_state->get('mappings');
     if (!empty($mappings)) {

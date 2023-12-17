@@ -5,6 +5,7 @@ namespace Drupal\workspaces\Form;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -71,6 +72,7 @@ class SwitchToLiveForm extends ConfirmFormBase implements WorkspaceFormInterface
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->workspaceManager->switchToLive();
     $this->messenger()->addMessage($this->t('You are now viewing the live version of the site.'));

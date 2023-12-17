@@ -183,6 +183,7 @@ class MessageForm extends ContentEntityForm {
   /**
    * Form submission handler for the 'preview' action.
    */
+  #[TrustedCallback]
   public function preview(array $form, FormStateInterface $form_state) {
     $message = $this->entity;
     $message->preview = TRUE;

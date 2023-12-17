@@ -58,6 +58,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
     // This won't have a proper JSON header, but Drupal doesn't check for that

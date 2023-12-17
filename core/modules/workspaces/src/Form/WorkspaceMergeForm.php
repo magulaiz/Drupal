@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceInterface;
 use Drupal\workspaces\WorkspaceOperationFactory;
@@ -142,6 +143,7 @@ class WorkspaceMergeForm extends ConfirmFormBase implements WorkspaceFormInterfa
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->workspaceOperationFactory->getMerger($this->sourceWorkspace, $this->targetWorkspace)->merge();
     $this->messenger()->addMessage($this->t('The contents of the %source_label workspace have been merged into %target_label.', [

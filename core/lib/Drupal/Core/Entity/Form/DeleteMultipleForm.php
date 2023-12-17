@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
@@ -213,6 +214,7 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $total_count = 0;
     $delete_entities = [];

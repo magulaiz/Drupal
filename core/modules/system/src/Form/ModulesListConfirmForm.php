@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -160,6 +161,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove the key value store entry.
     $account = $this->currentUser()->id();

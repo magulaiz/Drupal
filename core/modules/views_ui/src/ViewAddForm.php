@@ -198,6 +198,7 @@ class ViewAddForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
       /** @var \Drupal\views\Plugin\views\wizard\WizardInterface $wizard */

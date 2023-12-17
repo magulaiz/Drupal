@@ -131,6 +131,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus(t('The form submitted correctly.'));
   }

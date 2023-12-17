@@ -82,6 +82,7 @@ class FileTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Process the upload and perform validation. Note: we're using the
     // form value for the $replace parameter.

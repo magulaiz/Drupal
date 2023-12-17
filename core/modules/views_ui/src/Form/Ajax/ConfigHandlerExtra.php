@@ -102,6 +102,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
     $handler = $form_state->get('handler');

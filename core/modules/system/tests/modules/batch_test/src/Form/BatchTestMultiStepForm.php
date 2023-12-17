@@ -4,6 +4,7 @@ namespace Drupal\batch_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Generate form of id batch_test_multistep_form.
@@ -48,6 +49,7 @@ class BatchTestMultiStepForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     batch_test_stack(NULL, TRUE);
 

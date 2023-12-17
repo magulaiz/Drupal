@@ -94,6 +94,7 @@ class MenuLinkEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $link = $form['#plugin_form']->submitConfigurationForm($form, $form_state);
 

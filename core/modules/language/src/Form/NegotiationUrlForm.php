@@ -213,6 +213,7 @@ class NegotiationUrlForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save selected format (prefix or domain).
     $this->config('language.negotiation')

@@ -97,6 +97,7 @@ class FormTestProgrammaticForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->set('programmatic_form_submit', $form_state->getValues());
   }

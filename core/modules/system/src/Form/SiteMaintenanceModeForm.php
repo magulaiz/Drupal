@@ -5,6 +5,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
@@ -100,6 +101,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->state->set('system.maintenance_mode', $form_state->getValue('maintenance_mode'));
     parent::submitForm($form, $form_state);

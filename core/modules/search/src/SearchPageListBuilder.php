@@ -346,6 +346,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

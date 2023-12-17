@@ -120,6 +120,7 @@ class LocaleSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Invalidate the cached translation status when the configuration setting
     // of 'use_source' changes.

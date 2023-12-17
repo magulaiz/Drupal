@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form to test the validation of forms with a disabled CSRF token.
@@ -34,6 +35,7 @@ class FormTestValidateNoToken extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus('The form_test_validate_no_token form has been submitted successfully.');
   }

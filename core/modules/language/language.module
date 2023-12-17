@@ -10,7 +10,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Entity\ContentEntityFormInterface;
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -153,7 +152,7 @@ function language_element_info_alter(&$type) {
  * @return array
  *   The processed form element.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0 Use
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0 Use
  *   LanguageTrustedCallbacks::LanguageSelectProcess() instead.
  *
  * @todo Replace with CR url for issue 2966711
@@ -183,34 +182,16 @@ function language_entity_base_field_info_alter(&$fields) {
 
 /**
  * Submit handler for the forms that have a language_configuration element.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   LanguageFormCallbacks::configurationElementSubmit()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function language_configuration_element_submit(&$form, FormStateInterface $form_state) {
-  // Iterate through all the language_configuration elements and save their
-  // values.
-  // In case we are editing a bundle, we must check the new bundle name,
-  // because e.g. hook_ENTITY_update fired before.
-  if ($language = $form_state->get('language')) {
-    foreach ($language as $element_name => $values) {
-      $entity_type_id = $values['entity_type'];
-      $bundle = $values['bundle'];
-      $form_object = $form_state->getFormObject();
-      if ($form_object instanceof EntityFormInterface) {
-        /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
-        $entity = $form_object->getEntity();
-        if ($entity->getEntityType()->getBundleOf()) {
-          $bundle = $entity->id();
-          $language[$element_name]['bundle'] = $bundle;
-        }
-      }
-      $config = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
-      $config->setDefaultLangcode($form_state->getValue([$element_name, 'langcode']));
-      $config->setLanguageAlterable($form_state->getValue([$element_name, 'language_alterable']));
-      $config->save();
-
-      // Set the form_state language with the updated bundle.
-      $form_state->set('language', $language);
-    }
-  }
+  LanguageFormCallbacks::configurationElementSubmit($form, $form_state);
 }
 
 /**

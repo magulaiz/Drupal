@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form builder for \Drupal\Core\Form\FormState::cleanValues() test.
@@ -40,6 +41,7 @@ class FormTestFormStateValuesCleanAdvancedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
     print t('You WIN!');

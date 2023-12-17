@@ -4,6 +4,7 @@ namespace Drupal\filter\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -44,6 +45,7 @@ class FilterDisableForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->disable()->save();
     $this->messenger()->addStatus($this->t('Disabled text format %format.', ['%format' => $this->entity->label()]));

@@ -215,6 +215,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Call the plugin submit handler.
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);

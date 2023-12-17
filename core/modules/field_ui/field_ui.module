@@ -13,9 +13,9 @@ use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
-use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\field_ui\Form\FieldStorageConfigEditForm;
+use Drupal\field_ui\Form\FieldUiFormCallbacks;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 
 /**
@@ -267,21 +267,22 @@ function field_ui_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     unset($form['actions']['submit']['#button_type']);
     $form['actions']['save_continue']['#value'] = t('Save and manage fields');
     $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] - 5;
-    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_manage_field_form_submit';
+    $form['actions']['save_continue']['#submit'][] = [FieldUiFormCallbacks::class, 'formManageFieldFormSubmit'];
   }
 }
 
 /**
  * Form submission handler for the 'Save and manage fields' button.
  *
- * @see field_ui_form_alter()
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   FieldUiFormCallbacks::formManageFieldFormSubmit()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_state) {
-  $provider = $form_state->getFormObject()->getEntity()->getEntityType()->getProvider();
-  $id = $form_state->getFormObject()->getEntity()->id();
-  if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo($provider, $id)) {
-    $form_state->setRedirectUrl($route_info);
-  }
+  FieldUiFormCallbacks::formManageFieldFormSubmit($form, $form_state);
 }
 
 /**

@@ -65,6 +65,7 @@ class FormTestObject extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The FormTestObject::submitForm() method was used for this form.'));
     $this->config('form_test.object')

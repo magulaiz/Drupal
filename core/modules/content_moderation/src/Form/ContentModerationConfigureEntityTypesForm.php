@@ -13,6 +13,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\workflows\WorkflowInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -178,6 +179,7 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue('bundles') as $bundle_id => $checked) {
       if ($checked) {

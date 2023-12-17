@@ -107,6 +107,7 @@ class Display extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
     $display_id = $form_state->get('display_id');
