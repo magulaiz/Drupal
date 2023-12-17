@@ -20,14 +20,14 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
-  protected $storage;
+  protected StorageInterface $storage;
 
   /**
    * The instantiated Cache backend.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $cache;
+  protected CacheBackendInterface $cache;
 
   /**
    * List of listAll() prefixes with their results.
