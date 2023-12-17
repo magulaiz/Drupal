@@ -26,7 +26,7 @@ interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInt
   /**
    * Indicates the block label (title) should be displayed to end users.
    */
-  const BLOCK_LABEL_VISIBLE = 'visible';
+  const BLOCK_LABEL_VISIBLE = TRUE;
 
   /**
    * Returns the user-facing block label.

@@ -49,7 +49,7 @@ class BlockSettingsTest extends UnitTestCase {
         ],
         [
           'label' => 'title',
-          'label_display' => 'visible',
+          'label_display' => TRUE,
         ],
       ],
       'title empty' => [
@@ -61,7 +61,7 @@ class BlockSettingsTest extends UnitTestCase {
         ],
         [
           'label' => '',
-          'label_display' => '0',
+          'label_display' => FALSE,
         ],
       ],
       'title <none>' => [
@@ -73,7 +73,7 @@ class BlockSettingsTest extends UnitTestCase {
         ],
         [
           'label' => '<none>',
-          'label_display' => '0',
+          'label_display' => FALSE,
         ],
       ],
     ];

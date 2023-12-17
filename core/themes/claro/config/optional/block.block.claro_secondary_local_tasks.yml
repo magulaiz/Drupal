@@ -12,7 +12,7 @@ plugin: local_tasks_block
 settings:
   id: local_tasks_block
   label: 'Secondary tabs'
-  label_display: '0'
+  label_display: false
   provider: core
   primary: false
   secondary: true

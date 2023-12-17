@@ -18,7 +18,7 @@ third_party_settings:
             region: first
             configuration:
               id: 'extra_field_block:entity_test:bundle_with_extra_fields:display_extra_field'
-              label_display: '0'
+              label_display: FALSE
               context_mapping:
                 entity: layout_builder.entity
             weight: 1

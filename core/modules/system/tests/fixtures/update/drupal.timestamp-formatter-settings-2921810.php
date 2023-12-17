@@ -107,7 +107,7 @@ $config['third_party_settings']['layout_builder'] = [
           'region' => 'content',
           'configuration' => [
             'id' => 'field_block:node:page:field_foo',
-            'label_display' => '0',
+            'label_display' => FALSE,
             'context_mapping' => [
               'entity' => 'layout_builder.entity',
             ],

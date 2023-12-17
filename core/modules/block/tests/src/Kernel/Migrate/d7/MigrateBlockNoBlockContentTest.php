@@ -78,7 +78,7 @@ class MigrateBlockNoBlockContentTest extends MigrateDrupal7TestBase {
    *
    * @internal
    */
-  public function assertEntity(string $id, string $plugin_id, array $roles, string $pages, string $region, string $theme, int $weight, string $label, string $label_display, bool $status = TRUE): void {
+  public function assertEntity(string $id, string $plugin_id, array $roles, string $pages, string $region, string $theme, int $weight, string $label, bool $label_display, bool $status = TRUE): void {
     $block = Block::load($id);
     $this->assertInstanceOf(Block::class, $block);
     /** @var \Drupal\block\BlockInterface $block */
@@ -107,12 +107,12 @@ class MigrateBlockNoBlockContentTest extends MigrateDrupal7TestBase {
    * Tests the block migration.
    */
   public function testBlockMigration(): void {
-    $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'olivero', 0, '', '0');
-    $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', '0');
-    $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', 'visible');
-    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_bottom', 'olivero', 10, '', '0');
-    $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'claro', 0, '', '0');
-    $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'claro', 10, 'User login title', 'visible');
+    $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'olivero', 0, '', FALSE);
+    $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', FALSE);
+    $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', TRUE);
+    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_bottom', 'olivero', 10, '', FALSE);
+    $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'claro', 0, '', FALSE);
+    $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'claro', 10, 'User login title', TRUE);
 
     // Assert that disabled blocks (or enabled blocks whose plugin IDs could
     // be resolved) did not migrate.

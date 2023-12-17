@@ -110,7 +110,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'user_login_block',
       'label' => '',
       'provider' => 'user',
-      'label_display' => '0',
+      'label_display' => FALSE,
     ];
     $this->assertEntity('user', $visibility, 'sidebar', 'olivero', -10, $settings);
 
@@ -119,7 +119,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'system_menu_block',
       'label' => 'zu - Navigation',
       'provider' => 'system',
-      'label_display' => 'visible',
+      'label_display' => TRUE,
       'level' => 1,
       'expand_all_items' => FALSE,
       'depth' => 0,
@@ -142,7 +142,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'broken',
       'label' => '',
       'provider' => 'core',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'items_per_page' => '5',
     ];
     $this->assertEntity('user_2', $visibility, 'sidebar', 'olivero', -11, $settings);
@@ -163,7 +163,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'broken',
       'label' => '',
       'provider' => 'core',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'items_per_page' => '10',
     ];
     $this->assertEntity('user_3', $visibility, 'sidebar', 'olivero', -10, $settings);
@@ -180,7 +180,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'system_powered_by_block',
       'label' => '',
       'provider' => 'system',
-      'label_display' => '0',
+      'label_display' => FALSE,
     ];
     $this->assertEntity('system', $visibility, 'footer_top', 'olivero', -5, $settings);
 
@@ -189,7 +189,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'broken',
       'label' => '',
       'provider' => 'core',
-      'label_display' => '0',
+      'label_display' => FALSE,
     ];
     $this->assertEntity('menu', [], 'header', 'olivero', -5, $settings);
 
@@ -198,7 +198,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'broken',
       'label' => '',
       'provider' => 'core',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'block_count' => 7,
       'feed' => '5',
     ];
@@ -209,7 +209,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'broken',
       'label' => '',
       'provider' => 'core',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'block_mode' => 'book pages',
     ];
     $this->assertEntity('book', [], 'sidebar', 'olivero', -4, $settings);
@@ -219,7 +219,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'forum_active_block',
       'label' => '',
       'provider' => 'forum',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'block_count' => 3,
       'properties' => [
         'administrative' => '1',
@@ -231,7 +231,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'forum_new_block',
       'label' => '',
       'provider' => 'forum',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'block_count' => 4,
       'properties' => [
         'administrative' => '1',
@@ -244,7 +244,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'broken',
       'label' => '',
       'provider' => 'core',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'top_day_num' => 7,
       'top_all_num' => 8,
       'top_last_num' => 9,
@@ -263,7 +263,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'block_content',
       'label' => 'Static Block',
       'provider' => 'block_content',
-      'label_display' => 'visible',
+      'label_display' => TRUE,
       'status' => TRUE,
       'info' => '',
       'view_mode' => 'full',
@@ -281,7 +281,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'block_content',
       'label' => 'Another Static Block',
       'provider' => 'block_content',
-      'label_display' => 'visible',
+      'label_display' => TRUE,
       'status' => TRUE,
       'info' => '',
       'view_mode' => 'full',
@@ -294,7 +294,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'id' => 'block_content',
       'label' => '',
       'provider' => 'block_content',
-      'label_display' => '0',
+      'label_display' => FALSE,
       'status' => TRUE,
       'info' => '',
       'view_mode' => 'full',

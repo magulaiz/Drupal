@@ -28,7 +28,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:article:field_tags'
-              label_display: '0'
+              label_display: false
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -44,7 +44,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:article:field_media_image'
-              label_display: '0'
+              label_display: false
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -61,7 +61,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'field_block:node:article:body'
-              label_display: '0'
+              label_display: false
               context_mapping:
                 entity: layout_builder.entity
               formatter:
@@ -76,7 +76,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'extra_field_block:node:article:links'
-              label_display: '0'
+              label_display: false
               context_mapping:
                 entity: layout_builder.entity
             weight: 3
@@ -86,7 +86,7 @@ third_party_settings:
             region: content
             configuration:
               id: 'extra_field_block:node:article:content_moderation_control'
-              label_display: '0'
+              label_display: false
               context_mapping:
                 entity: layout_builder.entity
             weight: 4

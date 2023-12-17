@@ -18,7 +18,7 @@ plugin: search_form_block
 settings:
   id: search_form_block
   label: 'Search help'
-  label_display: visible
+  label_display: true
   provider: search
   page_id: help_search
 visibility:
