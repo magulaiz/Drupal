@@ -2,13 +2,13 @@
 
 namespace Drupal\views;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
+use Drupal\views\Plugin\ViewsPluginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -464,7 +464,7 @@ class ViewExecutable {
   /**
    * The display plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface;
+   * @var \Drupal\views\Plugin\ViewsPluginManager;
    */
   protected $displayPluginManager;
 
@@ -479,19 +479,17 @@ class ViewExecutable {
    *   The views data.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_plugin_manager
+   * @param \Drupal\views\Plugin\ViewsPluginManager $display_plugin_manager
    *   The plugin manager for display.
    */
-  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider, PluginManagerInterface $display_plugin_manager) {
+  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider, ViewsPluginManager $display_plugin_manager) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
     $this->user = $user;
     $this->viewsData = $views_data;
     $this->routeProvider = $route_provider;
-
-    // Initialize the display cache array.
-    $this->displayHandlers = new DisplayPluginCollection($this, $display_plugin_manager);
+    $this->displayPluginManager = $display_plugin_manager;
 
   }
 
@@ -752,8 +750,9 @@ class ViewExecutable {
     if (isset($this->current_display)) {
       return TRUE;
     }
-
     $this->current_display = 'default';
+    // Initialize the display cache array.
+    $this->displayHandlers = new DisplayPluginCollection($this, $this->displayPluginManager);
     $this->display_handler = $this->displayHandlers->get('default');
 
     return TRUE;
