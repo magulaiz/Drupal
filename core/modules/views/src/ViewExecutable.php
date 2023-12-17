@@ -2107,6 +2107,7 @@ class ViewExecutable {
       $defaults['user'],
       $defaults['request'],
       $defaults['routeProvider'],
+      $defaults['displayPluginManager'],
       $defaults['viewsData']
     );
 
@@ -2545,6 +2546,7 @@ class ViewExecutable {
       $this->user = \Drupal::currentUser();
       $this->viewsData = \Drupal::service('views.views_data');
       $this->routeProvider = \Drupal::service('router.route_provider');
+      $this->displayPluginManager = \Drupal::service('plugin.manager.views.display');
 
       // Restore the state of this executable.
       if ($request = \Drupal::request()) {
