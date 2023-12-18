@@ -95,64 +95,11 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function menuSelectElement($menu_id, array $menus = NULL) {
-    $options = $this->getMenuSelectOptions($menus);
-    if ($options) {
-      $menu_parent_wrapper = Html::getUniqueId('menu-parent-wrapper');
-      $elements['menu'] = [
-        '#title' => $this->t('Menu'),
-        '#type' => 'select',
-        '#options' => $options,
-        '#attributes' => ['class' => ['menu-title-select']],
-        '#ajax' => [
-          'callback' => [$this, 'updateParentLinks'],
-          'wrapper' => $menu_parent_wrapper,
-          'trigger_as' => ['name' => 'update_parent_links'],
-          'event' => 'change',
-        ],
-      ];
-      if (isset($options[$menu_id])) {
-        // Only provide the default value if it is valid among the options.
-        $elements['menu'] += ['#default_value' => $menu_id];
-      }
-      $elements['menu_submit'] = [
-        '#type' => 'submit',
-        '#name' => 'update_parent_links',
-        '#value' => $this->t('Change menu'),
-        '#submit' => [[$this, 'updateParentLinksSubmit']],
-        '#attributes' => ['class' => ['js-hide']],
-        '#ajax' => [
-          'callback' => [$this, 'updateParentLinks'],
-          'wrapper' => $menu_parent_wrapper,
-        ],
-      ];
-      $elements['menu_parent'] = [];
-      $elements_wrapper = [
-        'menu_parent_wrapper' => [
-          '#type' => 'container',
-          '#attributes' => ['id' => $menu_parent_wrapper],
-          'menu_parent' => $elements['menu_parent'],
-          'menu' => $elements['menu'],
-          'submit' => $elements['menu_submit'],
-          '#ajax' => [
-            'callback' => [$this, 'updateParentLinks'],
-            'wrapper' => $menu_parent_wrapper,
-          ],
-        ],
-      ];
-      return $elements_wrapper;
-    }
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL) {
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = '') {
     $options_cacheability = new CacheableMetadata();
     $options = $this->getParentSelectOptions($id, $menus, $options_cacheability);
     // If no options were found, there is nothing to select.
-    if ($options) {
+    if ($options && $menu_name === '') {
       $element = [
         '#type' => 'select',
         '#options' => $options,
@@ -169,6 +116,53 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       }
       $options_cacheability->applyTo($element);
       return $element;
+    } else {
+      $options = $this->getMenuSelectOptions($menus);
+      if ($options) {
+        $menu_parent_wrapper = Html::getUniqueId('menu-parent-wrapper');
+        $elements['menu'] = [
+          '#title' => $this->t('Menu'),
+          '#type' => 'select',
+          '#options' => $options,
+          '#attributes' => ['class' => ['menu-title-select']],
+          '#ajax' => [
+            'callback' => [$this, 'updateParentLinks'],
+            'wrapper' => $menu_parent_wrapper,
+            'trigger_as' => ['name' => 'update_parent_links'],
+            'event' => 'change',
+          ],
+        ];
+        if (isset($options[$menu_parent])) {
+          // Only provide the default value if it is valid among the options.
+          $elements['menu'] += ['#default_value' => $menu_parent];
+        }
+        $elements['menu_submit'] = [
+          '#type' => 'submit',
+          '#name' => 'update_parent_links',
+          '#value' => $this->t('Change menu'),
+          '#submit' => [[$this, 'updateParentLinksSubmit']],
+          '#attributes' => ['class' => ['js-hide']],
+          '#ajax' => [
+            'callback' => [$this, 'updateParentLinks'],
+            'wrapper' => $menu_parent_wrapper,
+          ],
+        ];
+        $elements['menu_parent'] = [];
+        $elements_wrapper = [
+          'menu_parent_wrapper' => [
+            '#type' => 'container',
+            '#attributes' => ['id' => $menu_parent_wrapper],
+            'menu_parent' => $elements['menu_parent'],
+            'menu' => $elements['menu'],
+            'submit' => $elements['menu_submit'],
+            '#ajax' => [
+              'callback' => [$this, 'updateParentLinks'],
+              'wrapper' => $menu_parent_wrapper,
+            ],
+          ],
+        ];
+        return $elements_wrapper;
+      }
     }
     return [];
   }

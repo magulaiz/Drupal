@@ -57,6 +57,8 @@ interface MenuParentFormSelectorInterface {
    * @param array $menus
    *   (optional) Array of menu names as keys and titles as values to limit
    *   the values that may be selected. If NULL, all menus will be included.
+   * @param string $menu_name
+   *   The select menu element name.
    *
    * @return array
    *   A form element to choose a parent, or an empty array if no possible
@@ -64,27 +66,6 @@ interface MenuParentFormSelectorInterface {
    *   a single string containing the chosen menu name and parent ID separated
    *   by a ':' character.
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL);
-
-  /**
-   * Gets a form element to choose a menu.
-   *
-   * @param string $menu_id
-   *   The default menu ID.
-   * @param array|null $menus
-   *   (optional) Array of menu names as keys and titles as values to limit
-   *   the values that may be selected. If NULL, all menus will be included.
-   *
-   * @return array
-   *   A form element to choose a menu, or an empty array if no possible
-   *   menu exist for the given parameters. The resulting form value will be
-   *   a single string containing the chosen menu name.
-   *
-   * @todo why are we introducing a new method? Is this strictly required?
-   *   Couldn't we return both elements from ::parentSelectElement? If we want
-   *   to retain BC, we could add a new optional parameter to allow turning on
-   *   this new functionality.
-   */
-  public function menuSelectElement($menu_id, array $menus = NULL);
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = '');
 
 }
