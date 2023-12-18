@@ -18,7 +18,7 @@ interface SectionListInterface extends \Countable {
    * @return Section[]
    *   An array of section objects.
    */
-  public function getSections(bool $key_by_uuid = FALSE);
+  public function getSections(bool $key_by_uuid = TRUE);
 
   /**
    * Gets a domain object for the layout section.

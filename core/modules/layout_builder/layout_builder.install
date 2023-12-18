@@ -165,7 +165,7 @@ function layout_builder_update_9001(&$sandbox) {
       $section_storage = $stored_data->data['section_storage'];
 
       // Loop through sections in the storage.
-      foreach ($section_storage->getSections() as $delta => &$section) {
+      foreach ($section_storage->getSections(FALSE) as $delta => &$section) {
         $section_array = $section->toArray();
         $section_array['uuid'] = \Drupal::service('uuid')->generate();
         $section_array['weight'] = $delta;

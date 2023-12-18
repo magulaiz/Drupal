@@ -21,7 +21,7 @@ class TestStateBasedSectionStorage extends SectionStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function getSections(bool $key_by_uuid = FALSE) {
+  public function getSections(bool $key_by_uuid = TRUE) {
     // Return a custom section.
     $section = (new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0);
     $section->appendComponent(new SectionComponent('fake-uuid', 'content', [

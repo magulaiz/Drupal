@@ -38,7 +38,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
    */
   public function testInvalidConfiguration() {
     $this->expectException(SchemaIncompleteException::class);
-    $this->sectionList->getSections()[0]->getComponent('10000000-0000-1000-a000-000000000000')->setConfiguration(['id' => 'foo', 'bar' => 'baz']);
+    $this->sectionList->getSections(FALSE)[0]->getComponent('10000000-0000-1000-a000-000000000000')->setConfiguration(['id' => 'foo', 'bar' => 'baz']);
     $this->sectionList->save();
   }
 

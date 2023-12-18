@@ -69,7 +69,7 @@ class TestSectionList implements SectionListInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSections(bool $key_by_uuid = FALSE) {
+  public function getSections(bool $key_by_uuid = TRUE) {
     $sections = $this->sections;
     if ($key_by_uuid) {
       return $sections;

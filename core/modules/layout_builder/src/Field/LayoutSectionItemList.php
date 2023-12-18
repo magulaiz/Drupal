@@ -32,7 +32,7 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
   /**
    * {@inheritdoc}
    */
-  public function getSections(bool $key_by_uuid = FALSE) {
+  public function getSections(bool $key_by_uuid = TRUE) {
     $sections = [];
     foreach ($this->list as $item) {
       if ($key_by_uuid) {

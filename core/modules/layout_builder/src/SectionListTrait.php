@@ -146,7 +146,7 @@ trait SectionListTrait {
   protected function hasBlankSection() {
     // A blank section will only ever exist when the delta is 0, as added by
     // ::removeSection().
-    return $this->hasSection(0) && $this->getSections()[0]->getLayoutId() === 'layout_builder_blank';
+    return $this->hasSection(0) && $this->getSections(FALSE)[0]->getLayoutId() === 'layout_builder_blank';
   }
 
   /**
@@ -162,7 +162,7 @@ trait SectionListTrait {
         $this->removeAllSections();
       }
 
-      $sections = $this->getSections(TRUE);
+      $sections = $this->getSections();
       foreach ($sections as $section_uuid => $section) {
         if ($section_uuid === $uuid) {
           unset($sections[$uuid]);

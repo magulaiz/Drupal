@@ -280,7 +280,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->plugin->setContext('entity', $context);
 
     $this->assertTrue($this->plugin->isOverridden());
-    $this->plugin->removeSection($this->plugin->getSections()[0]->getUuid());
+    $this->plugin->removeSection($this->plugin->getSections(FALSE)[0]->getUuid());
     $this->assertTrue($this->plugin->isOverridden());
     $this->plugin->removeAllSections(TRUE);
     $this->assertTrue($this->plugin->isOverridden());

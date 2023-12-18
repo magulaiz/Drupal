@@ -169,7 +169,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       $this->sectionList->removeAllSections();
     }
     elseif ($set_blank === TRUE) {
-      $expected = [$this->sectionList->removeAllSections($set_blank)->getSections()[0]];
+      $expected = [$this->sectionList->removeAllSections($set_blank)->getSections(FALSE)[0]];
     }
     else {
       $this->sectionList->removeAllSections($set_blank);
@@ -225,7 +225,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testRemoveMultipleSections() {
     $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
     $this->sectionList->removeSection('22000000-0000-1000-a000-000000000000');
-    $expected = $this->sectionList->getSections()[0];
+    $expected = $this->sectionList->getSections(FALSE)[0];
     $this->assertSections([$expected]);
   }
 
@@ -233,11 +233,11 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * Tests __clone().
    */
   public function testClone() {
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections()[0]->getLayoutSettings());
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections(FALSE)[0]->getLayoutSettings());
 
     $new_section_storage = clone $this->sectionList;
-    $new_section_storage->getSections()[0]->setLayoutSettings(['asdf' => 'qwer']);
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections()[0]->getLayoutSettings());
+    $new_section_storage->getSections(FALSE)[0]->setLayoutSettings(['asdf' => 'qwer']);
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections(FALSE)[0]->getLayoutSettings());
   }
 
   /**
