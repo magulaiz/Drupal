@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Fallback plugin class for FieldTypeCategoryManager.
  */
@@ -13,8 +15,8 @@ class FallbackFieldTypeCategory extends FieldTypeCategory {
   public function __construct(array $configuration, string $plugin_id, array $plugin_definition) {
     $plugin_id = $configuration['unique_identifier'];
     $plugin_definition = [
-      'label' => $configuration['label'] ?? '',
-      'description' => $configuration['description'] ?? '',
+      'label' => $configuration['label'],
+      'description' => $configuration['description'] ?? new TranslatableMarkup(''),
       'weight' => $configuration['weight'] ?? 0,
     ] + $plugin_definition;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
