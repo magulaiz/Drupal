@@ -159,7 +159,7 @@ class ModerationStateUserTest extends ModerationStateTestBase {
   }
 
   /**
-   * Assert count by langcode and uid.
+   * Assert node count by langcode and uid.
    */
   protected function assertUserNodeCount(int $uid, int $count, string $langcode, string $table): void {
     $query = \Drupal::database()->select($table, 'n');
