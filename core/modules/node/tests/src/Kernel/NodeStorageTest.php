@@ -53,7 +53,7 @@ class NodeStorageTest extends KernelTestBase {
    *
    * @covers ::userRevisionIds
    */
-  public function testUserRevisionIds() {
+  public function testUserRevisionIds(): void {
     $owner = User::create(['name' => 'test user']);
     $owner->save();
 
@@ -69,9 +69,9 @@ class NodeStorageTest extends KernelTestBase {
   /**
    * Test getting revisions created by a user.
    *
-   * @covers ::userRevisionAuthorRevisionIds
+   * @covers ::userRevisionIdsByRevisionAuthor
    */
-  public function testUserRevisionAuthorRevisionIds() {
+  public function testuserRevisionIdsByRevisionAuthor(): void {
     $user1 = User::create(['name' => 'test user 1']);
     $user1->save();
 
@@ -95,9 +95,9 @@ class NodeStorageTest extends KernelTestBase {
     /** @var \Drupal\node\NodeStorageInterface $nodeStorage */
     $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
 
-    $revisionIds = $nodeStorage->userRevisionAuthorRevisionIds($user1);
+    $revisionIds = $nodeStorage->userRevisionIdsByRevisionAuthor($user1);
     $this->assertEquals([$firstRevisionId], $revisionIds);
-    $revisionIds = $nodeStorage->userRevisionAuthorRevisionIds($user2);
+    $revisionIds = $nodeStorage->userRevisionIdsByRevisionAuthor($user2);
     $this->assertEquals([$secondRevisionId], $revisionIds);
   }
 

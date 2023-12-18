@@ -37,7 +37,7 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function userRevisionAuthorRevisionIds(AccountInterface $account): array {
+  public function userRevisionIdsByRevisionAuthor(AccountInterface $account): array {
     return $this->database->query(
       'SELECT vid FROM {' . $this->getRevisionTable() . '} WHERE [revision_uid] = :uid ORDER BY [vid]',
       [':uid' => $account->id()]
