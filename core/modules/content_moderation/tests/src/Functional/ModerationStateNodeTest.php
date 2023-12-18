@@ -20,9 +20,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',
@@ -197,7 +195,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   }
 
   /**
-   * Tests that o user cancel the default revision still the same.
+   * Tests that canceling a user retains the default revision.
    */
   public function testUserCancel() {
 
@@ -335,7 +333,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * Assert count by langcode and uid.
    */
-  private function assertUserNodeCount(int $uid, int $count, string $langcode, string $table) {
+  private function assertUserNodeCount(int $uid, int $count, string $langcode, string $table): void {
     $query = \Drupal::database()->select($table, 'n');
     $result = $query
       ->fields('n')
