@@ -38,9 +38,7 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
    *
    * All bin-specific mappings in $settings take precedence over this, but it
    * can be used to optimize cache storage for a Drupal installation without
-   * cache customizations in settings.php. For example, this can be used to map
-   * the 'bootstrap' bin to 'cache.backend.chainedfast', while allowing other
-   * bins to fall back to the global default of 'cache.backend.database'.
+   * cache customizations in settings.php.
    *
    * @var array
    */
