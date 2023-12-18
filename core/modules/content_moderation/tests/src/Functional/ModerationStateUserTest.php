@@ -60,6 +60,13 @@ class ModerationStateUserTest extends ModerationStateTestBase {
     $role->grantPermission('view any unpublished content');
     $role->save();
 
+  }
+
+  /**
+   * Tests that canceling a user retains the default revision.
+   */
+  public function testUserCancel(): void {
+
     // Create the first user.
     $web_user = $this->drupalCreateUser([
       'view any unpublished content',
@@ -86,13 +93,6 @@ class ModerationStateUserTest extends ModerationStateTestBase {
     ]);
 
     $this->grantUserPermissionToCreateContentOfType($second_web_user, 'moderated_content');
-
-  }
-
-  /**
-   * Tests that canceling a user retains the default revision.
-   */
-  public function testUserCancel(): void {
 
     $this->drupalLogin($web_user);
 
