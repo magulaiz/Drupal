@@ -12,18 +12,18 @@ interface FieldTypeCategoryInterface {
   /**
    * Returns the field group label.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return string|\Stringable
    *   The category label.
    */
-  public function getLabel(): TranslatableMarkup;
+  public function getLabel(): string|\Stringable;
 
   /**
    * Returns the field group description.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return string|\Stringable
    *   The category description.
    */
-  public function getDescription(): TranslatableMarkup;
+  public function getDescription(): string|\Stringable;
 
   /**
    * Returns the field group weight.

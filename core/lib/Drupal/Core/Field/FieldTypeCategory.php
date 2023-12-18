@@ -15,14 +15,14 @@ class FieldTypeCategory extends PluginBase implements FieldTypeCategoryInterface
   /**
    * {@inheritdoc}
    */
-  public function getLabel(): TranslatableMarkup {
+  public function getLabel(): string|\Stringable {
     return $this->pluginDefinition['label'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDescription(): TranslatableMarkup {
+  public function getDescription(): string|\Stringable {
     return $this->pluginDefinition['description'];
   }
 

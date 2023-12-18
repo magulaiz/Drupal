@@ -16,7 +16,7 @@ class FallbackFieldTypeCategory extends FieldTypeCategory {
     $plugin_id = $configuration['unique_identifier'];
     $plugin_definition = [
       'label' => $configuration['label'],
-      'description' => $configuration['description'] ?? new TranslatableMarkup(''),
+      'description' => $configuration['description'] ?? '',
       'weight' => $configuration['weight'] ?? 0,
     ] + $plugin_definition;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
