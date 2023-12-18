@@ -75,41 +75,54 @@ class UserPasswordChangeForm extends ContentEntityForm {
     $config = \Drupal::config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
-    // To skip the current password field, the user must have logged in via a
-    // one-time link and have the token in the URL. Store this in $form_state
-    // so it persists even on subsequent Ajax requests.
-    if (!$form_state->get('user_pass_reset') && ($token = $this->getRequest()->get('pass-reset-token'))) {
-      $session_key = 'pass_reset_' . $account->id();
-      $user_pass_reset = isset($_SESSION[$session_key]) && hash_equals($_SESSION[$session_key], $token);
-      $form_state->set('user_pass_reset', $user_pass_reset);
+    // Check for new account.
+    $register = $account->isNew();
+    // Display password field only for existing users or when user is allowed to
+    // assign a password during registration.
+    if (!$register) {
+      $form['account']['pass'] = [
+        '#type' => 'password_confirm',
+        '#size' => 25,
+        '#description' => $this->t('To change the current user password, enter the new password in both fields.'),
+      ];
+
+      // To skip the current password field, the user must have logged in via a
+      // one-time link and have the token in the URL. Store this in $form_state
+      // so it persists even on subsequent Ajax requests.
+      $request = $this->getRequest();
+      $user = $this->currentUser();
+      if (!$form_state->get('user_pass_reset') && ($token = $request->query->get('pass-reset-token'))) {
+        $session_key = 'pass_reset_' . $account->id();
+        $session_value = $request->getSession()->get($session_key);
+        $user_pass_reset = isset($session_value) && hash_equals($session_value, $token);
+        $form_state->set('user_pass_reset', $user_pass_reset);
+      }
+
+      // The user must enter their current password to change to a new one.
+      if ($user->id() == $account->id()) {
+        $form['account']['current_pass'] = [
+          '#type' => 'password',
+          '#title' => $this->t('Current password'),
+          '#size' => 25,
+          '#access' => !$form_state->get('user_pass_reset'),
+          '#weight' => -5,
+          // Do not let web browsers remember this password, since we are
+          // trying to confirm that the person submitting the form actually
+          // knows the current one.
+          '#attributes' => ['autocomplete' => 'off'],
+        ];
+        $form_state->set('user', $account);
+
+        // The user may only change their own password without their current
+        // password if they logged in via a one-time login link.
+        if (!$form_state->get('user_pass_reset')) {
+          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
+            '%pass' => $this->t('Password'),
+            ':url' => Url::fromRoute('user.pass')->toString(),
+          ]);
+        }
+      }
     }
-
-    // The user must enter their current password to change to a new one.
-    $form['account']['current_pass'] = [
-      '#type' => 'password',
-      '#title' => $this->t('Current password'),
-      '#size' => 25,
-      '#access' => !$form_state->get('user_pass_reset'),
-      '#attributes' => ['autocomplete' => 'off'],
-      '#required' => TRUE,
-    ];
-    $form_state->set('user', $account);
-
-    // The user may only change their own password without their current
-    // password if they logged in via a one-time login link.
-    if (!$form_state->get('user_pass_reset')) {
-      $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
-        '%pass' => $this->t('Password'),
-        ':url' => Url::fromRoute('user.pass')->toString(),
-      ]);
-    }
-
-    $form['account']['pass'] = [
-      '#type' => 'password_confirm',
-      '#required' => TRUE,
-      '#size' => 25,
-      '#description' => $this->t('To change the current user password, enter the new password in both fields.'),
-    ];
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Change Password')];
     return $form;
