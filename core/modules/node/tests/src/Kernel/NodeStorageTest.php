@@ -71,7 +71,7 @@ class NodeStorageTest extends KernelTestBase {
    *
    * @covers ::userRevisionIdsByRevisionAuthor
    */
-  public function testuserRevisionIdsByRevisionAuthor(): void {
+  public function testUserRevisionIdsByRevisionAuthor(): void {
     $user1 = User::create(['name' => 'test user 1']);
     $user1->save();
 
