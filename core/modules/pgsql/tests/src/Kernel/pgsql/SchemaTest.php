@@ -5,7 +5,7 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 // cSpell:ignore relkind objid refobjid regclass attname attrelid attnum
-// cSpell:ignore refobjsubid
+// cSpell:ignore refobjsubid indexdef
 
 /**
  * Tests schema API for the PostgreSQL driver.
@@ -305,6 +305,23 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertEquals($this->connection->getPrefix() . 'sequence_test', $sequence_owner->table_name);
     $this->assertEquals('uid', $sequence_owner->field_name, 'New sequence is owned by its table.');
 
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertPrefixedColumnIndex(string $table_name, string $index_key, string $column): void {
+    $full_name = str_replace('"', '', $this->connection->prefixTables('{' . $table_name . '}'));
+    $result = $this->connection->query("SELECT * FROM pg_indexes where tablename = :table_name", [
+      ':table_name' => $full_name,
+    ])->fetchAll();
+    foreach ($result as $row) {
+      if (str_contains($row->indexdef, sprintf('substr(%s, 1', $column))) {
+        $this->assertTrue(str_contains($row->indexname, $index_key));
+        return;
+      }
+    }
+    $this->assertTrue(FALSE, sprintf('Column %s was not indexed via %s on table %s.', $column, $index_key, $table_name));
   }
 
 }
