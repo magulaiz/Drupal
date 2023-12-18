@@ -23,7 +23,7 @@ class FieldTypeCategory extends PluginBase implements FieldTypeCategoryInterface
    * {@inheritdoc}
    */
   public function getDescription(): TranslatableMarkup {
-    return $this->pluginDefinition['description'];
+    return ($this->pluginDefinition['description'] instanceof TranslatableMarkup ? $this->pluginDefinition['description'] : new TranslatableMarkup($this->pluginDefinition['description']));
   }
 
   /**
