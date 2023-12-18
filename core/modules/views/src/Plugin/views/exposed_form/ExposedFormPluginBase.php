@@ -246,7 +246,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
     }
 
-    // Check if there are exposed filters for this view
+    // Check if there are exposed filters for this view.
     $exposed_filters = [];
     $exposed_required_filters = [];
     foreach ($this->view->filter as $id => $handler) {
@@ -258,8 +258,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
     }
 
-    // If any required exposed filters loop through them to see if they
-    // have any input. If not don't auto process the form to prevent validation.
+    // Do not auto process any required exposed filter that has input.
     if (!empty($exposed_required_filters)) {
       $form_values = $form_state->getUserInput();
       foreach ($exposed_required_filters as $key => $required_filter) {
