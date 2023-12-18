@@ -537,6 +537,18 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
     $form['settings'] = $settings_form;
   }
+  /**
+   * {@inheritdoc}
+   */
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+    parent::submitOptionsForm($form, $form_state);
+    if ($this->multiple) {
+      $options = &$form_state->getValue('options');
+      $options['delta_limit'] = (int) $options['delta_limit'];
+      $options['delta_offset'] = (int) $options['delta_offset'];
+    }
+  }
+
 
   /**
    * {@inheritdoc}
@@ -784,7 +796,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
       else {
         $delta_limit = (int) $this->options['delta_limit'];
-        $offset = intval($this->options['delta_offset']);
+        $offset = $this->options['delta_offset'];
 
         // We should only get here in this case if there is an offset, and in
         // that case we are limiting to all values after the offset.
