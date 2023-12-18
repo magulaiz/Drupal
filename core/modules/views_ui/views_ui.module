@@ -347,7 +347,7 @@ function views_ui_truncate($string, $length) {
     return $string;
   }
 
-  // Strip any HTML. This might shorten it to be less then $length;
+  // Strip any HTML. This might shorten it to be less than $length;
   $raw_string = PlainTextOutput::renderFromHtml($string);
   if (mb_strlen($raw_string) <= $length) {
     // Return the original string because without html it is less than $length.
