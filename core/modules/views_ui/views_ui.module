@@ -354,7 +354,7 @@ function views_ui_truncate($string, $length) {
     return $string;
   }
 
-  // IF the raw string is longer then use the regular truncate function.
+  // If the raw string is longer then use the regular truncate function.
   // Safeness is no longer important because the string contains no HTML.
   return Unicode::truncate($raw_string, $length, TRUE, TRUE);
 }

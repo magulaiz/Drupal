@@ -229,11 +229,11 @@ class DisplayTest extends UITestBase {
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
       $escaped = views_ui_truncate($input, 25);
-      $this->assertSession()->responseContains($escaped);
+      $this->assertSession()->assertEscaped($escaped);
       $this->assertSession()->responseNotContains($xss_markup);
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
-      $this->assertSession()->responseContains("View $escaped");
+      $this->assertSession()->assertEscaped("View $escaped");
       $this->assertSession()->responseNotContains("View $xss_markup");
       // Button attribute value truncated and escaped.
       $attribute_escaped = new Attribute(['value' => $escaped]);
