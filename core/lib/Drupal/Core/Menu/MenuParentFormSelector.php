@@ -95,11 +95,11 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = '') {
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = 'parent_select') {
     $options_cacheability = new CacheableMetadata();
     $options = $this->getParentSelectOptions($id, $menus, $options_cacheability);
     // If no options were found, there is nothing to select.
-    if ($options && $menu_name === '') {
+    if ($options && $menu_name === 'parent_select') {
       $element = [
         '#type' => 'select',
         '#options' => $options,

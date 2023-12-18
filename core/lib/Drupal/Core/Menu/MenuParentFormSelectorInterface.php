@@ -58,7 +58,7 @@ interface MenuParentFormSelectorInterface {
    *   (optional) Array of menu names as keys and titles as values to limit
    *   the values that may be selected. If NULL, all menus will be included.
    * @param string $menu_name
-   *   The select menu element name.
+   *   The name of the select element.By default, it's set to parent link selection.
    *
    * @return array
    *   A form element to choose a parent, or an empty array if no possible
@@ -66,6 +66,6 @@ interface MenuParentFormSelectorInterface {
    *   a single string containing the chosen menu name and parent ID separated
    *   by a ':' character.
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = '');
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = 'parent_select');
 
 }
