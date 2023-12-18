@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\content_moderation\Functional;
 
-use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Entity\Node;
 use Drupal\user\Entity\Role;
 
 /**
