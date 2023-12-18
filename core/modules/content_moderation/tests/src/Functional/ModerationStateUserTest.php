@@ -104,6 +104,7 @@ class ModerationStateUserTest extends ModerationStateTestBase {
 
     $this->drupalLogin($second_web_user);
 
+    $node = $this->getNodeByTitle('First version of the content en.');
     $translation_path = sprintf('node/%d/translations/add/en/es', $node->id());
     // Create a second revision.
     $this->drupalGet($translation_path);
