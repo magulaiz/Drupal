@@ -3,7 +3,6 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Default object used for field_type_categories plugins.

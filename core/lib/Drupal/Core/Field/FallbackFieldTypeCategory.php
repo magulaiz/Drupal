@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
  * Fallback plugin class for FieldTypeCategoryManager.
  */

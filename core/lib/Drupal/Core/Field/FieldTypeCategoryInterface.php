@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
  * Provides an object that returns the category info about the field type.
  */
