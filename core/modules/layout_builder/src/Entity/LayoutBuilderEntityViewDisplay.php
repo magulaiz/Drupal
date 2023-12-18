@@ -123,11 +123,12 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       $this->unsetThirdPartySetting('layout_builder', 'sections');
     }
     else {
+      $sections_to_set = [];
       foreach (array_values($sections) as $weight => $section) {
         $section->setWeight($weight);
-        $sections[$section->getUuid()] = $section;
+        $sections_to_set[$section->getUuid()] = $section;
       }
-      $this->setThirdPartySetting('layout_builder', 'sections', $sections);
+      $this->setThirdPartySetting('layout_builder', 'sections', $sections_to_set);
     }
     return $this;
   }
