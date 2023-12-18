@@ -102,6 +102,7 @@
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
+          disabled: $originalButton.attr('disabled'),
           'data-once': $originalButton.data('once'),
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
