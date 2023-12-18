@@ -36,8 +36,9 @@ class DateFormatValidationTest extends ConfigEntityValidationTestBase {
     $entity_values['locked'] = $locked;
     $entity_values['pattern'] = NULL;
     $this->expectException(SchemaIncompleteException::class);
-    $entity = DateFormat::create($entity_values);
-    $entity->save();
+    $this->assertValidationErrors(function () use ($entity_values) {
+      DateFormat::create($entity_values)->save();
+    });
   }
 
   /**
