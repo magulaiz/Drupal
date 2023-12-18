@@ -173,6 +173,9 @@ class UserPasswordChangeForm extends ContentEntityForm {
     $user = $form_state->getFormObject()->getEntity();
     // Set new password.
     $new_pass = $form_state->getValue('pass');
+    // If there's a session set to the users id, remove the password reset tag
+    // since a new password was saved.
+    $this->getRequest()->getSession()->remove('pass_reset_' . $user->id());
     $user->setPassword($new_pass);
     $user->save();
     $this->messenger()->addStatus('Password changed successfully.');

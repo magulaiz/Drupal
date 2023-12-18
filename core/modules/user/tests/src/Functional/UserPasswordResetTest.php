@@ -146,7 +146,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Verify that the password reset session has been destroyed.
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("Your current password is missing or incorrect; it's required to change the Password.");
+    $this->assertSession()->pageTextContains("Your current password is incorrect.");
 
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
@@ -530,7 +530,6 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $password = $this->randomMachineName();
     $edit = [
-      'current_pass' => $this->account->passRaw,
       'pass[pass1]' => $password,
       'pass[pass2]' => $password,
     ];
