@@ -712,7 +712,7 @@
       window.alert(
         `An error occurred while attempting to process ${this.options.url}: ${e.message}`,
       );
-      // For consistency, return a rejected Deferred (i.e., jqXHR's superclass)
+      // For consistency, return a rejected Promise
       // so that calling code can take appropriate action.
       return Promise.reject();
     }
