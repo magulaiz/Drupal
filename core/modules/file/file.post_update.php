@@ -9,6 +9,7 @@ use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_removed_post_updates().
