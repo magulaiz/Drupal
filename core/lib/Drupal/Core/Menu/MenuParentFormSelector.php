@@ -116,7 +116,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       }
       $options_cacheability->applyTo($element);
       return $element;
-    } 
+    }
     else {
       $options = $this->getMenuSelectOptions($menus);
       if ($options) {
