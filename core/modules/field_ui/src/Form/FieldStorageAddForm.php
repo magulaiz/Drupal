@@ -171,7 +171,7 @@ class FieldStorageAddForm extends FormBase {
     else {
       // Show options for groups and ungrouped field types.
       $this->addGroupFieldOptions($form, $form_state);
-      $form['actions'] = null;
+      $form['actions'] = NULL;
     }
 
     return $form;
