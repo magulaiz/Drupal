@@ -47,12 +47,6 @@
   }
 }
 
-@media (min-width: 87.5rem) {
-  .add-field-container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 .field-option {
   display: grid;
   grid-template-columns: var(--thumb-size) auto;
@@ -62,6 +56,13 @@
   border: 1px solid #dedfe4;
   gap: 0.75rem;
   border-radius: 0.25rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: unset;
+}
+
+.field-option:hover {
+  color: unset;
 }
 
 .field-option__item {
