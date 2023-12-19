@@ -17,7 +17,7 @@ class OpenModalDialogWithUrl implements CommandInterface {
    */
   public function __construct(
     protected string $url,
-    protected array $settings
+    protected array $settings,
   ) {}
 
   /**
