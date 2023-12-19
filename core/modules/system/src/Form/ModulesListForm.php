@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleDependencyMessageTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Extension\RequirementsChecker;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -88,6 +89,11 @@ class ModulesListForm extends FormBase {
   protected $accessManager;
 
   /**
+   * The requirements checker.
+   */
+  protected RequirementsChecker $requirementsChecker;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -98,7 +104,8 @@ class ModulesListForm extends FormBase {
       $container->get('access_manager'),
       $container->get('current_user'),
       $container->get('user.permissions'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('extension.requirements_checker'),
     );
   }
 
@@ -119,8 +126,10 @@ class ModulesListForm extends FormBase {
    *   The permission handler.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
+   * @param \Drupal\Core\Extension\RequirementsChecker|null $requirementsChecker
+   *   The requirements checker.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, AccessManagerInterface $access_manager, AccountInterface $current_user, PermissionHandlerInterface $permission_handler, ModuleExtensionList $extension_list_module) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, AccessManagerInterface $access_manager, AccountInterface $current_user, PermissionHandlerInterface $permission_handler, ModuleExtensionList $extension_list_module, RequirementsChecker $requirementsChecker = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
@@ -128,6 +137,11 @@ class ModulesListForm extends FormBase {
     $this->accessManager = $access_manager;
     $this->currentUser = $current_user;
     $this->permissionHandler = $permission_handler;
+    if (!$requirementsChecker) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $requirementsChecker argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3409874', E_USER_DEPRECATED);
+      $requirementsChecker = \Drupal::service('extension.requirements_checker');
+    }
+    $this->requirementsChecker = $requirementsChecker;
   }
 
   /**
@@ -454,13 +468,10 @@ class ModulesListForm extends FormBase {
       }
     }
 
-    // Make sure the install API is available.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-
     // Invoke hook_requirements('install'). If failures are detected, make
     // sure the dependent modules aren't installed either.
     foreach (array_keys($modules['install']) as $module) {
-      if (!drupal_check_module($module)) {
+      if (!$this->requirementsChecker->checkInstallRequirements($module)) {
         unset($modules['install'][$module]);
         unset($modules['non_stable'][$module]);
         foreach (array_keys($data[$module]->required_by) as $dependent) {

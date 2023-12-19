@@ -658,6 +658,10 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@entity_type.manager', '@string_translation']
     lazy: true
+  extension.requirements_checker:
+    class: Drupal\Core\Extension\RequirementsChecker
+    arguments: ['@extension.list.module', '@module_handler','@messenger']
+  Drupal\Core\Extension\RequirementsChecker: '@extension.requirements_checker'
   required_module_uninstall_validator:
     class: Drupal\Core\Extension\RequiredModuleUninstallValidator
     tags:
