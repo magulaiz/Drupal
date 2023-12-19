@@ -270,6 +270,10 @@
   .is-horizontal .tabs__trigger {
     display: none;
   }
+  .is-horizontal .tabs--primary {
+    align-items: center;
+    padding-block-end: 0.5rem;
+  }
   .is-horizontal .tabs--primary .tabs__link:focus {
     box-shadow:
       0 0 0 2px var(--color-gray-050),

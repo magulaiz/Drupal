@@ -255,6 +255,9 @@
       display: none;
     }
     & .tabs--primary {
+      align-items: center;
+      padding-block-end: 8px;
+      
       & .tabs__link {
         &:focus {
           box-shadow: 0 0 0 2px var(--color-gray-050), 0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
