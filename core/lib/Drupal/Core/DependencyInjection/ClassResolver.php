@@ -2,8 +2,10 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 
 /**
  * Implements the class resolver interface supporting class names and services.
