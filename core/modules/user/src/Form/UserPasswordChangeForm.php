@@ -72,21 +72,11 @@ class UserPasswordChangeForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
-    $user = $this->currentUser();
     $config = \Drupal::config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
     // Check for new account.
     $register = $account->isNew();
-
-    // For a new account, there are 2 sub-cases:
-    // $self_register: A user creates their own, new, account
-    // (path '/user/register')
-    // $admin_create: An administrator creates a new account for another user
-    // (path '/admin/people/create')
-    // If the current user is logged in and has permission to create users
-    // then it must be the second case.
-    $admin_create = $register && $account->access('create');
 
     // Display password field only for existing users or when user is allowed to
     // assign a password during registration.
