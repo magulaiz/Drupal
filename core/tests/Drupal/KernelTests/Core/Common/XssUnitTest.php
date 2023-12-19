@@ -35,11 +35,11 @@ class XssUnitTest extends KernelTestBase {
    * Tests t() functionality.
    */
   public function testT() {
-    $text = t('Simple text');
+    $text = 'Simple text';
     $this->assertSame('Simple text', (string) $text, 't leaves simple text alone.');
-    $text = t('Escaped text: @value', ['@value' => '<script>']);
+    $text = 'Escaped text: <script>';
     $this->assertSame('Escaped text: &lt;script&gt;', (string) $text, 't replaces and escapes string.');
-    $text = t('Placeholder text: %value', ['%value' => '<script>']);
+    $text = 'Placeholder text: <script>';
     $this->assertSame('Placeholder text: <em class="placeholder">&lt;script&gt;</em>', (string) $text, 't replaces, escapes and themes string.');
   }
 

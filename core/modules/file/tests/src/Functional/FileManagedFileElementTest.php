@@ -160,7 +160,6 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     $this->submitForm($edit, 'Upload');
     // We expect the title 'Managed <em>file & butter</em>' which got escaped
-    // via a t() call before.
     $this->assertSession()->responseContains('The file referenced by the Managed <em>file &amp; butter</em> field does not exist.');
   }
 

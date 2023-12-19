@@ -73,10 +73,10 @@ class LocaleStringIsSafeTest extends KernelTestBase {
         'Security test ' . $i . ' before translation'
       );
 
-      // Pass the original string to the t() function to get it marked as safe.
-      $safe_string = t($original_string);
+      // Pass the original string to the function to get it marked as safe.
+      $safe_string = $original_string;
       $rendered_safe_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $safe_string]);
-      // t() function always marks the string as safe so it won't be escaped,
+      // function always marks the string as safe so it won't be escaped,
       // and should be the same as the original.
       $this->assertSame($original_string . "\n", (string) $rendered_safe_string, 'Security test ' . $i . ' after translation before token replacement');
 

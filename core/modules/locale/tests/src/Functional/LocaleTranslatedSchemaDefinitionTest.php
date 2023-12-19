@@ -37,7 +37,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     $this->config('system.site')->set('default_langcode', 'fr')->save();
 
     // Clear all caches so that the base field definition, its cache in the
-    // entity field manager, the t() cache, etc. are all cleared.
+    // entity field manager, the cache, etc. are all cleared.
     $this->resetAll();
   }
 

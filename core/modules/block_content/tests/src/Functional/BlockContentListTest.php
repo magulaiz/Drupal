@@ -164,7 +164,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Create test block for other user tests.
     $test_block = $this->createBlockContent($label);
 
-    $link_text = t('Add content block');
+    $link_text = 'Add content block';
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content/block');

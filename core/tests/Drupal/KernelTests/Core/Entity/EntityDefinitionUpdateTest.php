@@ -119,11 +119,11 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
       'entity_test_update' => [
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
+        'The '.$this->entityTypeManager->getDefinition('entity_test_update')->getLabel().' entity type needs to be updated.',
         // The revision key is now defined, so the revision field needs to be
         // created.
-        t('The %field_name field needs to be installed.', ['%field_name' => 'Revision ID']),
-        t('The %field_name field needs to be installed.', ['%field_name' => 'Default revision']),
+        'The Revision ID field needs to be installed.',
+        'The Default revision field needs to be installed.',
       ],
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -885,7 +885,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
       'entity_test_update' => [
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
+        'The '.$this->entityTypeManager->getDefinition('entity_test_update')->getLabel().' entity type needs to be updated.',
       ],
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -902,7 +902,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
       'entity_test_update' => [
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
+        'The '.$this->entityTypeManager->getDefinition('entity_test_update')->getLabel().' entity type needs to be updated.'
       ],
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -1044,7 +1044,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $message = 'A field cannot be installed on a non-existing entity type';
     try {
       $storage_definition = BaseFieldDefinition::create('string')
-        ->setLabel(t('A new revisionable base field'))
+        ->setLabel('A new revisionable base field')
         ->setRevisionable(TRUE);
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition('bar', 'foo', 'entity_test', $storage_definition);
       $this->fail($message);
@@ -1061,7 +1061,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Create a new base field.
     $this->addRevisionableBaseField();
     $storage_definition = BaseFieldDefinition::create('string')
-      ->setLabel(t('A new revisionable base field'))
+      ->setLabel('A new revisionable base field')
       ->setRevisionable(TRUE);
     $this->assertFalse($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' does not exist before applying the update.");
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
@@ -1076,7 +1076,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $storage_definition = BaseFieldDefinition::create('text')
       ->setName('new_base_field')
       ->setTargetEntityTypeId('entity_test_update')
-      ->setLabel(t('A new revisionable base field'))
+      ->setLabel('A new revisionable base field')
       ->setRevisionable(TRUE);
     $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($storage_definition);
     $this->assertFalse($db_schema->fieldExists('entity_test_update', 'new_base_field'), "Previous schema for 'new_base_field' no longer exists.");
@@ -1227,7 +1227,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Add a base field with an initial value.
     $this->addBaseField();
     $storage_definition = BaseFieldDefinition::create('string')
-      ->setLabel(t('A new base field'))
+      ->setLabel('A new base field')
       ->setInitialValue('test value');
 
     $this->assertFalse($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' does not exist before applying the update.");
@@ -1326,7 +1326,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     try {
       $this->addBaseField();
       $storage_definition = BaseFieldDefinition::create('string')
-        ->setLabel(t('A new base field'))
+        ->setLabel('A new base field')
         ->setInitialValueFromField('field_that_does_not_exist');
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
       $this->fail('Using a non-existent field as initial value does not work.');
@@ -1338,7 +1338,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     try {
       $this->addBaseField();
       $storage_definition = BaseFieldDefinition::create('integer')
-        ->setLabel(t('A new base field'))
+        ->setLabel('A new base field')
         ->setInitialValueFromField('name');
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
       $this->fail('Using a field of a different type as initial value does not work.');
@@ -1351,7 +1351,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       // Add a base field that will not be stored in the shared tables.
       $initial_field = BaseFieldDefinition::create('string')
         ->setName('initial_field')
-        ->setLabel(t('An initial field'))
+        ->setLabel('An initial field')
         ->setCardinality(2);
       $this->state->set('entity_test_update.additional_base_field_definitions', ['initial_field' => $initial_field]);
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition('initial_field', 'entity_test_update', 'entity_test', $initial_field);
@@ -1360,7 +1360,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       // as the source of its initial values.
       $new_base_field = BaseFieldDefinition::create('string')
         ->setName('new_base_field')
-        ->setLabel(t('A new base field'))
+        ->setLabel('A new base field')
         ->setInitialValueFromField('initial_field');
       $this->state->set('entity_test_update.additional_base_field_definitions', ['initial_field' => $initial_field, 'new_base_field' => $new_base_field]);
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $new_base_field);

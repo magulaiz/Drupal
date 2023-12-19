@@ -76,7 +76,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEquals(t('The referenced entity (%type: %id) does not exist.', ['%type' => 'user', '%id' => $entity->id()]), $violation->getMessage(), 'The message for invalid value is correct.');
+    $this->assertEquals('The referenced entity (user: '.$entity->id().') does not exist.', $violation->getMessage(), 'The message for invalid value is correct.');
     $this->assertEquals($typed_data, $violation->getRoot(), 'Violation root is correct.');
   }
 
@@ -163,10 +163,8 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
     $violations = $referencing_entity->field_test->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals(t('This entity (%type: %id) cannot be referenced.', [
-      '%type' => 'node',
-      '%id' => $unpublished_node->id(),
-    ]), $violations[0]->getMessage());
+    $this->assertEquals('This entity (node: '.$unpublished_node->id().') cannot be referenced.',
+    $violations[0]->getMessage());
 
     // Now save the referencing entity which will create a pre-existing state
     // for it and repeat the checks. This time, the user without access should
@@ -207,10 +205,8 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
     $violations = $referencing_entity->field_test->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals(t('This entity (%type: %id) cannot be referenced.', [
-      '%type' => 'node',
-      '%id' => $different_bundle_node->id(),
-    ]), $violations[0]->getMessage());
+    $this->assertEquals('This entity (node: '.$different_bundle_node->id().') cannot be referenced.', 
+    $violations[0]->getMessage());
 
     // Delete the last node and check that the pre-existing reference is not
     // valid anymore.
@@ -218,14 +214,10 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
     $violations = $referencing_entity->field_test->validate();
     $this->assertCount(2, $violations);
-    $this->assertEquals(t('This entity (%type: %id) cannot be referenced.', [
-      '%type' => 'node',
-      '%id' => $different_bundle_node->id(),
-    ]), $violations[0]->getMessage());
-    $this->assertEquals(t('The referenced entity (%type: %id) does not exist.', [
-      '%type' => 'node',
-      '%id' => $deleted_node->id(),
-    ]), $violations[1]->getMessage());
+    $this->assertEquals('This entity (node: '.$different_bundle_node->id().') cannot be referenced.',
+    $violations[0]->getMessage());
+    $this->assertEquals('The referenced entity (node: '.$deleted_node->id().') does not exist.',
+    $violations[1]->getMessage());
   }
 
 }

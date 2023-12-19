@@ -49,7 +49,7 @@ class ActionAjaxTest extends ConfigurableActionBase {
     $having_a_party = $form_state->getValue('having_a_party', !empty($this->configuration['party_time']));
     $form['having_a_party'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Are we having a party?'),
+      '#title' => 'Are we having a party?',
       '#ajax' => [
         'wrapper' => 'party-container',
         'callback' => [$this, 'partyCallback'],
@@ -65,7 +65,7 @@ class ActionAjaxTest extends ConfigurableActionBase {
     if ($having_a_party) {
       $form['container']['party_time'] = [
         '#type' => 'textfield',
-        '#title' => $this->t('Party time'),
+        '#title' => 'Party time',
         '#default_value' => $this->configuration['party_time'],
       ];
     }

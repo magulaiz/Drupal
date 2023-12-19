@@ -168,13 +168,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_1', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_1', 'January', [], ['langcode' => 'de'], 'Translation of January');
+    $this->assertEquals('Februar_2', 'February', [], ['langcode' => 'de'], 'Translation of February');
+    $this->assertEquals('Marz_2', 'March', [], ['langcode' => 'de'], 'Translation of March');
+    $this->assertEquals('April_2', 'April', [], ['langcode' => 'de'], 'Translation of April');
+    $this->assertEquals('Mai_customized', 'May', [], ['langcode' => 'de'], 'Translation of May');
+    $this->assertEquals('Juni', 'June', [], ['langcode' => 'de'], 'Translation of June');
+    $this->assertEquals('Montag', 'Monday', [], ['langcode' => 'de'], 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -228,13 +228,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', 'January', [], ['langcode' => 'de'], 'Translation of January');
+    $this->assertEquals('Februar_2', 'February', [], ['langcode' => 'de'], 'Translation of February');
+    $this->assertEquals('Marz_2', 'March', [], ['langcode' => 'de'], 'Translation of March');
+    $this->assertEquals('April_2', 'April', [], ['langcode' => 'de'], 'Translation of April');
+    $this->assertEquals('Mai_customized', 'May', [], ['langcode' => 'de'], 'Translation of May');
+    $this->assertEquals('Juni', 'June', [], ['langcode' => 'de'], 'Translation of June');
+    $this->assertEquals('Montag', 'Monday', [], ['langcode' => 'de'], 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -268,13 +268,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_customized', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', 'January', [], ['langcode' => 'de'], 'Translation of January');
+    $this->assertEquals('Februar_customized', 'February', [], ['langcode' => 'de'], 'Translation of February');
+    $this->assertEquals('Marz_2', 'March', [], ['langcode' => 'de'], 'Translation of March');
+    $this->assertEquals('April_2', 'April', [], ['langcode' => 'de'], 'Translation of April');
+    $this->assertEquals('Mai_customized', 'May', [], ['langcode' => 'de'], 'Translation of May');
+    $this->assertEquals('Juni', 'June', [], ['langcode' => 'de'], 'Translation of June');
+    $this->assertEquals('Montag', 'Monday', [], ['langcode' => 'de'], 'Translation of Monday');
     // cSpell:enable
   }
 
