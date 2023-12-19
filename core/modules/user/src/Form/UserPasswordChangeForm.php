@@ -97,7 +97,7 @@ class UserPasswordChangeForm extends ContentEntityForm {
         $user_pass_reset = isset($session_value) && hash_equals($session_value, $token);
         $form_state->set('user_pass_reset', $user_pass_reset);
       }
-
+      $form_state->set('user', $account);
       // The user must enter their current password to change to a new one.
       if ($user->id() == $account->id()) {
         $form['account']['current_pass'] = [
@@ -111,7 +111,6 @@ class UserPasswordChangeForm extends ContentEntityForm {
           // knows the current one.
           '#attributes' => ['autocomplete' => 'off'],
         ];
-        $form_state->set('user', $account);
 
         // The user may only change their own password without their current
         // password if they logged in via a one-time login link.

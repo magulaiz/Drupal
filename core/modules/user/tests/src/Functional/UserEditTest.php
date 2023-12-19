@@ -73,10 +73,9 @@ class UserEditTest extends BrowserTestBase {
     $edit = [];
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $new_pass;
-    $edit['current_pass'] = $user1->passRaw;
     $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("Password field is required.");
+    $this->assertSession()->pageTextContains("Your current password is incorrect.");
 
     // Try again with the current password.
     $edit['current_pass'] = $user1->passRaw;
@@ -150,7 +149,6 @@ class UserEditTest extends BrowserTestBase {
     $user1 = $this->drupalCreateUser([]);
 
     $edit = ['pass[pass1]' => '0', 'pass[pass2]' => '0'];
-    $edit['current_pass'] = $user1->passRaw;
     $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Password changed successfully.");
