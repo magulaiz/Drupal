@@ -148,7 +148,7 @@ class UserEditTest extends BrowserTestBase {
     // Create a regular user.
     $user1 = $this->drupalCreateUser([]);
 
-    $edit = ['pass[pass1]' => '0', 'pass[pass2]' => '0'];
+    $edit = ['pass[pass1]' => '0', 'pass[pass2]' => '0', 'current_pass' => $user1->passRaw];
     $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Password changed successfully.");

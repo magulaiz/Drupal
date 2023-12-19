@@ -108,29 +108,26 @@ class UserPasswordChangeForm extends ContentEntityForm {
         $form_state->set('user_pass_reset', $user_pass_reset);
       }
 
-      // The user must enter their current password to change to a new one.
-      if ($user->id() == $account->id()) {
-        $form['account']['current_pass'] = [
-          '#type' => 'password',
-          '#title' => $this->t('Current password'),
-          '#size' => 25,
-          '#access' => !$form_state->get('user_pass_reset'),
-          '#weight' => -5,
-          // Do not let web browsers remember this password, since we are
-          // trying to confirm that the person submitting the form actually
-          // knows the current one.
-          '#attributes' => ['autocomplete' => 'off'],
-        ];
-        $form_state->set('user', $account);
+      $form['account']['current_pass'] = [
+        '#type' => 'password',
+        '#title' => $this->t('Current password'),
+        '#size' => 25,
+        '#access' => !$form_state->get('user_pass_reset'),
+        '#weight' => -5,
+        // Do not let web browsers remember this password, since we are
+        // trying to confirm that the person submitting the form actually
+        // knows the current one.
+        '#attributes' => ['autocomplete' => 'off'],
+      ];
+      $form_state->set('user', $account);
 
-        // The user may only change their own password without their current
-        // password if they logged in via a one-time login link.
-        if (!$form_state->get('user_pass_reset')) {
-          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
-            '%pass' => $this->t('Password'),
-            ':url' => Url::fromRoute('user.pass')->toString(),
-          ]);
-        }
+      // The user may only change their own password without their current
+      // password if they logged in via a one-time login link.
+      if (!$form_state->get('user_pass_reset')) {
+        $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
+          '%pass' => $this->t('Password'),
+          ':url' => Url::fromRoute('user.pass')->toString(),
+        ]);
       }
     }
     $form['actions'] = ['#type' => 'actions'];
