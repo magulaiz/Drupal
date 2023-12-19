@@ -30,7 +30,7 @@ class NodeUserCancelTest extends KernelTestBase {
   }
 
   /**
-   * Confirm that user's content has been attributed to anonymous user.
+   * Confirm that the author has been assigned to the anonymous user.
    */
   public function testCancelReassignToAnonymous() {
     /** @var \Drupal\node\NodeStorageInterface $nodeStorage */
@@ -52,8 +52,9 @@ class NodeUserCancelTest extends KernelTestBase {
       'title' => 'test node',
       'type' => $nodeType->id(),
     ]);
+
+    // Set to published to test 'user_cancel_reassign' does not unpublish.
     $node
-      // Set to published to test 'user_cancel_reassign' does not unpublish.
       ->setPublished()
       ->setOwner($user1)
       ->setRevisionUser($user1)
@@ -71,7 +72,7 @@ class NodeUserCancelTest extends KernelTestBase {
     // Reload node.
     /** @var \Drupal\node\NodeInterface $node */
     $node = $nodeStorage->load($node->id());
-    // Confirm that user's content has been attributed to anonymous user.
+    // Confirm that the author has been assigned to the anonymous user.
     $this->assertEquals(0, $node->getOwnerId());
     $this->assertEquals($user2->id(), $node->getRevisionUserId());
     // Ensure content is not unpublished, which 'user_cancel_block_unpublish'

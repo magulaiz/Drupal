@@ -45,12 +45,12 @@ class ModerationStateUserTest extends ModerationStateTestBase {
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled('node', 'moderated_content', TRUE);
 
-    // Set the user cancel default method.
+    // Set the default user cancel method.
     $this->config('user.settings')
       ->set('cancel_method', 'user_cancel_reassign')
       ->save();
 
-    // Add permissions to admin of cancel account.
+    // Add permissions to the admin account.
     $role_ids = $this->adminUser->getRoles();
     $role_id = reset($role_ids);
     $role = Role::load($role_id);
@@ -125,7 +125,7 @@ class ModerationStateUserTest extends ModerationStateTestBase {
     $this->drupalGet('user/' . $web_user->id() . '/cancel');
     $this->submitForm([], 'Confirm');
 
-    // Check that the revision of first user was assigned to the anonymous user.
+    // Verify that the revision of the first user was assigned to the anonymous user.
     $this->assertUserNodeCount($web_user->id(), 0, 'en', 'node_field_data');
     $this->assertUserNodeCount(0, 1, 'en', 'node_field_data');
     $this->assertUserNodeCount($second_web_user->id(), 1, 'es', 'node_field_data');
@@ -134,12 +134,12 @@ class ModerationStateUserTest extends ModerationStateTestBase {
     $this->assertUserNodeCount(0, 2, 'en', 'node_field_revision');
     $this->assertUserNodeCount($second_web_user->id(), 1, 'es', 'node_field_revision');
 
-    // Check content as anonymous.
+    // Check content as an anonymous user.
     $this->drupalLogout();
 
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
 
-    // Check default language.
+    // Check the default language.
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $this->drupalGet($node->toUrl('canonical', ['language' => $node->language()])->toString());
     $this->assertSession()->pageTextContains('First version of the content en.');
@@ -148,10 +148,10 @@ class ModerationStateUserTest extends ModerationStateTestBase {
     $this->assertEquals(0, $node->uid->entity->id());
     $this->assertEquals('First version of the content en.', $node->title->value);
 
-    // Check that the translation revision still have the right users "second_web_user".
+    // Check that the translation revision still has the right user "second_web_user".
     $translation = $node->getTranslation('es');
 
-    // Check translation.
+    // Check the translation.
     $this->drupalGet('es/node/' . $node->id());
     $this->assertSession()->pageTextContains('First version of the content es.');
     $this->assertEquals('First version of the content es.', $translation->title->value);
