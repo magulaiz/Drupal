@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Drupal\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -40,11 +41,18 @@ class ClassResolver implements ClassResolverInterface, ContainerAwareInterface {
             $service = (string) $attribute->newInstance()->value;
           }
 
-          if (!$this->container->has($service)) {
-            throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::_construct()", you should configure its value explicitly.', $service, $parameter->getName(), static::class));
+          $service_exists = $this->container->has($service);
+
+          if (!$service_exists && $parameter->isDefaultValueAvailable()) {
+            $args[] = $parameter->getDefaultValue();
+            continue;
           }
 
-          $args[] = $this->container->get($service);
+          if (!$service_exists && !$parameter->allowsNull()) {
+            throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::_construct()", you should configure its value explicitly.', $service, $parameter->getName(), $definition));
+          }
+
+          $args[] = $this->container->get($service, ContainerInterface::NULL_ON_INVALID_REFERENCE);
         }
 
         $instance = new $definition(...$args);
