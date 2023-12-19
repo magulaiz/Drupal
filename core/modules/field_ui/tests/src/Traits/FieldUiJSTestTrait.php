@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Traits;
 
+use Behat\Mink\Exception\ElementNotFoundException;
+
 /**
  * Provides common functionality for the Field UI tests that depend on JS.
  */
@@ -43,16 +45,30 @@ trait FieldUiJSTestTrait {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    if ($assert_session->waitForElementVisible('css', "[name='new_storage_type'][value='$field_type']")) {
-      $page = $this->getSession()->getPage();
-      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']")->getParent();
+
+    try {
+      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
+      $field_type_label = (string) $field_definitions[$field_type]['category'];
+      $this->getSession()->getPage()->clickLink($field_type_label);
+
+      if ($this->getSession()->getPage()->hasField('group_field_options_wrapper')) {
+        $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
+      }
     }
-    else {
-      $field_card = $this->getFieldFromGroupJS($field_type);
+
+    // If the element could not be found then it is probably in a group.
+    catch (ElementNotFoundException) {
+      // Call the helper function to confirm it is in a group.
+      $field_group = $this->getFieldFromGroup($field_type);
+      $this->clickLink($field_group);
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
     }
-    $field_card?->click();
+
+    $field_label = $page->findField('label');
     $page->findButton('Continue')->click();
-    $field_label = $page->findField('edit-label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
     $field_label->setValue($label);
