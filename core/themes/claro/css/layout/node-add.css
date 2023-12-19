@@ -43,5 +43,5 @@
  * Fixes the layout breaking due to long select list.
  */
 .node-form .form-type--select {
-  max-width: 34.3rem;
+  max-width: 100%;
 }
