@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -121,12 +122,18 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $new_storage_type = NULL, $display_as_group = FALSE) {
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
     }
     if (!$form_state->get('bundle')) {
       $form_state->set('bundle', $bundle);
+    }
+    if (!$form_state->getValue('new_storage_type')  && $form_state->getValue('new_storage_type') !== 'Back') {
+      $form_state->setValue('new_storage_type', $new_storage_type);
+    }
+    if ($form_state->getValue('new_storage_type') === 'Back') {
+      $form_state->setValue('new_storage_type', NULL);
     }
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
@@ -156,14 +163,15 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
     ];
-
-    if ($form_state->hasValue('new_storage_type')) {
+    // The group info is stored in new_storage_type.
+    if ($form_state->getValue('new_storage_type')) {
       // A group is already selected. Show field types for that group.
       $this->addFieldOptionsForGroup($form, $form_state);
     }
     else {
       // Show options for groups and ungrouped field types.
       $this->addGroupFieldOptions($form, $form_state);
+      $form['actions'] = null;
     }
 
     return $form;
@@ -221,10 +229,18 @@ class FieldStorageAddForm extends FormBase {
         ->createInstance($field_type['category'], $field_type);
       $display_as_group = $field_type['display_as_group'];
       $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
+      $route_parameters = [
+        'entity_type' => $this->entityTypeId,
+        'bundle' => $this->bundle,
+        'display_as_group' => $display_as_group ? 'true' : 'false',
+        'new_storage_type' => $category_info->getPluginId(),
+      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
       $field_type_options_radios[$id] = [
-        '#type' => 'container',
+        '#type' => 'html_tag',
+        '#tag' => 'a',
         '#attributes' => [
           'class' => ['field-option', 'js-click-to-select'],
+          'href' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters)->toString(),
         ],
         '#weight' => $category_info->getWeight(),
         'thumb' => [
@@ -243,7 +259,7 @@ class FieldStorageAddForm extends FormBase {
           ],
         ],
         'radio' => [
-          '#type' => 'radio',
+          '#type' => 'container',
           '#title' => $category_info->getLabel(),
           '#parents' => ['new_storage_type'],
           '#title_display' => 'before',
@@ -613,7 +629,7 @@ class FieldStorageAddForm extends FormBase {
    * Submit handler for resetting the form.
    */
   public static function startOver($form, FormStateInterface &$form_state) {
-    $form_state->unsetValue('new_storage_type');
+    $form_state->setValue('new_storage_type', 'Back');
     $form_state->setRebuild();
   }
 
