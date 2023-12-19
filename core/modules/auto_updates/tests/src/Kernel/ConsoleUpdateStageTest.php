@@ -90,7 +90,7 @@ class ConsoleUpdateStageTest extends AutoUpdatesKernelTestBase {
 
     $this->runConsoleUpdateStage();
     $this->assertNoCronRun();
-    $this->assertTrue($this->logger->hasRecord($exception->getMessage(), (string) RfcLogLevel::ERROR));
+    $this->assertExceptionLogged($exception->getMessage(), $this->logger);
 
     // Ensure we sent a success email to all recipients, even though post-apply
     // tasks failed.
@@ -326,10 +326,8 @@ END;
     $this->assertTrue($stage->isAvailable());
     $this->runConsoleUpdateStage();
 
-    $logged_by_stage = $this->logger->hasRecord($exception->getMessage(), (string) RfcLogLevel::ERROR);
-
     $this->assertTrue($stage->isAvailable());
-    $this->assertTrue($logged_by_stage);
+    $this->assertExceptionLogged($exception->getMessage(), $this->logger);
     $this->assertEmpty($cron_logger->records);
   }
 
@@ -695,7 +693,7 @@ END;
     $this->addEventTestListener($listener, PostCreateEvent::class);
     $lock_checked_on_events = [];
     $this->runConsoleUpdateStage();
-    $this->assertTrue($this->logger->hasRecordThatContains('Nope!', RfcLogLevel::ERROR));
+    $this->assertExceptionLogged('Nope!', $this->logger);
     $this->assertTrue($lock->lockMayBeAvailable('cron'));
     $this->assertSame([PreCreateEvent::class], $lock_checked_on_events);
   }

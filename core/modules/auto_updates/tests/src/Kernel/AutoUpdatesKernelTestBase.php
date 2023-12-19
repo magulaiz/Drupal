@@ -4,9 +4,11 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\auto_updates\Kernel;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\auto_updates\CronUpdateRunner;
 use Drupal\auto_updates\ConsoleUpdateStage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\package_manager\Validator\SymlinkValidator;
 use Drupal\package_manager\Validator\WritableFileSystemValidator;
 use Drupal\Tests\auto_updates\Traits\ValidationTestTrait;
@@ -103,6 +105,19 @@ abstract class AutoUpdatesKernelTestBase extends PackageManagerKernelTestBase {
     $this->container->get(ConsoleUpdateStage::class)->performUpdate();
   }
 
+  /**
+   * Asserts that an exception containing a particular message was logged.
+   *
+   * @param string $message
+   *   The message that should have been logged.
+   * @param \ColinODell\PsrTestLogger\TestLogger $logger
+   *   The logger.
+   */
+  protected function assertExceptionLogged(string $message, TestLogger $logger): void {
+    $predicate = fn ($record) => str_contains($record['context']['@message'] ?? '', $message);
+    $this->assertTrue($logger->hasRecordThatPasses($predicate, RfcLogLevel::ERROR));
+  }
+
 }
 
 /**
@@ -126,6 +141,11 @@ class TestCronUpdateRunner extends CronUpdateRunner {
  * A test version of the console update stage to override and expose internals.
  */
 class TestConsoleUpdateStage extends ConsoleUpdateStage {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected string $type = 'auto_updates:unattended';
 
   /**
    * {@inheritdoc}

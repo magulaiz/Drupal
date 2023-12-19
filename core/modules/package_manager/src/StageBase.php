@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
+use Drupal\Core\Utility\Error;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PostCreateEvent;
@@ -159,6 +160,17 @@ abstract class StageBase implements LoggerAwareInterface {
   protected SharedTempStore $tempStore;
 
   /**
+   * The stage type.
+   *
+   * To ensure that stage classes do not unintentionally use another stage's
+   * type, all concrete subclasses MUST explicitly define this property.
+   * The recommended pattern is `MODULE:TYPE`.
+   *
+   * @var string
+   */
+  protected string $type;
+
+  /**
    * Constructs a new Stage object.
    *
    * @param \Drupal\package_manager\PathLocator $pathLocator
@@ -196,6 +208,31 @@ abstract class StageBase implements LoggerAwareInterface {
   ) {
     $this->tempStore = $tempStoreFactory->get('package_manager_stage');
     $this->setLogger(new NullLogger());
+  }
+
+  /**
+   * Gets the stage type.
+   *
+   * The stage type can be used by stage event subscribers to implement logic
+   * specific to certain stages, without relying on the class name (which may
+   * not be part of module's public API).
+   *
+   * @return string
+   *   The stage type.
+   *
+   * @throws \LogicException
+   *   Thrown if $this->type is not explicitly overridden.
+   */
+  final public function getType(): string {
+    $reflector = new \ReflectionProperty($this, 'type');
+
+    // The $type property must ALWAYS be overridden. This means that different
+    // subclasses can return the same value (thus allowing one stage to
+    // impersonate another one), but if that happens, it is intentional.
+    if ($reflector->getDeclaringClass()->getName() === static::class) {
+      return $this->type;
+    }
+    throw new \LogicException(static::class . ' must explicitly override the $type property.');
   }
 
   /**
@@ -314,7 +351,14 @@ abstract class StageBase implements LoggerAwareInterface {
     // which would result in the lock having the wrong owner and the stage not
     // being claimable by whoever is actually creating it.
     $this->tempStore = $this->tempStoreFactory->get('package_manager_stage');
-    $this->tempStore->set(static::TEMPSTORE_LOCK_KEY, [$id, static::class]);
+    // For the lock value, we use both the stage's class and its type in order
+    // to prevent a stage from being manipulated by two different classes during
+    // a single life cycle.
+    $this->tempStore->set(static::TEMPSTORE_LOCK_KEY, [
+      $id,
+      static::class,
+      $this->getType(),
+    ]);
     $this->claim($id);
 
     $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
@@ -578,6 +622,8 @@ abstract class StageBase implements LoggerAwareInterface {
     }
 
     if (isset($error)) {
+      // Ensure the error is logged for post-mortem diagnostics.
+      Error::logException($this->logger, $error);
       if ($on_error) {
         $on_error();
       }
@@ -631,7 +677,7 @@ abstract class StageBase implements LoggerAwareInterface {
       )->render());
     }
 
-    if ($stored_lock === [$unique_id, static::class]) {
+    if ($stored_lock === [$unique_id, static::class, $this->getType()]) {
       $this->lock = $stored_lock;
       return $this;
     }

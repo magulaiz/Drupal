@@ -135,7 +135,7 @@ class WindowsValidatorTest extends AutoUpdatesKernelTestBase {
     $this->runConsoleUpdateStage();
     foreach ($expected_results as $result) {
       foreach ($result->messages as $message) {
-        $this->assertTrue($logger->hasRecordThatContains((string) $message, RfcLogLevel::ERROR));
+        $this->assertExceptionLogged((string) $message, $logger);
       }
     }
 

@@ -6,7 +6,7 @@ namespace Drupal\package_manager\PathExcluder;
 
 use Drupal\Core\Database\Connection;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
-use Drupal\package_manager\PathLocator;
+use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -22,16 +22,14 @@ class SqliteDatabaseExcluder implements EventSubscriberInterface {
   /**
    * Constructs a SqliteDatabaseExcluder object.
    *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
+   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface $pathFactory
+   *   The path factory service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
   public function __construct(
-    private readonly PathLocator $pathLocator,
-    // TRICKY: this cannot be private nor readonly for testing purposes.
-    // @see \Drupal\Tests\package_manager\Kernel\PathExcluder\SqliteDatabaseExcluderTest::mockDatabase()
-    protected Connection $database
+    private readonly PathFactoryInterface $pathFactory,
+    private readonly Connection $database,
   ) {}
 
   /**
@@ -50,19 +48,27 @@ class SqliteDatabaseExcluder implements EventSubscriberInterface {
    *   The event object.
    */
   public function excludeDatabaseFiles(CollectPathsToExcludeEvent $event): void {
-    // If the database is SQLite, it might be located in the active directory
-    // and we should exclude it. Always treat it as relative to the project root.
+    // If the database is SQLite, it might be located in the project directory
+    // and we should exclude it.
     if ($this->database->driver() === 'sqlite') {
-      $options = $this->database->getConnectionOptions();
-      // Nothing to exclude if the database lives outside the project root.
-      if (str_starts_with($options['database'], '/') && !str_starts_with($options['database'], $this->pathLocator->getProjectRoot())) {
-        return;
+      $db_path = $this->database->getConnectionOptions()['database'];
+      // Exclude the database file and auxiliary files created by SQLite.
+      $paths = [$db_path, "$db_path-shm", "$db_path-wal"];
+
+      // If the database path is absolute, it might be outside the project root,
+      // in which case we don't need to do anything.
+      if ($this->pathFactory->create($db_path)->isAbsolute()) {
+        try {
+          $event->addPathsRelativeToProjectRoot($paths);
+        }
+        catch (\LogicException) {
+          // The database is outside of the project root, so we're done.
+        }
       }
-      $event->addPathsRelativeToProjectRoot([
-        $options['database'],
-        $options['database'] . '-shm',
-        $options['database'] . '-wal',
-      ]);
+      else {
+        // The database is in the web root, and must be excluded relative to it.
+        $event->addPathsRelativeToWebRoot($paths);
+      }
     }
   }
 

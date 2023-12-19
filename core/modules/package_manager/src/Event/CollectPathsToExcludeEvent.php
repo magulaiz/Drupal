@@ -85,6 +85,9 @@ final class CollectPathsToExcludeEvent extends StageEvent implements PathListInt
    *   The paths to ignore. Absolute paths will be made relative to the project
    *   root; relative paths will be assumed to already be relative to the
    *   project root, and ignored as given.
+   *
+   * @throws \LogicException
+   *   If any of the given paths are absolute, but not inside the project root.
    */
   public function addPathsRelativeToProjectRoot(array $paths): void {
     $project_root = $this->pathLocator->getProjectRoot();

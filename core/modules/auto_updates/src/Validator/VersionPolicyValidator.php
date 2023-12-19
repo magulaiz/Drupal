@@ -5,7 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\auto_updates\Validator;
 
 use Drupal\auto_updates\CronUpdateRunner;
-use Drupal\auto_updates\ConsoleUpdateStage;
+use Drupal\auto_updates\Validator\VersionPolicy\TargetVersionNotPreRelease;
+use Drupal\auto_updates\Validator\VersionPolicy\TargetVersionStable;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\StatusCheckEvent;
@@ -20,7 +21,6 @@ use Drupal\auto_updates\Validator\VersionPolicy\ForbidDevSnapshot;
 use Drupal\auto_updates\Validator\VersionPolicy\SupportedBranchInstalled;
 use Drupal\auto_updates\Validator\VersionPolicy\TargetSecurityRelease;
 use Drupal\auto_updates\Validator\VersionPolicy\TargetVersionInstallable;
-use Drupal\auto_updates\Validator\VersionPolicy\TargetVersionStable;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreCreateEvent;
@@ -84,14 +84,22 @@ final class VersionPolicyValidator implements EventSubscriberInterface {
       $rules[] = ForbidDowngrade::class;
       // ...and in the same major version as the installed version...
       $rules[] = MajorVersionMatch::class;
-      // ...and it must be a known, secure, installable release.
+      // ...and it must be a known, secure, installable release...
       $rules[] = TargetVersionInstallable::class;
+      // @todo Remove the need to check for the stage instance in
+      //   https://drupal.org/i/3398782.
+      if ($stage->getType() !== 'auto_updates:unattended') {
+        // ...and must be either a release candidate, or stable.
+        $rules[] = TargetVersionNotPreRelease::class;
+      }
     }
 
     // If this is a cron update, we may need to do additional checks.
-    if ($stage instanceof ConsoleUpdateStage) {
+    if ($stage->getType() === 'auto_updates:unattended') {
       $mode = $this->cronUpdateRunner->getMode();
 
+      // @todo Remove the need to check if cron updates are disabled in
+      //   https://drupal.org/i/3398782.
       if ($mode !== CronUpdateRunner::DISABLED) {
         // If cron updates are enabled, the installed version must be stable;
         // no alphas, betas, or RCs.
@@ -155,6 +163,7 @@ final class VersionPolicyValidator implements EventSubscriberInterface {
       ForbidDevSnapshot::class => [StableReleaseInstalled::class],
       MajorVersionMatch::class => [TargetVersionInstallable::class],
       ForbidMinorUpdates::class => [TargetVersionInstallable::class],
+      TargetVersionStable::class => [TargetVersionNotPreRelease::class],
     ];
     foreach ($more_specific_rule_sets as $more_specific_rule => $less_specific_rules) {
       // If the more specific rule flagged any messages, the given rule is
@@ -239,7 +248,7 @@ final class VersionPolicyValidator implements EventSubscriberInterface {
       }
     }
     elseif ($event instanceof StatusCheckEvent) {
-      if ($stage instanceof ConsoleUpdateStage) {
+      if ($stage->getType() === 'auto_updates:unattended') {
         $target_release = $stage->getTargetRelease();
         if ($target_release) {
           return $target_release->getVersion();
@@ -268,7 +277,7 @@ final class VersionPolicyValidator implements EventSubscriberInterface {
     $project_info = new ProjectInfo('drupal');
     $available_releases = $project_info->getInstallableReleases() ?? [];
 
-    if ($stage instanceof ConsoleUpdateStage) {
+    if ($stage->getType() === 'auto_updates:unattended') {
       $available_releases = array_reverse($available_releases);
     }
     return $available_releases;

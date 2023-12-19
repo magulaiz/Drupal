@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\auto_updates\Validator;
 
-use Drupal\auto_updates\ConsoleUpdateStage;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Validator\StagedDBUpdateValidator;
@@ -39,7 +38,7 @@ final class StagedDatabaseUpdateValidator implements EventSubscriberInterface {
    */
   public function checkUpdateHooks(PreApplyEvent $event): void {
     $stage = $event->stage;
-    if (!$stage instanceof ConsoleUpdateStage) {
+    if ($stage->getType() !== 'auto_updates:unattended') {
       return;
     }
 

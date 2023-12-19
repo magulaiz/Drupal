@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\auto_updates;
 
+use Drupal\auto_updates\Validation\StatusChecker;
 use Drupal\Core\Url;
 use Drupal\system\Controller\DbUpdateController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -259,6 +260,12 @@ final class BatchProcessor {
    * @see auto_updates_batch_alter()
    */
   public static function dbUpdateBatchFinished(bool $success, array $results, array $operations): void {
+    // Run status checks after database updates are completed to ensure that
+    // PendingUpdatesValidator does not report any errors.
+    // @see \Drupal\package_manager\Validator\PendingUpdatesValidator
+    /** @var \Drupal\auto_updates\Validation\StatusChecker $status_checker */
+    $status_checker = \Drupal::service(StatusChecker::class);
+    $status_checker->run();
     DbUpdateController::batchFinished($success, $results, $operations);
     // Now that the update is done, we can put the site back online if it was
     // previously not in maintenance mode.

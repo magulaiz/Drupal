@@ -11,6 +11,7 @@ use Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @covers \Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder
@@ -20,161 +21,130 @@ use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
 
   /**
+   * The mocked database connection.
+   *
+   * @var \Drupal\Core\Database\Connection|\Prophecy\Prophecy\ObjectProphecy
+   */
+  private Connection|ObjectProphecy $mockDatabase;
+
+  /**
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
+    $this->mockDatabase = $this->prophesize(Connection::class);
+    $this->mockDatabase->driver()
+      ->willReturn('sqlite')
+      ->shouldBeCalled();
+
     $container->getDefinition(SqliteDatabaseExcluder::class)
-      ->setClass(TestSqliteDatabaseExcluder::class);
+      ->setArgument('$database', $this->mockDatabase->reveal());
   }
 
   /**
-   * Mocks a SQLite database connection for the event subscriber.
+   * Data provider for ::testSqliteDatabaseFilesExcluded().
    *
-   * @param array $connection_options
-   *   The connection options for the mocked database connection.
+   * @return array[]
+   *   The test cases.
    */
-  private function mockDatabase(array $connection_options): void {
-    $database = $this->prophesize(Connection::class);
-    $database->driver()->willReturn('sqlite');
-    $database->getConnectionOptions()->willReturn($connection_options);
-
-    /** @var \Drupal\Tests\package_manager\Kernel\PathExcluder\TestSiteConfigurationExcluder $sqlite_excluder */
-    $sqlite_excluder = $this->container->get(SqliteDatabaseExcluder::class);
-    $sqlite_excluder->database = $database->reveal();
+  public function providerSqliteDatabaseFilesExcluded(): array {
+    return [
+      // If the database is at a relative path, it should be excluded relative
+      // to the web root.
+      'relative path in relocated web root' => [
+        'www',
+        'db.sqlite',
+        'www/db.sqlite',
+      ],
+      'relative path, web root is project root' => [
+        '',
+        'db.sqlite',
+        'db.sqlite',
+      ],
+      // If the database is at an absolute path in the project root, it should
+      // be excluded relative to the project root.
+      'absolute path in relocated web root' => [
+        'www',
+        '<PROJECT_ROOT>/www/db.sqlite',
+        'www/db.sqlite',
+      ],
+      'absolute path, web root is project root' => [
+        '',
+        '<PROJECT_ROOT>/db.sqlite',
+        'db.sqlite',
+      ],
+      // If the database is outside the project root, the excluder doesn't need
+      // to do anything.
+      'absolute path outside of project, relocated web root' => [
+        'www',
+        '/path/to/database.sqlite',
+        FALSE,
+      ],
+      'absolute path outside of project, web root is project root' => [
+        '',
+        '/path/to/database.sqlite',
+        FALSE,
+      ],
+    ];
   }
 
   /**
    * Tests that SQLite database files are excluded from stage operations.
+   *
+   * @param string $web_root
+   *   The web root that should be returned by the path locator. See
+   *   \Drupal\package_manager\PathLocator::getWebRoot().
+   * @param string $db_path
+   *   The path of the SQLite database, as it should be reported by the database
+   *   connection. This can be a relative or absolute path; it does not need to
+   *   actually exist.
+   * @param string|false $expected_excluded_path
+   *   The path to the database, as it should be given to
+   *   CollectPathsToExcludeEvent. If FALSE, the database is located outside the
+   *   project and therefore is not excluded.
+   *
+   * @dataProvider providerSqliteDatabaseFilesExcluded
    */
-  public function testSqliteDatabaseFilesExcluded(): void {
-    // In this test, we want to perform the actual stage operations so that we
-    // can be sure that files are staged as expected.
-    $this->setSetting('package_manager_bypass_composer_stager', FALSE);
-    // Ensure we have an up-to-date container.
-    $this->container = $this->container->get('kernel')->rebuildContainer();
-
-    $active_dir = $this->container->get(PathLocator::class)->getProjectRoot();
-
-    // Mock a SQLite database connection to a file in the active directory. The
-    // file should not be staged.
-    $this->mockDatabase([
-      'database' => 'sites/example.com/db.sqlite',
-    ]);
-
-    $stage = $this->createStage();
-    $stage->create();
-    $stage->require(['ext-json:*']);
-    $stage_dir = $stage->getStageDirectory();
-
-    $excluded = [
-      "sites/example.com/db.sqlite",
-      "sites/example.com/db.sqlite-shm",
-      "sites/example.com/db.sqlite-wal",
-    ];
-    foreach ($excluded as $path) {
-      $this->assertFileExists("$active_dir/$path");
-      $this->assertFileDoesNotExist("$stage_dir/$path");
-    }
-
-    $stage->apply();
-    // The excluded files should still be in the active directory.
-    foreach ($excluded as $path) {
-      $this->assertFileExists("$active_dir/$path");
-    }
-  }
-
-  /**
-   * Data provider for testPathProcessing().
-   *
-   * @return string[][]
-   *   The test cases.
-   */
-  public function providerPathProcessing(): array {
-    return [
-      'relative path, in site directory' => [
-        'sites/example.com/db.sqlite',
-        [
-          'sites/example.com/db.sqlite',
-          'sites/example.com/db.sqlite-shm',
-          'sites/example.com/db.sqlite-wal',
-        ],
-      ],
-      'relative path, at root' => [
-        'db.sqlite',
-        [
-          'db.sqlite',
-          'db.sqlite-shm',
-          'db.sqlite-wal',
-        ],
-      ],
-      'absolute path, in site directory' => [
-        '/sites/example.com/db.sqlite',
-        [
-          'sites/example.com/db.sqlite',
-          'sites/example.com/db.sqlite-shm',
-          'sites/example.com/db.sqlite-wal',
-        ],
-      ],
-      'absolute path, at root' => [
-        '/db.sqlite',
-        [
-          'db.sqlite',
-          'db.sqlite-shm',
-          'db.sqlite-wal',
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * Tests SQLite database path processing.
-   *
-   * This test ensures that SQLite database paths are processed properly (e.g.,
-   * converting an absolute path to a relative path) before being flagged for
-   * exclusion.
-   *
-   * @param string $database_path
-   *   The path of the SQLite database, as set in the database connection
-   *   options. If it begins with a slash, it will be prefixed with the path of
-   *   the active directory.
-   * @param string[] $expected_exclusions
-   *   The database paths which should be flagged for exclusion.
-   *
-   * @dataProvider providerPathProcessing
-   */
-  public function testPathProcessing(string $database_path, array $expected_exclusions): void {
+  public function testSqliteDatabaseFilesExcluded(string $web_root, string $db_path, string|false $expected_excluded_path): void {
+    /** @var \Drupal\package_manager_bypass\MockPathLocator $path_locator */
     $path_locator = $this->container->get(PathLocator::class);
-    $path_factory = $this->container->get(PathFactoryInterface::class);
-    // If the database path should be treated as absolute, prefix it with the
-    // path of the active directory.
-    if (str_starts_with($database_path, '/')) {
-      $database_path = $path_locator->getProjectRoot() . $database_path;
+    $project_root = $path_locator->getProjectRoot();
+
+    // Set the mocked web root, keeping everything else as-is.
+    $path_locator->setPaths(
+      $project_root,
+      $path_locator->getVendorDirectory(),
+      $web_root,
+      $path_locator->getStagingRoot(),
+    );
+    $db_path = str_replace('<PROJECT_ROOT>', $project_root, $db_path);
+    $this->mockDatabase->getConnectionOptions()
+      ->willReturn(['database' => $db_path])
+      ->shouldBeCalled();
+
+    $event = new CollectPathsToExcludeEvent(
+      $this->createStage(),
+      $path_locator,
+      $this->container->get(PathFactoryInterface::class),
+    );
+    $actual_excluded_paths = $this->container->get('event_dispatcher')
+      ->dispatch($event)
+      ->getAll();
+
+    if (is_string($expected_excluded_path)) {
+      $expected_exclusions = [
+        $expected_excluded_path,
+        $expected_excluded_path . '-shm',
+        $expected_excluded_path . '-wal',
+      ];
+      $this->assertEmpty(array_diff($expected_exclusions, $actual_excluded_paths));
     }
-    $this->mockDatabase([
-      'database' => $database_path,
-    ]);
-
-    $event = new CollectPathsToExcludeEvent($this->createStage(), $path_locator, $path_factory);
-    // Invoke the event subscriber directly, so we can check that the database
-    // was correctly excluded.
-    $this->container->get(SqliteDatabaseExcluder::class)
-      ->excludeDatabaseFiles($event);
-    // All of the expected exclusions should be flagged.
-    $this->assertEquals($expected_exclusions, $event->getAll());
+    else {
+      // The path of the database should not appear anywhere in the list of
+      // excluded paths.
+      $this->assertStringNotContainsString($db_path, serialize($actual_excluded_paths));
+    }
   }
-
-}
-
-/**
- * A test-only version of the SQLite database excluder, to expose internals.
- */
-class TestSqliteDatabaseExcluder extends SqliteDatabaseExcluder {
-
-  /**
-   * {@inheritdoc}
-   */
-  public Connection $database;
 
 }

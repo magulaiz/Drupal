@@ -31,9 +31,25 @@ class PreUpdateTest extends UpdaterFormTestBase {
   }
 
   /**
-   * Checks pre-releases of the next minor are available on the form.
+   * Checks RC releases of the next minor are available on the form.
    */
-  public function testNextMinorPreRelease(): void {
+  public function testNextMinorRc(): void {
+    $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.0-rc1.xml');
+    $this->mockActiveCoreVersion('9.7.0');
+    $this->config('auto_updates.settings')
+      ->set('allow_core_minor_updates', TRUE)
+      ->save();
+    $this->checkForUpdates();
+    $this->drupalGet('/admin/reports/updates/update');
+    $assert_session = $this->assertSession();
+    $this->checkReleaseTable('#edit-next-minor-1', '.update-update-recommended', '9.8.0-rc1', FALSE, 'Latest version of Drupal 9.8 (next minor):');
+    $assert_session->pageTextContainsOnce('Currently installed: 9.7.0 (Up to date)');
+  }
+
+  /**
+   * Checks Beta releases of the next minor are not available on the form.
+   */
+  public function testNextMinorBeta(): void {
     $this->setReleaseMetadata(__DIR__ . '/../../../../package_manager/tests/fixtures/release-history/drupal.9.8.0-beta1.xml');
     $this->mockActiveCoreVersion('9.7.0');
     $this->config('auto_updates.settings')
@@ -42,8 +58,7 @@ class PreUpdateTest extends UpdaterFormTestBase {
     $this->checkForUpdates();
     $this->drupalGet('/admin/reports/updates/update');
     $assert_session = $this->assertSession();
-    $this->checkReleaseTable('#edit-next-minor-1', '.update-update-recommended', '9.8.0-beta1', FALSE, 'Latest version of Drupal 9.8 (next minor):');
-    $assert_session->pageTextContainsOnce('Currently installed: 9.7.0 (Up to date)');
+    $assert_session->statusMessageContains('No update available');
   }
 
 }

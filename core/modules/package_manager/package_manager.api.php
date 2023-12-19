@@ -97,8 +97,16 @@
  *
  * - \Drupal\package_manager\Event\PostApplyEvent
  *   Dispatched after changes in the stage directory have been copied to the
- *   active directory. This event may be dispatched multiple times during the
- *   stage life cycle.
+ *   active directory. It should only be used for cleaning up after other
+ *   operations that happened during the stage life cycle. For example, a
+ *   PostCreateEvent subscriber might have set a state value which is no longer
+ *   needed once the stage has been applied to the active directory -- in such a
+ *   case, a PostApplyEvent subscriber should delete that value.
+ *   `drupal_flush_all_caches()` is called just before this event is dispatched,
+ *   so subscribers shouldn't need to flush any caches or rebuild the service
+ *   container. This event may be dispatched multiple times during the stage
+ *   life cycle, and should *never* be used for schema changes (i.e., operations
+ *   that should happen in `hook_update_N()` or a post-update function).
  *
  * @section sec_stage_api Stage API: Public methods
  * The public API of any stage consists of the following methods:

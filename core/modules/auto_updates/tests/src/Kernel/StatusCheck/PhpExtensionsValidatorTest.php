@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\Tests\auto_updates\Kernel\StatusCheck;
 
 use Drupal\auto_updates\CronUpdateRunner;
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\package_manager\ValidationResult;
 use Drupal\Tests\auto_updates\Kernel\AutoUpdatesKernelTestBase;
 use Drupal\Tests\package_manager\Traits\PackageManagerBypassTestTrait;
@@ -64,7 +63,7 @@ class PhpExtensionsValidatorTest extends AutoUpdatesKernelTestBase {
     $this->runConsoleUpdateStage();
     // The update should have been stopped before it started.
     $this->assertUpdateStagedTimes(0);
-    $this->assertTrue($logger->hasRecordThatContains((string) $error_result->messages[0], RfcLogLevel::ERROR));
+    $this->assertExceptionLogged((string) $error_result->messages[0], $logger);
   }
 
   /**
@@ -88,7 +87,7 @@ class PhpExtensionsValidatorTest extends AutoUpdatesKernelTestBase {
     $this->runConsoleUpdateStage();
     // The update should have been staged, but then stopped with an error.
     $this->assertUpdateStagedTimes(1);
-    $this->assertTrue($logger->hasRecordThatContains("Unattended updates are not allowed while Xdebug is enabled. You cannot receive updates, including security updates, until it is disabled.", RfcLogLevel::ERROR));
+    $this->assertExceptionLogged("Unattended updates are not allowed while Xdebug is enabled. You cannot receive updates, including security updates, until it is disabled.", $logger);
   }
 
   /**

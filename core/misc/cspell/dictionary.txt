@@ -97,6 +97,7 @@ blockrelated
 blocktest
 bodyless
 boing
+bootable
 bovigo
 brion
 brotli
@@ -322,6 +323,7 @@ fieldlayout
 fieldlinks
 fieldnames
 fieldsets
+filedate
 filemime
 filesort
 filesystems
@@ -660,8 +662,8 @@ presetid
 presetname
 pretransaction
 preuninstall
-proc_open
 processlist
+proc_open
 proname
 prophesize
 prophesized
@@ -844,6 +846,9 @@ suggestionnotimplemented
 sulaco
 supercede
 svgz
+syncer
+Syncer
+syncers
 synchronizable
 syrop
 tabbingmanager

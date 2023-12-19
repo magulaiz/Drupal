@@ -8,14 +8,14 @@ use Composer\Semver\VersionParser;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * A policy rule requiring the target version to be a stable release.
+ * A policy rule requiring the target version to be a RC or higher.
  *
  * @internal
  *   This is an internal part of Automatic Updates' version policy for
  *   Drupal core. It may be changed or removed at any time without warning.
  *   External code should not interact with this class.
  */
-final class TargetVersionStable {
+final class TargetVersionNotPreRelease {
 
   use StringTranslationTrait;
 
@@ -31,9 +31,9 @@ final class TargetVersionStable {
    *   The error messages, if any.
    */
   public function validate(string $installed_version, ?string $target_version): array {
-    if (VersionParser::parseStability($target_version) !== 'stable') {
+    if (!in_array(VersionParser::parseStability($target_version), ['stable', 'RC'], TRUE)) {
       return [
-        $this->t('Drupal cannot be automatically updated during cron to the recommended version, @target_version, because it is not a stable version.', [
+        $this->t('Drupal cannot be updated to the recommended version, @target_version, because it is not a stable version.', [
           '@target_version' => $target_version,
         ]),
       ];

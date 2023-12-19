@@ -120,7 +120,23 @@ function auto_updates_mail(string $key, array &$message, array $params): void {
 /**
  * Implements hook_page_top().
  */
-function auto_updates_page_top() {
+function auto_updates_page_top(array &$page_top) {
+  // Ensure error messages will be displayed on the batch page.
+  // @todo Remove this work around when https://drupal.org/i/3406612 is fixed.
+  if (\Drupal::routeMatch()->getRouteName() === 'system.batch_page.html') {
+    // Directly render a status message placeholder without any messages.
+    // Messages are not intended to be show on the batch page, but in the event
+    // an error in a AJAX callback the messages will be displayed.
+    $page_top['messages'] = [
+      '#theme' => 'status_messages',
+      '#message_list' => [],
+      '#status_headings' => [
+        'status' => t('Status message'),
+        'error' => t('Error message'),
+        'warning' => t('Warning message'),
+      ],
+    ];
+  }
   /** @var \Drupal\auto_updates\Validation\AdminStatusCheckMessages $status_check_messages */
   $status_check_messages = \Drupal::classResolver(AdminStatusCheckMessages::class);
   $status_check_messages->displayAdminPageMessages();

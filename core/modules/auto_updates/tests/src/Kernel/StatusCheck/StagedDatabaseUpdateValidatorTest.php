@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\auto_updates\Kernel\StatusCheck;
 
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\Tests\auto_updates\Kernel\AutoUpdatesKernelTestBase;
 use ColinODell\PsrTestLogger\TestLogger;
@@ -39,8 +38,7 @@ class StagedDatabaseUpdateValidatorTest extends AutoUpdatesKernelTestBase {
     $this->addEventTestListener($listener);
 
     $this->runConsoleUpdateStage();
-    $expected_message = "The update cannot proceed because database updates have been detected in the following extensions.\nSystem\n";
-    $this->assertTrue($logger->hasRecord($expected_message, (string) RfcLogLevel::ERROR));
+    $this->assertExceptionLogged("The update cannot proceed because database updates have been detected in the following extensions.\nSystem\n", $logger);
   }
 
 }

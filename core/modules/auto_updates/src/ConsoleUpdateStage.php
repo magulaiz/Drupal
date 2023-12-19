@@ -11,6 +11,7 @@ use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
+use Drupal\Core\Utility\Error;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Exception\ApplyFailedException;
 use Drupal\package_manager\Exception\StageEventException;
@@ -29,8 +30,18 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * An updater that runs via a console command.
+ *
+ * @internal
+ *   This is an internal part of Automatic Updates and may be changed or removed
+ *   at any time without warning. External code should not interact with this
+ *   class.
  */
 class ConsoleUpdateStage extends UpdateStage {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected string $type = 'auto_updates:unattended';
 
   /**
    * The metadata key that stores the previous and target versions of core.
@@ -209,11 +220,19 @@ class ConsoleUpdateStage extends UpdateStage {
     }
     catch (\Throwable $e) {
       $this->lock->release('cron');
+
       if ($e instanceof StageEventException && $e->event instanceof PreCreateEvent) {
         // If the error happened during PreCreateEvent then the update did not
         // really start.
         $update_started = FALSE;
       }
+      // Validation errors, or exceptions thrown by stage life cycle event
+      // listeners, were already logged by ::dispatch(), but we need to log
+      // exceptions that don't fall into those categories.
+      if (!$e instanceof StageEventException) {
+        Error::logException($this->logger, $e);
+      }
+
       // Send notifications about the failed update.
       $mail_params = [
         'previous_version' => $installed_version,
@@ -241,7 +260,6 @@ class ConsoleUpdateStage extends UpdateStage {
       foreach ($this->statusCheckMailer->getRecipients() as $email => $langcode) {
         $this->mailManager->mail('auto_updates', $key, $email, $langcode, $mail_params);
       }
-      $this->logger->error($e->getMessage());
 
       // If an error occurred during the pre-create event, the stage will be
       // marked as available and we shouldn't try to destroy it, since the stage
@@ -314,8 +332,12 @@ class ConsoleUpdateStage extends UpdateStage {
     try {
       $this->postApply();
     }
+    catch (StageEventException) {
+      // Validation errors, or exceptions caused by stage life cycle events,
+      // were already logged by ::dispatch().
+    }
     catch (\Throwable $e) {
-      $this->logger->error($e->getMessage());
+      Error::logException($this->logger, $e);
     }
     $this->lock->release('cron');
     $this->destroy();

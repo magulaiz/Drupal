@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\package_manager\Build;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Composer\Composer;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager_test_event_logger\EventSubscriber\EventLogSubscriber;
@@ -692,27 +693,21 @@ END;
    *   The package manager test API URL to fetch.
    * @param array $query_data
    *   The query data.
-   *
-   * @return array
-   *   The received JSON.
    */
-  protected function getPackageManagerTestApiResponse(string $url, array $query_data): array {
+  protected function makePackageManagerTestApiRequest(string $url, array $query_data): void {
     $url .= '?' . http_build_query($query_data);
     $this->visit($url);
     $mink = $this->getMink();
     $session = $mink->getSession();
-    $file_contents = $session->getPage()->getContent();
 
     // Ensure test failures provide helpful debug output when there's a fatal
     // PHP error: don't use \Behat\Mink\WebAssert::statusCodeEquals().
     if ($session->getStatusCode() == 500) {
-      $this->assertEquals(200, 500, 'Error response: ' . $file_contents);
+      $this->assertEquals(200, 500, 'Error response: ' . $session->getPage()->getContent());
     }
     else {
       $mink->assertSession()->statusCodeEquals(200);
     }
-
-    return json_decode($file_contents, TRUE, flags: JSON_THROW_ON_ERROR);
   }
 
 }

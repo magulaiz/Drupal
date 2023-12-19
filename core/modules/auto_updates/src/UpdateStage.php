@@ -34,6 +34,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class UpdateStage extends StageBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected string $type = 'auto_updates:attended';
+
+  /**
    * Constructs a new UpdateStage object.
    *
    * @param \Drupal\package_manager\ComposerInspector $composerInspector

@@ -64,12 +64,15 @@ final class UpdateController extends ControllerBase {
    *   A redirect to the appropriate destination.
    */
   public function onFinish(Request $request): RedirectResponse {
-    $this->statusChecker->run();
     if ($this->pendingUpdatesValidator->updatesExist()) {
+      // If there are pending database updates then the status checks will be
+      // run after the database updates are completed.
+      // @see \Drupal\auto_updates\BatchProcessor::dbUpdateBatchFinished
       $message = $this->t('Apply database updates to complete the update process.');
       $url = Url::fromRoute('system.db_update');
     }
     else {
+      $this->statusChecker->run();
       $message = $this->t('Update complete!');
       $url = Url::fromRoute('update.status');
       // Now that the update is done, we can put the site back online if it was
