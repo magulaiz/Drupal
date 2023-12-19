@@ -49,7 +49,7 @@ class MigrateRowFailEvent extends EventBase {
    * @return \Drupal\migrate\Row
    *   The row object about to be imported.
    */
-  public function getRow() {
+  public function getRow():Row {
     return $this->row;
   }
 
@@ -59,7 +59,7 @@ class MigrateRowFailEvent extends EventBase {
    * @return \Exception
    *   The exception that was thrown.
    */
-  public function getException() {
+  public function getException():\Exception {
     return $this->exception;
   }
 

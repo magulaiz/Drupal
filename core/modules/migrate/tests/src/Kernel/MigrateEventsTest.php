@@ -220,7 +220,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * Tests migration row fail event.
    */
-  public function testMigrationRowFailEvent() {
+  public function testMigrationRowFailEvent():void {
     // Create a simple node migration. This will fail as other dependent
     // modules like 'user' are not enabled.
     $data_row = [
@@ -257,7 +257,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function rowFailEventRecorder(MigrateRowFailEvent $event, $name) {
+  public function rowFailEventRecorder(MigrateRowFailEvent $event, string $name):void {
     $this->state->set('migrate_events_test.row_fail_event', [
       'event_name' => $name,
       'row' => $event->getRow(),
