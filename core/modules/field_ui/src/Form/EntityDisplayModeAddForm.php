@@ -40,6 +40,17 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
+    $router_builder = \Drupal::service('router.builder');
+
+    // Rebuild the router before redirecting back to the display route to ensure
+    // that the new display mode is displayed in the local tasks. This is
+    // required because usually the router rebuild happens during kernel
+    // termination which is after the response has been sent. This is too late
+    // because the browser may have already redirected the user before this.
+    // @see \Drupal\Core\Routing\RouteBuilder::destruct()
+    $router_builder->rebuildIfNeeded();
+
     $isViewMode = FALSE;
     if ($this->displayContext == 'view') {
       $isViewMode = TRUE;
