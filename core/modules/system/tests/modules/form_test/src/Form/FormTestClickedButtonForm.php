@@ -57,6 +57,9 @@ class FormTestClickedButtonForm extends FormBase {
       elseif (str_contains($arg, 'i')) {
         $type = 'image_button';
       }
+      else {
+        $type = NULL;
+      }
       if (isset($type)) {
         $form[$name] = [
           '#type' => $type,
