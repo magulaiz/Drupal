@@ -102,11 +102,14 @@
     const destination = `destination=${Drupal.encodePath(
       Drupal.url(drupalSettings.path.currentPath + window.location.search),
     )}`;
-    $contextual.find('.contextual-links a').each(function () {
-      const url = this.getAttribute('href');
-      const glue = url.includes('?') ? '&' : '?';
-      this.setAttribute('href', url + glue + destination);
-    });
+    $contextual
+      .find('.contextual-links a')
+      .toArray()
+      .forEach((ele) => {
+        const url = ele.getAttribute('href');
+        const glue = url.includes('?') ? '&' : '?';
+        ele.setAttribute('href', url + glue + destination);
+      });
 
     let title = '';
     const $regionHeading = $region.find('h2');
@@ -177,10 +180,10 @@
 
       // Collect the IDs for all contextual links placeholders.
       const ids = [];
-      $placeholders.each(function () {
+      $placeholders.toArray().forEach((ele) => {
         ids.push({
-          id: $(this).attr('data-contextual-id'),
-          token: $(this).attr('data-contextual-token'),
+          id: $(ele).attr('data-contextual-id'),
+          token: $(ele).attr('data-contextual-token'),
         });
       });
 

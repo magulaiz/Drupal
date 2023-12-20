@@ -38,12 +38,12 @@
         /**
          * Shows or hides the block entry based on the query.
          *
-         * @param {number} index
-         *   The index in the loop, as provided by `jQuery.each`
          * @param {HTMLElement} label
          *   The label of the block.
+         * @param {number} index
+         *   The index in the loop, as provided by `forEach`
          */
-        function toggleBlockEntry(index, label) {
+        function toggleBlockEntry(label, index) {
           const $row = $(label).parent().parent();
           const textMatch = label.textContent.toLowerCase().includes(query);
           $row.toggle(textMatch);
@@ -51,7 +51,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $filterRows.each(toggleBlockEntry);
+          $filterRows.toArray().forEach(toggleBlockEntry);
           Drupal.announce(
             Drupal.formatPlural(
               $table.find('tr:visible').length - 1,
@@ -60,8 +60,8 @@
             ),
           );
         } else {
-          $filterRows.each(function (index) {
-            $(this).parent().parent().show();
+          $filterRows.toArray().forEach((element) => {
+            $(element).parent().parent().show();
           });
         }
       }

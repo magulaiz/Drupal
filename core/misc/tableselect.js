@@ -48,8 +48,9 @@
         .prev('table.sticky-header')
         .addBack()
         .find('th.select-all input[type="checkbox"]')
-        .each(function () {
-          const $checkbox = $(this);
+        .toArray()
+        .forEach((ele) => {
+          const $checkbox = $(ele);
           const stateChanged = $checkbox.prop('checked') !== state;
 
           $checkbox.attr(
@@ -74,8 +75,8 @@
         if (event.target.matches('input[type="checkbox"]')) {
           // Loop through all checkboxes and set their state to the select all
           // checkbox' state.
-          checkboxes.each(function () {
-            const $checkbox = $(this);
+          checkboxes.toArray().forEach((ele) => {
+            const $checkbox = $(ele);
             const stateChanged =
               $checkbox.prop('checked') !== event.target.checked;
 
@@ -91,7 +92,7 @@
             /**
              * @checkbox {HTMLElement}
              */
-            $checkbox.closest('tr').toggleClass('selected', this.checked);
+            $checkbox.closest('tr').toggleClass('selected', ele.checked);
           });
           // Update the title and the state of the check all box.
           updateSelectAll(event.target.checked);

@@ -25,9 +25,12 @@
    *   The targeted node as a jQuery object.
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
-    $target.parents('.vertical-tabs__pane').each((index, pane) => {
-      $(pane).data('verticalTab').focus();
-    });
+    $target
+      .parents('.vertical-tabs__pane')
+      .toArray()
+      .forEach((pane, index) => {
+        $(pane).data('verticalTab').focus();
+      });
   };
 
   /**

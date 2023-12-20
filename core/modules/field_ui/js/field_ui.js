@@ -113,9 +113,10 @@
       // Create row handlers.
       $(table)
         .find('tr.draggable')
-        .each(function () {
+        .toArray()
+        .forEach((ele) => {
           // Extract server-side data for the row.
-          const row = this;
+          const row = ele;
           if (row.id in rowsData) {
             const data = rowsData[row.id];
             data.tableDrag = tableDrag;
@@ -220,8 +221,10 @@
       const rowObject = this;
       $(rowObject.table)
         .find('tr.region-message')
-        .each(function () {
-          const $this = $(this);
+        .toArray()
+        .forEach((ele) => {
+          const $this = $(ele);
+          console.log(ele);
           // If the dragged row is in this region, but above the message row, swap
           // it down one space.
           if (
@@ -245,7 +248,7 @@
             $this.removeClass('region-populated').addClass('region-empty');
           }
           // This region has become populated.
-          else if (this.matches('.region-empty')) {
+          else if (ele.matches('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });
@@ -451,7 +454,7 @@
 
       function filterRows(e) {
         const query = e.target.value;
-        function showRow(index, row) {
+        function showRow(row, index) {
           const sources = row.querySelectorAll('.form-item');
           let sourcesConcat = '';
           // Concatenate the textContent of the elements in the row, with a
@@ -469,7 +472,7 @@
         // Filter if the length of the query is at least 1 character.
         if (query.length > 0) {
           searching = true;
-          $rows.each(showRow);
+          $rows.toArray().forEach(showRow);
         } else if (searching) {
           searching = false;
           $rows.show();

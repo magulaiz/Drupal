@@ -40,19 +40,18 @@
 
         // Update the view of the trigger.
         const $trigger = this.$el.find('.trigger');
-        $trigger
-          .each((index, element) => {
-            element.textContent = Drupal.t(
-              '@action @title configuration options',
-              {
-                '@action': !isOpen
-                  ? this.options.strings.open
-                  : this.options.strings.close,
-                '@title': this.model.get('title'),
-              },
-            );
-          })
-          .attr('aria-pressed', isOpen);
+        $trigger.toArray().forEach((element, index) => {
+          element.textContent = Drupal.t(
+            '@action @title configuration options',
+            {
+              '@action': !isOpen
+                ? this.options.strings.open
+                : this.options.strings.close,
+              '@title': this.model.get('title'),
+            },
+          );
+          element.setAttribute('aria-pressed', isOpen);
+        });
       },
     },
   );
