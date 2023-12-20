@@ -137,7 +137,12 @@
    */
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     const that = this;
-    this.exposedFormAjax = [];
+    const pendingForms = once('exposed-form', this.$exposed_form);
+    if (!pendingForms.length) {
+      return;
+    }
+
+    this.exposedFormAjax = this.exposedFormAjax || [];
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
     $(
@@ -145,15 +150,14 @@
       this.$exposed_form,
     )
       .not('[data-drupal-selector=edit-reset]')
-      .each(function (index) {
-        if (once('exposed-form-ajax', this).length) {
-          // Initialize the Drupal.ajax instance.
-          const selfSettings = $.extend({}, that.element_settings, {
-            base: $(this).attr('id'),
-            element: this,
-          });
-          that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
-        }
+      .not('[data-views-ajax-submit-disabled]')
+      .each(function () {
+        // Initialize the Drupal.ajax instance.
+        const selfSettings = $.extend({}, that.element_settings, {
+          base: $(this).attr('id'),
+          element: this,
+        });
+        that.exposedFormAjax.push(Drupal.ajax(selfSettings));
       });
   };
 
