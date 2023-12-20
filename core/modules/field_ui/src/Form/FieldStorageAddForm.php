@@ -239,6 +239,7 @@ class FieldStorageAddForm extends FormBase {
         '#type' => 'html_tag',
         '#tag' => 'a',
         '#attributes' => [
+          'role' => 'button',
           'class' => ['field-option', 'js-click-to-select'],
           'href' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters)->toString(),
         ],
@@ -258,27 +259,26 @@ class FieldStorageAddForm extends FormBase {
             ],
           ],
         ],
-        'radio' => [
+        'words' => [
           '#type' => 'container',
-          '#title' => $category_info->getLabel(),
-          '#parents' => ['new_storage_type'],
-          '#title_display' => 'before',
-          '#description_display' => 'before',
-          '#theme_wrappers' => ['form_element__new_storage_type'],
-          // If it is a category, set return value as the category label.
-          // Otherwise, set it as the field type id.
-          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
           '#attributes' => [
-            'class' => ['field-option-radio'],
+            'class' => ['field-option__words'],
           ],
-          '#description' => [
+          'label' => [
+            '#attributes' => [
+              'class' => ['field-option__label'],
+            ],
+            '#type' => 'html_tag',
+            '#tag' => 'span',
+            '#value' => $category_info->getLabel(),
+          ],
+          'description' => [
             '#type' => 'container',
             '#attributes' => [
               'class' => ['field-option__description'],
             ],
             '#markup' => $category_info->getDescription(),
           ],
-          '#variant' => 'field-option',
         ],
       ];
 

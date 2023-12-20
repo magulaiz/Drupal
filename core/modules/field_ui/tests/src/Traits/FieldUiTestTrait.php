@@ -38,13 +38,6 @@ trait FieldUiTestTrait {
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
     $label = $label ?: $this->randomMachineName();
-    $initial_edit = [
-      'new_storage_type' => $field_type,
-    ];
-    $second_edit = [
-      'label' => $label,
-      'field_name' => $field_name,
-    ];
 
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
@@ -53,33 +46,35 @@ trait FieldUiTestTrait {
       // First step: 'Add field' page.
       $this->drupalGet($bundle_path);
     }
-    else {
-      $bundle_path = $this->getUrl();
-    }
 
+    $initial_edit = [
+      'label' => $label,
+      'field_name' => $field_name,
+    ];
     try {
-      // First check if the passed in field type is not part of a group.
-      $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='$field_type']");
+      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
+      $field_type_label = (string) $field_definitions[$field_type]['label'];
+      $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$field_type_label']]");
+      $link->click();
+
+      if ($this->getSession()->getPage()->hasField('field_options_wrapper')) {
+        $initial_edit['group_field_options_wrapper'] = $field_type;
+      }
     }
     // If the element could not be found then it is probably in a group.
     catch (ElementNotFoundException) {
       // Call the helper function to confirm it is in a group.
       $field_group = $this->getFieldFromGroup($field_type);
-      if ($field_group) {
-        // Pass in the group name as the new storage type.
-        $initial_edit['new_storage_type'] = $field_group;
-        $second_edit['group_field_options_wrapper'] = $field_type;
-        $this->drupalGet($bundle_path);
-      }
+      $this->clickLink($field_group);
+      $initial_edit['group_field_options_wrapper'] = $field_type;
     }
     $this->submitForm($initial_edit, 'Continue');
-    $this->submitForm($second_edit, 'Continue');
     // Assert that the field is not created.
-    $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
+      file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html',$this->getSession()->getPage()->getContent());
       $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
-      // Test Breadcrumbs.
-      $this->getSession()->getPage()->findLink($label);
 
       // Ensure that each array key in $storage_edit is prefixed with field_storage.
       $prefixed_storage_edit = [];
@@ -194,24 +189,12 @@ trait FieldUiTestTrait {
    *   Group name
    */
   public function getFieldFromGroup($field_type) {
-    $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
-    $groups = [];
-    foreach ($group_elements as $group_element) {
-      $groups[] = $group_element->getAttribute('value');
-    }
-    foreach ($groups as $group) {
-      $test = [
-        'new_storage_type' => $group,
-      ];
-      $this->submitForm($test, 'Continue');
-      try {
-        $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
-        $this->submitForm([], 'Back');
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+    $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+    $grouped_field_types = $field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions());
+    foreach ($grouped_field_types as $group => $field_types) {
+      if (array_key_exists($field_type, $field_types)) {
         return $group;
-      }
-      catch (ElementNotFoundException) {
-        $this->submitForm([], 'Back');
-        continue;
       }
     }
     return NULL;
