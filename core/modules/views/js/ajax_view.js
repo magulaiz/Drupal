@@ -150,7 +150,6 @@
         'input[type=submit], button[type=submit], input[type=image]',
       )
       .not('[data-drupal-selector=edit-reset]')
-      .not('[data-views-ajax-submit-disabled]')
       .each(function () {
         // Initialize the Drupal.ajax instance.
         const selfSettings = $.extend({}, that.element_settings, {
