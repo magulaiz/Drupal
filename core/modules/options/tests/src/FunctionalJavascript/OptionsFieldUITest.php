@@ -8,6 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the Options field UI functionality.
@@ -18,6 +19,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 class OptionsFieldUITest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}
