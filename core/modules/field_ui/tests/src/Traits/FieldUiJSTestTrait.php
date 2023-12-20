@@ -49,7 +49,7 @@ trait FieldUiJSTestTrait {
       /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
       $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
       $field_definitions = $field_type_plugin_manager->getUiDefinitions();
-      $field_type_label = (string) $field_definitions[$field_type]['category'];
+      $field_type_label = (string) $field_definitions[$field_type]['label'];
       $this->getSession()->getPage()->clickLink($field_type_label);
 
       if ($this->getSession()->getPage()->hasField('group_field_options_wrapper')) {
@@ -60,7 +60,7 @@ trait FieldUiJSTestTrait {
     // If the element could not be found then it is probably in a group.
     catch (ElementNotFoundException) {
       // Call the helper function to confirm it is in a group.
-      $field_group = $this->getFieldFromGroupJS($field_type);
+      $field_group = $this->getFieldFromGroup($field_type);
       $this->clickLink($field_group);
       $this->assertSession()->assertWaitOnAjaxRequest();
       $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);

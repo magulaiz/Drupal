@@ -8,6 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 // cspell:ignore horserad
 
@@ -20,6 +21,8 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 class ManageFieldsTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
+
 
   /**
    * {@inheritdoc}
@@ -343,10 +346,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
     $page = $this->getSession()->getPage();
 
-    $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('You need to select a field type.');
-
-    $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
+    $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]'));
     $boolean_field->click();
     $page->findButton('Continue')->click();
     $page->findButton('Continue')->click();
