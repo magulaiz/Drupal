@@ -215,7 +215,6 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // Check that non-configurable fields are not available.
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-    file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html', $this->getSession()->getPage()->getContent());
     foreach ($field_types as $field_type => $definition) {
       $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
       $label = (string) $definition['label'];
@@ -228,7 +227,6 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
         }
         catch (ElementNotFoundException) {
           if ($group = $this->getFieldFromGroup($field_type)) {
-            file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html',$this->getSession()->getPage()->getContent());
             $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$group']]");
             $link->click();
             $this->assertSession()
