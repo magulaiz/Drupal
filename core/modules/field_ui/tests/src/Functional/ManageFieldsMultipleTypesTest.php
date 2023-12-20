@@ -114,13 +114,13 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
 
     // Create additional view mode and enable it only on bundle 1.
     EntityViewMode::create([
-        'id' => "{$entity_type}.only1",
-        'targetEntityType' => $entity_type,
-        'status' => TRUE,
-        'enabled' => TRUE,
-        'label' => 'Only on 1',
-      ])
-      ->save();
+      'id' => "{$entity_type}.only1",
+      'targetEntityType' => $entity_type,
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'Only on 1',
+    ])
+    ->save();
     $view_display_only1 = EntityViewDisplay::create([
       'id' => "{$entity_type}.{$bundle1['id']}.only1",
       'targetEntityType' => $entity_type,
@@ -155,13 +155,13 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
     ]);
     $view_display_disabled->save();
     EntityViewDisplay::create([
-        'id' => "{$entity_type}.{$bundle2['id']}.disabled",
-        'targetEntityType' => $entity_type,
-        'status' => TRUE,
-        'bundle' => $bundle2['id'],
-        'mode' => 'disabled',
-      ])
-      ->save();
+      'id' => "{$entity_type}.{$bundle2['id']}.disabled",
+      'targetEntityType' => $entity_type,
+      'status' => TRUE,
+      'bundle' => $bundle2['id'],
+      'mode' => 'disabled',
+    ])
+    ->save();
 
     $new_label = $this->randomMachineName();
     $this->fieldUIAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
