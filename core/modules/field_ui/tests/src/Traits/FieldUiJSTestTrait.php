@@ -136,33 +136,4 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->elementExists('xpath', $xpath);
   }
 
-  /**
-   * Helper function that returns the field card element if it is in a group.
-   *
-   * @param string $field_type
-   *   The name of the field type.
-   *
-   * @return \Behat\Mink\Element\NodeElement|false|mixed|null
-   *   Field card element within a group.
-   */
-  public function getFieldFromGroupJS($field_type) {
-    $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
-    $groups = [];
-    foreach ($group_elements as $group_element) {
-      $groups[] = $group_element->getAttribute('value');
-    }
-    $field_card = NULL;
-    foreach ($groups as $group) {
-      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']")->getParent();
-      $group_field_card->click();
-      $this->getSession()->getPage()->pressButton('Continue');
-      $field_card = $this->getSession()->getPage()->find('css', "[name='group_field_options_wrapper'][value='$field_type']");
-      if ($field_card) {
-        break;
-      }
-      $this->getSession()->getPage()->pressButton('Back');
-    }
-    return $field_card->getParent();
-  }
-
 }

@@ -207,6 +207,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->fillField('label', $field_name);
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]'));
     $text_plain->click();
+    $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
     $page->pressButton('Continue');
 
     // Ensure the default value is reloaded when the field storage settings
