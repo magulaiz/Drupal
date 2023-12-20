@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Element;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -179,7 +178,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
     $this->assertCount(1, $errors);
-    $this->assertEquals(['required_validate' => sprintf('%s field is required.', 'required_validate')], $errors);
+    $this->assertEquals(['required_validate' => 'required_validate field is required.'], $errors);
 
     // Test invalid required parameters.
     $form_state = (new FormState())
@@ -195,10 +194,10 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     $this->assertCount(4, $errors);
     $this->assertEquals([
-      'required_validate' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
-      'required_validate_route' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
-      'required_validate_url' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
-      'required_non_validate' => sprintf('%s field is required.', 'required_non_validate'),
+      'required_validate' => 'This path does not exist or you do not have permission to link to user/74.',
+      'required_validate_route' => 'This path does not exist or you do not have permission to link to user/74.',
+      'required_validate_url' => 'This path does not exist or you do not have permission to link to user/74.',
+      'required_non_validate' => 'required_non_validate field is required.',
     ], $errors);
 
     // Test invalid optional parameters.
@@ -217,8 +216,8 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     $this->assertEquals(count($errors), 2);
     $this->assertEquals($errors, [
-      'optional_validate' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
-      'optional_validate_route' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
+      'optional_validate' => 'This path does not exist or you do not have permission to link to user/74.',
+      'optional_validate_route' => 'This path does not exist or you do not have permission to link to user/74.',
     ]);
   }
 
