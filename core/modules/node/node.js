@@ -47,7 +47,6 @@
             .toArray()
             .forEach((ele) => {
               values.push(Drupal.checkPlain(ele.textContent.trim()));
-              console.log(values);
             });
           return values.join(', ');
         }

@@ -21,7 +21,8 @@
           onEnd: () => {
             $(widget)
               .children()
-              .each((index, child) => {
+              .toArray()
+              .forEach((child, index) => {
                 $(child).find('.js-media-library-item-weight')[0].value = index;
               });
           },

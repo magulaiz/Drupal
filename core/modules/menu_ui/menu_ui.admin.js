@@ -30,10 +30,13 @@
     const $menu = $('#edit-menu');
     const values = [];
 
-    $menu.find('input:checked').each(function () {
-      // Get the names of all checked menus.
-      values.push(Drupal.checkPlain(this.value));
-    });
+    $menu
+      .find('input:checked')
+      .toArray()
+      .forEach((ele) => {
+        // Get the names of all checked menus.
+        values.push(Drupal.checkPlain(ele.value));
+      });
 
     $.ajax({
       url: `${window.location.protocol}//${window.location.host}${Drupal.url(
