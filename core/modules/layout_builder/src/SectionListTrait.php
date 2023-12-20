@@ -41,7 +41,7 @@ trait SectionListTrait {
    */
   public function getSection($uuid) {
     if (is_int($uuid)) {
-      @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
     }
     if (Uuid::isValid($uuid)) {
       foreach ($this->getSections() as $section) {
@@ -154,7 +154,7 @@ trait SectionListTrait {
    */
   public function removeSection($uuid) {
     if (is_int($uuid)) {
-      @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
+      @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
     }
     if (Uuid::isValid($uuid)) {
       // Clear the section list if there is currently a blank section.
