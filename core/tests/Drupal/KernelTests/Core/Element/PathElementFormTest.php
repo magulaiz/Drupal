@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Element;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -115,7 +116,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => 'Submit',
     ];
 
     return $form;
@@ -178,7 +179,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
     $this->assertCount(1, $errors);
-    $this->assertEquals(['required_validate' => t('@name field is required.', ['@name' => 'required_validate'])], $errors);
+    $this->assertEquals(['required_validate' => sprintf('%s field is required.', 'required_validate')], $errors);
 
     // Test invalid required parameters.
     $form_state = (new FormState())
@@ -194,10 +195,10 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     $this->assertCount(4, $errors);
     $this->assertEquals([
-      'required_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
-      'required_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
-      'required_validate_url' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
-      'required_non_validate' => t('@name field is required.', ['@name' => 'required_non_validate']),
+      'required_validate' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
+      'required_validate_route' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
+      'required_validate_url' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
+      'required_non_validate' => sprintf('%s field is required.', 'required_non_validate'),
     ], $errors);
 
     // Test invalid optional parameters.
@@ -216,8 +217,8 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     $this->assertEquals(count($errors), 2);
     $this->assertEquals($errors, [
-      'optional_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
-      'optional_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
+      'optional_validate' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
+      'optional_validate_route' => sprintf('This path does not exist or you do not have permission to link to %s.', 'user/74'),
     ]);
   }
 
