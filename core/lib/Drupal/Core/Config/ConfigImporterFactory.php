@@ -13,8 +13,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Factory class to create config importer objects.
+ *
+ * This class is declared as final because the ConfigImporter class is not
+ * intended to be swappable.
  */
-class ConfigImporterFactory {
+final class ConfigImporterFactory {
 
   /**
    * The config manager.
