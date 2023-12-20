@@ -118,11 +118,11 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
       'entity_test_update' => [
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
+        'The Test entity update entity type needs to be updated.',
         // The revision key is now defined, so the revision field needs to be
         // created.
-        t('The %field_name field needs to be installed.', ['%field_name' => 'Revision ID']),
-        t('The %field_name field needs to be installed.', ['%field_name' => 'Default revision']),
+        'The Revision ID field needs to be installed.',
+        'The Default revision field needs to be installed.',
       ],
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -661,9 +661,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->addEntityIndex();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
-      'entity_test_update' => [
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
-      ],
+      'entity_test_update' => ['The Test entity update entity type needs to be updated.']
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
@@ -678,9 +676,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->removeEntityIndex();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
-      'entity_test_update' => [
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
-      ],
+      'entity_test_update' => ['The Test entity update entity type needs to be updated.']
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
