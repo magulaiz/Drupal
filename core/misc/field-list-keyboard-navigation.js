@@ -13,9 +13,6 @@
    */
   Drupal.behaviors.fieldListKeyboardNavigation = {
     attach() {
-      if (document.querySelector('[data-field-list-table]') === null) {
-        return;
-      }
       once(
         'keyboardNavigation',
         'input[type="text"], input[type="number"]',

@@ -164,7 +164,7 @@ class FieldStorageAddForm extends FormBase {
       'core/drupal.ajax',
     ];
     // The group info is stored in new_storage_type.
-    if ($form_state->getValue('new_storage_type')) {
+    if ($form_state->hasValue('new_storage_type')) {
       // A group is already selected. Show field types for that group.
       $this->addFieldOptionsForGroup($form, $form_state);
     }
@@ -239,7 +239,6 @@ class FieldStorageAddForm extends FormBase {
         '#type' => 'html_tag',
         '#tag' => 'a',
         '#attributes' => [
-          'role' => 'button',
           'class' => ['field-option', 'js-click-to-select'],
           'href' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters)->toString(),
         ],
@@ -259,7 +258,7 @@ class FieldStorageAddForm extends FormBase {
             ],
           ],
         ],
-        'words' => [
+        'description_container' => [
           '#type' => 'container',
           '#attributes' => [
             'class' => ['field-option__words'],
