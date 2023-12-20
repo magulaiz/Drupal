@@ -23,8 +23,8 @@ trait FieldStorageCreationTrait {
     // preconfigured or default widget and settings. The field will not appear
     // in other form modes until it is explicitly configured.
     foreach ($widget_settings as $mode => $options) {
-      $form_display = $this->entityDisplayRepository->getFormDisplay($this->entityTypeId, $this->bundle, $mode);
-      if ($form_display->status()) {
+      $form_display = $this->entityTypeManager->getStorage('entity_form_display')->load($this->entityTypeId . '.' . $this->bundle . '.' . $mode);
+      if ($form_display && $form_display->status()) {
         $form_display->setComponent($field_name, $options)->save();
       }
     }
@@ -53,8 +53,8 @@ trait FieldStorageCreationTrait {
     // preconfigured or default formatter and settings. The field stays hidden
     // for other view modes until it is explicitly configured.
     foreach ($formatter_settings as $mode => $options) {
-      $view_display = $this->entityDisplayRepository->getViewDisplay($this->entityTypeId, $this->bundle, $mode);
-      if ($view_display->status()) {
+      $view_display = $this->entityTypeManager->getStorage('entity_view_display')->load($this->entityTypeId . '.' . $this->bundle . '.' . $mode);
+      if ($view_display && $view_display->status()) {
         $view_display->setComponent($field_name, $options)->save();
       }
     }
