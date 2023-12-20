@@ -106,7 +106,9 @@
         '-',
       )}-${settings.view_display_id.replace(/_/g, '-')}"]`,
     );
-    this.attachExposedFormAjax();
+    if (once('exposed-form', this.$exposed_form).length) {
+      this.attachExposedFormAjax();
+    }
 
     // Add the ajax to pagers.
     once(
@@ -137,7 +139,7 @@
    */
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     const that = this;
-    const pendingForms = once('exposed-form', this.$exposed_form);
+    const pendingForms = once('exposed-form-attach', this.$exposed_form);
     if (!pendingForms.length) {
       return;
     }
@@ -146,9 +148,7 @@
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
     $(pendingForms)
-      .find(
-        'input[type=submit], button[type=submit], input[type=image]',
-      )
+      .find('input[type=submit], button[type=submit], input[type=image]')
       .not('[data-drupal-selector=edit-reset]')
       .each(function () {
         // Initialize the Drupal.ajax instance.
