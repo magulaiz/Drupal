@@ -70,8 +70,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->drupalLogin($user);
 
     $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
-    $page->find('css', "[name='new_storage_type'][value='field_ui:entity_reference:media']")->getParent()->click();
-    $page->findButton('Continue')->click();
+    $this->clickLink('Media');
     $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', 'Shatner');
     $this->waitForText('field_shatner');

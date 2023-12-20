@@ -154,10 +154,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->assertNull(FieldStorageConfig::loadByName('node', "field_test_field"));
 
     $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
-    $edit = [
-      'new_storage_type' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
@@ -175,10 +172,7 @@ class ManageFieldsTest extends BrowserTestBase {
 
     // Try creating a field with the same machine name.
     $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
-    $edit = [
-      'new_storage_type' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
@@ -211,10 +205,7 @@ class ManageFieldsTest extends BrowserTestBase {
     // Start adding a field as user 1, stop prior to saving, but keep the URL.
     $this->drupalLogin($user1);
     $this->drupalGet($bundle_path . '/fields/add-field');
-    $edit = [
-      'new_storage_type' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
@@ -229,10 +220,7 @@ class ManageFieldsTest extends BrowserTestBase {
     // Actually add a field as user 2.
     $this->drupalLogin($user2);
     $this->drupalGet($bundle_path . '/fields/add-field');
-    $edit = [
-      'new_storage_type' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
@@ -270,10 +258,7 @@ class ManageFieldsTest extends BrowserTestBase {
     // Start adding a field but stop prior to saving.
     $this->drupalLogin($user);
     $this->drupalGet($bundle_path . '/fields/add-field');
-    $edit = [
-      'new_storage_type' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Test field');
     $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',

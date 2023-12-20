@@ -62,8 +62,7 @@ trait FieldUiJSTestTrait {
       // Call the helper function to confirm it is in a group.
       $field_group = $this->getFieldFromGroup($field_type);
       $this->clickLink($field_group);
-      $this->assertSession()->assertWaitOnAjaxRequest();
-      $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
+      $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
     }
 
     $field_label = $page->findField('label');
