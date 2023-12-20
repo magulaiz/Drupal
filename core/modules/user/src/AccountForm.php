@@ -131,9 +131,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
 
     // When not building the user registration form, prevent web browsers from
-    // auto-filling/prefilling the email, username, and password fields.
+    // auto-filling/prefilling the username.
     if (!$register) {
-      foreach (['mail', 'name', 'pass'] as $key) {
+      foreach (['name'] as $key) {
         if (isset($form['account'][$key])) {
           $form['account'][$key]['#attributes']['autocomplete'] = 'off';
         }
@@ -332,16 +332,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       }
     }
 
-    // Set existing password if set in the form state.
-    $current_pass = trim($form_state->getValue('current_pass', ''));
-    if (strlen($current_pass) > 0) {
-      $account->setExistingPassword($current_pass);
-    }
-
-    // Skip the protected user field constraint if the user came from the
-    // password recovery page.
-    $account->_skipProtectedUserFieldConstraint = $form_state->get('user_pass_reset');
-
     return $account;
   }
 
@@ -388,11 +378,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-
-    $user = $this->getEntity();
-    // If there's a session set to the users id, remove the password reset tag
-    // since a new password was saved.
-    $this->getRequest()->getSession()->remove('pass_reset_' . $user->id());
   }
 
 }
