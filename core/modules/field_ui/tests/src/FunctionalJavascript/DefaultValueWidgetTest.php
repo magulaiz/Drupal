@@ -6,6 +6,7 @@ namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
@@ -17,6 +18,7 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
 
   use TaxonomyTestTrait;
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}

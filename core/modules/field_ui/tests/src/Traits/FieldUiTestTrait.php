@@ -73,7 +73,6 @@ trait FieldUiTestTrait {
     $this->submitForm($initial_edit, 'Continue');
     // Assert that the field is not created.
     if ($save_settings) {
-      file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html',$this->getSession()->getPage()->getContent());
       $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
 
       // Ensure that each array key in $storage_edit is prefixed with field_storage.
