@@ -145,10 +145,10 @@
     this.exposedFormAjax = this.exposedFormAjax || [];
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
-    $(
-      'input[type=submit], button[type=submit], input[type=image]',
-      this.$exposed_form,
-    )
+    $(pendingForms)
+      .find(
+        'input[type=submit], button[type=submit], input[type=image]',
+      )
       .not('[data-drupal-selector=edit-reset]')
       .not('[data-views-ajax-submit-disabled]')
       .each(function () {
