@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\ImportStorageTransformer;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
@@ -130,6 +131,13 @@ class ConfigSync extends FormBase {
   protected $themeExtensionList;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sync_storage
@@ -160,8 +168,10 @@ class ConfigSync extends FormBase {
    *   The import transformer service.
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL, EntityTypeManagerInterface $entity_type_manager) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -175,6 +185,7 @@ class ConfigSync extends FormBase {
     $this->renderer = $renderer;
     $this->moduleExtensionList = $extension_list_module;
     $this->importTransformer = $import_transformer;
+    $this->entityTypeManager = $entity_type_manager;
     if ($extension_list_theme === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
       $extension_list_theme = \Drupal::service('extension.list.theme');
@@ -200,7 +211,8 @@ class ConfigSync extends FormBase {
       $container->get('renderer'),
       $container->get('extension.list.module'),
       $container->get('config.import_transformer'),
-      $container->get('extension.list.theme')
+      $container->get('extension.list.theme'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -343,6 +355,27 @@ class ConfigSync extends FormBase {
                 'width' => 700,
               ]),
             ],
+          ];
+          // Get config type from config name.
+          $config_type = $this->configManager->getEntityTypeIdByName($config_name);
+          // If config type not empty, remove config prefix from config name.
+          if (!empty($config_type)) {
+            $definition = $this->entityTypeManager->getDefinition($config_type);
+            $config_prefix = $definition->getConfigPrefix() . ".";
+            if (substr($config_name, 0, strlen($config_prefix)) == $config_prefix) {
+              $config_name_url_param = substr($config_name, strlen($config_prefix));
+            }
+          }
+          else {
+            // If config type is empty,
+            // Then the config type should be simple configuration.
+            $config_type = 'system.simple';
+            $config_name_url_param = $config_name;
+          }
+          // Add export config link.
+          $links['export_config'] = [
+            'title' => $this->t('Export this config'),
+            'url' => Url::fromRoute('config.export_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
           ];
           $form[$collection][$config_change_type]['list']['#rows'][] = [
             'name' => $config_name,
