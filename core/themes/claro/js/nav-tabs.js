@@ -45,9 +45,12 @@
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           let width = 0;
 
-          $target.find('.js-tabs-link').each((index, value) => {
-            width += $(value).outerWidth();
-          });
+          $target
+            .find('.js-tabs-link')
+            .toArray()
+            .forEach((value, index) => {
+              width += $(value).outerWidth();
+            });
           $tab.attr('data-width', width);
         }
 
@@ -65,10 +68,13 @@
 
     $tab.addClass('position-container is-horizontal-enabled');
 
-    $target.find('.js-tab').each((index, element) => {
-      const $item = $(element);
-      $item.attr('data-original-order', $item.index());
-    });
+    $target
+      .find('.js-tab')
+      .toArray()
+      .forEach((element, index) => {
+        const $item = $(element);
+        $item.attr('data-original-order', $item.index());
+      });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
     const mql = window.matchMedia('(min-width: 48em)');

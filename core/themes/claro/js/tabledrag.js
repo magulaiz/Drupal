@@ -141,7 +141,8 @@
     onIndent() {
       $(this.table)
         .find('.tabledrag-cell > .js-indentation')
-        .each((index, indentToMove) => {
+        .toArray()
+        .forEach((indentToMove, index) => {
           const $indentToMove = $(indentToMove);
           const $cellContent = $indentToMove.siblings(
             '.tabledrag-cell-content',

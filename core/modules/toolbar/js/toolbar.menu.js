@@ -68,10 +68,13 @@
       // Twist the toggle.
       $toggle.toggleClass('open', switcher);
       // Adjust the toggle text.
-      $toggle.find('.action').each((index, element) => {
-        // Expand Structure, Collapse Structure.
-        element.textContent = switcher ? ui.handleClose : ui.handleOpen;
-      });
+      $toggle
+        .find('.action')
+        .toArray()
+        .forEach((element, index) => {
+          // Expand Structure, Collapse Structure.
+          element.textContent = switcher ? ui.handleClose : ui.handleOpen;
+        });
     }
 
     /**
@@ -130,23 +133,26 @@
       // Initialize items and their links.
       $menu.find('li > a').wrap('<div class="toolbar-box">');
       // Add a handle to each list item if it has a menu.
-      $menu.find('li').each((index, element) => {
-        const $item = $(element);
-        if ($item.children('ul.toolbar-menu').length) {
-          const $box = $item.children('.toolbar-box');
-          const $link = $box.find('a');
-          options.text = Drupal.t('@label', {
-            '@label': $link.length ? $link[0].textContent : '',
-          });
-          $item
-            .children('.toolbar-box')
-            .append(
-              $(Drupal.theme('toolbarMenuItemToggle', options))
-                .hide()
-                .fadeIn(150),
-            );
-        }
-      });
+      $menu
+        .find('li')
+        .toArray()
+        .forEach((element, index) => {
+          const $item = $(element);
+          if ($item.children('ul.toolbar-menu').length) {
+            const $box = $item.children('.toolbar-box');
+            const $link = $box.find('a');
+            options.text = Drupal.t('@label', {
+              '@label': $link.length ? $link[0].textContent : '',
+            });
+            $item
+              .children('.toolbar-box')
+              .append(
+                $(Drupal.theme('toolbarMenuItemToggle', options))
+                  .hide()
+                  .fadeIn(150),
+              );
+          }
+        });
     }
 
     /**

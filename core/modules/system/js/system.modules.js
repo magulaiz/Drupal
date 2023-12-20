@@ -58,7 +58,7 @@
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
           searching = true;
-          $rows.each(showModuleRow);
+          $rows.toArray().forEach(showModuleRow);
 
           // Note that we first open all <details> to be able to use ':visible'.
           // Mark the <details> elements that were closed before filtering, so
@@ -69,7 +69,7 @@
 
           // Hide the package <details> if they don't have any visible rows.
           // Note that we first show() all <details> to be able to use ':visible'.
-          $details.attr('open', true).each(hidePackageDetails);
+          $details.attr('open', true).toArray().forEach(hidePackageDetails);
 
           Drupal.announce(
             Drupal.formatPlural(

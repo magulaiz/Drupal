@@ -28,7 +28,7 @@
       function filterViewList(e) {
         const query = e.target.value.toLowerCase();
 
-        function showViewRow(index, row) {
+        function showViewRow(row, index) {
           const sources = row.querySelectorAll(
             '[data-drupal-selector="views-table-filter-text-source"]',
           );
@@ -42,7 +42,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $rows.each(showViewRow);
+          $rows.toArray().forEach(showViewRow);
         } else {
           $rows.show();
         }

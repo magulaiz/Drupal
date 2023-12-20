@@ -44,8 +44,10 @@
           $optionsContext
             .find('input:checked')
             .next('label')
-            .each(function () {
-              values.push(Drupal.checkPlain(this.textContent.trim()));
+            .toArray()
+            .forEach((ele) => {
+              values.push(Drupal.checkPlain(ele.textContent.trim()));
+              console.log(values);
             });
           return values.join(', ');
         }
