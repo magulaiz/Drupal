@@ -140,13 +140,15 @@ final class ConfigImporterFactory {
   /**
    * Creates a ConfigImporter instance.
    *
-   * @param \Drupal\Core\Config\StorageComparerInterface $storage_comparer
-   *   The storage comparer object.
+   * @param \Drupal\Core\Config\StorageComparer $storage_comparer
+   *   The storage comparer object. The type is the class and not
+   *   StorageComparerInterface because that is due to be removed: see
+   *   https://www.drupal.org/project/drupal/issues/3410037.
    *
    * @return \Drupal\Core\Config\ConfigImporter
    *   A config importer instance.
    */
-  public function createConfigImporter(StorageComparerInterface $storage_comparer): ConfigImporter {
+  public function createConfigImporter(StorageComparer $storage_comparer): ConfigImporter {
     return new ConfigImporter(
       $storage_comparer,
       $this->eventDispatcher,
