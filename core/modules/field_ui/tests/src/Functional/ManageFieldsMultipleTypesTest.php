@@ -119,8 +119,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
       'status' => TRUE,
       'enabled' => TRUE,
       'label' => 'Only on 1',
-    ])
-    ->save();
+    ])->save();
     $view_display_only1 = EntityViewDisplay::create([
       'id' => "{$entity_type}.{$bundle1['id']}.only1",
       'targetEntityType' => $entity_type,
@@ -160,8 +159,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
       'status' => TRUE,
       'bundle' => $bundle2['id'],
       'mode' => 'disabled',
-    ])
-    ->save();
+    ])->save();
 
     $new_label = $this->randomMachineName();
     $this->fieldUIAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
