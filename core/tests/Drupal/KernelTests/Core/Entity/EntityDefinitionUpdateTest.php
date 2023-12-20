@@ -661,7 +661,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->addEntityIndex();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
-      'entity_test_update' => ['The Test entity update entity type needs to be updated.']
+      'entity_test_update' => ['The Test entity update entity type needs to be updated.'],
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
@@ -676,7 +676,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->removeEntityIndex();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = [
-      'entity_test_update' => ['The Test entity update entity type needs to be updated.']
+      'entity_test_update' => ['The Test entity update entity type needs to be updated.'],
     ];
     $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
