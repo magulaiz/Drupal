@@ -368,7 +368,7 @@ class FileUploadHandler {
   protected function handleExtensionValidation(array &$validators): string {
     // Build a list of allowed extensions.
     if (isset($validators['FileExtension'])) {
-      if (!isset($validators['FileExtension']['extensions'])) {
+      if (empty($validators['FileExtension']['extensions'])) {
         // If 'FileExtension' is set and the list is empty then the caller wants
         // to allow any extension. In this case we have to remove the validator
         // or else it will reject all extensions.
