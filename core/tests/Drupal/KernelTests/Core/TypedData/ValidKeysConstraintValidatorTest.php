@@ -2,8 +2,6 @@
 
 namespace Drupal\KernelTests\Core\TypedData;
 
-// cspell:ignore validatable
-
 use Drupal\block\Entity\Block;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
