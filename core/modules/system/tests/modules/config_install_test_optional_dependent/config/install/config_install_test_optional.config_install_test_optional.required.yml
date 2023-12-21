@@ -1,0 +1,4 @@
+dependencies:
+  config:
+    - config_install_test_optional.config_install_test_optional.optional
+id: required

@@ -1,0 +1,8 @@
+name: "Optional Config Install Test - Dependent"
+type: module
+description: "The module that depends on the optional config and the dependency."
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:config_install_test_dependency
+  - drupal:config_install_test_optional

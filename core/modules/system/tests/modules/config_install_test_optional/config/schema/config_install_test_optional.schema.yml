@@ -1,0 +1,7 @@
+config_install_test_optional.*:
+  type: config_entity
+  label: 'Test Entity'
+  mapping:
+    id:
+      type: string
+      label: 'ID'

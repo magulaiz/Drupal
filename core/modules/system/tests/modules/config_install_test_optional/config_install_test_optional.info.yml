@@ -1,0 +1,5 @@
+name: "Optional Config Install Test - Optional config provider"
+type: module
+description: "Provide optional config for another module to depend on."
+package: Testing
+version: VERSION
