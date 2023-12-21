@@ -19,21 +19,21 @@
   & .tabledrag-cell-content__item {
     padding: 0;
   }
-  & .tabledrag-handle {
+  & .tabledrag-handle,
+  & .tabledrag-changed {
     float: inline-start;
   }
   & .tabledrag-changed {
-    float: inline-start;
-    line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
+    line-height: calc(
+      var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2)
+    );
   }
   & td {
     height: calc(var(--space-m) * 3);
     padding-block: var(--space-m);
-    & > :first-child {
-      margin-block-start: 0;
-    }
+    & > :first-child,
     & > :last-child {
-      margin-block-end: 0;
+      margin-block: 0;
     }
   }
   & .button.button:only-child {
