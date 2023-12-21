@@ -15,7 +15,7 @@
     "jquery/no-data": 0,
     "jquery/no-deferred": 0,
     "jquery/no-delegate": 2,
-    "jquery/no-each": 0,
+    "jquery/no-each": 2,
     "jquery/no-extend": 0,
     "jquery/no-fade": 0,
     "jquery/no-filter": 0,

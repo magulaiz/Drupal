@@ -85,8 +85,8 @@
             .before(tabList);
 
           // Transform each details into a tab.
-          $details.each(function () {
-            const $that = $(this);
+          $details.toArray().forEach((ele) => {
+            const $that = $(ele);
             const $summary = $that.find('> summary');
             const verticalTab = new Drupal.verticalTab({
               title: $summary.length ? $summary[0].textContent : '',
@@ -98,7 +98,7 @@
               .removeAttr('open')
               .addClass('vertical-tabs__pane')
               .data('verticalTab', verticalTab);
-            if (this.id === focusID) {
+            if (ele.id === focusID) {
               tabFocus = $that;
             }
           });

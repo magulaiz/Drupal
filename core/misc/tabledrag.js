@@ -338,10 +338,12 @@
         // based. Match immediate children of the parent element to allow
         // nesting.
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
+        /* eslint-disable */
         $table
           .find('> thead > tr, > tbody > tr, > tr')
           .each(this.addColspanClass(columnIndex));
       }
+      /* eslint-enable */
     });
     this.displayColumns(showWeight);
   };
