@@ -15,6 +15,7 @@
 gantt
     title Drupal Release Schedule
     dateFormat  YYYY-MM
+    tickInterval 1month
     axisFormat %Y %b
     section Drupal 10
     10.2 Security   :active, 102sec, 2024-06, 6M
