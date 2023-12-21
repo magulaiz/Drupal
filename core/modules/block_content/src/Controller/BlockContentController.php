@@ -9,7 +9,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
