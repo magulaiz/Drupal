@@ -466,7 +466,7 @@ class ViewExecutable {
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager;
    */
-  protected $displayPluginManager;
+  protected ViewsPluginManager $displayPluginManager;
 
   /**
    * Constructs a new ViewExecutable object.

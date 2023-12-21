@@ -45,7 +45,7 @@ class ViewExecutableFactory {
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager
    */
-  protected $displayPluginManager;
+  protected ViewsPluginManager $displayPluginManager;
 
   /**
    * Constructs a new ViewExecutableFactory.
