@@ -15,7 +15,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block_content'];
+  protected static $modules = ['block', 'block_content'];
 
   /**
    * {@inheritdoc}
