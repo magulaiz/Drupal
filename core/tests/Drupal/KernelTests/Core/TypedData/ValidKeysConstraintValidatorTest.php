@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
@@ -20,11 +21,13 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
   /**
-   * The config under test.
+   * The typed config under test.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\TypedData\TraversableTypedDataInterface
+   *
+   * @see \Drupal\Core\Config\TypedConfigManagerInterface::get()
    */
-  protected $config;
+  protected TraversableTypedDataInterface $config;
 
   /**
    * {@inheritdoc}
