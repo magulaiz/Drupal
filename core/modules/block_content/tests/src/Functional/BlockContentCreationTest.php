@@ -152,7 +152,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Verify destination URL, when clicking "Save and configure" this
     // destination will be ignored.
     $base = base_path();
-    $url = 'block/add?destination=' . $base . 'admin/content/block';
+    $url = 'block/add';
     $this->assertSession()->addressEquals($url);
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
