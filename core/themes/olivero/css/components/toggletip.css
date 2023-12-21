@@ -11,9 +11,5 @@
  */
 
 .form-item-textarea > label > .toggletip__toggle {
-  top: unset !important;
-}
-
-.form-item-textarea > label > .toggletip__toggle {
-  /* Override for olivero specific styling. */
+  top: unset !important; /* Override for olivero specific styling. */
 }
