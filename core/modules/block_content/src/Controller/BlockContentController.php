@@ -66,48 +66,6 @@ class BlockContentController extends ControllerBase {
   }
 
   /**
-   * Displays add content block links for available types.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
-   *
-   * @return array
-   *   A render array for a list of the block types that can be added or
-   *   if there is only one block type defined for the site, the function
-   *   returns the content block add page for that block type.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   EntityController::addPage() instead.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3346394
-   */
-  public function add(Request $request) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use EntityController::addPage() instead. See https://www.drupal.org/project/drupal/issues/3346394', E_USER_DEPRECATED);
-    $types = [];
-    // Only use block types the user has access to.
-    foreach ($this->blockContentTypeStorage->loadMultiple() as $type) {
-      $access = $this->entityTypeManager()->getAccessControlHandler('block_content')->createAccess($type->id(), NULL, [], TRUE);
-      if ($access->isAllowed()) {
-        $types[$type->id()] = $type;
-      }
-    }
-    uasort($types, [$this->blockContentTypeStorage->getEntityType()->getClass(), 'sort']);
-    if ($types && count($types) == 1) {
-      $type = reset($types);
-      return $this->addForm($type, $request);
-    }
-    if (count($types) === 0) {
-      return [
-        '#markup' => $this->t('You have not created any block types yet. Go to the <a href=":url">block type creation page</a> to add a new block type.', [
-          ':url' => Url::fromRoute('block_content.type_add')->toString(),
-        ]),
-      ];
-    }
-
-    return ['#theme' => 'block_content_add_list', '#content' => $types];
-  }
-
-  /**
    * Presents the content block creation form.
    *
    * @param \Drupal\block_content\BlockContentTypeInterface $block_content_type
