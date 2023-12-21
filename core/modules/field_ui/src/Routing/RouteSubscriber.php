@@ -164,6 +164,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           [
             '_entity_form' => 'entity_view_display.edit',
             '_title' => 'Manage display',
+            'view_mode_name' => 'default',
           ] + $defaults,
           ['_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'],
           $options
