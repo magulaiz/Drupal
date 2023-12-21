@@ -16,11 +16,11 @@ class SysLog implements LoggerInterface {
   use RfcLoggerTrait;
 
   /**
-   * A configuration object containing syslog settings.
+   * Lazy config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The message's placeholders parser.
@@ -45,7 +45,7 @@ class SysLog implements LoggerInterface {
    *   The parser to use when extracting message variables.
    */
   public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser) {
-    $this->config = $config_factory->get('syslog.settings');
+    $this->configFactory = $config_factory;
     $this->parser = $parser;
   }
 
@@ -55,8 +55,9 @@ class SysLog implements LoggerInterface {
   protected function openConnection() {
     if (!$this->connectionOpened) {
       // Do not connect if identity or facility are not configured.
-      $identity = $this->config->get('identity');
-      $facility = $this->config->get('facility');
+      $config = $this->configFactory->get('syslog.settings');
+      $identity = $config->get('identity');
+      $facility = $config->get('facility');
       if ($identity === NULL || $facility === NULL) {
         return;
       }
@@ -70,7 +71,7 @@ class SysLog implements LoggerInterface {
   public function log($level, string|\Stringable $message, array $context = []): void {
     global $base_url;
 
-    $format = $this->config->get('format');
+    $format = $this->configFactory->get('syslog.settings')->get('format');
     // If no format is configured then a message will not be written to syslog
     // so return early. This occurs during installation of the syslog module
     // before configuration has been written.
