@@ -38,7 +38,7 @@ class CommentStatisticsTest extends ViewTestBase {
   /**
    * Tests view for entity with "changed" field.
    */
-  public function testEntityMulChanged() {
+  public function testEntityMulChanged():void {
     ViewTestData::createTestViews(get_class($this), ['comment_test_views']);
 
     Role::load('anonymous')
