@@ -1,5 +1,15 @@
 ```mermaid
-%%{init: {'theme':'forest'}}%%
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#0077C0',
+      'primaryTextColor': '#fff',
+      'tertiaryColor': '#81CEFF',
+      'doneTaskBkgColor': '#7cbc48'
+    }
+  }
+}%%
 gantt
     title Drupal Release Schedule
     dateFormat  YYYY-MM
