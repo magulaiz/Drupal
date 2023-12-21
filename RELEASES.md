@@ -1,3 +1,4 @@
+```mermaid
 ---
 displayMode: compact
 ---
@@ -55,3 +56,4 @@ gantt
     section Drupal 12.1
     12.1 Support    :121sup, after 120sup, 6M
     12.1 Support    :active, after 121sup, 6M
+```
