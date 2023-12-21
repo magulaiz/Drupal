@@ -750,9 +750,10 @@ class ViewExecutable {
     if (isset($this->current_display)) {
       return TRUE;
     }
-    $this->current_display = 'default';
     // Initialize the display cache array.
     $this->displayHandlers = new DisplayPluginCollection($this, $this->displayPluginManager);
+
+    $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers->get('default');
 
     return TRUE;
