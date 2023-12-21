@@ -53,6 +53,11 @@
   }
 }
 
+.group-field-options {
+  display: table;
+  min-width: 100%;
+}
+
 .field-option__item {
   display: grid;
   grid-template-rows: auto 2fr;
@@ -92,6 +97,10 @@
 
   .item-list ul {
     margin-inline: 0;
+  }
+
+  .item-list {
+    padding-left: 1.4rem;
   }
 }
 
