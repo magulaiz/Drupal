@@ -35,13 +35,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Install the Block module and create a Block config entity, so that we can
-    // test that the validator infers the required keys from a defined schema.
-    $this->enableModules(['system', 'block', 'config_schema_test']);
-    // Also install the block_test_fully_validatable module, to enable using
-    // Block config entities as the example in the test cases below. The opt-in
-    // aspect is already tested in
-    // @see \Drupal\KernelTests\Config\Schema\MappingTest::testMappingInterpretations()
-    \Drupal::state()->set('config_schema_test_block_fully_validatable', TRUE);
+    // test that the validator infers keys from a defined schema.
+    $this->enableModules(['system', 'block']);
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['stark']);
@@ -50,18 +45,6 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       'id' => 'branding',
       'plugin' => 'system_branding_block',
       'theme' => 'stark',
-      'status' => TRUE,
-      'settings' => [
-        'use_site_logo' => TRUE,
-        'use_site_name' => TRUE,
-        'use_site_slogan' => TRUE,
-        'label_display' => FALSE,
-        // TRICKY: these 4 are inherited from `type: block_settings`.
-        'status' => TRUE,
-        'info' => '',
-        'view_mode' => 'full',
-        'context_mapping' => [],
-      ],
     ]);
     $block->save();
 
