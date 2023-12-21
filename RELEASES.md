@@ -1,32 +1,34 @@
 ```mermaid
 gantt
-    dateFormat  YYYY-MM-DD
-    title       Adding GANTT diagram functionality to mermaid
-    excludes    weekends
-    %% (`excludes` accepts specific dates in YYYY-MM-DD format, days of the week ("sunday") or "weekends", but not the word "weekdays".)
-
-    section A section
-    Completed task            :done,    des1, 2014-01-06,2014-01-08
-    Active task               :active,  des2, 2014-01-09, 3d
-    Future task               :         des3, after des2, 5d
-    Future task2              :         des4, after des3, 5d
-
-    section Critical tasks
-    Completed task in the critical line :crit, done, 2014-01-06,24h
-    Implement parser and jison          :crit, done, after des1, 2d
-    Create tests for parser             :crit, active, 3d
-    Future task in critical line        :crit, 5d
-    Create tests for renderer           :2d
-    Add to mermaid                      :1d
-    Functionality added                 :milestone, 2014-01-25, 0d
-
-    section Documentation
-    Describe gantt syntax               :active, a1, after des1, 3d
-    Add gantt diagram to demo page      :after a1  , 20h
-    Add another diagram to demo page    :doc1, after a1  , 48h
-
-    section Last section
-    Describe gantt syntax               :after doc1, 3d
-    Add gantt diagram to demo page      :20h
-    Add another diagram to demo page    :48h
+    title Drupal Release Schedule
+    dateFormat  YYYY-MM
+    axisFormat %Y %b
+    section Drupal 10
+    10.2 Security   :active, 102sec, 2024-06, 6M
+    10.3 Support    :103sup, 2024-06, 6M
+    10.3 Security   :active, 103sec, after 103sup,6M
+    section LTS Phase
+    10.4 Maint      :done, 104mnt, after 103sup, 6M
+    10.4 Security   :active, 104sec, after 104mnt, 6M
+    10.5 Maint      :done, 105mnt, after 104mnt, 6M
+    10.5 Security   :active, 105sec, after 105mnt, 6M
+    section Drupal 11
+    11.0 Support    :110sup, 2024-06  , 6M
+    11.0 Security   :active, 110sec, after 110sup, 6M
+    11.1 Support    :111sup, after 110sup, 6M
+    11.1 Security   :active, 111sec, after 111sup, 6M
+    11.2 Support    :112sup, after 111sup, 6M
+    11.2 Security   :active, 112sec, after 112sup, 6M
+    11.3 Support    :113sup, after 112sup, 6M
+    11.3 Security   :active, 113sec, after 113sup, 6M
+    11.4 Support    :114sup, after 113sup, 6M
+    section LTS Phase
+    11.4 Security   :active, 114sec, after 114sup, 6M
+    11.5 Maint      :done, 115mnt, after 114sup, 6M
+    11.5 Security   :active, 115sec, after 115mnt, 6M
+    11.6 Maint      :done, 116mnt, after 115mnt, 6M
+    section Drupal 12
+    12.0 Support    :120sup, after 113sup, 6M
+    12.0 Security   :active, 120sec, after 120sup, 6M
+    12.1 Support    :121sup, after 120sup, 6M
 ```
