@@ -20,6 +20,12 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     assert($constraint instanceof ValidKeysConstraint);
 
     if (!is_array($value)) {
+      // If the value is NULL, then the `NotNull` constraint validator will
+      // set the appropriate validation error message.
+      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraintValidator
+      if ($value === NULL) {
+        return;
+      }
       throw new UnexpectedTypeException($value, 'array');
     }
 
@@ -35,7 +41,11 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       $constraint->getAllowedKeys($this->context)
     );
     foreach ($invalid_keys as $key) {
-      $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
+      $this->context->buildViolation($constraint->invalidKeyMessage)
+        ->setParameter('@key', $key)
+        ->atPath($key)
+        ->setInvalidValue($key)
+        ->addViolation();
     }
   }
 
