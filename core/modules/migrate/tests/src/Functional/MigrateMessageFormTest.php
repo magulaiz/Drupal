@@ -21,7 +21,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
     $this->createTables($this->migrationIds);
 
     // Expected counts for each error level.
-    $exepected = [
+    $expected = [
       MigrationInterface::MESSAGE_ERROR => 3,
       MigrationInterface::MESSAGE_WARNING => 0,
       MigrationInterface::MESSAGE_NOTICE => 0,
@@ -36,10 +36,10 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
 
     // Set the filter to match each of the two filter-type attributes and
     // confirm the correct number of entries are displayed.
-    foreach ($exepected as $level => $expected_count) {
+    foreach ($expected as $level => $expected_count) {
       $edit['severity[]'] = $level;
       $this->submitForm($edit, 'Filter');
-      $count = $this->getLevelCounts($exepected);
+      $count = $this->getLevelCounts($expected);
       $this->assertEquals($expected_count, $count[$level], sprintf('Count for level %s failed', $level));
     }
 
@@ -72,7 +72,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
   /**
    * Gets the migrate messages.
    *
-   * @return string|int[][]
+   * @return array[]
    *   List of log events where each event is an array with following keys:
    *   - msg_id: (string) A message id.
    *   - severity: (int) The MigrationInterface error level.
@@ -80,10 +80,10 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
    */
   protected function getMessages(): array {
     $levels = [
-      MigrationInterface::MESSAGE_ERROR => 'Error',
-      MigrationInterface::MESSAGE_WARNING => 'Warning',
-      MigrationInterface::MESSAGE_NOTICE => 'Notice',
-      MigrationInterface::MESSAGE_INFORMATIONAL => 'Info',
+      'Error' => MigrationInterface::MESSAGE_ERROR,
+      'Warning' => MigrationInterface::MESSAGE_WARNING,
+      'Notice' => MigrationInterface::MESSAGE_NOTICE,
+      'Info' => MigrationInterface::MESSAGE_INFORMATIONAL,
     ];
     $entries = [];
     $table = $this->xpath('.//table[@id="admin-migrate-msg"]/tbody/tr');
@@ -92,7 +92,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
       if (count($cells) === 3) {
         $entries[] = [
           'msg_id' => $cells[0]->getText(),
-          'severity' => array_search($cells[1]->getText(), $levels, TRUE),
+          'severity' => $levels[$cells[1]->getText()],
           'message' => $cells[2]->getText(),
         ];
       }
