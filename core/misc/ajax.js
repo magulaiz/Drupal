@@ -1424,7 +1424,7 @@
         .forEach((ele) => {
           Drupal.detachBehaviors(ele, settings);
           ele.remove();
-        })
+        });
     },
 
     /**

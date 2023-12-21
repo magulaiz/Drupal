@@ -403,11 +403,11 @@
         $('.js-layout-builder-content-preview-placeholder-label').remove();
 
         // Iterate over all blocks.
-        $('[data-layout-content-preview-placeholder-label]').toArray().forEach(
-          (element, i) => {
+        $('[data-layout-content-preview-placeholder-label]')
+          .toArray()
+          .forEach((element, i) => {
             $(element).children().show();
-          },
-        );
+          });
       };
 
       $('#layout-builder-content-preview', context).on('change', (event) => {
