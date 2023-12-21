@@ -403,7 +403,7 @@
         $('.js-layout-builder-content-preview-placeholder-label').remove();
 
         // Iterate over all blocks.
-        $('[data-layout-content-preview-placeholder-label]').toArray.forEach(
+        $('[data-layout-content-preview-placeholder-label]').toArray().forEach(
           (element, i) => {
             $(element).children().show();
           },

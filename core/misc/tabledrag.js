@@ -340,10 +340,7 @@
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
         $table
           .find('> thead > tr, > tbody > tr, > tr')
-          .toArray()
-          .forEach((ele) => {
-            this.addColspanClass(ele, columnIndex);
-          });
+          .each(this.addColspanClass(columnIndex));
       }
     });
     this.displayColumns(showWeight);
@@ -360,10 +357,10 @@
    * @return {function}
    *   Function to add colspan class.
    */
-  Drupal.tableDrag.prototype.addColspanClass = function (ele, columnIndex) {
+  Drupal.tableDrag.prototype.addColspanClass = function (columnIndex) {
     return function () {
       // Get the columnIndex and adjust for any colspans in this row.
-      const $row = $(ele);
+      const $row = $(this);
       let index = columnIndex;
       const cells = $row.children();
       let cell;
