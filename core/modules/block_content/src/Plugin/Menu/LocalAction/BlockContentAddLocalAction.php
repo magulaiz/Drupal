@@ -4,7 +4,6 @@ namespace Drupal\block_content\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 
 /**
  * Modifies the 'Add content block' local action.
