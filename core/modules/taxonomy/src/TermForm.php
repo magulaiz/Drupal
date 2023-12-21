@@ -23,7 +23,7 @@ class TermForm extends ContentEntityForm {
     $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $vocabulary = $vocab_storage->load($term->bundle());
     if ($term->isNew() && $vocabulary->label()) {
-      $form['#title'] = $this->t('<em>Add new term in </em> %parent', [
+      $form['#title'] = $this->t('<em>Add new term in</em> %parent', [
         '%parent' => $vocabulary->label(),
       ]);
     }
