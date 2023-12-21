@@ -3,6 +3,7 @@
 namespace Drupal\Tests\views\Unit\Plugin\Block;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Block\ViewsBlock;
 
@@ -46,6 +47,13 @@ class ViewsBlockTest extends UnitTestCase {
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
+
+  /**
+   * The module handler used to check whether menu_ui is installed.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $moduleHandler;
 
   /**
    * The mocked display handler.
@@ -128,6 +136,7 @@ class ViewsBlockTest extends UnitTestCase {
       ->with('test_view')
       ->willReturn($this->view);
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
+    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
   }
 
   /**
@@ -148,7 +157,7 @@ class ViewsBlockTest extends UnitTestCase {
     $definition = [];
 
     $definition['provider'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account, $this->moduleHandler);
 
     $this->assertEquals($build, $plugin->build());
   }
@@ -170,7 +179,7 @@ class ViewsBlockTest extends UnitTestCase {
     $definition = [];
 
     $definition['provider'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account, $this->moduleHandler);
 
     $this->assertEquals(array_intersect_key($build, ['#cache' => TRUE]), $plugin->build());
   }
@@ -192,7 +201,7 @@ class ViewsBlockTest extends UnitTestCase {
     $definition = [];
 
     $definition['provider'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account, $this->moduleHandler);
 
     $this->assertEquals([], $plugin->build());
   }

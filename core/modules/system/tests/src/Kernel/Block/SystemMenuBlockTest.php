@@ -8,11 +8,12 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Render\Element;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
-use Drupal\user\Entity\User;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Drupal\Core\Url;
 
 /**
  * Tests \Drupal\system\Plugin\Block\SystemMenuBlock.
@@ -26,6 +27,8 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class SystemMenuBlockTest extends KernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * Modules to enable.
    *
@@ -36,6 +39,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     'block',
     'menu_test',
     'menu_link_content',
+    'menu_ui',
     'field',
     'user',
     'link',
@@ -84,12 +88,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('menu_link_content');
 
-    $account = User::create([
-      'name' => $this->randomMachineName(),
-      'status' => 1,
-    ]);
-    $account->save();
-    $this->container->get('current_user')->setAccount($account);
+    $this->setUpCurrentUser([], ['administer menu']);
 
     $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
     $this->linkTree = $this->container->get('menu.link_tree');
@@ -171,6 +170,33 @@ class SystemMenuBlockTest extends KernelTestBase {
       ],
     ];
     $this->assertSame($expected, $dependencies);
+  }
+
+  /**
+   * Tests the editing links for SystemMenuBlock.
+   */
+  public function testOperationLinks() {
+    $block = Block::create([
+      'plugin' => 'system_menu_block:' . $this->menu->id(),
+      'region' => 'footer',
+      'id' => 'machine_name',
+      'theme' => 'stark',
+    ]);
+
+    $links = $block->getOperationLinks();
+    $menu_link = [
+      'title' => 'Edit menu',
+      'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $this->menu->id()]),
+      'weight' => 50,
+    ];
+
+    // Test when user does have "administer menu" permission.
+    $this->assertEquals(['menu-edit' => $menu_link], $links);
+
+    $this->setUpCurrentUser([]);
+    $links = $block->getOperationLinks();
+    // Test when user doesn't have "administer menu" permission.
+    $this->assertEmpty($links);
   }
 
   /**

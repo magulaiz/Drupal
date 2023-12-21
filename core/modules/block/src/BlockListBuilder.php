@@ -365,6 +365,17 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = $this->t('Remove');
     }
+
+    // Check for any additional operations. Example edit-view.
+    // Since these additional operations will take the user away from the
+    // block layout page, we add a destination parameter to redirect the user
+    // back.
+    $operation_extras = $entity->getOperationLinks();
+    foreach ($operation_extras as $key => $operation_extra) {
+      $operation_extra['url'] = $this->ensureDestination($operation_extra['url']);
+      $operations[$key] = $operation_extra;
+    }
+
     return $operations;
   }
 

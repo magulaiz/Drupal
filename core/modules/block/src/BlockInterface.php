@@ -122,4 +122,18 @@ interface BlockInterface extends ConfigEntityInterface {
    */
   public function createDuplicateBlock($new_id = NULL, $new_theme = NULL);
 
+  /**
+   * Returns a list of operation links available for this block.
+   *
+   * @return array[]
+   *   An array of operation links. Keys in this array will overwrite keys of
+   *   operations defined in
+   *   \Drupal\block\BlockListBuilder::getDefaultOperations().
+   *   Each operation link is itself an array with the following keys:
+   *     - title: The title the link should display.
+   *     - url: The \Drupal\Core\Url object for the link.
+   *     - weight: The link weight.
+   */
+  public function getOperationLinks(): array;
+
 }
