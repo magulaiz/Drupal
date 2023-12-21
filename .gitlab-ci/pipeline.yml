@@ -218,6 +218,7 @@ variables:
   <<: [ *with-composer, *default-job-settings ]
   rules:
     - if: $PERFORMANCE_TEST == "1"
+  tags: [ performance-test-runner ]
   variables:
     KUBERNETES_CPU_REQUEST: "24"
   services:
