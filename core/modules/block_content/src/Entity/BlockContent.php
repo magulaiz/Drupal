@@ -78,7 +78,6 @@ use Drupal\block_content\BlockContentInterface;
  *     "revision_log_message" = "revision_log"
  *   },
  *   bundle_entity_type = "block_content_type",
- *   permission_granularity = "type",
  *   field_ui_base_route = "entity.block_content_type.edit_form",
  *   render_cache = FALSE,
  * )
