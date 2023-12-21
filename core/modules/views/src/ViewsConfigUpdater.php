@@ -541,6 +541,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     foreach ($displays as &$display) {
       if (!empty($display['display_options']['exposed_form'])) {
         if (!isset($display['display_options']['exposed_form']['options']['disable_ajax_submit'])) {
+          if (!isset($display['display_options']['exposed_form']['options'])) {
+            $display['display_options']['exposed_form']['options'] = [];
+          }
           $options_before = array_intersect_key($display['display_options']['exposed_form']['options'], [
             'submit_button' => 1,
           ]);
