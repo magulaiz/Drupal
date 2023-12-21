@@ -526,8 +526,8 @@ details.fieldset-no-legend {
 [dir="rtl"] .views-config-group-region .views-group-box--operator {
   padding-inline-start: var(--space-l);
   padding-inline-end: var(--space-xl);
-  border-inline-start-width: var(--input-border-size);
   border-inline-end-width: 0;
+  border-inline-start-width: var(--input-border-size);
 }
 
 .views-config-group-region .views-group-box--value {
@@ -536,18 +536,18 @@ details.fieldset-no-legend {
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value {
-  border-inline-start-width: 0;
   border-inline-end-width: var(--input-border-size);
+  border-inline-start-width: 0;
 }
 
 .views-config-group-region .views-group-box--value>.form-item {
-  margin-inline-end: var(--space-l); /* LTR */
   margin-inline-start: var(--space-xl); /* LTR */
+  margin-inline-end: var(--space-l); /* LTR */
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value>.form-item {
-  margin-inline-end: var(--space-xl); /* LTR */
   margin-inline-start: var(--space-l); /* LTR */
+  margin-inline-end: var(--space-xl); /* LTR */
 }
 
 .views-config-group-region .views-group-box--value>.form-item::before {
