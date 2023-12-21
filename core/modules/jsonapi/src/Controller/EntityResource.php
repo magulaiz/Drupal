@@ -203,7 +203,7 @@ class EntityResource {
     $this->user = $user;
 
     if (!isset($event_dispatcher)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error(__METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3280569', E_USER_DEPRECATED);
       $this->eventDispatcher = \Drupal::service('event_dispatcher');
     }
   }

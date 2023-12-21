@@ -11,14 +11,10 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\Component\EventDispatcher\Event;
 
 /**
- * An event used for collecting resource object metadata of a JSON:API resource types.
+ * Event for collecting resource object metadata of a JSON:API resource types.
  *
- * When subscribing to this event you should make sure you set the correct cache tags and contexts. These will then
- * bubble up to the normalization.
- *
- * This class does not automatically add the cache tags and contexts. You can do anything in the meta event subscriber,
- * but you should make sure you add the correct cache tags and contexts to the normalization based on the data you add
- * to the metadata.
+ * Subscribers of this event that call ::setMeta() must set the appropriate
+ * cache tags and contexts. These will then bubble up to the normalization.
  */
 final class CollectResourceObjectMetaEvent extends Event implements RefinableCacheableDependencyInterface {
 
@@ -34,15 +30,15 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
   /**
    * Constructs a new CollectResourceObjectMetaEvent object.
    *
-   * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $resource_object
+   * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $resourceObject
    *   The resource object.
    * @param array $context
    *   The context options for the normalizer.
    */
   public function __construct(
     private readonly ResourceObject $resourceObject,
-    private array $context)
-  {
+    private array $context
+  ) {
     assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
   }
 
