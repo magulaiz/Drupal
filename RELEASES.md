@@ -4,9 +4,11 @@
     'theme': 'base',
     'themeVariables': {
       'primaryColor': '#0077C0',
-      'primaryTextColor': '#fff',
+      'primaryTextColor': '#FFFFFF',
       'tertiaryColor': '#81CEFF',
-      'doneTaskBkgColor': '#7cbc48'
+      'tertiaryTextColor': '#000000',
+      'doneTaskBkgColor': '#7cbc48',
+      'textColor': '#000000'
     }
   }
 }%%
