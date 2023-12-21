@@ -57,7 +57,11 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
    */
   protected $node2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
+    'file',
     'node',
     'field',
     'jsonapi',
@@ -79,6 +83,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
     $this->installSchema('user', ['users_data']);
     $type = NodeType::create([
       'type' => 'dummy',
+      'name' => 'Dummy',
       'new_revision' => TRUE,
     ]);
     $type->save();

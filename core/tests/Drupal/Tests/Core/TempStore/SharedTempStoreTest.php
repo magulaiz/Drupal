@@ -264,9 +264,9 @@ class SharedTempStoreTest extends UnitTestCase {
 
     $metadata = $this->tempStore->getMetadata('test');
     $this->assertInstanceOf(Lock::class, $metadata);
-    $this->assertObjectHasAttribute('updated', $metadata);
+    $this->assertObjectHasProperty('updated', $metadata);
     // Data should get removed.
-    $this->assertObjectNotHasAttribute('data', $metadata);
+    $this->assertObjectNotHasProperty('data', $metadata);
 
     $this->assertNull($this->tempStore->getMetadata('test'));
   }
@@ -366,7 +366,6 @@ class SharedTempStoreTest extends UnitTestCase {
     $this->assertInstanceOf(SharedTempStore::class, $store);
 
     $reflected_request_stack = (new \ReflectionObject($store))->getProperty('requestStack');
-    $reflected_request_stack->setAccessible(TRUE);
     $request_stack = $reflected_request_stack->getValue($store);
     $this->assertEquals($this->requestStack, $request_stack);
     $this->assertSame($unserializable_request, $request_stack->pop());
@@ -380,9 +379,9 @@ class SharedTempStoreTest extends UnitTestCase {
 class UnserializableRequest extends Request {
 
   /**
-   * @return array
+   * Always throw an exception.
    */
-  public function __serialize(): array {
+  public function __serialize() {
     throw new \LogicException('Oops!');
   }
 
