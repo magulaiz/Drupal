@@ -1,3 +1,4 @@
+```mermaid
 %%{
   init: {
     'theme': 'base',
@@ -43,3 +44,4 @@ gantt
     12.0 Support    :120sup, after 113sup, 6M
     12.0 Security   :active, 120sec, after 120sup, 6M
     12.1 Support    :121sup, after 120sup, 6M
+```
