@@ -38,7 +38,7 @@ use Drupal\block_content\BlockContentInterface;
  *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\media\Routing\MediaRouteProvider",
+ *       "html" = "\Drupal\block_content\Routing\RouteSubscriber",
  *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
