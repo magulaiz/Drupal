@@ -114,12 +114,18 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // this twice so that any caches which take two requests to warm are also
     // covered.
     $account = $this->drupalCreateUser();
+    foreach (range(0, 1) as $index) {
+      $this->drupalGet('node');
+      $this->drupalGet('user/login');
+      $this->submitLoginForm($account);
+      $this->drupalLogout();
+    }
 
     $this->drupalGet('node');
     $this->drupalGet('user/login');
     $performance_data = $this->collectPerformanceData(function () use ($account) {
       $this->submitLoginForm($account);
-    }, 'foo');
+    });
 
     // This test observes a variable number of database queries, so to avoid
     // random test failures, assert greater than equal the highest and lowest
