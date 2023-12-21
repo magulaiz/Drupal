@@ -1,4 +1,5 @@
 ```mermaid
+%%{init: {'theme':'forest'}}%%
 gantt
     title Drupal Release Schedule
     dateFormat  YYYY-MM
