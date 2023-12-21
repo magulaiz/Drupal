@@ -26,7 +26,7 @@
  *   markup.
  */
 
- details.fieldset-no-legend {
+details.fieldset-no-legend {
   padding-block-start: 0;
 }
 
@@ -64,7 +64,7 @@
       inset-block-start: 0;
       float: none;
       margin-block: 0;
-      margin-inline: 0 0.25rem;
+      margin-inline: 0 calc(var(--space-xs) / 2);
       transform: none;
     }
   }
@@ -76,14 +76,14 @@
   & .form-item:first-of-type.description {
     margin: 0 0 var(--space-l) 0;
     padding-block-end: var(--space-s);
-    border-bottom: 0.0625rem solid var(--color-gray-200);
+    border-block-end: var(--input-border-size) solid var(--color-gray-200);
     font-weight: bold;
   }
 
   /* So "remove" link appears next to the checkbox. */
   & .draggable .form-type--checkbox {
     display: inline-block;
-    margin: 0 0.25rem;
+    margin: 0 calc(var(--space-xs) / 2);
   }
 
   & .form-element {
@@ -94,7 +94,7 @@
   }
 
   & .form-element--type-select {
-    padding-inline-end: calc(2rem - var(--input-border-size));
+    padding-inline-end: calc(calc(var(--space-m) * 2) - var(--input-border-size));
     background-position-y: 56%;
   }
 
@@ -127,19 +127,19 @@
 .form-item-options-expose-label,
 .form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
-  margin-block: 6px;
+  margin-block: calc(var(--space-s) / 2);
 }
 
 .views-admin-dependent .form-type-radio,
 .views-admin-dependent .form-radios .form-item {
-  margin-block: 2px;
+  margin-block: var(--outline-size);
 }
 
 /* @end */
 
 /* @group Lists */
 
-.views-admin{
+.views-admin {
   & .item-list ul {
     margin: 0;
     padding: 0;
@@ -150,7 +150,7 @@
   }
 
   & .button .links li {
-    padding-inline-end: 12px; /* LTR */
+    padding-inline-end: var(--space-s); /* LTR */
   }
 }
 
@@ -195,7 +195,7 @@
   padding: 0;
   list-style: none;
   text-align: left; /* LTR */
-  border-bottom: 0 none;
+  border-block-end: 0 none;
 
   & .views-display-deleted-link {
     text-decoration: line-through;
@@ -210,8 +210,8 @@
   }
 
   & li {
-    margin-block: 0 5px;
-    margin-inline: 6px 5px;
+    margin-block: 0 calc(calc(var(--space-xs) / 2) + var(--input-border-size));
+    margin-inline: calc(var(--space-s) / 2) calc(calc(var(--space-xs) / 2) + var(--input-border-size));
 
     &:hover {
       padding-inline-start: 0;
@@ -229,11 +229,11 @@
 
   & a {
     display: inline-block;
-    padding: 10px;
+    padding: calc(var(--space-xs) + var(--outline-size));
     border: var(--input-border-size) solid var(--views-tabs-border-color);
-    border-radius: 7px;
+    border-radius: calc(calc(var(--space-s) / 2) + var(--input-border-size));
     font-size: small;
-    line-height: 1.3333;
+    line-height: var(--line-height-heading);
 
     &:focus {
       outline: none;
@@ -256,7 +256,8 @@
     position: relative;
 
     & a {
-      padding: 9px 13px 9px 9px;
+      padding-block: calc(var(--space-xs) + var(--input-border-size));
+      padding-inline: calc(var(--space-xs) + var(--input-border-size)) calc(var(--space-s) + var(--input-border-size));
       color: var(--color-gray-800);
       border: none;
       border-radius: var(--base-border-radius);
@@ -286,7 +287,7 @@
 
     & a:focus {
       background-color: var(--color-bgblue-active);
-      box-shadow: 0 0 0 3px var(--view-tabs-add-box-shadow);
+      box-shadow: 0 0 0 var(--focus-border-size) var(--view-tabs-add-box-shadow);
     }
 
     &.open a {
@@ -308,20 +309,20 @@
     position: absolute;
     z-index: 50;
     inset-block-start: 38px;
-    inset-inline-start: -2px;
+    inset-inline-start: calc(var(--outline-size) * -1);
     margin: 0;
     box-shadow: var(--details-box-shadow);
 
     & li {
       display: block;
-      border-width: 0 1px;
+      border-width: 0 var(--input-border-size);
       border-style: solid;
       border-color: var(--views-tabs-border-color);
       background-color: var(--views-tabs-bg-color);
     }
 
     & li:first-child {
-      border-width: 1px 1px 0;
+      border-width: var(--input-border-size) var(--input-border-size) 0;
       border-radius: 0 var(--base-border-radius) 0 0; /* LTR */
 
       [dir="rtl"] & {
@@ -338,16 +339,18 @@
 /* Display a red border if the display doesn't validate. */
 .views-tabs li.is-active a.is-active.error,
 .views-tabs .error {
-  padding: 8px;
-  border: 2px solid var(--view-tabs-error-border-color);
+  padding: var(--space-xs);
+  border: var(--outline-size) solid var(--view-tabs-error-border-color);
 }
+
 .views-tabs .action-list li:last-child,
 .views-displays .action-list li:last-child {
-  padding-bottom: 0.4rem;
-  border-width: 0 1px 1px;
+  padding-block-end: 0.4rem;
+  border-width: 0 var(--input-border-size) var(--input-border-size);
   border-bottom-right-radius: var(--button-border-radius-size);
   border-bottom-left-radius: var(--button-border-radius-size);
 }
+
 .views-tabs__action-list-button {
   width: 100%;
   margin: 0;
@@ -384,10 +387,10 @@
 
 .views-ui-display-tab-bucket {
   & .links {
-    padding: 2px 6px 4px;
+    padding: var(--outline-size) calc(var(--space-s) / 2) calc(var(--space-xs) / 2);
 
     & li + li {
-      margin-inline-start: 3px;
+      margin-inline-start: calc(var(--outline-size) + var(--input-border-size));
     }
   }
 }
@@ -401,7 +404,7 @@
     border-bottom: 0;
 
     &:first-of-type {
-      border-top: 0.0625rem solid var(--color-gray-200);
+      border-block-start: var(--input-border-size) solid var(--color-gray-200);
     }
   }
 
@@ -432,8 +435,8 @@
   }
 
   & .filter-group-operator-row {
-    border-right: 1px solid transparent !important;
-    border-left: 1px solid transparent !important;
+    border-inline-end: var(--input-border-size) solid transparent !important;
+    border-inline-start: var(--input-border-size) solid transparent !important;
   }
 
   & tr.drag td {
@@ -455,15 +458,14 @@
 
 .views-query-info {
   & pre {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-block: 0;
   }
 
   /* @group Query info table */
 
   & table {
-    border-spacing: 1px;
-    border-radius: 7px;
+    border-spacing: var(--input-border-size);
+    border-radius: calc(calc(var(--space-s) / 2) + var(--input-border-size));
 
     & tr td:last-child {
       /* Fixes a Claro style that bleeds down into this table unnecessarily */
@@ -471,13 +473,14 @@
     }
   }
 }
+
 /* @end */
 
 /* @group Add view */
 
 .form-item-page-create,
 .form-item-block-create {
-  margin-block-start: 13px;
+  margin-block-start: calc(var(--space-s) + var(--input-border-size));
 }
 
 /* @end */
@@ -488,10 +491,10 @@
  */
 
 .filterable-option .form-item.form-type-checkbox {
-  padding-block: 4px;
+  padding-block: calc(var(--space-xs) / 2);
   /* This selector is aggressive because Claro's reset for .form-items is aggressive. */
-  padding-bottom: 4px;
-  padding-inline-start: 4px;
+  padding-bottom: calc(var(--space-xs) / 2);
+  padding-inline-start: calc(var(--space-xs) / 2);
 }
 
 /* @end */
@@ -504,50 +507,59 @@
 .views-config-group-region {
   display: table;
   margin: var(--space-l) 0;
-  border: 0.0625rem solid var(--color-gray-200);
+  border: var(--input-border-size) solid var(--color-gray-200);
   border-collapse: collapse;
 }
+
 .views-config-group-region .views-group-box {
   position: relative;
   display: table-cell;
   padding: var(--space-l);
-  border: 0.0625rem solid var(--color-gray-200);
+  border: var(--input-border-size) solid var(--color-gray-200);
 }
+
 .views-config-group-region .views-group-box--operator {
-  padding-right: var(--space-xl);
-  border-right-width: 0;
+  padding-inline-end: var(--space-xl);
+  border-inline-end-width: 0;
 }
+
 [dir="rtl"] .views-config-group-region .views-group-box--operator {
-  padding-right: var(--space-l);
-  padding-left: var(--space-xl);
-  border-right-width: 0.0625rem;
-  border-left-width: 0;
+  padding-inline-start: var(--space-l);
+  padding-inline-end: var(--space-xl);
+  border-inline-start-width: var(--input-border-size);
+  border-inline-end-width: 0;
 }
+
 .views-config-group-region .views-group-box--value {
   padding: 0;
-  border-left-width: 0; /* LTR */
+  border-inline-start-width: 0; /* LTR */
 }
+
 [dir="rtl"] .views-config-group-region .views-group-box--value {
-  border-right-width: 0;
-  border-left-width: 0.0625rem;
+  border-inline-start-width: 0;
+  border-inline-end-width: var(--input-border-size);
 }
-.views-config-group-region .views-group-box--value > .form-item {
-  margin-right: var(--space-l); /* LTR */
-  margin-left: var(--space-xl); /* LTR */
+
+.views-config-group-region .views-group-box--value>.form-item {
+  margin-inline-end: var(--space-l); /* LTR */
+  margin-inline-start: var(--space-xl); /* LTR */
 }
-[dir="rtl"] .views-config-group-region .views-group-box--value > .form-item {
-  margin-right: var(--space-xl); /* LTR */
-  margin-left: var(--space-l); /* LTR */
+
+[dir="rtl"] .views-config-group-region .views-group-box--value>.form-item {
+  margin-inline-end: var(--space-xl); /* LTR */
+  margin-inline-start: var(--space-l); /* LTR */
 }
-.views-config-group-region .views-group-box--value > .form-item::before {
+
+.views-config-group-region .views-group-box--value>.form-item::before {
   position: absolute;
   top: 0;
   left: 0;
+
   & .views-group-box {
     position: relative;
     display: table-cell;
     padding: var(--space-l);
-    border: 0.0625rem solid var(--color-gray-200);
+    border: var(--input-border-size) solid var(--color-gray-200);
   }
 
   & .views-group-box--operator {
@@ -567,10 +579,10 @@
       position: absolute;
       inset-block-start: 0;
       inset-inline-start: 0;
-      width: 0.0625rem;
+      width: var(--input-border-size);
       height: 100%;
       content: "";
-      border-left: 0.0625rem solid var(--color-gray-200);
+      border-inline-start: var(--input-border-size) solid var(--color-gray-200);
     }
 
     & > .form-item::after {
@@ -582,7 +594,7 @@
       padding-inline: 0.4rem 0.3rem;
       content: ">";
       color: var(--color-gray-600);
-      border: 0.0625rem solid var(--color-gray-200);
+      border: var(--input-border-size) solid var(--color-gray-200);
       background: var(--views-tabs-bg-color);
       font-size: var(--font-size-h1);
       font-weight: bold;
