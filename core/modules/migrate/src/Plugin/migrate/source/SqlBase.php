@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;
@@ -211,6 +212,12 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       else {
         throw $e;
       }
+    }
+    catch (\PDOException $e) {
+      throw new MigrateException("Migration {$this->migration->id()} failed to connect to {$key}:{$target}. {$e->getMessage()}", $e->getCode(), $e);
+    }
+    catch (DatabaseAccessDeniedException $e) {
+      throw new MigrateException("Migration {$this->migration->id()} failed to connect to {$key}:{$target}. {$e->getMessage()}", $e->getCode(), $e);
     }
     return $connection;
   }
