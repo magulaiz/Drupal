@@ -117,7 +117,6 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
 
       // If access is allowed to this element in the tree check for access to
       // its own children.
-      $elementRoute = $this->router->getRouteCollection()->get($element->link->getRouteName());
       return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account)->isAllowed());
     }
     return AccessResult::neutral();
