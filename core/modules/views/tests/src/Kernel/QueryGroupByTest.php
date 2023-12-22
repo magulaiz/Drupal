@@ -86,6 +86,17 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->assertEquals(3, $types['name2']);
   }
 
+  public function testAggregateCountFunction() {
+    $this->setupTestEntities();
+
+    $view = Views::getView('test_aggregate_count_function');
+    $this->executeView($view);
+
+    $this->assertEquals(7, $view->result[0]->id);
+    $this->assertCount(1, $view->result, 'Make sure the count of rows is one.');
+
+  }
+
   /**
    * Tests aggregate count feature with no group by.
    */
