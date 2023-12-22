@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form controller for the user account forms.
+ * Form controller for the user email forms.
  */
 class UserEmailChangeForm extends ContentEntityForm {
 
@@ -69,7 +69,7 @@ class UserEmailChangeForm extends ContentEntityForm {
     $new_email = $form_state->getValue('mail');
     $current_email = $form_state->getFormObject()->entity->getEmail();
     if ($new_email == $current_email) {
-      $form_state->setErrorByName('mail', t("You didn't change your email."));
+      $form_state->setErrorByName('mail', t("This email address is already associated with your account."));
     }
 
     return $entity;

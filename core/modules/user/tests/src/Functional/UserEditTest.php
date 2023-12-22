@@ -169,7 +169,7 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalGet("user/" . $user1->id() . "/edit-email");
     $edit = ['current_pass' => $user1->passRaw, 'mail' => ''];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("You didn't change your email.");
+    $this->assertSession()->pageTextContains("This email address is already associated with your account.");
   }
 
   /**
