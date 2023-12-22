@@ -129,10 +129,8 @@ class TextWithSummaryItem extends TextItemBase {
    * fieldSettingsForm().
    */
   public static function validateRequiredSummary($element, FormStateInterface $form_state) {
-    if (!empty($element['#value'])) {
-      if (empty($form_state->getValue(['settings', 'display_summary']))) {
-        $form_state->setError($element, t('If "Require summary" is checked "Summary input" has to be checked as well.'));
-      }
+    if (!empty($element['#value']) && empty($form_state->getValue(['settings', 'display_summary']))) {
+      $form_state->setError($element, t('If "Require summary" is checked "Summary input" has to be checked as well.'));
     }
   }
 
