@@ -11,6 +11,7 @@
  */
 
 figure {
+  display: block;
   background: #f7f9fa;
 }
 
@@ -31,6 +32,7 @@ figure {
 }
 
 figcaption {
+  display: block;
   padding-top: 0.5625rem;
   padding-bottom: 0.5625rem;
   color: #313637;
