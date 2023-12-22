@@ -89,19 +89,19 @@ class Section implements ThirdPartySettingsInterface {
    * Creates a new section and sets the UUID for it.
    *
    * @param string $layout_id
-   *    The layout plugin ID.
+   *   The layout plugin ID.
    * @param array $layout_settings
-   *    (optional) The layout plugin settings.
+   *   (optional) The layout plugin settings.
    * @param \Drupal\layout_builder\SectionComponent[] $components
-   *    (optional) The components.
+   *   (optional) The components.
    * @param array[] $third_party_settings
-   *    (optional) Any third party settings.
+   *   (optional) Any third party settings.
    *
    * @return Section
    *   The section.
    */
   public static function create($layout_id, array $layout_settings = [], array $components = [], array $third_party_settings = []) {
-      return (new Section($layout_id, $layout_settings, $components, $third_party_settings))->setUuid(\Drupal::service('uuid')->generate());
+    return (new Section($layout_id, $layout_settings, $components, $third_party_settings))->setUuid(\Drupal::service('uuid')->generate());
   }
 
   /**
