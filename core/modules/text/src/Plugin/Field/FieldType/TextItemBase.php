@@ -77,16 +77,18 @@ abstract class TextItemBase extends FieldItemBase {
     if (empty($settings['max_length'])) {
       // Textarea handling
       $value = $random->paragraphs();
+      $summary_value = $random->sentences(10);
     }
     else {
       // Textfield handling.
       $max = ceil($settings['max_length'] / 3);
       $value = substr($random->sentences(mt_rand(1, $max), FALSE), 0, $settings['max_length']);
+      $summary_value = $value;
     }
 
     $values = [
       'value' => $value,
-      'summary' => $value,
+      'summary' => $summary_value,
       'format' => filter_fallback_format(),
     ];
     return $values;
