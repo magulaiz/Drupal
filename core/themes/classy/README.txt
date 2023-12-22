@@ -8,11 +8,11 @@ To use Classy as your base theme, set the 'base theme' in your theme's .info.yml
 file to "classy":
   base theme: classy
 
-See https://www.drupal.org/docs/8/theming-drupal-8/using-classy-as-a-base-theme
+See https://www.drupal.org/docs/theming-drupal-drupal-8/using-classy-as-a-base-theme
 for more information on using the Classy theme.
 
-ABOUT DRUPAL THEMING
+ABOUT THEMING DRUPAL
 --------------------
 
-See https://www.drupal.org/docs/8/theming for more information on Drupal
-theming.
+See https://www.drupal.org/docs/theming-drupal for more information on theming
+Drupal.

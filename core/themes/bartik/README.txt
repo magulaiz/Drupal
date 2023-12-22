@@ -12,8 +12,8 @@ This theme is not intended to be used as a base theme.
 To read more about the Bartik theme please see:
 https://www.drupal.org/docs/8/core/themes/bartik-theme
 
-ABOUT DRUPAL THEMING
+ABOUT THEMING DRUPAL
 --------------------
 
-See https://www.drupal.org/docs/8/theming for more information on Drupal
-theming.
+See https://www.drupal.org/docs/theming-drupal for more information on theming
+Drupal.

@@ -11,8 +11,8 @@ Warning: Themes that decide to not use Stable 9 as a base theme will need
 continuous maintenance as core changes, so only opt out if you are prepared to
 keep track of those changes and how they affect your theme.
 
-ABOUT DRUPAL THEMING
+ABOUT THEMING DRUPAL
 --------------------
 
-For more information, see Drupal.org's theming guide.
-https://www.drupal.org/docs/8/theming
+For more information, see Drupal.org's theming Drupal.
+https://www.drupal.org/docs/theming-drupal

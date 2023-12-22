@@ -13,8 +13,8 @@ on using the Seven theme.
 Seven is an internal theme and shouldn't be extended by other themes. Please
 see https://www.drupal.org/node/2582945 for more info.
 
-ABOUT DRUPAL THEMING
+ABOUT THEMING DRUPAL
 --------------------
 
-See https://www.drupal.org/docs/8/theming for more information on Drupal 8
-theming.
+See https://www.drupal.org/docs/theming-drupal for more information on theming
+Drupal.
