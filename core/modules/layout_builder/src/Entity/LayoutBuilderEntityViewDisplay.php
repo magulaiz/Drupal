@@ -468,7 +468,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   protected function getDefaultSection() {
     // If no section exists, append a new one.
     if (!$this->hasSection(0)) {
-      $this->appendSection((new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0));
+      $this->appendSection(Section::create('layout_onecol'));
     }
 
     // Return the first section.

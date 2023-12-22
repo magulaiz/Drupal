@@ -699,7 +699,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
 
     // Prepare an object with a pre-existing section.
     $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
-      ->set('sections', ['first-section-uuid' => (new Section('layout_twocol'))->setUuid(\Drupal::service('uuid')->generate())->toArray()])
+      ->set('sections', ['first-section-uuid' => Section::create('layout_twocol')->toArray()])
       ->save();
 
     // The pre-existing section is found.

@@ -188,11 +188,11 @@ class LayoutSectionTest extends BrowserTestBase {
   public function testLayoutSectionFormatterAccess() {
     $node = $this->createSectionNode([
       [
-        'section' => (new Section('layout_onecol', [], [
+        'section' => Section::create('layout_onecol', [], [
           'baz' => new SectionComponent('baz', 'content', [
             'id' => 'test_access',
           ]),
-        ]))->setUuid(\Drupal::service('uuid')->generate()),
+        ]),
       ],
     ]);
 

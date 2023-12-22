@@ -58,7 +58,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
     $this->enableOverrides();
     /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $this->entity->get(OverridesSectionStorage::FIELD_NAME);
-    $field_list->appendSection((new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate()));
+    $field_list->appendSection(Section::create('layout_onecol'));
     $this->entity->save();
 
     // The rendered entity has now changed. The non-configurable field is shown

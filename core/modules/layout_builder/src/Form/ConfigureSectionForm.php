@@ -266,7 +266,7 @@ class ConfigureSectionForm extends FormBase {
         $this->section = $this->sectionStorage->getSections()[$this->delta];
       }
       else {
-        $this->section = (new Section($this->pluginId))->setUuid(\Drupal::service('uuid')->generate());
+        $this->section = Section::create($this->pluginId);
       }
     }
 
