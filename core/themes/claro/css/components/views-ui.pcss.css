@@ -369,7 +369,7 @@ details.fieldset-no-legend {
   }
 
   /* RTL required for precedence over core's styles. */
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     margin: 0;
   }
 }
@@ -515,7 +515,7 @@ details.fieldset-no-legend {
 .views-config-group-region .views-group-box--operator {
   padding-inline: var(--space-l) var(--space-xl);
   border-inline-end-width: 0;
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     border-inline-start-width: var(--input-border-size);
   }
 }
@@ -524,7 +524,7 @@ details.fieldset-no-legend {
   padding: 0;
   border-inline-start-width: 0;
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     border-inline-end-width: var(--input-border-size);
   }
 }
