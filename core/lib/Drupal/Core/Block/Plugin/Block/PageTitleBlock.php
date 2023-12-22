@@ -61,7 +61,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     if (!$this->titleResolver || !$this->routeMatch || !$this->requestStack || !$this->baseRouteTitleResolver) {
-      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $titleResolver, $routeMatch, $requestStack, and $baseRouteTitleResolver arguments is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3397210', E_USER_DEPRECATED);
+      @trigger_error('Calling PageTitleBlock::__construct() without the $titleResolver, $routeMatch, $requestStack, and $baseRouteTitleResolver arguments is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3397210', E_USER_DEPRECATED);
       $this->titleResolver = \Drupal::service('title_resolver');
       $this->routeMatch = \Drupal::service('current_route_match');
       $this->requestStack = \Drupal::service('request_stack');
