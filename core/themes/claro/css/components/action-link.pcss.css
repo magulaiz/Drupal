@@ -62,6 +62,29 @@
     background-color: var(--color-bgblue-active);
   }
 
+  & + .action-link {
+    margin-inline-start: var(--space-s);
+  }
+
+  /**
+  * Action links inside form-actions.
+  *
+  * Add the same margin for action-link inside form-actions as button has.
+  */
+  .form-actions &,
+  .field-actions & {
+    margin-inline: 0 var(--space-s);
+  }
+}
+
+@media (forced-colors: active) {
+  .action-link {
+    color: linktext!important;
+  }
+}
+
+/* Class starts with `action-link--icon`  */
+[class*='action-link--icon'] {
   /**
   * Action link icons with states.
   *
@@ -76,24 +99,13 @@
     display: inline-block;
     width: 1em;
     height: 1em;
+    content: "";
     margin-inline: calc(var(--space-s) - var(--space-m)) 0.5em;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-  }
-
-  & + .action-link {
-    margin-inline-start: var(--space-s);
-  }
-
-  /**
-  * Action links inside form-actions.
-  *
-  * Add the same margin for action-link inside form-actions as button has.
-  */
-  .form-actions &,
-  .field-actions & {
-    margin-inline: 0 var(--space-s);
+    background-color: currentColor;
+    mask-image: var(--icon);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center center;
   }
 }
 
@@ -145,368 +157,41 @@
 }
 
 .action-link--icon-plus {
-
-  /* Plus */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/plus.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/plus.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/plus.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/plus.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Plus — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/plus.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/plus.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/plus.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/plus.svg)
 }
 
 .action-link--icon-trash {
-
-  /* Trash */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/trash.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/trash.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/trash.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/trash.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Trash — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/trash.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/trash.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/trash.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/trash.svg);
 }
 
 .action-link--icon-ex {
-
-  /* Ex */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/ex.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/ex.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/ex.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/ex.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Ex — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/ex.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/ex.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/ex.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/ex.svg);
 }
 
 .action-link--icon-checkmark {
-
-  /* Checkmark */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/checkmark.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/checkmark.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/checkmark.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/checkmark.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Checkmark — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/checkmark.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/checkmark.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/checkmark.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/checkmark.svg);
 }
 
 .action-link--icon-cog {
-
-  /* Cog */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/cog.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/cog.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/cog.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/cog.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Cog — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/cog.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/cog.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/cog.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/cog.svg);
 }
 
 .action-link--icon-show {
-
-  /* Show */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/show.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/show.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/show.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/show.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Show - danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/show.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/show.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/show.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/show.svg);
 }
 
 .action-link--icon-hide {
-
-  /* Hide */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/hide.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/hide.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/hide.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/hide.svg);
-  }
-
-  &.action-link--danger {
-
-    /* Hide - danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/hide.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/hide.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/hide.svg);
-    }
-  }
+  --icon: url(../../images/icons/545560/hide.svg);
 }
 
 .action-link--icon-key {
-
-  /* Key */
-  &::before {
-    content: "";
-    background-image: url("../../images/icons/545560/key.svg");
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/key.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url("../../images/icons/0036b1/key.svg");
-  }
-
-  &:active::before {
-    background-image: url("../../images/icons/002e9a/key.svg");
-  }
-
-  &.action-link--danger {
-
-    /* Key — danger */
-    &::before {
-      background-image: url("../../images/icons/d72222/key.svg");
-    }
-
-    &:hover::before {
-      background-image: url("../../images/icons/c11f1f/key.svg");
-    }
-
-    &:active::before {
-      background-image: url("../../images/icons/ab1b1b/key.svg");
-    }
-  }
+  --icon: url("../../images/icons/545560/key.svg");
 }
 
 .action-link--icon-questionmark {
-
-  /* Question Mark */
-  &::before {
-    content: "";
-    background-image: url("../../images/icons/545560/questionmark.svg");
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/questionmark.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url("../../images/icons/0036b1/questionmark.svg");
-  }
-
-  &:active::before {
-    background-image: url("../../images/icons/002e9a/questionmark.svg");
-  }
-
-  &.action-link--danger {
-
-    /* Question Mark - danger */
-    &::before {
-      background-image: url("../../images/icons/d72222/questionmark.svg");
-    }
-
-    &:hover::before {
-      background-image: url("../../images/icons/c11f1f/questionmark.svg");
-    }
-
-    &:active::before {
-      background-image: url("../../images/icons/ab1b1b/questionmark.svg");
-    }
-  }
+  --icon: url("../../images/icons/545560/questionmark.svg");
 }
 
 .action-link--icon-chevron-left {
-  &::before {
-    display: block;
-    content: "";
-    background-image: url("../../images/icons/545560/pager-prev.svg");
-  }
-}
-
-@media (min-width: 30em) {
-  .action-link--icon-chevron-left {
-    &::before {
-      display: inline-block;
-    }
-  }
+  --icon: url("../../images/icons/545560/pager-prev.svg");
 }

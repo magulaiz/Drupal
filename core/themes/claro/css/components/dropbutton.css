@@ -131,23 +131,19 @@
   position: absolute;
   z-index: 3;
   top: 0;
-  right: 0; /* LTR */
+  inset-inline-end: 0;
+  inset-inline-start: auto;
   bottom: 0;
   width: var(--dropbutton-toggle-size);
   height: var(--dropbutton-toggle-size);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-inline-start: var(--dropbutton-border-size) solid white !important;
-  border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
+  border-start-end-radius: var(--button-border-radius-size);
+  border-end-end-radius: var(--button-border-radius-size);
   background: var(--button-bg-color);
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
   -webkit-appearance: none;
   appearance: none;
-}
-
-[dir="rtl"] .dropbutton__toggle {
-  right: auto;
-  left: 0;
-  border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
 }
 
 .dropbutton__toggle::before {

@@ -76,14 +76,6 @@ tr.selected td {
   box-shadow: none;
 }
 
-.views-bulk-actions__item .button--primary:not(:disabled, .is-disabled) {
-  background: var(--color-blue-400);
-}
-
-.views-bulk-actions__item .button--primary:not(:disabled, .is-disabled):hover {
-  background: var(--color-blue-500);
-}
-
 .views-bulk-actions__item .form-item__label {
   display: inline;
   padding-inline-end: var(--space-xs);
