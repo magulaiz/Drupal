@@ -176,6 +176,13 @@ abstract class QueryBase implements QueryInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConditions() {
+    return $this->condition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function exists($property, $langcode = NULL) {
     $this->condition->exists($property, $langcode);
     return $this;
