@@ -38,7 +38,7 @@ class CommentEntityTranslation extends FieldableEntity {
 
     $query->addField('n', 'type', 'node_type');
 
-    $query->orderBy('et.created');
+    $query->orderBy('c.cid');
 
     return $query;
   }
