@@ -39,7 +39,7 @@
         action: ui.handleOpen,
         text: ''
       };
-      $menu.find('li > a').wrap('<div class="toolbar-box">');
+      $menu.find('li > a, li > span').wrap('<div class="toolbar-box">');
       $menu.find('li').each(function (index, element) {
         var $item = $(element);
         if ($item.children('ul.toolbar-menu').length) {
