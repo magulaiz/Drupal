@@ -1,0 +1,9 @@
+name: 'Testing install use dependencies'
+type: profile
+description: 'Tests install profiles that use dependencies.'
+version: VERSION
+hidden: true
+install:
+  - drupal:node
+themes:
+  - starterkit_theme
