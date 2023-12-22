@@ -232,7 +232,6 @@ function field_entity_bundle_delete($entity_type_id, $bundle) {
   // \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::onDependencyRemoval()
   // because we need to take into account bundles that are not provided by a
   // config entity type so they are not part of the config dependencies.
-
   // Gather a list of all entity reference fields.
   $map = \Drupal::service('entity_field.manager')->getFieldMapByFieldType('entity_reference');
   $ids = [];
