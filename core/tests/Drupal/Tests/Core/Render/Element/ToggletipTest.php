@@ -50,9 +50,9 @@ class ToggletipTest extends WebDriverTestBase {
     $toggle_button = $page->find('css', "$element_selector > button.toggletip__toggle");
     $at_description_span = $toggle_button->find('css', 'span');
     $this->assertEquals($at_description, $at_description_span->getText());
-    // Get tooltip id from button.
-    $tooltip_id = $toggle_button->getAttribute('popovertarget');
-    $popover_element = $page->find('css', "#$tooltip_id");
+    // Get tip id from button.
+    $tip_id = $toggle_button->getAttribute('popovertarget');
+    $popover_element = $page->find('css', "#$tip_id");
     // Confirm popover is not visible.
     $this->assertFalse($popover_element->isVisible(), "Popover for $element_selector should not be visible before click");
     $toggle_button->click();

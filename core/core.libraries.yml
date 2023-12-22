@@ -890,15 +890,15 @@ drupal.toggletip:
   dependencies:
     - core/once
     - core/drupal
-    - core/drupal.tooltip
+    - core/drupal.tip
 
-drupal.tooltip:
+drupal.tip:
   version: VERSION
   js:
-    misc/tooltip.js: {}
+    misc/tip.js: {}
   css:
     component:
-      misc/tooltip.css: {}
+      misc/tip.css: {}
   dependencies:
     - core/once
     - core/drupal

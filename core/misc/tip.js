@@ -1,7 +1,7 @@
 // cspell:ignore popovertarget
 /**
  * @file
- * Attaches behaviors for adding tooltip functionality.
+ * Attaches behaviors for adding tip functionality.
  */
 // cspell:ignore UIDOM Wolfson
 
@@ -10,43 +10,43 @@
   displace,
   { computePosition, flip, shift, offset, autoUpdate, arrow },
 ) => {
-  Drupal.tooltip = {
+  Drupal.tip = {
     defaultConfig: {
       placement: 'top-end',
       offset: 24,
       shiftPadding: 5,
     },
   };
-  Drupal.behaviors.tooltip = {
+  Drupal.behaviors.tip = {
     attach(context) {
-      const { defaultConfig } = Drupal.tooltip;
+      const { defaultConfig } = Drupal.tip;
 
       once(
-        'drupal-tooltip-trigger',
-        '[data-drupal-tooltip-toggle-button]',
+        'drupal-tip-trigger',
+        '[data-drupal-tip-toggle-button]',
         context,
-      ).forEach((tooltipTrigger) => {
-        const tip = Drupal.theme.tooltip(
-          tooltipTrigger.getAttribute('popovertarget'),
-          tooltipTrigger.dataset.drupalTooltipToggleButton,
+      ).forEach((tipTrigger) => {
+        const tip = Drupal.theme.tip(
+          tipTrigger.getAttribute('popovertarget'),
+          tipTrigger.dataset.drupalTipToggleButton,
         );
 
         const config = { ...defaultConfig };
 
-        // [data-drupal-tooltip-placement] from https://floating-ui.com/docs/computePosition#placement-1
-        if (tooltipTrigger.dataset.drupalTooltipPlacement) {
-          config.placement = tooltipTrigger.dataset.drupalTooltipPlacement;
+        // [data-drupal-tip-placement] from https://floating-ui.com/docs/computePosition#placement-1
+        if (tipTrigger.dataset.drupalTipPlacement) {
+          config.placement = tipTrigger.dataset.drupalTipPlacement;
         }
 
         // Create the arrow that points to the tip's disclosure button.
-        const tipArrow = Drupal.theme.tooltipArrow(tip);
+        const tipArrow = Drupal.theme.tipArrow(tip);
 
-        tooltipTrigger.after(tip);
+        tipTrigger.after(tip);
 
         // Position the toggletip.
-        autoUpdate(tooltipTrigger, tip, () => {
+        autoUpdate(tipTrigger, tip, () => {
           displace();
-          computePosition(tooltipTrigger, tip, {
+          computePosition(tipTrigger, tip, {
             placement: config.placement,
             middleware: [
               offset(config.offset),
@@ -136,17 +136,17 @@
    * @param {string} tipId
    *   The tipId.
    * @param {string} content
-   *   The tooltip text.
+   *   The tip text.
    *
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.tooltip = (tipId, content) => {
+  Drupal.theme.tip = (tipId, content) => {
     const tip = document.createElement('div');
-    tip.classList.add('tooltip');
+    tip.classList.add('tip');
     tip.setAttribute('tabindex', '0');
     tip.setAttribute('role', 'status');
-    tip.setAttribute('data-drupal-tooltip', true);
+    tip.setAttribute('data-drupal-tip', true);
     tip.id = tipId;
     tip.setAttribute('popover', '');
     tip.innerHTML = content;
@@ -162,9 +162,9 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.tooltipArrow = (tip) => {
+  Drupal.theme.tipArrow = (tip) => {
     const tipArrow = document.createElement('div');
-    tipArrow.classList.add('tooltip__arrow');
+    tipArrow.classList.add('tip__arrow');
     tip.append(tipArrow);
     return tipArrow;
   };

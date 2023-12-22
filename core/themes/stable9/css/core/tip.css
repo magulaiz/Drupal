@@ -1,4 +1,4 @@
-.tooltip {
+.tip {
   display: inline-flex;
   width: max-content;
   max-width: 50rem;
@@ -12,21 +12,21 @@
   font-weight: 400;
 }
 
-[data-drupal-tooltip][popover] {
+[data-drupal-tip][popover] {
   overflow: visible;
   border: none;
 }
 
-.tooltip a,
-.tooltip .link {
+.tip a,
+.tip .link {
   color: #ffd23f;
 }
 
-.tooltip__arrow {
+.tip__arrow {
   position: absolute;
   z-index: 1;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 8px;
+  height: 8px;
   transform: rotate(45deg);
   background: #222;
 }

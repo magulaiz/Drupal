@@ -208,7 +208,7 @@
             tipElement.append(button);
           }
 
-          Drupal.behaviors.tooltip.attach(tipElement);
+          Drupal.behaviors.tip.attach(tipElement);
 
           // Determine the line height so the toggle button can be vertically
           // centered.
@@ -259,7 +259,7 @@
   Drupal.theme.toggletipButton = (descriptionId, tipId, toggleId, config) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.setAttribute('data-drupal-tooltip-toggle-button', config.content);
+    button.setAttribute('data-drupal-tip-toggle-button', config.content);
     button.setAttribute('aria-expanded', false);
     button.setAttribute('aria-labelledby', descriptionId);
     button.setAttribute('aria-controls', tipId);
