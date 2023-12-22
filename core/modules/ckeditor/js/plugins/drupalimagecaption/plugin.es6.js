@@ -311,6 +311,8 @@
                   captionElement.removeChild(captionElement.childNodes.item(0));
                 }
               }
+
+              return actualWidget;
             };
           };
           // Low priority to ensure drupalimage's event handler runs first.
