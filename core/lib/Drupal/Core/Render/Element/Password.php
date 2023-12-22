@@ -38,6 +38,9 @@ class Password extends FormElement {
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
+      '#spellcheck' => 'false',
+      '#autocorrect' => 'off',
+      '#autocapitalize' => 'none',
       '#process' => [
         [$class, 'processAjaxForm'],
         [$class, 'processPattern'],
@@ -63,7 +66,7 @@ class Password extends FormElement {
    */
   public static function preRenderPassword($element) {
     $element['#attributes']['type'] = 'password';
-    Element::setAttributes($element, ['id', 'name', 'size', 'maxlength', 'placeholder']);
+    Element::setAttributes($element, ['id', 'name', 'size', 'maxlength', 'placeholder', 'spellcheck', 'autocorrect', 'autocapitalize']);
     static::setAttributes($element, ['form-text']);
 
     return $element;
