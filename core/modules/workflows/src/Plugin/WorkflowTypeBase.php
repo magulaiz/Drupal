@@ -335,7 +335,8 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   public function getTransitionsForState($state_id, $direction = TransitionInterface::DIRECTION_FROM) {
     $transition_ids = array_keys(array_filter($this->configuration['transitions'], function ($transition) use ($state_id, $direction) {
-      return in_array($state_id, (array) $transition[$direction], TRUE);
+      return ($direction === 'from' && !$transition[$direction]) ||
+        in_array($state_id, (array) $transition[$direction], TRUE);
     }));
     return $this->getTransitions($transition_ids);
   }
