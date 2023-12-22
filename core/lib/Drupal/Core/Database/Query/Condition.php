@@ -8,7 +8,7 @@ use Drupal\Core\Database\InvalidQueryException;
 /**
  * Generic class for a series of conditions in a query.
  */
-class Condition implements ConditionInterface, \Countable {
+class Condition implements ConditionInterface, JsonConditionInterface, \Countable {
 
   /**
    * Provides a map of condition operators to condition operator options.
@@ -60,6 +60,11 @@ class Condition implements ConditionInterface, \Countable {
    * @var bool
    */
   protected $changed = TRUE;
+
+  /**
+   * Whether the resulting query should have its parameters strictly-bound.
+   */
+  protected bool $strictParams = FALSE;
 
   /**
    * The identifier of the query placeholder this condition has been compiled against.
@@ -122,6 +127,32 @@ class Condition implements ConditionInterface, \Countable {
       'operator' => $operator,
     ];
 
+    $this->changed = TRUE;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function usesStrictParameters(): bool {
+    return $this->strictParams;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function jsonCondition(string $field, string $jsonpath, SelectInterface|array|int|string|null $value = NULL, string $operator = '=') {
+    // @todo Validation and sanity-checking.
+
+    $this->conditions[] = [
+      'field' => $field,
+      'jsonpath' => $jsonpath,
+      'value' => $value,
+      'operator' => $operator,
+    ];
+
+    $this->strictParams = TRUE;
     $this->changed = TRUE;
 
     return $this;
@@ -236,6 +267,11 @@ class Condition implements ConditionInterface, \Countable {
           $arguments += $condition['value'];
           $ignore_operator = TRUE;
         }
+        elseif (isset($condition['jsonpath'])) {
+          // This is a query on a jsonpath expression.
+          $field_fragment = $this->getJsonFieldFragment($condition['field'], $condition, $connection);
+          $ignore_operator = FALSE;
+        }
         else {
           // Left hand part is a normal field. Add it as is.
           $field_fragment = $connection->escapeField($condition['field']);
@@ -325,6 +361,29 @@ class Condition implements ConditionInterface, \Countable {
       $this->arguments = $arguments;
       $this->changed = FALSE;
     }
+  }
+
+  /**
+   * Get the field fragment for a jsonpath condition.
+   *
+   * Database drivers may implement slightly different syntax, e.g.
+   * a JSON_EXTRACT() function or using the field name as-is and applying the
+   * jsonpath in the value portion with a db-specific operator.
+   *
+   * @param string $field_name
+   *   Field name.
+   * @param array $condition
+   *   Condition definition.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection; may be necessary to determine fragment.
+   *
+   * @return string
+   *   Field fragment.
+   */
+  protected function getJsonFieldFragment(string $field_name, array $condition, Connection $connection): string {
+    // This will be highly-dependent on database driver semantics.
+    // JSON_EXTRACT() is MySQL's version and is used here as a baseline example.
+    return "JSON_EXTRACT({$condition['field']}, '{$condition['jsonpath']}')";
   }
 
   /**

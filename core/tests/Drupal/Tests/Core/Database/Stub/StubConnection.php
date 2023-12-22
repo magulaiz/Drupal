@@ -122,7 +122,7 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function condition($conjunction) {
+  public function condition($conjunction, $table = NULL) {
     return new StubCondition($conjunction);
   }
 

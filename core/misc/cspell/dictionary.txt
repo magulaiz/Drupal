@@ -259,6 +259,9 @@ hexcode
 hilited
 hmac
 hookname
+hostnames
+hotpath
+hotpaths
 hrefs
 htmlcorrector
 httpheader
@@ -285,6 +288,7 @@ javascripts
 jessebeach
 jqueryui
 jsonlint
+jsonpath
 justinrainbow
 keyevent
 keypresses

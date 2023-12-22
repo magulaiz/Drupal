@@ -2,15 +2,17 @@
 
 namespace Drupal\pgsql\Driver\Database\pgsql;
 
+use Drupal\Core\Database\Configuration\IndexSpecification;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\pgsql\Enum\IndexType;
 
 // cSpell:ignore adbin adnum adrelid adsrc attisdropped attname attnum attrdef
 // cSpell:ignore attrelid atttypid atttypmod bigserial conkey conname conrelid
 // cSpell:ignore contype fillfactor indexname indexrelid indisprimary indkey
-// cSpell:ignore indrelid nextval nspname regclass relkind relname relnamespace
-// cSpell:ignore schemaname setval
+// cSpell:ignore indrelid nextval nspname regclass regtype relkind relname
+// cSpell:ignore relnamespace schemaname setval
 
 /**
  * @addtogroup schemaapi
@@ -60,6 +62,26 @@ class Schema extends DatabaseSchema {
     // If the schema is not set in the connection options then schema defaults
     // to public.
     $this->defaultSchema = $connection->getConnectionOptions()['schema'] ?? 'public';
+  }
+
+  /**
+   * Get a list of column names for a table.
+   *
+   * @return array
+   *   Array of column names for the table.
+   */
+  public function getFields(string $table): array {
+    $sql = <<<'EOD'
+SELECT attrelid::regclass AS tbl
+     , attname            AS col
+     , atttypid::regtype  AS datatype
+FROM   pg_attribute
+WHERE  attrelid = :table::regclass
+AND    attnum > 0
+AND    NOT attisdropped
+ORDER  BY attnum;
+EOD;
+    return array_keys($this->connection->query($sql, [':table' => $this->connection->getPrefix() . $table])->fetchAllAssoc('col'));
   }
 
   /**
@@ -314,9 +336,35 @@ EOD;
     $sql .= "\n)";
     $statements[] = $sql;
 
+    $indexed_full_columns = [];
     if (isset($table['indexes']) && is_array($table['indexes'])) {
-      foreach ($table['indexes'] as $key_name => $key) {
-        $statements[] = $this->_createIndexSql($name, $key_name, $key);
+      foreach ($table['indexes'] as $key_name => $spec) {
+        $statements[] = $this->_createIndexSql($name, $key_name, $spec);
+        foreach ($spec as $column) {
+          if (is_string($column)) {
+            $indexed_full_columns[] = $column;
+          }
+        }
+      }
+    }
+    foreach ($table['fields'] as $field_name => $field) {
+      if (!empty($field['type']) && $field['type'] === 'json' && !in_array($field_name, $indexed_full_columns)) {
+        // This JSON data field is not explicitly indexed, however Postgres
+        // provides powerful indexing via GIN for these columns without
+        // pre-configuring JSON path queries to optimize. Adding an index on
+        // this column provides zero-configuration performance enhancement.
+        $statements[] = $this->_createIndexSql(
+          $name,
+          sprintf(
+            'auto_%s_%s',
+            $field_name,
+            count($statements),
+          ),
+          new IndexSpecification(
+            [$field_name],
+            ['pgsql' => ['type' => IndexType::GIN]]
+          )
+        );
       }
     }
 
@@ -356,6 +404,11 @@ EOD;
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+    }
+
+    if (!empty($spec['as'])) {
+      // Virtual generated columns are not yet supported in Postgres.
+      $sql .= ' GENERATED ALWAYS AS (' . $spec['as'] . ') STORED';
     }
 
     if (!empty($spec['unsigned'])) {
@@ -467,6 +520,8 @@ EOD;
       'serial:medium' => 'serial',
       'serial:big' => 'bigserial',
       'serial:normal' => 'serial',
+
+      'json:normal' => 'jsonb',
     ];
     return $map;
   }
@@ -1020,9 +1075,42 @@ EOD;
     $this->resetTableInformation($table);
   }
 
-  protected function _createIndexSql($table, $name, $fields) {
-    $query = 'CREATE INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx') . ' ON {' . $table . '} (';
-    $query .= $this->_createKeySql($fields) . ')';
+  /**
+   * Generate index creation statement.
+   *
+   * @param string $table
+   *   Table name.
+   * @param string $name
+   *   Index name.
+   * @param iterable $fields
+   *   Fields used by the index.
+   *
+   * @return string
+   *   Database statement.
+   */
+  protected function _createIndexSql(string $table, string $name, iterable $fields): string {
+    $query = 'CREATE INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx') . ' ON {' . $table . '} ';
+    $operator = '';
+    if ($fields instanceof IndexSpecification && ($config = $fields->getDriverConfig('pgsql')) && !empty($config['type']) && $config['type'] instanceof IndexType) {
+      // Both GIN and GiST indexes may cover only one column.
+      if (count($fields) > 1) {
+        throw new \RuntimeException('Postgres indexes of %s type may only cover a single column. See https://www.postgresql.org/docs/current/textsearch-indexes.html', $config['type']->value);
+      }
+      // Index must be on a full column.
+      if (is_array($fields->getIterator()->current())) {
+        throw new \RuntimeException(sprintf('Postgres %s indexes are incompatible with substring column definition.', $config['type']->value));
+      }
+      $query .= 'USING ' . $config['type']->value . ' ';
+      // While the operator is technically applied to a specific column, we
+      // include it in the index config as it is impractical to introduce a
+      // second layer of value objects into the schema definition array.
+      $operator = $config['operator'] ?? '';
+    }
+    $query .= sprintf(
+      '(%s %s)',
+      $this->_createKeySql($fields),
+      $operator,
+    );
     return $query;
   }
 

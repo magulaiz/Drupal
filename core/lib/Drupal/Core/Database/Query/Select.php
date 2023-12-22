@@ -143,7 +143,7 @@ class Select extends Query implements SelectInterface {
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
     parent::__construct($connection, $options);
     $conjunction = $options['conjunction'] ?? 'AND';
-    $this->condition = $this->connection->condition($conjunction);
+    $this->condition = $this->connection->condition($conjunction, $table);
     $this->having = $this->connection->condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
   }
@@ -236,6 +236,9 @@ class Select extends Query implements SelectInterface {
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     $this->condition->compile($connection, $queryPlaceholder);
+    if (($this->condition instanceof StrictSqlParamsConditionInterface) && $this->condition->usesStrictParameters()) {
+      $this->queryOptions['strict_params'] = TRUE;
+    }
     $this->having->compile($connection, $queryPlaceholder);
 
     foreach ($this->tables as $table) {

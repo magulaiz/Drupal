@@ -3,6 +3,7 @@
 namespace Drupal\mysql\Driver\Database\mysql;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\JsonpathGeneratedFieldTrait;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
@@ -20,6 +21,8 @@ use Drupal\Component\Utility\Unicode;
  * MySQL implementation of \Drupal\Core\Database\Schema.
  */
 class Schema extends DatabaseSchema {
+
+  use JsonpathGeneratedFieldTrait;
 
   /**
    * Maximum length of a table comment in MySQL.
@@ -100,6 +103,9 @@ class Schema extends DatabaseSchema {
     // Add the SQL statement for each field.
     foreach ($table['fields'] as $field_name => $field) {
       $sql .= $this->createFieldSql($field_name, $this->processField($field)) . ", \n";
+      if ($auto_created_generated_fields = $this->processJsonpathGeneratedFields($field_name, $table, $name)) {
+        $sql .= implode(", \n", $auto_created_generated_fields) . ", \n";
+      }
     }
 
     // Process keys & indexes.
@@ -141,6 +147,7 @@ class Schema extends DatabaseSchema {
    *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
+    // Column name is in brackets to avoid collisions with reserved names.
     $sql = "[" . $name . "] " . $spec['mysql_type'];
 
     if (in_array($spec['mysql_type'], $this->mysqlStringTypes)) {
@@ -160,6 +167,10 @@ class Schema extends DatabaseSchema {
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+    }
+
+    if (!empty($spec['as'])) {
+      $sql .= ' GENERATED ALWAYS AS (' . $spec['as'] . ') VIRTUAL';
     }
 
     if (!empty($spec['unsigned'])) {
@@ -184,7 +195,7 @@ class Schema extends DatabaseSchema {
       $sql .= ' DEFAULT ' . $this->escapeDefaultValue($spec['default']);
     }
 
-    if (empty($spec['not null']) && !isset($spec['default'])) {
+    if (empty($spec['not null']) && !isset($spec['default']) && empty($spec['as'])) {
       $sql .= ' DEFAULT NULL';
     }
 
@@ -267,6 +278,8 @@ class Schema extends DatabaseSchema {
 
       'blob:big'        => 'LONGBLOB',
       'blob:normal'     => 'BLOB',
+
+      'json:normal'     => 'JSON',
     ];
     return $map;
   }
@@ -429,6 +442,10 @@ class Schema extends DatabaseSchema {
 
       $query .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
+    $add_ons = ['fields' => [$field => $spec]];
+    if ($auto_created_generated_fields = $this->processJsonpathGeneratedFields($field, $add_ons, $table)) {
+      $query .= ', ADD ' . implode(", \nADD ", $auto_created_generated_fields);
+    }
     try {
       $this->connection->query($query);
     }
@@ -441,6 +458,12 @@ class Schema extends DatabaseSchema {
       }
       else {
         throw $e;
+      }
+    }
+    if (!empty($add_ons['indexes'])) {
+      // Create additional auto-generated indexes.
+      foreach ($add_ons['indexes'] as $index_name => $index) {
+        $this->addIndex($table, $index_name, $index, $add_ons);
       }
     }
 
@@ -471,6 +494,13 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
+  protected static function getJsonExtractValueExpression(string $field, string $jsonpath): string {
+    return "JSON_EXTRACT({$field}, '{$jsonpath}')";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function dropField($table, $field) {
     if (!$this->fieldExists($table, $field)) {
       return FALSE;
@@ -488,8 +518,27 @@ class Schema extends DatabaseSchema {
       $this->dropPrimaryKey($table);
     }
 
+    // When dropping a field that had a JSON path generated field automatically
+    // created for purposes of index optimization, drop the generated field and
+    // corresponding index.
+    $auto_generated_column_prefix = self::getJsonpathGeneratedFieldPrefix($field);
+    foreach (array_filter($this->getFields($table), fn(string $name) => str_starts_with($name, $auto_generated_column_prefix)) as $field_name) {
+      $this->dropIndex($table, $field_name);
+      $this->dropField($table, $field_name);
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP [' . $field . ']');
     return TRUE;
+  }
+
+  /**
+   * Get a list of column names for a table.
+   *
+   * @return array
+   *   Array of column names for the table.
+   */
+  public function getFields(string $table): array {
+    return array_keys($this->connection->query('SHOW COLUMNS FROM {' . $table . '}')->fetchAllAssoc('Field'));
   }
 
   /**

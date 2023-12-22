@@ -7,7 +7,7 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 // cSpell:ignore attname attnum attrelid objid refobjid refobjsubid regclass
-// cspell:ignore relkind relname
+// cspell:ignore relkind relname seqscan
 
 /**
  * Tests schema API for the PostgreSQL driver.
@@ -382,6 +382,39 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     ];
     $this->schema->createTable($table_name, $table_spec);
     $this->assertTrue($this->schema->tableExists($table_name));
+  }
+
+  /**
+   * Tests JSON schema type.
+   */
+  public function testJsonSchema(): void {
+    $this->doTestJsonSchema();
+    foreach (self::JSON_TEST_DATA as $path => $expected) {
+      $query = $this->connection->select('test_json');
+      $query->addExpression('jsonb_path_query(test_field, :path)', NULL, [
+        ':path' => $path,
+      ]);
+      $actual = json_decode($query->execute()->fetchField());
+      $this->assertSame($expected, $actual);
+    }
+    // GIN indexing works on JSONB columns, yet only for certain
+    // Postgres-supported operators. We test one, here.
+    $explain_query = $this->connection->select('test_json');
+    // @todo Convert this WHERE to use the query builder when https://www.drupal.org/project/drupal/issues/3378275 lands.
+    // Postgres might try to outsmart us and run a table scan instead of using
+    // an index, due to a low number of rows. Explicitly tell the database
+    // to disable sequence scans for small sets. The index will still only be
+    // used if it is properly configured, so this will not result in a
+    // false-positive test result.
+    $this->connection->query('SET enable_seqscan TO off');
+    $explained = implode("\n", $this->connection->query(
+      'EXPLAIN ' . $explain_query . ' WHERE test_field @> :json',
+      [':json' => json_encode(['b' => 'value1'])]
+    )->fetchCol());
+    $this->assertStringContainsString('Bitmap Index Scan', $explained);
+
+    // Postgres will automatically drop an orphaned index. Ensure no exception.
+    $this->schema->dropField('test_json', 'test_field');
   }
 
 }
