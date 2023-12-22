@@ -252,7 +252,7 @@ class Condition implements ConditionInterface, \Countable {
           // If something passed in an invalid character stop early, so we
           // don't rely on a broken SQL statement when we would just replace
           // those characters.
-          if (stripos($condition['operator'], 'UNION') !== FALSE || strpbrk($condition['operator'], '[-\'"();') !== FALSE) {
+          if (stripos(!empty($condition['operator']) ? $condition['operator'] : '', 'UNION') !== FALSE || strpbrk(!empty($condition['operator']) ? $condition['operator'] : '', '[-\'"();') !== FALSE) {
             $this->changed = TRUE;
             $this->arguments = [];
             // Provide a string which will result into an empty query result.
@@ -398,7 +398,7 @@ class Condition implements ConditionInterface, \Countable {
       // We need to upper case because PHP index matches are case sensitive but
       // do not need the more expensive mb_strtoupper() because SQL statements
       // are ASCII.
-      $operator = strtoupper($operator);
+      $operator = strtoupper($operator ?? '');
       $return = static::$conditionOperatorMap[$operator] ?? [];
     }
 
