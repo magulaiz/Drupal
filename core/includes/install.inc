@@ -261,13 +261,9 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
   }
   // Build list of setting names and insert the values into the global namespace.
   $variable_names = [];
-  $settings_settings = [];
   foreach ($settings as $setting => $data) {
     if ($setting != 'settings') {
       _drupal_rewrite_settings_global($GLOBALS[$setting], $data);
-    }
-    else {
-      _drupal_rewrite_settings_global($settings_settings, $data);
     }
     $variable_names['$' . $setting] = $setting;
   }
@@ -386,12 +382,6 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
       throw new Exception("Failed to modify '$settings_file'. Verify the file permissions.");
     }
     else {
-      // In case any $settings variables were written, import them into the
-      // Settings singleton.
-      if (!empty($settings_settings)) {
-        $old_settings = Settings::getAll();
-        new Settings($settings_settings + $old_settings);
-      }
       // The existing settings.php file might have been included already. In
       // case an opcode cache is enabled, the rewritten contents of the file
       // will not be reflected in this process. Ensure to invalidate the file
