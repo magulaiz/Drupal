@@ -1096,7 +1096,7 @@ class EntityResource {
       $destination_field_list = $destination->get($field_name);
 
       $origin_field_list = $origin->get($field_name);
-      if ($this->checkPatchFieldAccess($destination_field_list, $origin_field_list)) {
+      if ($this->checkPatchFieldAccess($origin_field_list, $destination_field_list)) {
         $destination->set($field_name, $origin_field_list->getValue());
       }
     }
