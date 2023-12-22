@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Element;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Element;
@@ -134,6 +135,19 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     $output['#type'] = 'container';
     $output['#attributes']['id'] = 'layout-builder';
     $output['#attributes']['class'][] = 'layout-builder';
+
+    // Add standard entity classes to avoid styles from being lost on LB UI.
+    $contexts = $section_storage->getContextValues();
+    if (!empty($contexts['entity']) && $contexts['entity'] instanceof ContentEntityInterface) {
+      $entity = $contexts['entity'];
+      $output['#attributes']['class'][] = $entity->getEntityTypeId();
+      $output['#attributes']['class'][] = $entity->getEntityTypeId() . '--type-' . $entity->bundle();
+
+      if (!empty($contexts['view_mode'])) {
+        $output['#attributes']['class'][] = $entity->getEntityTypeId() . '--view-mode-' . $contexts['view_mode'];
+      }
+    }
+
     // Mark this UI as uncacheable.
     $output['#cache']['max-age'] = 0;
     return $output;
