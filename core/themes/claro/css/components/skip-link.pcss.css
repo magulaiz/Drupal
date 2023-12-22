@@ -8,14 +8,20 @@
 @import "../base/variables.pcss.css";
 
 .skip-link {
-  z-index: 50;
-  left: 50%;
+  z-index: 503;
+  top: 0;
+  left: 0; /* LTR */
   padding: 1px 10px 2px;
-  transform: translateX(-50%);
   color: var(--color-white);
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 0; /* LTR */
   background: var(--color-gray-800);
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
   font-size: 0.94em;
+}
+[dir="rtl"] .skip-link {
+  right: 0;
+  left: auto;
+  border-radius: 0 0 0 10px;
 }
 .skip-link:hover,
 .skip-link:active {

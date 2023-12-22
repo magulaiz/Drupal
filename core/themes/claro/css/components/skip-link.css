@@ -13,14 +13,21 @@
  */
 
 .skip-link {
-  z-index: 50;
-  left: 50%;
+  z-index: 503;
+  top: 0;
+  left: 0; /* LTR */
   padding: 1px 0.625rem 2px;
-  transform: translateX(-50%);
   color: #fff;
-  border-radius: 0 0 0.625rem 0.625rem;
+  border-radius: 0 0 0.625rem 0; /* LTR */
   background: #55565b;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
   font-size: 0.94em;
+}
+
+[dir="rtl"] .skip-link {
+  right: 0;
+  left: auto;
+  border-radius: 0 0 0 0.625rem;
 }
 
 .skip-link:hover,
