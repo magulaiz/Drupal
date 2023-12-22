@@ -21,12 +21,14 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
    * @covers \Drupal\content_moderation\Entity\Handler\NodeModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testNotModerated() {
+    $web_assert = $this->assertSession();
     $this->drupalLogin($this->adminUser);
     $this->createContentTypeFromUi('Not moderated', 'not_moderated');
-    $this->assertSession()->pageTextContains('The content type Not moderated has been added.');
+    $web_assert->pageTextContains('The content type Not moderated has been added.');
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'not_moderated');
     $this->drupalGet('node/add/not_moderated');
-    $this->assertSession()->pageTextContains('Save');
+    $web_assert->fieldNotExists('Save as');
+    $web_assert->buttonExists('Save');
     $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');
@@ -40,6 +42,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
    * @covers \Drupal\content_moderation\Entity\Handler\NodeModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testEnablingOnExistingContent() {
+    $web_assert = $this->assertSession();
     $editor_permissions = [
       'administer workflows',
       'access administration pages',
@@ -60,8 +63,9 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->grantUserPermissionToCreateContentOfType($editor, 'not_moderated');
     $this->grantUserPermissionToCreateContentOfType($editor_with_publish, 'not_moderated');
 
-    // Create content.
+    // Create non-moderated content.
     $this->drupalGet('node/add/not_moderated');
+    $web_assert->fieldNotExists('Save as');
     $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');
@@ -92,14 +96,25 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/edit');
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
-    $this->assertSession()->optionNotExists('moderation_state[0][state]', 'published');
+    $web_assert->fieldExists('Change to');
+    $web_assert->optionExists('moderation_state[0][state]', 'draft');
+    $web_assert->optionNotExists('moderation_state[0][state]', 'published');
 
     $this->drupalLogin($editor_with_publish);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
-    $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
+    $web_assert->fieldExists('Change to');
+    $web_assert->optionExists('moderation_state[0][state]', 'draft');
+    $web_assert->optionExists('moderation_state[0][state]', 'published');
+
+    // Create moderated content.
+    $this->drupalGet('node/add/not_moderated');
+    $web_assert->fieldExists('Save as');
+    $this->drupalPostForm(NULL, [
+      'title[0][value]' => 'Moderated test',
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
+    $this->assertSession()->pageTextContains('Not moderated Moderated test has been created.');
   }
 
   /**
