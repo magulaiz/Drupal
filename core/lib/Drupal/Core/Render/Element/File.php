@@ -91,9 +91,9 @@ class File extends FormElement {
     $uploaded_files = \Drupal::request()->files->get('files', []);
     $uploaded_file = $uploaded_files[$element_name] ?? NULL;
     if ($uploaded_file) {
-      // Cast this to an array so that the structure is consistent regardless of
+      // Always return an array so that the structure is consistent regardless of
       // whether #value is set or not.
-      return (array) $uploaded_file;
+      return is_array($uploaded_file) ? $uploaded_file : [$uploaded_file];
     }
     return NULL;
   }
