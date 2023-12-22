@@ -633,6 +633,7 @@ class FieldStorageAddForm extends FormBase {
    * Submit handler for resetting the form.
    */
   public static function startOver($form, FormStateInterface &$form_state) {
+    // Need to do this as the parameters for buildForm are retained on rebuild.
     $form_state->setValue('new_storage_type', self::BACK_FLAG);
     $form_state->setRebuild();
   }
