@@ -148,7 +148,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // Extract the expressions stored in the dynamic type name.
     $matches = [];
     // @see \Drupal\Core\Config\TypedConfigManager::replaceDynamicTypeName()
-    assert(preg_match("/\[(.*)\]/U", $unresolved_type, $matches) === 1);
+    $result = preg_match("/\[(.*)\]/U", $unresolved_type, $matches);
+    assert($result === 1);
     // @see \Drupal\Core\Config\TypedConfigManager::replaceExpression()
     $expression = $matches[1];
     // From the expression, extract the instructions for where to retrieve a value.
