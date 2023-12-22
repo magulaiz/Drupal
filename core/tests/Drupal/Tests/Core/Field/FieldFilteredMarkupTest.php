@@ -36,6 +36,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
     $data[] = ['<script>test string</script>', 'test string', TRUE];
     // Certain tags are not filtered.
     $data[] = ['<em>test string</em>', '<em>test string</em>', TRUE];
+    $data[] = ['<details><summary>Details</summary>Something.</details>', '<details><summary>Details</summary>Something.</details>', TRUE];
     // HTML will be normalized.
     $data[] = ['<em>test string', '<em>test string</em>', TRUE];
 
@@ -51,7 +52,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
    * @covers ::displayAllowedTags
    */
   public function testDisplayAllowedTags() {
-    $expected = '<a> <b> <big> <code> <del> <em> <i> <ins> <pre> <q> <small> <span> <strong> <sub> <sup> <tt> <ol> <ul> <li> <p> <br> <img>';
+    $expected = '<a> <b> <big> <code> <del> <em> <i> <ins> <pre> <q> <small> <span> <strong> <sub> <sup> <tt> <ol> <ul> <li> <p> <br> <img> <details> <summary>';
 
     $this->assertSame($expected, FieldFilteredMarkup::displayAllowedTags());
   }
