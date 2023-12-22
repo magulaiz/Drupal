@@ -25,7 +25,7 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
    * @var array
    *   Session data keyed by the session ID.
    */
-  private $readSessions;
+  private array $readSessions = [];
 
   /**
    * Constructs a new write safe session handler.
@@ -77,6 +77,9 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
    */
   #[\ReturnTypeWillChange]
   public function read($session_id) {
+    if (\array_key_exists($session_id, $this->readSessions)) {
+      return $this->readSessions[$session_id];
+    }
     $value = $this->wrappedSessionHandler->read($session_id);
     $this->readSessions[$session_id] = $value;
     return $value;
@@ -93,6 +96,7 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
     }
     if ($this->isSessionWritable()) {
       return $this->wrappedSessionHandler->write($session_id, $session_data);
+      $this->readSessions[$session_id] = $session_data;
     }
     return TRUE;
   }
