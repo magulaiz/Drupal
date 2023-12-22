@@ -95,7 +95,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: #828388;
+  color: #75767b;
 }
 
 .fieldset__label.has-error {
@@ -111,7 +111,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__description.is-disabled {
-  color: #828388;
+  color: #75767b;
 }
 
 /* Error message (Inline form errors). */

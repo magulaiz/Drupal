@@ -137,12 +137,12 @@ _:-ms-fullscreen,
 }
 
 .form-element[disabled] {
-  color: #828388;
+  color: #75767b;
   border-color: #bababf;
   background-color: #f2f2f3;
   box-shadow: none;
   /* https://stackoverflow.com/q/262158#answer-23511280 */
-  -webkit-text-fill-color: #828388;
+  -webkit-text-fill-color: #75767b;
 }
 
 /**
