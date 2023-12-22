@@ -54,7 +54,7 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
    */
   #[\ReturnTypeWillChange]
   public function destroy($session_id) {
-    unset($this->readSessions($session_id));
+    unset($this->readSessions[$session_id]);
     return $this->wrappedSessionHandler->destroy($session_id);
   }
 
