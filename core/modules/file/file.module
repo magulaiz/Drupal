@@ -1389,6 +1389,10 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
       // removed.
       if ($element['#files'][$fid] && $element['#files'][$fid]->isTemporary()) {
         $element['#files'][$fid]->delete();
+        $file = \Drupal\file\Entity\File::load($fid);
+        if (!empty($file)) {
+           $file->delete();
+         }
       }
     }
     // Update both $form_state->getValues() and FormState::$input to reflect
