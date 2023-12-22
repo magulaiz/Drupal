@@ -219,7 +219,8 @@ class MenuAccessTest extends BrowserTestBase {
       $tree_routes
     );
 
-    // @todo Add comment about grand child logic with overview.
+    // Route using overview should have access to the grand child to access the
+    // current route.
     $this->assertUserRoutesAccess(
       $grandChild1User,
       [],
