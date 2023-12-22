@@ -35,15 +35,16 @@ class UserEmailChangeForm extends ContentEntityForm {
       '#type'   => 'container',
       '#weight' => -10,
     ];
-
-    $form['account']['current_pass'] = [
-      '#type' => 'password',
-      '#title' => $this->t('Current password'),
-      '#size' => 25,
-      '#access' => !$form_state->get('user_pass_reset'),
-      '#attributes' => ['autocomplete' => 'off'],
-      '#required' => TRUE,
-    ];
+    if ($user->id() == $account->id()) {
+      $form['account']['current_pass'] = [
+        '#type' => 'password',
+        '#title' => $this->t('Current password'),
+        '#size' => 25,
+        '#access' => !$form_state->get('user_pass_reset'),
+        '#attributes' => ['autocomplete' => 'off'],
+        '#required' => TRUE,
+      ];
+    }
     $form_state->set('user', $account);
 
     // The mail field is NOT required if account originally had no mail set

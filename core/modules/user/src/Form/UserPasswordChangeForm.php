@@ -72,6 +72,7 @@ class UserPasswordChangeForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
+    $user = $this->currentUser();
     $config = \Drupal::config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
@@ -98,17 +99,19 @@ class UserPasswordChangeForm extends ContentEntityForm {
         $form_state->set('user_pass_reset', $user_pass_reset);
       }
 
-      $form['account']['current_pass'] = [
-        '#type' => 'password',
-        '#title' => $this->t('Current password'),
-        '#size' => 25,
-        '#access' => !$form_state->get('user_pass_reset'),
-        '#weight' => -5,
-        // Do not let web browsers remember this password, since we are
-        // trying to confirm that the person submitting the form actually
-        // knows the current one.
-        '#attributes' => ['autocomplete' => 'off'],
-      ];
+      if ($user->id() == $account->id()) {
+        $form['account']['current_pass'] = [
+          '#type' => 'password',
+          '#title' => $this->t('Current password'),
+          '#size' => 25,
+          '#access' => !$form_state->get('user_pass_reset'),
+          '#weight' => -5,
+          // Do not let web browsers remember this password, since we are
+          // trying to confirm that the person submitting the form actually
+          // knows the current one.
+          '#attributes' => ['autocomplete' => 'off'],
+        ];
+      }
       $form_state->set('user', $account);
 
       // The user may only change their own password without their current
