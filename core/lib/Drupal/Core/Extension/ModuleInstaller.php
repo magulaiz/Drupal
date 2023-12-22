@@ -265,7 +265,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
 
         // Allow modules to react prior to the installation of a module.
-        $this->moduleHandler->invokeAll('module_preinstall', [$module]);
+        $this->moduleHandler->invokeAll('module_preinstall', [$module, $sync_status]);
 
         // Now install the module's schema if necessary.
         $this->installSchema($module);
@@ -459,7 +459,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Allow modules to react prior to the uninstallation of a module.
-      $this->moduleHandler->invokeAll('module_preuninstall', [$module]);
+      $this->moduleHandler->invokeAll('module_preuninstall', [$module, $sync_status]);
 
       // Uninstall the module.
       $this->moduleHandler->loadInclude($module, 'install');
