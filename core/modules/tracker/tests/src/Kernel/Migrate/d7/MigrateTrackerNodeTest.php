@@ -15,6 +15,7 @@ class MigrateTrackerNodeTest extends MigrateDrupalTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'filter',
     'menu_ui',
     'node',
     'text',
