@@ -25,15 +25,6 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
     $field_name = 'test_reuse';
     $label = $this->randomMachineName();
 
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-
-    // Ensure that both bundles have a default form and view display.
-    $display_repository->getFormDisplay($entity_type, $bundle1['id'])->save();
-    $display_repository->getViewDisplay($entity_type, $bundle1['id'])->save();
-    $display_repository->getFormDisplay($entity_type, $bundle2['id'])->save();
-    $display_repository->getViewDisplay($entity_type, $bundle2['id'])->save();
-
     // Create field with pre-configured options.
     $this->drupalGet($bundle1['path'] . "/fields/add-field");
     $this->fieldUIAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
@@ -43,6 +34,9 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
     $this->assertTrue($field->isRequired());
     $this->assertEquals($new_label, $field->label());
     $this->assertEquals('preconfigured_field_setting', $field->getSetting('test_field_setting'));
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
 
     $form_display = $display_repository->getFormDisplay($entity_type, $bundle2['id']);
     $this->assertEquals('test_field_widget_multiple', $form_display->getComponent("field_{$field_name}")['type']);
