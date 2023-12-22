@@ -39,6 +39,8 @@ class AssetDumper implements AssetDumperInterface {
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     $filename = $file_extension . '_' . Crypt::hashBase64($data) . '.' . $file_extension;
+    // Prevent "ad" from appearing anywhere in the file name.
+    $filename = str_ireplace('ad', '--', $filename);
     // Create the css/ or js/ path within the files folder.
     $path = 'public://' . $file_extension;
     $uri = $path . '/' . $filename;
