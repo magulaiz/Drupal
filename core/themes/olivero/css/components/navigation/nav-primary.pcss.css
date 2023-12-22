@@ -113,10 +113,10 @@
     transform-origin: left;
     /* Intentionally not using CSS logical properties. */
     border-top: solid 5px var(--color--primary-50);
-  }
 
-  .primary-nav__menu-link:hover & {
-    transform: scaleX(1);
+    @nest .primary-nav__menu-link:hover & {
+      transform: scaleX(1);
+    }
   }
 }
 
