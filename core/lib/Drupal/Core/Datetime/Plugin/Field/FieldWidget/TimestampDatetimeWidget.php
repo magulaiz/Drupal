@@ -57,10 +57,13 @@ class TimestampDatetimeWidget extends WidgetBase {
       elseif (isset($item['value']['object']) && $item['value']['object'] instanceof DrupalDateTime) {
         $date = $item['value']['object'];
       }
+      elseif ($item['value'] === NULL) {
+        $date = NULL;
+      }
       else {
         $date = new DrupalDateTime();
       }
-      $item['value'] = $date->getTimestamp();
+      $item['value'] = !empty($date) ? $date->getTimestamp() : NULL;
     }
     return $values;
   }
