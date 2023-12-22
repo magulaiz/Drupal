@@ -459,7 +459,7 @@ function node_preprocess_field__node(&$variables) {
 function node_theme_suggestions_node(array $variables) {
   $suggestions = [];
   $node = $variables['elements']['#node'];
-  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'] ?? '', '.', '_');
 
   $suggestions[] = 'node__' . $sanitized_view_mode;
   $suggestions[] = 'node__' . $node->bundle();
