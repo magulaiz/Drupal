@@ -396,7 +396,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (!focusChanged && _this3.element && !$(_this3.element).data('disable-refocus')) {
         var target = false;
         for (var n = elementParents.length - 1; !target && n >= 0; n--) {
-          target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
+          target = document.querySelector(`[id="${elementParents[n].getAttribute('id')}"]`);
         }
         if (target) {
           $(target).trigger('focus');

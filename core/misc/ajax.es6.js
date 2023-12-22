@@ -1078,9 +1078,7 @@
 
             for (let n = elementParents.length - 1; !target && n >= 0; n--) {
               target = document.querySelector(
-                `[data-drupal-selector="${elementParents[n].getAttribute(
-                  'data-drupal-selector',
-                )}"]`,
+                `[id="${elementParents[n].getAttribute('id')}"]`
               );
             }
             if (target) {
