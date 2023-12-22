@@ -168,6 +168,14 @@ interface ConditionInterface {
   public function &conditions();
 
   /**
+   * Gets the current conjunction.
+   *
+   * @return string
+   *   Can be AND or OR.
+   */
+  public function getConjunction();
+
+  /**
    * Gets a complete list of all values to insert into the prepared statement.
    *
    * @return array

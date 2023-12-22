@@ -189,4 +189,11 @@ abstract class Query implements PlaceholderInterface {
     return $this->connection;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConjunction() {
+    return $this->conjunction;
+  }
+
 }

@@ -43,6 +43,17 @@ class Condition implements ConditionInterface, \Countable {
   protected $conditions = [];
 
   /**
+   * The conjunction of this condition group.
+   *
+   * The value is one of the following:
+   * - AND (default)
+   * - OR
+   *
+   * @var string
+   */
+  protected $conjunction;
+
+  /**
    * Array of arguments.
    *
    * @var array
@@ -91,7 +102,7 @@ class Condition implements ConditionInterface, \Countable {
       @trigger_error('Creating an instance of this class is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Use Database::getConnection()->condition() instead. See https://www.drupal.org/node/3159568', E_USER_DEPRECATED);
     }
 
-    $this->conditions['#conjunction'] = $conjunction;
+    $this->conjunction = $conjunction;
   }
 
   /**
@@ -126,6 +137,13 @@ class Condition implements ConditionInterface, \Countable {
     $this->changed = TRUE;
 
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConjunction() {
+    return $this->conjunction;
   }
 
   /**
@@ -208,8 +226,6 @@ class Condition implements ConditionInterface, \Countable {
       $arguments = [];
 
       $conditions = $this->conditions;
-      $conjunction = $conditions['#conjunction'];
-      unset($conditions['#conjunction']);
       foreach ($conditions as $condition) {
         // Process field.
         if ($condition['field'] instanceof ConditionInterface) {
@@ -329,7 +345,7 @@ class Condition implements ConditionInterface, \Countable {
 
       // Concatenate all conditions using the conjunction and brackets around
       // the individual conditions to assure the proper evaluation order.
-      $this->stringVersion = count($condition_fragments) > 1 ? '(' . implode(") $conjunction (", $condition_fragments) . ')' : implode($condition_fragments);
+      $this->stringVersion = count($condition_fragments) > 1 ? '(' . implode(") $this->conjunction (", $condition_fragments) . ')' : implode($condition_fragments);
       $this->arguments = $arguments;
       $this->changed = FALSE;
     }
