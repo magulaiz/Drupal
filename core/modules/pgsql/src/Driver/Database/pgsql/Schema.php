@@ -348,23 +348,12 @@ EOD;
       }
     }
     foreach ($table['fields'] as $field_name => $field) {
-      if (!empty($field['type']) && $field['type'] === 'json' && !in_array($field_name, $indexed_full_columns)) {
+      if (!in_array($field_name, $indexed_full_columns) && $sql = $this->createAutoJsonIndexSql($name, $field_name, $field)) {
         // This JSON data field is not explicitly indexed, however Postgres
         // provides powerful indexing via GIN for these columns without
         // pre-configuring JSON path queries to optimize. Adding an index on
         // this column provides zero-configuration performance enhancement.
-        $statements[] = $this->_createIndexSql(
-          $name,
-          sprintf(
-            'auto_%s_%s',
-            $field_name,
-            count($statements),
-          ),
-          new IndexSpecification(
-            [$field_name],
-            ['pgsql' => ['type' => IndexType::GIN]]
-          )
-        );
+        $statements[] = $sql;
       }
     }
 
@@ -381,6 +370,33 @@ EOD;
     }
 
     return $statements;
+  }
+
+  /**
+   * Create automatic index creation SQL for field, if necessary.
+   *
+   * @param string $table
+   *   Table name.
+   * @param string $field_name
+   *   Field name.
+   * @param array $spec
+   *   Field spec.
+   *
+   * @return string|null
+   *   Index creation SQL or NULL if unnecessary.
+   */
+  protected function createAutoJsonIndexSql(string $table, string $field_name, array $spec): ?string {
+    return !empty($spec['type']) && $spec['type'] === 'json' ? $this->_createIndexSql(
+      $table,
+      sprintf(
+        'auto_gen_%s',
+        $field_name,
+      ),
+      new IndexSpecification(
+        [$field_name],
+        ['pgsql' => ['type' => IndexType::GIN]]
+      )
+    ) : NULL;
   }
 
   /**
@@ -747,6 +763,9 @@ EOD;
     // Add column comment.
     if (!empty($spec['description'])) {
       $this->connection->query('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
+    }
+    if ($sql = $this->createAutoJsonIndexSql($table, $field, $spec)) {
+      $this->connection->query($sql);
     }
     $this->resetTableInformation($table);
   }

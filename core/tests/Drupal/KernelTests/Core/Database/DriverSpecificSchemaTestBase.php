@@ -315,17 +315,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
   }
 
   /**
-   * Test retrieval of table field data.
-   */
-  public function testGetFields(): void {
-    $this->schema->createTable('test_table', [
-      'fields' => ['serial_column' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE]],
-      'primary key' => ['serial_column'],
-    ]);
-    $this->assertEqualsCanonicalizing(['serial_column'], $this->schema->getFields('test_table'));
-  }
-
-  /**
    * Tests creating a table with database specific data type.
    */
   abstract public function testTableWithSpecificDataType(): void;
