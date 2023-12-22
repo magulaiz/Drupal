@@ -40,10 +40,6 @@ details.fieldset-no-legend {
 .views-ui-dialog a.button {
   margin-block: 0;
   margin-inline-end: 0;
-
-  [dir="rtl"] & {
-    margin-right: 0;
-  }
 }
 
 .views-ui-dialog {
@@ -146,11 +142,11 @@ details.fieldset-no-legend {
   }
 
   & .links li {
-    padding-inline-end: 0; /* LTR */
+    padding-inline-end: 0;
   }
 
   & .button .links li {
-    padding-inline-end: var(--space-s); /* LTR */
+    padding-inline-end: var(--space-s);
   }
 }
 
@@ -373,7 +369,7 @@ details.fieldset-no-legend {
   }
 
   /* RTL required for precedence over core's styles. */
-  [dir="rtl"] & {
+  @nest [dir="rtl"] & {
     margin: 0;
   }
 }
@@ -491,10 +487,8 @@ details.fieldset-no-legend {
  */
 
 .filterable-option .form-item.form-type-checkbox {
-  padding-block: calc(var(--space-xs) / 2);
   /* This selector is aggressive because Claro's reset for .form-items is aggressive. */
-  padding-bottom: calc(var(--space-xs) / 2);
-  padding-inline-start: calc(var(--space-xs) / 2);
+  padding-block: calc(var(--space-xs) / 2);
 }
 
 /* @end */
@@ -519,41 +513,30 @@ details.fieldset-no-legend {
 }
 
 .views-config-group-region .views-group-box--operator {
-  padding-inline-end: var(--space-xl);
+  padding-inline: var(--space-l) var(--space-xl);
   border-inline-end-width: 0;
-}
-
-[dir="rtl"] .views-config-group-region .views-group-box--operator {
-  padding-inline-start: var(--space-l);
-  padding-inline-end: var(--space-xl);
-  border-inline-end-width: 0;
-  border-inline-start-width: var(--input-border-size);
+  @nest [dir="rtl"] & {
+    border-inline-start-width: var(--input-border-size);
+  }
 }
 
 .views-config-group-region .views-group-box--value {
   padding: 0;
-  border-inline-start-width: 0; /* LTR */
-}
-
-[dir="rtl"] .views-config-group-region .views-group-box--value {
-  border-inline-end-width: var(--input-border-size);
   border-inline-start-width: 0;
+
+  @nest [dir="rtl"] & {
+    border-inline-end-width: var(--input-border-size);
+  }
 }
 
 .views-config-group-region .views-group-box--value>.form-item {
-  margin-inline-start: var(--space-xl); /* LTR */
-  margin-inline-end: var(--space-l); /* LTR */
-}
-
-[dir="rtl"] .views-config-group-region .views-group-box--value>.form-item {
-  margin-inline-start: var(--space-l); /* LTR */
-  margin-inline-end: var(--space-xl); /* LTR */
+  margin-inline: var(--space-xl) var(--space-l);
 }
 
 .views-config-group-region .views-group-box--value>.form-item::before {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
 
   & .views-group-box {
     position: relative;
