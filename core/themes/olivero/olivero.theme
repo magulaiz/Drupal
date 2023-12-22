@@ -13,6 +13,88 @@ use Drupal\Core\Render\Element;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_attachments_alter().
+ */
+function olivero_page_attachments_alter(array &$page) {
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('olivero');
+
+  // Preload fonts for headings and normal body copy (non bold and non italic).
+  $files = [
+    $theme_path . '/fonts/metropolis/Metropolis-Regular.woff2',
+    $theme_path . '/fonts/metropolis/Metropolis-SemiBold.woff2',
+    $theme_path . '/fonts/metropolis/Metropolis-Bold.woff2',
+    $theme_path . '/fonts/lora/lora-v14-latin-regular.woff2',
+  ];
+
+  $should_add_header = TRUE;
+  foreach ($files as $path) {
+    $file_parts = explode('.', basename($path));
+    $extension = end($file_parts);
+
+    $page['#attached']['html_head_link'][] = [
+      [
+        'rel' => 'preload',
+        'href' => $path,
+        'as' => 'font',
+        'type' => 'font/' . $extension,
+        'crossorigin' => 'crossorigin',
+      ],
+      $should_add_header,
+    ];
+  }
+
+  // Declare preloaded fonts with inline CSS.
+  $css = <<<CSS
+  @font-face {
+    font-family: metropolis;
+    src:
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Regular.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: metropolis;
+    src:
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-SemiBold.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-SemiBold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: metropolis;
+    src:
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Bold.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Bold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: Lora;
+    src:
+      local("Lora Regular"),
+      local("Lora-Regular"),
+      url("/core/themes/olivero/fonts/lora/lora-v14-latin-regular.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/lora/lora-v14-latin-regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  CSS;
+
+  $page['#attached']['html_head'][] = [
+    [
+      '#tag' => 'style',
+      '#value' => $css,
+    ],
+    FALSE,
+  ];
+}
+
+/**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  *
  * Adds body classes if certain regions have content.
