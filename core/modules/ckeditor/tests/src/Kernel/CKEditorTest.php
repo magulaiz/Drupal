@@ -504,7 +504,7 @@ class CKEditorTest extends KernelTestBase {
       'resize_dir' => 'vertical',
       'justifyClasses' => ['text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'],
       'entities' => FALSE,
-      'disableNativeSpellChecker' => FALSE,
+      'disableNativeSpellChecker' => TRUE,
     ];
   }
 
