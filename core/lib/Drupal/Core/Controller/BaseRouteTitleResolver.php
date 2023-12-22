@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
 /**
- * Provides a class which gets title based on base route.
+ * Provides a class which gets the title from the current local-task base route.
  */
 class BaseRouteTitleResolver implements TitleResolverInterface {
 
@@ -43,7 +43,7 @@ class BaseRouteTitleResolver implements TitleResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request, Route $route) {
+  public function getTitle(Request $request, Route $route) : array|string|\Stringable|null {
     $route_match = RouteMatch::createFromRequest($request);
     $base_route_names = $this->localTaskManager->getBaseRouteNames($route_match->getRouteName());
     $title = NULL;
