@@ -326,7 +326,10 @@ class OverviewTerms extends FormBase {
       '#empty' => $empty,
       '#header' => [
         'term' => $this->t('Name'),
-        'operations' => $this->t('Operations'),
+        'operations' => [
+          'data' => $this->t('Operations'),
+          'class' => 'ui-operations',
+        ],
         'weight' => $update_tree_access->isAllowed() ? $this->t('Weight') : NULL,
       ],
       '#attributes' => [

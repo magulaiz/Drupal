@@ -37,8 +37,20 @@ th {
   text-align: left; /* LTR */
   color: #232429;
   background: #f3f4f9;
-  line-height: 1.25rem; /* 20px */
+  line-height: 1.25rem /* 20px */
 }
+
+[dir="ltr"] th.ui-operations {
+    padding-right: 10em;
+}
+
+[dir="rtl"] th.ui-operations {
+    padding-left: 10em;
+}
+
+th.ui-operations {
+    width: 1px;
+  }
 
 [dir="rtl"] th {
   text-align: right;

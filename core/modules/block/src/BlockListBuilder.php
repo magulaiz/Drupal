@@ -175,7 +175,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         $this->t('Category'),
         $this->t('Region'),
         $this->t('Weight'),
-        $this->t('Operations'),
+        [
+          'data' => $this->t('Operations'),
+          'class' => 'ui-operations',
+        ],
       ],
       '#attributes' => [
         'id' => 'blocks',
