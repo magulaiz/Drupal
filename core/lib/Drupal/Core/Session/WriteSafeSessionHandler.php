@@ -45,6 +45,7 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
    */
   #[\ReturnTypeWillChange]
   public function close() {
+    $this->readSessions = [];
     return $this->wrappedSessionHandler->close();
   }
 
@@ -53,6 +54,7 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
    */
   #[\ReturnTypeWillChange]
   public function destroy($session_id) {
+    unset($this->readSessions($session_id));
     return $this->wrappedSessionHandler->destroy($session_id);
   }
 
@@ -95,8 +97,8 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
       return TRUE;
     }
     if ($this->isSessionWritable()) {
-      return $this->wrappedSessionHandler->write($session_id, $session_data);
       $this->readSessions[$session_id] = $session_data;
+      return $this->wrappedSessionHandler->write($session_id, $session_data);
     }
     return TRUE;
   }
