@@ -152,6 +152,7 @@ class MenuAccessTest extends BrowserTestBase {
       'menu_test.grand_child1_test',
       'menu_test.grand_child2_test',
       'menu_test.grand_child3_test',
+      'menu_test.great_grand_child1_test',
     ];
 
     // Create a user with access to only the top level parent.
@@ -206,11 +207,15 @@ class MenuAccessTest extends BrowserTestBase {
     $this->assertUserRoutesAccess($childOnlyUser, [], $tree_routes);
     // A user that does not have access to the top level parent but has access
     // to all the other routes will have access to all routes except the parent
-    // and 'menu_test.child3_test_block', because it has no items underneath in the
-    // menu.
+    // and 'menu_test.child3_test_block', because it has no items underneath in
+    // the menu.
     $this->assertUserRoutesAccess(
       $noParentAccessUser,
-      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test_block', 'menu_test.child4_test_overview']),
+      array_diff($tree_routes, [
+        'menu_test.parent_test',
+        'menu_test.child3_test_block',
+        'menu_test.child4_test_overview',
+      ]),
       $tree_routes
     );
 
@@ -220,8 +225,12 @@ class MenuAccessTest extends BrowserTestBase {
       [],
       $tree_routes);
     $this->assertUserRoutesAccess(
-      $greatGrandChild1User,
-      ['menu_test.parent_test', 'menu_test.child1_test', 'menu_test.grand_child1_test'],
+      $greatGrandChild1User, [
+        'menu_test.parent_test',
+        'menu_test.child1_test',
+        'menu_test.grand_child1_test',
+        'menu_test.great_grand_child1_test',
+      ],
       $tree_routes);
     // Users who have only access to one grand child route should have access
     // only to that route and its parents.
