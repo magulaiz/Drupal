@@ -27,6 +27,8 @@
   set classes = [
     'taxonomy-term',
     'vocabulary-' ~ term.bundle|clean_class,
+    view_mode ? 'taxonomy-term--view-mode-' ~ view_mode|clean_class,
+    'taxonomy-term--' ~ term.bundle|clean_class ~ '--view-mode-' ~ view_mode|clean_class,
   ]
 %}
 <div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
