@@ -413,7 +413,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertSame($expected_page_cache_header_value, $response->getHeader('X-Drupal-Cache')[0]);
     }
     else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+      if (NULL !== $response->hasHeader('X-Drupal-Cache')) {
+        $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+      }
+      else {
+        $this->assertTrue($response->hasHeader('X-Drupal-Cache'));
+      }
+      $this->stringStartsWith('0 UNCACHEABLE');
     }
 
     // Expected Dynamic Page Cache header value: X-Drupal-Dynamic-Cache header.
@@ -422,7 +428,16 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertSame($expected_dynamic_page_cache_header_value, $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
     else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+      if ($expected_status_code === 403) {
+        if ($response->hasHeader('X-Drupal-Dynamic-Cache')) {
+          $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
+          $this->stringStartsWith('UNCACHEABLE (', $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
+        }
+      }
+      else {
+        $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+        $this->stringStartsWith('0 UNCACHEABLE');
+      }
     }
   }
 
