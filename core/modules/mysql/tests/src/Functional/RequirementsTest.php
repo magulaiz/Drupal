@@ -36,7 +36,16 @@ class RequirementsTest extends BrowserTestBase {
   }
 
   /**
-   * Test the isolation level warning message on status page.
+   * Test the isolation level is set to READ-COMMITTED.
+   */
+  public function testIsolationLevelReadCommitted() {
+    $connection = Database::getConnection();
+    $status = $connection->query('SELECT @@TX_ISOLATION')->fetchField();
+    $this->assertEquals('READ-COMMITTED', $status);
+  }
+
+  /**
+   * Test the isolation level doesn't display warning message on status page.
    */
   public function testIsolationLevelWarningNotDisplaying() {
     $admin_user = $this->drupalCreateUser([
@@ -44,22 +53,6 @@ class RequirementsTest extends BrowserTestBase {
       'access site reports',
     ]);
     $this->drupalLogin($admin_user);
-
-    // Set the isolation level to a level that produces a warning.
-    $this->writeIsolationLevelSettings('REPEATABLE READ');
-
-    // Check the message is not a warning.
-    $this->drupalGet('admin/reports/status');
-    $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
-      ':text' => 'For the best performance and to minimize locking issues, the READ-COMMITTED',
-    ]);
-    $this->assertCount(1, $elements);
-    $this->assertStringStartsWith('REPEATABLE-READ', $elements[0]->getParent()->getText());
-    // Ensure it is a warning.
-    $this->assertStringContainsString('warning', $elements[0]->getParent()->getParent()->find('css', 'summary')->getAttribute('class'));
-
-    // Rollback the isolation level to read committed.
-    $this->writeIsolationLevelSettings('READ COMMITTED');
 
     // Check the message is not a warning.
     $this->drupalGet('admin/reports/status');
