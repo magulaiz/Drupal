@@ -100,6 +100,16 @@ class ElementsLabelsTest extends BrowserTestBase {
   }
 
   /**
+   * Tests deprecated ability to set form element id as array.
+   *
+   * @group legacy
+   */
+  public function testFormIdAsArrayDeprecation() {
+    $this->drupalGet('form_test/form-labels/true');
+    $this->expectDeprecation('Providing IDs as an array is deprecated in drupal:9.5.0 and is removed in drupal:10.0.0. Only use string values for ID. See https://www.drupal.org/node/3307047');
+  }
+
+  /**
    * Tests XSS-protection of element labels.
    */
   public function testTitleEscaping() {
@@ -108,6 +118,30 @@ class ElementsLabelsTest extends BrowserTestBase {
       $this->assertSession()->responseContains("$type alert('XSS') is XSS filtered!");
       $this->assertSession()->responseNotContains("$type <script>alert('XSS')</script> is XSS filtered!");
     }
+  }
+
+  /**
+   * Tests that the label's 'for' element references the correct ID.
+   */
+  public function testLabelAssociation() {
+    $page = $this->getSession()->getPage();
+    $this->drupalGet('form_test/form-labels');
+
+    $elements = [];
+
+    $elements['id_set_with_property'] = $page->find('css', '.form-item-id-set-with-id-property');
+    $elements['id_set_in_attributes'] = $page->find('css', '.form-item-id-set-within-attributes');
+    foreach ($elements as $key => $wrapper) {
+      $this->assertNotNull($wrapper, "$key wrapper not found");
+      $label = $wrapper->find('css', 'label');
+      $input = $wrapper->find('css', 'input');
+      $this->assertNotNull($label, "$key label not found");
+      $this->assertNotNull($input, "$key input not found");
+      $for = $label->getAttribute('for');
+      $input = $input->getAttribute('id');
+      $this->assertSame($for, $input, "$key label for attribute does not match label id");
+    }
+
   }
 
   /**
