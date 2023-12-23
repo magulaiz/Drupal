@@ -596,7 +596,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * Updates the kernel module list.
    *
-   * @param array $module_filenames
+   * @param string[] $module_filenames
    *   The list of installed modules.
    */
   protected function updateKernel($module_filenames) {
