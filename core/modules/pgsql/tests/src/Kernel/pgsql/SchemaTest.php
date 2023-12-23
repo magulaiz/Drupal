@@ -414,7 +414,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       'EXPLAIN ' . $explain_query . ' WHERE test_field @> :json',
       [':json' => json_encode(['b' => 'value1'])]
     )->fetchCol());
-    $this->assertStringContainsString('Bitmap Index Scan', $explained);
+    // Ensure the auto-generated index is used.
+    $this->assertMatchesRegularExpression('/Bitmap Index Scan.*auto_gen_test_field/', $explained);
 
     // Postgres will automatically drop an orphaned index. Ensure no exception.
     $this->schema->dropField('test_json', 'test_field');

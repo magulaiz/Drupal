@@ -357,7 +357,8 @@ class Schema extends DatabaseSchema {
     // SQLite doesn't have a full-featured ALTER TABLE statement. It only
     // supports adding new fields to a table, in some simple cases. In most
     // cases, we have to create a new table and copy the data over.
-    if (empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
+    // JSON data type gets special handling due to automatic index creation.
+    if (empty($keys_new) && $specification['type'] !== 'json' && (empty($specification['not null']) || isset($specification['default']))) {
       // When we don't have to create new keys and we are not creating a
       // NOT NULL column without a default value, we can use the quicker version.
       $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));

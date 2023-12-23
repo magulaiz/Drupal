@@ -1411,6 +1411,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       'primary key' => ['id'],
     ]);
     $sourceValue = 'Generated fields are useful.';
+    $this->assertTrue($this->schema->fieldExists('with_generated', 'gen'));
     $this->connection->insert('with_generated')
       ->fields(['text_field' => $sourceValue])
       ->execute();
@@ -1456,8 +1457,16 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    * Tests JSON schema type.
    */
   protected function doTestJsonSchema(): void {
-    $this->schema->createTable('test_json', static::JSON_TABLE_SPECIFICATION);
+    $spec = static::JSON_TABLE_SPECIFICATION;
+    $this->schema->createTable('test_json', $spec);
     $this->assertTrue($this->schema->tableExists('test_json'), 'Table with database specific datatype was created.');
+
+    // Test ::fieldExists().
+    $this->assertTrue($this->schema->fieldExists('test_json', 'test_field'));
+
+    // Test simple index creation. Drivers supporting options should test them.
+    $this->schema->addIndex('test_json', 'test_simple_index', ['test_field'], $spec);
+    $this->schema->indexExists('test_json', 'test_simple_index');
 
     $this->connection->insert('test_json')
       ->fields([
