@@ -1467,6 +1467,14 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // Test simple index creation. Drivers supporting options should test them.
     $this->schema->addIndex('test_json', 'test_simple_index', ['test_field'], $spec);
     $this->schema->indexExists('test_json', 'test_simple_index');
+    // Leave this simple index in place so drivers must play nice with existing
+    // indexes which cover these fields.
+
+    // Ensure creating and then dropping an index on a JSON data field doesn't
+    // raise an exception.
+    $this->schema->addIndex('test_json', 'test_simple_index_2', ['test_field'], $spec);
+    $this->schema->indexExists('test_json', 'test_simple_index_2');
+    $this->schema->dropIndex('test_json', 'test_simple_index_2');
 
     $this->connection->insert('test_json')
       ->fields([
