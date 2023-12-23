@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\Block;
 use Drupal\Core\Url;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ViewExecutableFactory;
@@ -47,13 +46,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   protected $user;
 
   /**
-   * The module handler used to check whether menu_ui is installed.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a \Drupal\views\Plugin\Block\ViewsBlockBase object.
    *
    * @param array $configuration
@@ -68,10 +60,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *   The views storage.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler used to check whether views_ui is installed.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
     [$name, $this->displayID] = explode('-', $delta, 2);
@@ -80,7 +70,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
     $this->user = $user;
-    $this->moduleHandler = $module_handler;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -94,7 +83,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
       $container->get('views.executable'),
       $container->get('entity_type.manager')->getStorage('view'),
       $container->get('current_user'),
-      $container->get('module_handler')
     );
   }
 
@@ -243,27 +231,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    */
   public function getViewExecutable() {
     return $this->view;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperationLinks(): array {
-    $view = $this->view;
-    $display_id = $this->displayID;
-    $links = [];
-    // Check the current user has the appropriate permission to edit views.
-    if ($this->moduleHandler->moduleExists('views_ui') && $view->storage->access('edit')) {
-      $links['view-edit'] = [
-        'title' => $this->t('Edit view'),
-        'url' => Url::fromRoute('entity.view.edit_display_form', [
-          'view' => $view->id(),
-          'display_id' => $display_id,
-        ]),
-        'weight' => 50,
-      ];
-    }
-    return $links;
   }
 
 }

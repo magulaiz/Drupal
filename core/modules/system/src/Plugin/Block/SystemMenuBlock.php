@@ -12,8 +12,6 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Url;
-use Drupal\system\Entity\Menu;
 use Drupal\system\Form\SystemMenuOffCanvasForm;
 use Drupal\system\Plugin\Derivative\SystemMenuBlock as SystemMenuBlockDeriver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,14 +64,11 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *   The menu tree service.
    * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
    *   The active menu trail service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
-   *   The module handler used to check whether menu_ui is installed.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail, ModuleHandlerInterface $module_handler = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->menuTree = $menu_tree;
     $this->menuActiveTrail = $menu_active_trail;
-    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -86,7 +81,6 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $plugin_definition,
       $container->get('menu.link_tree'),
       $container->get('menu.active_trail'),
-      $container->get('module_handler'),
     );
   }
 
@@ -247,28 +241,6 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // accessibility of a menu, will be bubbled automatically.
     $menu_name = $this->getDerivativeId();
     return Cache::mergeContexts(parent::getCacheContexts(), ['route.menu_active_trails:' . $menu_name]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperationLinks(): array {
-    $menu_name = $this->getDerivativeId();
-
-    $links = [];
-    // Check the current user has the appropriate permission to edit menus.
-    if ($this->moduleHandler->moduleExists('menu_ui')) {
-      $menu = Menu::load($menu_name);
-      if ($menu->access('edit')) {
-        $links['menu-edit'] = [
-          'title' => $this->t('Edit menu'),
-          'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]),
-          'weight' => 50,
-        ];
-      }
-    }
-
-    return $links;
   }
 
 }

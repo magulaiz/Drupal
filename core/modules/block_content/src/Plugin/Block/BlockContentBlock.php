@@ -231,7 +231,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
         // later in \Drupal\block\BlockListBuilder.
         'url' => $custom_block->toUrl('edit-form')->setOptions([]),
         // Using this weight so this option appears at the top.
-        'weight' => -50,
+        'weight' => 50,
       ];
     }
     return $links;

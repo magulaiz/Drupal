@@ -6,6 +6,7 @@ use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
@@ -17,6 +18,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 class BlockContentTest extends KernelTestBase {
 
   use UserCreationTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -59,7 +61,7 @@ class BlockContentTest extends KernelTestBase {
 
     $links = $block->getOperationLinks();
     $block_link = [
-      'title' => 'Edit block',
+      'title' => $this->t('Edit block'),
       'url' => $block_content->toUrl('edit-form')->setOptions([]),
       'weight' => 50,
     ];
@@ -68,7 +70,7 @@ class BlockContentTest extends KernelTestBase {
     // have the "administer block" permission.
     $this->assertEmpty($links);
 
-    $this->setUpCurrentUser(['uid' => 2], ['edit any spiffy block content', 'administer block']);
+    $this->setUpCurrentUser(['uid' => 1], ['edit any spiffy block content', 'administer blocks']);
     $links = $block->getOperationLinks();
     // At this point, we are logged in as an admin, so the user does
     // have the "administer block" permission.

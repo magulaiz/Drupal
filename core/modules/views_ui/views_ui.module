@@ -5,7 +5,9 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\block\Entity\Block;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
@@ -347,4 +349,30 @@ function views_ui_truncate($string, $length) {
   }
 
   return $string;
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function views_ui_entity_operation(EntityInterface $entity) {
+  if (!$entity instanceof Block) {
+    return;
+  }
+
+  $operations = [];
+  if (str_contains($entity->id(), 'views_block')) {
+    if ($entity->access('edit')) {
+      $theme_position = strpos($entity->id(), '_');
+      // Remove theme name from ID.
+      $view_name =  substr($entity->id(), $theme_position + 1);
+      // Removed _menu from ID.
+      $operations['view-edit'] = [
+        'title' => t('Edit view'),
+        'url' => Url::fromRoute('entity.view.edit_display_form', ['view' => $view_name]),
+        'weight' => 50,
+      ];
+    }
+  }
+
+  return $operations;
 }

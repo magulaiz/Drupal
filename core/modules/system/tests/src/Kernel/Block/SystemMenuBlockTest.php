@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Block;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
@@ -28,6 +29,7 @@ use Drupal\Core\Url;
 class SystemMenuBlockTest extends KernelTestBase {
 
   use UserCreationTrait;
+  use StringTranslationTrait;
 
   /**
    * Modules to enable.
@@ -185,7 +187,7 @@ class SystemMenuBlockTest extends KernelTestBase {
 
     $links = $block->getOperationLinks();
     $menu_link = [
-      'title' => 'Edit menu',
+      'title' => $this->t('Edit menu'),
       'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $this->menu->id()]),
       'weight' => 50,
     ];
