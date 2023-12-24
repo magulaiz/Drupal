@@ -26,9 +26,9 @@ class BlockContentReusableIndexUpdatePathTest extends UpdatePathTestBase {
    */
   public function testRunUpdates(): void {
     $connection = Database::getConnection();
-    $this->assertFalse($connection->schema()->indexExists('block_content_field_data', 'block_content__reusable'), 'Block Content reusable index not yet added.');
+    $this->assertFalse($connection->schema()->indexExists('block_content_field_data', 'block_content_field__reusable'), 'Block Content reusable index not yet added.');
     $this->runUpdates();
-    $this->assertTrue($connection->schema()->indexExists('block_content_field_data', 'block_content__reusable'), 'Block Content reusable index has been added.');
+    $this->assertTrue($connection->schema()->indexExists('block_content_field_data', 'block_content_field__reusable'), 'Block Content reusable index has been added.');
   }
 
 }
