@@ -81,7 +81,7 @@ th {
         mask: url(../../images/icons/000f33/sort--inactive--ltr.svg) no-repeat 50% 50%;
       }
 
-      @nest [dir="rtl"] & {
+      [dir="rtl"] & {
         background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
 
         @media (forced-colors: active) {
@@ -137,11 +137,11 @@ td {
   padding: var(--space-xs) var(--space-m);
   text-align: start;
 
-  @nest & .item-list ul {
+  & .item-list ul {
     margin: 0;
   }
 
-  @nest &.is-active {
+  &.is-active {
     background: none;
   }
 }
