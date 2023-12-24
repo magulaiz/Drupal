@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\options\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
@@ -11,6 +13,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
  * Tests the Options field UI functionality.
  *
  * @group options
+ * @group #slow
  */
 class OptionsFieldUITest extends WebDriverTestBase {
 
@@ -397,7 +400,7 @@ JS;
    */
   private function assertHasFocusByAttribute(string $name, string $value): void {
     $active_element = $this->getSession()->evaluateScript('document.activeElement');
-    $this->assertSame($value, $active_element->getAttribute($name));
+    $this->assertSame($value, $active_element->attribute($name));
   }
 
   /**
