@@ -7,7 +7,6 @@ use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a test local action plugin class.
@@ -39,11 +38,9 @@ class TestLocalActionWithConfig extends LocalActionDefault {
    *   The route provider to load routes by name.
    * @param \Drupal\Core\Config\Config $config
    *   The 'menu_test.links.action' config.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The current request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, Config $config, RequestStack $requestStack) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $requestStack);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, Config $config) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider);
 
     $this->config = $config;
   }
@@ -58,7 +55,6 @@ class TestLocalActionWithConfig extends LocalActionDefault {
       $plugin_definition,
       $container->get('router.route_provider'),
       $container->get('config.factory')->get('menu_test.links.action'),
-      $container->get('request_stack')
     );
   }
 

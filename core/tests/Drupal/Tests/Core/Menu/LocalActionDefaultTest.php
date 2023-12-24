@@ -6,7 +6,6 @@ use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\Core\Menu\LocalActionDefault
@@ -59,13 +58,6 @@ class LocalActionDefaultTest extends UnitTestCase {
   protected $routeProvider;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -73,14 +65,13 @@ class LocalActionDefaultTest extends UnitTestCase {
 
     $this->stringTranslation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->requestStack = new RequestStack();
   }
 
   /**
    * Setups the local action default.
    */
   protected function setupLocalActionDefault() {
-    $this->localActionDefault = new LocalActionDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider, $this->requestStack);
+    $this->localActionDefault = new LocalActionDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider);
   }
 
   /**

@@ -52,7 +52,7 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('router.route_provider'),
+      $container->get('router.route_provider')
     );
   }
 
