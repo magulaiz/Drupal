@@ -7,7 +7,6 @@ use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Modifies the 'Add link' local action to add a destination.
@@ -34,11 +33,9 @@ class MenuLinkAdd extends LocalActionDefault {
    *   The route provider to load routes by name.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, RedirectDestinationInterface $redirect_destination, RequestStack $requestStack) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $requestStack);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, RedirectDestinationInterface $redirect_destination) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider);
 
     $this->redirectDestination = $redirect_destination;
   }
@@ -53,7 +50,6 @@ class MenuLinkAdd extends LocalActionDefault {
       $plugin_definition,
       $container->get('router.route_provider'),
       $container->get('redirect.destination'),
-      $container->get('request_stack'),
     );
   }
 

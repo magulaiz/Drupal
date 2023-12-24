@@ -72,7 +72,7 @@ class BlockContentListTest extends BlockContentTestBase {
   /**
    * Tests the region value when a new block is saved.
    */
-  public function testBlockRegionPlacement() {
+  public function testBlockRegionPlacement(): void {
     $this->drupalLogin($this->drupalCreateUser($this->permissions));
     $this->drupalGet("admin/structure/block/library/stark", ['query' => ['region' => 'content']]);
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginBase;
@@ -13,7 +11,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a default implementation for local action plugins.
@@ -21,6 +18,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class LocalActionDefault extends PluginBase implements LocalActionInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
 
   use DependencySerializationTrait;
+
+  /**
+   * The route provider to load routes by name.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
 
   /**
    * Constructs a LocalActionDefault object.
@@ -31,13 +35,13 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The current request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected RouteProviderInterface $routeProvider, protected RequestStack $requestStack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->routeProvider = $route_provider;
   }
 
   /**
@@ -49,7 +53,6 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('request_stack'),
     );
   }
 
