@@ -31,26 +31,11 @@ class RequirementsChecker {
     }
     // Check requirements.
     $requirements = $this->moduleHandler->invoke($module, 'requirements', ['install']);
-    if (!is_array($requirements) || $this->getMaxSeverity($requirements) !== REQUIREMENT_ERROR) {
+    if (!is_array($requirements) || RequirementsSeverity::getMaxSeverity($requirements) !== REQUIREMENT_ERROR) {
       return TRUE;
     }
     $this->printErrorMessages($requirements);
     return FALSE;
-  }
-
-  /**
-   * Returns the maximum severity of a set of requirements.
-   *
-   * @phpstan-param array<string, mixed> $requirements
-   */
-  public function getMaxSeverity(array $requirements): int {
-    $severity = REQUIREMENT_OK;
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity'])) {
-        $severity = max($severity, $requirement['severity']);
-      }
-    }
-    return $severity;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Extension\RequirementsSeverity;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
@@ -91,7 +92,7 @@ class SystemManager {
    */
   public function checkRequirements() {
     $requirements = $this->listRequirements();
-    return $this->getMaxSeverity($requirements) == static::REQUIREMENT_ERROR;
+    return RequirementsSeverity::getMaxSeverity($requirements) == static::REQUIREMENT_ERROR;
   }
 
   /**
@@ -130,15 +131,15 @@ class SystemManager {
    *
    * @return int
    *   The highest severity in the array.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\Core\Extension\RequirementsSeverity::getMaxSeverity() instead.
+   *
+   * @see https://www.drupal.org/node/3409874
    */
   public function getMaxSeverity(&$requirements) {
-    $severity = static::REQUIREMENT_OK;
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity'])) {
-        $severity = max($severity, $requirement['severity']);
-      }
-    }
-    return $severity;
+    @\trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\RequirementsSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3409874', \E_USER_DEPRECATED);
+    return RequirementsSeverity::getMaxSeverity($requirements);
   }
 
   /**
