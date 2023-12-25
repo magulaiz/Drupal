@@ -593,7 +593,7 @@ abstract class StylePluginBase extends PluginBase {
             if ($rendered) {
               $grouping = (string) $group_content;
               if ($rendered_strip) {
-                $group_content = $grouping = strip_tags(htmlspecialchars_decode($group_content));
+                $group_content = $grouping = strip_tags(htmlspecialchars_decode($grouping));
               }
             }
             else {
