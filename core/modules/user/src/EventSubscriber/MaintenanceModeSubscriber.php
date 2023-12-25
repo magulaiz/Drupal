@@ -6,7 +6,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\Url;
-use Drupal\user\UserSessionHandlerInterface;
+use Drupal\user\UserSessionHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -31,30 +31,22 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   protected $account;
 
   /**
-   * The user session handler.
-   *
-   * @var \Drupal\user\UserSessionHandlerInterface
-   */
-  protected UserSessionHandlerInterface $userSessionHandler;
-
-  /**
    * Constructs a new MaintenanceModeSubscriber.
    *
    * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
    *   The maintenance mode.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
+   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
    *   The user session handler.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account, UserSessionHandlerInterface $userSessionHandler = NULL) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account, protected ?UserSessionHandler $userSessionHandler = NULL) {
     $this->maintenanceMode = $maintenance_mode;
     $this->account = $account;
     if (!$userSessionHandler) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $userSessionHandler = \Drupal::service('user.session_handler');
+      $this->userSessionHandler = \Drupal::service('user.session_handler');
     }
-    $this->userSessionHandler = $userSessionHandler;
   }
 
   /**

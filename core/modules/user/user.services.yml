@@ -76,4 +76,4 @@ services:
   user.session_handler:
     class: Drupal\user\UserSessionHandler
     arguments: ['@current_user', '@request_stack', '@session_manager', '@entity_type.manager', '@module_handler', '@logger.channel.user', '@datetime.time']
-  Drupal\user\UserSessionHandlerInterface: '@user.session_handler'
+  Drupal\user\UserSessionHandler: '@user.session_handler'

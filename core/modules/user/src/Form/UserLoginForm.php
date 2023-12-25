@@ -9,7 +9,7 @@ use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserSessionHandlerInterface;
+use Drupal\user\UserSessionHandler;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserFloodControlInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,13 +57,6 @@ class UserLoginForm extends FormBase {
   protected $bareHtmlPageRenderer;
 
   /**
-   * The user session handler.
-   *
-   * @var \Drupal\user\UserSessionHandlerInterface
-   */
-  protected UserSessionHandlerInterface $userSessionHandler;
-
-  /**
    * Constructs a new UserLoginForm.
    *
    * @param \Drupal\user\UserFloodControlInterface $user_flood_control
@@ -76,20 +69,26 @@ class UserLoginForm extends FormBase {
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
-   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
+   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
    *   The user session handler.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer, UserSessionHandlerInterface $userSessionHandler = NULL) {
+  public function __construct(
+    UserFloodControlInterface $user_flood_control,
+    UserStorageInterface $user_storage,
+    UserAuthInterface $user_auth,
+    RendererInterface $renderer,
+    BareHtmlPageRendererInterface $bare_html_renderer,
+    protected ?UserSessionHandler $userSessionHandler = NULL,
+  ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
     if (!$userSessionHandler) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $userSessionHandler = \Drupal::service('user.session_handler');
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionHandler = \Drupal::service('user.session_handler');
     }
-    $this->userSessionHandler = $userSessionHandler;
   }
 
   /**

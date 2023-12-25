@@ -17,13 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RegisterForm extends AccountForm {
 
   /**
-   * The user session handler.
-   *
-   * @var \Drupal\user\UserSessionHandlerInterface
-   */
-  protected UserSessionHandlerInterface $userSessionHandler;
-
-  /**
    * Constructs a new EntityForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -34,16 +27,21 @@ class RegisterForm extends AccountForm {
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
+   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
    *   The user session handler.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, UserSessionHandlerInterface $userSessionHandler = NULL) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    LanguageManagerInterface $language_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    TimeInterface $time = NULL,
+    protected ?UserSessionHandler $userSessionHandler = NULL,
+  ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     if (!$userSessionHandler) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $userSessionHandler = \Drupal::service('user.session_handler');
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionHandler = \Drupal::service('user.session_handler');
     }
-    $this->userSessionHandler = $userSessionHandler;
   }
 
   /**

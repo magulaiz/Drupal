@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Handler for user sessions.
  */
-class UserSessionHandler implements UserSessionHandlerInterface {
+class UserSessionHandler {
 
   /**
    * Creates a new UserSessionHandler.

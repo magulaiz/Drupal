@@ -79,7 +79,7 @@ class LegacyUserTest extends KernelTestBase {
    * Tests the user_login_finalize() deprecation.
    */
   public function testUserLoginDeprecation(): void {
-    $this->expectDeprecation("user_login_finalize() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionHandlerInterface::login() instead. See https://www.drupal.org/node/3379194");
+    $this->expectDeprecation("user_login_finalize() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionHandler::login() instead. See https://www.drupal.org/node/3379194");
     $account = $this->createUser();
     user_login_finalize($account);
   }
@@ -88,7 +88,7 @@ class LegacyUserTest extends KernelTestBase {
    * Tests the user_logout() deprecation.
    */
   public function testUserLogoutDeprecation(): void {
-    $this->expectDeprecation("user_logout() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionHandlerInterface::logout() instead. See https://www.drupal.org/node/3379194");
+    $this->expectDeprecation("user_logout() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionHandler::logout() instead. See https://www.drupal.org/node/3379194");
     user_logout();
   }
 

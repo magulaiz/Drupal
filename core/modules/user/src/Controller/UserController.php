@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserSessionHandlerInterface;
+use Drupal\user\UserSessionHandler;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -75,7 +75,7 @@ class UserController extends ControllerBase {
    *   The flood service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
+   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
    *   The user session handler.
    */
   public function __construct(
@@ -85,7 +85,7 @@ class UserController extends ControllerBase {
     LoggerInterface $logger,
     FloodInterface $flood,
     protected ?TimeInterface $time = NULL,
-    protected ?UserSessionHandlerInterface $userSessionHandler = NULL,
+    protected ?UserSessionHandler $userSessionHandler = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;

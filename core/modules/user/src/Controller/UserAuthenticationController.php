@@ -9,7 +9,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserSessionHandlerInterface;
+use Drupal\user\UserSessionHandler;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -96,13 +96,6 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $logger;
 
   /**
-   * The user session handler.
-   *
-   * @var \Drupal\user\UserSessionHandlerInterface
-   */
-  protected UserSessionHandlerInterface $userSessionHandler;
-
-  /**
    * Constructs a new UserAuthenticationController object.
    *
    * @param \Drupal\user\UserFloodControlInterface $user_flood_control
@@ -121,10 +114,20 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\user\UserSessionHandlerInterface|null $userSessionHandler
+   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
    *   The user session handler.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats, LoggerInterface $logger, UserSessionHandlerInterface $userSessionHandler = NULL) {
+  public function __construct(
+    UserFloodControlInterface $user_flood_control,
+    UserStorageInterface $user_storage,
+    CsrfTokenGenerator $csrf_token,
+    UserAuthInterface $user_auth,
+    RouteProviderInterface $route_provider,
+    Serializer $serializer,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    protected ?UserSessionHandler $userSessionHandler = NULL,
+  ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->csrfToken = $csrf_token;
@@ -134,10 +137,9 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $this->routeProvider = $route_provider;
     $this->logger = $logger;
     if (!$userSessionHandler) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $userSessionHandler = \Drupal::service('user.session_handler');
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionHandler = \Drupal::service('user.session_handler');
     }
-    $this->userSessionHandler = $userSessionHandler;
   }
 
   /**
