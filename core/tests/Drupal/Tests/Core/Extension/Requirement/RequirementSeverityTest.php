@@ -31,17 +31,19 @@ class RequirementSeverityTest extends UnitTestCase {
    *   Test data.
    */
   public function requirementProvider() {
-    $info = Requirement::create()
-      ->setSeverity(RequirementSeverity::INFO)
-      ->setValue("Foo");
-    $warning = Requirement::create()
-      ->setSeverity(RequirementSeverity::WARNING)
-      ->setValue("Baz");
-    $error = Requirement::create()
-      ->setSeverity(RequirementSeverity::ERROR)
-      ->setValue("Baz");
-    $ok = Requirement::create()
-      ->setValue("Bar");
+    $info = new Requirement(
+      title: "Foo",
+      severity: RequirementSeverity::INFO,
+    );
+    $warning = new Requirement(
+      title: "Baz",
+      severity: RequirementSeverity::WARNING,
+    );
+    $error = new Requirement(
+      title: "Wiz",
+      severity: RequirementSeverity::ERROR,
+    );
+    $ok = new Requirement(title: "Bar");
     return [
       [
         [

@@ -10,36 +10,15 @@ namespace Drupal\Core\Extension\Requirement;
 final class Requirement implements \ArrayAccess {
 
   /**
-   * The requirement severity.
+   * Creates a new Requirement.
    */
-  protected RequirementSeverity $severity = RequirementSeverity::OK;
-
-  /**
-   * The requirement title.
-   */
-  protected string $title;
-
-  /**
-   * The requirement value.
-   */
-  protected string $value;
-
-  /**
-   * The requirement description.
-   */
-  protected string $description;
-
-  /**
-   * Create a new requirement.
-   */
-  public static function create(): Requirement {
-    return new Requirement();
-  }
-
-  /**
-   * This class should not be instantiated directly.
-   */
-  private function __construct() {}
+  public function __construct(
+    protected null|string|\Stringable $title = NULL,
+    protected null|string|\Stringable $value = NULL,
+    protected null|string|\Stringable $description = NULL,
+    protected RequirementSeverity $severity = RequirementSeverity::OK,
+    protected ?int $weight = NULL,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -52,6 +31,7 @@ final class Requirement implements \ArrayAccess {
       'title',
       'value',
       'severity',
+      'weight',
     ], TRUE);
   }
 
@@ -66,6 +46,7 @@ final class Requirement implements \ArrayAccess {
       'title' => $this->getTitle(),
       'value' => $this->getValue(),
       'severity' => $this->getSeverity(),
+      'weight' => $this->getWeight(),
       default => NULL,
     };
   }
@@ -73,14 +54,14 @@ final class Requirement implements \ArrayAccess {
   /**
    * Gets the description.
    */
-  public function getDescription(): string {
+  public function getDescription(): null|string|\Stringable {
     return $this->description;
   }
 
   /**
    * Sets the description.
    */
-  public function setDescription(?string $description): Requirement {
+  public function setDescription(null|string|\Stringable $description): Requirement {
     $this->description = $description;
     return $this;
   }
@@ -88,14 +69,14 @@ final class Requirement implements \ArrayAccess {
   /**
    * Gets the title.
    */
-  public function getTitle(): string {
+  public function getTitle(): null|string|\Stringable {
     return $this->title;
   }
 
   /**
    * Sets the title.
    */
-  public function setTitle(?string $title): Requirement {
+  public function setTitle(null|string|\Stringable $title): Requirement {
     $this->title = $title;
     return $this;
   }
@@ -103,14 +84,14 @@ final class Requirement implements \ArrayAccess {
   /**
    * Gets the value.
    */
-  public function getValue(): string {
+  public function getValue(): null|string|\Stringable {
     return $this->value;
   }
 
   /**
    * Sets the value.
    */
-  public function setValue(?string $value): Requirement {
+  public function setValue(null|string|\Stringable $value): Requirement {
     $this->value = $value;
     return $this;
   }
@@ -131,6 +112,21 @@ final class Requirement implements \ArrayAccess {
   }
 
   /**
+   * Gets the weight.
+   */
+  public function getWeight(): ?int {
+    return $this->weight;
+  }
+
+  /**
+   * Sets the weight.
+   */
+  public function setWeight(int $weight): Requirement {
+    $this->weight = $weight;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    *
    * This is for BC support only.
@@ -138,19 +134,23 @@ final class Requirement implements \ArrayAccess {
   public function offsetSet($offset, $value): void {
     switch ($offset) {
       case 'description':
-        $this->setDescription($value);
+        $this->description = $value;
         break;
 
       case 'title':
-        $this->setTitle($value);
+        $this->title = $value;
         break;
 
       case 'value':
-        $this->setValue($value);
+        $this->value = $value;
         break;
 
       case 'severity':
-        $this->setSeverity($value);
+        $this->severity = $value;
+        break;
+
+      case 'weight':
+        $this->weight = $value;
     }
   }
 
@@ -162,19 +162,23 @@ final class Requirement implements \ArrayAccess {
   public function offsetUnset($offset): void {
     switch ($offset) {
       case 'description':
-        $this->setDescription(NULL);
+        $this->description = NULL;
         break;
 
       case 'title':
-        $this->setTitle(NULL);
+        $this->title = NULL;
         break;
 
       case 'value':
-        $this->setValue(NULL);
+        $this->value = NULL;
         break;
 
       case 'severity':
-        $this->setSeverity(RequirementSeverity::OK);
+        $this->severity = RequirementSeverity::OK;
+        break;
+
+      case 'weight':
+        $this->weight = NULL;
     }
   }
 

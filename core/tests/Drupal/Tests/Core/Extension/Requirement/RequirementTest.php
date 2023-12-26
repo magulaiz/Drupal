@@ -14,18 +14,19 @@ use Drupal\Tests\UnitTestCase;
 class RequirementTest extends UnitTestCase {
 
   /**
-   * @covers ::create
+   * Tests array access BC layer.
    */
   public function testArrayAccess() {
-    $requirement = Requirement::create()
-      ->setTitle("Alice in Wonderland")
-      ->setDescription("It's no use going back to yesterday, because I was a different person then.")
-      ->setValue("small");
+    $requirement = new Requirement(
+      title: 'Alice in Wonderland',
+      value: 'small',
+      description: 'It\'s no use going back to yesterday, because I was a different person then.',
+    );
 
     // Test array access.
-    $this->assertEquals("Alice in Wonderland", $requirement['title']);
-    $this->assertEquals("It's no use going back to yesterday, because I was a different person then.", $requirement['description']);
-    $this->assertEquals("small", $requirement['value']);
+    $this->assertEquals('Alice in Wonderland', $requirement['title']);
+    $this->assertEquals('It\'s no use going back to yesterday, because I was a different person then.', $requirement['description']);
+    $this->assertEquals('small', $requirement['value']);
     $this->assertEquals(RequirementSeverity::OK, $requirement['severity']);
   }
 
