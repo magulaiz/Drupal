@@ -693,7 +693,7 @@
                 $(nextGroup.group)
                   .toArray()
                   .forEach((element) => {
-                    groupHeight += Drupal.elementmentIsHidden(element)
+                    groupHeight += Drupal.elementIsHidden(element)
                       ? 0
                       : element.offsetHeight;
                   });
