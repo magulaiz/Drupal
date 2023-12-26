@@ -10,10 +10,10 @@
  * Presentational styles for Drupal dialogs.
  */
 
- .ui-dialog {
+.ui-dialog {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   padding: 0;
   border: 0;
   border-radius: var(--jui-dialog-border-radius);
