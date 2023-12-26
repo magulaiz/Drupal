@@ -74,7 +74,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $this->displaySet = $this->view->setDisplay($this->displayID);
     $this->user = $user;
     if ($this->addContextualLinks === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $addContextualLinks argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2571679', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $addContextualLinks argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3382344', E_USER_DEPRECATED);
       $this->addContextualLinks = \Drupal::service('views.contextual_links');
     }
 
@@ -218,8 +218,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
         $output = ['#markup' => $output];
       }
 
-      // addLinks() needs the following information in
-      // order to be attached to the view.
+      // addLinks() needs the following information in order to be attached
+      // to the view.
       $output['#view_id'] = $this->view->storage->id();
       $output['#view_display_show_admin_links'] = $this->view->getShowAdminLinks();
       $output['#view_display_plugin_id'] = $this->view->display_handler->getPluginId();

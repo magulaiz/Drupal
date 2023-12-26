@@ -144,7 +144,7 @@ class ContextualLinks {
               }
             }
           }
-          // If the link was valid, attach information about it to the
+          // If the link is valid, attach information about it to the
           // renderable array.
           if ($valid) {
             $render_element['#views_contextual_links'] = TRUE;

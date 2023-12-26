@@ -85,8 +85,8 @@ class View extends RenderElement {
         }
 
         if (empty($view->display_handler->getPluginDefinition()['returns_response'])) {
-          // addLinks() needs the following information in
-          // order to be attached to the view.
+          // addLinks() needs the following information in order to be
+          // attached to the view.
           $element['#view_id'] = $view->storage->id();
           $element['#view_display_show_admin_links'] = $view->getShowAdminLinks();
           $element['#view_display_plugin_id'] = $view->display_handler->getPluginId();
