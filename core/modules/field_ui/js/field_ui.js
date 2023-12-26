@@ -222,8 +222,8 @@
       $(rowObject.table)
         .find('tr.region-message')
         .toArray()
-        .forEach((ele) => {
-          const $this = $(ele);
+        .forEach((element) => {
+          const $this = $(element);
           // If the dragged row is in this region, but above the message row, swap
           // it down one space.
           if (
@@ -236,7 +236,7 @@
               rowObject.method !== 'keyboard' ||
               rowObject.direction === 'down'
             ) {
-              rowObject.swap('after', ele);
+              rowObject.swap('after', element);
             }
           }
           // This region has become empty.
@@ -247,7 +247,7 @@
             $this.removeClass('region-populated').addClass('region-empty');
           }
           // This region has become populated.
-          else if (ele.matches('.region-empty')) {
+          else if (element.matches('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });

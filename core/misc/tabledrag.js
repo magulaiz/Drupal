@@ -241,8 +241,8 @@
     $table
       .find('> tr.draggable, > tbody > tr.draggable')
       .toArray()
-      .forEach((ele) => {
-        self.makeDraggable(ele);
+      .forEach((element) => {
+        self.makeDraggable(element);
       });
 
     const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
