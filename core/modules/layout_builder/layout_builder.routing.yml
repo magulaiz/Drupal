@@ -13,6 +13,7 @@ layout_builder.choose_section:
     _title: 'Choose a layout for this section'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -25,6 +26,7 @@ layout_builder.add_section:
     _controller: '\Drupal\layout_builder\Controller\AddSectionController::build'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -41,6 +43,7 @@ layout_builder.configure_section:
     plugin_id: null
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -53,6 +56,7 @@ layout_builder.remove_section:
     _form: '\Drupal\layout_builder\Form\RemoveSectionForm'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -66,6 +70,7 @@ layout_builder.choose_block:
     _title: 'Choose a block'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -79,6 +84,7 @@ layout_builder.add_block:
     _title: 'Configure block'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -92,6 +98,7 @@ layout_builder.choose_inline_block:
     _title: 'Add a new content block'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -105,6 +112,35 @@ layout_builder.update_block:
     _title: 'Configure block'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+layout_builder.translate_block:
+  path: '/layout_builder/translate/block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}/{langcode}'
+  defaults:
+    _form: '\Drupal\layout_builder\Form\TranslateBlockForm'
+    _title: 'Translate block'
+  requirements:
+    _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'translated'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+layout_builder.translate_inline_block:
+  path: '/layout_builder/translate/inline-block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}'
+  defaults:
+    _entity_form: 'block_content.layout_builder_translate'
+    _title: 'Translate block'
+  requirements:
+    _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'translated'
   options:
     _admin_route: TRUE
     parameters:
@@ -118,6 +154,7 @@ layout_builder.move_block_form:
     _form: '\Drupal\layout_builder\Form\MoveBlockForm'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
@@ -130,6 +167,7 @@ layout_builder.remove_block:
     _form: '\Drupal\layout_builder\Form\RemoveBlockForm'
   requirements:
     _layout_builder_access: 'view'
+    _layout_builder_translation_access: 'untranslated'
   options:
     _admin_route: TRUE
     parameters:
