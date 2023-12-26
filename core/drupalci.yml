@@ -1,6 +1,7 @@
 # This is the DrupalCI testbot build file for Drupal core.
 # Learn to make one for your own drupal.org project:
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
+# cspell:ignore noninteractive
 _phpunit_testgroups_to_execute: &testgroups
   # Default: all of Drupal core's test suite runs.
   testgroups: '--all'
@@ -12,6 +13,8 @@ build:
       # Run code quality checks.
       container_command.commit-checks:
         commands:
+          # Install rsync.
+          - DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y rsync
           - "core/scripts/dev/commit-code-check.sh --drupalci"
         halt-on-fail: true
       # run_tests task is executed several times in order of performance speeds.

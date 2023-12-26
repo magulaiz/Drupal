@@ -97,6 +97,7 @@ blockrelated
 blocktest
 bodyless
 boing
+bootable
 bovigo
 brion
 brotli
@@ -322,6 +323,7 @@ fieldlayout
 fieldlinks
 fieldnames
 fieldsets
+filedate
 filemime
 filesort
 filesystems
@@ -369,6 +371,7 @@ harkonnen
 hashmarks
 hateoas
 hexcode
+hhvm
 hilited
 hinode
 hippopotamidae
@@ -427,6 +430,7 @@ keypresses
 keyvalue
 killswitch
 kinberg
+kirk
 kitt
 kolkata
 kpresenter
@@ -659,6 +663,7 @@ presetname
 pretransaction
 preuninstall
 processlist
+proc_open
 proname
 prophesize
 prophesized
@@ -782,6 +787,8 @@ squiz
 squizlabs
 srcset
 ssess
+stage's
+stager's
 stardivision
 starterkit
 statuscode
@@ -839,6 +846,9 @@ suggestionnotimplemented
 sulaco
 supercede
 svgz
+syncer
+Syncer
+syncers
 synchronizable
 syrop
 tabbingmanager
@@ -982,6 +992,7 @@ unpublishes
 unpublishing
 unregisters
 unrendered
+unrequested
 unrevisionable
 unrouted
 unsanitized
@@ -991,6 +1002,7 @@ unserializes
 unserializing
 unsets
 unsetting
+unshallow
 unshortened
 unsimplified
 unsticky
@@ -999,6 +1011,7 @@ untarring
 untrustable
 unvalidated
 unwrapper
+unwritable
 upcasted
 upcasting
 updateprogress
