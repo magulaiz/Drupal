@@ -10,7 +10,6 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
-use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
@@ -103,20 +102,6 @@ class ConfigureVisibilityForm extends FormBase {
   protected $configuration;
 
   /**
-   * The context repository service.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
-   */
-  protected $contextRepository;
-
-  /**
-   * The class resolver service.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
    * Constructs a ConfigureVisibilityForm object.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
@@ -129,16 +114,13 @@ class ConfigureVisibilityForm extends FormBase {
    *   The plugin form manager.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
-   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
-   *   The context repository.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ConditionManager $condition_manager, UuidInterface $uuid_generator, PluginFormFactoryInterface $plugin_form_manager, ClassResolverInterface $class_resolver, ContextRepositoryInterface $context_repository) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ConditionManager $condition_manager, UuidInterface $uuid_generator, PluginFormFactoryInterface $plugin_form_manager, ClassResolverInterface $class_resolver) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
     $this->conditionManager = $condition_manager;
     $this->uuidGenerator = $uuid_generator;
     $this->pluginFormFactory = $plugin_form_manager;
     $this->classResolver = $class_resolver;
-    $this->contextRepository = $context_repository;
   }
 
   /**
@@ -150,8 +132,7 @@ class ConfigureVisibilityForm extends FormBase {
       $container->get('plugin.manager.condition'),
       $container->get('uuid'),
       $container->get('plugin_form.factory'),
-      $container->get('class_resolver'),
-      $container->get('context.repository')
+      $container->get('class_resolver')
     );
   }
 
