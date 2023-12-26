@@ -358,6 +358,8 @@ class ConfigSync extends FormBase {
           ];
           // Get config type from config name.
           $config_type = $this->configManager->getEntityTypeIdByName($config_name);
+          // Set config name url param.
+          $config_name_url_param = $config_name;
           // If config type not empty, remove config prefix from config name.
           if (!empty($config_type)) {
             $definition = $this->entityTypeManager->getDefinition($config_type);
@@ -370,7 +372,6 @@ class ConfigSync extends FormBase {
             // If config type is empty,
             // Then the config type should be simple configuration.
             $config_type = 'system.simple';
-            $config_name_url_param = $config_name;
           }
           // Add export config link.
           $links['export_config'] = [
