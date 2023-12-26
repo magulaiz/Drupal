@@ -48,14 +48,14 @@ class SectionComponentVisibility implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    // Run before BlockComponentRenderArray (priority 100), so that we can
-    // stop propagation and prevent rendering the component.
+    // Priority is set to 255 so this subscriber is run after the one in
+    // BlockComponentRenderArray.
     $events[LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY] = ['onBuildRender', 255];
     return $events;
   }
 
   /**
-   * Determines the visibility of section component.
+   * Determines the visibility of section components.
    *
    * @param \Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent $event
    *   The section component build render array event.
