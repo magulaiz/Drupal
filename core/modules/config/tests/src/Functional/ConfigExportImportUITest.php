@@ -174,6 +174,60 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('There is no staged configuration.');
     $this->assertSession()->pageTextContains($this->contentType->label());
 
+    // Check Export this config link.
+    // Simple configuration config entity export link.
+    $config_export_link = "admin/config/development/configuration/single/export/system.simple/system.site";
+
+    // Check Export this config link exist.
+    $this->assertSession()->linkByHrefExists($config_export_link);
+
+    // Xpath from link href.
+    $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $config_export_link]);
+
+    // Click export this config link.
+    $this->getSession()->getPage()->find('xpath', $xpath)->click();
+
+    // Check 'Simple configuration' config type option exists.
+    // In export single item page.
+    $option_config_type = $this->assertSession()->optionExists("config_type", 'Simple configuration');
+    // Verify 'Simple configuration' config type option is selected.
+    $this->assertTrue($option_config_type->isSelected());
+
+    // Check 'system.site' config option exist.
+    $option_config_name = $this->assertSession()->optionExists("config_name", "system.site");
+    // Verify 'system.site' config option is selected.
+    $this->assertTrue($option_config_name->isSelected());
+
+    // Return back to Configuration Synchronize main page.
+    $this->drupalGet('admin/config/development/configuration');
+
+    // Check export this config link.
+    // For configurations other than simple configuration.
+    $config_export_link = "admin/config/development/configuration/single/export/entity_form_display/node.{$this->contentType->label()}.default";
+
+    // Check Export this config link exist.
+    $this->assertSession()->linkByHrefExists($config_export_link);
+
+    // Xpath from link href.
+    $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $config_export_link]);
+
+    // Click export this config link.
+    $this->getSession()->getPage()->find('xpath', $xpath)->click();
+
+    // Check 'Entity form display' config type option exists.
+    // In export single item page.
+    $option_config_type = $this->assertSession()->optionExists("config_type", 'Entity form display');
+    // Verify 'Entity form display' config type option is selected.
+    $this->assertTrue($option_config_type->isSelected());
+
+    // Check 'node.<content type>.default' config option exist.
+    $option_config_name = $this->assertSession()->optionExists("config_name", "node.{$this->contentType->label()}.default");
+    // Verify 'node.<content type>.default' config option is selected.
+    $this->assertTrue($option_config_name->isSelected());
+
+    // Return back to Configuration Synchronize main page.
+    $this->drupalGet('admin/config/development/configuration');
+
     $this->submitForm([], 'Import all');
     // After importing the snapshot has been updated and there are no warnings.
     $this->assertSession()->pageTextNotContains('Warning message');
