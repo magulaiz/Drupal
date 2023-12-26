@@ -26,11 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldStorageAddForm extends FormBase {
 
   /**
-  * The flag for indicating a back operation.
-  */
-  const BACK_FLAG = 'Back';
-
-  /**
    * The name of the entity type.
    *
    * @var string
@@ -134,11 +129,8 @@ class FieldStorageAddForm extends FormBase {
     if (!$form_state->get('bundle')) {
       $form_state->set('bundle', $bundle);
     }
-    if (!$form_state->getValue('new_storage_type')  && $form_state->getValue('new_storage_type') !== self::BACK_FLAG) {
+    if (!$form_state->getValue('new_storage_type')) {
       $form_state->setValue('new_storage_type', $new_storage_type);
-    }
-    if ($form_state->getValue('new_storage_type') === self::BACK_FLAG) {
-      $form_state->setValue('new_storage_type', NULL);
     }
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
@@ -632,10 +624,12 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Submit handler for resetting the form.
    */
-  public static function startOver($form, FormStateInterface &$form_state) {
+  public function startOver($form, FormStateInterface &$form_state) {
     // Need to do this as the parameters for buildForm are retained on rebuild.
-    $form_state->setValue('new_storage_type', self::BACK_FLAG);
-    $form_state->setRebuild();
+    $entity_type_id = $this->entityTypeId;
+    $form_state->setRedirect("field_ui.field_storage_config_add_$entity_type_id", [
+      'node_type' => $this->bundle,
+    ]);
   }
 
 }
