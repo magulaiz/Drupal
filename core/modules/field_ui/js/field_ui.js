@@ -114,9 +114,9 @@
       $(table)
         .find('tr.draggable')
         .toArray()
-        .forEach((ele) => {
+        .forEach((element) => {
           // Extract server-side data for the row.
-          const row = ele;
+          const row = element;
           if (row.id in rowsData) {
             const data = rowsData[row.id];
             data.tableDrag = tableDrag;

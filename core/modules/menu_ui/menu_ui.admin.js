@@ -33,9 +33,9 @@
     $menu
       .find('input:checked')
       .toArray()
-      .forEach((ele) => {
+      .forEach((element) => {
         // Get the names of all checked menus.
-        values.push(Drupal.checkPlain(ele.value));
+        values.push(Drupal.checkPlain(element.value));
       });
 
     $.ajax({

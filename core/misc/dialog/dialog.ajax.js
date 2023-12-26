@@ -96,9 +96,9 @@
       const $buttons = $dialog.find(
         '.form-actions input[type=submit], .form-actions a.button, .form-actions a.action-link',
       );
-      $buttons.toArray().forEach((ele) => {
-        const $originalButton = $(ele);
-        ele.style.display = 'none';
+      $buttons.toArray().forEach((element) => {
+        const $originalButton = $(element);
+        element.style.display = 'none';
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),

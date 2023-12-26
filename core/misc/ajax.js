@@ -1421,9 +1421,9 @@
       const settings = response.settings || ajax.settings || drupalSettings;
       $(response.selector)
         .toArray()
-        .forEach((ele) => {
-          Drupal.detachBehaviors(ele, settings);
-          ele.remove();
+        .forEach((element) => {
+          Drupal.detachBehaviors(element, settings);
+          element.remove();
         });
     },
 

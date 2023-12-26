@@ -105,10 +105,10 @@
     $contextual
       .find('.contextual-links a')
       .toArray()
-      .forEach((ele) => {
-        const url = ele.getAttribute('href');
+      .forEach((element) => {
+        const url = element.getAttribute('href');
         const glue = url.includes('?') ? '&' : '?';
-        ele.setAttribute('href', url + glue + destination);
+        element.setAttribute('href', url + glue + destination);
       });
 
     let title = '';

@@ -45,8 +45,8 @@
             .find('input:checked')
             .next('label')
             .toArray()
-            .forEach((ele) => {
-              values.push(Drupal.checkPlain(ele.textContent.trim()));
+            .forEach((element) => {
+              values.push(Drupal.checkPlain(element.textContent.trim()));
             });
           return values.join(', ');
         }

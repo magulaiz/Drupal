@@ -46,8 +46,8 @@
       $context
         .find('.menu-link-form')
         .toArray()
-        .forEach((ele) => {
-          const $this = $(ele);
+        .forEach((element) => {
+          const $this = $(element);
           // Try to find menu settings widget elements as well as a 'title' field
           // in the form, but play nicely with user permissions and form
           // alterations.

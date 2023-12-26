@@ -22,8 +22,10 @@
           .find('input[name^="options"]:checked')
           .parent()
           .toArray()
-          .forEach((ele) => {
-            values.push(Drupal.checkPlain($(ele).find('label')[0].textContent));
+          .forEach((element) => {
+            values.push(
+              Drupal.checkPlain($(element).find('label')[0].textContent),
+            );
           });
         if ($(context).find('#edit-options-status:checked').length === 0) {
           values.unshift(Drupal.t('Not published'));
@@ -45,8 +47,8 @@
             .find('input:checked')
             .next('label')
             .toArray()
-            .forEach((ele) => {
-              values.push(Drupal.checkPlain(ele.textContent));
+            .forEach((element) => {
+              values.push(Drupal.checkPlain(element.textContent));
             });
 
           return values.join(', ');

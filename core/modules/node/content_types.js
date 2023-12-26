@@ -30,8 +30,8 @@
           .find('input[name^="options"]:checked')
           .next('label')
           .toArray()
-          .forEach((ele) => {
-            values.push(Drupal.checkPlain(ele.textContent));
+          .forEach((element) => {
+            values.push(Drupal.checkPlain(element.textContent));
           });
         if ($(context).find('#edit-options-status:checked').length === 0) {
           values.unshift(Drupal.t('Not published'));
@@ -51,8 +51,8 @@
         $('input:checked', context)
           .next('label')
           .toArray()
-          .forEach((ele) => {
-            values.push(Drupal.checkPlain(ele.textContent));
+          .forEach((element) => {
+            values.push(Drupal.checkPlain(element.textContent));
           });
 
         return values.join(', ');
@@ -64,8 +64,8 @@
           .find('input:checked')
           .next('label')
           .toArray()
-          .forEach((ele) => {
-            values.push(Drupal.checkPlain(ele.textContent));
+          .forEach((element) => {
+            values.push(Drupal.checkPlain(element.textContent));
           });
         if ($editContext.find('#edit-display-submitted:checked').length === 0) {
           values.unshift(Drupal.t("Don't display post information"));

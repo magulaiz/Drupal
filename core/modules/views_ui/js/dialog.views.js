@@ -14,26 +14,26 @@
       // Add a class to do some styles adjustments.
       $modal.closest('.views-ui-dialog').addClass('views-ui-dialog-scroll');
       // Let scroll element take all the height available.
-      $scroll.toArray().forEach((ele) => {
-        Object.assign(ele.style, {
+      $scroll.toArray().forEach((element) => {
+        Object.assign(element.style, {
           overflow: 'visible',
           height: 'auto',
         });
       });
       modalHeight = $modal.height();
-      $viewsOverride.toArray().forEach((ele) => {
-        offset += ele.offsetHeight;
+      $viewsOverride.toArray().forEach((element) => {
+        offset += element.offsetHeight;
       });
 
       // Take internal padding into account.
       const scrollOffset = $scroll.outerHeight() - $scroll.height();
       $scroll.height(modalHeight - offset - scrollOffset);
       // Reset scrolling properties.
-      $modal.toArray().forEach((ele) => {
-        ele.style.overflow = 'hidden';
+      $modal.toArray().forEach((element) => {
+        element.style.overflow = 'hidden';
       });
-      $scroll.toArray().forEach((ele) => {
-        ele.style.overflow = 'auto';
+      $scroll.toArray().forEach((element) => {
+        element.style.overflow = 'auto';
       });
     }
   }

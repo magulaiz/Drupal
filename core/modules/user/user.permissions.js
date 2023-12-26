@@ -84,14 +84,14 @@
       $row
         .find('.js-real-checkbox')
         .toArray()
-        .forEach((ele) => {
-          ele.style.display = authCheckbox.checked ? 'none' : '';
+        .forEach((element) => {
+          element.style.display = authCheckbox.checked ? 'none' : '';
         });
       $row
         .find('.js-dummy-checkbox')
         .toArray()
-        .forEach((ele) => {
-          ele.style.display = authCheckbox.checked ? '' : 'none';
+        .forEach((element) => {
+          element.style.display = authCheckbox.checked ? '' : 'none';
         });
     },
   };

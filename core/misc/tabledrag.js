@@ -441,22 +441,22 @@
     $tables
       .find('.tabledrag-hide')
       .toArray()
-      .forEach((ele) => {
-        ele.style.display = 'none';
+      .forEach((element) => {
+        element.style.display = 'none';
       });
     // Show TableDrag handles.
     $tables
       .find('.tabledrag-handle')
       .toArray()
-      .forEach((ele) => {
-        ele.style.display = '';
+      .forEach((element) => {
+        element.style.display = '';
       });
     // Reduce the colspan of any effected multi-span columns.
     $tables
       .find('.tabledrag-has-colspan')
       .toArray()
-      .forEach((ele) => {
-        ele.colSpan -= 1;
+      .forEach((element) => {
+        element.colSpan -= 1;
       });
   };
 
@@ -471,22 +471,22 @@
     $tables
       .find('.tabledrag-hide')
       .toArray()
-      .forEach((ele) => {
-        ele.style.display = '';
+      .forEach((element) => {
+        element.style.display = '';
       });
     // Hide TableDrag handles.
     $tables
       .find('.tabledrag-handle')
       .toArray()
-      .forEach((ele) => {
-        ele.style.display = 'none';
+      .forEach((element) => {
+        element.style.display = 'none';
       });
     // Increase the colspan for any columns where it was previously reduced.
     $tables
       .find('.tabledrag-has-colspan')
       .toArray()
-      .forEach((ele) => {
-        ele.colSpan += 1;
+      .forEach((element) => {
+        element.colSpan += 1;
       });
   };
 
@@ -692,10 +692,10 @@
               if (nextGroup) {
                 $(nextGroup.group)
                   .toArray()
-                  .forEach((ele) => {
-                    groupHeight += Drupal.elementIsHidden(ele)
+                  .forEach((element) => {
+                    groupHeight += Drupal.elementmentIsHidden(element)
                       ? 0
-                      : ele.offsetHeight;
+                      : element.offsetHeight;
                   });
                 const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
@@ -1192,21 +1192,21 @@
             $(targetElement)
               .find('option')
               .toArray()
-              .forEach((ele) => {
-                values.push(ele.value);
+              .forEach((element) => {
+                values.push(element.value);
               });
             const maxVal = values[values.length - 1];
             // Populate the values in the siblings.
             $(siblings)
               .find(targetClass)
               .toArray()
-              .forEach((ele) => {
+              .forEach((element) => {
                 // If there are more items than possible values, assign the
                 // maximum value to the row.
                 if (values.length > 0) {
-                  ele.value = values.shift();
+                  element.value = values.shift();
                 } else {
-                  ele.value = maxVal;
+                  element.value = maxVal;
                 }
               });
           } else {
@@ -1219,8 +1219,8 @@
             $(siblings)
               .find(targetClass)
               .toArray()
-              .forEach((ele) => {
-                ele.value = weight;
+              .forEach((element) => {
+                element.value = weight;
                 weight++;
               });
           }
