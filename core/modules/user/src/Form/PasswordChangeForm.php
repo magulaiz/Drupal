@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class UserPasswordChangeForm extends ContentEntityForm {
+class PasswordChangeForm extends ContentEntityForm {
 
   /**
    * The Password Hasher.
@@ -73,7 +73,7 @@ class UserPasswordChangeForm extends ContentEntityForm {
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
     $user = $this->currentUser();
-    $config = \Drupal::config('user.settings');
+    $config = $this->config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
     // Check for new account.

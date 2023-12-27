@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form controller for the user email forms.
  */
-class UserEmailChangeForm extends ContentEntityForm {
+class EmailChangeForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class UserEmailChangeForm extends ContentEntityForm {
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
     $user = $this->currentUser();
-    $config = \Drupal::config('user.settings');
+    $config = $this->config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
     // Account information.

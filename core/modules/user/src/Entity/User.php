@@ -43,8 +43,8 @@ use Drupal\user\UserInterface;
  *       "default" = "Drupal\user\ProfileForm",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",
  *       "register" = "Drupal\user\RegisterForm",
- *       "email" = "Drupal\user\Form\UserEmailChangeForm",
- *       "pass" = "Drupal\user\Form\UserPasswordChangeForm",
+ *       "email" = "Drupal\user\Form\EmailChangeForm",
+ *       "pass" = "Drupal\user\Form\PasswordChangeForm",
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },
