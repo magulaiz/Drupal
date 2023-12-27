@@ -25,4 +25,7 @@ function config_schema_test_config_schema_info_alter(&$definitions) {
   if (\Drupal::state()->get('config_schema_test_block_fully_validatable')) {
     $definitions['block.block.*']['constraints']['FullyValidatable'] = NULL;
   }
+  else {
+    unset($definitions['block.block.*']['constraints']);
+  }
 }

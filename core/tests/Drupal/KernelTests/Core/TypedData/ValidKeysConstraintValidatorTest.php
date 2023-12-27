@@ -34,12 +34,12 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     parent::setUp();
     // Install the Block module and create a Block config entity, so that we can
     // test that the validator infers the required keys from a defined schema.
-    $this->enableModules(['system', 'block', 'config_schema_test']);
-    // Also install the block_test_fully_validatable module, to enable using
-    // Block config entities as the example in the test cases below. The opt-in
-    // aspect is already tested in
+    $this->enableModules(['system', 'block']);
+    // Also install the config_schema_test module, to enable testing with
+    // config entities as the example in the test cases below, simulating both
+    // possible schema states: fully validatable and not fully validatable.
     // @see \Drupal\KernelTests\Config\Schema\MappingTest::testMappingInterpretations()
-    \Drupal::state()->set('config_schema_test_block_fully_validatable', TRUE);
+    $this->enableModules(['config_schema_test']);
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['stark']);
@@ -122,9 +122,18 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests detecting missing required keys.
    *
+   * @testWith [true, {"settings": "'label_display' is a required key."}]
+   *           [false, {}]
+   *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$missingRequiredKeyMessage
    */
-  public function testRequiredKeys(): void {
+  public function testRequiredKeys(bool $block_is_fully_validatable, array $expected_validation_errors): void {
+    // Set or unset the `FullyValidatable` constraint on `block.block.*`.
+    \Drupal::state()->set('config_schema_test_block_fully_validatable', $block_is_fully_validatable);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->config = $this->container->get('config.typed')
+      ->get('block.block.branding');
+
     // Start from the valid config.
     $this->assertEmpty($this->config->validate());
 
@@ -139,19 +148,24 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // are required to set it: see `type: block_settings`.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertValidationErrors('block.block.branding', $data,
-      [
-        'settings' => "'label_display' is a required key.",
-      ],
-    );
+    $this->assertValidationErrors('block.block.branding', $data, $expected_validation_errors);
   }
 
   /**
    * Tests detecting missing dynamically required keys.
    *
+   * @testWith [true, {"settings": "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block)."}]
+   *           [false, {}]
+   *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMissingRequiredKeyMessage
    */
-  public function testDynamicallyRequiredKeys(): void {
+  public function testDynamicallyRequiredKeys(bool $block_is_fully_validatable, array $expected_validation_errors): void {
+    // Set or unset the `FullyValidatable` constraint on `block.block.*`.
+    \Drupal::state()->set('config_schema_test_block_fully_validatable', $block_is_fully_validatable);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->config = $this->container->get('config.typed')
+      ->get('block.block.branding');
+
     // Start from the valid config.
     $this->assertEmpty($this->config->validate());
 
@@ -166,20 +180,25 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // all block plugins support this key in their configuration.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertValidationErrors('block.block.branding', $data,
-      [
-        'settings' => "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
-      ],
-    );
+    $this->assertValidationErrors('block.block.branding', $data, $expected_validation_errors);
   }
 
   /**
    * Tests detecting both unknown and required keys.
    *
+   * @testWith [true, ["'primary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).", "'secondary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block)."]]
+   *           [false, []]
+   *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMissingRequiredKeyMessage
    */
-  public function testBothUnknownAndDynamicallyRequiredKeys(): void {
+  public function testBothUnknownAndDynamicallyRequiredKeys(bool $block_is_fully_validatable, array $additional_expected_validation_errors): void {
+    // Set or unset the `FullyValidatable` constraint on `block.block.*`.
+    \Drupal::state()->set('config_schema_test_block_fully_validatable', $block_is_fully_validatable);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->config = $this->container->get('config.typed')
+      ->get('block.block.branding');
+
     // Start from the valid config.
     $this->assertEmpty($this->config->validate());
 
@@ -199,8 +218,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
           "'use_site_logo' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
           "'use_site_name' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
           "'use_site_slogan' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
-          "'primary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
-          "'secondary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+          ...$additional_expected_validation_errors,
         ],
       ],
     );
@@ -331,6 +349,11 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
    * Tests ValidKeys constraint validator detecting optional keys.
    */
   public function testMarkedAsOptional(): void {
+    \Drupal::state()->set('config_schema_test_block_fully_validatable', TRUE);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->config = $this->container->get('config.typed')
+      ->get('block.block.branding');
+
     $violations = $this->config->validate();
     $this->assertCount(0, $violations);
 
