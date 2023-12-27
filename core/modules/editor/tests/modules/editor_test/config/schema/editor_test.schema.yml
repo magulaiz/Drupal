@@ -3,6 +3,8 @@
 editor.settings.unicorn:
   type: mapping
   label: 'Unicorn settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     ponies_too:
       type: boolean

@@ -24,6 +24,8 @@ editor.editor.*:
 editor.image_upload_settings.*:
   type: mapping
   label: 'Image upload settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     status:
       type: boolean
@@ -31,6 +33,8 @@ editor.image_upload_settings.*:
 
 editor.image_upload_settings.1:
   type: editor.image_upload_settings.*
+  constraints:
+    FullyValidatable: ~
   mapping:
     scheme:
       type: string
