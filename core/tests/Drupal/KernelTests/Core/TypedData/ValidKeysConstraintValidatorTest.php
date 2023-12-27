@@ -4,8 +4,8 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
@@ -19,11 +19,13 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
   /**
-   * The config under test.
+   * The typed config under test.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\TypedData\TraversableTypedDataInterface
+   *
+   * @see \Drupal\Core\Config\TypedConfigManagerInterface::get()
    */
-  protected $config;
+  protected TraversableTypedDataInterface $config;
 
   /**
    * {@inheritdoc}
@@ -68,7 +70,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests ValidKeys constraint validator detecting unsupported keys.
+   * Tests detecting unsupported keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$invalidKeyMessage
    */
@@ -76,29 +78,49 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // Start from the valid config.
     $this->assertEmpty($this->config->validate());
 
-    // Then modify only one thing: generate a non-existent `label_display`
-    // setting.
+    // Then modify only one thing: generate a non-existent `foobar` setting.
     $data = $this->config->toArray();
     $data['settings']['foobar'] = TRUE;
-    $this->config = $this->container->get('config.typed')
-      ->createFromNameAndData('block.block.branding', $data);
-
-    // Now 1 validation error should be triggered: one for the unsupported key.
-    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
-    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
+    $this->assertValidationErrors('block.block.branding', $data,
+      // Now 1 validation error should be triggered: one for the unsupported key.
+      // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+      // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
       [
-        "'foobar' is not a supported key.",
+        'settings.foobar' => "'foobar' is not a supported key.",
       ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
     );
   }
 
   /**
-   * Tests ValidKeys constraint validator detecting missing required keys.
+   * Tests detecting unknown keys.
+   *
+   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
+   */
+  public function testUnknownKeys(): void {
+    // Start from the valid config.
+    $this->assertEmpty($this->config->validate());
+
+    // Then modify only one thing: the block plugin that is being used.
+    $data = $this->config->toArray();
+    $data['plugin'] = 'system_powered_by_block';
+    $this->assertValidationErrors('block.block.branding', $data,
+      // Now 3 validation errors should be triggered: one for each of the
+      // settings that exist in the "branding" block but not the "powered by"
+      // block.
+      // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
+      // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
+      [
+        'settings' => [
+          "'use_site_logo' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+          "'use_site_name' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+          "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
+        ],
+      ],
+    );
+  }
+
+  /**
+   * Tests detecting missing required keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$missingRequiredKeyMessage
    */
@@ -117,51 +139,15 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // are required to set it: see `type: block_settings`.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
+    $this->assertValidationErrors('block.block.branding', $data,
       [
-        "'label_display' is a required key.",
+        'settings' => "'label_display' is a required key.",
       ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
     );
   }
 
   /**
-   * Tests ValidKeys constraint validator detecting unknown keys.
-   *
-   * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
-   */
-  public function testUnknownKeys(): void {
-    // Start from the valid config.
-    $this->assertEmpty($this->config->validate());
-
-    // Then modify only one thing: the block plugin that is being used.
-    $data = $this->config->toArray();
-    $data['plugin'] = 'system_powered_by_block';
-    $this->config = $this->container->get('config.typed')
-      ->createFromNameAndData('block.block.branding', $data);
-
-    // Now 3 validation errors should be triggered: one for each of the settings
-    // that exist in the "branding" block but not the "powered by" block.
-    // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
-    // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
-      [
-        "'use_site_logo' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-        "'use_site_name' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-        "'use_site_slogan' is an unknown key because plugin is system_powered_by_block (see config schema type block.settings.*).",
-      ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
-    );
-  }
-
-  /**
-   * Tests ValidKeys detecting missing dynamically required keys.
+   * Tests detecting missing dynamically required keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMissingRequiredKeyMessage
    */
@@ -180,19 +166,15 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // all block plugins support this key in their configuration.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
+    $this->assertValidationErrors('block.block.branding', $data,
       [
-        "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
+        'settings' => "'use_site_name' is a required key because plugin is system_branding_block (see config schema type block.settings.system_branding_block).",
       ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
     );
   }
 
   /**
-   * Tests ValidKeys constraint validator detecting unknown and required keys.
+   * Tests detecting both unknown and required keys.
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicMissingRequiredKeyMessage
@@ -211,18 +193,16 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // that exist in the "branding" block but not the "powered by" block.
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
-    $this->assertSame(
-      [
-        "'use_site_logo' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
-        "'use_site_name' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
-        "'use_site_slogan' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
-        "'primary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
-        "'secondary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+    $this->assertValidationErrors('block.block.branding', $data,
+     [
+       'settings' => [
+          "'use_site_logo' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+          "'use_site_name' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+          "'use_site_slogan' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+          "'primary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+          "'secondary' is a required key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
+        ],
       ],
-      array_map(
-        fn (ConstraintViolation $v) => (string) $v->getMessage(),
-        iterator_to_array($this->config->validate()),
-      )
     );
   }
 
@@ -285,6 +265,17 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       'south' => 'Atlanta',
       'west' => 'San Francisco',
     ];
+    $violations = $typed_config->create(clone $definition, $value)->validate();
+    $this->assertCount(0, $violations);
+
+    // If, in the mapping definition, some keys do NOT have
+    // `requiredKey: false` set, then they MUST be set. In other
+    // words, all keys are required unless they individually
+    // specify otherwise.
+    // First test without changing the value: no error should occur because all
+    // keys passed to the ValidKeys constraint have a value.
+    unset($definition['mapping']['south']['requiredKey']);
+    unset($definition['mapping']['east']['requiredKey']);
     $violations = $typed_config->create(clone $definition, $value)->validate();
     $this->assertCount(0, $violations);
 
@@ -354,13 +345,53 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     $this->config->setValue($data);
     $violations = $this->config->validate();
     $this->assertCount(1, $violations);
-    $this->assertSame("'status' is a required key.", (string) $violations->get(0)->getMessage());
+    $this->assertSame("'status' is a required key.", (string) $violations->get(0)
+      ->getMessage());
 
     // Unless a key is explicitly marked as optional.
     $mapping['status']['requiredKey'] = FALSE;
     $this->config->getDataDefinition()['mapping'] = $mapping;
     $violations = $this->config->validate();
     $this->assertCount(0, $violations);
+  }
+
+  /**
+   * Asserts a set of validation errors is raised when the config is validated.
+   *
+   * @param string $config_name
+   *   The machine name of the configuration.
+   * @param array $config_data
+   *   The data associated with the configuration. Note: This configuration
+   *   doesn't yet have to be stored.
+   * @param array<string, string|string[]> $expected_messages
+   *   The expected validation error messages. Keys are property paths, values
+   *   are the expected messages: a string if a single message is expected, an
+   *   array of strings if multiple are expected.
+   */
+  protected function assertValidationErrors(string $config_name, array $config_data, array $expected_messages): void {
+    $violations = $this->container->get('config.typed')
+      ->createFromNameAndData($config_name, $config_data)
+      ->validate();
+
+    $actual_messages = [];
+    foreach ($violations as $violation) {
+      $property_path = $violation->getPropertyPath();
+
+      if (!isset($actual_messages[$property_path])) {
+        $actual_messages[$property_path] = (string) $violation->getMessage();
+      }
+      else {
+        // Transform value from string to array.
+        if (is_string($actual_messages[$property_path])) {
+          $actual_messages[$property_path] = (array) $actual_messages[$violation->getPropertyPath()];
+        }
+        // And append.
+        $actual_messages[$property_path][] = (string) $violation->getMessage();
+      }
+    }
+    ksort($expected_messages);
+    ksort($actual_messages);
+    $this->assertSame($expected_messages, $actual_messages);
   }
 
 }
