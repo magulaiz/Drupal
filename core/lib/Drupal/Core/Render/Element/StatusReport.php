@@ -39,8 +39,8 @@ class StatusReport extends RenderElementBase {
     foreach ($element['#requirements'] as $key => $requirement) {
       $severity = $severities[RequirementSeverity::INFO->value];
       if (isset($requirement['severity'])) {
-        $requirement_severity = (int) $requirement['severity'] === RequirementSeverity::OK ? RequirementSeverity::INFO : (int) $requirement['severity'];
-        $severity = $severities[$requirement_severity];
+        $requirement_severity = $requirement['severity'] === RequirementSeverity::OK ? RequirementSeverity::INFO : $requirement['severity'];
+        $severity = $severities[$requirement_severity->value];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
         $severity = $severities[RequirementSeverity::OK->value];
