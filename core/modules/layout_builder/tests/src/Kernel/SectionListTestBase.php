@@ -101,7 +101,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @covers ::getSection
    */
   public function testGetSectionInvalidUuid() {
-    $this->expectException(\Exception::class);
+    $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid uuid "uuid"');
     $this->sectionList->getSection('uuid');
   }
@@ -112,7 +112,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @group legacy
    */
   public function testGetSectionWithDelta() {
-    $this->expectException(\Exception::class);
+    $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid uuid "0"');
     $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886');
     $this->sectionList->getSection(0);

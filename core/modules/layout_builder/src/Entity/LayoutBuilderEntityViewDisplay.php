@@ -101,7 +101,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   public function getSections(bool $key_by_uuid = FALSE) {
     $sections = $this->getThirdPartySetting('layout_builder', 'sections', []);
-    if ($key_by_uuid) {
+    if ($key_by_uuid || empty($sections)) {
       return $sections;
     }
     else {
