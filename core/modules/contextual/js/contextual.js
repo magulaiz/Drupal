@@ -212,8 +212,10 @@
       // for each of the placeholders.
       if (uncachedIDs.length > 0) {
         const params = new URLSearchParams();
-        params.append('ids[]', uncachedIDs);
-        params.append('tokens[]', uncachedTokens);
+        uncachedIDs.forEach((id, index) => {
+          params.append(`ids[]`, id);
+          params.append(`tokens[]`, uncachedTokens[index]);
+        });
         (async () => {
           const response = await fetch(Drupal.url('contextual/render'), {
             method: 'POST',
