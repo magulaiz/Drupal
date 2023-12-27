@@ -28,4 +28,12 @@ function config_schema_test_config_schema_info_alter(&$definitions) {
   else {
     unset($definitions['block.block.*']['constraints']);
   }
+
+  // @see \Drupal\Tests\node\Kernel\NodeTypeValidationTest::testThirdPartySettingsMenuUi()
+  if (\Drupal::state()->get('config_schema_test_menu_ui_third_party_settings_fully_validatable')) {
+    $definitions['node.type.*.third_party.menu_ui']['constraints']['FullyValidatable'] = NULL;
+  }
+  else {
+    unset($definitions['node.type.*.third_party.menu_ui']['constraints']);
+  }
 }
