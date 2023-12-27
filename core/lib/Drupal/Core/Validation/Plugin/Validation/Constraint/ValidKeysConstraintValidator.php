@@ -6,6 +6,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
+use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -101,6 +102,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // `FullyValidatable` as a top-level validation constraint.
     // @see https://www.drupal.org/node/3364108
     // @see https://www.drupal.org/node/3364109
+    $root_type = $this->context->getObject()->getRoot()->getDataDefinition()->getDataType();
     $root_type_has_opted_in = FALSE;
     foreach ($this->context->getObject()->getRoot()->getConstraints() as $c) {
       if ($c instanceof FullyValidatableConstraint) {
@@ -112,6 +114,41 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
     // required.
     if (!$root_type_has_opted_in) {
       return;
+    }
+    // If this is a dynamically typed property path, then not only must the
+    // (absolute) root type be considered, but also the (relative) static root
+    // type: the resolved type.
+    // For example, `block.block.*:settings` has a dynamic type defined:
+    // `block.settings.[%parent.plugin]`, but `block.block.*:plugin` does not.
+    // Consequently, the value at the `plugin` property path depends only on the
+    // `block.block.*` config schema type and hence only that config schema type
+    // must have the `FullyValidatable` constraint, because it defines which
+    // keys are required.
+    // In contrast, the `block.block.*:settings` property path depends on
+    // whichever dynamic type `block.settings.[%parent.plugin]` resolved to, to
+    // be able to know which keys are required. Therefore that resolved type
+    // determines which keys are required and whether it is fully validatable.
+    // So for example the `block.settings.system_branding_block` config schema
+    // type would also need to have the `FullyValidatable` constraint to
+    // consider its schema-defined keys to be required:
+    // - use_site_logo
+    // - use_site_name
+    // - use_site_slogan
+    $static_type_root = TypedConfigManager::getStaticTypeRoot($this->context->getObject());
+    $static_type_root_type = $static_type_root->getDataDefinition()->getDataType();
+    if ($root_type !== $static_type_root_type) {
+      $root_type_has_opted_in = FALSE;
+      foreach ($static_type_root->getConstraints() as $c) {
+        if ($c instanceof FullyValidatableConstraint) {
+          $root_type_has_opted_in = TRUE;
+          break;
+        }
+      }
+      // Return early: do not generate validation errors for keys that are
+      // required.
+      if (!$root_type_has_opted_in) {
+        return;
+      }
     }
 
     $required_keys = array_intersect($mapping->getRequiredKeys(), $constraint->getAllowedKeys($this->context));
