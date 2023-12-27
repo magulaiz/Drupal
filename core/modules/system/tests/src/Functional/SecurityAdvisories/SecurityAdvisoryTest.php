@@ -141,10 +141,10 @@ class SecurityAdvisoryTest extends BrowserTestBase {
 
     // If both PSA and non-PSA advisories are displayed they should be displayed
     // as errors.
-    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::ERROR);
+    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::ERROR->value);
     // The advisories will be displayed on admin pages if the response was
     // stored from the status report request.
-    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::ERROR);
+    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::ERROR->value);
 
     // Confirm that a user without the correct permission will not see the
     // advisories on admin pages.
@@ -160,8 +160,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->drupalLogin($this->user);
     // Test cache.
     AdvisoryTestClientMiddleware::setTestEndpoint($this->nonWorkingEndpoint);
-    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::ERROR);
-    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::ERROR);
+    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::ERROR->value);
+    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::ERROR->value);
 
     // Tests transmit errors with a JSON endpoint.
     $this->tempStore->delete('advisories_response');
@@ -229,7 +229,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   private function assertAdminPageLinks(array $expected_link_texts, int $error_or_warning): void {
     $assert = $this->assertSession();
     $this->drupalGet(Url::fromRoute('system.admin'));
-    if ($error_or_warning === RequirementSeverity::ERROR) {
+    if ($error_or_warning === RequirementSeverity::ERROR->value) {
       $assert->pageTextContainsOnce('Error message');
       $assert->pageTextNotContains('Warning message');
     }
@@ -255,7 +255,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   private function assertStatusReportLinks(array $expected_link_texts, int $error_or_warning): void {
     $this->drupalGet(Url::fromRoute('system.status'));
     $assert = $this->assertSession();
-    $selector = 'h3#' . ($error_or_warning === RequirementSeverity::ERROR ? 'error' : 'warning')
+    $selector = 'h3#' . ($error_or_warning === RequirementSeverity::ERROR->value ? 'error' : 'warning')
       . ' ~ details.system-status-report__entry:contains("Critical security announcements")';
     $assert->elementExists('css', $selector);
     foreach ($expected_link_texts as $expected_link_text) {
