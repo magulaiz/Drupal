@@ -361,8 +361,9 @@ class ConfigSync extends FormBase {
           // Set config name URL parameter.
           $config_name_url_param = $config_name;
 
-          // If config type is not empty, remove config prefix from config name.
-          if (!empty($config_type)) {
+          // If config type is not empty and is not 'system.simple',
+          // Remove config prefix from config name.
+          if (!empty($config_type) && $config_type != 'system.simple') {
             $definition = $this->entityTypeManager->getDefinition($config_type);
             $config_prefix = $definition->getConfigPrefix() . ".";
             // Check if config name starts with the config prefix.
