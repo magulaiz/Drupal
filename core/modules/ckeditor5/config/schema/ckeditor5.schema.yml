@@ -3,8 +3,6 @@
 editor.settings.ckeditor5:
   type: mapping
   label: 'CKEditor 5 settings'
-  constraints:
-    FullyValidatable: ~
   mapping:
     toolbar:
       type: mapping
@@ -27,6 +25,7 @@ editor.settings.ckeditor5:
       sequence:
         type: ckeditor5.plugin.[%key]
   constraints:
+    FullyValidatable: ~
     # Each enabled CKEditor 5 plugin that implements \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface
     # must exist in here.
     CKEditor5EnabledConfigurablePlugins: []
