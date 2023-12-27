@@ -194,8 +194,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
     // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
     $this->assertValidationErrors('block.block.branding', $data,
-     [
-       'settings' => [
+      [
+        'settings' => [
           "'use_site_logo' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
           "'use_site_name' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
           "'use_site_slogan' is an unknown key because plugin is local_tasks_block (see config schema type block.settings.local_tasks_block).",
