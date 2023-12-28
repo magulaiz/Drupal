@@ -72,8 +72,11 @@ trait FieldUiTestTrait {
     }
     $this->submitForm($initial_edit, 'Continue');
     // Assert that the field is not created.
+    $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
       $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
+      // Test Breadcrumbs.
+      $this->getSession()->getPage()->findLink($label);
 
       // Ensure that each array key in $storage_edit is prefixed with field_storage.
       $prefixed_storage_edit = [];
@@ -200,6 +203,21 @@ trait FieldUiTestTrait {
   }
 
   /**
+   * Asserts that the field doesn't exist in the overview form.
+   *
+   * @param string $bundle_path
+   *   The bundle path.
+   * @param string $label
+   *   The field label.
+   */
+  protected function assertFieldDoesNotExist(string $bundle_path, string $label) {
+    $original_url = $this->getUrl();
+    $this->drupalGet(explode('/fields', $bundle_path)[0] . '/fields');
+    $this->assertFieldDoesNotExistOnOverview($label);
+    $this->drupalGet($original_url);
+  }
+
+  /**
    * Asserts that the field appears on the overview form.
    *
    * @param string $label
@@ -216,6 +234,21 @@ trait FieldUiTestTrait {
     if ($element === NULL) {
       throw new ElementNotFoundException($this->getSession()->getDriver(), 'form field', 'label', $label);
     }
+  }
+
+  /**
+   * Asserts that the field does not appear on the overview form.
+   *
+   * @param string $label
+   *   The field label.
+   */
+  protected function assertFieldDoesNotExistOnOverview(string $label) {
+    $xpath = $this->assertSession()
+      ->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
+        ':label' => $label,
+      ]);
+    $element = $this->getSession()->getPage()->find('xpath', $xpath);
+    $this->assertSession()->assert($element === NULL, sprintf('A field "%s" appears on this page, but it should not.', $label));
   }
 
 }
