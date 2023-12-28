@@ -67,11 +67,10 @@ class StatisticsLastUpdated extends Date {
       // @todo Lookup changed field in keys https://www.drupal.org/node/2209971
       $entity_data_table = $this->query->ensureTable($entity_type->getDataTable(), $this->relationship);
       $this->field_alias = $this->query->addOrderBy(NULL, "GREATEST(" . $entity_data_table . ".changed, " . $this->tableAlias . ".last_comment_timestamp)", $this->options['order'], $this->tableAlias . '_' . $this->field);
+      return;
     }
-    else {
-      // No changed field on entity so using own table.
-      $this->field_alias = $this->query->addOrderBy(NULL, $this->tableAlias . ".last_comment_timestamp", $this->options['order'], $this->tableAlias . '_' . $this->field);
-    }
+    // No changed field on entity so using own table.
+    $this->field_alias = $this->query->addOrderBy(NULL, $this->tableAlias . ".last_comment_timestamp", $this->options['order'], $this->tableAlias . '_' . $this->field);
   }
 
 }
