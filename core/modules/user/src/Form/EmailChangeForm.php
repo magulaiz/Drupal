@@ -30,6 +30,9 @@ class EmailChangeForm extends ContentEntityForm {
     $config = $this->config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
+    // Check for new account.
+    $register = $account->isNew();
+
     // Account information.
     $form['account'] = [
       '#type'   => 'container',
@@ -44,8 +47,8 @@ class EmailChangeForm extends ContentEntityForm {
         '#attributes' => ['autocomplete' => 'off'],
         '#required' => TRUE,
       ];
+      $form_state->set('user', $account);
     }
-    $form_state->set('user', $account);
 
     // The mail field is NOT required if account originally had no mail set
     // and the user performing the edit has 'administer users' permission.
@@ -56,7 +59,8 @@ class EmailChangeForm extends ContentEntityForm {
       '#title' => $this->t('Email address'),
       '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
-      '#default_value' => $account->getEmail(),
+      '#default_value' => (!$register ? $account->getEmail() : ''),
+      '#access' => $account->mail->access('edit'),
     ];
 
     return $form;
@@ -84,7 +88,7 @@ class EmailChangeForm extends ContentEntityForm {
     $account = parent::buildEntity($form, $form_state);
 
     // Set existing password if set in the form state.
-    $current_pass = trim($form_state->getValue('current_pass'));
+    $current_pass = trim($form_state->getValue('current_pass',''));
     if (strlen($current_pass) > 0) {
       $account->setExistingPassword($current_pass);
     }

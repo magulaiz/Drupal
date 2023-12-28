@@ -111,16 +111,16 @@ class PasswordChangeForm extends ContentEntityForm {
           // knows the current one.
           '#attributes' => ['autocomplete' => 'off'],
         ];
-      }
-      $form_state->set('user', $account);
+        $form_state->set('user', $account);
 
-      // The user may only change their own password without their current
-      // password if they logged in via a one-time login link.
-      if (!$form_state->get('user_pass_reset')) {
-        $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
-          '%pass' => $this->t('Password'),
-          ':url' => Url::fromRoute('user.pass')->toString(),
-        ]);
+        // The user may only change their own password without their current
+        // password if they logged in via a one-time login link.
+        if (!$form_state->get('user_pass_reset')) {
+          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
+            '%pass' => $this->t('Password'),
+            ':url' => Url::fromRoute('user.pass')->toString(),
+          ]);
+        }
       }
     }
     $form['actions'] = ['#type' => 'actions'];
@@ -153,7 +153,7 @@ class PasswordChangeForm extends ContentEntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check current pass only if not password reset.
-    if (!$form_state->get('user_pass_reset')) {
+    if (!$form_state->get('user_pass_reset') && $form_state->get('user') === $this->entity ) {
       $current_pass = $form_state->getValue('current_pass');
       $user = $form_state->get('user');
       if (!$this->passwordHasher->check($current_pass, $user->getPassword())) {
