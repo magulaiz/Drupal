@@ -127,7 +127,56 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: comment_ces_last_updated
-      filters: {  }
+      filters:
+        last_updated:
+          id: last_updated
+          table: comment_entity_statistics
+          field: last_updated
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: last_updated_op
+            label: 'last_updated (last_updated)'
+            description: ''
+            use_operator: true
+            operator: last_updated_op
+            operator_limit_selection: true
+            operator_list:
+              '=': '='
+              '!=': '!='
+            identifier: last_updated
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: comment_ces_last_updated
       sorts:
         last_updated:
           id: last_updated
