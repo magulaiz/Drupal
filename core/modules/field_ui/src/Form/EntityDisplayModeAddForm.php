@@ -24,7 +24,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $form = parent::buildForm($form, $form_state, $entity_type_id);
     // Add an ajax callback when the form is loaded from respective field UI's.
-    if (\Drupal::request()->query->get('parent')) {
+    if ($this->getRequest()->query->get('parent')) {
       $form['actions']['submit']['#ajax'] = [
         'callback' => '::ajaxSubmit',
       ];
@@ -51,11 +51,11 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     // @see \Drupal\Core\Routing\RouteBuilder::destruct()
     $router_builder->rebuildIfNeeded();
 
-    $isViewMode = FALSE;
-    if ($this->displayContext == 'view') {
-      $isViewMode = TRUE;
-    }
-    $command = new RedirectCommand(FieldUI::getDisplayRouteInfo($this->getEntity()->toArray()['targetEntityType'], \Drupal::request()->query->get('parent'), $isViewMode)->toString());
+    $command = new RedirectCommand(FieldUI::getDisplayRouteInfo(
+      $this->getEntity()->toArray()['targetEntityType'],
+      $this->getRequest()->query->get('parent'),
+      $this->displayContext === 'view',
+    )->toString());
     $response = new AjaxResponse();
     return $response->addCommand($command);
   }
