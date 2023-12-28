@@ -629,4 +629,32 @@ class SelectTest extends DatabaseTestBase {
       ->execute();
   }
 
+  /**
+   * Data provider of JSON condition test cases.
+   *
+   * @return array[]
+   *   Test cases.
+   */
+  public function providerJsonConditionOperators(): array {
+    return [
+      'LTE with matching' => [5, '<=', 1],
+      'LTE with no matching' => [5, '<=', 1],
+      'GT with matching' => [-2, '>', 2],
+      'GT with subset matching' => [7, '>', 1],
+      'Equals' => [10, '=', 1],
+    ];
+  }
+
+  /**
+   * Test JSON conditions with supported operators.
+   *
+   * @dataProvider providerJsonConditionOperators
+   */
+  public function testJsonCondition(int|string $value, string $operator, int $expected_count): void {
+    $query = $this->connection->select('json', 'j');
+    $query->fields('j');
+    $query->jsonCondition('test_field', '$.number', $value, $operator);
+    $this->assertEquals($expected_count, (int) $query->countQuery()->execute()->fetchField());
+  }
+
 }

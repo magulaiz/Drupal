@@ -34,7 +34,7 @@ trait JsonpathGeneratedFieldConditionTrait {
         return $schema->getJsonpathGeneratedFieldName($field_name, $condition['jsonpath']);
       }
     }
-    return parent::getJsonFieldFragment($field_name, $condition, $connection);
+    return "JSON_EXTRACT({$condition['field']}, '{$condition['jsonpath']}')";
   }
 
 }

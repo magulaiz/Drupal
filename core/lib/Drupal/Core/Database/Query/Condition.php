@@ -268,9 +268,8 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
           $ignore_operator = TRUE;
         }
         elseif (isset($condition['jsonpath'])) {
-          // This is a query on a jsonpath expression.
-          $field_fragment = $this->getJsonFieldFragment($condition['field'], $condition, $connection);
           $ignore_operator = FALSE;
+          $field_fragment = $this->processJsonCondition($condition, $connection, $ignore_operator);
         }
         else {
           // Left hand part is a normal field. Add it as is.
@@ -364,26 +363,28 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
   }
 
   /**
-   * Get the field fragment for a jsonpath condition.
+   * Compile a JSON condition.
    *
-   * Database drivers may implement slightly different syntax, e.g.
-   * a JSON_EXTRACT() function or using the field name as-is and applying the
-   * jsonpath in the value portion with a db-specific operator.
+   * Drivers supporting JSON data types may have widely-varying syntax on
+   * SQL syntax for queries. This default implementation delegates to a function
+   * which provides a simple field fragment, however some drivers (e.g., PgSQL)
+   * may need more complex syntax.
    *
-   * @param string $field_name
-   *   Field name.
    * @param array $condition
-   *   Condition definition.
+   *   Condition.
    * @param \Drupal\Core\Database\Connection $connection
-   *   Database connection; may be necessary to determine fragment.
+   *   Connection.
+   * @param bool $ignore_operator
+   *   Ignore operator flag, passed by reference.
    *
    * @return string
    *   Field fragment.
    */
-  protected function getJsonFieldFragment(string $field_name, array $condition, Connection $connection): string {
-    // This will be highly-dependent on database driver semantics.
-    // JSON_EXTRACT() is MySQL's version and is used here as a baseline example.
-    return "JSON_EXTRACT({$condition['field']}, '{$condition['jsonpath']}')";
+  protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator): string {
+    if (method_exists($this, 'getJsonFieldFragment')) {
+      return $this->getJsonFieldFragment($condition['field'], $condition, $connection);
+    }
+    throw new \RuntimeException('Database driver must implement ' . __FUNCTION__);
   }
 
   /**

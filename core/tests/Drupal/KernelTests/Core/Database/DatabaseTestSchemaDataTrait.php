@@ -118,6 +118,18 @@ trait DatabaseTestSchemaDataTrait {
         'function' => 'Function value 1',
       ])
       ->execute();
+
+    $this->connection->insert('json')
+      ->fields(['id', 'test_field'])
+      ->values([
+        'id' => 1,
+        'test_field' => '{"number": 5}',
+      ])
+      ->values([
+        'id' => 2,
+        'test_field' => '{"number": 10}',
+      ])
+      ->execute();
   }
 
 }
