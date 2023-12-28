@@ -46,8 +46,8 @@
   text-decoration: none;
   color: unset;
   border: 1px solid #dedfe4;
-  border-radius: 4px;
   gap: 0.75rem;
+  border-radius: 4px;
   &:hover {
     color: unset;
   }
