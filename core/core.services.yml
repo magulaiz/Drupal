@@ -879,6 +879,7 @@ services:
   wrapped_request_stack:
     class: Drupal\Core\StackMiddleware\RequestStackWrapper
     arguments: ['@request_stack']
+  Drupal\Core\StackMiddleware\RequestStackWrapper: '@wrapped_request_stack'
   current_route_match:
     class: Drupal\Core\Routing\CurrentRouteMatch
     arguments: ['@request_stack']
@@ -972,6 +973,7 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: event_subscriber }
+  Drupal\Core\EventSubscriber\StackMiddlewareSubscriber: '@http_middleware.stack_middleware_subscriber'
   psr7.http_foundation_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
   Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface: '@psr7.http_foundation_factory'
