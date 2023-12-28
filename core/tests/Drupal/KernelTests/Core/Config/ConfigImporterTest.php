@@ -978,8 +978,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests events and collections during a config import.
    */
-  public function testEventsAndCollectionsImport(): void
-  {
+  public function testEventsAndCollectionsImport(): void {
     $collections = [
       'another_collection',
       'collection.test1',
