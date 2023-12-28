@@ -654,7 +654,7 @@ class SelectTest extends DatabaseTestBase {
     $query = $this->connection->select('json', 'j');
     $query->fields('j');
     $query->jsonCondition('test_field', '$.number', $value, $operator);
-    $this->assertEquals($expected_count, (int) $query->countQuery()->execute()->fetchField());
+    $this->assertEquals($expected_count, count($query->execute()->fetchAll()));
   }
 
 }

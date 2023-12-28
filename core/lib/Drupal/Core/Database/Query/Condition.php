@@ -380,7 +380,7 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
    * @return string
    *   Field fragment.
    */
-  protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator): string {
+  protected function processJsonCondition(array &$condition, Connection $connection, bool &$ignore_operator): string {
     if (method_exists($this, 'getJsonFieldFragment')) {
       return $this->getJsonFieldFragment($condition['field'], $condition, $connection);
     }
