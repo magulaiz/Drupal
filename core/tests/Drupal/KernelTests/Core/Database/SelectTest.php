@@ -637,11 +637,12 @@ class SelectTest extends DatabaseTestBase {
    */
   public function providerJsonConditionOperators(): array {
     return [
-      'LTE with matching' => [5, '<=', 1],
-      'LTE with no matching' => [5, '<=', 1],
-      'GT with matching' => [-2, '>', 2],
-      'GT with subset matching' => [7, '>', 1],
-      'Equals' => [10, '=', 1],
+      'LTE with matching' => ['$.number', 5, '<=', 1],
+      'LTE with no matching' => ['$.number', 5, '<=', 1],
+      'GT with matching' => ['$.number', -2, '>', 3],
+      'GT with subset matching' => ['$.number', 7, '>', 2],
+      'Equals' => ['$.number', 10, '=', 2],
+      'Text equals' => ['$.key', 'some text', '=', 1],
     ];
   }
 
@@ -650,10 +651,10 @@ class SelectTest extends DatabaseTestBase {
    *
    * @dataProvider providerJsonConditionOperators
    */
-  public function testJsonCondition(int|string $value, string $operator, int $expected_count): void {
+  public function testJsonCondition(string $jsonpath, int|string $value, string $operator, int $expected_count): void {
     $query = $this->connection->select('json', 'j');
     $query->fields('j');
-    $query->jsonCondition('test_field', '$.number', $value, $operator);
+    $query->jsonCondition('test_field', $jsonpath, $value, $operator);
     $this->assertEquals($expected_count, count($query->execute()->fetchAll()));
   }
 

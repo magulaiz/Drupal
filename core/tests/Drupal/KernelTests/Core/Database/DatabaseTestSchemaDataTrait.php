@@ -129,6 +129,10 @@ trait DatabaseTestSchemaDataTrait {
         'id' => 2,
         'test_field' => '{"number": 10}',
       ])
+      ->values([
+        'id' => 3,
+        'test_field' => '{"number": 10, "key": "some text"}',
+      ])
       ->execute();
   }
 

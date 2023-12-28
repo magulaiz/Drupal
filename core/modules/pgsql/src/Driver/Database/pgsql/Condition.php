@@ -21,7 +21,14 @@ class Condition extends QueryCondition {
     if ($op === '=') {
       $op = '==';
     }
-    return "{$condition['field']} @? '{$condition['jsonpath']} ? (@ {$op} {$condition['value']})'";
+    // @todo - Security - is this sufficient escaping?
+    $value = is_string($condition['value'])
+      ? json_encode($condition['value'], JSON_THROW_ON_ERROR)
+      : $condition['value'];
+    // PDO requires the ? be doubled else they are considered placeholders.
+    // Inside the single-quoted jsonpath expression, we can't use a named
+    // placeholder, as would normally be preferred. (It won't be interpreted.)
+    return "{$condition['field']} @?? '{$condition['jsonpath']} ? (@ {$op} {$value})'";
   }
 
 }
