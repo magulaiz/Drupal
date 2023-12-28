@@ -11,6 +11,8 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 /**
  * Tests schema API for the SQLite driver.
  *
+ * @coversDefaultClass \Drupal\sqlite\Driver\Database\sqlite\Schema
+ *
  * @group Database
  */
 class SchemaTest extends DriverSpecificSchemaTestBase {
@@ -52,7 +54,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
-   * @covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
+   * @covers ::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [
@@ -135,6 +137,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
    * Tests automatic optimization to use a JSON-based index.
+   *
+   * @covers ::indexExists
    */
   public function testJsonOptimization(): void {
     if (!$this->connection->supportsGeneratedColumns()) {
@@ -153,6 +157,9 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       ['strict_params' => $query->usesStrictParameters()]
     )->fetchAssoc();
     $this->assertStringContainsString('USING INDEX', $explained['detail'], 'Auto-generated index not used in query.');
+    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $index_schema = $introspect_index_schema->invoke($this->schema, 'test_json');
+    $this->assertTrue($this->schema->indexExists('test_json', array_keys($index_schema['indexes'])[0]));
   }
 
 }

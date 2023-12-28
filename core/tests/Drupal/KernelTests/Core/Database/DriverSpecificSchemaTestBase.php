@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Configuration\IndexSpecification;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Exception\SchemaIndexOnJsonFieldUnsupportedException;
 use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\SchemaException;
@@ -1455,8 +1456,11 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
   /**
    * Tests JSON schema type.
+   *
+   * @param bool $allow_direct_indexes
+   *   Whether to allow direct index creation on a JSON data column.
    */
-  protected function doTestJsonSchema(): void {
+  protected function doTestJsonSchema(bool $allow_direct_indexes = FALSE): void {
     $spec = static::JSON_TABLE_SPECIFICATION;
     $this->schema->createTable('test_json', $spec);
     $this->assertTrue($this->schema->tableExists('test_json'), 'Table with database specific datatype was created.');
@@ -1465,16 +1469,18 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertTrue($this->schema->fieldExists('test_json', 'test_field'));
 
     // Test simple index creation. Drivers supporting options should test them.
-    $this->schema->addIndex('test_json', 'test_simple_index', ['test_field'], $spec);
-    $this->schema->indexExists('test_json', 'test_simple_index');
-    // Leave this simple index in place so drivers must play nice with existing
-    // indexes which cover these fields.
+    // Drivers should validate indexes are actually used; this only tests the
+    // methods for creating, asserting and dropping indexes with simple syntax.
 
-    // Ensure creating and then dropping an index on a JSON data field doesn't
-    // raise an exception.
-    $this->schema->addIndex('test_json', 'test_simple_index_2', ['test_field'], $spec);
-    $this->schema->indexExists('test_json', 'test_simple_index_2');
-    $this->schema->dropIndex('test_json', 'test_simple_index_2');
+    // Not all db drivers support creating an index directly on a JSON field.
+    if (!$allow_direct_indexes) {
+      $this->expectException(SchemaIndexOnJsonFieldUnsupportedException::class);
+    }
+    $this->schema->addIndex('test_json', 'test_simple_index', ['test_field'], $spec);
+    if ($allow_direct_indexes) {
+      $this->assertTrue($this->schema->indexExists('test_json', 'test_simple_index'));
+      $this->schema->dropIndex('test_json', 'test_simple_index');
+    }
 
     $this->connection->insert('test_json')
       ->fields([

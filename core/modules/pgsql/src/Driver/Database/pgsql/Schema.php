@@ -3,6 +3,7 @@
 namespace Drupal\pgsql\Driver\Database\pgsql;
 
 use Drupal\Core\Database\Configuration\IndexSpecification;
+use Drupal\Core\Database\Exception\SchemaIndexOnJsonFieldUnsupportedException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
@@ -339,7 +340,7 @@ EOD;
     $indexed_full_columns = [];
     if (isset($table['indexes']) && is_array($table['indexes'])) {
       foreach ($table['indexes'] as $key_name => $spec) {
-        $statements[] = $this->_createIndexSql($name, $key_name, $spec);
+        $statements[] = $this->_createIndexSql($name, $key_name, $this->processIndexFields($spec, $table, $name, $name));
         foreach ($spec as $column) {
           if (is_string($column)) {
             $indexed_full_columns[] = $column;
@@ -921,8 +922,53 @@ EOD;
       throw new SchemaObjectExistsException("Cannot add index '$name' to table '$table': index already exists.");
     }
 
-    $this->connection->query($this->_createIndexSql($table, $name, $fields));
+    $this->connection->query($this->_createIndexSql($table, $name, $this->processIndexFields($fields, $spec, $table, $name)));
     $this->resetTableInformation($table);
+  }
+
+  /**
+   * Process index fields and perform basic sanity checking.
+   *
+   * @param array|IndexSpecification $fields
+   *   Field specification.
+   * @param array $table_spec
+   *   Table spec.
+   * @param string $table
+   *   Table name.
+   * @param string $index
+   *   Index name.
+   *
+   * @return array|IndexSpecification
+   *   Processed index specification.
+   *
+   * @throws \Drupal\Core\Database\Exception\SchemaIndexOnJsonFieldUnsupportedException
+   *   Thrown when index specification is malformed.
+   */
+  protected function processIndexFields(array|IndexSpecification $fields, array $table_spec, string $table, string $index): array|IndexSpecification {
+    if (!($fields instanceof IndexSpecification) || (($config = $fields->getDriverConfig('pgsql')) && !($config['type'] ?? NULL) instanceof IndexType)) {
+      $contains_json_field = FALSE;
+      foreach ($fields as $field_spec) {
+        if ($table_spec['fields'][is_array($field_spec) ? $field_spec[0] : $field_spec]['type'] === 'json') {
+          $contains_json_field = TRUE;
+          break;
+        }
+      }
+      if ($contains_json_field) {
+        if (count($fields) === 1) {
+          return !($fields instanceof IndexSpecification)
+            ? new IndexSpecification($fields, ['pgsql' => ['type' => IndexType::GIN]])
+            : $fields;
+        }
+        throw new SchemaIndexOnJsonFieldUnsupportedException(
+          sprintf(
+            'JSON data columns must be indexed only by themselves when using Postgres: Table %s, index %s contains incompatible source columns.',
+            $table,
+            $index,
+          )
+        );
+      }
+    }
+    return $fields;
   }
 
   /**

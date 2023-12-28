@@ -2,6 +2,7 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
+use Drupal\Core\Database\JsonIndexValidationTrait;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\JsonpathGeneratedFieldTrait;
 use Drupal\Core\Database\SchemaException;
@@ -23,6 +24,7 @@ use Drupal\Component\Utility\Unicode;
 class Schema extends DatabaseSchema {
 
   use JsonpathGeneratedFieldTrait;
+  use JsonIndexValidationTrait;
 
   /**
    * Maximum length of a table comment in MySQL.
@@ -627,6 +629,8 @@ class Schema extends DatabaseSchema {
 
     $spec['indexes'][$name] = $fields;
     $indexes = $this->getNormalizedIndexes($spec);
+
+    $this::guardNoDirectJsonIndexes($table, $name, $fields, $spec);
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX [' . $name . '] (' . $this->createKeySql($indexes[$name]) . ')');
   }

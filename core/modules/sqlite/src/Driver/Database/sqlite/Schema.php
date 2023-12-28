@@ -2,6 +2,7 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\JsonIndexValidationTrait;
 use Drupal\Core\Database\JsonpathGeneratedFieldTrait;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
@@ -20,6 +21,7 @@ use Drupal\Core\Database\Schema as DatabaseSchema;
 class Schema extends DatabaseSchema {
 
   use JsonpathGeneratedFieldTrait;
+  use JsonIndexValidationTrait;
 
   /**
    * Override DatabaseSchema::$defaultSchema.
@@ -728,6 +730,8 @@ class Schema extends DatabaseSchema {
     if ($this->indexExists($table, $name)) {
       throw new SchemaObjectExistsException("Cannot add index '$name' to table '$table': index already exists.");
     }
+
+    $this::guardNoDirectJsonIndexes($table, $name, $fields, $spec);
 
     $schema['indexes'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);

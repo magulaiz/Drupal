@@ -18,6 +18,8 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 /**
  * Tests schema API for the MySQL driver.
  *
+ * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Schema
+ *
  * @group Database
  */
 class SchemaTest extends DriverSpecificSchemaTestBase {
@@ -210,7 +212,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
-   * @covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
+   * @covers ::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [
@@ -284,6 +286,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
    * Tests automatic optimization to use a JSON-based index.
+   *
+   * @covers ::indexExists
    */
   public function testJsonOptimization(): void {
     // MySQL will automatically use the index of a generated column when
@@ -304,6 +308,9 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       ['strict_params' => $query->usesStrictParameters()]
     )->fetchAssoc();
     $this->assertStringStartsWith('auto_gen_', $explained['key'], 'Auto-generated index not used in query.');
+    $this->assertTrue($this->schema->indexExists('test_json', $explained['key']));
+    // Ensure does not throw an exception.
+    $this->schema->dropIndex('test_json', $explained['key']);
   }
 
   /**
