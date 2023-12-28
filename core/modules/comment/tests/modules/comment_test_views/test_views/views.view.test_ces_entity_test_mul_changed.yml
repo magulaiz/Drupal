@@ -147,12 +147,10 @@ display:
             operator_id: last_updated_op
             label: 'last_updated (last_updated)'
             description: ''
-            use_operator: true
+            use_operator: false
             operator: last_updated_op
-            operator_limit_selection: true
-            operator_list:
-              '=': '='
-              '!=': '!='
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: last_updated
             required: false
             remember: false
