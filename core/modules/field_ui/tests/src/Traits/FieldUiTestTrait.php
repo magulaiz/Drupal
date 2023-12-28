@@ -46,6 +46,9 @@ trait FieldUiTestTrait {
       // First step: 'Add field' page.
       $this->drupalGet($bundle_path);
     }
+    else {
+      $bundle_path = $this->getUrl();
+    }
 
     $initial_edit = [
       'label' => $label,
