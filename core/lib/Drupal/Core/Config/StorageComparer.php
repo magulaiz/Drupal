@@ -149,8 +149,8 @@ class StorageComparer implements StorageComparerInterface {
       if ($collection !== StorageInterface::DEFAULT_COLLECTION) {
         $target = $target->createCollection($collection);
       }
-      // If we're in not in write mode wrap the storage in a static cache so
-      // that multiple reads of the same configuration object are cheap.
+      // If we are not in write mode wrap the storage in a static cache so that
+      // multiple reads of the same configuration object are cheap.
       if (!$this->writeMode) {
         $target = new CachedStorage(
           $target,

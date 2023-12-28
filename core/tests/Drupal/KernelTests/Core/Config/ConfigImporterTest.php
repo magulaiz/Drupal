@@ -1025,7 +1025,7 @@ class ConfigImporterTest extends KernelTestBase {
     \Drupal::state()->set('config_test_install.foo_value', 'transient');
 
     // Prime the active config cache. If the ConfigImporter and StorageComparer
-    // do not manager the target storage correctly this cache can pollute the
+    // do not manage the target storage correctly this cache can pollute the
     // data.
     \Drupal::configFactory()->get('config_test.system');
 
