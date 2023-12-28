@@ -202,7 +202,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @covers ::removeSection
    */
   public function testRemoveSectionInvalidUuid() {
-    $this->expectException(\Exception::class);
+    $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid uuid "uuid"');
     $this->sectionList->removeSection('uuid');
   }
@@ -213,7 +213,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @group legacy
    */
   public function testRemoveSectionWithDelta() {
-    $this->expectException(\Exception::class);
+    $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid uuid "0"');
     $this->expectDeprecation('Calling removeSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886');
     $this->sectionList->removeSection(0);

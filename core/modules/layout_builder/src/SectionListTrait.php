@@ -175,7 +175,7 @@ trait SectionListTrait {
       }
       return $this;
     }
-    throw new \Exception(sprintf('Invalid uuid "%s"', $uuid));
+    throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
 
   }
 
