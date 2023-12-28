@@ -311,6 +311,12 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertTrue($this->schema->indexExists('test_json', $explained['key']));
     // Ensure does not throw an exception.
     $this->schema->dropIndex('test_json', $explained['key']);
+
+    // Test querying a path that is not in json_hotpaths.
+    $query = $this->connection->select('test_json');
+    $query->jsonCondition('test_field', '$.nested.key', 'something');
+    $query->addExpression('id');
+    $query->execute();
   }
 
   /**

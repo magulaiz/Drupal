@@ -269,7 +269,7 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
         }
         elseif (isset($condition['jsonpath'])) {
           $ignore_operator = FALSE;
-          $field_fragment = $this->processJsonCondition($condition, $connection, $ignore_operator);
+          $field_fragment = $this->processJsonCondition($condition, $connection, $ignore_operator, $queryPlaceholder);
         }
         else {
           // Left hand part is a normal field. Add it as is.
@@ -376,13 +376,15 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
    *   Connection.
    * @param bool $ignore_operator
    *   Ignore operator flag, passed by reference.
+   * @param PlaceholderInterface $query_placeholder
+   *   Query placeholder.
    *
    * @return string
    *   Field fragment.
    */
-  protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator): string {
+  protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator, PlaceholderInterface $query_placeholder): string {
     if (method_exists($this, 'getJsonFieldFragment')) {
-      return $this->getJsonFieldFragment($condition['field'], $condition, $connection);
+      return $this->getJsonFieldFragment($condition['field'], $condition, $connection, $query_placeholder);
     }
     throw new \RuntimeException('Database driver must implement ' . __FUNCTION__);
   }
