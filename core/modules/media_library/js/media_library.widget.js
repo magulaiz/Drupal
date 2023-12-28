@@ -60,7 +60,11 @@
           .closest('.js-media-library-widget')
           .find('.js-media-library-item-weight')
           .parent()
-          .toggle();
+          .toArray()
+          .forEach((element) => {
+            element.style.display =
+              element.style.display === 'none' ? '' : 'none';
+          });
       });
       mediaLibraryToggle.forEach((item) => {
         item.textContent = strings.show;

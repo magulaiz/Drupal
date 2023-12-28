@@ -208,11 +208,11 @@
               $currentPasswordSuggestions.html()
             ) {
               password.$suggestions.replaceWith($currentPasswordSuggestions);
-              password.$suggestions = $currentPasswordSuggestions.toggle(
-                // Only show the description box if a weakness exists in the
-                // password.
-                result.strength !== 100,
-              );
+              password.$suggestions = $currentPasswordSuggestions;
+              // Only show the description box if a weakness exists in the
+              // password.
+              password.$suggestions[0].style.display =
+                result.strength !== 100 ? '' : 'none';
             }
 
             if (passwordStrengthBarClassesToRemove) {

@@ -46,7 +46,7 @@
         function toggleBlockEntry(index, label) {
           const $row = $(label).parent().parent();
           const textMatch = label.textContent.toLowerCase().includes(query);
-          $row.toggle(textMatch);
+          $row[0].style.display = textMatch ? '' : 'none';
         }
 
         // Filter if the length of the query is at least 2 characters.

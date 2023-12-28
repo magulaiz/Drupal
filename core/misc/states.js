@@ -731,7 +731,7 @@
       if (e.target.tagName === 'A') {
         $element = $(e.target);
       }
-      $element.toggle(e.value);
+      $element[0].style.display = e.value ? '' : 'none';
     }
   });
 

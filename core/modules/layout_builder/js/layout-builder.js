@@ -56,7 +56,7 @@
             $link.closest('.js-layout-builder-category').show();
           }
           // Toggle the li tag of the matching link.
-          $link.parent().toggle(textMatch);
+          $link.parent()[0].style.display = textMatch ? '' : 'none';
         };
 
         // Filter if the length of the query is at least 2 characters.
