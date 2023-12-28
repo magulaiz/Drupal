@@ -8,7 +8,7 @@
 /**
  * Implements hook_install().
  */
-function config_test_install($is_syncing) {
+function config_test_install($is_syncing): void {
   $secondary_write = \Drupal::state()->get('config_test_install.foo_value');
   if ($secondary_write !== NULL) {
     \Drupal::configFactory()
