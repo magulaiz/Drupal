@@ -117,24 +117,24 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->config('field_ui.settings')->set('field_prefix', '')->save();
 
     $label = 'Disallowed field';
-    $edit2 = [
+    $edit = [
       'label' => $label,
     ];
 
     // Try with an entity key.
-    $edit2['field_name'] = 'title';
+    $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
     $this->clickLink('Test field');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
-    $edit2['field_name'] = 'sticky';
+    $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
     $this->clickLink('Test field');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
@@ -393,13 +393,13 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $field_exceed_max_length_input = $this->randomMachineName(23);
 
     // Try to create the field.
-    $edit2 = [
+    $edit = [
       'label' => $field_exceed_max_length_label,
       'field_name' => $field_exceed_max_length_input,
     ];
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
     $this->clickLink('Test field');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
