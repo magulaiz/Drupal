@@ -4,7 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -53,10 +53,10 @@ class StackMiddlewareSubscriber implements EventSubscriberInterface {
    * This ensures the request stack is populated until the very end of the
    * execution cycle, right before any __destruct() functions are run.
    *
-   * @param \Symfony\Component\HttpKernel\Event\PostResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   The event to process.
    */
-  public function onKernelTerminate(PostResponseEvent $event) {
+  public function onKernelTerminate(TerminateEvent $event): void {
     $this->requestStack->pop();
   }
 
