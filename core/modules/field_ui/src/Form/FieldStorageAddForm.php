@@ -227,7 +227,6 @@ class FieldStorageAddForm extends FormBase {
       $display_as_group = $field_type['display_as_group'];
       $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
       $route_parameters = [
-        'entity_type' => $this->entityTypeId,
         'bundle' => $this->bundle,
         'new_storage_type' => $category_info->getPluginId(),
       ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
