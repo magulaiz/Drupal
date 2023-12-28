@@ -15,7 +15,7 @@ interface JsonConditionInterface extends StrictSqlParamsConditionInterface {
    *   The name of the field to check.
    * @param string $jsonpath
    *   The jsonpath for value comparison.
-   * @param string|int|array|SelectInterface|null $value
+   * @param string|int|array|SelectInterface|bool|null $value
    *   The value to test the field against. In most cases, and depending on the
    *   operator, this will be a scalar or an array. As SQL accepts select
    *   queries on any place where a scalar value or set is expected, $value may
@@ -35,6 +35,6 @@ interface JsonConditionInterface extends StrictSqlParamsConditionInterface {
    * @throws \Drupal\Core\Database\InvalidQueryException
    *   If passed invalid arguments, such as an empty array as $value.
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|array|SelectInterface|null $value = NULL, string $operator = '=');
+  public function jsonCondition(string $field, string $jsonpath, string|int|array|SelectInterface|bool|null $value = NULL, string $operator = '=');
 
 }

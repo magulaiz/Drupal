@@ -643,6 +643,8 @@ class SelectTest extends DatabaseTestBase {
       'GT with subset matching' => ['$.number', 7, '>', 2],
       'Equals' => ['$.number', 10, '=', 2],
       'Text equals' => ['$.key', 'some text', '=', 1],
+      'Boolean TRUE' => ['$.boolean', TRUE, '=', 2],
+      'Boolean FALSE' => ['$.boolean', FALSE, '=', 1],
     ];
   }
 
@@ -651,7 +653,7 @@ class SelectTest extends DatabaseTestBase {
    *
    * @dataProvider providerJsonConditionOperators
    */
-  public function testJsonCondition(string $jsonpath, int|string $value, string $operator, int $expected_count): void {
+  public function testJsonCondition(string $jsonpath, int|string|bool $value, string $operator, int $expected_count): void {
     $query = $this->connection->select('json', 'j');
     $query->fields('j');
     $query->jsonCondition('test_field', $jsonpath, $value, $operator);

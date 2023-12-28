@@ -123,15 +123,19 @@ trait DatabaseTestSchemaDataTrait {
       ->fields(['id', 'test_field'])
       ->values([
         'id' => 1,
-        'test_field' => '{"number": 5}',
+        'test_field' => '{"boolean": true, "number": 5}',
       ])
       ->values([
         'id' => 2,
-        'test_field' => '{"number": 10}',
+        'test_field' => '{"number": 10, "boolean": false}',
       ])
       ->values([
         'id' => 3,
         'test_field' => '{"number": 10, "key": "some text"}',
+      ])
+      ->values([
+        'id' => 4,
+        'test_field' => '{"boolean": true, "key": "some other text"}',
       ])
       ->execute();
   }

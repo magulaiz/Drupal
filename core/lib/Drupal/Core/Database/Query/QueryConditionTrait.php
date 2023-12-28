@@ -38,7 +38,7 @@ trait QueryConditionTrait {
   /**
    * {@inheritdoc}
    */
-  public function jsonCondition(string $field, string $jsonpath, SelectInterface|array|int|string|null $value = NULL, string $operator = '=') {
+  public function jsonCondition(string $field, string $jsonpath, string|int|array|SelectInterface|bool|null $value = NULL, string $operator = '=') {
     $this->condition->jsonCondition($field, $jsonpath, $value, $operator);
     return $this;
   }
