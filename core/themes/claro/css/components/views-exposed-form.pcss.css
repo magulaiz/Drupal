@@ -61,7 +61,7 @@
 .views-exposed-form .form-item--no-label,
 .views-exposed-form__item.views-exposed-form__item.views-exposed-form__item--actions {
   /* Line height of a label + existing margin for the element + margin for label */
-  margin-top: calc(var(--line-height-form-label) + var(--space-s) + var(--space-xs));
+  margin-block-start: calc(var(--line-height-form-label) + var(--space-s) + var(--space-xs));
 }
 
 .views-exposed-form .fieldset {
@@ -79,23 +79,20 @@
 }
 
 .views-exposed-form .fieldset__wrapper .form-item {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 
 .views-exposed-form .fieldset__wrapper .form-element {
   min-height: calc(((var(--input-padding-vertical) + var(--input-border-size)) * 2) + var(--input-line-height) - 10px); /* iOS. */
-  padding-top: calc(var(--input-padding-vertical) - 5px);
-  padding-bottom: calc(var(--input-padding-vertical) - 5px);
+  padding-block: calc(var(--input-padding-vertical) - 5px);
 }
 
 .views-exposed-form .fieldset__wrapper .form-item:not(:last-of-type) {
-  margin-right: 0.5rem;
+  margin-inline-end: 0.5rem;
 }
 
 .views-exposed-form .fieldset__label {
-  margin-top: calc(var(--space-xs) / 2); /* 4px */
-  margin-bottom: calc(var(--space-xs) / 2); /* 4px */
+  margin-block: calc(var(--space-xs) / 2); /* 4px */
   padding: 0;
   color: var(--color-text);
   font-size: var(--font-size-s); /* ~14px */
