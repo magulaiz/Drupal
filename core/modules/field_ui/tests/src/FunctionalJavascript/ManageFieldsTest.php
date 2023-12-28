@@ -209,6 +209,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
     $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
 
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
