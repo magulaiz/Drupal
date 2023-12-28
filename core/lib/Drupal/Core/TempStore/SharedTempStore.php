@@ -204,11 +204,13 @@ class SharedTempStore {
    *   The key of the data to store.
    * @param mixed $value
    *   The data to store.
+   * @param int $expire
+   *   The time to live for an item, in seconds.
    *
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function set($key, $value) {
+  public function set($key, $value, $expire = NULL) {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
@@ -222,7 +224,13 @@ class SharedTempStore {
       'updated' => (int) $this->requestStack->getMainRequest()->server->get('REQUEST_TIME'),
     ];
     $this->ensureAnonymousSession();
-    $this->storage->setWithExpire($key, $value, $this->expire);
+
+    // Allow expire to be set per item, use default if not provided.
+    if (!isset($expire)) {
+      $expire = $this->expire;
+    }
+
+    $this->storage->setWithExpire($key, $value, $expire);
     $this->lockBackend->release($key);
   }
 
