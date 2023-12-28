@@ -58,7 +58,7 @@ class StatisticsLastUpdated extends Date {
 
     $entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
     $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($this->getEntityType());
-    if ($entity_type->entityClassImplements(EntityChangedInterface::class) && isset($base_fields['changed'])) {
+    if ($entity_type->entityClassImplements(EntityChangedInterface::class) && isset($base_fields['changed']) && $base_fields['changed']->getType() === 'changed') {
       // @todo Lookup changed field in keys https://www.drupal.org/node/2209971
       $entity_data_table = $this->query->ensureTable($entity_type->getDataTable(), $this->relationship);
       $field = 'GREATEST(' . $entity_data_table . '.changed, ' . $this->tableAlias . '.last_comment_timestamp)';
