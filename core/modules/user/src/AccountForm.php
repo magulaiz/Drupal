@@ -95,14 +95,15 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     // and the user performing the edit has 'administer users' permission.
     // This allows users without email address to be edited and deleted.
     // Also see \Drupal\user\Plugin\Validation\Constraint\UserMailRequired.
-    $form['account']['mail'] = [
-      '#type' => 'email',
-      '#title' => $this->t('Email address'),
-      '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
-      '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
-      '#default_value' => (!$register ? $account->getEmail() : ''),
-      '#access' => $account->mail->access('edit'),
-    ];
+    if ($register) {
+      $form['account']['mail'] = [
+        '#type' => 'email',
+        '#title' => $this->t('Email address'),
+        '#description' => $this->t('The email address is not made public. It will only be used if you need to be contacted about your account or for opted-in notifications.'),
+        '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
+        '#default_value' => (!$register ? $account->getEmail() : ''),
+      ];
+    }
 
     // Only show name field on registration form or user can change own username.
     $form['account']['name'] = [
