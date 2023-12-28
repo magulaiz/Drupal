@@ -153,7 +153,7 @@ class PasswordChangeForm extends ContentEntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check current pass only if not password reset.
-    if (!$form_state->get('user_pass_reset') && $form_state->get('user') === $this->entity ) {
+    if (!$form_state->get('user_pass_reset') && $form_state->get('user') === $this->entity) {
       $current_pass = $form_state->getValue('current_pass');
       $user = $form_state->get('user');
       if (!$this->passwordHasher->check($current_pass, $user->getPassword())) {

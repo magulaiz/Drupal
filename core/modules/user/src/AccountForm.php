@@ -113,7 +113,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       $form_state->set('user', $account);
     }
 
-
     if (!$config->get('verify_mail') || $admin_create) {
       $form['account']['pass'] = [
         '#type' => 'password_confirm',

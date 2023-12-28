@@ -530,7 +530,6 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $password = $this->randomMachineName();
     $edit = [
-//      'current_pass' => $this->account->passRaw,
       'pass[pass1]' => $password,
       'pass[pass2]' => $password,
     ];

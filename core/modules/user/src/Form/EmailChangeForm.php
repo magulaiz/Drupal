@@ -88,7 +88,7 @@ class EmailChangeForm extends ContentEntityForm {
     $account = parent::buildEntity($form, $form_state);
 
     // Set existing password if set in the form state.
-    $current_pass = trim($form_state->getValue('current_pass',''));
+    $current_pass = trim($form_state->getValue('current_pass', ''));
     if (strlen($current_pass) > 0) {
       $account->setExistingPassword($current_pass);
     }
