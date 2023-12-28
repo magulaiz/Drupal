@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\StackMiddleware;
 
-use Drupal\Core\Http\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Request stack that controls the lifecycle of requests.
@@ -33,7 +33,7 @@ class RequestStackWrapper extends RequestStack {
   /**
    * The wrapped request stack.
    *
-   * @var \Drupal\Core\Http\RequestStack
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   private $wrappedRequestStack;
 
@@ -47,7 +47,7 @@ class RequestStackWrapper extends RequestStack {
   /**
    * Constructs a new RequestStackWrapper.
    *
-   * @param \Drupal\Core\Http\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
   public function __construct(RequestStack $requestStack) {
@@ -64,7 +64,7 @@ class RequestStackWrapper extends RequestStack {
   /**
    * {@inheritdoc}
    */
-  public function pop() {
+  public function pop(): ?Request {
     if (!$this->localRequests) {
       return NULL;
     }
@@ -75,7 +75,7 @@ class RequestStackWrapper extends RequestStack {
   /**
    * {@inheritdoc}
    */
-  public function getCurrentRequest() {
+  public function getCurrentRequest(): ?Request {
     return $this->wrappedRequestStack->getCurrentRequest();
   }
 
@@ -96,7 +96,7 @@ class RequestStackWrapper extends RequestStack {
   /**
    * {@inheritdoc}
    */
-  public function getParentRequest() {
+  public function getParentRequest(): ?Request {
     return $this->wrappedRequestStack->getParentRequest();
   }
 
