@@ -229,7 +229,7 @@ class FieldStorageAddForm extends FormBase {
       $route_parameters = [
         'entity_type' => $this->entityTypeId,
         'bundle' => $this->bundle,
-        'display_as_group' => $display_as_group ? TRUE : FALSE,
+        'display_as_group' => $display_as_group ? 'true' : 'false',
         'new_storage_type' => $category_info->getPluginId(),
       ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
       $field_type_options_radios[$id] = [
