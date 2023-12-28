@@ -497,7 +497,7 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   protected static function getJsonExtractValueExpression(string $field, string $jsonpath): string {
-    return "JSON_EXTRACT({$field}, '{$jsonpath}')";
+    return "JSON_UNQUOTE(JSON_EXTRACT({$field}, '{$jsonpath}'))";
   }
 
   /**
