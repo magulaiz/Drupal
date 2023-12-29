@@ -75,15 +75,15 @@ class PrivateTempStoreFactory {
    * @param string $collection
    *   The collection name to use for this key/value store. This is typically
    *   a shared namespace or module name, e.g. 'views', 'entity', etc.
-   * @param int $expire
+   * @param int|null $expire
    *   The time to live for items, in seconds.
    *
    * @return \Drupal\Core\TempStore\PrivateTempStore
    *   An instance of the key/value store.
    */
-  public function get($collection, $expire = NULL) {
+  public function get($collection, ?int $expire = NULL): PrivateTempStore {
     // Allow expire to be set per collection, use default if not provided.
-    if (!isset($expire)) {
+    if ($expire === NULL) {
       $expire = $this->expire;
     }
 
