@@ -339,7 +339,7 @@
         $table
           .find('> thead > tr, > tbody > tr, > tr')
           .toArray()
-          .forEach(this.addColspanClass.bind(this, columnIndex));
+          .forEach((element) => this.addColspanClass(element, columnIndex));
       }
     });
     this.displayColumns(showWeight);
@@ -349,6 +349,8 @@
    * Mark cells that have colspan.
    *
    * In order to adjust the colspan instead of hiding them altogether.
+   * @param {HTMLElement} element
+   *   The element to adjust colspans.
    *
    * @param {number} columnIndex
    *   The column index to add colspan class to.
@@ -356,29 +358,27 @@
    * @return {function}
    *   Function to add colspan class.
    */
-  Drupal.tableDrag.prototype.addColspanClass = function (columnIndex) {
-    return function () {
-      // Get the columnIndex and adjust for any colspans in this row.
-      const $row = $(this);
-      let index = columnIndex;
-      const cells = $row.children();
-      let cell;
-      cells.each(function (n) {
-        if (n < index && this.colSpan && this.colSpan > 1) {
-          index -= this.colSpan - 1;
-        }
-      });
-      if (index > 0) {
-        cell = cells.filter(`:nth-child(${index})`);
-        if (cell[0].colSpan && cell[0].colSpan > 1) {
-          // If this cell has a colspan, mark it so we can reduce the colspan.
-          cell.addClass('tabledrag-has-colspan');
-        } else {
-          // Mark this cell so we can hide it.
-          cell.addClass('tabledrag-hide');
-        }
+  Drupal.tableDrag.prototype.addColspanClass = function (element, columnIndex) {
+    // Get the columnIndex and adjust for any colspans in this row.
+    const $row = $(element);
+    let index = columnIndex;
+    const cells = $row.children();
+    let cell;
+    cells.each(function (n) {
+      if (n < index && this.colSpan && this.colSpan > 1) {
+        index -= this.colSpan - 1;
       }
-    };
+    });
+    if (index > 0) {
+      cell = cells.filter(`:nth-child(${index})`);
+      if (cell[0].colSpan && cell[0].colSpan > 1) {
+        // If this cell has a colspan, mark it so we can reduce the colspan.
+        cell.addClass('tabledrag-has-colspan');
+      } else {
+        // Mark this cell so we can hide it.
+        cell.addClass('tabledrag-hide');
+      }
+    }
   };
 
   /**
