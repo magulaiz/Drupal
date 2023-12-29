@@ -55,9 +55,23 @@ trait JsonpathGeneratedFieldConditionTrait {
         }
       }
     }
-    return "JSON_EXTRACT({$condition['field']}, '{$condition['jsonpath']}')"
-      // MySQL will otherwise cast the result to an int, so be explicit.
-      . (is_bool($condition['value']) ? ' = true' : '');
+    return $this->getJsonFieldFragmentFunction(
+      $condition['field'],
+      $condition['jsonpath'],
+      $condition['value'],
+      $connection
+    );
+  }
+
+  /**
+   * Get the SQL function statement for retrieving a JSON value.
+   *
+   * It may be necessary to override this method if the driver requires special
+   * handling of return types or other unique value-matching behavior. This
+   * base case is standard SQL syntax.
+   */
+  protected function getJsonFieldFragmentFunction(string $field, string $jsonpath, mixed $value, Connection $connection): string {
+    return "JSON_EXTRACT({$field}, '{$jsonpath}')";
   }
 
 }

@@ -651,6 +651,11 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Test JSON conditions with supported operators.
    *
+   * This test appears simple at first glance but is particularly important when
+   * implementing JSON data types. Variable typing becomes far more sensitive
+   * when matching JSON documents vs. other data which is stored directly in SQL
+   * tables.
+   *
    * @dataProvider providerJsonConditionOperators
    */
   public function testJsonCondition(string $jsonpath, int|string|bool $value, string $operator, int $expected_count): void {
