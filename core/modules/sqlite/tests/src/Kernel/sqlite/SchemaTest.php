@@ -119,8 +119,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       $query = $this->connection->select('test_json');
       // JSON_EXTRACT() in SQLite has some unique behavior, which is abstracted
       // in the driver's Condition class. The syntax here ensures we're only
-      // testing our basic integration with the schema API; the DBAL is tested
-      // elsewhere.
+      // testing our basic integration with the schema API; the abstraction is
+      // tested elsewhere.
       $query->addExpression('json_extract([test_field], :path, "$._")', NULL, [
         ':path' => $path,
       ]);
