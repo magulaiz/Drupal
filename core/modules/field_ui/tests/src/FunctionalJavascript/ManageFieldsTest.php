@@ -199,8 +199,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     // Try adding a field using a grouped field type.
     $this->assertNotEmpty($email_field = $page->find('xpath', '//*[text() = "Email"]'));
     $email_field->click();
-        $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
-    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
     $assert_session->pageTextNotContains('Choose an option below');
     $page->pressButton('Back');
 
