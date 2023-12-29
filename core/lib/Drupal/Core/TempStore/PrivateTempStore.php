@@ -115,13 +115,13 @@ class PrivateTempStore {
    *   The key of the data to store.
    * @param mixed $value
    *   The data to store.
-   * @param int $expire
+   * @param int|null $expire
    *   The time to live for an item, in seconds.
    *
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function set($key, $value, $expire = NULL) {
+  public function set($key, $value, ?int $expire = NULL) {
     if ($this->currentUser->isAnonymous()) {
       // Ensure that an anonymous user has a session created for them, as
       // otherwise subsequent page loads will not be able to retrieve their
@@ -149,7 +149,7 @@ class PrivateTempStore {
     ];
 
     // Allow expire to be set per item, use default if not provided.
-    if (!isset($expire)) {
+    if ($expire === NULL) {
       $expire = $this->expire;
     }
 
