@@ -49,13 +49,15 @@ trait JsonpathGeneratedFieldConditionTrait {
             ''
           );
         $candidate = $schema->getJsonpathGeneratedFieldName($field_name, $condition['jsonpath']);
-        // @todo - This could benefit from some caching.
+        // @todo - This could maybe benefit from caching, but that's still another request.
         if ($connection->schema()->fieldExists($table, $candidate)) {
           return $candidate;
         }
       }
     }
-    return "JSON_EXTRACT({$condition['field']}, '{$condition['jsonpath']}')";
+    return "JSON_EXTRACT({$condition['field']}, '{$condition['jsonpath']}')"
+      // MySQL will otherwise cast the result to an int, so be explicit.
+      . (is_bool($condition['value']) ? ' = true' : '');
   }
 
 }
