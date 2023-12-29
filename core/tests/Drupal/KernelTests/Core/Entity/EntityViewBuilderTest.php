@@ -311,7 +311,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests a view mode alter on an entity.
    */
-  public function testHookEntityTypeViewModeAlter() {
+  public function testHookEntityTypeViewModeAlter(): void {
     $entity_ids = [];
     // Create some entities to test.
     for ($i = 0; $i < 5; $i++) {
