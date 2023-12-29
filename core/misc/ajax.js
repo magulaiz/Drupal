@@ -1395,7 +1395,7 @@
       // `#ajax['wrapper']` to be optional.
       if ($newContent.parents('html').length) {
         // Attach behaviors to all element nodes.
-        $newContent.toArray().forEach((element, index) => {
+        $newContent.toArray().forEach((element) => {
           if (element.nodeType === Node.ELEMENT_NODE) {
             Drupal.attachBehaviors(element, settings);
           }

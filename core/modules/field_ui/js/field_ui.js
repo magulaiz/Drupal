@@ -453,7 +453,7 @@
 
       function filterRows(e) {
         const query = e.target.value;
-        function showRow(row, index) {
+        function showRow(row) {
           const sources = row.querySelectorAll('.form-item');
           let sourcesConcat = '';
           // Concatenate the textContent of the elements in the row, with a

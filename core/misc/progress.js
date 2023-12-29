@@ -78,8 +78,8 @@
           $(this.element)
             .find('div.progress__bar')
             .toArray()
-            .forEach((element) => {
-              element.style.width = `${percentage}%`;
+            .forEach(({ style }) => {
+              style.width = `${percentage}%`;
             });
           $(this.element)
             .find('div.progress__percentage')

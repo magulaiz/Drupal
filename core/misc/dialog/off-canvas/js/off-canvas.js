@@ -185,7 +185,7 @@
       $element[0].style.height = 'auto';
       const modalHeight = $container.height();
 
-      $offsets.toArray().forEach((e, i) => {
+      $offsets.toArray().forEach((e) => {
         offset += $(e).outerHeight();
       });
 

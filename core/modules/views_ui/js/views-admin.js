@@ -905,7 +905,7 @@
         const operators = this.dropdowns.find('select').not($target);
 
         // Change the other operators to match this new value.
-        operators.toArray().forEach(function (item, index) {
+        operators.toArray().forEach((item) => {
           item.value = $target[0].value;
         });
       },

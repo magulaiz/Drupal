@@ -39,7 +39,7 @@
         // Case insensitive expression to find query at the beginning of a word.
         const re = new RegExp(`\\b${query}`, 'i');
 
-        function showModuleRow(row, index) {
+        function showModuleRow(row) {
           const sources = row.querySelectorAll(
             '.table-filter-text-source, .module-name, .module-description',
           );

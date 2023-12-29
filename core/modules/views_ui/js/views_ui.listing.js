@@ -28,7 +28,7 @@
       function filterViewList(e) {
         const query = e.target.value.toLowerCase();
 
-        function showViewRow(row, index) {
+        function showViewRow(row) {
           const sources = row.querySelectorAll(
             '[data-drupal-selector="views-table-filter-text-source"]',
           );

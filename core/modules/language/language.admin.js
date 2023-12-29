@@ -39,9 +39,7 @@
       $configForm
         .find(`${inputSelector}:not(:checked)`)
         .toArray()
-        .forEach((element, index) => {
-          toggleTable(element);
-        });
+        .forEach(toggleTable);
     },
   };
 })(jQuery, Drupal);

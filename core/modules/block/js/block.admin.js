@@ -43,7 +43,7 @@
          * @param {number} index
          *   The index in the loop, as provided by `forEach`
          */
-        function toggleBlockEntry(label, index) {
+        function toggleBlockEntry(label) {
           const $row = $(label).parent().parent();
           const textMatch = label.textContent.toLowerCase().includes(query);
           $row.toggle(textMatch);

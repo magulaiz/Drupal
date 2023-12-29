@@ -142,7 +142,7 @@
       $(this.table)
         .find('.tabledrag-cell > .js-indentation')
         .toArray()
-        .forEach((indentToMove, index) => {
+        .forEach((indentToMove) => {
           const $indentToMove = $(indentToMove);
           const $cellContent = $indentToMove.siblings(
             '.tabledrag-cell-content',

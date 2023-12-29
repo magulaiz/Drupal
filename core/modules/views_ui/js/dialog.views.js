@@ -22,7 +22,7 @@
       });
       modalHeight = $modal.height();
       $viewsOverride.toArray().forEach((element) => {
-        offset += element.offsetHeight;
+        offset += $(element).outerHeight();
       });
 
       // Take internal padding into account.

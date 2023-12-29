@@ -42,7 +42,7 @@
          * @param {number} index
          *   The index in the loop, as provided by `forEach`
          */
-        const toggleBlockEntry = (link, index) => {
+        const toggleBlockEntry = (link) => {
           const $link = $(link);
           const textMatch = link.textContent.toLowerCase().includes(query);
           // Checks if a category is currently hidden.
@@ -368,7 +368,7 @@
          */
         $('[data-layout-content-preview-placeholder-label]', context)
           .toArray()
-          .forEach((element, i) => {
+          .forEach((element) => {
             const $element = $(element);
 
             // Hide everything in block that isn't contextual link related.
@@ -405,7 +405,7 @@
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]')
           .toArray()
-          .forEach((element, i) => {
+          .forEach((element) => {
             $(element).children().show();
           });
       };

@@ -159,7 +159,7 @@
         // Case insensitive expression to find query at the beginning of a word.
         const re = new RegExp(`\\b${query}`, 'i');
 
-        function showPermissionRow(row, index) {
+        function showPermissionRow(row) {
           const sources = row.querySelectorAll('.table-filter-text-source');
           if (sources.length > 0) {
             const textMatch = sources[0].textContent.search(re) !== -1;
