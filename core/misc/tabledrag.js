@@ -241,9 +241,7 @@
     $table
       .find('> tr.draggable, > tbody > tr.draggable')
       .toArray()
-      .forEach((element) => {
-        self.makeDraggable(element);
-      });
+      .forEach(self.makeDraggable);
 
     const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
     this.$toggleWeightButton = $toggleWeightWrapper.find(
@@ -338,12 +336,11 @@
         // based. Match immediate children of the parent element to allow
         // nesting.
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
-        /* eslint-disable */
         $table
           .find('> thead > tr, > tbody > tr, > tr')
-          .each(this.addColspanClass(columnIndex));
+          .toArray()
+          .forEach(this.addColspanClass(columnIndex));
       }
-      /* eslint-enable */
     });
     this.displayColumns(showWeight);
   };
