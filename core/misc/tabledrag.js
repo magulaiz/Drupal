@@ -339,7 +339,7 @@
         $table
           .find('> thead > tr, > tbody > tr, > tr')
           .toArray()
-          .forEach(this.addColspanClass(columnIndex));
+          .forEach(this.addColspanClass.bind(this, columnIndex));
       }
     });
     this.displayColumns(showWeight);
