@@ -106,7 +106,6 @@ class SharedTempStoreFactory {
       $expire = $this->expire;
     }
 
-
     // Store the data for this collection in the database.
     $storage = $this->storageFactory->get("tempstore.shared.$collection");
     return new SharedTempStore($storage, $this->lockBackend, $owner, $this->requestStack, $this->currentUser, $expire);

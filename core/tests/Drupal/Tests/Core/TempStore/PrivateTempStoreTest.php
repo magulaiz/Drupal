@@ -181,7 +181,7 @@ class PrivateTempStoreTest extends UnitTestCase {
     return [
       // A NULL expire value falls back to the default value.
       [NULL, $this->defaultExpire],
-      [123456, 123456]
+      [123456, 123456],
     ];
   }
 
