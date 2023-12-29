@@ -1318,8 +1318,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $this->assertResult(7, 13, 15);
 
-    // field_test_entity_query_entity_test_mulrev()_alter removes the entity with
-    // id '7'.
+    // field_test_entity_query_entity_test_mulrev()_alter removes the
+    // entity with id '7'.
     $query = clone $basicQuery;
     $this->queryResults = $query
       ->addTag('entity_query_entity_test_mulrev_alter_hook_test')
@@ -1334,7 +1334,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $this->assertResult(5, 7, 15);
 
-    // field_test_entity_query_entity_test_mulrev_entity_query_entity_test_mulrev_alter_tag_test_alter()
+    // field_test_entity_query_entity_test_mulrev_entity_query_
+    // entity_test_mulrev_alter_tag_test_alter()
     // removes the entity with id '15'.
     $query = clone $basicQuery;
     $this->queryResults = $query

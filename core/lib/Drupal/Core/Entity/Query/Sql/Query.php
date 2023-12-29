@@ -95,7 +95,7 @@ class Query extends QueryBase implements QueryInterface {
    * @return $this
    *   Returns the called object.
    */
-  protected function alter() {
+  protected function alter(): Query {
     $hooks = ['entity_query', 'entity_query_' . $this->getEntityTypeId()];
     if (isset($this->alterTags)) {
       foreach ($this->alterTags as $tag => $value) {
