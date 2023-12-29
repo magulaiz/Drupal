@@ -843,7 +843,7 @@ class ConfigImporterTest extends KernelTestBase {
     $extensions['module']['system_test'] = 0;
     $extensions['module'] = module_config_sort($extensions['module']);
     $sync->write('core.extension', $extensions);
-    $this->configImporter->reset()->import();
+    $this->configImporter()->import();
 
     // Syncing values stored in state by hook_module_preinstall should be TRUE
     // when module is installed via config import.
@@ -868,7 +868,7 @@ class ConfigImporterTest extends KernelTestBase {
     // by uninstall hooks should be TRUE.
     unset($extensions['module']['module_test']);
     $sync->write('core.extension', $extensions);
-    $this->configImporter->reset()->import();
+    $this->configImporter()->import();
     $this->assertTrue(\Drupal::state()->get('system_test_preuninstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preuninstall() returns TRUE');
     $this->assertTrue(\Drupal::state()->get('system_test_preuninstall_module_syncing_param'), 'system_test_module_preuninstall() $is_syncing value is TRUE');
     $this->assertTrue(\Drupal::state()->get('system_test_modules_uninstalled_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_modules_uninstalled returns TRUE');
