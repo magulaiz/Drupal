@@ -257,6 +257,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->submitForm($edit, 'Continue');
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    $this->assertSession()->addressEquals($url . '/boolean');
   }
 
   /**

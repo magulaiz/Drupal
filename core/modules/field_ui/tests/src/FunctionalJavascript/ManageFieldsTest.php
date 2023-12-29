@@ -185,7 +185,8 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
 
     // Test validation.
-    $this->getSession()->getPage()->clickLink('Number');
+    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]'));
+    $number_field->click();
     $assert_session->pageTextContains('Choose an option below');
     $field_name = 'test_field_1';
     $page->fillField('label', $field_name);
@@ -196,11 +197,15 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->pressButton('Back');
 
     // Try adding a field using a grouped field type.
-    $this->getSession()->getPage()->clickLink('Email');
+    $this->assertNotEmpty($email_field = $page->find('xpath', '//*[text() = "Email"]'));
+    $email_field->click();
+        $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
+    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
     $assert_session->pageTextNotContains('Choose an option below');
     $page->pressButton('Back');
 
-    $this->getSession()->getPage()->clickLink('Plain text');
+    $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]'));
+    $text->click();
     $page->pressButton('Continue');
     $assert_session->pageTextContains('Choose an option below');
 
@@ -209,6 +214,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
     $page->pressButton('Continue');
+
     $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
 
     // Ensure the default value is reloaded when the field storage settings
