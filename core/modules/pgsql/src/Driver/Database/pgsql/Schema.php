@@ -948,7 +948,8 @@ EOD;
     if (!($fields instanceof IndexSpecification) || (($config = $fields->getDriverConfig('pgsql')) && !($config['type'] ?? NULL) instanceof IndexType)) {
       $contains_json_field = FALSE;
       foreach ($fields as $field_spec) {
-        if ($table_spec['fields'][is_array($field_spec) ? $field_spec[0] : $field_spec]['type'] === 'json') {
+        $field_name = is_array($field_spec) ? $field_spec[0] : $field_spec;
+        if (!empty($table_spec['fields'][$field_name]) && $table_spec['fields'][$field_name]['type'] === 'json') {
           $contains_json_field = TRUE;
           break;
         }
