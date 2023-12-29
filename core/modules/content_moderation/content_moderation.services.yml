@@ -22,6 +22,6 @@ services:
       - { name: event_subscriber }
   content_moderation.workspace_subscriber:
     class: Drupal\content_moderation\EventSubscriber\WorkspaceSubscriber
-    arguments: ['@entity_type.manager', '@?workspaces.association']
+    arguments: ['@entity_type.manager', '@workspaces.association']
     tags:
       - { name: event_subscriber }
