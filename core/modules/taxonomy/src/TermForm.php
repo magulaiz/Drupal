@@ -5,7 +5,6 @@ namespace Drupal\taxonomy;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManager;
 
 /**
  * Base for handler for taxonomy term edit forms.
