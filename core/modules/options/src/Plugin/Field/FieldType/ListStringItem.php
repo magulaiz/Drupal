@@ -61,7 +61,7 @@ class ListStringItem extends ListItemBase {
    */
   protected function allowedValuesDescription() {
     $description = '<p>' . $this->t('The name will be used in displayed options and edit forms.');
-    $description .= '<br/>' . $this->t('The key is the stored value.');
+    $description .= '<br/>' . $this->t('The value is automatically generated machine name of the name provided and will be the stored value.');
     $description .= '</p>';
     $description .= '<p>' . $this->t('Allowed HTML tags in labels: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '</p>';
     return $description;
@@ -81,6 +81,39 @@ class ListStringItem extends ListItemBase {
    */
   protected static function castAllowedValue($value) {
     return (string) $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = parent::storageSettingsForm($form, $form_state, $has_data);
+
+    // Improve user experience by using an automatically generated machine name.
+    foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
+      $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'machine_name';
+      $element['allowed_values']['table'][$delta]['item']['key']['#machine_name'] = [
+        'exists' => [static::class, 'exists'],
+      ];
+      $element['allowed_values']['table'][$delta]['item']['key']['#process'] = array_merge(
+        [[static::class, 'processAllowedValuesKey']],
+        // Workaround for https://drupal.org/i/1300290#comment-12873635.
+        \Drupal::service('plugin.manager.element_info')->getInfoProperty('machine_name', '#process', []),
+      );
+    }
+
+    return $element;
+  }
+
+  /**
+   * Sets the machine name source to be the label.
+   */
+  public static function processAllowedValuesKey(array &$element): array {
+    $parents = $element['#parents'];
+    array_pop($parents);
+    $parents[] = 'label';
+    $element['#machine_name']['source'] = $parents;
+    return $element;
   }
 
   /**
