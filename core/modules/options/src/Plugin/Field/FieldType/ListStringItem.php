@@ -100,6 +100,7 @@ class ListStringItem extends ListItemBase {
         // Workaround for https://drupal.org/i/1300290#comment-12873635.
         \Drupal::service('plugin.manager.element_info')->getInfoProperty('machine_name', '#process', []),
       );
+      $element['allowed_values']['table'][$delta]['item']['key']['#element_validate'] = [];
     }
 
     return $element;
