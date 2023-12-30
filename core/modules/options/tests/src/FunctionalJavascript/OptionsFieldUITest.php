@@ -376,6 +376,26 @@ JS;
   }
 
   /**
+   * Tests `list_string` machine name with special characters.
+   */
+  public function testMachineNameSpecialCharacters() {
+    $this->fieldName = 'field_options_text';
+    $this->createOptionsField('list_string');
+    $this->drupalGet($this->adminPath);
+
+    $label_element_name = "field_storage[subform][settings][allowed_values][table][0][item][label]";
+    $this->getSession()->getPage()->fillField($label_element_name, 'Hello world');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->exposeOptionMachineName(1);
+
+    $key_element_name = "field_storage[subform][settings][allowed_values][table][0][item][key]";
+    $this->getSession()->getPage()->fillField($key_element_name, '.hello#world');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->pressButton('Save settings');
+    $this->assertSession()->statusMessageContains("Saved {$this->fieldName} configuration.");
+  }
+
+  /**
    * Assert the count of the allowed values rows.
    *
    * @param int $expected_count
