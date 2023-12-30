@@ -150,4 +150,32 @@ JS;
     $assert_session->elementExists('css', '#big-pipe-large-content');
   }
 
+  /**
+   * Test BigPipe replacement of multiple complex replacements.
+   *
+   * In some situations with either a large number of replacements or multiple
+   * replacements involving complex operations, some replacements were not
+   * completed. This is a simulation of such a situation by rendering a lot of
+   * node entities on a page.
+   */
+  public function testMultipleReplacements_3390178() {
+    $this->container->get('module_installer')->install(['node']);
+    $type = $this->drupalCreateContentType();
+    // This number is somewhat arbitrary, but set high enough to reproduce bug.
+    $count = 4000;
+    for ($i = 0; $i < $count; $i++) {
+      $this->drupalCreateNode(['type' => $type->id()]);
+    }
+
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet(Url::fromRoute('big_pipe_regression_test.3390178'));
+    $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
+    $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
+    $this->assertCount(0, $this->getSession()->getPage()->findAll('css', 'span[data-big-pipe-placeholder-id]'));
+    $this->assertCount($count + 1, $this->getSession()->getPage()->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
+  }
+
 }
