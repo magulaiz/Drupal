@@ -389,10 +389,21 @@ JS;
     $this->exposeOptionMachineName(1);
 
     $key_element_name = "field_storage[subform][settings][allowed_values][table][0][item][key]";
-    $this->getSession()->getPage()->fillField($key_element_name, '.hello#world');
+
+    // Ensure that the machine name was generated correctly.
+    $this->assertSession()->fieldValueEquals($key_element_name, 'hello_world');
+
+    // Ensure that the machine name can be overridden with a value that includes
+    // special characters.
+    $this->getSession()->getPage()->fillField($key_element_name, '.hello #world');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->getSession()->getPage()->pressButton('Save settings');
     $this->assertSession()->statusMessageContains("Saved {$this->fieldName} configuration.");
+
+    // Ensure that the machine name was saved correctly.
+    $allowed_values = FieldStorageConfig::loadByName('node', $this->fieldName)
+      ->getSetting('allowed_values');
+    $this->assertSame(['.hello #world'], array_keys($allowed_values));
   }
 
   /**
