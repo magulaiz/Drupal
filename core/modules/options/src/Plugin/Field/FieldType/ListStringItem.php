@@ -114,6 +114,14 @@ class ListStringItem extends ListItemBase {
     array_pop($parents);
     $parents[] = 'label';
     $element['#machine_name']['source'] = $parents;
+
+    // Override the default description which is not applicable to this use of
+    // the machine name element given that it allows users to manually enter
+    // characters usually not allowed in machine names.
+    if (!isset($element['#description'])) {
+      $element['#description'] = '';
+    }
+
     return $element;
   }
 
