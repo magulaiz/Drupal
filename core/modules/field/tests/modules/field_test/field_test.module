@@ -13,11 +13,11 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\Core\Entity\Query\QueryInterface;
 
 require_once __DIR__ . '/field_test.entity.inc';
 require_once __DIR__ . '/field_test.field.inc';
@@ -238,7 +238,7 @@ function field_test_entity_reference_selection_alter(array &$definitions): void 
  *
  * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
  */
-function field_test_entity_query_alter(QueryInterface &$query) {
+function field_test_entity_query_alter(QueryInterface &$query): void {
   if ($query->hasTag('entity_query_alter_hook_test')) {
     $query->condition('id', '5', '<>');
   }
@@ -249,7 +249,7 @@ function field_test_entity_query_alter(QueryInterface &$query) {
  *
  * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
  */
-function field_test_entity_query_entity_test_mulrev_alter(QueryInterface &$query) {
+function field_test_entity_query_entity_test_mulrev_alter(QueryInterface &$query): void {
   if ($query->hasTag('entity_query_entity_test_mulrev_alter_hook_test')) {
     $query->condition('id', '7', '<>');
   }
@@ -260,7 +260,7 @@ function field_test_entity_query_entity_test_mulrev_alter(QueryInterface &$query
  *
  * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
  */
-function field_test_entity_query_entity_query_alter_tag_test_alter(QueryInterface &$query) {
+function field_test_entity_query_entity_query_alter_tag_test_alter(QueryInterface &$query): void {
   $query->condition('id', '13', '<>');
 }
 
@@ -272,6 +272,6 @@ function field_test_entity_query_entity_query_alter_tag_test_alter(QueryInterfac
  *
  * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
  */
-function field_test_entity_query_entity_test_mulrev_entity_query_entity_test_mulrev_alter_tag_test_alter(QueryInterface &$query) {
+function field_test_entity_query_entity_test_mulrev_entity_query_entity_test_mulrev_alter_tag_test_alter(QueryInterface &$query): void {
   $query->condition('id', '15', '<>');
 }
