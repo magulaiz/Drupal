@@ -226,8 +226,8 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function hasPermission($permission) {
     if (!is_string($permission)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a $permission parameter of type other than string is deprecated in drupal:10.3.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3410098', E_USER_DEPRECATED);
-      $permission = (string) $permission;
+      @trigger_error('Calling ' . __METHOD__ . '() with a $permission parameter of type other than string is deprecated in drupal:10.3.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3411485', E_USER_DEPRECATED);
+      return FALSE;
     }
     return \Drupal::service('permission_checker')->hasPermission($permission, $this);
   }
