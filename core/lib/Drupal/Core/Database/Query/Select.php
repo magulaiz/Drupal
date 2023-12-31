@@ -143,7 +143,7 @@ class Select extends Query implements SelectInterface {
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
     parent::__construct($connection, $options);
     $conjunction = $options['conjunction'] ?? 'AND';
-    $this->condition = $this->connection->condition($conjunction, $table);
+    $this->condition = $this->connection->condition($conjunction);
     $this->having = $this->connection->condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
   }
