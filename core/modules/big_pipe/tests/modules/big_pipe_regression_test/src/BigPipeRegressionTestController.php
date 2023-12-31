@@ -52,9 +52,9 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
   /**
    * A page with multiple nodes.
    *
-   * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testMultipleReplacements_3390178
+   * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testMultipleReplacements
    */
-  public function regression3390178() {
+  public function multipleReplacements() {
     $build = [];
     try {
       $ids = $this->entityTypeManager()

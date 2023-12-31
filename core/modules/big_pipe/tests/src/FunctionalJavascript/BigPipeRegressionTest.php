@@ -157,8 +157,10 @@ JS;
    * replacements involving complex operations, some replacements were not
    * completed. This is a simulation of such a situation by rendering a lot of
    * node entities on a page.
+   *
+   * @see https://www.drupal.org/node/3390178
    */
-  public function testMultipleReplacements_3390178() {
+  public function testMultipleReplacements() {
     $this->container->get('module_installer')->install(['node']);
     $type = $this->drupalCreateContentType();
     // This number is somewhat arbitrary, but set high enough to reproduce bug.
@@ -171,7 +173,7 @@ JS;
     $this->drupalLogin($user);
     $assert_session = $this->assertSession();
 
-    $this->drupalGet(Url::fromRoute('big_pipe_regression_test.3390178'));
+    $this->drupalGet(Url::fromRoute('big_pipe_test_multiple_replacements'));
     $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
     $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
     $this->assertCount(0, $this->getSession()->getPage()->findAll('css', 'span[data-big-pipe-placeholder-id]'));
