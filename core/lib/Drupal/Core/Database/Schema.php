@@ -2,12 +2,19 @@
 
 namespace Drupal\Core\Database;
 
+use Drupal\Core\Database\Event\SchemaKeyColumnDefinitionEvent;
+use Drupal\Core\Database\Event\SchemaIndexDefinitionEvent;
+use Drupal\Core\Database\Event\SchemaPrimaryKeyDefinitionEvent;
 use Drupal\Core\Database\Query\PlaceholderInterface;
+use Drupal\Core\Database\Schema\Table;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
 
 /**
  * Provides a base implementation for Database Schema.
  */
 abstract class Schema implements PlaceholderInterface {
+
+  use ConvertDefinitionTrait;
 
   /**
    * The database connection.
@@ -46,6 +53,11 @@ abstract class Schema implements PlaceholderInterface {
   public function __construct($connection) {
     $this->uniqueIdentifier = uniqid('', TRUE);
     $this->connection = $connection;
+    $this->connection->enableEvents([
+      SchemaKeyColumnDefinitionEvent::class,
+      SchemaIndexDefinitionEvent::class,
+      SchemaPrimaryKeyDefinitionEvent::class,
+    ]);
   }
 
   /**
@@ -614,6 +626,8 @@ abstract class Schema implements PlaceholderInterface {
     if ($this->tableExists($name)) {
       throw new SchemaObjectExistsException("Table '$name' already exists.");
     }
+    $tableDefinition = $this->convertTableToSchemaDefinition($table);
+    $table = new Table($name, $tableDefinition);
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
       $this->connection->query($statement);
@@ -627,7 +641,7 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @param string $name
    *   The name of the table to create.
-   * @param array $table
+   * @param array|\Drupal\Core\Database\Schema\Table $table
    *   A Schema API table definition array.
    *
    * @return array
