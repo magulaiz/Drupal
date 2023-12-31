@@ -38,14 +38,6 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
   const AJAX_REQUEST_PARAMETER = '_drupal_ajax';
 
   /**
-   * Request parameter used to track page state.
-   *
-   * This is used to track various page states across ajax requests like the
-   * current theme and available libraries.
-   */
-  const AJAX_PAGE_STATE_REQUEST_PARAMETER = 'ajax_page_state';
-
-  /**
    * Sets the AJAX parameter from the current request.
    *
    * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event

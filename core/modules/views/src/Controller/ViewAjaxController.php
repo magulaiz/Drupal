@@ -8,7 +8,6 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Path\CurrentPathStack;
@@ -38,8 +37,8 @@ class ViewAjaxController implements ContainerInjectionInterface {
     'view_dom_id',
     'pager_element',
     'view_base_path',
-    AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER,
-    AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
+    'ajax_page_state',
+    '_drupal_ajax',
     FormBuilderInterface::AJAX_FORM_REQUEST,
     MainContentViewSubscriber::WRAPPER_FORMAT,
   ];
@@ -153,7 +152,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       // the related listener can behave correctly.
       // @todo Remove this parsing once these are removed from the request in
       //   https://www.drupal.org/node/2504709.
-      $existing_page_state = $request->get(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
+      $existing_page_state = $request->get('ajax_page_state');
       foreach (self::FILTERED_QUERY_PARAMETERS as $key) {
         $request->query->remove($key);
         $request->request->remove($key);
@@ -207,10 +206,10 @@ class ViewAjaxController implements ContainerInjectionInterface {
         ];
         if (is_array($existing_page_state) &&
             ($temp_attributes = array_intersect_key($existing_page_state, $theme_keys))) {
-          $request->attributes->set(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER, $temp_attributes);
+          $request->attributes->set('ajax_page_state', $temp_attributes);
         }
         $preview = $view->preview($display_id, $args);
-        $request->attributes->remove(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
+        $request->attributes->remove('ajax_page_state');
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);

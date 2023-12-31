@@ -4,7 +4,6 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -66,7 +65,7 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->get(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
     return !empty($ajax_page_state['theme']) && isset($ajax_page_state['theme_token']);
   }
 
@@ -74,7 +73,7 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->get(AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER);
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
     $theme = $ajax_page_state['theme'];
     $token = $ajax_page_state['theme_token'];
 

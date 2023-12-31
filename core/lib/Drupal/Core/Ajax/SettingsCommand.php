@@ -3,7 +3,6 @@
 namespace Drupal\Core\Ajax;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 
 /**
  * AJAX command for adjusting Drupal's JavaScript settings.
@@ -56,8 +55,8 @@ class SettingsCommand implements CommandInterface {
    * Implements Drupal\Core\Ajax\CommandInterface:render().
    */
   public function render() {
-    if (isset($this->settings[AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER]['libraries'])) {
-      $this->settings[AjaxResponseSubscriber::AJAX_PAGE_STATE_REQUEST_PARAMETER]['libraries'] = UrlHelper::compressQueryParameter($this->settings['ajax_page_state']['libraries']);
+    if (isset($this->settings['ajax_page_state']['libraries'])) {
+      $this->settings['ajax_page_state']['libraries'] = UrlHelper::compressQueryParameter($this->settings['ajax_page_state']['libraries']);
     }
 
     return [
