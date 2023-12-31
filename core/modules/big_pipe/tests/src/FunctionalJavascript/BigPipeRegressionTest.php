@@ -160,7 +160,7 @@ JS;
    *
    * @see https://www.drupal.org/node/3390178
    */
-  public function testMultipleReplacements() {
+  public function testMultipleReplacements(): void {
     $this->container->get('module_installer')->install(['node']);
     $type = $this->drupalCreateContentType();
     // This number is somewhat arbitrary, but set high enough to reproduce bug.
