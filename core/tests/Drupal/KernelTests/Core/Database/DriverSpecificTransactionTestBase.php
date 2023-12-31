@@ -500,7 +500,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // Even with stacking.
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
-    $transaction2 = $this->connection->startTransaction();
+    $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->executeDDLStatement();
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
@@ -512,7 +512,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // A transaction after a DDL statement should still work the same.
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
-    $transaction2 = $this->connection->startTransaction();
+    $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->executeDDLStatement();
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
@@ -537,7 +537,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // Including with stacking.
       $this->cleanUp();
       $transaction = $this->createRootTransaction('', FALSE);
-      $transaction2 = $this->connection->startTransaction();
+      $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
       $this->executeDDLStatement();
       $transaction2->commit();
       $transaction3 = $this->connection->startTransaction();
