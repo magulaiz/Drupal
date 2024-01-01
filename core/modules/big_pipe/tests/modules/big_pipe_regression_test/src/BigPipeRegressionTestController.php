@@ -3,6 +3,7 @@
 namespace Drupal\big_pipe_regression_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
@@ -10,7 +11,7 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';
 
-  const PLACEHOLDER_COUNT = 4000;
+  const PLACEHOLDER_COUNT = 2000;
 
   /**
    * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testMultipleBodies_2678662()
@@ -56,9 +57,9 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
    */
   public function multipleReplacements() {
     $build = [];
-    foreach (range(1, self::PLACEHOLDER_COUNT) as $id) {
+    foreach (range(1, self::PLACEHOLDER_COUNT) as $length) {
       $build[] = [
-        '#lazy_builder' => [static::class . '::largeContentBuilder', []],
+        '#lazy_builder' => [static::class . '::renderRandomSentence', [rand(1, $length)]],
         '#create_placeholder' => TRUE,
       ];
     }
@@ -91,10 +92,23 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
   }
 
   /**
+   * Renders a random length sentence.
+   *
+   * @param int $length
+   *   The sentence length.
+   *
+   * @return array
+   *   Render array.
+   */
+  public static function renderRandomSentence(int $length): array {
+    return ['#cache' => ['max-age' => 0], '#markup' => (new Random())->sentences($length)];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['currentTime', 'largeContentBuilder'];
+    return ['currentTime', 'largeContentBuilder', 'renderRandomSentence'];
   }
 
 }
