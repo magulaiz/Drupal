@@ -57,7 +57,9 @@ trait ConvertDefinitionTrait {
    */
   final protected function convertColumnToArrayDefinition(Column $column): array {
     $spec = [];
-    $spec['type'] = $column->type;
+    if ($column->type !== Property::Undefined) {
+      $spec['type'] = $column->type;
+    }
     if ($column->description !== Property::Undefined) {
       $spec['description'] = $column->description;
     }

@@ -5,6 +5,9 @@ namespace Drupal\Tests\mysql\Kernel\mysql;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
+use Drupal\Core\Database\SchemaDefinition\Column as ColumnDefinition;
+use Drupal\Core\Database\SchemaDefinition\Index as IndexDefinition;
+use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -49,16 +52,18 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    * {@inheritdoc}
    */
   public function testTableWithSpecificDataType(): void {
-    $table_specification = [
-      'description' => 'Schema table description.',
-      'fields' => [
-        'timestamp'  => [
-          'mysql_type' => 'timestamp',
-          'not null' => FALSE,
-          'default' => NULL,
-        ],
+    $table_specification = new TableDefinition(
+      name: 'test_timestamp',
+      description: 'Schema table description.',
+      columns: [
+        new ColumnDefinition(
+          name: 'timestamp',
+          dbSpecificType: ['mysql' => 'timestamp'],
+          notNull: FALSE,
+          default: NULL,
+        ),
       ],
-    ];
+    );
     $this->schema->createTable('test_timestamp', $table_specification);
     $this->assertTrue($this->schema->tableExists('test_timestamp'));
   }
@@ -69,52 +74,67 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    * @see \Drupal\mysql\Driver\Database\mysql\Schema::getNormalizedIndexes()
    */
   public function testIndexLength(): void {
-    $table_specification = [
-      'fields' => [
-        'id'  => [
-          'type' => 'int',
-          'default' => NULL,
-        ],
-        'test_field_text'  => [
-          'type' => 'text',
-          'not null' => TRUE,
-        ],
-        'test_field_string_long'  => [
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ],
-        'test_field_string_ascii_long'  => [
-          'type' => 'varchar_ascii',
-          'length' => 255,
-        ],
-        'test_field_string_short'  => [
-          'type' => 'varchar',
-          'length' => 128,
-          'not null' => TRUE,
-        ],
+    $table_specification = new TableDefinition(
+      name: 'test_table_index_length',
+      columns: [
+        new ColumnDefinition(
+          name: 'id',
+          type: 'int',
+          default: NULL,
+        ),
+        new ColumnDefinition(
+          name: 'test_field_text',
+          type: 'text',
+          notNull: TRUE,
+        ),
+        new ColumnDefinition(
+          name: 'test_field_string_long',
+          type: 'varchar',
+          length: 255,
+          notNull: TRUE,
+        ),
+        new ColumnDefinition(
+          name: 'test_field_string_ascii_long',
+          type: 'varchar_ascii',
+          length: 255,
+        ),
+        new ColumnDefinition(
+          name: 'test_field_string_short',
+          type: 'varchar',
+          length: 128,
+          notNull: TRUE,
+        ),
       ],
-      'indexes' => [
-        'test_regular' => [
-          'test_field_text',
-          'test_field_string_long',
-          'test_field_string_ascii_long',
-          'test_field_string_short',
-        ],
-        'test_length' => [
-          ['test_field_text', 128],
-          ['test_field_string_long', 128],
-          ['test_field_string_ascii_long', 128],
-          ['test_field_string_short', 128],
-        ],
-        'test_mixed' => [
-          ['test_field_text', 200],
-          'test_field_string_long',
-          ['test_field_string_ascii_long', 200],
-          'test_field_string_short',
-        ],
+      indexes: [
+        new IndexDefinition(
+          name: 'test_regular',
+          columns: [
+            'test_field_text',
+            'test_field_string_long',
+            'test_field_string_ascii_long',
+            'test_field_string_short',
+          ],
+        ),
+        new IndexDefinition(
+          name: 'test_length',
+          columns: [
+            ['test_field_text', 128],
+            ['test_field_string_long', 128],
+            ['test_field_string_ascii_long', 128],
+            ['test_field_string_short', 128],
+          ],
+        ),
+        new IndexDefinition(
+          name: 'test_mixed',
+          columns: [
+            ['test_field_text', 200],
+            'test_field_string_long',
+            ['test_field_string_ascii_long', 200],
+            'test_field_string_short',
+          ],
+        ),
       ],
-    ];
+    );
     $this->schema->createTable('test_table_index_length', $table_specification);
 
     // Ensure expected exception thrown when adding index with missing info.

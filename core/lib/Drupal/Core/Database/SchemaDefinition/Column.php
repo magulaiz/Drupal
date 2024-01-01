@@ -14,13 +14,15 @@ final class Column implements SchemaDefinitionInterface {
    *
    * @param string $name
    *   The column name.
-   * @param string $type
-   *   The generic datatype: 'char', 'varchar', 'text', 'blob', 'int', 'float',
-   *   'numeric', or 'serial'. Most types just map to the according database
-   *   engine specific data types. Use 'serial' for auto incrementing fields.
-   *   This will expand to 'INT auto_increment' on MySQL. A special
-   *   'varchar_ascii' type is also available for limiting machine name field
-   *   to US ASCII characters.
+   * @param Property|string $type
+   *   (Optional) The generic datatype: 'char', 'varchar', 'text', 'blob',
+   *   'int', 'float', 'numeric', or 'serial'. Most types just map to the
+   *   according database engine specific data types. This argument is
+   *   mandatory unless $dbSpecificType is specified.
+   *   Use 'serial' for auto incrementing fields. This will expand to
+   *   'INT auto_increment' on MySQL.
+   *   A special 'varchar_ascii' type is also available for limiting machine
+   *   name field to US ASCII characters.
    * @param Property|string $description
    *   (Optional) A string in non-markup plain text describing this field and
    *   its purpose. References to other tables should be enclosed in curly
@@ -73,7 +75,7 @@ final class Column implements SchemaDefinitionInterface {
    */
   public function __construct(
     public readonly string $name,
-    public readonly string $type,
+    public readonly Property|string $type = Property::Undefined,
     public readonly Property|string $description = Property::Undefined,
     public readonly Property|bool $serialize = Property::Undefined,
     public readonly Property|string $size = Property::Undefined,
