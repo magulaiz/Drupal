@@ -53,12 +53,17 @@ final class Column implements SchemaDefinitionInterface {
    *   'numeric' only is signed or unsigned. Defaults to FALSE. Ignored for
    *    other field types.
    * @param Property|int $precision
-   *   (Optional) For type 'numeric' fields, indicates the precision (total
-   *   number of significant digits). Mandatory. Ignored for other field types.
-   * @param Property|bool $binary
-   *   (Optional) For type 'numeric' fields, indicates the scale (decimal
-   *   digits right of the decimal point). Mandatory. Ignored for other field
+   *   (Optional) Mandatory for type 'numeric' fields, indicates the precision
+   *   (total number of significant digits). Ignored for other field types.
+   * @param Property|int $scale
+   *   (Optional) Mandatory for type 'numeric' fields, indicates the scale
+   *   (decimal digits right of the decimal point). Ignored for other field
    *   types.
+   * @param Property|bool $binary
+   *   (Optional) A boolean indicating that MySQL should force 'char',
+   *   'varchar' or 'text' fields to use case-sensitive binary collation. This
+   *   has no effect on other database types for which case sensitivity is
+   *   already the default behavior.
    * @param Property|array<string,string> $dbSpecificType
    *   (Optional) If you need to use a column type not included in the
    *   officially supported list of types above, you can specify a type for
