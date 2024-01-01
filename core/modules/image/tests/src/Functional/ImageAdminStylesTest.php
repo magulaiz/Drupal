@@ -530,7 +530,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test preview image show with private scheme.
+   * Tests the display of preview images using a private scheme.
    */
   public function testPreviewImageShowInPrivateScheme() {
     $this->config('system.file')->set('default_scheme', 'private')->save();
@@ -544,7 +544,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style->save();
 
     // Build the derivative preview image file with the Image Style.
-    // @see core/modules/image/image.admin.inc:55
+    // @see template_preprocess_image_style_preview()
     $preview_file = $style->buildUri($original_path);
     $style->createDerivative($original_path, $preview_file);
 
