@@ -362,6 +362,20 @@ class UserDataTest extends UnitTestCase {
       'name' => 'test_value',
     ];
 
+    yield 'Query UID and Name string injection returns string' => [
+      'return_data' => [
+        '5' => (object) [
+          'serialized' => '0',
+          'value' => 'i:12345;',
+        ],
+      ],
+      'test_result' => function ($result) {
+        self::assertSame('i:12345;', $result);
+      },
+      'uid' => 5,
+      'name' => 'test_value',
+    ];
+
     yield 'Query UID return String' => [
       'return_data' => [
         (object) [
@@ -554,6 +568,23 @@ class UserDataTest extends UnitTestCase {
       'name' => NULL,
     ];
 
+    yield 'Query UID string injection returns string' => [
+      'return_data' => [
+        (object) [
+          'uid' => '5',
+          'module' => 'unit_test',
+          'name' => 'test_value',
+          'value' => 'i:12345;',
+          'serialized' => '0',
+        ],
+      ],
+      'test_result' => function ($result) {
+        self::assertSame(['test_value' => 'i:12345;'], $result);
+      },
+      'uid' => 5,
+      'name' => NULL,
+    ];
+
     yield 'Query Name return String' => [
       'return_data' => [
         (object) [
@@ -736,6 +767,23 @@ class UserDataTest extends UnitTestCase {
       'return_data' => [],
       'test_result' => function ($result) {
         self::assertEmpty($result);
+      },
+      'uid' => NULL,
+      'name' => 'test_value',
+    ];
+
+    yield 'Query Name string injection returns string' => [
+      'return_data' => [
+        (object) [
+          'uid' => '5',
+          'module' => 'unit_test',
+          'name' => 'test_value',
+          'value' => 'i:12345;',
+          'serialized' => '0',
+        ],
+      ],
+      'test_result' => function ($result) {
+        self::assertSame(['5' => 'i:12345;'], $result);
       },
       'uid' => NULL,
       'name' => 'test_value',
@@ -929,6 +977,23 @@ class UserDataTest extends UnitTestCase {
       'return_data' => [],
       'test_result' => function ($result) {
         self::assertEmpty($result);
+      },
+      'uid' => NULL,
+      'name' => NULL,
+    ];
+
+    yield 'Query module only string injection returns string' => [
+      'return_data' => [
+        (object) [
+          'uid' => '5',
+          'module' => 'unit_test',
+          'name' => 'test_value',
+          'value' => 'i:12345;',
+          'serialized' => '0',
+        ],
+      ],
+      'test_result' => function ($result) {
+        self::assertSame(['5' => ['test_value' => 'i:12345;']], $result);
       },
       'uid' => NULL,
       'name' => NULL,
