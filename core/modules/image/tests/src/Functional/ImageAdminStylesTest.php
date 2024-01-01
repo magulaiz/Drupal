@@ -548,7 +548,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $preview_file = $style->buildUri($original_path);
     $style->createDerivative($original_path, $preview_file);
 
-    // Check if derivative image exists.
+    // Check if the derivative image exists.
     $this->assertFileExists($preview_file);
 
     // Generate itok token for the preview image.
