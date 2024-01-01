@@ -59,7 +59,7 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
     $build = [];
     foreach (range(1, self::PLACEHOLDER_COUNT) as $length) {
       $build[] = [
-        '#lazy_builder' => [static::class . '::renderRandomSentence', [rand(1, $length)]],
+        '#lazy_builder' => [static::class . '::renderRandomSentence', [$length]],
         '#create_placeholder' => TRUE,
       ];
     }
