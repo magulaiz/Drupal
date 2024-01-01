@@ -4,10 +4,9 @@ namespace Drupal\big_pipe_regression_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Component\Utility\Random;
-use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
-class BigPipeRegressionTestController extends ControllerBase implements TrustedCallbackInterface {
+class BigPipeRegressionTestController implements TrustedCallbackInterface {
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';
 
