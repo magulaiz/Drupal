@@ -77,76 +77,14 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    * @see \Drupal\mysql\Driver\Database\mysql\Schema::getNormalizedIndexes()
    */
   public function testIndexLength(): void {
-    $table_specification = new TableDefinition(
-      name: 'test_table_index_length',
-      columns: [
-        new ColumnDefinition(
-          name: 'id',
-          type: 'int',
-          default: NULL,
-        ),
-        new ColumnDefinition(
-          name: 'test_field_text',
-          type: 'text',
-          notNull: TRUE,
-        ),
-        new ColumnDefinition(
-          name: 'test_field_string_long',
-          type: 'varchar',
-          length: 255,
-          notNull: TRUE,
-        ),
-        new ColumnDefinition(
-          name: 'test_field_string_ascii_long',
-          type: 'varchar_ascii',
-          length: 255,
-        ),
-        new ColumnDefinition(
-          name: 'test_field_string_short',
-          type: 'varchar',
-          length: 128,
-          notNull: TRUE,
-        ),
-      ],
-      indexes: [
-        new IndexDefinition(
-          name: 'test_regular',
-          columns: [
-            'test_field_text',
-            'test_field_string_long',
-            'test_field_string_ascii_long',
-            'test_field_string_short',
-          ],
-        ),
-        new IndexDefinition(
-          name: 'test_length',
-          columns: [
-            ['test_field_text', 128],
-            ['test_field_string_long', 128],
-            ['test_field_string_ascii_long', 128],
-            ['test_field_string_short', 128],
-          ],
-        ),
-        new IndexDefinition(
-          name: 'test_mixed',
-          columns: [
-            ['test_field_text', 200],
-            'test_field_string_long',
-            ['test_field_string_ascii_long', 200],
-            'test_field_string_short',
-          ],
-        ),
-      ],
-    );
+    $table_specification = $this->buildTableIndexLengthDefinition();
     $this->schema->createTable('test_table_index_length', $table_specification);
-    $array_table_specification = $this->convertTableToArrayDefinition($table_specification);
 
     // Ensure expected exception thrown when adding index with missing info.
     $expected_exception_message = "MySQL needs the 'test_field_text' field specification in order to normalize the 'test_regular' index";
-    $missing_field_spec = $array_table_specification;
-    unset($missing_field_spec['fields']['test_field_text']);
+    $missing_field_spec = $this->buildTableIndexLengthDefinition(FALSE);
     try {
-      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $missing_field_spec);
+      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], [], $missing_field_spec);
       $this->fail('SchemaException not thrown when adding index with missing information.');
     }
     catch (SchemaException $e) {
@@ -154,13 +92,12 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     }
 
     // Add a separate index.
-    $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $array_table_specification);
-    $table_specification_with_new_index = $array_table_specification;
-    $table_specification_with_new_index['indexes']['test_separate'] = [['test_field_text', 200]];
+    $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], [], $table_specification);
+    $table_specification_with_new_index = $this->buildTableIndexLengthDefinition(TRUE, TRUE);
 
     // Ensure that the exceptions of addIndex are thrown as expected.
     try {
-      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $array_table_specification);
+      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], [], $table_specification_with_new_index);
       $this->fail('\Drupal\Core\Database\SchemaObjectExistsException exception missed.');
     }
     catch (SchemaObjectExistsException $e) {
@@ -168,7 +105,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     }
 
     try {
-      $this->schema->addIndex('test_table_non_existing', 'test_separate', [['test_field_text', 200]], $array_table_specification);
+      $this->schema->addIndex('test_table_non_existing', 'test_separate', [['test_field_text', 200]], [], $table_specification_with_new_index);
       $this->fail('\Drupal\Core\Database\SchemaObjectDoesNotExistException exception missed.');
     }
     catch (SchemaObjectDoesNotExistException $e) {
@@ -203,8 +140,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
     // Count the number of columns defined in the indexes.
     $column_count = 0;
-    foreach ($table_specification_with_new_index['indexes'] as $index) {
-      foreach ($index as $field) {
+    foreach ($table_specification_with_new_index->indexes as $index) {
+      foreach ($index->columns as $field) {
         $column_count++;
       }
     }
@@ -214,6 +151,86 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       $test_count++;
     }
     $this->assertEquals($column_count, $test_count, 'Number of tests matches expected value.');
+  }
+
+  /**
+   * Helper to build a table for ::testIndexLength().
+   */
+  protected function buildTableIndexLengthDefinition(bool $includeTestFieldText = TRUE, bool $includeSeparateIndex = FALSE): TableDefinition {
+    $columns = [];
+    $columns[] = new ColumnDefinition(
+      name: 'id',
+      type: 'int',
+      default: NULL,
+    );
+    if ($includeTestFieldText) {
+      $columns[] = new ColumnDefinition(
+        name: 'test_field_text',
+        type: 'text',
+        notNull: TRUE,
+      );
+    }
+    $columns[] = new ColumnDefinition(
+      name: 'test_field_string_long',
+      type: 'varchar',
+      length: 255,
+      notNull: TRUE,
+    );
+    $columns[] = new ColumnDefinition(
+      name: 'test_field_string_ascii_long',
+      type: 'varchar_ascii',
+      length: 255,
+    );
+    $columns[] = new ColumnDefinition(
+      name: 'test_field_string_short',
+      type: 'varchar',
+      length: 128,
+      notNull: TRUE,
+    );
+
+    $indexes = [
+      new IndexDefinition(
+        name: 'test_regular',
+        columns: [
+          'test_field_text',
+          'test_field_string_long',
+          'test_field_string_ascii_long',
+          'test_field_string_short',
+        ],
+      ),
+      new IndexDefinition(
+        name: 'test_length',
+        columns: [
+          ['test_field_text', 128],
+          ['test_field_string_long', 128],
+          ['test_field_string_ascii_long', 128],
+          ['test_field_string_short', 128],
+        ],
+      ),
+      new IndexDefinition(
+        name: 'test_mixed',
+        columns: [
+          ['test_field_text', 200],
+          'test_field_string_long',
+          ['test_field_string_ascii_long', 200],
+          'test_field_string_short',
+        ],
+      ),
+    ];
+    if ($includeSeparateIndex) {
+      $indexes[] = new IndexDefinition(
+        name: 'test_separate',
+        columns: [
+          ['test_field_text', 200],
+        ],
+      );
+    }
+
+    return new TableDefinition(
+      name: 'test_table_index_length',
+      columns: $columns,
+      indexes: $indexes,
+    );
   }
 
   /**

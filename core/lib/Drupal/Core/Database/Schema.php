@@ -484,6 +484,9 @@ abstract class Schema implements PlaceholderInterface {
    *   Note that the above is a partial table definition and that we would
    *   usually pass a complete table definition as obtained through
    *   hook_schema() instead.
+   * @param \Drupal\Core\Database\SchemaDefinition\Table|null $tableDefinition
+   *   (Optional) The table specification (see above) as a SchemaDefinition
+   *   object.
    *
    * @see schemaapi
    * @see hook_schema()
@@ -495,7 +498,7 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @todo remove the $spec argument whenever schema introspection is added.
    */
-  abstract public function addIndex($table, $name, $fields, array $spec);
+   abstract public function addIndex($table, $name, $fields, array $spec, /* ?TableDefinition $tableDefinition */);
 
   /**
    * Drop an index.
