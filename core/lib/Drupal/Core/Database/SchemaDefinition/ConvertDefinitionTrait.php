@@ -87,7 +87,9 @@ trait ConvertDefinitionTrait {
       $spec['binary'] = $column->binary;
     }
     if ($column->dbSpecificType !== Property::Undefined) {
-      $spec[$column->dbSpecificType[0] . '_type'] = $column->dbSpecificType[1];
+      foreach ($column->dbSpecificType as $db => $dbType) {
+        $spec[$db . '_type'] = $dbType;
+      }
     }
     return $spec;
   }
