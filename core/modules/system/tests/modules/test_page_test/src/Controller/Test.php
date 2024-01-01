@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\test_page_test\Controller;
 
 use Drupal\Core\Render\Markup;
@@ -85,7 +87,7 @@ class Test {
    * @param int $code
    *   The status code.
    */
-  public function httpResponseException($code) {
+  public function httpResponseException(int $code) {
     throw new HttpException($code);
   }
 

@@ -5,7 +5,7 @@
  * Implements hooks for the CKEditor 4 to 5 Upgrade plugin Test module.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * Implements hook_ckeditor4to5upgrade_plugin_info_alter().

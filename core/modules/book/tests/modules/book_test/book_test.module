@@ -11,6 +11,8 @@
  * @see \Drupal\book\Tests\BookTest::testBookNavigationCacheContext()
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_page_attachments().
  */

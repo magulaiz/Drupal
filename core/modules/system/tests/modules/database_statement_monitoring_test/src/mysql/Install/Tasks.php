@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\database_statement_monitoring_test\mysql\Install;
 
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks as BaseTasks;

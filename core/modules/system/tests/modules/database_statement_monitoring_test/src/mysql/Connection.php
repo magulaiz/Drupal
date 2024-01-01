@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\database_statement_monitoring_test\mysql;
 
 use Drupal\mysql\Driver\Database\mysql\Connection as BaseConnection;

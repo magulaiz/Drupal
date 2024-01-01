@@ -5,6 +5,8 @@
  * Provides tests for tour module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
 
 /**

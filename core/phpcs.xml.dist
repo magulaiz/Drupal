@@ -281,6 +281,7 @@
     <include-pattern>./tests/Drupal/Tests/*Trait.php</include-pattern>
     <include-pattern>./tests/Drupal/Tests/Traits/*</include-pattern>
     <exclude-pattern>./tests/Drupal/Tests/Listeners/*</exclude-pattern>
+    <include-pattern>*/tests/*_test/</include-pattern>
   </rule>
 
   <!-- Squiz sniffs -->

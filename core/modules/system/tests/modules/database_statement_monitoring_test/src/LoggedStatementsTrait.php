@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\database_statement_monitoring_test;
 
 @trigger_error('\Drupal\database_statement_monitoring_test\LoggedStatementsTrait is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3318162', E_USER_DEPRECATED);
