@@ -137,7 +137,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Search for "Page One".
     $this->submitForm(['title' => 'Page One'], 'Filter');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()-> assertExpectedAjaxRequest(1);
 
     // Verify that the theme is the 'claro' admin theme and not the default
     // theme ('stark').
