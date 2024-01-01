@@ -6,6 +6,8 @@ namespace Drupal\Core\Database\SchemaDefinition;
 
 /**
  * A helper trait to convert SchemaDefinition objects to legacy array.
+ *
+ * @internal
  */
 trait ConvertDefinitionTrait {
 

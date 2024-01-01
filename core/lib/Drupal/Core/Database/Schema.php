@@ -619,6 +619,7 @@ abstract class Schema implements PlaceholderInterface {
       throw new SchemaObjectExistsException("Table '$name' already exists.");
     }
     if ($table instanceof TableDefinition) {
+      assert($name === $table->name, "The value of the \$name argument '{$name}' must be equal to the \$name property of the \$table argument; found '{$table->name}'.");
       $name = $table->name;
       $table = $this->convertTableToArrayDefinition($table);
     }
