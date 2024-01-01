@@ -114,10 +114,10 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $definition += $this->getDefinitionWithReplacements($type, $replace);
     $constraint_collection = $definition['constraints'];
     foreach ($constraint_collection as $constraint => $config) {
-       $constraint = $this->constraintManager->getDefinition($constraint);
-       if ($constraint['type'] !== $type) {
-         throw new \LogicException("The constraint {$constraint['id']} is not allowed on this config schema, it is only allowed on {$constraint['type']}, this is {$type}.");
-       }
+      $constraint = $this->constraintManager->getDefinition($constraint);
+      if ($constraint['type'] !== $type) {
+        throw new \LogicException("The constraint {$constraint['id']} is not allowed on this config schema, it is only allowed on {$constraint['type']}, this is {$type}.");
+      }
     }
 
     $data_definition = $this->createDataDefinition($definition['type']);
