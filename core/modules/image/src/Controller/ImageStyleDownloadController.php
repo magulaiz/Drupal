@@ -177,7 +177,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     }
 
     // If it is default sample.png, ignore scheme.
-    if ($image_uri == $sample_image_uri) {
+    if ($image_uri === $sample_image_uri) {
       $image_uri = $target;
     }
 
