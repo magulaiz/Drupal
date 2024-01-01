@@ -9,6 +9,11 @@ namespace Drupal\Core\Database\SchemaDefinition;
  */
 trait ConvertDefinitionTrait {
 
+  /**
+   * Converts a Table object.
+   *
+   * @internal
+   */
   final protected function convertTableToArrayDefinition(Table $table): array {
     $spec = [];
     if ($table->description !== Property::Undefined) {
@@ -30,6 +35,11 @@ trait ConvertDefinitionTrait {
     return $spec;
   }
 
+  /**
+   * Converts an array of Column objects.
+   *
+   * @internal
+   */
   final protected function convertColumnsToArrayDefinition(array $columns): array {
     $spec = [];
     foreach ($columns as $column) {
@@ -38,6 +48,11 @@ trait ConvertDefinitionTrait {
     return $spec;
   }
 
+  /**
+   * Converts a Column object.
+   *
+   * @internal
+   */
   final protected function convertColumnToArrayDefinition(Column $column): array {
     $spec = [];
     $spec['type'] = $column->type;
@@ -72,11 +87,16 @@ trait ConvertDefinitionTrait {
       $spec['binary'] = $column->binary;
     }
     if ($column->dbSpecificType !== Property::Undefined) {
-      $spec[dbSpecificType[0] . '_type'] = $column->dbSpecificType[1];
+      $spec[$column->dbSpecificType[0] . '_type'] = $column->dbSpecificType[1];
     }
     return $spec;
   }
 
+  /**
+   * Converts an array of KeyColumn objects.
+   *
+   * @internal
+   */
   final protected function convertKeyColumnsToArrayDefinition(array $columns): array {
     $spec = [];
     foreach ($columns as $column) {
@@ -85,6 +105,11 @@ trait ConvertDefinitionTrait {
     return $spec;
   }
 
+  /**
+   * Converts a KeyColumn object.
+   *
+   * @internal
+   */
   final protected function convertKeyColumnToArrayDefinition(KeyColumn $column): string|array {
     if ($column->length !== NULL) {
       return [$column->name, $column->length];
@@ -92,10 +117,20 @@ trait ConvertDefinitionTrait {
     return $column->name;
   }
 
+  /**
+   * Converts a PrimaryKey object.
+   *
+   * @internal
+   */
   final protected function convertPrimaryKeyToArrayDefinition(PrimaryKey $primaryKey): array {
     return $this->convertKeyColumnsToArrayDefinition($primaryKey->columns);
   }
 
+  /**
+   * Converts an array of UniqueKey objects.
+   *
+   * @internal
+   */
   final protected function convertUniqueKeysToArrayDefinition(array $uniqueKeys): array {
     $spec = [];
     foreach ($uniqueKeys as $uniqueKey) {
@@ -104,6 +139,11 @@ trait ConvertDefinitionTrait {
     return $spec;
   }
 
+  /**
+   * Converts an array of Index objects.
+   *
+   * @internal
+   */
   final protected function convertIndexesToArrayDefinition(array $indexes): array {
     $spec = [];
     foreach ($indexes as $index) {
@@ -112,6 +152,11 @@ trait ConvertDefinitionTrait {
     return $spec;
   }
 
+  /**
+   * Converts an array of ForeignKey objects.
+   *
+   * @internal
+   */
   final protected function convertForeignKeysToArrayDefinition(array $foreignKeys): array {
     $spec = [];
     foreach ($foreignKeys as $foreignKey) {
