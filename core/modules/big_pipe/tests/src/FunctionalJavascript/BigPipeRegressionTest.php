@@ -161,6 +161,9 @@ JS;
    * @see https://www.drupal.org/node/3390178
    */
   public function testMultipleReplacements(): void {
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+
     $assert_session = $this->assertSession();
 
     $this->drupalGet(Url::fromRoute('big_pipe_test_multiple_replacements'));
