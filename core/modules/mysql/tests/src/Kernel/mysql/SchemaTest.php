@@ -139,10 +139,11 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       ],
     );
     $this->schema->createTable('test_table_index_length', $table_specification);
+    $array_table_specification = $this->convertTableToArrayDefinition($table_specification);
 
     // Ensure expected exception thrown when adding index with missing info.
     $expected_exception_message = "MySQL needs the 'test_field_text' field specification in order to normalize the 'test_regular' index";
-    $missing_field_spec = $this->convertTableToArrayDefinition($table_specification);
+    $missing_field_spec = $array_table_specification;
     unset($missing_field_spec['fields']['test_field_text']);
     try {
       $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $missing_field_spec);
@@ -153,13 +154,13 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     }
 
     // Add a separate index.
-    $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $table_specification);
-    $table_specification_with_new_index = $table_specification;
+    $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $array_table_specification);
+    $table_specification_with_new_index = $array_table_specification;
     $table_specification_with_new_index['indexes']['test_separate'] = [['test_field_text', 200]];
 
     // Ensure that the exceptions of addIndex are thrown as expected.
     try {
-      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $table_specification);
+      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $array_table_specification);
       $this->fail('\Drupal\Core\Database\SchemaObjectExistsException exception missed.');
     }
     catch (SchemaObjectExistsException $e) {
@@ -167,7 +168,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     }
 
     try {
-      $this->schema->addIndex('test_table_non_existing', 'test_separate', [['test_field_text', 200]], $table_specification);
+      $this->schema->addIndex('test_table_non_existing', 'test_separate', [['test_field_text', 200]], $array_table_specification);
       $this->fail('\Drupal\Core\Database\SchemaObjectDoesNotExistException exception missed.');
     }
     catch (SchemaObjectDoesNotExistException $e) {
