@@ -3,11 +3,15 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Query\PlaceholderInterface;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
+use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 
 /**
  * Provides a base implementation for Database Schema.
  */
 abstract class Schema implements PlaceholderInterface {
+
+  use ConvertDefinitionTrait;
 
   /**
    * The database connection.
@@ -602,8 +606,8 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @param $name
    *   The name of the table to create.
-   * @param $table
-   *   A Schema API table definition array.
+   * @param array|\Drupal\Core\Database\SchemaDefinition\Table $table
+   *   A Schema API table definition.
    *
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already exists.
@@ -613,6 +617,10 @@ abstract class Schema implements PlaceholderInterface {
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {
       throw new SchemaObjectExistsException("Table '$name' already exists.");
+    }
+    if ($table instanceof TableDefinition) {
+      $name = $table->name;
+      $table = $this->convertTableToArrayDefinition($table);
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
