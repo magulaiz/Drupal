@@ -59,7 +59,7 @@ function template_preprocess_image_style_preview(&$variables) {
   }
   $preview_image = $image_factory->get($preview_file);
 
-  // Generate an itok;
+  // Generate an itok.
   $defaultScheme = \Drupal::config('system.file')->get('default_scheme');
   $variables['itok'] = $style->getPathToken($defaultScheme . '://' . $original_path);
 
