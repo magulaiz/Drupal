@@ -156,28 +156,18 @@ JS;
    * In some situations with either a large number of replacements or multiple
    * replacements involving complex operations, some replacements were not
    * completed. This is a simulation of such a situation by rendering a lot of
-   * node entities on a page.
+   * placeholders on a page.
    *
    * @see https://www.drupal.org/node/3390178
    */
   public function testMultipleReplacements(): void {
-    $this->container->get('module_installer')->install(['node']);
-    $type = $this->drupalCreateContentType();
-    // This number is somewhat arbitrary, but set high enough to reproduce bug.
-    $count = 4000;
-    for ($i = 0; $i < $count; $i++) {
-      $this->drupalCreateNode(['type' => $type->id()]);
-    }
-
-    $user = $this->drupalCreateUser();
-    $this->drupalLogin($user);
     $assert_session = $this->assertSession();
 
     $this->drupalGet(Url::fromRoute('big_pipe_test_multiple_replacements'));
     $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
     $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
     $this->assertCount(0, $this->getSession()->getPage()->findAll('css', 'span[data-big-pipe-placeholder-id]'));
-    $this->assertCount($count + 1, $this->getSession()->getPage()->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
+    $this->assertCount(BigPipeRegressionTestController::PLACEHOLDER_COUNT + 1, $this->getSession()->getPage()->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
   }
 
 }

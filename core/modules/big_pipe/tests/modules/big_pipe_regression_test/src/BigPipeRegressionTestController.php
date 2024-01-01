@@ -3,14 +3,14 @@
 namespace Drupal\big_pipe_regression_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 class BigPipeRegressionTestController extends ControllerBase implements TrustedCallbackInterface {
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';
+
+  const PLACEHOLDER_COUNT = 4000;
 
   /**
    * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testMultipleBodies_2678662()
@@ -56,23 +56,10 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
    */
   public function multipleReplacements() {
     $build = [];
-    try {
-      $ids = $this->entityTypeManager()
-        ->getStorage('node')
-        ->getQuery()
-        ->accessCheck(TRUE)
-        ->execute();
-
-      foreach ($ids as $id) {
-        $build[] = [
-          '#lazy_builder' => [static::class . '::renderNode', [$id]],
-          '#create_placeholder' => TRUE,
-        ];
-      }
-    }
-    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
-      return [
-        '#markup' => '<p>Node storage not available</p>',
+    foreach (range(1, self::PLACEHOLDER_COUNT) as $id) {
+      $build[] = [
+        '#lazy_builder' => [static::class . '::largeContentBuilder', []],
+        '#create_placeholder' => TRUE,
       ];
     }
 
@@ -104,32 +91,10 @@ class BigPipeRegressionTestController extends ControllerBase implements TrustedC
   }
 
   /**
-   * Renders a node given a node id from #lazy_builder callback.
-   *
-   * @param int $id
-   *   The node ID.
-   *
-   * @return array
-   */
-  public static function renderNode(int $id) {
-    try {
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load($id);
-      $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node);
-    }
-    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
-      return [
-        '#markup' => '<p>Node entity not available</p>',
-      ];
-    }
-
-    return ['#cache' => ['max-age' => 0]] + $build;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['currentTime', 'largeContentBuilder', 'renderNode'];
+    return ['currentTime', 'largeContentBuilder'];
   }
 
 }
