@@ -5,6 +5,7 @@ namespace Drupal\Core\Extension;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -658,6 +659,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
     $schema = $this->connection->schema();
     foreach ($tables as $name => $table) {
+      assert(!($table instanceof Table) || ($name === $table->name), "The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'.");
       $schema->createTable($name, $table);
     }
   }

@@ -22,6 +22,7 @@ final class ForeignKey extends KeyBase {
   ) {
     parent::__construct($columns);
     $this->foreignColumns = $this->buildColumns($foreignColumns);
+    assert(count($this->columns) === count($this->foreignColumns), "Mismatching count of columns for the {$this->name} foreign key.");
   }
 
 }

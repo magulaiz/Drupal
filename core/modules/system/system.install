@@ -1621,7 +1621,7 @@ function system_schema() {
   // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
   // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
   // @todo: Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
-  $schema[] = new Table(
+  $schema['sequences'] = new Table(
     name: 'sequences',
     description: 'Stores IDs.',
     columns: [
@@ -1636,7 +1636,7 @@ function system_schema() {
     primaryKey: new PrimaryKey(['value']),
   );
 
-  $schema[] = new Table(
+  $schema['sessions'] = new Table(
     name: 'sessions',
     description: "Drupal's session handlers read and write into the sessions table. Each record represents a user session, either anonymous or authenticated.",
     columns: [
