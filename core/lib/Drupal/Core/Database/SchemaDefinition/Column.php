@@ -42,7 +42,7 @@ final class Column implements SchemaDefinitionInterface {
    * @param Property|bool $notNull
    *   (Optional)  If true, no NULL values will be allowed in this database
    *   column. Defaults to false.
-   * @param Property|string|int $default
+   * @param Property|string|int|null $default
    *   (Optional) The field's default value. The PHP type of the value
    *   matters: '', '0', and 0 are all different. If you specify '0' as the
    *   default value for a type 'int' field it will not work because '0' is a
@@ -80,7 +80,7 @@ final class Column implements SchemaDefinitionInterface {
     public readonly Property|bool $serialize = Property::Undefined,
     public readonly Property|string $size = Property::Undefined,
     public readonly Property|bool $notNull = Property::Undefined,
-    public readonly Property|string|int $default = Property::Undefined,
+    public readonly Property|string|int|NULL $default = Property::Undefined,
     public readonly Property|int $length = Property::Undefined,
     public readonly Property|bool $unsigned = Property::Undefined,
     public readonly Property|int $precision = Property::Undefined,
