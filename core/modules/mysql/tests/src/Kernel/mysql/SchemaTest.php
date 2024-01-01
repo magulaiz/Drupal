@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\SchemaDefinition\Column as ColumnDefinition;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
 use Drupal\Core\Database\SchemaDefinition\Index as IndexDefinition;
 use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 use Drupal\Core\Database\SchemaException;
@@ -19,6 +20,8 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
  * @group Database
  */
 class SchemaTest extends DriverSpecificSchemaTestBase {
+
+  use ConvertDefinitionTrait;
 
   /**
    * {@inheritdoc}
@@ -139,7 +142,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
     // Ensure expected exception thrown when adding index with missing info.
     $expected_exception_message = "MySQL needs the 'test_field_text' field specification in order to normalize the 'test_regular' index";
-    $missing_field_spec = $table_specification;
+    $missing_field_spec = $this->convertTableToArrayDefinition($table_specification);
     unset($missing_field_spec['fields']['test_field_text']);
     try {
       $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $missing_field_spec);

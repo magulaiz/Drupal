@@ -13,11 +13,24 @@ abstract class KeyBase implements SchemaDefinitionInterface {
 
   /**
    * Constructor.
+   *
+   * @param KeyColumn[] $columns
+   *   An array of one or more key column specifiers.
    */
   public function __construct(array $columns) {
     $this->columns = $this->buildColumns($columns);
   }
 
+  /**
+   * Builds an array of KeyColumn objects from a mixed list of columns.
+   *
+   * @param list<KeyColumn|string|array{0:string, 1:int}> $rawColumns
+   *   The list can be of a mix of KeyColumn objects, strings representing
+   *   column names, or arrays to represent limited length keys.
+   *
+   * @return KeyColumn[]
+   *   The normalized list of KeyColumn objects.
+   */
   protected function buildColumns(array $rawColumns): array {
     $columns = [];
     foreach ($rawColumns as $rawColumn) {
