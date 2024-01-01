@@ -62,7 +62,7 @@ class PasswordVerifyTest extends UnitTestCase {
     $corePassword->check($samplePassword, $sampleHash)->willReturn(TRUE);
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
-    $result = $passwordService->check($samplePassword, $sampleHash);
+    $result = $passwordService->verify($samplePassword, $sampleHash);
     $this->assertTrue($result, 'Calls to check() are forwarded to core password service if hash settings are not recognized.');
   }
 
@@ -90,14 +90,14 @@ class PasswordVerifyTest extends UnitTestCase {
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
 
-    $result = $passwordService->check($validPassword, $passwordHash);
+    $result = $passwordService->verify($validPassword, $passwordHash);
     $this->assertTrue($result, 'Accepts valid passwords created prior to 10.1.x');
-    $result = $passwordService->check($invalidPassword, $passwordHash);
+    $result = $passwordService->verify($invalidPassword, $passwordHash);
     $this->assertFalse($result, 'Rejects invalid passwords created prior to 10.1.x');
 
-    $result = $passwordService->check($validPassword, $passwordLayered);
+    $result = $passwordService->verify($validPassword, $passwordLayered);
     $this->assertTrue($result, 'Accepts valid passwords migrated from sites running 6.x');
-    $result = $passwordService->check($invalidPassword, $passwordLayered);
+    $result = $passwordService->verify($invalidPassword, $passwordLayered);
     $this->assertFalse($result, 'Rejects invalid passwords migrated from sites running 6.x');
   }
 
@@ -129,11 +129,11 @@ class PasswordVerifyTest extends UnitTestCase {
     if ($allowed) {
       $hash = $passwordService->hash($password);
       $this->assertNotFalse($hash);
-      $result = $passwordService->check($password, $hash);
+      $result = $passwordService->verify($password, $hash);
       $this->assertTrue($result);
     }
     else {
-      $result = $passwordService->check($password, $bogusHash);
+      $result = $passwordService->verify($password, $bogusHash);
       $this->assertFalse($result);
     }
   }

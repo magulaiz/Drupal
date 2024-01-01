@@ -5,7 +5,7 @@ namespace Drupal\Core\Password;
 /**
  * Secure password hashing functions for user authentication.
  *
- * @deprecated Scheduled for removal in Drupal 10.2.x. Constants and properties
+ * @deprecated Scheduled for removal in Drupal 10.3.x. Constants and properties
  *   will me moved in \Drupal\Core\Password\PasswordHashInterface. Use
  *   \Drupal\Core\Password\PasswordHashInterface instead.
  *

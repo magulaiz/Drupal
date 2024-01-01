@@ -27,7 +27,7 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * The password hasher under test.
    */
-  protected PasswordInterface $passwordHasher;
+  protected PasswordHashInterface $passwordHasher;
 
   /**
    * {@inheritdoc}
@@ -78,8 +78,8 @@ class PhpPasswordTest extends UnitTestCase {
 
     // Now the hash should be OK.
     $this->assertFalse($strongHasher->needsRehash($rehashedPassword), 'Re-hashed password does not need a new hash.');
-    $this->assertTrue($strongHasher->check($this->password, $rehashedPassword), 'Password check succeeds with re-hashed password.');
-    $this->assertTrue($this->passwordHasher->check($this->password, $rehashedPassword), 'Password check succeeds with re-hashed password with original hasher.');
+    $this->assertTrue($strongHasher->verify($this->password, $rehashedPassword), 'Password check succeeds with re-hashed password.');
+    $this->assertTrue($this->passwordHasher->verify($this->password, $rehashedPassword), 'Password check succeeds with re-hashed password with original hasher.');
   }
 
   /**
