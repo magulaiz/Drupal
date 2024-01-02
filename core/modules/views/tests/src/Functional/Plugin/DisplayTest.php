@@ -7,6 +7,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests the basic display plugin.
@@ -14,7 +15,7 @@ use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin
  * @group views
  */
 class DisplayTest extends ViewTestBase {
-
+  use StringTranslationTrait;
   /**
    * Views used by this test.
    *
@@ -459,6 +460,31 @@ class DisplayTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/display/files/page_1/rendering_language');
     $this->assertSession()->pageTextContains($not_supported_text);
     $this->assertSession()->pageTextNotContains($supported_text);
+  }
+
+  /**
+   * Tests view with external page url should throw error.
+   */
+  public function testViewUrlAsExternal() {
+    $this->drupalGet('admin/structure/views/add');
+    $this->assertSession()->statusCodeEquals(200);
+    // Create a view that sorts oldest first.
+    $view1 = [];
+    $view1['label'] = $this->randomMachineName(16);
+    $view1['id'] = strtolower($this->randomMachineName(16));
+    $view1['description'] = $this->randomMachineName(16);
+    $view1['page[create]'] = 1;
+    $view1['page[title]'] = $this->randomMachineName(16);
+    $view1['page[path]'] = 'https://www.' . $this->randomMachineName(16) . '.com';
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view1, 'Save and edit');
+    $this->assertSession()->responseContains('Path component ' . "'" . $view1['page[path]'] . "'" . ' is external. External URL is not accepted as view path.');
+
+    // Saving view with internal url.
+    $view1['page[path]'] = 'admin/' . $this->randomMachineName(16);
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view1, 'Save and edit');
+    $this->assertSession()->responseContains($this->t('The view %view has been saved.', ['%view' => $view1['label']]));
   }
 
 }
