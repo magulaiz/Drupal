@@ -69,7 +69,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    *
    * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::viewElements()
    *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
    * EntityViewBuilder #pre_render and #post_render callbacks prevent recursion.
    *
    * @see https://www.drupal.org/node/3316878
