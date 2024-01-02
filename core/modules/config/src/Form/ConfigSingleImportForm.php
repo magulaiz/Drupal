@@ -5,6 +5,7 @@ namespace Drupal\config\Form;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\config\StorageReplaceDataWrapper;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigManagerInterface;
@@ -27,6 +28,8 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Provides a form for importing a single configuration file.
@@ -246,7 +249,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $config_type = NULL, $config_name = NULL) {
     // When this is the confirmation step fall through to the confirmation form.
     if ($this->data) {
       return parent::buildForm($form, $form_state);
@@ -267,12 +270,14 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#title' => $this->t('Configuration type'),
       '#type' => 'select',
       '#options' => $config_types,
+      '#default_value' => $config_type,
       '#required' => TRUE,
     ];
     $form['config_name'] = [
       '#title' => $this->t('Configuration name'),
       '#description' => $this->t('Enter the name of the configuration file without the <em>.yml</em> extension. (e.g. <em>system.site</em>)'),
       '#type' => 'textfield',
+      '#default_value' => $config_name,
       '#states' => [
         'required' => [
           ':input[name="config_type"]' => ['value' => 'system.simple'],
@@ -288,6 +293,13 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#rows' => 24,
       '#required' => TRUE,
     ];
+    if ($config_type && $config_name) {
+      $fake_form_state = (new FormState())->setValues([
+        'config_type' => $config_type,
+        'config_name' => $config_name,
+      ]);
+      $form['import'] = $this->updateImport($form, $fake_form_state);
+    }
     $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced'),
@@ -304,6 +316,27 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#button_type' => 'primary',
     ];
     return $form;
+  }
+
+  /**
+   * Handles switching the import textarea.
+   */
+  public function updateImport($form, FormStateInterface $form_state) {
+    // Determine the full config name for the selected config entity.
+    if ($form_state->getValue('config_type') !== 'system.simple') {
+      $definition = $this->entityTypeManager->getDefinition($form_state->getValue('config_type'));
+      $name = $definition->getConfigPrefix() . '.' . $form_state->getValue('config_name');
+    }
+    // The config name is used directly for simple configuration.
+    else {
+      $name = $form_state->getValue('config_name');
+    }
+    /**
+     * @var Drupal\Core\Config\FileStorage
+     */
+    $config_storage_sync_service = \Drupal::service('config.storage.sync');
+    $form['import']['#value'] = Yaml::encode($config_storage_sync_service->read($name));
+    return $form['import'];
   }
 
   /**

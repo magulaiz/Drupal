@@ -377,6 +377,10 @@ class ConfigSync extends FormBase {
             'title' => $this->t('Export this config'),
             'url' => Url::fromRoute('config.export_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
           ];
+          $links['import_config'] = [
+            'title' => $this->t('Import this config'),
+            'url' => Url::fromRoute('config.import_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
+          ];
           $form[$collection][$config_change_type]['list']['#rows'][] = [
             'name' => $config_name,
             'operations' => [
