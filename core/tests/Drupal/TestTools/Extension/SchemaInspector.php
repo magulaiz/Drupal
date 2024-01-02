@@ -2,12 +2,17 @@
 
 namespace Drupal\TestTools\Extension;
 
+use Drupal\Core\Database\Exception\SchemaDefinitionException;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Provides methods to access modules' schema.
  */
 class SchemaInspector {
+
+  use ConvertDefinitionTrait;
 
   /**
    * Returns the module's schema specification.
@@ -28,7 +33,23 @@ class SchemaInspector {
    */
   public static function getTablesSpecification(ModuleHandlerInterface $handler, string $module): array {
     if ($handler->loadInclude($module, 'install')) {
-      return $handler->invoke($module, 'schema') ?? [];
+      $tables = $handler->invoke($module, 'schema') ?? [];
+      $temp = [];
+      foreach ($tables as $name => $table) {
+        if ($table instanceof Table) {
+          if (is_int($name)) {
+            $name = $table->name;
+          }
+          if ($name !== $table->name) {
+            throw new SchemaDefinitionException("The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'");
+          }
+          if (!\Drupal::database()->supportsSchemaDefinition()) {
+            $table = $this->convertTableToArrayDefinition($table);
+          }
+        }
+        $temp[$name] = $table;
+      }
+      return $temp;
     }
     return [];
   }

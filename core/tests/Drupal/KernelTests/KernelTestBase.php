@@ -7,7 +7,6 @@ use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
@@ -779,9 +778,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       }
       if (empty($specification[$table])) {
         throw new \LogicException("$module module does not define a schema for table '$table'.");
-      }
-      if ($specification[$table] instanceof Table && $table !== $specification[$table]->name) {
-        throw new \LogicException("The '{$table}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$specification[$table]->name}'.");
       }
       $schema->createTable($table, $specification[$table]);
     }
