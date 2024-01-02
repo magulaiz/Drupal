@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Alteration class for the site information settings form.
  */
-class SystemInformationFormAlter implements ContainerInjectionInterface {
+class SiteInformationFormAlter implements ContainerInjectionInterface {
 
   use DependencySerializationTrait;
 

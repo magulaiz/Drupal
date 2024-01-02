@@ -8,7 +8,7 @@
 declare(strict_types = 1);
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\path_alias\Form\SystemInformationFormAlter;
+use Drupal\path_alias\Form\SiteInformationFormAlter;
 use Drupal\path_alias\Plugin\Condition\PathAliasRequestPath;
 
 /**
@@ -41,6 +41,6 @@ function path_alias_condition_info_alter(array &$definitions): void {
  */
 function path_alias_form_system_site_information_settings_alter(array &$form): void {
   Drupal::classResolver()
-    ->getInstanceFromDefinition(SystemInformationFormAlter::class)
+    ->getInstanceFromDefinition(SiteInformationFormAlter::class)
     ->alterForm($form);
 }
