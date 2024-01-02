@@ -420,7 +420,7 @@ class LinkFieldTest extends BrowserTestBase {
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
         'handler' => 'default',
-        'handler_settings' => []
+        'handler_settings' => [],
       ],
     ])->save();
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
