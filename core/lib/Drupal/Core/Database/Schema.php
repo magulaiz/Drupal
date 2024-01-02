@@ -6,6 +6,22 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
 
 /**
  * Provides a base implementation for Database Schema.
+ *
+ * @phpstan-type TableColumnDefinition array{
+ *   'description': string,
+ *   'type': string,
+ *   'serialize': bool,
+ *   'size': string,
+ *   'not null': bool,
+ *   'default': scalar|array<scalar>,
+ *   'length': string,
+ *   'unsigned': bool,
+ *   'precision': int,
+ *   'scale': int,
+ *   'binary': bool
+ * }
+ * @phpstan-type TableColumns array<string, TableColumnDefinition>
+ * @phpstan-type KeyColumns array<string|array{0: string, 1: int}>
  */
 abstract class Schema implements PlaceholderInterface {
 
@@ -323,6 +339,8 @@ abstract class Schema implements PlaceholderInterface {
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a field by that name.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified keys fail validation.
    */
   abstract public function addField($table, $field, $spec, $keys_new = []);
 
@@ -359,14 +377,52 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   The table to be altered.
    * @param $fields
-   *   Fields for the primary key.
+   *   Fields for the primary key. Partial column length specifications are not
+   *   allowed.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a primary key.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified key fails validation.
    */
   abstract public function addPrimaryKey($table, $fields);
+
+  /**
+   * Validates a primary key schema definition.
+   *
+   * @param KeyColumns $key_fields
+   *   An array containing the fields that will form the primary key.
+   * @param TableColumns $fields
+   *   (Optional) An array containing the field specifications of the table,
+   *   as per the schema data structure format.
+   *
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified fields fail validation.
+   */
+  protected function validatePrimaryKeySchema(array $key_fields, array $fields = []): void {
+    // Ensure no partial column length specified.
+    $fixed_key_fields = [];
+    foreach ($key_fields as $key_field) {
+      if (is_array($key_field)) {
+        @trigger_error('Specification of primary key with column length is deprecated in drupal:10.2.0 and will throw a SchemaException from drupal:11.0.0. Specify full columns for a primary key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
+        $fixed_key_fields[] = $key_field[0];
+      }
+      else {
+        $fixed_key_fields[] = $key_field;
+      }
+    }
+
+    // Ensure primary key is not null.
+    if (!empty($fields)) {
+      foreach (array_intersect($fixed_key_fields, array_keys($fields)) as $field_name) {
+        if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
+          throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");
+        }
+      }
+    }
+  }
 
   /**
    * Drop the primary key.
@@ -408,14 +464,37 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the key.
    * @param $fields
-   *   An array of field names.
+   *   An array of field names. Partial column length specifications are not
+   *   allowed.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a key by that name.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified key fails validation.
    */
   abstract public function addUniqueKey($table, $name, $fields);
+
+  /**
+   * Validates a unique key schema definition.
+   *
+   * @param KeyColumns $key_fields
+   *   An array containing the fields that will form the unique key.
+   * @param TableColumns $fields
+   *   (Optional) An array containing the field specifications of the table,
+   *   as per the schema data structure format.
+   *
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified key fails validation.
+   */
+  protected function validateUniqueKeySchema(array $key_fields, array $fields = []): void {
+    foreach ($key_fields as $key_field) {
+      if (is_array($key_field)) {
+        @trigger_error('Specification of unique keys with column length is deprecated in drupal:10.2.0 and will throw a SchemaException from drupal:11.0.0. Specify full columns for an unique key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
+      }
+    }
+  }
 
   /**
    * Drop a unique key.
@@ -594,6 +673,8 @@ abstract class Schema implements PlaceholderInterface {
    *   If the specified table or source field doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified destination field already exists.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified keys fail validation.
    */
   abstract public function changeField($table, $field, $field_new, $spec, $keys_new = []);
 
@@ -607,6 +688,8 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already exists.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the table definition fails validation.
    * @throws \BadMethodCallException
    *   When ::createTableSql() is not implemented in the concrete driver class.
    */
@@ -716,8 +799,14 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \Drupal\Core\Database\SchemaException
    *   Thrown if any primary key field specification does not exist or if they
    *   do not define 'not null' as TRUE.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   ::validatePrimaryKeySchema() instead.
+   *
+   * @see https://www.drupal.org/node/3375071
    */
   protected function ensureNotNullPrimaryKey(array $primary_key, array $fields) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use ::validatePrimaryKeySchema() instead. See https://www.drupal.org/node/3375071', E_USER_DEPRECATED);
     foreach (array_intersect($primary_key, array_keys($fields)) as $field_name) {
       if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
         throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");

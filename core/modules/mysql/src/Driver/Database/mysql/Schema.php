@@ -104,7 +104,12 @@ class Schema extends DatabaseSchema {
 
     // Process keys & indexes.
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
-      $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
+      $this->validatePrimaryKeySchema($table['primary key'], $table['fields']);
+    }
+    if (!empty($table['unique keys'])) {
+      foreach ($table['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields, $table['fields']);
+      }
     }
     $keys = $this->createKeysSql($table);
     if (count($keys)) {
@@ -407,9 +412,15 @@ class Schema extends DatabaseSchema {
     }
 
     // Fields that are part of a PRIMARY KEY must be added as NOT NULL.
-    $is_primary_key = isset($keys_new['primary key']) && in_array($field, $keys_new['primary key'], TRUE);
+    $is_primary_key = isset($keys_new['primary key']) && in_array($field, $this->fieldNames($keys_new['primary key']), TRUE);
     if ($is_primary_key) {
-      $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $spec]);
+      $this->validatePrimaryKeySchema($keys_new['primary key'], [$field => $spec]);
+    }
+
+    if (!empty($keys_new['unique keys'])) {
+      foreach ($keys_new['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields, [$field => $spec]);
+      }
     }
 
     $fix_null = FALSE;
@@ -506,6 +517,7 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function addPrimaryKey($table, $fields) {
+    $this->validatePrimaryKeySchema($fields);
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add primary key to table '$table': table doesn't exist.");
     }
@@ -543,6 +555,7 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function addUniqueKey($table, $name, $fields) {
+    $this->validateUniqueKeySchema($fields);
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add unique key '$name' to table '$table': table doesn't exist.");
     }
@@ -634,8 +647,13 @@ class Schema extends DatabaseSchema {
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field_new, $keys_new['primary key'], TRUE)) {
-      $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field_new => $spec]);
+    if (isset($keys_new['primary key']) && in_array($field_new, $this->fieldNames($keys_new['primary key']), TRUE)) {
+      $this->validatePrimaryKeySchema($keys_new['primary key'], [$field_new => $spec]);
+    }
+    if (!empty($keys_new['unique keys'])) {
+      foreach ($keys_new['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields, [$field_new => $spec]);
+      }
     }
 
     $sql = 'ALTER TABLE {' . $table . '} CHANGE [' . $field . '] ' . $this->createFieldSql($field_new, $this->processField($spec));
