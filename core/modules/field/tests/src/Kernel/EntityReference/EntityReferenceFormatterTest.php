@@ -14,6 +14,8 @@ use Drupal\user\RoleInterface;
 use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the formatters functionality.
@@ -235,8 +237,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    * Tests recursive rendering protection failing over single entity N times.
    */
   public function testEntityFormatterRecursiveRenderingFailing(): void {
-    \Drupal::requestStack()
-      ->push(Request::create('http://example.com', 'POST'));
+    $request = Request::create('http://example.com', 'POST');
+    $request->setSession(new Session(new MockArraySessionStorage()));
+    \Drupal::requestStack()->push($request);
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_entity_view';
@@ -404,8 +407,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    * Tests multiple renderings of an entity that references another.
    */
   public function testEntityReferenceRecursionProtectionWithRepeatedReferencingEntity(): void {
-    \Drupal::requestStack()
-      ->push(Request::create('http://example.com', 'POST'));
+    $request = Request::create('http://example.com', 'POST');
+    $request->setSession(new Session(new MockArraySessionStorage()));
+    \Drupal::requestStack()->push($request);
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_entity_view';
