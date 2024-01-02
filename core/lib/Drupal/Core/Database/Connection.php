@@ -1774,7 +1774,7 @@ abstract class Connection {
    *   TRUE if this driver can handle SchemaDefinition objects directly, FALSE
    *   if they have to be converted to the legacy array-based specifications.
    *
-   * @internal 
+   * @internal
    */
   public function supportsSchemaDefinition(): bool {
     return FALSE;
