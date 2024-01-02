@@ -22,7 +22,7 @@
     status,
   ) {
     $('.hilited').removeClass('hilited');
-    $(response.selector).addClass('hilited');
+    $(response.selector)[0].classList.add('hilited');
   };
 
   /**

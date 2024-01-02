@@ -12,7 +12,9 @@
     let modalHeight;
     if ($scroll.length) {
       // Add a class to do some styles adjustments.
-      $modal.closest('.views-ui-dialog').addClass('views-ui-dialog-scroll');
+      $modal
+        .closest('.views-ui-dialog')[0]
+        .classList.add('views-ui-dialog-scroll');
       // Let scroll element take all the height available.
       $scroll.each(function () {
         Object.assign(this.style, {

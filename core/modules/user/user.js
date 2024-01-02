@@ -82,9 +82,8 @@
 
         const $confirmInputParent = $confirmInput
           .parent()
-          .addClass('confirm-parent')
           .append($passwordConfirmMessage);
-
+        $confirmInputParent[0].classList.add('confirm-parent');
         // List of classes to be removed from the strength bar on a state
         // change.
         const passwordStrengthBarClassesToRemove = [
@@ -222,7 +221,7 @@
             }
             // Adjust the length of the strength indicator.
             password.$strengthBar[0].style.width = `${result.strength}%`;
-            password.$strengthBar.addClass(result.indicatorClass);
+            password.$strengthBar[0].classList.add(result.indicatorClass);
 
             // Update the strength indication text.
             password.$strengthTextWrapper.html(result.indicatorText);

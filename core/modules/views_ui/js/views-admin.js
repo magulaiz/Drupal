@@ -1071,9 +1071,8 @@
             // Assume this filter group is empty, until we find otherwise.
             draggableCount = 0;
             $currentEmptyRow = $row.next('tr');
-            $currentEmptyRow
-              .removeClass('group-populated')
-              .addClass('group-empty');
+            $currentEmptyRow[0].classList.remove('group-empty');
+            $currentEmptyRow[0].classList.add('group-populated');
             // The cell with the dropdown operator should span the title row and
             // the "this group is empty" row.
             $operatorCell.attr('rowspan', 2);
@@ -1084,9 +1083,8 @@
             // We've found a visible filter row, so we now know the group isn't
             // empty.
             draggableCount++;
-            $currentEmptyRow
-              .removeClass('group-empty')
-              .addClass('group-populated');
+            $currentEmptyRow[0].classList.remove('group-empty');
+            $currentEmptyRow[0].classList.add('group-populated');
             // The operator cell should span all draggable rows, plus the title.
             $operatorCell.attr('rowspan', draggableCount + 1);
           }
