@@ -1120,18 +1120,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Use fallback mapping.
     $columns = $table_mapping->getColumnNames($field_name);
     foreach ($columns as $column_name => $schema_name) {
-      // If there is no main property and only a single column, get all
-      // properties from the first field item and assume that they will be
-      // stored serialized.
-      if (!$definition->getMainPropertyName() && count($columns) == 1) {
-        $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
-      }
-      else {
-        $value = $this->toStoredValue(
-          $entity->$field_name->$column_name ?? NULL,
-          $definition->getSchema()['columns'][$column_name]
-        );
-      }
+      $value = $this->toStoredValue(
+        // If there is no main property and only a single column, get all
+        // properties from the first field item and assume that they will be
+        // stored serialized.
+        (!$definition->getMainPropertyName() && count($columns) == 1)
+          ? ($item = $entity->$field_name->first()) ? $item->getValue() : []
+          : $entity->$field_name->$column_name ?? NULL,
+        $definition->getSchema()['columns'][$column_name]
+      );
 
       // Do not set serial fields if we do not have a value. This supports all
       // SQL database drivers.
