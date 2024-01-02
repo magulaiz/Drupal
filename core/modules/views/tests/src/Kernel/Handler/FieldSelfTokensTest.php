@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
