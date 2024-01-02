@@ -9,6 +9,11 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
+/**
+ * Test field items with custom property mapping.
+ *
+ * @group Field
+ */
 class FieldMappingStorageTest extends EntityKernelTestBase {
 
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
