@@ -18,7 +18,7 @@ class FieldSelfTokensTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user'];
+  protected static $modules = ['node'];
 
   /**
    * Views used by this test.
