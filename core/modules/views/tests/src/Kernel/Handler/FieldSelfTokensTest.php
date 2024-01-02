@@ -9,16 +9,14 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests Drupal\views\Plugin\views\field\EntityField handler token escaping.
+ * Tests token escaping in the EntityField handler.
  *
  * @group views
  */
 class FieldSelfTokensTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'user'];
 
@@ -30,7 +28,7 @@ class FieldSelfTokensTest extends ViewsKernelTestBase {
   public static $testViews = ['test_field_self_tokens'];
 
   /**
-   * {@inheritdoc}
+   * This method is called before each test.
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
