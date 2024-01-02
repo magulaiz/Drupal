@@ -572,6 +572,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
    * Test that the language switching block does not expose restricted paths.
    */
   public function testRestrictedPaths(): void {
+    \Drupal::service('module_installer')->install(['path_alias']);
     $entity_type_manager = \Drupal::entityTypeManager();
 
     // Add the French language.
