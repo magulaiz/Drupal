@@ -154,7 +154,6 @@ variables:
   services:
     - <<: *with-database
 
-
 '👷️️️ PHPUnit Build':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   variables:
