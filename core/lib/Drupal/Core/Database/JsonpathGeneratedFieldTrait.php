@@ -48,7 +48,8 @@ trait JsonpathGeneratedFieldTrait {
   /**
    * Get the expression to retrieve a JSON value at a given jsonpath.
    *
-   * This is database-specific.
+   * This is database-specific, and should represent the "unquoted" value of the
+   * data at the JSON path, e.g. via ->> or JSON_UNQUOTE().
    *
    * @param string $field
    *   Field name.
