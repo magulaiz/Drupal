@@ -10,7 +10,7 @@ use Drupal\file\FileInterface;
 /**
  * Implements hook_file_validate().
  */
-function ckeditor5_image_upload_test_file_validate(FileInterface $file) {
+function ckeditor5_image_upload_test_file_validate(FileInterface $file): ?array {
   $errors = [];
   $filename = \Drupal::service('file_system')->realpath($file->getFileUri());
   if (!file_exists($filename)) {
