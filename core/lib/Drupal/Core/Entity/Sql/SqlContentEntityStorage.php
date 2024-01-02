@@ -1947,7 +1947,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $propertyValues = [];
     foreach ($column_values as $column => $value) {
       if ($property = $columns_to_properties[$column] ?? NULL) {
-        $propertyValues[$property] = (!empty($column_attributes[$property]['serialize'])) ? unserialize($value) : $value;
+        $propertyValues[$property] = $this->fromStoredValue($value, $column_attributes[$property]);
       }
     }
     return $propertyValues;
@@ -1974,7 +1974,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $column_values = [];
     foreach ($property_values as $property => $value) {
       if ($column = $properties_to_columns[$property] ?? NULL) {
-        $column_values[$column] = (!empty($column_attributes[$property]['serialize'])) ? serialize($value) : $value;
+        $column_values[$column] = $this->toStoredValue($value, $column_attributes[$property]);
       }
     }
     return $column_values;
