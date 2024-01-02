@@ -12,6 +12,7 @@ use Drupal\Core\Database\SchemaDefinition\KeyColumn;
 use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
 use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Database\SchemaDefinition\UniqueKey;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the ConvertDefinitionTrait.
@@ -160,7 +161,7 @@ class ConvertDefinitionTraitTest extends UnitTestCase {
       ],
     );
 
-    $this->assertEquals($arraySpecification, self::convertTableToArrayDefinition(schemaDefinition));
+    $this->assertEquals($arraySpecification, self::convertTableToArrayDefinition($schemaDefinition));
   }
 
 }
