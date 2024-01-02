@@ -44,7 +44,7 @@ class SchemaInspector {
             throw new SchemaDefinitionException("The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'");
           }
           if (!\Drupal::database()->supportsSchemaDefinition()) {
-            $table = $this->convertTableToArrayDefinition($table);
+            $table = self::convertTableToArrayDefinition($table);
           }
         }
         $temp[$name] = $table;
