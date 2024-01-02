@@ -3,6 +3,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -13,7 +14,6 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -232,7 +232,13 @@ class FieldStorageAddForm extends FormBase {
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
     $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
-    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
+
+    if (array_key_exists('new_storage_type', $form_state->getUserInput())) {
+      $new_storage_type = $form_state->getUserInput()['new_storage_type'];
+      if (isset($new_storage_type) && $form_state->getStorage()['field_type_options'][$new_storage_type]['display_as_group']) {
+        $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
+      }
+    }
   }
 
   /**
@@ -244,36 +250,6 @@ class FieldStorageAddForm extends FormBase {
    *   The current state of the form.
    */
   protected function addFieldOptionsForGroup(array &$form, FormStateInterface $form_state): void {
-    // Field label and field_name.
-    $form['new_storage_wrapper'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['field-ui-new-storage-wrapper'],
-      ],
-    ];
-    $form['new_storage_wrapper']['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#size' => 30,
-    ];
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['new_storage_wrapper']['field_name'] = [
-      '#type' => 'machine_name',
-      '#field_prefix' => $field_prefix,
-      '#size' => 15,
-      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-      // Calculate characters depending on the length of the field prefix
-      // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
-      '#machine_name' => [
-        'source' => ['new_storage_wrapper', 'label'],
-        'exists' => [$this, 'fieldNameExists'],
-      ],
-      '#required' => FALSE,
-    ];
-
-    $form['actions']['submit']['#validate'][] = '::validateFieldType';
-
     $form['actions']['back'] = [
       '#type' => 'submit',
       '#value' => $this->t('Back'),
@@ -361,7 +337,7 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Validates the second step (field storage selection and label) of the form.
+   * Validates the second step (field storage selection) of the form.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -369,23 +345,6 @@ class FieldStorageAddForm extends FormBase {
    *   The current state of the form.
    */
   public function validateFieldType(array $form, FormStateInterface $form_state) {
-    // Missing label.
-    if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
-    }
-    // Missing field name.
-    if (!$form_state->getValue('field_name')) {
-      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-    }
-    // Field name validation.
-    else {
-      $field_name = $form_state->getValue('field_name');
-
-      // Add the field prefix.
-      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
-      $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
-    }
-
     if (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper')) {
       $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to choose an option.'));
     }
@@ -396,6 +355,8 @@ class FieldStorageAddForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
+    $values['label'] = 'New field';
+    $values['field_name'] = $this->config('field_ui.settings')->get('field_prefix') . (new Random)->machineName(16, TRUE);
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
@@ -447,6 +408,7 @@ class FieldStorageAddForm extends FormBase {
       'default_options' => $default_options,
     ]);
 
+    $this->tempStore->set('temp_name', $field_name);
     // Configure next steps in the multi-part form.
     $destinations = [];
     $route_parameters = [
@@ -524,27 +486,6 @@ class FieldStorageAddForm extends FormBase {
     }
 
     return $default_options;
-  }
-
-  /**
-   * Checks if a field machine name is taken.
-   *
-   * @param string $value
-   *   The machine name, not prefixed.
-   * @param array $element
-   *   An array containing the structure of the 'field_name' element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return bool
-   *   Whether or not the field machine name is taken.
-   */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
-    // Add the field prefix.
-    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
-
-    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
-    return isset($field_storage_definitions[$field_name]);
   }
 
   /**
