@@ -386,7 +386,7 @@ block.settings.page_title_block:
   mapping:
     base_route_title:
       type: boolean
-      label: 'Display base route title instead of current title'
+      label: 'Display section title instead of current title'
 
 block.settings.system_branding_block:
   type: block_settings
