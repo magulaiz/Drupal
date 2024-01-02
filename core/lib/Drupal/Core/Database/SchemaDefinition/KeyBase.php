@@ -9,13 +9,21 @@ namespace Drupal\Core\Database\SchemaDefinition;
  */
 abstract class KeyBase implements SchemaDefinitionInterface {
 
+  /**
+   * The key columns.
+   *
+   * @var KeyColumn[]
+   *   The list of KeyColumn objects. 
+   */
   public readonly array $columns;
 
   /**
    * Constructor.
    *
-   * @param KeyColumn[] $columns
-   *   An array of one or more key column specifiers.
+   * @param list<KeyColumn|string|array{0:string, 1:int}> $columns
+   *   A mix of key column specifiers, being KeyColumn objects, strings naming
+   *   columns, or arrays of two elements, column name and length, specifying a
+   *   prefix of the named column.
    */
   public function __construct(array $columns) {
     $this->columns = $this->buildColumns($columns);
@@ -25,8 +33,9 @@ abstract class KeyBase implements SchemaDefinitionInterface {
    * Builds an array of KeyColumn objects from a mixed list of columns.
    *
    * @param list<KeyColumn|string|array{0:string, 1:int}> $rawColumns
-   *   The list can be of a mix of KeyColumn objects, strings representing
-   *   column names, or arrays to represent limited length keys.
+   *   A mix of key column specifiers, being KeyColumn objects, strings naming
+   *   columns, or arrays of two elements, column name and length, specifying a
+   *   prefix of the named column.
    *
    * @return KeyColumn[]
    *   The normalized list of KeyColumn objects.

@@ -12,8 +12,10 @@ final class PrimaryKey extends KeyBase {
   /**
    * Constructor.
    *
-   * @param KeyColumn[] $columns
-   *   An array of one or more key column specifiers that form the primary key.
+   * @param list<KeyColumn|string|array{0:string, 1:int}> $columns
+   *   A mix of key column specifiers, being KeyColumn objects, strings naming
+   *   columns, or arrays of two elements, column name and length, specifying a
+   *   prefix of the named column.
    */
   public function __construct(array $columns) {
     parent::__construct($columns);

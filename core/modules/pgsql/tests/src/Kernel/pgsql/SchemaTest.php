@@ -3,8 +3,6 @@
 namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
-use Drupal\Core\Database\SchemaDefinition\Column as ColumnDefinition;
-use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 
 // cSpell:ignore relkind objid refobjid regclass attname attrelid attnum
 // cSpell:ignore refobjsubid
@@ -48,18 +46,16 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    * {@inheritdoc}
    */
   public function testTableWithSpecificDataType(): void {
-    $table_specification = new TableDefinition(
-      name: 'test_timestamp',
-      description: 'Schema table description.',
-      columns: [
-        new ColumnDefinition(
-          name: 'timestamp',
-          dbSpecificType: ['pgsql' => 'timestamp'],
-          notNull: FALSE,
-          default: NULL,
-        ),
+    $table_specification = [
+      'description' => 'Schema table description.',
+      'fields' => [
+        'timestamp'  => [
+          'pgsql_type' => 'timestamp',
+          'not null' => FALSE,
+          'default' => NULL,
+        ],
       ],
-    );
+    ];
     $this->schema->createTable('test_timestamp', $table_specification);
     $this->assertTrue($this->schema->tableExists('test_timestamp'));
   }

@@ -3,15 +3,11 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Query\PlaceholderInterface;
-use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
-use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 
 /**
  * Provides a base implementation for Database Schema.
  */
 abstract class Schema implements PlaceholderInterface {
-
-  use ConvertDefinitionTrait;
 
   /**
    * The database connection.
@@ -484,11 +480,6 @@ abstract class Schema implements PlaceholderInterface {
    *   Note that the above is a partial table definition and that we would
    *   usually pass a complete table definition as obtained through
    *   hook_schema() instead.
-   * phpcs:disable Drupal.Commenting
-   * @param \Drupal\Core\Database\SchemaDefinition\Table|null $tableDefinition
-   *   (Optional) The table specification (see above) as a SchemaDefinition
-   *   object.
-   * phpcs:enable
    *
    * @see schemaapi
    * @see hook_schema()
@@ -500,7 +491,7 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @todo remove the $spec argument whenever schema introspection is added.
    */
-  abstract public function addIndex($table, $name, $fields, array $spec, /* ?TableDefinition $tableDefinition */);
+  abstract public function addIndex($table, $name, $fields, array $spec);
 
   /**
    * Drop an index.
@@ -611,8 +602,8 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @param $name
    *   The name of the table to create.
-   * @param array|\Drupal\Core\Database\SchemaDefinition\Table $table
-   *   A Schema API table definition.
+   * @param $table
+   *   A Schema API table definition array.
    *
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already exists.
@@ -622,11 +613,6 @@ abstract class Schema implements PlaceholderInterface {
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {
       throw new SchemaObjectExistsException("Table '$name' already exists.");
-    }
-    if ($table instanceof TableDefinition) {
-      assert($name === $table->name, "The value of the \$name argument '{$name}' must be equal to the \$name property of the \$table argument; found '{$table->name}'.");
-      $name = $table->name;
-      $table = $this->convertTableToArrayDefinition($table);
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {

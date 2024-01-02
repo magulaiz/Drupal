@@ -14,8 +14,11 @@ final class Table implements SchemaDefinitionInterface {
    *
    * @param string $name
    *   The table name.
-   * @param Column[] $columns
-   *   An array that describes the table's database columns.
+   * @param Property|Column[] $columns
+   *   (Optional) An array that describes the table's database columns. This is
+   *   normally mandatory. Some methods in the Schema API - for example
+   *   Schema::addField() - require partial table definition, so this is
+   *   optional to support it.
    * @param Property|string $description
    *   (Optional) A string in non-markup plain text describing this table and
    *   its purpose. References to other tables should be enclosed in curly
@@ -33,7 +36,7 @@ final class Table implements SchemaDefinitionInterface {
    */
   public function __construct(
     public readonly string $name,
-    public readonly array $columns,
+    public readonly Property|array $columns = Property::Undefined,
     public readonly Property|string $description = Property::Undefined,
     public readonly Property|PrimaryKey $primaryKey = Property::Undefined,
     public readonly Property|array $uniqueKeys = Property::Undefined,

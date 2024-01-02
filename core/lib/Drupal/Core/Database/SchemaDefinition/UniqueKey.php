@@ -11,6 +11,13 @@ final class UniqueKey extends KeyBase {
 
   /**
    * Constructor.
+   *
+   * @param string $name
+   *   The unique key name.
+   * @param list<KeyColumn|string|array{0:string, 1:int}> $columns
+   *   A mix of key column specifiers, being KeyColumn objects, strings naming
+   *   columns, or arrays of two elements, column name and length, specifying a
+   *   prefix of the named column.
    */
   public function __construct(
     public readonly string $name,

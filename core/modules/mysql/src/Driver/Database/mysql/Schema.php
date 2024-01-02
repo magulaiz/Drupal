@@ -6,7 +6,6 @@ use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
-use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -552,17 +551,12 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function addIndex($table, $name, $fields, array $spec, ?TableDefinition $tableDefinition = NULL) {
+  public function addIndex($table, $name, $fields, array $spec) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add index '$name' to table '$table': table doesn't exist.");
     }
     if ($this->indexExists($table, $name)) {
       throw new SchemaObjectExistsException("Cannot add index '$name' to table '$table': index already exists.");
-    }
-
-    if ($tableDefinition instanceof TableDefinition) {
-      assert($table === $tableDefinition->name, "The value of the \$name argument '{$name}' must be equal to the \$name property of the \$tableDefinition argument; found '{$tableDefinition->name}'.");
-      $spec = $this->convertTableToArrayDefinition($tableDefinition);
     }
 
     $spec['indexes'][$name] = $fields;

@@ -21,7 +21,9 @@ trait ConvertDefinitionTrait {
     if ($table->description !== Property::Undefined) {
       $spec['description'] = $table->description;
     }
-    $spec['fields'] = self::convertColumnsToArrayDefinition($table->columns);
+    if ($table->columns !== Property::Undefined) {
+      $spec['fields'] = self::convertColumnsToArrayDefinition($table->columns);
+    }
     if ($table->primaryKey !== Property::Undefined) {
       $spec['primary key'] = self::convertPrimaryKeyToArrayDefinition($table->primaryKey);
     }
