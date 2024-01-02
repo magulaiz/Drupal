@@ -104,7 +104,7 @@ details.fieldset-no-legend {
 
 /**
   * Elements must communicate width to table rendering.
-  * @todo revisit in https://drupal.org/node/3135457
+  * @todo revisit in https://www.drupal.org/node/3159896
   */
 
 .views-ui-dialog td .form-element {
