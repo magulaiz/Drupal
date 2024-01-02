@@ -117,10 +117,13 @@ class TextWithSummaryItem extends TextItemBase {
           ':input[name="settings[display_summary]"]' => ['checked' => TRUE],
         ],
         'unchecked' => [
-          ':input[name="settings[display_summary]"]' => ['checked' => FALSE],
-        ],
-        'unchecked' => [
-          ':input[name="settings[required_summary]"]' => ['checked' => FALSE],
+          [
+            ':input[name="settings[required_summary]"]' => ['checked' => FALSE],
+          ],
+          'and',
+          [
+            ':input[name="settings[display_summary]"]' => ['checked' => FALSE],
+          ],
         ],
       ],
     ];
