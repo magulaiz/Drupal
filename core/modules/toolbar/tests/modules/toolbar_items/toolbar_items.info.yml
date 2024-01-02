@@ -1,0 +1,5 @@
+name: 'Multiple toolbar items'
+type: module
+description: 'Support module for multiple toolbar items.'
+package: Testing
+version: VERSION

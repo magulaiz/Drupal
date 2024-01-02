@@ -78,6 +78,10 @@
       }
       // Process the administrative toolbar.
       once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
+        $('[data-toolbar-extra-item-toggle-button]').on('click', () => {
+          toolbar.toggleAttribute('data-show-toolbar-extra-item');
+        });
+
         // Establish the toolbar models and views.
         const model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(
