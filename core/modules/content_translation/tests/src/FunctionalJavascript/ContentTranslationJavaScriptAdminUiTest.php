@@ -40,4 +40,5 @@ class ContentTranslationJavaScriptAdminUiTest extends WebDriverTestBase {
     $this->drupalGet('/admin/config/regional/content-language');
     $this->failOnJavaScriptErrors();
   }
+
 }
