@@ -3,21 +3,13 @@
 namespace Drupal\Tests\rest\Functional\Views;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
-use Drupal\views\Entity\View;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the serializer style plugin.
