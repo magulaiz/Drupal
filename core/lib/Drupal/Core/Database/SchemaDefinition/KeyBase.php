@@ -13,7 +13,7 @@ abstract class KeyBase implements SchemaDefinitionInterface {
    * The key columns.
    *
    * @var KeyColumn[]
-   *   The list of KeyColumn objects. 
+   *   The list of KeyColumn objects.
    */
   public readonly array $columns;
 
