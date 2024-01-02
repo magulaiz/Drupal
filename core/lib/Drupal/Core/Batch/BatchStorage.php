@@ -7,12 +7,15 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
 use Drupal\Core\Database\SchemaDefinition\Index;
 use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
 use Drupal\Core\Database\SchemaDefinition\Table;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BatchStorage implements BatchStorageInterface {
+
+  use ConvertDefinitionTrait;
 
   /**
    * The table name.
@@ -199,6 +202,9 @@ class BatchStorage implements BatchStorageInterface {
     try {
       $database_schema = $this->connection->schema();
       $schema_definition = $this->schemaDefinition();
+      if (!$this->connection->supportsSchemaDefinition()) {
+        $schema_definition = $this->convertTableToArrayDefinition($schema_definition);
+      }
       $database_schema->createTable(static::TABLE_NAME, $schema_definition);
     }
     // If another process has already created the batch table, attempting to
