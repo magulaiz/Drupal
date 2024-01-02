@@ -124,7 +124,7 @@ class ConvertDefinitionTraitTest extends UnitTestCase {
             'mysql' => 'timestamp',
             'pgsql' => 'timestamp',
             'sqlite' => 'datetime',
-          ]
+          ],
           notNull: FALSE,
           default: NULL,
         ),
