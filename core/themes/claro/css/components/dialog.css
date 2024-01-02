@@ -86,8 +86,8 @@
   background: var(--color-white);
 }
 
-/* Form action buttons are moved in dialogs. Remove empty space. */
 .ui-dialog > .ui-dialog-content .form-actions {
+  /* Form action buttons are moved in dialogs. Remove empty space. */
   margin: 0;
   padding: 0;
 }
@@ -103,9 +103,9 @@
   padding: 0;
 }
 
-/** Off-canvas styles. */
+/* Off-canvas styles. */
 
-.ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
+.ui-dialog .ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
   background: none;
 }
 
