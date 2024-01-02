@@ -401,7 +401,7 @@ function install_begin_request($class_loader, &$install_state) {
     try {
       $system_schema = system_schema();
       end($system_schema);
-      $table = key($system_schema);
+      $table = current($system_schema)->name;
       $install_state['base_system_verified'] = Database::getConnection()->schema()->tableExists($table);
     }
     catch (DatabaseExceptionWrapper $e) {
@@ -1179,7 +1179,7 @@ function install_verify_database_settings($site_path) {
 function install_verify_database_ready() {
   $system_schema = system_schema();
   end($system_schema);
-  $table = key($system_schema);
+  $table = current($system_schema)->name;
 
   $existing_install = FALSE;
   if (Database::getConnectionInfo()) {
