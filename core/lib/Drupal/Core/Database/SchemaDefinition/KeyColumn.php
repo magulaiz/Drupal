@@ -14,7 +14,7 @@ final class KeyColumn implements SchemaDefinitionInterface {
    *
    * @param string $name
    *   The column name.
-   * @param int|null $lenght
+   * @param int|null $length
    *   (Optional) if set, specifies a prefix of the named column.
    */
   public function __construct(
