@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Ajax;
 
 /**
@@ -8,7 +10,7 @@ namespace Drupal\Core\Ajax;
 class OpenModalDialogWithUrl implements CommandInterface {
 
   /**
-   * Constructs a OpenModalWithUrl object.
+   * Constructs a OpenModalDialogWithUrl object.
    *
    * @param string $url
    *   The URL of the page.
@@ -25,7 +27,7 @@ class OpenModalDialogWithUrl implements CommandInterface {
    */
   public function render() {
     return [
-      'command' => 'openDialogWithUrl',
+      'command' => 'openModalDialogWithUrl',
       'url' => $this->url,
       'dialogOptions' => $this->settings,
     ];

@@ -516,7 +516,7 @@ class AjaxCommandsTest extends UnitTestCase {
         'modal' => TRUE,
       ]);
     $expected = [
-      'command' => 'openDialogWithUrl',
+      'command' => 'openModalDialogWithUrl',
       'url' => 'http://example.com',
       'dialogOptions' => [
         'url' => 'example',

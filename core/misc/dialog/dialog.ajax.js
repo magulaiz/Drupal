@@ -300,7 +300,10 @@
    * @param {object} response
    *   The Ajax response.
    */
-  Drupal.AjaxCommands.prototype.openDialogWithUrl = function (ajax, response) {
+  Drupal.AjaxCommands.prototype.openModalDialogWithUrl = function (
+    ajax,
+    response,
+  ) {
     const dialogOptions = response.dialogOptions || {};
     const elementSettings = {
       progress: { type: 'fullscreen' },
