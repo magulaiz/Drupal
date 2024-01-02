@@ -91,7 +91,7 @@ function link_field_config_presave(FieldConfigInterface $field) {
     return;
   }
   if (empty($field->getSetting('handler'))) {
-    @trigger_error("Having empty or not set 'handler' and 'handler_settings' settings is deprecated in 10.3.0 and will be mandatory in Drupal 11.0.0. Configure field {$field->getLabel()} for {$field->getTargetBundle()} ({$field->getEntityType()->getLabel()}). See https://www.drupal.org/node/3375174", E_USER_DEPRECATED);
+    @trigger_error("Having empty or not set 'handler' and 'handler_settings' settings is deprecated in drupal:10.3.0 and will be mandatory in drupal:11.0.0. Configure field {$field->getLabel()} for {$field->getTargetBundle()} ({$field->getEntityType()->getLabel()}). See https://www.drupal.org/node/3375174", E_USER_DEPRECATED);
     $field->setSetting('handler', 'default');
     $field->setSetting('handler_settings', []);
   }
@@ -119,7 +119,7 @@ function link_entity_form_display_presave(EntityFormDisplayInterface $display) {
     }
 
     if (!isset($component['settings']['match_limit'])) {
-      @trigger_error("Having empty or not set 'match_limit' and 'match_operator' is deprecated in 10.3.0 and will be mandatory in Drupal 11.0.0. Configure field {$display->label()} for {$display->getTargetBundle()} ({$display->getTargetEntityTypeId()}). See https://www.drupal.org/node/3375174", E_USER_DEPRECATED);
+      @trigger_error("Having empty or not set 'match_limit' and 'match_operator' is deprecated in drupal:10.3.0 and will be mandatory in drupal:11.0.0. Configure field {$display->label()} for {$display->getTargetBundle()} ({$display->getTargetEntityTypeId()}). See https://www.drupal.org/node/3375174", E_USER_DEPRECATED);
       $component['settings']['match_operator'] = 'CONTAINS';
       $component['settings']['match_limit'] = 10;
       $display->setComponent($field_name, $component);
