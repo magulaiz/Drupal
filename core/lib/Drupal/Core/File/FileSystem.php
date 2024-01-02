@@ -72,7 +72,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function moveUploadedFile($filename, $uri) {
+  public function moveUploadedFile($filename, $uri): bool {
     $result = @move_uploaded_file($filename, $uri);
     // PHP's move_uploaded_file() does not properly support streams if
     // open_basedir is enabled so if the move failed, try finding a real path
@@ -92,7 +92,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function chmod($uri, $mode = NULL) {
+  public function chmod($uri, $mode = NULL): bool {
     if (!isset($mode)) {
       if (is_dir($uri)) {
         $mode = $this->settings->get('file_chmod_directory', static::CHMOD_DIRECTORY);
@@ -113,7 +113,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function unlink($uri, $context = NULL) {
+  public function unlink($uri, $context = NULL): bool {
     if (!$this->streamWrapperManager->isValidUri($uri) && (substr(PHP_OS, 0, 3) == 'WIN')) {
       chmod($uri, 0600);
     }
@@ -128,7 +128,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function realpath($uri) {
+  public function realpath($uri): string|false {
     // If this URI is a stream, pass it off to the appropriate stream wrapper.
     // Otherwise, attempt PHP's realpath. This allows use of this method even
     // for unmanaged files outside of the stream wrapper interface.
@@ -142,7 +142,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function dirname($uri) {
+  public function dirname($uri): string {
     $scheme = StreamWrapperManager::getScheme($uri);
 
     if ($this->streamWrapperManager->isValidScheme($scheme)) {
@@ -156,7 +156,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function basename($uri, $suffix = NULL) {
+  public function basename($uri, $suffix = NULL): string {
     $separators = '/';
     if (DIRECTORY_SEPARATOR != '/') {
       // For Windows OS add special separator.
@@ -177,7 +177,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
+  public function mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL): bool {
     if (!isset($mode)) {
       $mode = $this->settings->get('file_chmod_directory', static::CHMOD_DIRECTORY);
     }
@@ -256,7 +256,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function rmdir($uri, $context = NULL) {
+  public function rmdir($uri, $context = NULL): bool {
     if (!$this->streamWrapperManager->isValidUri($uri) && (substr(PHP_OS, 0, 3) == 'WIN')) {
       chmod($uri, 0700);
     }
@@ -271,7 +271,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function tempnam($directory, $prefix) {
+  public function tempnam($directory, $prefix): string|false {
     $scheme = StreamWrapperManager::getScheme($directory);
 
     if ($this->streamWrapperManager->isValidScheme($scheme)) {
@@ -293,7 +293,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function copy($source, $destination, $replace = self::EXISTS_RENAME) {
+  public function copy($source, $destination, $replace = self::EXISTS_RENAME): string {
     $this->prepareDestination($source, $destination, $replace);
 
     if (!@copy($source, $destination)) {
@@ -319,7 +319,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function delete($path) {
+  public function delete($path): bool {
     if (is_file($path)) {
       if (!$this->unlink($path)) {
         $this->logger->error("Failed to unlink file '%path'.", ['%path' => $path]);
@@ -349,7 +349,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteRecursive($path, callable $callback = NULL) {
+  public function deleteRecursive($path, callable $callback = NULL): bool {
     if ($callback) {
       call_user_func($callback, $path);
     }
@@ -378,7 +378,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function move($source, $destination, $replace = self::EXISTS_RENAME) {
+  public function move($source, $destination, $replace = self::EXISTS_RENAME): string {
     $this->prepareDestination($source, $destination, $replace);
 
     // Ensure compatibility with Windows.
@@ -504,7 +504,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function saveData($data, $destination, $replace = self::EXISTS_RENAME) {
+  public function saveData($data, $destination, $replace = self::EXISTS_RENAME): string {
     // Write the data to a temporary file.
     $temp_name = $this->tempnam('temporary://', 'file');
     if (file_put_contents($temp_name, $data) === FALSE) {
@@ -519,7 +519,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function prepareDirectory(&$directory, $options = self::MODIFY_PERMISSIONS) {
+  public function prepareDirectory(&$directory, $options = self::MODIFY_PERMISSIONS): bool {
     if (!$this->streamWrapperManager->isValidUri($directory)) {
       // Only trim if we're not dealing with a stream.
       $directory = rtrim($directory, '/\\');
@@ -555,7 +555,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDestinationFilename($destination, $replace) {
+  public function getDestinationFilename($destination, $replace): string|false {
     $basename = $this->basename($destination);
     if (!Unicode::validateUtf8($basename)) {
       throw new FileException(sprintf("Invalid filename '%s'", $basename));
@@ -582,7 +582,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function createFilename($basename, $directory) {
+  public function createFilename($basename, $directory): string {
     $original = $basename;
     // Strip control characters (ASCII value < 32). Though these are allowed in
     // some filesystems, not many applications handle them well.
@@ -629,7 +629,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTempDirectory() {
+  public function getTempDirectory(): string {
     // Use settings.
     $temporary_directory = $this->settings->get('file_temp_path');
     if (!empty($temporary_directory)) {
@@ -655,7 +655,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function scanDirectory($dir, $mask, array $options = []) {
+  public function scanDirectory($dir, $mask, array $options = []): array {
     // Merge in defaults.
     $options += [
       'callback' => 0,
