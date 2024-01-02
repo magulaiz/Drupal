@@ -3,7 +3,19 @@
 namespace Drupal\Core\Config;
 
 /**
- * Lazy config factory.
+ * Defines the lazy configuration object factory.
+ *
+ * The lazy configuration object factory ('config.factory.lazy' service) is a
+ * drop-in replacement for the 'config.factory' service, which lazily loads the
+ * 'config.factory' service if/when it is needed and forwards the method call.
+ *
+ * Services can inject 'config.factory.lazy' to work around a circular reference
+ * that appears if a configuration storage dependency (such as a cache backend)
+ * requires a service that depends on configuration storage (such as a logger).
+ *
+ * @see \Drupal\Core\Config\ConfigFactory
+ *
+ * @ingroup config_api
  */
 class LazyConfigFactory implements ConfigFactoryInterface {
 
