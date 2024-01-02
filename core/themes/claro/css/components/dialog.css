@@ -84,10 +84,9 @@
   padding: var(--space-m) var(--space-l);
   color: var(--color-text);
   background: var(--color-white);
-
-  /* Form action buttons are moved in dialogs. Remove empty space. */
 }
 
+/* Form action buttons are moved in dialogs. Remove empty space. */
 .ui-dialog > .ui-dialog-content .form-actions {
   margin: 0;
   padding: 0;
