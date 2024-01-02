@@ -466,12 +466,29 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // hierarchies and saves memory here.
       foreach ($field_names as $field_name) {
         $field_columns = $this->tableMapping->getColumnNames($field_name);
+        $field_storage_definition = $this->fieldStorageDefinitions[$field_name];
+        if ($field_storage_definition instanceof StorageMapperInterface) {
+          $item_values = $field_storage_definition->mapColumnsOnLoad(
+            $this->mapColumnsOnLoad(
+              $field_name,
+              array_intersect_key((array) $record, array_flip($field_columns)),
+              $field_storage_definition->getColumns()
+            )
+          );
+          if (isset($item_values)) {
+            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $item_values;
+            foreach ($field_columns as $column_name) {
+              unset($record->{$column_name});
+            }
+            continue;
+          }
+        }
         // Handle field types that store several properties.
         if (count($field_columns) > 1) {
-          $definition_columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
+          $definition_columns = $field_storage_definition->getColumns();
           foreach ($field_columns as $property_name => $column_name) {
             if (property_exists($record, $column_name)) {
-              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
+              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = $this->fromStoredValue($record->{$column_name}, $definition_columns[$property_name]);
               unset($record->{$column_name});
             }
           }
@@ -480,9 +497,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         else {
           $column_name = reset($field_columns);
           if (property_exists($record, $column_name)) {
-            $columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
+            $columns = $field_storage_definition->getColumns();
             $column = reset($columns);
-            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
+            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $this->fromStoredValue($record->{$column_name}, $column);
             unset($record->{$column_name});
           }
         }
@@ -590,10 +607,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         foreach ($all_fields as $field_name) {
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
+          $definition_columns = $storage_definition->getColumns();
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
             $item_values = $storage_definition->mapColumnsOnLoad(
-              $this->mapColumnNamesOnLoad($field_name, $row)
+              $this->mapColumnsOnLoad($field_name, $row, $definition_columns)
             );
           }
           if (isset($item_values)) {
@@ -601,18 +619,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           else {
             // Use fallback mapping.
-            $definition_columns = $storage_definition->getColumns();
             $columns = $table_mapping->getColumnNames($field_name);
             // Do not key single-column fields by property name.
             if (count($columns) == 1) {
               $column_name = reset($columns);
               $column_attributes = $definition_columns[key($columns)];
-              $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+              $values[$id][$field_name][$langcode] = $this->fromStoredValue($row[$column_name], $column_attributes);
             }
             else {
               foreach ($columns as $property_name => $column_name) {
                 $column_attributes = $definition_columns[$property_name];
-                $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+                $values[$id][$field_name][$langcode][$property_name] = $this->fromStoredValue($row[$column_name], $column_attributes);
               }
             }
           }
@@ -1091,9 +1108,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Ensuring that __get returns a FieldItemList is crucial here.
       $item_value = $entity->$field_name instanceof FieldItemListInterface
       && ($item = $entity->$field_name->first()) ? $item->getValue() : [];
-      $maybe_mapped_columns = $this->mapColumnNamesOnSave(
+      $maybe_mapped_columns = $this->mapColumnsOnSave(
         $field_name,
-        $definition->mapColumnsOnSave($item_value)
+        $definition->mapColumnsOnSave($item_value),
+        $definition->getColumns()
       );
     }
     if (isset($maybe_mapped_columns)) {
@@ -1109,10 +1127,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
       }
       else {
-        $value = $entity->$field_name->$column_name ?? NULL;
-      }
-      if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
-        $value = serialize($value);
+        $value = $this->toStoredValue(
+          $entity->$field_name->$column_name ?? NULL,
+          $definition->getSchema()['columns'][$column_name]
+        );
       }
 
       // Do not set serial fields if we do not have a value. This supports all
@@ -1275,6 +1293,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Load field data.
     $langcodes = array_keys($this->languageManager->getLanguages(LanguageInterface::STATE_ALL));
     foreach ($storage_definitions as $field_name => $storage_definition) {
+      $column_attributes = $storage_definition->getColumns();
       $table = !$load_from_revision ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
 
       // Ensure that only values having valid languages are retrieved. Since we
@@ -1310,7 +1329,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
               $item = $storage_definition->mapColumnsOnLoad(
-                $this->mapColumnNamesOnLoad($field_name, (array) $row)
+                $this->mapColumnsOnLoad($field_name, (array) $row, $column_attributes)
               );
             }
             // Use fallback mapping.
@@ -1318,10 +1337,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               $item = [];
               // For each column declared by the field, populate the item from the
               // prefixed database column.
-              foreach ($storage_definition->getColumns() as $column => $attributes) {
+              foreach ($column_attributes as $column => $attributes) {
                 $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
                 // Unserialize the value if specified in the column schema.
-                $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
+                $item[$column] = $this->fromStoredValue($row->$column_name, $attributes);
               }
             }
 
@@ -1426,9 +1445,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
             $item_value = $item ? $item->getValue() : [];
-            $maybe_mapped_columns = $this->mapColumnNamesOnSave(
+            $maybe_mapped_columns = $this->mapColumnsOnSave(
               $field_name,
-              $storage_definition->mapColumnsOnSave($item_value)
+              $storage_definition->mapColumnsOnSave($item_value),
+              $storage_definition->getColumns()
             );
           }
           if (isset($maybe_mapped_columns)) {
@@ -1438,12 +1458,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // Use fallback mapping.
             foreach ($storage_definition->getColumns() as $column => $attributes) {
               $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
-              // Serialize the value if specified in the column schema.
-              $value = $item->$column;
-              if (!empty($attributes['serialize'])) {
-                $value = serialize($value);
-              }
-              $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
+              $record[$column_name] = SqlContentEntityStorageSchema::castValue(
+                $attributes,
+                $this->toStoredValue($item->$column, $attributes)
+              );
             }
           }
           $query->values($record);
@@ -1469,6 +1487,51 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
       }
     }
+  }
+
+  /**
+   * Convert a value to its stored representation, e.g. serialized.
+   *
+   * This is not the same as type casting, and exists to provide a single point
+   * for abstracting out calls such as serialization and JSON encoding.
+   *
+   * @param mixed $value
+   *   Value to be stored.
+   * @param array $column_attributes
+   *   Column schema definition.
+   *
+   * @return mixed
+   *   Value to be stored.
+   */
+  protected function toStoredValue(mixed $value, array $column_attributes): mixed {
+    if ($column_attributes['type'] === 'json') {
+      return json_encode($value, JSON_THROW_ON_ERROR);
+    }
+    if (!empty($column_attributes['serialize'])) {
+      return serialize($value);
+    }
+    return $value;
+  }
+
+  /**
+   * Convert a stored value to its appropriate PHP representation.
+   *
+   * @param mixed $value
+   *   Stored value.
+   * @param array $column_attributes
+   *   Column schema definition.
+   *
+   * @return mixed
+   *   Value.
+   */
+  protected function fromStoredValue(mixed $value, array $column_attributes): mixed {
+    if ($column_attributes['type'] === 'json') {
+      return json_decode($value, TRUE, flags: JSON_THROW_ON_ERROR);
+    }
+    if (!empty($column_attributes['serialize'])) {
+      return unserialize($value, ['allowed_classes' => FALSE]);
+    }
+    return $value;
   }
 
   /**
@@ -1868,16 +1931,18 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   Field name.
    * @param array $column_values
    *   Column values.
+   * @param array $column_attributes
+   *   Column attributes from storage config.
    *
    * @return array
    *   Array of values, keyed by property name.
    */
-  protected function mapColumnNamesOnLoad(string $field_name, array $column_values): array {
+  protected function mapColumnsOnLoad(string $field_name, array $column_values, array $column_attributes): array {
     $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
     $propertyValues = [];
     foreach ($column_values as $column => $value) {
       if ($property = $columns_to_properties[$column] ?? NULL) {
-        $propertyValues[$property] = $value;
+        $propertyValues[$property] = (!empty($column_attributes[$property]['serialize'])) ? unserialize($value) : $value;
       }
     }
     return $propertyValues;
@@ -1890,22 +1955,24 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   Field name.
    * @param array|null $property_values
    *   Property values, or NULL.
+   * @param array $column_attributes
+   *   Column attributes from storage config.
    *
    * @return array|null
    *   Values keyed by column, or NULL if nothing to save.
    */
-  protected function mapColumnNamesOnSave(string $field_name, ?array $property_values): ?array {
+  protected function mapColumnsOnSave(string $field_name, ?array $property_values, array $column_attributes): ?array {
     if (!isset($property_values)) {
       return NULL;
     }
     $properties_to_columns = $this->tableMapping->getColumnNames($field_name);
-    $columnValues = [];
+    $column_values = [];
     foreach ($property_values as $property => $value) {
       if ($column = $properties_to_columns[$property] ?? NULL) {
-        $columnValues[$column] = $value;
+        $column_values[$column] = (!empty($column_attributes[$property]['serialize'])) ? serialize($value) : $value;
       }
     }
-    return $columnValues;
+    return $column_values;
   }
 
 }
