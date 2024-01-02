@@ -16,20 +16,6 @@ class SysLog implements LoggerInterface {
   use RfcLoggerTrait;
 
   /**
-   * Lazy config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The message's placeholders parser.
-   *
-   * @var \Drupal\Core\Logger\LogMessageParserInterface
-   */
-  protected $parser;
-
-  /**
    * Stores whether there is a system logger connection opened or not.
    *
    * @var bool
@@ -39,14 +25,15 @@ class SysLog implements LoggerInterface {
   /**
    * Constructs a SysLog object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory object.
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser) {
-    $this->configFactory = $config_factory;
-    $this->parser = $parser;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected LogMessageParserInterface $parser,
+  ) {
   }
 
   /**
