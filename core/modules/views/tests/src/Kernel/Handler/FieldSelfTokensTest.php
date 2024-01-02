@@ -48,9 +48,6 @@ class FieldSelfTokensTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   public function testSelfTokenEscaping() {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = \Drupal::service('renderer');
-
     $view = Views::getView('test_field_self_tokens');
     $view->initHandlers();
     $this->executeView($view);
@@ -58,7 +55,7 @@ class FieldSelfTokensTest extends ViewsKernelTestBase {
     $title_field = $view->field['title'];
     $title_field->options['alter']['text'] = '<p>{{ title__value }}</p>';
     $title_field->options['alter']['alter_text'] = TRUE;
-    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($title_field, $row) {
+    $output = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($title_field, $row) {
       return $title_field->theme($row);
     });
     $this->assertSame('<p>Questions &amp; Answers</p>', (string) $output);
