@@ -234,7 +234,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   /**
    * Tests recursive rendering protection failing over single entity N times.
    */
-  public function testEntityFormatterRecursiveRenderingFailing() {
+  public function testEntityFormatterRecursiveRenderingFailing(): void {
     \Drupal::requestStack()
       ->push(Request::create('http://example.com', 'POST'));
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -403,7 +403,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   /**
    * Tests multiple renderings of an entity that references another.
    */
-  public function testEntityReferenceRecursionProtectionWithRepeatedReferencingEntity() {
+  public function testEntityReferenceRecursionProtectionWithRepeatedReferencingEntity(): void {
     \Drupal::requestStack()
       ->push(Request::create('http://example.com', 'POST'));
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
