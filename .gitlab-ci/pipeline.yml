@@ -122,15 +122,6 @@ variables:
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
-'⚙️️ PHPUnit Kernel':
-  <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 2
-  variables:
-    TESTSUITE: PHPUnit-Kernel
-    KUBERNETES_CPU_REQUEST: "16"
-  services:
-    - <<: *with-database
-
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 2
@@ -153,6 +144,16 @@ variables:
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
+
+'⚙️️ PHPUnit Kernel':
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
+  parallel: 2
+  variables:
+    TESTSUITE: PHPUnit-Kernel
+    KUBERNETES_CPU_REQUEST: "16"
+  services:
+    - <<: *with-database
+
 
 '👷️️️ PHPUnit Build':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
