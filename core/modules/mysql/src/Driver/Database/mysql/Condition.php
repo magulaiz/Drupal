@@ -28,9 +28,13 @@ class Condition extends QueryCondition {
     return $this->doGetJsonFieldFragment($field_name, $condition, $connection, $query_placeholder, $connection->isMariaDb());
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getJsonFieldFragmentFunction(string $field, string $jsonpath, mixed $value, Connection $connection): string {
     assert($connection instanceof MySqlConnection);
-    return $this->doGetJsonFieldFragmentFunction($field, $jsonpath, $value, $connection)
+    $fragment = $this->doGetJsonFieldFragmentFunction($field, $jsonpath, $value, $connection);
+    return $fragment
       // MySQL will otherwise cast the result to an int, so be explicit.
       . (!$connection->isMariaDb() && is_bool($value) ? ' = true' : '');
   }

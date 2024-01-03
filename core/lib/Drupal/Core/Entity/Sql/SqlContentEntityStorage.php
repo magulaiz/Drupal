@@ -1458,11 +1458,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           else {
             // Use fallback mapping.
-            foreach ($storage_definition->getColumns() as $column => $attributes) {
+            $columns = $storage_definition->getColumns();
+            foreach ($columns as $column => $attributes) {
               $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
               $record[$column_name] = SqlContentEntityStorageSchema::castValue(
                 $attributes,
-                $this->toStoredValue($item->$column, $attributes)
+                $this->toStoredValue(
+                  (!$storage_definition->getMainPropertyName() && count($columns) == 1)
+                    ? $item->getValue()
+                    : $item->$column,
+                  $attributes
+                )
               );
             }
           }

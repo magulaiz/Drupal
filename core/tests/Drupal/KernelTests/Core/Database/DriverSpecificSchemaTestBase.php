@@ -1423,7 +1423,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertSame($sourceValue, $result);
   }
 
-  const JSON_TEST_VALUE = '{"key": "value1", "number": 0, "bool": true, "list": ["a","b","c"], "nested": {"key": "value2"}}';
+  const JSON_TEST_VALUE = '{"key": "value1", "number": 0, "bool": true, "list": ["a","b","c"], "nested": {"key": "value2"}, "float": 5.5}';
 
   const JSON_TEST_DATA = [
     '$.key' => 'value1',
@@ -1432,6 +1432,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     '$.number' => 0,
     '$.list' => ['a', 'b', 'c'],
     '$.list[1]' => 'b',
+    '$.float' => 5.5,
   ];
 
   const JSON_TABLE_SPECIFICATION = [

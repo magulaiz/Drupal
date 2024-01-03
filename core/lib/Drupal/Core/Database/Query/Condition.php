@@ -142,9 +142,22 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
   /**
    * {@inheritdoc}
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|array|SelectInterface|bool|null $value = NULL, string $operator = '=') {
-    // @todo Validation and sanity-checking.
-
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|SelectInterface|bool|null $value = NULL, string $operator = '=') {
+    $allowed_operators = ['=', '<>', '!=', '<', '<=', '>', '>='];
+    if (!in_array($operator, $allowed_operators)) {
+      throw new InvalidQueryException(sprintf(
+        'Operator %s is not supported by %s. Allowed operators include: %s',
+        $operator,
+        __CLASS__ . '::' . __METHOD__,
+        implode(', ', $allowed_operators),
+      ));
+    }
+    if (!str_starts_with($jsonpath, '$')) {
+      throw new InvalidQueryException(sprintf(
+        'The provided jsonpath %s is invalid. Supported jsonpath expressions must begin with "$".',
+        $jsonpath,
+      ));
+    }
     $this->conditions[] = [
       'field' => $field,
       'jsonpath' => $jsonpath,

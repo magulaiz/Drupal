@@ -71,7 +71,11 @@ trait JsonpathGeneratedFieldConditionTrait {
    * base case is standard SQL syntax.
    */
   protected function getJsonFieldFragmentFunction(string $field, string $jsonpath, mixed $value, Connection $connection): string {
-    return "JSON_EXTRACT({$field}, '{$jsonpath}')";
+    $fragment = "JSON_EXTRACT({$field}, '{$jsonpath}')";
+    if (is_float($value)) {
+      return sprintf('CAST(%s AS DOUBLE)', $fragment);
+    }
+    return $fragment;
   }
 
 }

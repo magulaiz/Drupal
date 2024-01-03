@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\JsonConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
@@ -12,7 +13,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 /**
  * The SQL storage entity query class.
  */
-class Query extends QueryBase implements QueryInterface {
+class Query extends QueryBase implements QueryInterface, JsonConditionInterface {
 
   /**
    * The build sql select query.
@@ -354,6 +355,23 @@ class Query extends QueryBase implements QueryInterface {
     $sql = $clone->connection->quoteIdentifiers($sql);
 
     return strtr($sql, $quoted);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function jsonCondition(string $field, string $jsonpath, SelectInterface|array|bool|int|float|string|null $value = NULL, string $operator = '=') {
+    assert($this->condition instanceof JsonConditionInterface);
+    $this->condition->jsonCondition($field, $jsonpath, $value, $operator);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function usesStrictParameters(): bool {
+    assert($this->condition instanceof JsonConditionInterface);
+    return $this->condition->usesStrictParameters();
   }
 
 }

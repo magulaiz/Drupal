@@ -25,9 +25,8 @@ interface JsonConditionInterface extends StrictSqlParamsConditionInterface {
    *   be ignored and $value should be a SelectInterface object.
    * @param string|null $operator
    *   The operator to use. Supported for all supported databases are at least:
-   *   - The comparison operators =, <>, <, <=, >, >=.
-   *   - The operators (NOT) BETWEEN, (NOT) IN, (NOT) EXISTS, (NOT) LIKE.
-   *   Other operators (e.g. LIKE, BINARY) may or may not work. Defaults to =.
+   *   - The comparison operators =, <>, !=, <, <=, >, >=.
+   *   Defaults to =.
    *
    * @return $this
    *   The called object.
@@ -35,6 +34,6 @@ interface JsonConditionInterface extends StrictSqlParamsConditionInterface {
    * @throws \Drupal\Core\Database\InvalidQueryException
    *   If passed invalid arguments, such as an empty array as $value.
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|array|SelectInterface|bool|null $value = NULL, string $operator = '=');
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|SelectInterface|bool|null $value = NULL, string $operator = '=');
 
 }
