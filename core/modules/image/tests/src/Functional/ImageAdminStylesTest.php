@@ -532,7 +532,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Tests the display of preview images using a private scheme.
    */
-  public function testPreviewImageShowInPrivateScheme() {
+  public function testPreviewImageShowInPrivateScheme(): void {
     $this->config('system.file')->set('default_scheme', 'private')->save();
 
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
