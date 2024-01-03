@@ -12,17 +12,10 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-use Drupal\shortcut\Entity\Shortcut;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
-use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 
 // cspell:ignore llamalovers catcuddlers Cuddlers
@@ -35,7 +28,7 @@ use GuzzleHttp\RequestOptions;
  *
  * @internal
  */
-class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
+class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
 
   use CommentTestTrait;
 
