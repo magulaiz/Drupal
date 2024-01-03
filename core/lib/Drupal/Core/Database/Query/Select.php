@@ -9,7 +9,7 @@ use Drupal\Core\Database\Connection;
  *
  * @ingroup database
  */
-class Select extends Query implements SelectInterface {
+class Select extends Query implements SelectInterface, JsonConditionInterface {
 
   use QueryConditionTrait;
 

@@ -80,7 +80,6 @@ class Condition extends ConditionBase implements JsonConditionInterface {
           $conditionContainer->where($condition['where'], $condition['where_args']);
         }
         elseif (isset($condition['jsonpath'])) {
-          assert($conditionContainer instanceof JsonConditionInterface);
           $conditionContainer->jsonCondition(
             $field,
             $condition['jsonpath'],

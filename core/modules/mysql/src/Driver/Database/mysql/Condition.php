@@ -42,7 +42,7 @@ class Condition extends QueryCondition {
   protected function getJsonFieldFragmentFunction(string $field, string $jsonpath, mixed $value, Connection $connection): string {
     assert($connection instanceof MySqlConnection);
     $fragment = $this->doGetJsonFieldFragmentFunction($field, $jsonpath, $value, $connection);
-    return is_float($value)
+    return is_numeric($value)
       // This would hide the index on MySQL, however we account for that in
       // ::getJsonFieldFragment().
       // @todo When MySQL 8.0.21+ is required, use JSON_VALUE().
