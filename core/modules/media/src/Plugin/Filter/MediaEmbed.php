@@ -292,6 +292,13 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $uuid = $node->getAttribute('data-entity-uuid');
       $view_mode_id = $node->getAttribute('data-view-mode') ?: $this->settings['default_view_mode'];
 
+      // Inline media needs a dedicated view mode in order to ensure rendering
+      // of valid (flow content) HTML when rendering inside flow content like
+      // <p> tags for example.
+      if ($node->tagName == 'drupal-media-inline') {
+        $view_mode_id = 'ckeditor_inline';
+      }
+
       // Delete the consumed attributes.
       $node->removeAttribute('data-entity-type');
       $node->removeAttribute('data-entity-uuid');
@@ -319,19 +326,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $build = $media && ($view_mode || $view_mode_id === EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE)
         ? $this->renderMedia($media, $view_mode_id, $langcode)
         : $this->renderMissingMediaIndicator();
-
-      if ($node->tagName == 'drupal-media-inline') {
-        // For media that's embedded inline, we render only the source field, as
-        // we want to render as little markup as possible to get markup that is
-        // valid inside a flow content element. If we render <div> elements for
-        // example, this won't render properly inside a <p> tag and results in
-        // invalid HTML.
-        $field_definition = $media->getSource()
-          ->getSourceFieldDefinition($media->get('bundle')->entity);
-        $field_view = $media->get($field_definition->getName())->view('ckeditor_inline');
-        $field_view['#theme'] = 'field__ckeditor_inline';
-        $build = $field_view;
-      }
 
       if (empty($build['#attributes']['class'])) {
         $build['#attributes']['class'] = [];
