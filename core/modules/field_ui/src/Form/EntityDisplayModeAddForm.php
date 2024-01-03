@@ -67,7 +67,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     ]);
     $bundle = $this->getRequest()->query->get('bundle') ?: NULL;
     // Validate the bundle to avoid CSRF.
-    if (in_array($bundle, array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id)))) {
+    if (in_array($bundle, array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id)))) {
       $form['bundles_by_entity']['#default_value'] = $bundle !== NULL ? [$bundle] : [];
     }
     return $form;
