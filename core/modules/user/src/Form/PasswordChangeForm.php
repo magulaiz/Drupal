@@ -59,8 +59,6 @@ class PasswordChangeForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
-   *
-   * Removing base form id to avoid unapplicable hooks from contrib modules.
    */
   public function getBaseFormId() {
     return NULL;
@@ -76,12 +74,9 @@ class PasswordChangeForm extends ContentEntityForm {
     $config = $this->config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
 
-    // Check for new account.
-    $register = $account->isNew();
-
     // Display password field only for existing users or when user is allowed to
     // assign a password during registration.
-    if (!$register) {
+    if (!$account->isNew()) {
       $form['account']['pass'] = [
         '#type' => 'password_confirm',
         '#size' => 25,

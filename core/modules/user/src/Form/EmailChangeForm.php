@@ -13,8 +13,6 @@ class EmailChangeForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
-   *
-   * Removing base form id to avoid unapplicable hooks from contrib modules.
    */
   public function getBaseFormId() {
     return NULL;
@@ -29,9 +27,6 @@ class EmailChangeForm extends ContentEntityForm {
     $user = $this->currentUser();
     $config = $this->config('user.settings');
     $form['#cache']['tags'] = $config->getCacheTags();
-
-    // Check for new account.
-    $register = $account->isNew();
 
     // Account information.
     $form['account'] = [
@@ -59,7 +54,7 @@ class EmailChangeForm extends ContentEntityForm {
       '#title' => $this->t('Email address'),
       '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
-      '#default_value' => (!$register ? $account->getEmail() : ''),
+      '#default_value' => (!$account->isNew() ? $account->getEmail() : ''),
       '#access' => $account->mail->access('edit'),
     ];
 
