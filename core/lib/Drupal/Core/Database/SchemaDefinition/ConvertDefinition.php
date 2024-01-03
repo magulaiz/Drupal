@@ -81,8 +81,8 @@ abstract class ConvertDefinition {
     if ($column->serialize !== Property::Undefined) {
       $spec['serialize'] = $column->serialize;
     }
-    if ($column->size !== Property::Undefined) {
-      $spec['size'] = $column->size;
+    if ($column->size !== ColumnSize::Undefined) {
+      $spec['size'] = $column->size->value;
     }
     if ($column->notNull !== Property::Undefined) {
       $spec['not null'] = $column->notNull;

@@ -31,14 +31,10 @@ final class Column implements SchemaDefinitionInterface {
    * @param Property|bool $serialize
    *   (Optional) A boolean indicating whether the field will be stored as a
    *   serialized string.
-   * @param Property|string $size
-   *   (Optional) The data size: 'tiny', 'small', 'medium', 'normal', 'big'.
-   *   This is a hint about the largest value the field will store and
-   *   determines which of the database engine specific data types will be
-   *   used (e.g. on MySQL, TINYINT vs. INT vs. BIGINT). 'normal', the default,
-   *   selects the base type (e.g. on MySQL, INT, VARCHAR, BLOB, etc.). Not all
-   *   sizes are available for all data types. See
-   *   DatabaseSchema::getFieldTypeMap() for possible combinations.
+   * @param ColumnSize $size
+   *   (Optional) The column data size. This is a hint about the largest value
+   *   the column will store. See
+   *   \Drupal\Core\Database\SchemaDefinition\ColumnSize for possible values.
    * @param Property|bool $notNull
    *   (Optional)  If true, no NULL values will be allowed in this database
    *   column. Defaults to false.
@@ -78,7 +74,7 @@ final class Column implements SchemaDefinitionInterface {
     public readonly Property|string $type = Property::Undefined,
     public readonly Property|string $description = Property::Undefined,
     public readonly Property|bool $serialize = Property::Undefined,
-    public readonly Property|string $size = Property::Undefined,
+    public readonly ColumnSize $size = ColumnSize::Undefined,
     public readonly Property|bool $notNull = Property::Undefined,
     public readonly Property|string|int|NULL $default = Property::Undefined,
     public readonly Property|int $length = Property::Undefined,

@@ -7,6 +7,7 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
 use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\Index;
 use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
@@ -269,7 +270,7 @@ class BatchStorage implements BatchStorageInterface {
           description: 'A serialized array containing the processing data for the batch.',
           type: 'blob',
           notNull: FALSE,
-          size: 'big',
+          size: ColumnSize::Big,
         ),
       ],
       primaryKey: new PrimaryKey(['bid']),

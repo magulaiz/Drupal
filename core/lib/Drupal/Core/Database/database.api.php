@@ -7,6 +7,7 @@
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
 use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
@@ -577,13 +578,13 @@ function hook_schema(bool $returnArraySchema = TRUE) {
         description: 'The value.',
         type: 'blob',
         notNull: FALSE,
-        size: 'big',
+        size: ColumnSize::Big,
       ),
       new Column(
         name: 'serialized',
         description: 'Whether value is serialized.',
         type: 'int',
-        size: 'tiny',
+        size: ColumnSize::Tiny,
         unsigned: TRUE,
         default: 0,
       ),
