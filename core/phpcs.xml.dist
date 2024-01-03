@@ -274,7 +274,9 @@
     </properties>
     <!-- @todo Broaden this in https://www.drupal.org/project/drupal/issues/3400434 -->
     <!-- <include-pattern>*/tests/*</include-pattern> -->
-    <include-pattern>./tests/Drupal/*.php</include-pattern>
+    <include-pattern>*/tests/src/FunctionalJavascript/*</include-pattern>
+    <include-pattern>*/tests/src/Traits/*</include-pattern>
+    <include-pattern>./tests/Drupal/*</include-pattern>
     <include-pattern>./tests/TestSuites/*</include-pattern>
     <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
     <!-- @todo remove after https://www.drupal.org/node/3399746 -->
