@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -42,6 +43,13 @@ class ConfigSingleExportForm extends FormBase {
   protected $definitions = [];
 
   /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a new ConfigSingleImportForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -49,9 +57,10 @@ class ConfigSingleExportForm extends FormBase {
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, FileSystemInterface $file_system) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configStorage = $config_storage;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -60,7 +69,8 @@ class ConfigSingleExportForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('config.storage')
+      $container->get('config.storage'),
+      $container->get('file_system'),
     );
   }
 
@@ -128,6 +138,11 @@ class ConfigSingleExportForm extends FormBase {
       ]);
       $form['export'] = $this->updateExport($form, $fake_form_state);
     }
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Download'),
+    ];
+
     return $form;
   }
 
@@ -205,7 +220,24 @@ class ConfigSingleExportForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Nothing to submit.
+    $config_type = $form_state->getValue('config_type');
+    $config_name = $form_state->getValue('config_name');
+    $export = $form_state->getValue('export');
+    if ($config_type && $config_name) {
+      if ($form_state->getValue('config_type') !== 'system.simple') {
+        $entity_manager = \Drupal::service('entity_type.manager');
+        $definition = $entity_manager->getDefinition($config_type);
+        $name = $definition->getConfigPrefix() . '.' . $config_name;
+      }
+      // The config name is used directly for simple configuration.
+      else {
+        $name = $config_name;
+      }
+      $filename = $name . '.yml';
+      file_put_contents($this->fileSystem->getTempDirectory() . DIRECTORY_SEPARATOR . $filename, $export);
+      $form_state->setRedirect('config.export_single_download', ['filename' => $filename]);
+    }
+
   }
 
 }
