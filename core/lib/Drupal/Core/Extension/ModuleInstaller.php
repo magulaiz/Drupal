@@ -6,7 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Exception\SchemaDefinitionException;
-use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -30,8 +30,6 @@ use Psr\Log\LoggerInterface;
  * solve this dilemma.
  */
 class ModuleInstaller implements ModuleInstallerInterface {
-
-  use ConvertDefinitionTrait;
 
   /**
    * The module handler.
@@ -671,7 +669,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
           throw new SchemaDefinitionException("The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'");
         }
         if (!$this->connection->supportsSchemaDefinition()) {
-          $table = $this->convertTableToArrayDefinition($table);
+          $table = ConvertDefinition::tableToArray($table);
         }
       }
       $schema->createTable($name, $table);

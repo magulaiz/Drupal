@@ -9,32 +9,32 @@ namespace Drupal\Core\Database\SchemaDefinition;
  *
  * @internal
  */
-trait ConvertDefinitionTrait {
+abstract class ConvertDefinition {
 
   /**
    * Converts a Table object.
    *
    * @internal
    */
-  final protected static function convertTableToArrayDefinition(Table $table): array {
+  final public static function tableToArray(Table $table): array {
     $spec = [];
     if ($table->description !== Property::Undefined) {
       $spec['description'] = $table->description;
     }
     if ($table->columns !== Property::Undefined) {
-      $spec['fields'] = self::convertColumnsToArrayDefinition($table->columns);
+      $spec['fields'] = self::columnsToArray($table->columns);
     }
     if ($table->primaryKey !== Property::Undefined) {
-      $spec['primary key'] = self::convertPrimaryKeyToArrayDefinition($table->primaryKey);
+      $spec['primary key'] = self::primaryKeyToArray($table->primaryKey);
     }
     if ($table->uniqueKeys !== Property::Undefined) {
-      $spec['unique keys'] = self::convertUniqueKeysToArrayDefinition($table->uniqueKeys);
+      $spec['unique keys'] = self::uniqueKeysToArray($table->uniqueKeys);
     }
     if ($table->indexes !== Property::Undefined) {
-      $spec['indexes'] = self::convertIndexesToArrayDefinition($table->indexes);
+      $spec['indexes'] = self::indexesToArray($table->indexes);
     }
     if ($table->foreignKeys !== Property::Undefined) {
-      $spec['foreign keys'] = self::convertForeignKeysToArrayDefinition($table->foreignKeys);
+      $spec['foreign keys'] = self::foreignKeysToArray($table->foreignKeys);
     }
     return $spec;
   }
@@ -44,10 +44,10 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertColumnsToArrayDefinition(array $columns): array {
+  final public static function columnsToArray(array $columns): array {
     $spec = [];
     foreach ($columns as $column) {
-      $spec[$column->name] = self::convertColumnToArrayDefinition($column);
+      $spec[$column->name] = self::columnToArray($column);
     }
     return $spec;
   }
@@ -57,7 +57,7 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertColumnToArrayDefinition(Column $column): array {
+  final public static function columnToArray(Column $column): array {
     $spec = [];
     if ($column->type !== Property::Undefined) {
       $spec['type'] = $column->type;
@@ -105,10 +105,10 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertKeyColumnsToArrayDefinition(array $columns): array {
+  final public static function keyColumnsToArray(array $columns): array {
     $spec = [];
     foreach ($columns as $column) {
-      $spec[] = self::convertKeyColumnToArrayDefinition($column);
+      $spec[] = self::keyColumnToArray($column);
     }
     return $spec;
   }
@@ -118,7 +118,7 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertKeyColumnToArrayDefinition(KeyColumn $column): string|array {
+  final public static function keyColumnToArray(KeyColumn $column): string|array {
     if ($column->length !== NULL) {
       return [$column->name, $column->length];
     }
@@ -130,8 +130,8 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertPrimaryKeyToArrayDefinition(PrimaryKey $primaryKey): array {
-    return self::convertKeyColumnsToArrayDefinition($primaryKey->columns);
+  final public static function primaryKeyToArray(PrimaryKey $primaryKey): array {
+    return self::keyColumnsToArray($primaryKey->columns);
   }
 
   /**
@@ -139,10 +139,10 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertUniqueKeysToArrayDefinition(array $uniqueKeys): array {
+  final public static function uniqueKeysToArray(array $uniqueKeys): array {
     $spec = [];
     foreach ($uniqueKeys as $uniqueKey) {
-      $spec[$uniqueKey->name] = self::convertKeyColumnsToArrayDefinition($uniqueKey->columns);
+      $spec[$uniqueKey->name] = self::keyColumnsToArray($uniqueKey->columns);
     }
     return $spec;
   }
@@ -152,10 +152,10 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertIndexesToArrayDefinition(array $indexes): array {
+  final public static function indexesToArray(array $indexes): array {
     $spec = [];
     foreach ($indexes as $index) {
-      $spec[$index->name] = self::convertKeyColumnsToArrayDefinition($index->columns);
+      $spec[$index->name] = self::keyColumnsToArray($index->columns);
     }
     return $spec;
   }
@@ -165,11 +165,11 @@ trait ConvertDefinitionTrait {
    *
    * @internal
    */
-  final protected static function convertForeignKeysToArrayDefinition(array $foreignKeys): array {
+  final public static function foreignKeysToArray(array $foreignKeys): array {
     $spec = [];
     foreach ($foreignKeys as $foreignKey) {
-      $cols = self::convertKeyColumnsToArrayDefinition($foreignKey->columns);
-      $foreignCols = self::convertKeyColumnsToArrayDefinition($foreignKey->foreignColumns);
+      $cols = self::keyColumnsToArray($foreignKey->columns);
+      $foreignCols = self::keyColumnsToArray($foreignKey->foreignColumns);
       $match = [];
       for ($i = 0; $i < count($cols); $i++) {
         $match[$cols[$i]] = $foreignCols[$i];

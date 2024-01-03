@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\SchemaDefinition\Column;
-use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
 use Drupal\Core\Database\SchemaDefinition\KeyColumn;
@@ -15,18 +15,16 @@ use Drupal\Core\Database\SchemaDefinition\UniqueKey;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the ConvertDefinitionTrait.
+ * Tests conversion of SchemaDefinition objects to legacy array-based structure.
  *
  * @group Database
  */
-class ConvertDefinitionTraitTest extends UnitTestCase {
-
-  use ConvertDefinitionTrait;
+class ConvertDefinitionTest extends UnitTestCase {
 
   /**
-   * Tests the ConvertDefinitionTrait.
+   * Tests ConvertDefinition::tableToArray.
    */
-  public function testConvertDefinitionTrait(): void {
+  public function testConvertDefinition(): void {
     $arraySpecification = [
       'description' => 'Basic test table for the database unit tests.',
       'fields' => [
@@ -161,7 +159,7 @@ class ConvertDefinitionTraitTest extends UnitTestCase {
       ],
     );
 
-    $this->assertEquals($arraySpecification, self::convertTableToArrayDefinition($schemaDefinition));
+    $this->assertEquals($arraySpecification, ConvertDefinition::tableToArray($schemaDefinition));
   }
 
 }

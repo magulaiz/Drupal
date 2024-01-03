@@ -3,7 +3,7 @@
 namespace Drupal\TestTools\Extension;
 
 use Drupal\Core\Database\Exception\SchemaDefinitionException;
-use Drupal\Core\Database\SchemaDefinition\ConvertDefinitionTrait;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
@@ -11,8 +11,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * Provides methods to access modules' schema.
  */
 class SchemaInspector {
-
-  use ConvertDefinitionTrait;
 
   /**
    * Returns the module's schema specification.
@@ -44,7 +42,7 @@ class SchemaInspector {
             throw new SchemaDefinitionException("The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'");
           }
           if (!\Drupal::database()->supportsSchemaDefinition()) {
-            $table = self::convertTableToArrayDefinition($table);
+            $table = ConvertDefinition::tableToArray($table);
           }
         }
         $temp[$name] = $table;
