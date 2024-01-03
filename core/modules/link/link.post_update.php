@@ -13,7 +13,7 @@ use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
 /**
  * Populate new 'handler' settings for the link widget.
  */
-function link_post_update_widget_handler_settings(&$sandbox = NULL) {
+function link_post_update_widget_handler_settings(&$sandbox = NULL): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $callback = function (FieldConfigInterface $field) {
     if ($field->getType() == 'link') {
@@ -33,7 +33,7 @@ function link_post_update_widget_handler_settings(&$sandbox = NULL) {
 /**
  * Populate new 'match_limit' and 'match_operator' settings for the link widget.
  */
-function link_post_update_match_settings(&$sandbox = NULL) {
+function link_post_update_match_settings(&$sandbox = NULL): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   /** @var \Drupal\Core\Field\WidgetPluginManager $field_widget_manager */
   $field_widget_manager = \Drupal::service('plugin.manager.field.widget');

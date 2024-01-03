@@ -86,7 +86,7 @@ function link_field_type_category_info_alter(&$definitions) {
  *
  * @todo Remove this hook in Drupal 11.0.x https://www.drupal.org/project/drupal/issues/3373258
  */
-function link_field_config_presave(FieldConfigInterface $field) {
+function link_field_config_presave(FieldConfigInterface $field): void {
   if ($field->getType() !== 'link') {
     return;
   }
@@ -104,7 +104,7 @@ function link_field_config_presave(FieldConfigInterface $field) {
  *
  * @todo Remove this hook in Drupal 11.0.x https://www.drupal.org/project/drupal/issues/3341689
  */
-function link_entity_form_display_presave(EntityFormDisplayInterface $display) {
+function link_entity_form_display_presave(EntityFormDisplayInterface $display): void {
   /** @var \Drupal\Core\Field\WidgetPluginManager $field_widget_manager */
   $field_widget_manager = \Drupal::service('plugin.manager.field.widget');
 

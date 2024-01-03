@@ -192,7 +192,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    */
-  public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state) {
+  public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state): void {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface $field */
     $field = $form_state->getFormObject()->getEntity();
     $field->getFieldStorageDefinition()->setSetting('target_type', 'node');
@@ -205,7 +205,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    *
    * @see static::fieldSettingsForm()
    */
-  public static function fieldSettingsAjaxProcess($form, FormStateInterface $form_state) {
+  public static function fieldSettingsAjaxProcess(array $form, FormStateInterface $form_state): array {
     static::fieldSettingsAjaxProcessElement($form, $form);
     return $form;
   }
@@ -215,7 +215,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    *
    * @see static::fieldSettingsAjaxProcess()
    */
-  public static function fieldSettingsAjaxProcessElement(&$element, $main_form) {
+  public static function fieldSettingsAjaxProcessElement(array &$element, array $main_form): void {
     if (!empty($element['#ajax'])) {
       $element['#ajax'] = [
         'callback' => [static::class, 'settingsAjax'],
@@ -237,7 +237,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    *
    * @see _entity_reference_field_settings_process()
    */
-  public static function formProcessMergeParent($element) {
+  public static function formProcessMergeParent(array $element): array {
     $parents = $element['#parents'];
     array_pop($parents);
     $element['#parents'] = $parents;
@@ -249,7 +249,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    *
    * @see static::fieldSettingsForm()
    */
-  public static function settingsAjax($form, FormStateInterface $form_state) {
+  public static function settingsAjax(array $form, FormStateInterface $form_state): array {
     return NestedArray::getValue($form, $form_state->getTriggeringElement()['#ajax']['element']);
   }
 
@@ -258,7 +258,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    *
    * @see static::fieldSettingsForm()
    */
-  public static function settingsAjaxSubmit($form, FormStateInterface $form_state) {
+  public static function settingsAjaxSubmit(array $form, FormStateInterface $form_state): void {
     $form_state->setRebuild();
   }
 

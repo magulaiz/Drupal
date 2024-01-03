@@ -362,7 +362,7 @@ class LinkWidget extends WidgetBase {
    * @return array
    *   List of options.
    */
-  protected function getMatchOperatorOptions() {
+  protected function getMatchOperatorOptions(): array {
     return [
       'STARTS_WITH' => $this->t('Starts with'),
       'CONTAINS' => $this->t('Contains'),

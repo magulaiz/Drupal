@@ -19,7 +19,7 @@ class LinkPostUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
     ];
@@ -28,7 +28,7 @@ class LinkPostUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update hook setting handler for field type.
    */
-  public function testLinkFieldTypeUpdate() {
+  public function testLinkFieldTypeUpdate(): void {
     $config = $this->config('field.field.node.test_content_type.field_test_5');
     $this->assertEmpty($config->get('settings.handler'));
     $this->assertEmpty($config->get('settings.handler_settings'));
@@ -44,7 +44,7 @@ class LinkPostUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update hook setting handler for field type.
    */
-  public function testLinkWidgetMatchSettingsUpdate() {
+  public function testLinkWidgetMatchSettingsUpdate(): void {
     $config = $this->config('core.entity_form_display.node.test_content_type.default');
     $this->assertEmpty($config->get('content.field_test_5.settings.match_limit'));
     $this->assertEmpty($config->get('content.field_test_5.settings.match_operator'));
