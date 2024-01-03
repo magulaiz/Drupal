@@ -29,7 +29,7 @@ class PasswordChangeForm extends ContentEntityForm {
   protected $passwordHasher;
 
   /**
-   * Constructs a UserPasswordForm object.
+   * Constructs a PasswordChangeForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
