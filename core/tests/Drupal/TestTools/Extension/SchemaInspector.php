@@ -35,7 +35,7 @@ class SchemaInspector {
       foreach ($tables as $name => $table) {
         if ($table instanceof Table) {
           $name = $table->name;
-          if (!$this->connection->supportsSchemaDefinition()) {
+          if (!\Drupal::database()->supportsSchemaDefinition()) {
             $table = ConvertDefinition::tableToArray($table);
           }
         }
