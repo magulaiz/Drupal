@@ -93,8 +93,9 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->assertEquals('Optional configuration that is not overridden.', $config_test->label());
 
     // Ensure the optional configuration is installed. Note that the overridden
-    // EntityTestBundle config with ID install_test has a dependency on
-    // EntityTestBundle with ID testing_config_overrides, so it has to exist.
+    // EntityTestBundle config with ID testing_config_overrides has a
+    // dependency on EntityTestBundle with ID testing_config_overrides_module,
+    // so it has to exist.
     $this->assertInstanceOf(EntityTestBundle::class, \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('testing_config_overrides_module'));
 
     // Ensure that optional configuration from a profile is created if
