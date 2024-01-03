@@ -94,10 +94,19 @@ function ckeditor5_theme() {
     'field__ckeditor_inline' => [
       'base hook' => 'field',
     ],
-    'media__ckeditor_inline' => [
-      'base hook' => 'field',
+    'media__ckeditor_inline_embed' => [
+      'base hook' => 'media',
     ],
   ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function ckeditor5_theme_suggestions_media_alter(array &$suggestions, array $variables) {
+  if ($variables['elements']['#view_mode'] == 'ckeditor_inline') {
+    $suggestions[] = 'media__ckeditor_inline_embed';
+  }
 }
 
 /**
@@ -105,7 +114,6 @@ function ckeditor5_theme() {
  */
 function ckeditor5_preprocess_media(&$variables) {
   if ($variables['view_mode'] == 'ckeditor_inline') {
-    $variables['elements']['#theme'] = 'media__ckeditor_inline';
     foreach ($variables['content'] as &$element) {
       if (!empty($element['#theme']) && $element['#theme'] == 'field') {
         $element['#theme'] = 'field__ckeditor_inline';
