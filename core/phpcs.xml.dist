@@ -280,6 +280,8 @@
     <include-pattern>./tests/Drupal/*</include-pattern>
     <include-pattern>./tests/TestSuites/*</include-pattern>
     <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
+    <exclude-pattern>*/fixtures/*</exclude-pattern>
+    <exclude-pattern>*/Fixture/*</exclude-pattern>
     <!-- @todo remove after https://www.drupal.org/node/3399746 -->
     <exclude-pattern>./tests/Drupal/FunctionalTests/*</exclude-pattern>
     <!-- @todo remove after https://www.drupal.org/node/3399388 -->
