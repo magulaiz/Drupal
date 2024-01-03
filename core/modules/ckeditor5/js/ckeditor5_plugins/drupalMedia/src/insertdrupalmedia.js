@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
+import { first } from 'ckeditor5/src/utils';
 import { groupNameToModelAttributeKey } from './utils';
-import {first} from "ckeditor5/src/utils";
 
 /**
  * @module drupalMedia/insertdrupalmediacommand
@@ -10,15 +10,6 @@ import {first} from "ckeditor5/src/utils";
 
 function createDrupalMedia(writer, attributes, model) {
   return writer.createElement(model, attributes);
-}
-
-function determineImageTypeForInsertion(editor, selectable) {
-  const schema = editor.model.schema;
-  // Try to replace the selected widget (e.g. another image).
-  if (selectable.is('selection')) {
-    return determineImageTypeForInsertionAtSelection(schema, selectable);
-  }
-  return schema.checkChild(selectable, 'drupalMediaInline') ? 'drupalMediaInline' : 'drupalMedia';
 }
 
 function determineImageTypeForInsertionAtSelection(schema, selection) {
@@ -37,7 +28,16 @@ function determineImageTypeForInsertionAtSelection(schema, selection) {
   return 'drupalMediaInline';
 }
 
-
+function determineImageTypeForInsertion(editor, selectable) {
+  const schema = editor.model.schema;
+  // Try to replace the selected widget (e.g. another image).
+  if (selectable.is('selection')) {
+    return determineImageTypeForInsertionAtSelection(schema, selectable);
+  }
+  return schema.checkChild(selectable, 'drupalMediaInline')
+    ? 'drupalMediaInline'
+    : 'drupalMedia';
+}
 
 /**
  * The insert media command.
@@ -112,7 +112,7 @@ export default class InsertDrupalMediaCommand extends Command {
 
     const insertedModel = determineImageTypeForInsertion(
       this.editor,
-      this.editor.model.document.selection
+      this.editor.model.document.selection,
     );
 
     this.editor.model.change((writer) => {
@@ -125,10 +125,7 @@ export default class InsertDrupalMediaCommand extends Command {
   refresh() {
     const model = this.editor.model;
     const selection = model.document.selection;
-    const mediaModel = determineImageTypeForInsertion(
-      this.editor,
-      selection
-    );
+    const mediaModel = determineImageTypeForInsertion(this.editor, selection);
     const allowedIn = model.schema.findAllowedParent(
       selection.getFirstPosition(),
       mediaModel,

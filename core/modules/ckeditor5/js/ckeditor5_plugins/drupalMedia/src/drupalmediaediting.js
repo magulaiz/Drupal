@@ -239,7 +239,7 @@ export default class DrupalMediaEditing extends Plugin {
       'drupal-media-inline': 'drupalMediaInline',
     };
 
-    Object.keys(viewToModelMap).forEach(view => {
+    Object.keys(viewToModelMap).forEach((view) => {
       const model = viewToModelMap[view];
 
       conversion
@@ -248,7 +248,7 @@ export default class DrupalMediaEditing extends Plugin {
           view: {
             name: view,
           },
-          model: model,
+          model,
         })
         .add((dispatcher) => {
           dispatcher.on(
@@ -292,7 +292,7 @@ export default class DrupalMediaEditing extends Plugin {
         });
 
       conversion.for('dataDowncast').elementToElement({
-        model: model,
+        model,
         view: {
           name: view,
         },
@@ -300,10 +300,11 @@ export default class DrupalMediaEditing extends Plugin {
       conversion
         .for('editingDowncast')
         .elementToElement({
-          model: model,
+          model,
           view: (modelElement, { writer }) => {
             const container = writer.createContainerElement('figure', {
-              class: view === 'drupal-media-inline' ? `drupal-media ${view}` : view,
+              class:
+                view === 'drupal-media-inline' ? `drupal-media ${view}` : view,
             });
             if (!this.previewUrl) {
               // If preview URL isn't available, insert empty preview element
@@ -311,7 +312,10 @@ export default class DrupalMediaEditing extends Plugin {
               const mediaPreview = writer.createRawElement('div', {
                 'data-drupal-media-preview': 'unavailable',
               });
-              writer.insert(writer.createPositionAt(container, 0), mediaPreview);
+              writer.insert(
+                writer.createPositionAt(container, 0),
+                mediaPreview,
+              );
             }
             writer.setCustomProperty(model, true, container);
 
@@ -353,7 +357,10 @@ export default class DrupalMediaEditing extends Plugin {
               media = viewWriter.createRawElement('div', {
                 'data-drupal-media-preview': 'loading',
               });
-              viewWriter.insert(viewWriter.createPositionAt(container, 0), media);
+              viewWriter.insert(
+                viewWriter.createPositionAt(container, 0),
+                media,
+              );
             }
 
             this._fetchPreview(modelElement).then(({ label, preview }) => {
