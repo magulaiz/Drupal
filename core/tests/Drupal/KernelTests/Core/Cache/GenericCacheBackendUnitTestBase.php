@@ -23,7 +23,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $cachebackends;
+  protected $cachebackends = [];
 
   /**
    * Cache bin to use for testing.
@@ -105,7 +105,6 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->cachebackends = [];
     $this->defaultValue = $this->randomMachineName(10);
 
     parent::setUp();
@@ -123,7 +122,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     foreach ($this->cachebackends as $bin => $cachebackend) {
       $this->cachebackends[$bin]->deleteAll();
     }
-    unset($this->cachebackends);
+    $this->cachebackends = [];
 
     $this->tearDownCacheBackend();
 

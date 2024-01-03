@@ -144,6 +144,11 @@ class ViewUI implements ViewEntityInterface {
   protected string $entityType;
 
   /**
+   * The form cache.
+   */
+  public array $form_cache = [];
+
+  /**
    * Constructs a View UI object.
    *
    * @param \Drupal\views\ViewEntityInterface $storage
@@ -268,8 +273,8 @@ class ViewUI implements ViewEntityInterface {
    * Submit handler for cancel button.
    */
   public function standardCancel($form, FormStateInterface $form_state) {
-    if (!empty($this->changed) && isset($this->form_cache)) {
-      unset($this->form_cache);
+    if (!empty($this->changed) && $this->form_cache !== []) {
+      $this->form_cache = [];
       $this->cacheSet();
     }
 
@@ -491,8 +496,8 @@ class ViewUI implements ViewEntityInterface {
       }
     }
 
-    if (isset($this->form_cache)) {
-      unset($this->form_cache);
+    if ($this->form_cache !== []) {
+      $this->form_cache = [];
     }
 
     // Store in cache

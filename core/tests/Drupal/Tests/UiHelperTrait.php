@@ -184,7 +184,6 @@ trait UiHelperTrait {
     $assert_session->fieldExists('pass');
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
-    unset($this->loggedInUser->sessionId);
     $this->loggedInUser = FALSE;
     \Drupal::currentUser()->setAccount(new AnonymousUserSession());
   }

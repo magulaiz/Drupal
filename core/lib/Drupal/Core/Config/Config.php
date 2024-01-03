@@ -31,7 +31,7 @@ class Config extends StorableConfigBase {
    * The configuration data from storage merged with module and settings
    * overrides.
    *
-   * @var array
+   * @var array|null
    */
   protected $overriddenData;
 
@@ -82,7 +82,7 @@ class Config extends StorableConfigBase {
    * {@inheritdoc}
    */
   public function get($key = '') {
-    if (!isset($this->overriddenData)) {
+    if ($this->overriddenData === NULL) {
       $this->setOverriddenData();
     }
     if (empty($key)) {
@@ -173,7 +173,7 @@ class Config extends StorableConfigBase {
    *   The configuration object.
    */
   protected function resetOverriddenData() {
-    unset($this->overriddenData);
+    $this->overriddenData = NULL;
     return $this;
   }
 
