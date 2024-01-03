@@ -72,8 +72,8 @@ trait JsonpathGeneratedFieldConditionTrait {
    */
   protected function getJsonFieldFragmentFunction(string $field, string $jsonpath, mixed $value, Connection $connection): string {
     $fragment = "JSON_EXTRACT({$field}, '{$jsonpath}')";
-    if (is_float($value)) {
-      return sprintf('CAST(%s AS DOUBLE)', $fragment);
+    if (is_float($value) || is_int($value)) {
+      return sprintf('CAST(%s AS DECIMAL)', $fragment);
     }
     return $fragment;
   }
