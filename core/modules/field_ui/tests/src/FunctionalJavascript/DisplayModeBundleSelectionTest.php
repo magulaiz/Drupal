@@ -158,17 +158,19 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
    *   View or Form display mode.
    * @param string $path
    *   Display mode path.
-   * @param array $mode_count
-   *   Mode count before and after adding new display mode.
+   * @param int $mode_count_before
+   *   Mode count before adding new display mode.
+   * @param int $mode_count_after
+   *   Mode count after adding new display mode.
    *
    * @dataProvider providerDisplayModeLinks
    */
-  public function testDisplayModeLinks($display_mode, $path, $mode_count) {
+  public function testDisplayModeLinks(string $display_mode, string $path, int $mode_count_before, int $mode_count_after) {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     $this->drupalGet("/admin/structure/types/manage/article/$path");
-    $assert_session->elementsCount('xpath', '//*[@id="block-tabs-block"]/ul[2]/li/a', $mode_count[0]);
+    $assert_session->elementsCount('xpath', '//*[@id="block-tabs-block"]/ul[2]/li/a', $mode_count_before);
 
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
     $this->clickLink("Add new $display_mode mode");
@@ -183,7 +185,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
     $this->assertNotNull($assert_session->waitForButton('Display settings'));
     $this->assertTrue($this->assertSession()->waitForText("Saved the test-$display_mode $display_mode mode."));
     // Ensure new display mode is added to the local tasks bar.
-    $assert_session->elementsCount('xpath', '//*[@id="block-tabs-block"]/ul[2]/li/a', $mode_count[1]);
+    $assert_session->elementsCount('xpath', '//*[@id="block-tabs-block"]/ul[2]/li/a', $mode_count_after);
 
     // Check that the display mode checkbox is checked.
     $page->find('css', '[data-drupal-selector="edit-modes"]')->pressButton('Display settings');
@@ -195,8 +197,8 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
    */
   public function providerDisplayModeLinks() {
     return [
-      'view display' => ['view', 'display', [2, 3]],
-      'form display' => ['form', 'form-display', [0, 2]],
+      'view display' => ['view', 'display', 2, 3],
+      'form display' => ['form', 'form-display', 0, 2],
     ];
   }
 
