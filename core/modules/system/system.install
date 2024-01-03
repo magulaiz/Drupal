@@ -14,6 +14,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
 use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
@@ -1617,7 +1618,7 @@ function system_install() {
 /**
  * Implements hook_schema().
  */
-function system_schema() {
+function system_schema(bool $returnArraySchema = TRUE) {
   // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
   // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
   // @todo: Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
@@ -1699,7 +1700,10 @@ function system_schema() {
     ],
   );
 
-  return $schema;
+  return match ($returnArraySchema) {
+    TRUE => ConvertDefinition::schemaToArray($schema),
+    FALSE => $schema,
+  };
 }
 
 /**

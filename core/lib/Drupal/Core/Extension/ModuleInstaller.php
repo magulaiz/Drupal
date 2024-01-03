@@ -5,7 +5,6 @@ namespace Drupal\Core\Extension;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Exception\SchemaDefinitionException;
 use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\DrupalKernelInterface;
@@ -658,16 +657,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @internal
    */
   protected function installSchema(string $module): void {
-    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
+    $tables = $this->moduleHandler->invoke($module, 'schema', [FALSE]) ?? [];
     $schema = $this->connection->schema();
     foreach ($tables as $name => $table) {
       if ($table instanceof Table) {
-        if (is_int($name)) {
-          $name = $table->name;
-        }
-        if ($name !== $table->name) {
-          throw new SchemaDefinitionException("The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'");
-        }
+        $name = $table->name;
         if (!$this->connection->supportsSchemaDefinition()) {
           $table = ConvertDefinition::tableToArray($table);
         }
@@ -685,16 +679,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @internal
    */
   protected function uninstallSchema(string $module): void {
-    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
+    $tables = $this->moduleHandler->invoke($module, 'schema', [FALSE]) ?? [];
     $schema = $this->connection->schema();
     foreach ($tables as $name => $table) {
       if ($table instanceof Table) {
-        if (is_int($name)) {
-          $name = $table->name;
-        }
-        if ($name !== $table->name) {
-          throw new SchemaDefinitionException("The '{$name}' key returned by the {$module}_schema() function must be equal to the Table::\$name property; found '{$table->name}'");
-        }
+        $name = $table->name;
       }
       if ($schema->tableExists($name)) {
         $schema->dropTable($name);

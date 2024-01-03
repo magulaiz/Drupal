@@ -5,11 +5,24 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\SchemaDefinition;
 
 /**
- * A helper trait to convert SchemaDefinition objects to legacy array.
+ * An helper class to convert SchemaDefinition objects to legacy array.
  *
  * @internal
  */
 abstract class ConvertDefinition {
+
+  /**
+   * Converts an array of Table objects.
+   *
+   * @internal
+   */
+  final public static function schemaToArray(array $schema): array {
+    $spec = [];
+    foreach ($schema as $table) {
+      $spec[$table->name] = self::tableToArray($table);
+    }
+    return $spec;
+  }
 
   /**
    * Converts a Table object.

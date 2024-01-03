@@ -399,7 +399,7 @@ function install_begin_request($class_loader, &$install_state) {
 
   if ($install_state['settings_verified']) {
     try {
-      $system_schema = system_schema();
+      $system_schema = system_schema(returnArraySchema: FALSE);
       end($system_schema);
       $table = current($system_schema)->name;
       $install_state['base_system_verified'] = Database::getConnection()->schema()->tableExists($table);
@@ -1177,7 +1177,7 @@ function install_verify_database_settings($site_path) {
  *   installing the System module.
  */
 function install_verify_database_ready() {
-  $system_schema = system_schema();
+  $system_schema = system_schema(returnArraySchema: FALSE);
   end($system_schema);
   $table = current($system_schema)->name;
 
