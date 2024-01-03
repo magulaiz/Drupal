@@ -53,7 +53,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $form = parent::buildForm($form, $form_state, $entity_type_id);
     // Add an ajax callback when the form is loaded from respective field UI's.
-    if ($this->getRequest()->query->get('parent')) {
+    if ($this->getRequest()->query->get('bundle')) {
       $form['actions']['submit']['#ajax'] = [
         'callback' => '::ajaxSubmit',
       ];
@@ -61,7 +61,15 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
-    $form['#title'] = $this->t('Add new @entity-type %label', ['@entity-type' => $definition->getLabel(), '%label' => $this->entityType->getSingularLabel()]);
+    $form['#title'] = $this->t('Add new @entity-type %label', [
+      '@entity-type' => $definition->getLabel(),
+      '%label' => $this->entityType->getSingularLabel(),
+    ]);
+    $bundle = $this->getRequest()->query->get('bundle') ?: NULL;
+    // Validate the bundle to avoid CSRF.
+    if (in_array($bundle, array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id)))) {
+      $form['bundles_by_entity']['#default_value'] = $bundle !== NULL ? [$bundle] : [];
+    }
     return $form;
   }
 

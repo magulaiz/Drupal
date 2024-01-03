@@ -115,7 +115,6 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
     $definition = $this->entityTypeManager->getDefinition($this->entity->isNew() ? $this->targetEntityTypeId : $this->entity->getTargetType());
 
     $bundles_by_entity = [];
-    $defaults = [];
     foreach (array_keys($bundles[$definition->id()]) as $bundle) {
       $bundles_by_entity[$bundle] = $bundles[$definition->id()][$bundle]['label'];
       // Determine default display modes.
@@ -127,13 +126,11 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       }
     }
 
-    $bundle = $this->getRequest()->query->get('parent') ?: NULL;
     $form['bundles_by_entity'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Enable this @display-mode for the following @bundle-label types:', ['@display-mode' => $this->entityType->getSingularLabel(), '@bundle-label' => $definition->getLabel()]),
       '#description' => $this->t('This @display-mode will still be available for the rest of the @bundle-label types if not checked here, but it will not be enabled by default.', ['@bundle-label' => $definition->getLabel(), '@display-mode' => $this->entityType->getSingularLabel()]),
       '#options' => $bundles_by_entity,
-      '#default_value' => [$bundle],
     ];
 
     return $form;
