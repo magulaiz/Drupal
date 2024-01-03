@@ -56,6 +56,8 @@ class ConfigSingleExportForm extends FormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, FileSystemInterface $file_system) {
     $this->entityTypeManager = $entity_type_manager;
@@ -138,6 +140,7 @@ class ConfigSingleExportForm extends FormBase {
       ]);
       $form['export'] = $this->updateExport($form, $fake_form_state);
     }
+    $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Download'),
@@ -224,14 +227,7 @@ class ConfigSingleExportForm extends FormBase {
     $config_name = $form_state->getValue('config_name');
     $export = $form_state->getValue('export');
     if ($config_type && $config_name) {
-      if ($form_state->getValue('config_type') !== 'system.simple') {
-        $definition = $this->entityTypeManager->getDefinition($config_type);
-        $name = $definition->getConfigPrefix() . '.' . $config_name;
-      }
-      // The config name is used directly for simple configuration.
-      else {
-        $name = $config_name;
-      }
+      $name = ($config_type !== 'system.simple') ? $this->entityTypeManager->getDefinition($config_type)->getConfigPrefix() . '.' . $config_name : $config_name;
       $filename = $name . '.yml';
       file_put_contents($this->fileSystem->getTempDirectory() . DIRECTORY_SEPARATOR . $filename, $export);
       $form_state->setRedirect('config.export_single_download', ['filename' => $filename]);
