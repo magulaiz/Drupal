@@ -179,7 +179,7 @@ class SystemMenuBlockTest extends KernelTestBase {
   /**
    * Tests the editing links for SystemMenuBlock.
    */
-  public function testOperationLinks() {
+  public function testOperationLinks(): void {
     $block = Block::create([
       'plugin' => 'system_menu_block:' . $this->menu->id(),
       'region' => 'footer',
@@ -187,7 +187,7 @@ class SystemMenuBlockTest extends KernelTestBase {
       'theme' => 'stark',
     ]);
 
-    $links = $block->getOperationLinks();
+    $links = menu_ui_entity_operation($block);
     $menu_link = [
       'title' => $this->t('Edit menu'),
       'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $this->menu->id()]),
@@ -198,7 +198,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $this->assertEquals(['menu-edit' => $menu_link], $links);
 
     $this->setUpCurrentUser([]);
-    $links = $block->getOperationLinks();
+    $links = menu_ui_entity_operation($block);
     // Test when user doesn't have "administer menu" permission.
     $this->assertEmpty($links);
   }

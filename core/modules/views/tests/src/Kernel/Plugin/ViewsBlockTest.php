@@ -150,7 +150,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
   /**
    * Tests the editing links for ViewsBlockBase.
    */
-  public function testOperationLinks() {
+  public function testOperationLinks(): void {
     $this->setUpCurrentUser(['uid' => 0]);
 
     $block = Block::create([
@@ -160,7 +160,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
       'theme' => 'stark',
     ]);
 
-    $links = $block->getOperationLinks();
+    $links = views_ui_entity_operation($block);
     $view_link = [
       'title' => 'Edit view',
       'url' => Url::fromRoute('entity.view.edit_display_form', [
@@ -176,7 +176,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
 
     $this->setUpCurrentUser(['uid' => 1], ['administer views']);
 
-    $links = $block->getOperationLinks();
+    $links = views_ui_entity_operation($block);
     // At this point, we are logged in as an admin, so the user does
     // have the "administer views" permission.
     $this->assertEquals(['view-edit' => $view_link], $links);

@@ -472,24 +472,21 @@ function menu_ui_theme(): array {
 /**
  * Implements hook_entity_operation().
  */
-function menu_ui_entity_operation(EntityInterface $entity) {
-  if (!$entity instanceof Block) {
-    return;
-  }
-
+function menu_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
-  if (str_contains($entity->id(), '_menu')) {
-    if ($entity->access('edit')) {
-      $theme_position = strpos($entity->id(), '_');
-      // Remove theme name from ID.
-      $menu_name =  substr($entity->id(), $theme_position + 1);
-      // Removed _menu from ID.
-      $menu_name = substr($menu_name, 0, -5);
-      $operations['menu-edit'] = [
-        'title' => t('Edit menu'),
-        'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]),
-        'weight' => 50,
-      ];
+  if ($entity instanceof Block) {
+    $plugin = $entity->getPlugin();
+    $plugin_id = $plugin->getBaseId();
+    if ($plugin_id === 'system_menu_block') {
+      $menu_id = $plugin->getDerivativeId();
+      $menu = Menu::load($menu_id);
+      if ($menu->access('edit')) {
+        $operations['menu-edit'] = [
+          'title' => t('Edit menu'),
+          'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_id]),
+          'weight' => 50,
+        ];
+      }
     }
   }
 

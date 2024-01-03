@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Analyzer;
 
@@ -354,23 +355,26 @@ function views_ui_truncate($string, $length) {
 /**
  * Implements hook_entity_operation().
  */
-function views_ui_entity_operation(EntityInterface $entity) {
-  if (!$entity instanceof Block) {
-    return;
-  }
-
+function views_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
-  if (str_contains($entity->id(), 'views_block')) {
-    if ($entity->access('edit')) {
-      $theme_position = strpos($entity->id(), '_');
-      // Remove theme name from ID.
-      $view_name =  substr($entity->id(), $theme_position + 1);
-      // Removed _menu from ID.
-      $operations['view-edit'] = [
-        'title' => t('Edit view'),
-        'url' => Url::fromRoute('entity.view.edit_display_form', ['view' => $view_name]),
-        'weight' => 50,
-      ];
+  if ($entity instanceof Block) {
+    $plugin = $entity->getPlugin();
+    $plugin_id = $plugin->getBaseId();
+    if ($plugin_id === 'views_block') {
+      $vid_parts = explode('-', $plugin->getDerivativeId());
+      $vid = $vid_parts[0] ?? '';
+      $display_id = $vid_parts[1] ?? '';
+      $view = View::load($vid);
+      if ($view->access('edit')) {
+        $operations['view-edit'] = [
+          'title' => t('Edit view'),
+          'url' => Url::fromRoute('entity.view.edit_display_form', [
+            'view' => $view->id(),
+            'display_id' => $display_id,
+          ]),
+          'weight' => 50,
+        ];
+      }
     }
   }
 

@@ -38,7 +38,7 @@ class BlockContentTest extends KernelTestBase {
   /**
    * Tests the editing links for BlockContentBlock.
    */
-  public function testOperationLinks() {
+  public function testOperationLinks(): void {
     // Create a block content type.
     $block_content_type = BlockContentType::create([
       'id' => 'spiffy',
