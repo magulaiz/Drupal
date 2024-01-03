@@ -276,6 +276,7 @@
     <!-- <include-pattern>*/tests/*</include-pattern> -->
     <include-pattern>*/tests/src/FunctionalJavascript/*</include-pattern>
     <include-pattern>*/tests/src/Traits/*</include-pattern>
+    <include-pattern>*/tests/src/Unit/*</include-pattern>
     <include-pattern>./tests/Drupal/*</include-pattern>
     <include-pattern>./tests/TestSuites/*</include-pattern>
     <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
@@ -283,8 +284,6 @@
     <exclude-pattern>./tests/Drupal/FunctionalTests/*</exclude-pattern>
     <!-- @todo remove after https://www.drupal.org/node/3399388 -->
     <exclude-pattern>./tests/Drupal/KernelTests/*</exclude-pattern>
-    <!-- @todo remove after https://www.drupal.org/node/3399373 -->
-    <exclude-pattern>./tests/Drupal/Tests/*/*.php</exclude-pattern>
   </rule>
 
   <!-- Squiz sniffs -->
