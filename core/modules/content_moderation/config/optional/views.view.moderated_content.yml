@@ -7,6 +7,7 @@ dependencies:
   enforced:
     module:
       - content_moderation
+      - workflows
 id: moderated_content
 label: 'Moderated content'
 module: views
