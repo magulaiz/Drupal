@@ -135,6 +135,13 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   protected $data = [];
 
   /**
+   * The sync configuration storage.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $syncStorage;
+
+  /**
    * Constructs a new ConfigSingleImportForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -161,11 +168,14 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *   The module extension list.
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
+   * @param \Drupal\Core\Config\StorageInterface $sync_storage
+   *   The source storage.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, StorageInterface $sync_storage, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configStorage = $config_storage;
     $this->renderer = $renderer;
+    $this->syncStorage = $sync_storage;
 
     // Services necessary for \Drupal\Core\Config\ConfigImporter.
     $this->eventDispatcher = $event_dispatcher;
@@ -191,6 +201,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $container->get('entity_type.manager'),
       $container->get('config.storage'),
       $container->get('renderer'),
+      $container->get('config.storage.sync'),
       $container->get('event_dispatcher'),
       $container->get('config.manager'),
       $container->get('lock.persistent'),
@@ -292,11 +303,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#required' => TRUE,
     ];
     if ($config_type && $config_name) {
-      $fake_form_state = (new FormState())->setValues([
-        'config_type' => $config_type,
-        'config_name' => $config_name,
-      ]);
-      $form['import'] = $this->updateImport($form, $fake_form_state);
+      $form['import']['#value'] = $this->updateImport($config_type, $config_name);
     }
     $form['advanced'] = [
       '#type' => 'details',
@@ -319,24 +326,20 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * Handles switching the import textarea.
    */
-  public function updateImport($form, FormStateInterface $form_state) {
+  public function updateImport($config_type, $config_name) {
     // Determine the full config name for the selected config entity.
-    if ($form_state->getValue('config_type') !== 'system.simple') {
-      $definition = $this->entityTypeManager->getDefinition($form_state->getValue('config_type'));
-      $name = $definition->getConfigPrefix() . '.' . $form_state->getValue('config_name');
+    if ($config_type !== 'system.simple') {
+      $definition = $this->entityTypeManager->getDefinition($config_type);
+      $name = $definition->getConfigPrefix() . '.' . $config_name;
     }
     // The config name is used directly for simple configuration.
     else {
-      $name = $form_state->getValue('config_name');
+      $name = $config_name;
     }
-    /**
-     * @var Drupal\Core\Config\FileStorage
-     */
-    $config_storage_sync_service = \Drupal::service('config.storage.sync');
-    // Check if config exists.
-    $exists = $config_storage_sync_service->exists($name);
-    $form['import']['#value'] = !$exists ? NULL : Yaml::encode($config_storage_sync_service->read($name));
-    return $form['import'];
+    // Check if config exists then read the raw data for this config name,
+    // Encode it, and display it.
+    $data = $this->syncStorage->exists($name) ? Yaml::encode($this->syncStorage->read($name)) : NULL;
+    return $data;
   }
 
   /**

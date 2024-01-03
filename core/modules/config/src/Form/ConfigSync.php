@@ -345,6 +345,8 @@ class ConfigSync extends FormBase {
           else {
             $route_name = 'config.diff';
           }
+          // Initialize links array.
+          $links = [];
           $links['view_diff'] = [
             'title' => $this->t('View differences'),
             'url' => Url::fromRoute($route_name, $route_options),
@@ -358,29 +360,23 @@ class ConfigSync extends FormBase {
           ];
           // Get config type from config name.
           $config_type = $this->configManager->getEntityTypeIdByName($config_name) ?? 'system.simple';
-          // Set config name URL parameter.
-          $config_name_url_param = $config_name;
 
-          // If config type is not empty and is not 'system.simple',
-          // Remove config prefix from config name.
-          if (!empty($config_type) && $config_type != 'system.simple') {
-            $definition = $this->entityTypeManager->getDefinition($config_type);
-            $config_prefix = $definition->getConfigPrefix() . ".";
-            // Check if config name starts with the config prefix.
-            if (strpos($config_name, $config_prefix) === 0) {
-              // Remove config prefix from config name.
-              $config_name_url_param = substr($config_name, strlen($config_prefix));
-            }
-          }
+          // Get config name URL parameter.
+          $config_name_url_param = $this->getConfigNameUrlParam($config_type, $config_name);
+
           // Add export config link.
           $links['export_config'] = [
             'title' => $this->t('Export this config'),
             'url' => Url::fromRoute('config.export_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
           ];
-          $links['import_config'] = [
-            'title' => $this->t('Import this config'),
-            'url' => Url::fromRoute('config.import_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
-          ];
+          // Add import config link for all config change type
+          // Other than 'delete'.
+          if ($config_change_type != 'delete') {
+            $links['import_config'] = [
+              'title' => $this->t('Import this config'),
+              'url' => Url::fromRoute('config.import_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
+            ];
+          }
           $form[$collection][$config_change_type]['list']['#rows'][] = [
             'name' => $config_name,
             'operations' => [
@@ -439,6 +435,29 @@ class ConfigSync extends FormBase {
         }
       }
     }
+  }
+
+  /**
+   * Helper function to get Config name url param.
+   */
+  public function getConfigNameUrlParam($config_type, $config_name) {
+
+    // Initialize config name url param.
+    $config_name_url_param = $config_name;
+
+    // If config type is not empty and is not 'system.simple',
+    // Remove config prefix from config name.
+    if (!empty($config_type) && $config_type != 'system.simple') {
+      $definition = $this->entityTypeManager->getDefinition($config_type);
+      $config_prefix = $definition->getConfigPrefix() . ".";
+      // Check if config name starts with the config prefix.
+      if (strpos($config_name, $config_prefix) === 0) {
+        // Remove config prefix from config name.
+        $config_name_url_param = substr($config_name, strlen($config_prefix));
+      }
+    }
+    return $config_name_url_param;
+
   }
 
 }
