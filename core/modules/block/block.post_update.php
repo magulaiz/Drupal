@@ -5,7 +5,6 @@
  * Post update functions for Block.
  */
 
-use Consolidation\Config\ConfigInterface;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 
@@ -29,12 +28,7 @@ function block_post_update_add_base_route_title_page_title(&$sandbox = NULL) {
     ->update($sandbox, 'block', function (BlockInterface $block) {
       if ($block->get('plugin') == 'page_title_block') {
         $settings = $block->get('settings');
-        if ($block->get('theme') == 'claro') {
-          $settings['base_route_title'] = TRUE;
-        }
-        else {
-          $settings['base_route_title'] = FALSE;
-        }
+        $settings['base_route_title'] = $block->get('theme') === 'claro';
         $block->set('settings', $settings);
         return TRUE;
       }
