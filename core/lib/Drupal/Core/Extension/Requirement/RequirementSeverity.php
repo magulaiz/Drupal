@@ -36,7 +36,7 @@ enum RequirementSeverity: int {
           $requirementSeverity = RequirementSeverity::OK->value;
         }
         elseif (is_int($requirement['severity'])) {
-          @\trigger_error('Calling ' . __METHOD__ . '() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
+          @\trigger_error('Calling Drupal\Core\Extension\Requirement::getMaxSeverity() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
           $requirementSeverity = $requirement['severity'];
         }
         else {

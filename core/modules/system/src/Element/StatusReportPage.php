@@ -98,6 +98,10 @@ class StatusReportPage extends RenderElementBase {
     foreach ($element['#requirements'] as $key => &$requirement) {
       $severity = $severities[RequirementSeverity::INFO->value];
       if (isset($requirement['severity'])) {
+        if (is_int($requirement['severity'])) {
+          @\trigger_error('Calling ' . __METHOD__ . '() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
+          $requirement['severity'] = RequirementSeverity::from($requirement['severity']);
+        }
         $severity = $severities[$requirement['severity']->value];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
