@@ -469,7 +469,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $field_storage_definition = $this->fieldStorageDefinitions[$field_name];
         if ($field_storage_definition instanceof StorageMapperInterface) {
           $item_values = $field_storage_definition->mapColumnsOnLoad(
-            $this->mapColumnsOnLoad(
+            $this->mapFromTableColumns(
               $field_name,
               array_intersect_key((array) $record, array_flip($field_columns)),
               $field_storage_definition->getColumns()
@@ -611,7 +611,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
             $item_values = $storage_definition->mapColumnsOnLoad(
-              $this->mapColumnsOnLoad($field_name, $row, $definition_columns)
+              $this->mapFromTableColumns($field_name, $row, $definition_columns)
             );
           }
           if (isset($item_values)) {
@@ -1326,7 +1326,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
               $item = $storage_definition->mapColumnsOnLoad(
-                $this->mapColumnsOnLoad($field_name, (array) $row, $column_attributes)
+                $this->mapFromTableColumns($field_name, (array) $row, $column_attributes)
               );
             }
             // Use fallback mapping.
@@ -1531,7 +1531,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return json_decode($value, TRUE, flags: JSON_THROW_ON_ERROR);
     }
     if (!empty($column_attributes['serialize'])) {
-      return unserialize($value, ['allowed_classes' => FALSE]);
+      // @todo Hardening - Provide a way to guard allowed classes.
+      return unserialize($value);
     }
     return $value;
   }
@@ -1927,7 +1928,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Map columns to properties on load.
+   * Map columns on load.
    *
    * @param string $field_name
    *   Field name.
@@ -1939,7 +1940,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return array
    *   Array of values, keyed by property name.
    */
-  protected function mapColumnsOnLoad(string $field_name, array $column_values, array $column_attributes): array {
+  protected function mapFromTableColumns(string $field_name, array $column_values, array $column_attributes): array {
     $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
     $propertyValues = [];
     foreach ($column_values as $column => $value) {
