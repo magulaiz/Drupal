@@ -5,6 +5,8 @@
  * A dummy module that provides extra toolbar items for toolbar testing.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Url;
 
 /**

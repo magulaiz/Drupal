@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\toolbar_test_toolbar_items\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
