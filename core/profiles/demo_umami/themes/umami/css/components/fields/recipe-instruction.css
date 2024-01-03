@@ -12,9 +12,8 @@
   font-weight: 400;
   line-height: 1.2;
 }
-/* Large */
+/* Large - 960px */
 @media screen and (min-width: 60rem) {
-  /* 960px */
   .field--name-field-recipe-instruction .field__label {
     margin: 0 0 1.5em 0;
     font-size: 1.77rem;

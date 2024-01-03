@@ -43,8 +43,9 @@
   margin-inline: 0;
 }
 
+/* 960px */
+
 @media screen and (min-width: 60rem) {
-  /* 960px */
   .views-display-columns > * {
     float: left; /* LTR */
     width: 32%;

@@ -6,9 +6,8 @@
 .grid--3 .views-row {
   margin-bottom: 28px;
 }
-/* Small */
+/* Small - 480px */
 @media screen and (min-width: 30em) {
-  /* 480px */
   .grid--3 {
     overflow-x: hidden;
   }
@@ -26,9 +25,8 @@
     padding: 0;
   }
 }
-/* Large */
+/* Large - 960px */
 @media screen and (min-width: 60em) {
-  /* 960px */
   .grid--3 .views-row {
     flex-basis: calc(33.3% - 28px);
     flex-grow: 0;
