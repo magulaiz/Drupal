@@ -225,8 +225,7 @@ class ConfigSingleExportForm extends FormBase {
     $export = $form_state->getValue('export');
     if ($config_type && $config_name) {
       if ($form_state->getValue('config_type') !== 'system.simple') {
-        $entity_manager = \Drupal::service('entity_type.manager');
-        $definition = $entity_manager->getDefinition($config_type);
+        $definition = $this->entityTypeManager->getDefinition($config_type);
         $name = $definition->getConfigPrefix() . '.' . $config_name;
       }
       // The config name is used directly for simple configuration.
