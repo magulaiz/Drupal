@@ -1449,6 +1449,10 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
             'type' => 'text',
             'jsonpath' => '$.key',
           ],
+          [
+            'type' => 'float',
+            'jsonpath' => '$.float',
+          ],
         ],
       ],
     ],

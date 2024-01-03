@@ -297,7 +297,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     // driver handles this inconsistency automatically.
     $this->schema->createTable('test_json', self::JSON_TABLE_SPECIFICATION);
     $query = $this->connection->select('test_json');
-    $query->jsonCondition('test_field', '$.number', 0);
+    $query->jsonCondition('test_field', '$.float', -0.1, '>=');
     $query->addExpression('id');
     $explained = $this->connection->query(
       'EXPLAIN ' . $query,
@@ -307,7 +307,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       // query.
       ['strict_params' => $query->usesStrictParameters()]
     )->fetchAssoc();
-    $this->assertStringStartsWith('auto_gen_', $explained['key'], 'Auto-generated index not used in query.');
+    $this->assertStringStartsWith('auto_gen_', $explained['key'] ?? '', 'Auto-generated index not used in query.');
     $this->assertTrue($this->schema->indexExists('test_json', $explained['key']));
     // Ensure does not throw an exception.
     $this->schema->dropIndex('test_json', $explained['key']);
