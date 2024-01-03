@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
 use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
@@ -44,6 +45,7 @@ class ConvertDefinitionTest extends UnitTestCase {
         'age' => [
           'description' => "The person's age",
           'type' => 'int',
+          'size' => 'small',
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
@@ -104,6 +106,7 @@ class ConvertDefinitionTest extends UnitTestCase {
           name: 'age',
           description: "The person's age",
           type: 'int',
+          size: ColumnSize::Small,
           unsigned: TRUE,
           notNull: TRUE,
           default: 0,
