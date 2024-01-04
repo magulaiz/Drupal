@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\SchemaDefinition\Column;
 use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ColumnType;
 use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
@@ -89,14 +90,14 @@ class ConvertDefinitionTest extends UnitTestCase {
       columns: [
         new Column(
           name: 'id',
-          type: 'serial',
+          type: ColumnType::Serial,
           unsigned: TRUE,
           notNull: TRUE,
         ),
         new Column(
           name: 'name',
           description: "A person's name",
-          type: 'varchar_ascii',
+          type: ColumnType::VarcharAscii,
           length: 255,
           notNull: TRUE,
           default: '',
@@ -105,7 +106,7 @@ class ConvertDefinitionTest extends UnitTestCase {
         new Column(
           name: 'age',
           description: "The person's age",
-          type: 'int',
+          type: ColumnType::Int,
           size: ColumnSize::Small,
           unsigned: TRUE,
           notNull: TRUE,
@@ -114,7 +115,7 @@ class ConvertDefinitionTest extends UnitTestCase {
         new Column(
           name: 'job',
           description: "The person's job",
-          type: 'varchar',
+          type: ColumnType::Varchar,
           length: 255,
           notNull: TRUE,
           default: 'Undefined',

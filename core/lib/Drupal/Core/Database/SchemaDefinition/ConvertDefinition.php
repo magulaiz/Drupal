@@ -72,8 +72,8 @@ abstract class ConvertDefinition {
    */
   final public static function columnToArray(Column $column): array {
     $spec = [];
-    if ($column->type !== Property::Undefined) {
-      $spec['type'] = $column->type;
+    if ($column->type !== ColumnType::Undefined) {
+      $spec['type'] = $column->type->value;
     }
     if ($column->description !== Property::Undefined) {
       $spec['description'] = $column->description;

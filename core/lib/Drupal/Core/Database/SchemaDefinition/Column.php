@@ -14,15 +14,11 @@ final class Column implements SchemaDefinitionInterface {
    *
    * @param string $name
    *   The column name.
-   * @param Property|string $type
-   *   (Optional) The generic datatype: 'char', 'varchar', 'text', 'blob',
-   *   'int', 'float', 'numeric', or 'serial'. Most types just map to the
-   *   according database engine specific data types. This argument is
-   *   mandatory unless $dbSpecificType is specified.
-   *   Use 'serial' for auto incrementing fields. This will expand to
-   *   'INT auto_increment' on MySQL.
-   *   A special 'varchar_ascii' type is also available for limiting machine
-   *   name field to US ASCII characters.
+   * @param ColumnType $type
+   *   (Optional) The column data type, generic. Each database will map this to
+   *   its own definition. This argument is mandatory unless $dbSpecificType is
+   *   specified. See
+   *   \Drupal\Core\Database\SchemaDefinition\ColumnType for allowed values.
    * @param Property|string $description
    *   (Optional) A string in non-markup plain text describing this field and
    *   its purpose. References to other tables should be enclosed in curly
@@ -34,7 +30,7 @@ final class Column implements SchemaDefinitionInterface {
    * @param ColumnSize $size
    *   (Optional) The column data size. This is a hint about the largest value
    *   the column will store. See
-   *   \Drupal\Core\Database\SchemaDefinition\ColumnSize for possible values.
+   *   \Drupal\Core\Database\SchemaDefinition\ColumnSize for allowed values.
    * @param Property|bool $notNull
    *   (Optional)  If true, no NULL values will be allowed in this database
    *   column. Defaults to false.
@@ -68,10 +64,13 @@ final class Column implements SchemaDefinitionInterface {
    *   each database backend. Specify this as an associative array having the
    *   database type ('mysql', 'sqlite', 'pgsql', 'oracle', etc.) as the key,
    *   and the database specific type as the value.
+   *
+   * @see \Drupal\Core\Database\SchemaDefinition\ColumnType
+   * @see \Drupal\Core\Database\SchemaDefinition\ColumnSize
    */
   public function __construct(
     public readonly string $name,
-    public readonly Property|string $type = Property::Undefined,
+    public readonly ColumnType $type = ColumnType::Undefined,
     public readonly Property|string $description = Property::Undefined,
     public readonly Property|bool $serialize = Property::Undefined,
     public readonly ColumnSize $size = ColumnSize::Undefined,

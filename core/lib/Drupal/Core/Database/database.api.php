@@ -8,6 +8,7 @@
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\SchemaDefinition\Column;
 use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ColumnType;
 use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
@@ -552,7 +553,7 @@ function hook_schema(bool $returnArraySchema = TRUE) {
       new Column(
         name: 'uid',
         description: 'The {users}.uid this record affects.',
-        type: 'int',
+        type: ColumnType::Int,
         unsigned: TRUE,
         notNull: TRUE,
         default: 0,
@@ -560,7 +561,7 @@ function hook_schema(bool $returnArraySchema = TRUE) {
       new Column(
         name: 'module',
         description: 'The name of the module declaring the variable.',
-        type: 'varchar_ascii',
+        type: ColumnType::VarcharAscii,
         length: DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         notNull: TRUE,
         default: '',
@@ -568,7 +569,7 @@ function hook_schema(bool $returnArraySchema = TRUE) {
       new Column(
         name: 'name',
         description: 'The identifier of the data.',
-        type: 'varchar_ascii',
+        type: ColumnType::VarcharAscii,
         length: 128,
         notNull: TRUE,
         default: '',
@@ -576,14 +577,14 @@ function hook_schema(bool $returnArraySchema = TRUE) {
       new Column(
         name: 'value',
         description: 'The value.',
-        type: 'blob',
-        notNull: FALSE,
+        type: ColumnType::Blob,
         size: ColumnSize::Big,
+        notNull: FALSE,
       ),
       new Column(
         name: 'serialized',
         description: 'Whether value is serialized.',
-        type: 'int',
+        type: ColumnType::Int,
         size: ColumnSize::Tiny,
         unsigned: TRUE,
         default: 0,
