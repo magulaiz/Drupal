@@ -5,6 +5,7 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -70,6 +71,8 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     if (in_array($bundle, array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id)))) {
       $form['bundles_by_entity']['#default_value'] = $bundle !== NULL ? [$bundle] : [];
     }
+    $form['#prefix'] = '<div id="mode-add-form-wrapper">';
+    $form['#suffix'] = '</div>';
     return $form;
   }
 
@@ -92,6 +95,25 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     )->toString());
     $response = new AjaxResponse();
     return $response->addCommand($command);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+    if ($form_state->hasAnyErrors()) {
+      $form['status_messages'] = [
+        '#type' => 'status_messages',
+        '#weight' => -1000,
+      ];
+      $form['#sorted'] = FALSE;
+      $response = new AjaxResponse();
+      $response->addCommand(new ReplaceCommand('#mode-add-form-wrapper', $form));
+    }
+    else {
+      $response = $this->successfulAjaxSubmit($form, $form_state);
+    }
+    return $response;
   }
 
   /**
