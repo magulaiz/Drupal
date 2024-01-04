@@ -87,7 +87,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
 
     $command = new RedirectCommand(FieldUI::getDisplayRouteInfo(
       $this->getEntity()->toArray()['targetEntityType'],
-      $this->getRequest()->query->get('parent'),
+      $this->getRequest()->query->get('bundle'),
       $this->displayContext === 'view',
     )->toString());
     $response = new AjaxResponse();
