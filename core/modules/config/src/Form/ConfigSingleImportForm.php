@@ -301,6 +301,9 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#rows' => 24,
       '#required' => TRUE,
     ];
+    // If config type and config name URL presents.
+    // Then need to update import text area,
+    // with config data.
     if ($config_type && $config_name) {
       $form['import']['#value'] = $this->updateImport($config_type, $config_name);
     }
