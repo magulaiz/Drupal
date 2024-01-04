@@ -335,6 +335,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   public function updateImport($config_type, $config_name) {
     // Determine the full config name for the selected config entity.
     if ($config_type !== 'system.simple') {
+      // Get config type definition and append config prefix.
       $definition = $this->entityTypeManager->getDefinition($config_type);
       $name = $definition->getConfigPrefix() . '.' . $config_name;
     }
