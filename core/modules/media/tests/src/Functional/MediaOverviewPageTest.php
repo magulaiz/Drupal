@@ -22,6 +22,11 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = ['language'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Make the site multilingual to have a working language field handler.

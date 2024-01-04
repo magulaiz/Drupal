@@ -39,8 +39,6 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    // Make the site multilingual to have a working language field handler.
-    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
     $this->installEntitySchema('user');
 
     $role_with_access = Role::create([

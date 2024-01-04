@@ -25,7 +25,6 @@ abstract class MediaFunctionalTestBase extends BrowserTestBase {
     'views_ui',
     'media',
     'media_test_source',
-    'language',
   ];
 
 }
