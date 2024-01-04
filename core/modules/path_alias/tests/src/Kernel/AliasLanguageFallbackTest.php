@@ -99,14 +99,17 @@ class AliasLanguageFallbackTest extends LanguageTestBase {
 
     // Enable configured fallback from English to Afrikaans.
     $this->setPathAliasFallbackLanguage('af');
-    $this->assertEquals($test_alias, $this->aliasRepository->lookupBySystemPath($test_source, 'en')['alias'], 'The Afrikaans path alias is returned if we specify English to the alias repository and Afrikaans is a valid fallback candidate for English.');
+    $en_lookup_result = $this->aliasRepository->lookupBySystemPath($test_source, 'en');
+    $this->assertEquals($test_alias, $en_lookup_result['alias'] ?? NULL, 'The Afrikaans path alias is returned if we specify English to the alias repository and Afrikaans is a valid fallback candidate for English.');
     // Test that standard path lookup still works.
-    $this->assertEquals($test_alias, $this->aliasRepository->lookupBySystemPath($test_source, 'af')['alias'], 'Directly looking up the system path for an alias in Afrikaans still works when Afrikaans is a fallback language.');
+    $af_lookup_result = $this->aliasRepository->lookupBySystemPath($test_source, 'af');
+    $this->assertEquals($test_alias, $af_lookup_result['alias'] ?? NULL, 'Directly looking up the system path for an alias in Afrikaans still works when Afrikaans is a fallback language.');
 
     // Create an identical alias in English, for a different source path.
     $en_test_alias = '/test-english-login-alias';
     $this->createPathAlias($test_source, $en_test_alias, 'en');
-    $this->assertEquals($en_test_alias, $this->aliasRepository->lookupBySystemPath($test_source, 'en')['alias'], 'The more specific English path alias is returned if we specify English to the alias repository.');
+    $en_lookup_result = $this->aliasRepository->lookupBySystemPath($test_source, 'en');
+    $this->assertEquals($en_test_alias, $en_lookup_result['alias'] ?? NULL, 'The more specific English path alias is returned if we specify English to the alias repository.');
 
     // Check that no alias is found when none exists.
     $this->assertNull($this->aliasRepository->lookupBySystemPath('/this-alias-does-not-exist', 'en'), 'No alias is found when none exists.');
