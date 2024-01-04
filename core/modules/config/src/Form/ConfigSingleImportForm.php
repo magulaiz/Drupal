@@ -170,10 +170,14 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, StorageInterface $sync_storage, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, StorageInterface $sync_storage = NULL, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configStorage = $config_storage;
     $this->renderer = $renderer;
+    if ($sync_storage === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $sync_storage argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3412290', E_USER_DEPRECATED);
+      $sync_storage = \Drupal::service('config.storage.sync');
+    }
     $this->syncStorage = $sync_storage;
 
     // Services necessary for \Drupal\Core\Config\ConfigImporter.

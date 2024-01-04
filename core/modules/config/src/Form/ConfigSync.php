@@ -171,7 +171,7 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL, EntityTypeManagerInterface $entity_type_manager = NULL) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -185,12 +185,16 @@ class ConfigSync extends FormBase {
     $this->renderer = $renderer;
     $this->moduleExtensionList = $extension_list_module;
     $this->importTransformer = $import_transformer;
-    $this->entityTypeManager = $entity_type_manager;
     if ($extension_list_theme === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
       $extension_list_theme = \Drupal::service('extension.list.theme');
     }
     $this->themeExtensionList = $extension_list_theme;
+    if ($entity_type_manager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $entity_type_manager argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3412302', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::service('entity_type.manager');
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
