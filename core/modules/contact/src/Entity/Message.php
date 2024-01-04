@@ -4,6 +4,7 @@ namespace Drupal\contact\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\contact\MessageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -196,6 +197,17 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setSetting('target_type', 'user');
 
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+    if (!$update) {
+      \Drupal::service('contact.mail_handler')->sendMailMessages($this, \Drupal::currentUser());
+      \Drupal::flood()->register('contact', \Drupal::configFactory()->get('contact.settings')->get('flood.interval'));
+    }
   }
 
 }
