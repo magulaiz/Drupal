@@ -68,7 +68,7 @@ class EmailChangeForm extends ContentEntityForm {
     $entity = parent::validateForm($form, $form_state);
     $new_email = $form_state->getValue('mail');
     $current_email = $form_state->getFormObject()->entity->getEmail();
-    if ($new_email == $current_email) {
+    if ($new_email === $current_email) {
       $form_state->setErrorByName('mail', t("This email address is already associated with your account."));
     }
 
