@@ -39,7 +39,11 @@ class CommentAdminTest extends CommentBrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Make the site multilingual to have a working language field handler.
-    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
+    ConfigurableLanguage::create([
+      'id' => 'es',
+      'title' => 'Spanish title',
+      'label' => 'Spanish label',
+    ])->save();
     \Drupal::service('module_installer')->install(['views']);
     $view = Views::getView('comment');
     $view->storage->enable()->save();
