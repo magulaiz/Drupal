@@ -220,7 +220,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   /**
    * Tests a multilingual node with an alias in non-specified language.
    */
-  public function testMultilingualNodeWithAliasInNonSpecifiedLanguage() {
+  public function testMultilingualNodeWithAliasInNonSpecifiedLanguage(): void {
     // Create a node with two translations, but without any aliases yet.
     $node = $this->createNodeWithTranslations('en', ['fr', 'de']);
     $node = $this->reloadNode($node);
