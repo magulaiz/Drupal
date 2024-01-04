@@ -10,6 +10,7 @@
     const $scroll = $modal.find('[data-drupal-views-scroll]');
     let offset = 0;
     let modalHeight;
+    let maintenanceMessageHeight = 0;
     if ($scroll.length) {
       // Add a class to do some styles adjustments.
       $modal.closest('.views-ui-dialog').addClass('views-ui-dialog-scroll');
@@ -21,13 +22,23 @@
         });
       });
       modalHeight = $modal.height();
+      maintenanceMessageHeight = $('.ui-dialog-content .messages').outerHeight(
+        true,
+      );
       $viewsOverride.each(function () {
         offset += $(this).outerHeight();
       });
 
       // Take internal padding into account.
       const scrollOffset = $scroll.outerHeight() - $scroll.height();
-      $scroll.height(modalHeight - offset - scrollOffset);
+      // $scroll.height(modalHeight - offset - scrollOffset);
+      if (maintenanceMessageHeight) {
+        $scroll.height(
+          modalHeight - offset - scrollOffset - maintenanceMessageHeight,
+        );
+      } else {
+        $scroll.height(modalHeight - offset - scrollOffset);
+      }
       // Reset scrolling properties.
       $modal.each(function () {
         this.style.overflow = 'hidden';
