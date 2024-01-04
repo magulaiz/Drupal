@@ -317,7 +317,6 @@ class FieldStorageAddForm extends FormBase {
     ];
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
-    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
     $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
@@ -358,7 +357,6 @@ class FieldStorageAddForm extends FormBase {
       '#required' => FALSE,
     ];
 
-    $form['actions']['submit']['#validate'][] = '::validateFieldType';
 
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
@@ -439,29 +437,11 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Validates the first step of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritDoc}
    */
-  public function validateGroupOrField(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->getValue('new_storage_type')) {
-      $form_state->setErrorByName('add', $this->t('You need to select a field type.'));
-    }
-  }
-
-  /**
-   * Validates the second step (field storage selection and label) of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function validateFieldType(array $form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Missing label.
+    parent::validateForm($form, $form_state);
     if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
