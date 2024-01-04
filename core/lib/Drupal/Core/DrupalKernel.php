@@ -290,7 +290,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE, $app_root = NULL) {
     if ($app_root) {
-      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Omit the parameter.', E_USER_DEPRECATED);
+      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Omit the parameter. See https://www.drupal.org/node/3267862', E_USER_DEPRECATED);
     }
 
     $kernel = new static($environment, $class_loader, $allow_dumping, $app_root);
@@ -321,7 +321,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->allowDumping = $allow_dumping;
 
     if ($app_root) {
-      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Omit the parameter.', E_USER_DEPRECATED);
+      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Omit the parameter. See https://www.drupal.org/node/3267862', E_USER_DEPRECATED);
     }
 
     if ($app_root === NULL) {
@@ -339,7 +339,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @see https://www.drupal.org/node/3267862
    */
   protected static function guessApplicationRoot() {
-    @trigger_error('The guessApplicationRoot() method is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getApplicationRoot() instead.', E_USER_DEPRECATED);
+    @trigger_error('The guessApplicationRoot() method is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getApplicationRoot() instead. See https://www.drupal.org/node/326786', E_USER_DEPRECATED);
 
     return static::getApplicationRoot();
   }
@@ -1018,7 +1018,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public static function bootEnvironment($app_root = NULL) {
     if ($app_root) {
-      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Omit the parameter.', E_USER_DEPRECATED);
+      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Omit the parameter. See https://www.drupal.org/node/3267862', E_USER_DEPRECATED);
     }
 
     if (static::$isEnvironmentInitialized) {
