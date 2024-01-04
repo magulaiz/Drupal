@@ -85,9 +85,6 @@ class EmphasisTest extends WebDriverTestBase {
           ],
         ],
       ],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {

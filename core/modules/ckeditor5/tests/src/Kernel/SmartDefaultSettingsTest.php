@@ -129,9 +129,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => [],
       ],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ])->setSyncing(TRUE)->save();
 
     FilterFormat::create(
@@ -371,9 +368,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ])->setSyncing(TRUE)->save();
 
     FilterFormat::create([
@@ -409,9 +403,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'styles' => "span.llama|Llama span",
           ],
         ],
-      ],
-      'image_upload' => [
-        'status' => FALSE,
       ],
     ])->setSyncing(TRUE)->save();
 
@@ -479,9 +470,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ])->setSyncing(TRUE)->save();
   }
 
@@ -526,7 +514,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'format' => $format_id,
       'editor' => 'ckeditor5',
       'settings' => ['toolbar' => ['items' => []]],
-      'image_upload' => ['status' => FALSE],
     ]);
     $pre_ck5_validation_errors = $this->validatePairToViolationsArray($minimal_valid_cke5_text_editor, $text_format, FALSE);
     $this->assertSame($expected_fundamental_compatibility_violations, $pre_ck5_validation_errors);

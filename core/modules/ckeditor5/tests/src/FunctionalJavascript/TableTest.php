@@ -89,9 +89,6 @@ class TableTest extends CKEditor5TestBase {
           ],
         ],
       ],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {

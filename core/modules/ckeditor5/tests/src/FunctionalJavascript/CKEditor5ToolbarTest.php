@@ -47,9 +47,6 @@ class CKEditor5ToolbarTest extends CKEditor5TestBase {
       'editor' => 'ckeditor5',
       'format' => 'test_format',
       'settings' => [],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {

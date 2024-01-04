@@ -72,11 +72,7 @@ class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Store this configuration in its out-of-band location.
-    $form_state->get('editor')->setImageUploadSettings(
-      $form_state->getValue('status')
-      ? $form_state->getValues()
-      : ['status' => FALSE]
-    );
+    $form_state->get('editor')->setImageUploadSettings($form_state->getValues());
   }
 
   /**
