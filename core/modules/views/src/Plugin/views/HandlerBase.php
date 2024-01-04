@@ -760,7 +760,10 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     $value = array_values(array_filter($value, 'strlen'));
 
     if ($force_int) {
-      $value = array_map(function($val) { return (int) $val;}, $value);
+      $value = array_map(function ($val) {
+        return (int) $val;
+
+      }, $value);
     }
 
     return (object) ['value' => $value, 'operator' => $operator];
