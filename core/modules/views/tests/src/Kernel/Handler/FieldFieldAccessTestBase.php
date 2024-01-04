@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
