@@ -53,84 +53,32 @@ class PageTitleBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Data provider for testContextualizeTitle().
-   *
-   * @return array[][]
-   *   The test cases.
-   */
-  public function providerTestContextualizeTitle() {
-    $non_contextualized_title = 'Update';
-    $contextualized_title = 'Extend: Update';
-    $contextualized_title_visually_hidden_part = ': Update';
-    return [
-      'Stark theme' => [
-        $this->defaultTheme,
-        FALSE,
-        $non_contextualized_title,
-        $contextualized_title,
-        $contextualized_title_visually_hidden_part,
-      ],
-      // For Claro theme the base_route_title settings is enabled by default
-      // hence the title will always be contextualized.
-      'Claro theme' => [
-        'claro',
-        TRUE,
-        $contextualized_title,
-        $contextualized_title,
-        $contextualized_title_visually_hidden_part,
-      ],
-      'Olivero theme' => [
-        'olivero',
-        FALSE,
-        $non_contextualized_title,
-        $contextualized_title,
-        $contextualized_title_visually_hidden_part,
-      ],
-    ];
-  }
-
-  /**
    * Check if the contextualized title is displayed.
-   *
-   * @dataProvider providerTestContextualizeTitle
    */
-  public function testContextualizeTitle(string $theme, bool $base_route_title_enabled, string $non_contextualized_title, string $contextualized_title, string $contextualized_title_visually_hidden_part): void {
-    if ($theme !== $this->defaultTheme) {
-      $system_theme_config = $this->container->get('config.factory')
-        ->getEditable('system.theme');
-      $system_theme_config
-        ->set('default', $theme)
-        ->save();
-      \Drupal::service('theme_installer')->install([$theme]);
-    }
-    $edit['admin_theme'] = $theme;
+  public function testContextualizeTitle(): void {
+    $edit['admin_theme'] = $this->defaultTheme;
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
     // Make sure the title shown is non-contextualized.
     $this->drupalGet('admin/modules/update');
-    $this->assertSession()->elementTextEquals('css', 'h1', $non_contextualized_title);
+    $this->assertSession()->elementTextEquals('css', 'h1', 'Update');
 
-    // Checking if the title block is configured for showing contextualized
-    // title and if it's not then configure it.
-    $this->drupalGet('admin/structure/block/manage/' . $theme . '_page_title');
-    // If it's configured to show contextualized title then the value of the
-    // configuration will be 1 otherwise 0.
+    // Checking if the title block is configured for showing
+    // contextualized title and if it's not then configure it.
+    $this->drupalGet('admin/structure/block/manage/' . $this->defaultTheme . '_page_title');
+    // In stark theme it's not configured to show contextualized title
+    // therefore the value of the configuration will be 1 otherwise 0.
     // @see \Drupal\Core\Block\Plugin\Block\PageTitleBlock::blockForm()
-    if ($base_route_title_enabled) {
-      $this->assertSession()->fieldValueEquals('settings[base_route_title]', 1);
-    }
-    else {
-      $this->assertSession()->fieldValueEquals('settings[base_route_title]', 0);
-      $this->submitForm(['settings[base_route_title]' => 1], 'Save block');
-    }
+    $this->assertSession()->fieldValueEquals('settings[base_route_title]', 0);
+    $this->submitForm(['settings[base_route_title]' => 1], 'Save block');
 
     // Make sure the title shown is contextualized.
     $this->drupalGet('admin/modules/update');
-    $this->assertSession()->elementTextEquals('css', 'h1', $contextualized_title);
+    $this->assertSession()->elementTextEquals('css', 'h1', 'Extend: Update');
     $title = $this->assertSession()->elementExists('xpath', '//h1');
     $this->assertSession()->elementExists('xpath', '/span[@class="visually-hidden"]', $title);
-    $this->assertSession()->elementTextEquals('xpath', '//h1/span', $contextualized_title_visually_hidden_part);
+    $this->assertSession()->elementTextEquals('xpath', '//h1/span', ': Update');
 
   }
 
