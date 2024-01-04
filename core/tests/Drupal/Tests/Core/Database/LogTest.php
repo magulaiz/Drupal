@@ -39,7 +39,7 @@ class LogTest extends UnitTestCase {
     $result = (new StubConnection($pdo, []))->testLogCaller();
     $this->assertSame([
       'file' => __FILE__,
-      'line' => 37,
+      'line' => 39,
       'function' => 'testContribDriverLog',
       'class' => 'Drupal\Tests\Core\Database\LogTest',
       'type' => '->',
@@ -53,7 +53,7 @@ class LogTest extends UnitTestCase {
     $result = (new Log())->findCaller();
     $this->assertSame([
       'file' => __FILE__,
-      'line' => 51,
+      'line' => 53,
       'function' => 'testContribDriverLog',
       'class' => 'Drupal\Tests\Core\Database\LogTest',
       'type' => '->',
