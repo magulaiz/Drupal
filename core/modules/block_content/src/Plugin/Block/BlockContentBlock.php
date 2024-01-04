@@ -222,8 +222,6 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     $custom_block = $this->getEntity();
     $links = [];
 
-    // Check that the current user has the appropriate permission to edit this
-    // custom block.
     if ($custom_block->access('edit')) {
       $links['block-edit'] = [
         'title' => $this->t('Edit block'),

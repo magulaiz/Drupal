@@ -5,7 +5,7 @@
  * Provide structure for the administrative interface to Views.
  */
 
-use Drupal\block\Entity\Block;
+use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -357,7 +357,7 @@ function views_ui_truncate($string, $length) {
  */
 function views_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
-  if ($entity instanceof Block) {
+  if ($entity instanceof BlockInterface) {
     $plugin = $entity->getPlugin();
     $plugin_id = $plugin->getBaseId();
     if ($plugin_id === 'views_block') {

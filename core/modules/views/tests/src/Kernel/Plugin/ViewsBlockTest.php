@@ -160,26 +160,22 @@ class ViewsBlockTest extends ViewsKernelTestBase {
       'theme' => 'stark',
     ]);
 
-    $links = views_ui_entity_operation($block);
-    $view_link = [
-      'title' => 'Edit view',
-      'url' => Url::fromRoute('entity.view.edit_display_form', [
-        'view' => 'test_view_block',
-        'display_id' => 'block_1',
-      ]),
-      'weight' => 50,
-    ];
-
-    // At this point, we are logged in as anonymous, so the user doesn't
-    // have the "administer views" permission.
-    $this->assertEmpty($links);
+    // The anonymous user doesn't have the "administer block" permission.
+    $this->assertEmpty(views_ui_entity_operation($block));
 
     $this->setUpCurrentUser(['uid' => 1], ['administer views']);
 
-    $links = views_ui_entity_operation($block);
-    // At this point, we are logged in as an admin, so the user does
-    // have the "administer views" permission.
-    $this->assertEquals(['view-edit' => $view_link], $links);
+    // The admin user does have the "administer block" permission.
+    $this->assertEquals([
+      'view-edit' => [
+        'title' => 'Edit view',
+        'url' => Url::fromRoute('entity.view.edit_display_form', [
+          'view' => 'test_view_block',
+          'display_id' => 'block_1',
+        ]),
+        'weight' => 50,
+      ],
+    ], views_ui_entity_operation($block));
   }
 
 }

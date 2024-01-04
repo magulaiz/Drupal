@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Kernel;
 
 use Drupal\block\Entity\Block;
@@ -39,12 +41,11 @@ class BlockContentTest extends KernelTestBase {
    */
   public function testOperationLinks(): void {
     // Create a block content type.
-    $block_content_type = BlockContentType::create([
+    BlockContentType::create([
       'id' => 'spiffy',
       'label' => 'Mucho spiffy',
       'description' => "Provides a block type that increases your site's spiffiness by up to 11%",
-    ]);
-    $block_content_type->save();
+    ])->save();
     // And a block content entity.
     $block_content = BlockContent::create([
       'info' => 'Spiffy prototype',
@@ -58,22 +59,19 @@ class BlockContentTest extends KernelTestBase {
       'theme' => 'stark',
     ]);
 
-    $links = $block->getOperationLinks();
-    $block_link = [
-      'title' => $this->t('Edit block'),
-      'url' => $block_content->toUrl('edit-form')->setOptions([]),
-      'weight' => 50,
-    ];
-
-    // At this point, we are logged in as anonymous, so the user doesn't
-    // have the "administer block" permission.
-    $this->assertEmpty($links);
+    // The anonymous user doesn't have the "administer block" permission.
+    $this->assertEmpty($block->getOperationLinks());
 
     $this->setUpCurrentUser(['uid' => 1], ['edit any spiffy block content', 'administer blocks']);
-    $links = $block->getOperationLinks();
-    // At this point, we are logged in as an admin, so the user does
-    // have the "administer block" permission.
-    $this->assertEquals(['block-edit' => $block_link], $links);
+
+    // The admin user does have the "administer block" permission.
+    $this->assertEquals([
+      'block-edit' => [
+        'title' => $this->t('Edit block'),
+        'url' => $block_content->toUrl('edit-form')->setOptions([]),
+        'weight' => 50,
+      ],
+    ], $block->getOperationLinks());
   }
 
 }

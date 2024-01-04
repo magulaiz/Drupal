@@ -8,7 +8,7 @@
  * used for navigation.
  */
 
-use Drupal\block\Entity\Block;
+use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Breadcrumb\Breadcrumb;
@@ -474,7 +474,7 @@ function menu_ui_theme(): array {
  */
 function menu_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
-  if ($entity instanceof Block) {
+  if ($entity instanceof BlockInterface) {
     $plugin = $entity->getPlugin();
     $plugin_id = $plugin->getBaseId();
     if ($plugin_id === 'system_menu_block') {

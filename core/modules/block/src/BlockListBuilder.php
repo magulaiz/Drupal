@@ -366,7 +366,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $operations['delete']['title'] = $this->t('Remove');
     }
 
-    // Check for any additional operations. Example edit-view.
+    // Check for any additional operations.
     // Since these additional operations will take the user away from the
     // block layout page, we add a destination parameter to redirect the user
     // back.
