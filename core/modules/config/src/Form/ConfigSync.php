@@ -452,6 +452,7 @@ class ConfigSync extends FormBase {
     // If config type is not empty and is not 'system.simple',
     // Remove config prefix from config name.
     if (!empty($config_type) && $config_type != 'system.simple') {
+      // Get config type definition and append config prefix.
       $definition = $this->entityTypeManager->getDefinition($config_type);
       $config_prefix = $definition->getConfigPrefix() . ".";
       // Check if config name starts with the config prefix.
