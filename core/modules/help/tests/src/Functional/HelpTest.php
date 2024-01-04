@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Verify help display and user access to help based on permissions.
  *
  * @group help
+ * @group #slow
  */
 class HelpTest extends BrowserTestBase {
 
