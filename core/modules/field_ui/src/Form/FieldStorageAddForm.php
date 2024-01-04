@@ -440,7 +440,7 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Missing label.
@@ -648,7 +648,7 @@ class FieldStorageAddForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   An AJAX response that display validation error messages or represents a
    *   successful submission.
    *
