@@ -63,15 +63,12 @@ class MoveBlockFormTest extends WebDriverTestBase {
       '.block-extra-field-blocknodebundle-with-section-fieldlinks',
       '.block-field-blocknodebundle-with-section-fieldbody',
     ];
-    $this->markTestSkipped("Skipped temporarily for random fails.");
     $this->assertRegionBlocksOrder(0, 'content', $expected_block_order);
 
     // Add a top section using the Two column layout.
     $page->clickLink('Add section');
     $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Two column');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
     $page->pressButton('Add section');
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
@@ -81,28 +78,25 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $assert_session->elementNotExists('css', $first_region_block_locator);
     $assert_session->elementExists('css', '[data-layout-delta="0"].layout--twocol-section [data-region="first"] .layout-builder__add-block')->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('Powered by Drupal');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
-    $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $first_region_block_locator));
-
-    // Ensure the request has completed before the test starts.
-    $assert_session->assertWaitOnAjaxRequest();
   }
 
   /**
    * Tests moving a block.
    */
   public function testMoveBlock() {
+    $this->markTestSkipped("Skipped temporarily for random fails.");
+
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     // Reorder body field in current region.
     $this->openBodyMoveForm(1, 'content', ['Links', 'Body (current)']);
-    $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current)*', 'Links']);
+    $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current) *', 'Links']);
     $page->pressButton('Move');
     $expected_block_order = [
       '.block-field-blocknodebundle-with-section-fieldbody',
@@ -116,9 +110,8 @@ class MoveBlockFormTest extends WebDriverTestBase {
     // Move the body block into the first region above existing block.
     $this->openBodyMoveForm(1, 'content', ['Body (current)', 'Links']);
     $page->selectFieldOption('Region', '0:first');
-    $this->markTestSkipped("Skipped temporarily for random fails.");
     $this->assertBlockTable(['Powered by Drupal', 'Body (current)']);
-    $this->moveBlockWithKeyboard('up', 'Body', ['Body (current)*', 'Powered by Drupal']);
+    $this->moveBlockWithKeyboard('up', 'Body', ['Body (current) *', 'Powered by Drupal']);
     $page->pressButton('Move');
     $expected_block_order = [
       '.block-field-blocknodebundle-with-section-fieldbody',
@@ -143,20 +136,17 @@ class MoveBlockFormTest extends WebDriverTestBase {
     // Add 25 'Powered by Drupal' blocks to a new section.
     $page->clickLink('Add section');
     $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->clickLink('One column');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
     $page->pressButton('Add section');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $large_block_number = 25;
     for ($i = 0; $i < $large_block_number; $i++) {
       $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
-      $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
-      $assert_session->assertWaitOnAjaxRequest();
+      $this->assertSession()->assertExpectedAjaxRequest(1);
+      $this->assertNotEmpty($page->find('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
       $page->clickLink('Powered by Drupal');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
-      $assert_session->assertWaitOnAjaxRequest();
       $page->pressButton('Add block');
       $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     }
@@ -170,7 +160,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $expected_block_table[] = 'Body (current)';
     $this->assertBlockTable($expected_block_table);
     $expected_block_table = array_fill(0, $large_block_number - 1, 'Powered by Drupal');
-    $expected_block_table[] = 'Body (current)*';
+    $expected_block_table[] = 'Body (current) *';
     $expected_block_table[] = 'Powered by Drupal';
     $this->moveBlockWithKeyboard('up', 'Body', $expected_block_table);
     $page->pressButton('Move');
@@ -191,7 +181,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
    */
   protected function assertBlockTable(array $expected_block_labels): void {
     $page = $this->getSession()->getPage();
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $block_tds = $page->findAll('css', '.layout-builder-components-table__block-label');
     $this->assertSameSize($block_tds, $expected_block_labels);
     /** @var \Behat\Mink\Element\NodeElement $block_td */
@@ -255,7 +244,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $region_selector = "[data-layout-delta=\"$section_delta\"] [data-region=\"$region\"]";
@@ -288,7 +276,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
 
     $body_field_locator = "[data-layout-delta=\"$delta\"] [data-region=\"$region\"] .block-field-blocknodebundle-with-section-fieldbody";
     $this->clickContextualLink($body_field_locator, 'Move');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['select', 'Region']));
     $assert_session->fieldValueEquals('Region', "$delta:$region");
     $this->assertBlockTable($initial_blocks);

@@ -36,7 +36,6 @@ class DatabaseStorageTest extends StorageTestBase {
    * Tests asynchronous table creation.
    */
   public function testConcurrent() {
-    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3398063");
     if (!function_exists('pcntl_fork')) {
       $this->markTestSkipped('Requires the pcntl_fork() function');
     }
@@ -50,7 +49,7 @@ class DatabaseStorageTest extends StorageTestBase {
     $default_connection = Database::getConnectionInfo();
     Database::removeConnection('default');
 
-    $time_to_start = microtime(TRUE) + 0.1;
+    $time_to_start = microtime(TRUE) + 1;
 
     // This loop creates a new fork to set or get key values keys.
     foreach ($functions as $i => $function) {

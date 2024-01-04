@@ -278,6 +278,16 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   protected function openMediaLibraryForField($field_name, $after_open_selector = '.js-media-library-menu') {
     $this->assertElementExistsAfterWait('css', "#$field_name-media-library-wrapper.js-media-library-widget")
       ->pressButton('Add media');
+
+    if (empty($this->assertSession()->waitForText('Add or select media'))) {
+      // Maybe there were more buttons, try another selector.
+      $this->getSession()->getPage()->pressButton("{$field_name}-media-library-open-button");
+      // @todo: Remove if random errors here no longer happen.
+      if (empty($this->assertSession()->waitForText('Add or select media'))) {
+        $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
+        file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
+      }
+    }
     $this->waitForText('Add or select media');
 
     // Assert that the grid display is visible and the links to toggle between

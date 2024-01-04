@@ -118,9 +118,14 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     // Move the mouse over the toolbar button so that isn't over a contextual
     // links area which cause the contextual link to be shown.
     $page->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
-    $this->assertTrue($page->waitFor(10, function ($page) {
+    $result = $page->waitFor(10, function ($page) {
       return !$page->find('css', '.contextual .trigger.visually-hidden');
-    }));
+    });
+    if (!$result) {
+      $this->createScreenshot('./sites/simpletest/browser_output/Screenshot-' . __METHOD__ . '.jpg');
+      file_put_contents('./sites/simpletest/browser_output/SnapshotHTML-' . __METHOD__ . '.html', $this->getSession()->getPage()->getHtml());
+    }
+    $this->assertTrue($result);
     // No contextual triggers should be hidden.
     $web_assert->elementNotExists('css', '.contextual .trigger.visually-hidden');
     // The toolbar edit button should read "Editing".

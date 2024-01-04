@@ -236,7 +236,6 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $session->getPage()->fillField('Name', 'Dog');
     $session->getPage()->pressButton('Apply filters');
     $this->waitForText('Dog');
-    $this->markTestSkipped("Skipped temporarily for random fails.");
     $this->waitForNoText('Bear');
     $session->getPage()->fillField('Name', '');
     $session->getPage()->pressButton('Apply filters');
@@ -618,7 +617,6 @@ JS;
     $this->assertSame('Remove Horse', $remove_button->getAttribute('aria-label'));
     $assert_session->pageTextNotContains('You do not have permission to view media item');
     $remove_button->press();
-    $this->waitForText("Removing Horse.");
     $this->waitForText("Horse has been removed.");
     // Logout without saving.
     $this->drupalLogout();
@@ -646,7 +644,6 @@ JS;
     $assert_session->pageTextContains("You do not have permission to view media item $media_id.");
     // Confirm ajax text does not reveal media name.
     $remove_button->press();
-    $this->waitForText("Removing media.");
     $this->waitForText("Media has been removed.");
   }
 
