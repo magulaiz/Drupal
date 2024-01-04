@@ -465,7 +465,7 @@ class DisplayTest extends ViewTestBase {
   /**
    * Tests view with external page url should throw error.
    */
-  public function testViewUrlAsExternal() {
+  public function testViewUrlAsExternal(): void {
     $this->drupalGet('admin/structure/views/add');
     $this->assertSession()->statusCodeEquals(200);
     // Create a view that sorts oldest first.
