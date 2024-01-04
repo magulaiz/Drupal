@@ -85,12 +85,7 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    if (!parent::access($account)) {
-      return FALSE;
-    }
-    // The user will have access to the language filter only if the site is
-    // multilingual.
-    return $this->languageManager->isMultilingual();
+ return $this->languageManager->isMultilingual() && parent::access($account);
   }
 
 }

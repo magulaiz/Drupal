@@ -19,11 +19,7 @@ class FieldLanguage extends EntityField {
   public function access(AccountInterface $account) {
     // Don't display the field in case the site is not multilingual, because
     // there is no point in doing so.
-    if (!$this->languageManager->isMultilingual()) {
-      return FALSE;
-    }
-
-    return parent::access($account);
+    return $this->languageManager->isMultilingual() && parent::access($account);
   }
 
 }

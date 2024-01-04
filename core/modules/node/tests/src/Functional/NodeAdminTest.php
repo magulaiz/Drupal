@@ -228,15 +228,15 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/edit');
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/delete');
     }
-    // Ensure that both the language table column as well as the language
-    // exposed filter are just visible on multilingual sites.
+    // Ensure that the language table column and the language exposed filter are
+    // not visible on monolingual sites.
     $this->assertSession()->fieldNotExists('langcode');
     $this->assertEquals(0, count($this->cssSelect('td.views-field-langcode')));
     $this->assertEquals(0, count($this->cssSelect('td.views-field-langcode')));
   }
 
   /**
-   * Tests content admin page for multilingual site.
+   * Tests content overview for a multilingual site.
    */
   public function testContentAdminPageMultilingual() {
     $this->drupalLogin($this->adminUser);
