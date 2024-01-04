@@ -226,7 +226,7 @@ class ConfigSingleExportForm extends FormBase {
     $config_type = $form_state->getValue('config_type');
     $config_name = $form_state->getValue('config_name');
     $export = $form_state->getValue('export');
-    if ($config_type && $config_name) {
+    if ($config_type && $config_name && $export) {
       $name = ($config_type !== 'system.simple') ? $this->entityTypeManager->getDefinition($config_type)->getConfigPrefix() . '.' . $config_name : $config_name;
       $filename = $name . '.yml';
       file_put_contents($this->fileSystem->getTempDirectory() . DIRECTORY_SEPARATOR . $filename, $export);
