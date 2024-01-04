@@ -8,6 +8,7 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -188,6 +189,8 @@ class FieldStorageAddForm extends FormBase {
       $form['actions'] = NULL;
     }
 
+    $form['#prefix'] = '<div id="modal-wrapper">';
+    $form['#suffix'] = '</div>';
     return $form;
   }
 
@@ -340,6 +343,7 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#size' => 30,
+      '#required' => TRUE,
     ];
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
     $form['new_storage_wrapper']['field_name'] = [
@@ -356,7 +360,6 @@ class FieldStorageAddForm extends FormBase {
       ],
       '#required' => FALSE,
     ];
-
 
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
@@ -659,7 +662,7 @@ class FieldStorageAddForm extends FormBase {
       ];
       $form['#sorted'] = FALSE;
       $response = new AjaxResponse();
-      $response->addCommand(new ReplaceCommand('#field-storage-subfield', $form));
+      $response->addCommand(new ReplaceCommand('#modal-wrapper', $form));
     }
     else {
       if (!empty($form_state->getValue('label'))) {
@@ -687,8 +690,32 @@ class FieldStorageAddForm extends FormBase {
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     $response = new AjaxResponse();
-    $response->addCommand(new OpenModalDialogCommand('title', $form));
+    if ($form_state->hasValue('group_field_options_wrapper')) {
+      $response->addCommand(new RedirectCommand($this->getRedirectUrl($form_state->getValue('field_name'))->toString()));
+    }
+    else {
+      $response->addCommand(new OpenModalDialogCommand('title', $form));
+    }
     return $response;
+  }
+
+  /**
+   * Gets the redirect URL.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL to redirect to.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getRedirectUrl(string $field_name): Url {
+    $route_parameters = [
+      'field_name' => $field_name,
+      'entity_type' => $this->entityTypeId,
+    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
+    return Url::fromRoute("field_ui.field_add_{$this->entityTypeId}", $route_parameters);
   }
 
 }
