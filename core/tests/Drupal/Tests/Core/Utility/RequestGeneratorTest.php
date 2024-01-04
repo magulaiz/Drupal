@@ -15,6 +15,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -141,6 +142,7 @@ class RequestGeneratorTest extends UnitTestCase {
     yield 'ResourceNotFoundException' => [ResourceNotFoundException::class, ''];
     yield 'MethodNotAllowedException' => [MethodNotAllowedException::class, []];
     yield 'AccessDeniedHttpException' => [AccessDeniedHttpException::class, ''];
+    yield 'NotFoundHttpException' => [NotFoundHttpException::class, ''];
   }
 
   /**
