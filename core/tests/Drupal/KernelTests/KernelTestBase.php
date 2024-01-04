@@ -614,7 +614,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
 
-    // Removed the stored configuration importer so if used again it will be
+    // Remove the stored configuration importer so if used again it will be
     // built with up-to-date services.
     $this->configImporter = NULL;
   }
