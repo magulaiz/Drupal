@@ -122,12 +122,7 @@ date_format:
   translatable: true
   translation context: 'PHP date format'
   constraints:
-    NotNull: {}
     NotBlank: {}
-    Regex:
-      # cspell:ignore Hisuve
-      pattern: '/[dDjlNSwzWFmMntLoXxYyaABgGhHisuveIOPpTZcrU]+/'
-      message: 'At least one of the characters should format this into a date. For example, use "Y" for the year, "m" for the month, "d" for the day. For more advanced options see: https://www.php.net/manual/en/datetime.format.php.'
 
 # HTML color value.
 color_hex:
@@ -563,13 +558,6 @@ core_date_format_pattern.0:
 core_date_format_pattern.1:
   type: string
   label: 'Date format'
-  constraints:
-    NotNull: {}
-    NotBlank: {}
-    Regex:
-      # cspell:ignore Hisuve
-      pattern: '/[dDjlNSwzWFmMntLoXxYyaABgGhHisuveIOPpTZcrU]+/'
-      message: 'At least one of the characters should format this into a date. For example, use "Y" for the year, "m" for the month, "d" for the day. For more advanced options see: https://www.php.net/manual/en/datetime.format.php.'
 
 # Generic field settings schemas.
 

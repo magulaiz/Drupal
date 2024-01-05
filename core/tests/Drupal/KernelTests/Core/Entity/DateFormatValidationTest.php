@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 
@@ -28,49 +27,11 @@ class DateFormatValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
-  /**
-   * @dataProvider provideLocked
-   */
-  public function testDateFormatNotNull($locked) {
-    $entity_values['id'] = $entity_values['label'] = $this->randomMachineName();
-    $entity_values['locked'] = $locked;
-    $entity_values['pattern'] = NULL;
-    $this->expectException(SchemaIncompleteException::class);
-    $this->assertValidationErrors(function () use ($entity_values) {
-      DateFormat::create($entity_values)->save();
-    });
-  }
-
-  /**
-   * @dataProvider provideLocked
-   */
-  public function testDateFormatNotBlank($locked) {
-    $entity_values['id'] = $entity_values['label'] = $this->randomMachineName();
-    $entity_values['locked'] = $locked;
-    $entity_values['pattern'] = '';
-    $this->expectException(SchemaIncompleteException::class);
-    $entity = DateFormat::create($entity_values);
-    $entity->save();
-  }
-
-  /**
-   * @dataProvider provideLocked
-   */
-  public function testDateFormatNeedsAtLeastOneDateChar($locked) {
-    $entity_values['id'] = $entity_values['label'] = $this->randomMachineName();
-    $entity_values['locked'] = $locked;
-    $entity_values['pattern'] = 'k';
-    $this->expectException(SchemaIncompleteException::class);
-    $this->expectExceptionMessageMatches('/At least one of the characters should format this into a date/');
-    $entity = DateFormat::create($entity_values);
-    $entity->save();
-  }
-
-  public function provideLocked(): array {
-    return [
-      [TRUE],
-      [FALSE],
-    ];
+  public function testPatternCannotBeEmpty(): void {
+    $this->entity->setPattern('');
+    $this->assertValidationErrors([
+      'pattern' => 'This value should not be blank.',
+    ]);
   }
 
 }
