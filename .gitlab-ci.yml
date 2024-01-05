@@ -175,7 +175,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.1 MySQLi 5.7':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
@@ -183,7 +183,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 'PHP 8.1 MySQLi 8':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-8"
