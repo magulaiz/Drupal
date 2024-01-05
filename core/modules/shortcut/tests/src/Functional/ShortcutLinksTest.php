@@ -4,7 +4,6 @@ namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
@@ -457,7 +456,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
-   * @param string
+   * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use new FormattableMarkup() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
