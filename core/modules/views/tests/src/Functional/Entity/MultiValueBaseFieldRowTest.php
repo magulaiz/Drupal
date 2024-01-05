@@ -43,12 +43,12 @@ class MultiValueBaseFieldRowTest extends ViewTestBase {
 
     EntityTest::create([
       'name' => 'a',
-      'test_muti_value_base_field' => ['val_1', 'val_2'],
+      'test_multi_value_base_field' => ['val_1', 'val_2'],
     ])->save();
-    EntityTest::create(['name' => 'b', 'test_muti_value_base_field' => 'val_1'])->save();
+    EntityTest::create(['name' => 'b', 'test_multi_value_base_field' => 'val_1'])->save();
     EntityTest::create([
       'name' => 'c',
-      'test_muti_value_base_field' => ['val_1', 'val_2'],
+      'test_multi_value_base_field' => ['val_1', 'val_2'],
     ])->save();
     $this->drupalLogin($this->drupalCreateUser(['access content']));
   }
@@ -63,15 +63,15 @@ class MultiValueBaseFieldRowTest extends ViewTestBase {
     $this->assertCount(5, $rows);
     // Test if each value is displayed in separate rows.
     $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(1) .views-field-name', 'a');
-    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(1) .views-field-test-muti-value-base-field-value', 'val_1');
+    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(1) .views-field-test-multi-value-base-field-value', 'val_1');
     $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(2) .views-field-name', 'a');
-    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(2) .views-field-test-muti-value-base-field-value', 'val_2');
+    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(2) .views-field-test-multi-value-base-field-value', 'val_2');
     $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(3) .views-field-name', 'b');
-    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(3) .views-field-test-muti-value-base-field-value', 'val_1');
+    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(3) .views-field-test-multi-value-base-field-value', 'val_1');
     $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(4) .views-field-name', 'c');
-    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(4) .views-field-test-muti-value-base-field-value', 'val_1');
+    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(4) .views-field-test-multi-value-base-field-value', 'val_1');
     $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(5) .views-field-name', 'c');
-    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(5) .views-field-test-muti-value-base-field-value', 'val_2');
+    $this->assertSession()->elementTextEquals('css', 'table tbody tr:nth-child(5) .views-field-test-multi-value-base-field-value', 'val_2');
   }
 
 }

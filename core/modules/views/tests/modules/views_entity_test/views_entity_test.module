@@ -29,7 +29,7 @@ function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_ty
 
     // Create a new base field with unlimited cardinality for the test
     // \Drupal\Tests\views\Functional\Entity\MultiValueBaseFieldRowTest.
-    $definitions['test_muti_value_base_field'] = BaseFieldDefinition::create('string')
+    $definitions['test_multi_value_base_field'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Test multi value base field'))
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setTranslatable(FALSE)

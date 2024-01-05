@@ -84,15 +84,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        test_muti_value_base_field_value:
-          id: test_muti_value_base_field_value
-          table: entity_test__test_muti_value_base_field
-          field: test_muti_value_base_field_value
+        test_multi_value_base_field_value:
+          id: test_multi_value_base_field_value
+          table: entity_test__test_multi_value_base_field
+          field: test_multi_value_base_field_value
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: entity_test
-          entity_field: test_muti_value_base_field
+          entity_field: test_multi_value_base_field
           plugin_id: field
           label: 'Test multi value base field'
           exclude: false
