@@ -77,7 +77,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    * @param string $vid
    *   Vocabulary ID to retrieve terms for.
    * @param int $parent
-   *   The term ID under which to generate the tree. If ROOT_TERM_ID,
+   *   The term ID under which to generate the tree. If TermInterface::ROOT_TERM_ID,
    *   generate the tree for the entire vocabulary.
    * @param int $max_depth
    *   The number of levels of the tree to return. Leave NULL to return all
