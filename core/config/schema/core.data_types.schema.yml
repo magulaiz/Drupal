@@ -547,7 +547,10 @@ core.date_format.*:
       type: core_date_format_pattern.[%parent.locked]
       label: 'PHP date format'
       constraints:
-        NotBlank: {}
+        NotBlank: []
+        # A valid date format character must appear somewhere in the value.
+        # See https://www.php.net/manual/en/datetime.format.php
+        Regex: '/[aABcdDeFgGhHiIjlLmMnNoOpPrsStTuUvwWxXyYzZ]/'
   constraints:
     FullyValidatable: ~
 
