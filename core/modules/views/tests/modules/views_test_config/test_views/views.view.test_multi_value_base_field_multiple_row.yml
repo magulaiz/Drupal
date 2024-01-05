@@ -18,7 +18,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'test_multi value_base_field_multiple_row'
+      title: 'test_multi_value_base_field_multiple_row'
       fields:
         name:
           id: name
@@ -195,7 +195,7 @@ display:
           default_row_class: true
           columns:
             name: name
-            test_mutivalue_field_value: test_mutivalue_field_value
+            test_milti_value_base_field_value: test_milti_value_base_field_value
           default: '-1'
           info:
             name:
@@ -205,7 +205,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            test_mutivalue_field_value:
+            test_milti_value_base_field_value:
               sortable: false
               default_sort_order: asc
               align: ''
