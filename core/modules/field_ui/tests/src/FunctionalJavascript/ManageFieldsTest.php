@@ -7,6 +7,7 @@ namespace Drupal\Tests\field_ui\FunctionalJavascript;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
@@ -21,6 +22,7 @@ class ManageFieldsTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
   use FieldUiTestTrait;
+  use ContextualLinkClickTrait;
 
 
   /**
@@ -297,16 +299,18 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->pressButton('Back');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($assert_session->waitForText('Choose a type of field'));
-    $this->assertNotEmpty($test_field = $page->find('xpath', '//*[text() = "Test field"]'));
-    $test_field->click();
+    $modal = $this->getSession()->getPage()->find('css', '.ui-dialog-content');
+    $modal->clickLink('Test field');
     $assert_session->assertWaitOnAjaxRequest();
-    $page->pressButton('Continue');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
     $field_name = 'test_field_2';
     $page->fillField('label', $field_name);
     $assert_session->pageTextNotContains('Choose an option below');
 
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $this->assertTrue($assert_session->waitForText("These settings apply to the $field_name field everywhere it is used."));
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));

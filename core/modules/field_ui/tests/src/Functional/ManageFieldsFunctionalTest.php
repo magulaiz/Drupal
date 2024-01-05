@@ -229,7 +229,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
             $link->click();
             $this->assertSession()
               ->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
-            $this->submitForm([], 'Back');
+            $this->clickLink('Back');
           }
         }
       }
