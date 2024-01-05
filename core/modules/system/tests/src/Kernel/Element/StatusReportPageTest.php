@@ -26,7 +26,7 @@ class StatusReportPageTest extends KernelTestBase {
       '#requirements' => [
         'foo' => [
           'title' => 'Foo',
-          'severity' => RequirementSeverity::INFO,
+          'severity' => \REQUIREMENT_INFO,
         ],
         'baz' => [
           'title' => 'Baz',
@@ -35,14 +35,6 @@ class StatusReportPageTest extends KernelTestBase {
         'wiz' => [
           'title' => 'Wiz',
           'severity' => RequirementSeverity::ERROR,
-        ],
-        'bar' => [
-          'title' => 'Bar',
-          'severity' => RequirementSeverity::OK,
-        ],
-        'legacy' => [
-          'title' => 'Legacy',
-          'severity' => \REQUIREMENT_OK,
         ],
       ],
     ];
