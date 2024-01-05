@@ -37,9 +37,9 @@ class DateFormatValidationTest extends ConfigEntityValidationTestBase {
    * @param string $expected_error
    *   The error message that should be flagged for the invalid pattern.
    *
-   * @testWith ["q", true, "This value is not valid."]
+   * @testWith ["q", true, "This is not a valid date format."]
    *   ["", true, "This value should not be blank."]
-   *   ["q", false, "This value is not valid."]
+   *   ["q", false, "This is not a valid date format."]
    *   ["", false, "This value should not be blank."]
    */
   public function testPatternIsValidated(string $pattern, bool $locked, string $expected_error): void {

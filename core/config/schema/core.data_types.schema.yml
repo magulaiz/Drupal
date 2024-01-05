@@ -550,7 +550,9 @@ core.date_format.*:
         NotBlank: []
         # A valid date format character must appear somewhere in the value.
         # See https://www.php.net/manual/en/datetime.format.php
-        Regex: '/[aABcdDeFgGhHiIjlLmMnNoOpPrsStTuUvwWxXyYzZ]/'
+        Regex:
+          pattern: '/[aABcdDeFgGhHiIjlLmMnNoOpPrsStTuUvwWxXyYzZ]/'
+          message: 'This is not a valid date format.'
   constraints:
     FullyValidatable: ~
 
