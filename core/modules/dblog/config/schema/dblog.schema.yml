@@ -10,3 +10,5 @@ dblog.settings:
       constraints:
         Range:
           min: 0
+  constraints:
+    FullyValidatable: ~
