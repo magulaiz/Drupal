@@ -44,8 +44,9 @@
           tableBody.rows[backStep - 1].classList.add(
             'taxonomy-term-divider-top',
           );
-          tableBody.rows[backStep].
-            classList.add('taxonomy-term-divider-bottom');
+          tableBody.rows[backStep].classList.add(
+            'taxonomy-term-divider-bottom',
+          );
         }
 
         if (forwardStep) {
