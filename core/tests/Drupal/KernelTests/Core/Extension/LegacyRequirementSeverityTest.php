@@ -2,8 +2,9 @@
 
 namespace Drupal\KernelTests\Core\Extension;
 
-use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\KernelTests\KernelTestBase;
+
+include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 
 /**
  * Tests the legacy requirements severity deprecations.
@@ -15,12 +16,13 @@ use Drupal\KernelTests\KernelTestBase;
 class LegacyRequirementSeverityTest extends KernelTestBase {
 
   /**
-   * @covers ::getMaxSeverity
+   * @covers drupal_requirements_severity
    * @dataProvider requirementProvider
    */
-  public function testGetMaxSeverity(array $requirements, RequirementSeverity $expectedSeverity): void {
+  public function testGetMaxSeverity(array $requirements, int $expectedSeverity): void {
+    $this->expectDeprecation('drupal_requirements_severity() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3410939');
     $this->expectDeprecation('Calling Drupal\Core\Extension\Requirement::getMaxSeverity() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939');
-    $severity = RequirementSeverity::getMaxSeverity($requirements);
+    $severity = drupal_requirements_severity($requirements);
     $this->assertEquals($expectedSeverity, $severity);
   }
 
@@ -31,8 +33,6 @@ class LegacyRequirementSeverityTest extends KernelTestBase {
    *   Test data.
    */
   public function requirementProvider(): array {
-    include_once \DRUPAL_ROOT . '/core/includes/install.inc';
-
     $info = [
       'title' => 'Foo',
       'severity' => \REQUIREMENT_INFO,
@@ -56,14 +56,14 @@ class LegacyRequirementSeverityTest extends KernelTestBase {
           $error,
           $ok,
         ],
-        RequirementSeverity::ERROR,
+        \REQUIREMENT_ERROR,
       ],
       [
         [
           $info,
           $ok,
         ],
-        RequirementSeverity::OK,
+        \REQUIREMENT_OK,
       ],
       [
         [
@@ -71,7 +71,7 @@ class LegacyRequirementSeverityTest extends KernelTestBase {
           $info,
           $ok,
         ],
-        RequirementSeverity::WARNING,
+        \REQUIREMENT_WARNING,
       ],
     ];
   }
