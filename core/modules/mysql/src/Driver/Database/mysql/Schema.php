@@ -440,6 +440,7 @@ class Schema extends DatabaseSchema {
         $this->connection->query($query . ', DROP COLUMN [my_row_id]');
       }
       else {
+        dump($e);
         throw $e;
       }
     }
