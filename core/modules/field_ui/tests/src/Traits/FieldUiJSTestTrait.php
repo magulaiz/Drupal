@@ -11,6 +11,8 @@ use Behat\Mink\Exception\ElementNotFoundException;
  */
 trait FieldUiJSTestTrait {
 
+  use FieldUiTestTrait;
+
   /**
    * Creates a new field through the Field UI.
    *
@@ -30,13 +32,16 @@ trait FieldUiJSTestTrait {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
+    $this->getSession()->resizeWindow(1200, 800);
     $label = $label ?: $field_name;
 
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
     if ($bundle_path !== NULL) {
-      $bundle_path = "$bundle_path/fields/add-field";
+      $bundle_path = "$bundle_path/fields";
       $this->drupalGet($bundle_path);
+      $this->getSession()->getPage()->clickLink('Create a new field');
+      $this->assertSession()->assertWaitOnAjaxRequest();
     }
 
     // First step: 'Add field' page.
@@ -62,11 +67,11 @@ trait FieldUiJSTestTrait {
       // Call the helper function to confirm it is in a group.
       $field_group = $this->getFieldFromGroup($field_type);
       $this->clickLink($field_group);
+      $this->assertSession()->assertWaitOnAjaxRequest();
       $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
     }
 
-    $field_label = $page->findField('label');
-    $page->findButton('Continue')->click();
+    $field_label = $this->assertSession()->waitForField('label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
     $field_label->setValue($label);
@@ -77,8 +82,7 @@ trait FieldUiJSTestTrait {
     $field_field_name = $page->findField('field_name');
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
-
-    $page->findButton('Continue')->click();
+    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
       // Second step: Save field settings.

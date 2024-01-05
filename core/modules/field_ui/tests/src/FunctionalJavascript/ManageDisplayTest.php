@@ -56,6 +56,7 @@ class ManageDisplayTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create a test user.

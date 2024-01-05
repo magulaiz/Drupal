@@ -690,7 +690,7 @@ class FieldStorageAddForm extends FormBase {
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     $response = new AjaxResponse();
-    if ($form_state->hasValue('group_field_options_wrapper')) {
+    if ($form_state->hasValue('new_storage_type')) {
       $response->addCommand(new RedirectCommand($this->getRedirectUrl($form_state->getValue('field_name'))->toString()));
     }
     else {

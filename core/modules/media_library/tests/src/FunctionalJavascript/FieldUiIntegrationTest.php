@@ -32,6 +32,8 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->getSession()->resizeWindow(1200, 800);
 
     // Create a user who can add media fields.
     $user = $this->drupalCreateUser([
@@ -67,13 +69,14 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     ]);
     $this->drupalLogin($user);
 
-    $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('/admin/structure/types/manage/article/fields');
+    $this->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->clickLink('Media');
     $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', 'Shatner');
     $this->waitForText('field_shatner');
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_shatner.*/', $this->getUrl());
+    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
     $assert_session->pageTextNotContains('Undefined index: target_bundles');
     $this->waitForFieldExists('Type One')->check();
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_one]"][checked="checked"]');

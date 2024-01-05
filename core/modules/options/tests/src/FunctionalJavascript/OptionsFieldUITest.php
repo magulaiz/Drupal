@@ -28,6 +28,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     'node',
     'options',
     'field_ui',
+    'block',
   ];
 
   /**
@@ -68,6 +69,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->getSession()->resizeWindow(1200, 800);
 
     // Create test user.
     $admin_user = $this->drupalCreateUser([
