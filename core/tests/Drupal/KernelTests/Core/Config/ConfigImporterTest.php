@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
@@ -828,6 +829,50 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertTrue($state['entity_state::predelete'], 'ConfigEntity::isSyncing() returns TRUE');
     $this->assertTrue($state['global_state::delete'], '\Drupal::isConfigSyncing() returns TRUE');
     $this->assertTrue($state['entity_state::delete'], 'ConfigEntity::isSyncing() returns TRUE');
+
+    // Test that isSyncing is TRUE in hook_module_preinstall() when installing
+    // module via config import.
+    $extensions = $sync->read('core.extension');
+    // First, install system_test so that its hook_module_preinstall() will run
+    // when module_test is installed.
+    $this->container->get('module_installer')->install(['system_test']);
+    // Add module_test and system_test to the enabled modules to be imported,
+    // so that module_test gets installed on import and system_test does not get
+    // uninstalled.
+    $extensions['module']['module_test'] = 0;
+    $extensions['module']['system_test'] = 0;
+    $extensions['module'] = module_config_sort($extensions['module']);
+    $sync->write('core.extension', $extensions);
+    $this->configImporter->reset()->import();
+
+    // Syncing values stored in state by hook_module_preinstall should be TRUE
+    // when module is installed via config import.
+    $this->assertTrue(\Drupal::state()->get('system_test_preinstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preinstall() returns TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_preinstall_module_syncing_param'), 'system_test_module_preinstall() $is_syncing value is TRUE');
+
+    // Syncing value stored in state by uninstall hooks should be FALSE
+    // when uninstalling outside of config import.
+    $this->container->get('module_installer')->uninstall(['module_test']);
+    $this->assertFalse(\Drupal::state()->get('system_test_preuninstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preuninstall() returns FALSE');
+    $this->assertFalse(\Drupal::state()->get('system_test_preuninstall_module_syncing_param'), 'system_test_module_preuninstall() $is_syncing value is FALSE');
+    $this->assertFalse(\Drupal::state()->get('system_test_modules_uninstalled_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_modules_uninstalled returns FALSE');
+    $this->assertFalse(\Drupal::state()->get('system_test_modules_uninstalled_syncing_param'), 'system_test_modules_uninstalled $is_syncing value is FALSE');
+
+    // Syncing value stored in state by hook_module_preinstall should be FALSE
+    // when installing outside of config import.
+    $this->container->get('module_installer')->install(['module_test']);
+    $this->assertFalse(\Drupal::state()->get('system_test_preinstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preinstall() returns TRUE');
+    $this->assertFalse(\Drupal::state()->get('system_test_preinstall_module_syncing_param'), 'system_test_module_preinstall() $is_syncing value is TRUE');
+
+    // Uninstall module_test via config import. Syncing value stored in state
+    // by uninstall hooks should be TRUE.
+    unset($extensions['module']['module_test']);
+    $sync->write('core.extension', $extensions);
+    $this->configImporter->reset()->import();
+    $this->assertTrue(\Drupal::state()->get('system_test_preuninstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preuninstall() returns TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_preuninstall_module_syncing_param'), 'system_test_module_preuninstall() $is_syncing value is TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_modules_uninstalled_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_modules_uninstalled returns TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_modules_uninstalled_syncing_param'), 'system_test_modules_uninstalled $is_syncing value is TRUE');
   }
 
   /**
@@ -928,6 +973,44 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertSame([], $event['current_config_data']);
     $this->assertSame([], $event['raw_config_data']);
     $this->assertSame(['key' => 'bar'], $event['original_config_data']);
+  }
+
+  /**
+   * Tests events and collections during a config import.
+   */
+  public function testEventsAndCollectionsImport(): void {
+    $collections = [
+      'another_collection',
+      'collection.test1',
+      'collection.test2',
+    ];
+    // Set the event listener to return three possible collections.
+    // @see \Drupal\config_collection_install_test\EventSubscriber
+    \Drupal::state()->set('config_collection_install_test.collection_names', $collections);
+    $this->enableModules(['config_collection_install_test']);
+    $this->installConfig(['config_collection_install_test']);
+
+    // Export the configuration and uninstall the module to test installing it
+    // via configuration import.
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->container->get('module_installer')->uninstall(['config_collection_install_test']);
+    $this->assertEmpty($this->container->get('config.storage')->getAllCollectionNames());
+
+    \Drupal::state()->set('config_events_test.all_events', []);
+    $this->configImporter()->import();
+    $this->assertSame($collections, $this->container->get('config.storage')->getAllCollectionNames());
+
+    $all_events = \Drupal::state()->get('config_events_test.all_events');
+    $this->assertArrayHasKey('core.extension', $all_events[ConfigEvents::SAVE]);
+    // Ensure that config in collections does not have the regular configuration
+    // event triggered.
+    $this->assertArrayNotHasKey('config_collection_install_test.test', $all_events[ConfigEvents::SAVE]);
+    $this->assertCount(3, $all_events[ConfigCollectionEvents::SAVE_IN_COLLECTION]['config_collection_install_test.test']);
+    $event_collections = [];
+    foreach ($all_events[ConfigCollectionEvents::SAVE_IN_COLLECTION]['config_collection_install_test.test'] as $event) {
+      $event_collections[] = $event['current_config_data']['collection'];
+    }
+    $this->assertSame($collections, $event_collections);
   }
 
   /**
