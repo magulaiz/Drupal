@@ -64,4 +64,3 @@ type_settings:
       - article
       - page
   default_moderation_state: draft
-
