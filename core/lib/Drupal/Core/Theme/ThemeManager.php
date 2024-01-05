@@ -224,42 +224,8 @@ class ThemeManager implements ThemeManagerInterface {
       'theme_hook_original' => $original_hook,
     ];
 
-    // Set base hook for later use. For example if '#theme' => 'node__article'
-    // is called, we run hook_theme_suggestions_node_alter() rather than
-    // hook_theme_suggestions_node__article_alter(), and also pass in the base
-    // hook as the last parameter to the suggestions alter hooks.
-    if (isset($info['base hook'])) {
-      $base_theme_hook = $info['base hook'];
-    }
-    else {
-      $base_theme_hook = $hook;
-    }
-
-    // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->buildThemeHookSuggestions($hook, $info['base hook'] ?? '', $variables);
-    // If the theme implementation was invoked with a direct theme suggestion
-    // like '#theme' => 'node__article', add it to the suggestions array before
-    // invoking suggestion alter hooks.
-    $derived_suggestions_excluding_base_hook = array_slice($derived_suggestions, 1);
-    if (isset($info['base hook']) && !in_array($hook, $derived_suggestions_excluding_base_hook)) {
-      $suggestions[] = $hook;
-    }
-    $suggestions = array_merge($suggestions, $derived_suggestions_excluding_base_hook);
 
-    // Invoke hook_theme_suggestions_alter() and
-    // hook_theme_suggestions_HOOK_alter().
-    $hooks = [
-      'theme_suggestions',
-      'theme_suggestions_' . $base_theme_hook,
-    ];
-    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
-    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
-
-    // Add the base suggestion, should always have the lowest priority.
-    $derived_base_hook = reset($derived_suggestions);
-    if (!in_array($derived_base_hook, $suggestions)) {
-      array_unshift($suggestions, $derived_base_hook);
-    }
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
     // '#theme' => 'node', but a module can add 'node__article' as a suggestion
@@ -399,6 +365,8 @@ class ThemeManager implements ThemeManagerInterface {
    *   Theme hook that was called.
    * @param string $info_base_hook
    *   Theme registry info for $hook['base hook'] key or empty string.
+   * @param array $derived_suggestions
+   *   Array of derived suggestions..
    * @param array $variables
    *   Theme variables that were passed along with the call.
    *
@@ -411,7 +379,7 @@ class ThemeManager implements ThemeManagerInterface {
    * @internal
    *   This method may change at any time. It is not for use outside this class.
    */
-  protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array &$variables): array {
+  protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array $derived_suggestions, array &$variables): array {
     // Set base hook for later use. For example if '#theme' => 'node__article'
     // is called, we run hook_theme_suggestions_node_alter() rather than
     // hook_theme_suggestions_node__article_alter(), and also pass in the base
@@ -423,9 +391,11 @@ class ThemeManager implements ThemeManagerInterface {
     // If the theme implementation was invoked with a direct theme suggestion
     // like '#theme' => 'node__article', add it to the suggestions array before
     // invoking suggestion alter hooks.
-    if ($info_base_hook) {
-      $suggestions[] = $hook;
-    }
+    $derived_suggestions_excluding_base_hook = array_slice($derived_suggestions, 1);
+    if (isset($info['base hook']) && !in_array($hook, $derived_suggestions_excluding_base_hook)) {
+       $suggestions[] = $hook;
+     }
+    $suggestions = array_merge($suggestions, $derived_suggestions_excluding_base_hook);
 
     // Invoke hook_theme_suggestions_alter() and
     // hook_theme_suggestions_HOOK_alter().
@@ -435,6 +405,12 @@ class ThemeManager implements ThemeManagerInterface {
     ];
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
+
+    // Add the base suggestion, should always have the lowest priority.
+    $derived_base_hook = reset($derived_suggestions);
+    if (!in_array($derived_base_hook, $suggestions)) {
+      array_unshift($suggestions, $derived_base_hook);
+    }
 
     return $suggestions;
   }
