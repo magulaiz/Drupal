@@ -237,8 +237,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Continue');
     $assert_session->waitForText("These settings apply to the $field_name field everywhere it is used.");
-//        $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
-//$this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
 
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
