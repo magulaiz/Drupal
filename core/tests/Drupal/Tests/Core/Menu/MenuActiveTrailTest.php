@@ -191,6 +191,81 @@ class MenuActiveTrailTest extends UnitTestCase {
   }
 
   /**
+   * Tests that menus with numeric IDs are handled correctly.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3399221
+   * @covers ::resolveCacheMiss
+   */
+  public function testParallelCacheBuildForNumericMenus() {
+    // Set up a request with a route name and object.
+    $mock_route = new Route('');
+    /** @var \Symfony\Component\HttpFoundation\Request $request */
+    $request = new Request();
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'baby_llama');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $mock_route);
+    $this->requestStack->push($request);
+
+    // Create a menu link within a menu with numeric ID.
+    $link_1 = MenuLinkMock::create(['menu_name' => '123', 'id' => 'menu_link_1', 'route_name' => 'baby_llama']);
+
+    // Setup the menu link manager to return the menu link.
+    $this->menuLinkManager->expects($this->any())
+      ->method('loadLinksbyRoute')
+      ->with('baby_llama')
+      ->willReturn([$link_1]);
+    $this->menuLinkManager->expects($this->any())
+      ->method('getParentIds')
+      ->with($link_1->getPluginId())
+      ->willReturn([$link_1->getPluginId() => $link_1->getPluginId()]);
+
+    // Setup a common cache_menu "backend" for two requests (i.e. two MenuActiveTrail instances)
+    $cid = 'active-trail:route:baby_llama:route_parameters:' . serialize([]);
+    $cache_menu = [];
+    // Two requests will "get" the cache 4 times (2 for lazyLoadCache and 2 for updateCache).
+    $this->cache->expects($this->exactly(4))
+      ->method('get')
+      ->with($cid)
+      ->willReturnCallback(function ($cid) use (&$cache_menu) {
+          return $cache_menu[$cid] ?? FALSE;
+      });
+    // Two requests will "set" the cache 2 times (1 for each request).
+    $this->cache->expects($this->any())
+      ->method('set')
+      ->with($cid)
+      ->willReturnCallback(function ($cid, $data) use (&$cache_menu) {
+          $cache_menu[$cid] = (object) [
+            'created' => time(),
+            'data' => $data,
+          ];
+      });
+
+    // Two requests will acquire and release the lock twice (from updateCache).
+    $this->lock->expects($this->exactly(2))
+      ->method('acquire')
+      ->willReturn(TRUE);
+    $this->lock->expects($this->exactly(2))
+      ->method('release');
+
+    // Two requests have their own MenuActiveTrail instances.
+    $menuActiveTrail1 = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch, $this->cache, $this->lock);
+    $menuActiveTrail2 = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch, $this->cache, $this->lock);
+
+    // Both requests will call getActiveTrailIds(). Since cache is empty, both will call the resolveCacheMiss
+    $menuActiveTrail1->get($link_1->getMenuName());
+    $menuActiveTrail2->get($link_1->getMenuName());
+
+    // After first request ends, it will call updateCache() which will set the cache.
+    $menuActiveTrail1->destruct();
+    $first_cache = $cache_menu[$cid]->data;
+    // After second request ends, it will call updateCache() which will set the cache.
+    $menuActiveTrail2->destruct();
+    $second_cache = $cache_menu[$cid]->data;
+
+    // The cached data should be the same for both requests.
+    $this->assertEquals($first_cache, $second_cache);
+  }
+
+  /**
    * Tests getCid()
    *
    * @covers ::getCid
