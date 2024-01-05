@@ -66,7 +66,8 @@ trait FieldUiJSTestTrait {
     catch (ElementNotFoundException) {
       // Call the helper function to confirm it is in a group.
       $field_group = $this->getFieldFromGroup($field_type);
-      $this->clickLink($field_group);
+      $modal = $this->getSession()->getPage()->find('css', '.ui-dialog-content');
+      $modal->clickLink($field_group);
       $this->assertSession()->assertWaitOnAjaxRequest();
       $this->assertSession()->fieldExists('group_field_options_wrapper')->selectOption($field_type);
     }
