@@ -25,6 +25,7 @@
  */
 
 .js .form-autocomplete {
+  padding-inline-end: 2.25rem;
   background-image: url(../../images/icons/868686/magnifier.svg);
   background-repeat: no-repeat;
   background-position: 100% 50%;

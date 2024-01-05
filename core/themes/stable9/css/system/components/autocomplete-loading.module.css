@@ -6,6 +6,7 @@
  */
 
 .js input.form-autocomplete {
+  padding-inline-end: 2.25rem;
   background-image: url(../../../../../misc/throbber-inactive.png);
   background-repeat: no-repeat;
   background-position: 100% center; /* LTR */
