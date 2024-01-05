@@ -457,14 +457,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
-   * @param string|\Drupal\Component\Render\MarkupInterface $message
+   * @param string
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use new FormattableMarkup() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    *
    * @internal
    */
-  protected function assertShortcutQuickLink(string $label, int $index = 0, string|MarkupInterface $message = ''): void {
+  protected function assertShortcutQuickLink(string $label, int $index = 0, string $message = ''): void {
     $links = $this->xpath('//a[normalize-space()=:label]', [':label' => $label]);
     $message = ($message ? $message : new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
     $this->assertArrayHasKey($index, $links, (string) $message);
