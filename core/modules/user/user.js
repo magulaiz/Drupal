@@ -65,9 +65,8 @@
       const cssClasses = Drupal.user.password.css;
       once('password', 'input.js-password-field', context).forEach((value) => {
         const $mainInput = $(value);
-        const $mainInputParent = $mainInput
-          .parent()
-          .addClass(cssClasses.passwordParent);
+        const $mainInputParent = $mainInput.parent();
+        $mainInputParent[0].classList.add(cssClasses.passwordParent);
         const $passwordWidget = $mainInput.closest(
           '.js-form-type-password-confirm',
         );
@@ -141,17 +140,14 @@
          * Adds classes to the widget indicating if the elements are filled.
          */
         const addWidgetClasses = () => {
-          $passwordWidget
-            .addClass(
-              $mainInput[0].value
-                ? cssClasses.passwordFilled
-                : cssClasses.passwordEmpty,
-            )
-            .addClass(
-              $confirmInput[0].value
-                ? cssClasses.confirmFilled
-                : cssClasses.confirmEmpty,
-            );
+          $passwordWidget[0].classList.add(
+            $mainInput[0].value
+              ? cssClasses.passwordFilled
+              : cssClasses.passwordEmpty,
+            $confirmInput[0].value
+              ? cssClasses.confirmFilled
+              : cssClasses.confirmEmpty,
+          );
         };
 
         /**
@@ -179,7 +175,9 @@
                 confirmTextWrapperClassesToRemove,
               );
             }
-            $passwordMatchStatus.html(confirmMessage).addClass(confirmClass);
+            $passwordMatchStatus
+              .html(confirmMessage)[0]
+              .classList.add(confirmClass);
           }
         };
 

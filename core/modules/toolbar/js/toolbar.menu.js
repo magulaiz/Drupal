@@ -31,7 +31,7 @@
             `a[data-drupal-link-system-path="${currentPath}"]`,
           );
           if ($menuItem.length !== 0) {
-            $menuItem.closest('a').addClass('is-active');
+            $menuItem.closest('a')[0].classList.add('is-active');
             break;
           }
           const lastIndex = currentPath.lastIndexOf('/');
@@ -163,7 +163,10 @@
      */
     function markListLevels($lists, level) {
       level = !level ? 1 : level;
-      const $lis = $lists.children('li').addClass(`level-${level}`);
+      const $lis = $lists.children('li');
+      $lis.toArray().forEach((element) => {
+        element.classList.add(`level-${level}`);
+      });
       $lists = $lis.children('ul');
       if ($lists.length) {
         markListLevels($lists, level + 1);
@@ -186,9 +189,8 @@
         activeItem = window.location.pathname;
       }
       if (activeItem) {
-        const $activeItem = $menu
-          .find(`a[href="${activeItem}"]`)
-          .addClass('menu-item--active');
+        const $activeItem = $menu.find(`a[href="${activeItem}"]`);
+        $activeItem[0]?.classList.add('menu-item--active');
         if (pathItem.length === 0 && activeItem) {
           const count = currentPath.split('/').length;
           // Find the deepest link with its parent info and start
@@ -198,9 +200,10 @@
               `a[data-drupal-link-system-path="${currentPath}"]`,
             );
             if ($menuItem.length !== 0) {
-              const $activeTrail = $menuItem
-                .parentsUntil('.root', 'li')
-                .addClass('menu-item--active-trail');
+              const $activeTrail = $menuItem.parentsUntil('.root', 'li');
+              $activeTrail.toArray().forEach((element) => {
+                element.classList.add('menu-item--active-trail');
+              });
               toggleList($activeTrail, true);
               break;
             }
@@ -208,9 +211,10 @@
             currentPath = currentPath.slice(0, lastIndex);
           }
         } else {
-          const $activeTrail = $activeItem
-            .parentsUntil('.root', 'li')
-            .addClass('menu-item--active-trail');
+          const $activeTrail = $activeItem.parentsUntil('.root', 'li');
+          $activeTrail.toArray().forEach((element) => {
+            element.classList.add('menu-item--active-trail');
+          });
           toggleList($activeTrail, true);
         }
       }
@@ -225,8 +229,7 @@
         $menu
           .on('click.toolbar', '.toolbar-box', toggleClickHandler)
           .on('click.toolbar', '.toolbar-box a', linkClickHandler);
-
-        $menu.addClass('root');
+        $menu[0].classList.add('root');
         initItems($menu);
         markListLevels($menu);
         // Restore previous and active states.

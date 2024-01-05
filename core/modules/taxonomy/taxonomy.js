@@ -39,20 +39,23 @@
         const tableBody = $table[0].tBodies[0];
         if (backStep) {
           for (let n = 0; n < backStep; n++) {
-            $(tableBody.rows[n]).addClass('taxonomy-term-preview');
+            tableBody.rows[n].classList.add('taxonomy-term-preview');
           }
-          $(tableBody.rows[backStep - 1]).addClass('taxonomy-term-divider-top');
-          $(tableBody.rows[backStep]).addClass('taxonomy-term-divider-bottom');
+          tableBody.rows[backStep - 1].classList.add(
+            'taxonomy-term-divider-top',
+          );
+          tableBody.rows[backStep],
+            classList.add('taxonomy-term-divider-bottom');
         }
 
         if (forwardStep) {
           for (let k = rows - forwardStep - 1; k < rows - 1; k++) {
-            $(tableBody.rows[k]).addClass('taxonomy-term-preview');
+            tableBody.rows[k].classList.add('taxonomy-term-preview');
           }
-          $(tableBody.rows[rows - forwardStep - 2]).addClass(
+          tableBody.rows[rows - forwardStep - 2].classList.add(
             'taxonomy-term-divider-top',
           );
-          $(tableBody.rows[rows - forwardStep - 1]).addClass(
+          tableBody.rows[rows - forwardStep - 1].classList.add(
             'taxonomy-term-divider-bottom',
           );
         }
