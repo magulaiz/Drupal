@@ -27,8 +27,17 @@ class DateFormatValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
-  public function testPatternCannotBeBlank(): void {
-    $this->entity->setPattern('');
+  /**
+   * Tests that the pattern of a date format can never be blank.
+   *
+   * @param bool $locked
+   *   Whether the date format entity is locked or not.
+   *
+   * @testWith [true]
+   *   [false]
+   */
+  public function testPatternCannotBeBlank(bool $locked): void {
+    $this->entity->setPattern('')->set('locked', $locked);
     $this->assertValidationErrors([
       'pattern' => 'This value should not be blank.',
     ]);

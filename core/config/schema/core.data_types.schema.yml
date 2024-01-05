@@ -121,8 +121,6 @@ date_format:
   label: 'Date format'
   translatable: true
   translation context: 'PHP date format'
-  constraints:
-    NotBlank: {}
 
 # HTML color value.
 color_hex:
@@ -548,6 +546,8 @@ core.date_format.*:
     pattern:
       type: core_date_format_pattern.[%parent.locked]
       label: 'PHP date format'
+      constraints:
+        NotBlank: {}
   constraints:
     FullyValidatable: ~
 
