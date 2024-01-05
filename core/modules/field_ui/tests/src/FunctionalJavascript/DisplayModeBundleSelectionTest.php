@@ -165,7 +165,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
    *
    * @dataProvider providerDisplayModeLinks
    */
-  public function testDisplayModeLinks(string $display_mode, string $path, int $mode_count_before, int $mode_count_after) {
+  public function testDisplayModeLinks(string $display_mode, string $path, int $mode_count_before, int $mode_count_after): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
