@@ -30,13 +30,21 @@ class ConfigImportAllTest extends ModuleTestBase {
   protected $webUser;
 
   /**
-   * The profile to install as a basis for testing.
+   * Modules to enable.
    *
-   * Using the standard profile as this has a lot of additional configuration.
-   *
-   * @var string
+   * @var array
    */
-  protected $profile = 'standard';
+  protected static $modules = ['config'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $profile = 'testing';
 
   /**
    * {@inheritdoc}
@@ -101,7 +109,7 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
     $database_module = \Drupal::service('database')->getProvider();
-    $expected_modules = ['path_alias', 'system', 'user', 'standard', $database_module];
+    $expected_modules = ['path_alias', 'system', 'user', 'testing', $database_module];
     // If the database module has dependencies, they are expected too.
     $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($database_module);
     $database_module_dependencies = $database_module_extension->requires ? array_keys($database_module_extension->requires) : [];
