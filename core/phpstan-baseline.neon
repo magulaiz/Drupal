@@ -2120,7 +2120,7 @@ parameters:
 			count: 1
 			path: modules/pgsql/tests/src/Unit/SchemaTest.php
 
--
+		-
 			message: "#^@covers value \\\\Drupal\\\\phpass\\\\Password\\\\PhpassHashedPassword\\:\\:__construct references an invalid method\\.$#"
 			count: 1
 			path: modules/phpass/tests/src/Tests/LegacyPasswordHashingTest.php
