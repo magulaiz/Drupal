@@ -4,6 +4,7 @@ namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Tests term validation constraints.

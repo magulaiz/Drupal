@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
+use Drupal\taxonomy\TermInterface;
+
 /**
  * Tests the taxonomy term source with vocabulary filter.
  *
@@ -30,7 +32,7 @@ class TermSourceWithVocabularyFilterTest extends TermTest {
         'name' => 'name value 1 (name_field)',
         'description' => 'description value 1 (description_field)',
         'weight' => 0,
-        'parent' => [0],
+        'parent' => [TermInterface::ROOT_TERM_ID],
       ],
       [
         'tid' => 4,

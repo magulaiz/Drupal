@@ -430,8 +430,8 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
 
     $result = $query->execute()->fetchAll();
 
-    // If all the terms have the same parent, the parent can only be root (0).
-    if ((int) $result[0]->max_parent_id === 0) {
+    // If all the terms have the same parent, the parent can only be root (TermInterface::ROOT_TERM_ID).
+    if ((int) $result[0]->max_parent_id === TermInterface::ROOT_TERM_ID) {
       $this->vocabularyHierarchyType[$vid] = VocabularyInterface::HIERARCHY_DISABLED;
     }
     // If no term has a delta higher than 0, no term has multiple parents.

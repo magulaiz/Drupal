@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
@@ -78,15 +79,15 @@ class TermTest extends MigrateSqlSourceTestBase {
     $tests[0]['source_data']['term_hierarchy'] = [
       [
         'tid' => 1,
-        'parent' => 0,
+        'parent' => TermInterface::ROOT_TERM_ID,
       ],
       [
         'tid' => 2,
-        'parent' => 0,
+        'parent' => TermInterface::ROOT_TERM_ID,
       ],
       [
         'tid' => 3,
-        'parent' => 0,
+        'parent' => TermInterface::ROOT_TERM_ID,
       ],
       [
         'tid' => 4,
@@ -106,7 +107,7 @@ class TermTest extends MigrateSqlSourceTestBase {
       ],
       [
         'tid' => 7,
-        'parent' => 0,
+        'parent' => TermInterface::ROOT_TERM_ID,
       ],
     ];
 
@@ -118,7 +119,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 1',
         'description' => 'description value 1',
         'weight' => 0,
-        'parent' => [0],
+        'parent' => [TermInterface::ROOT_TERM_ID],
       ],
       [
         'tid' => 2,
@@ -126,7 +127,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 2',
         'description' => 'description value 2',
         'weight' => 0,
-        'parent' => [0],
+        'parent' => [TermInterface::ROOT_TERM_ID],
       ],
       [
         'tid' => 3,
@@ -134,7 +135,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 3',
         'description' => 'description value 3',
         'weight' => 0,
-        'parent' => [0],
+        'parent' => [TermInterface::ROOT_TERM_ID],
       ],
       [
         'tid' => 4,
@@ -166,7 +167,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 7',
         'description' => 'description value 7',
         'weight' => 0,
-        'parent' => [0],
+        'parent' => [TermInterface::ROOT_TERM_ID],
       ],
     ];
 
@@ -183,7 +184,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 1',
         'description' => 'description value 1',
         'weight' => 0,
-        'parent' => [0],
+        'parent' => [TermInterface::ROOT_TERM_ID],
       ],
       [
         'tid' => 4,
