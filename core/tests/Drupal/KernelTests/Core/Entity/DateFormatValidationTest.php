@@ -27,7 +27,7 @@ class DateFormatValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
-  public function testPatternCannotBeEmpty(): void {
+  public function testPatternCannotBeBlank(): void {
     $this->entity->setPattern('');
     $this->assertValidationErrors([
       'pattern' => 'This value should not be blank.',

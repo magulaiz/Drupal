@@ -548,6 +548,8 @@ core.date_format.*:
     pattern:
       type: core_date_format_pattern.[%parent.locked]
       label: 'PHP date format'
+  constraints:
+    FullyValidatable: ~
 
 # Unlocked date formats should use the translatable type.
 core_date_format_pattern.0:
