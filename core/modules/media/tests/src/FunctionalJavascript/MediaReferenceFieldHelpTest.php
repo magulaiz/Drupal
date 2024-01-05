@@ -22,6 +22,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
   protected static $modules = [
     'media',
     'media_library',
+    'block',
   ];
 
   /**
@@ -30,13 +31,17 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
    * @see media_form_field_ui_field_storage_add_form_alter()
    */
   public function testFieldCreationHelpText() {
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->getSession()->resizeWindow(1200, 800);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
     $type = $this->drupalCreateContentType([
       'type' => 'foo',
     ]);
-    $this->drupalGet("/admin/structure/types/manage/{$type->id()}/fields/add-field");
+    $this->drupalGet("/admin/structure/types/manage/{$type->id()}/fields");
+    $this->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $field_groups = [
       'File upload',
@@ -48,15 +53,19 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
     // Choose a boolean field, none of the description containers should be
     // visible.
     $page->clickLink('Boolean');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains($help_text);
     $page->pressButton('Back');
+    $assert_session->assertWaitOnAjaxRequest();
 
     // Select each of the Reference, File upload field groups and verify their
     // descriptions are now visible and match the expected text.
     foreach ($field_groups as $field_group) {
       $this->clickLink($field_group);
+      $assert_session->assertWaitOnAjaxRequest();
       $assert_session->pageTextContains($help_text);
-      $page->pressButton('Back');
+      $this->assertSession()->buttonExists('Back')->press();
+      $assert_session->assertWaitOnAjaxRequest();
     }
   }
 
