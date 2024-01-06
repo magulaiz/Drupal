@@ -16,6 +16,7 @@ use GuzzleHttp\RequestOptions;
  * Test image upload.
  *
  * @group ckeditor5
+ * @group legacy
  * @internal
  */
 class ImageUploadTest extends BrowserTestBase {
@@ -59,6 +60,7 @@ class ImageUploadTest extends BrowserTestBase {
    * Tests using the file upload route with a disallowed extension.
    */
   public function testUploadFileExtension() {
+    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
@@ -85,6 +87,7 @@ class ImageUploadTest extends BrowserTestBase {
    * Tests using the file upload route with a file size larger than allowed.
    */
   public function testFileUploadLargerFileSize() {
+    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
@@ -119,6 +122,7 @@ class ImageUploadTest extends BrowserTestBase {
    * @see https://www.drupal.org/project/drupal/issues/3184974
    */
   public function testLockAfterFailedValidation() {
+    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,

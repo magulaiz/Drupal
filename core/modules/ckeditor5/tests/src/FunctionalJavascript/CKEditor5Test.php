@@ -623,8 +623,11 @@ JS;
 
   /**
    * Tests list plugin.
+   *
+   * @group legacy
    */
   public function testListPlugin() {
+    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'CKEditor 5 with list',
@@ -751,8 +754,11 @@ JS;
 
   /**
    * Ensures that HTML comments are preserved in CKEditor 5.
+   *
+   * @group legacy
    */
   public function testComments(): void {
+    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
