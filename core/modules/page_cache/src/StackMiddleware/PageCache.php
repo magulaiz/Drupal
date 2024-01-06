@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
+use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -280,7 +281,9 @@ class PageCache implements HttpKernelInterface {
 
     if ($expire === Cache::PERMANENT || $expire > $request_time) {
       $tags = $response->getCacheableMetadata()->getCacheTags();
-      $response->setAttachments([]);
+      if ($response instanceof AttachmentsInterface) {
+        $response->setAttachments([]);
+      }
       $this->set($request, $response, $expire, $tags);
     }
 
