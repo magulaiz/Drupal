@@ -5,13 +5,12 @@
  * Test module for Filter module hooks and functions not used in core.
  */
 
-use Drupal\filter\FilterFormatInterface;
 use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function filter_test_filter_format_insert(FilterFormatInterface $format) {
+function filter_test_filter_format_insert($format) {
   \Drupal::messenger()->addStatus('hook_filter_format_insert invoked.');
 
   if ($format->id() === 'filter_test') {
