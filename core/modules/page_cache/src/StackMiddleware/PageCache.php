@@ -280,6 +280,7 @@ class PageCache implements HttpKernelInterface {
 
     if ($expire === Cache::PERMANENT || $expire > $request_time) {
       $tags = $response->getCacheableMetadata()->getCacheTags();
+      $response->setAttachments([]);
       $this->set($request, $response, $expire, $tags);
     }
 
