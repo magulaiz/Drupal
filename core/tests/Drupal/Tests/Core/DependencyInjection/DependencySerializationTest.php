@@ -83,6 +83,7 @@ abstract class DependencySerializationTestDummyBase implements ContainerAwareInt
  * Defines a test class which has a single service as dependency.
  */
 class DependencySerializationTestDummy extends DependencySerializationTestDummyBase {
+
   /**
    * A test service.
    *
