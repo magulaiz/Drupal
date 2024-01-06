@@ -20,76 +20,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class ConfigImporterFactory {
 
   /**
-   * The config manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The event dispatcher service.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The database lock object.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The module installer service.
-   *
-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
-   */
-  protected $moduleInstaller;
-
-  /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $stringTranslation;
-
-  /**
-   * The module extension list service.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The theme extension list service.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
-   */
-  protected $themeExtensionList;
-
-  /**
    * Creates a ConfigImporterFactory instance.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
@@ -114,28 +44,17 @@ final class ConfigImporterFactory {
    *   The theme extension list service.
    */
   public function __construct(
-    EventDispatcherInterface $event_dispatcher,
-    ConfigManagerInterface $config_manager,
-    LockBackendInterface $lock,
-    TypedConfigManagerInterface $typed_config_manager,
-    ModuleHandlerInterface $module_handler,
-    ModuleInstallerInterface $module_installer,
-    ThemeHandlerInterface $theme_handler,
-    TranslationManager $string_translation,
-    ModuleExtensionList $module_extension_list,
-    ThemeExtensionList $theme_extension_list
-  ) {
-    $this->eventDispatcher = $event_dispatcher;
-    $this->configManager = $config_manager;
-    $this->lock = $lock;
-    $this->typedConfigManager = $typed_config_manager;
-    $this->moduleHandler = $module_handler;
-    $this->moduleInstaller = $module_installer;
-    $this->themeHandler = $theme_handler;
-    $this->stringTranslation = $string_translation;
-    $this->moduleExtensionList = $module_extension_list;
-    $this->themeExtensionList = $theme_extension_list;
-  }
+    protected EventDispatcherInterface $eventDispatcher,
+    protected ConfigManagerInterface $configManager,
+    protected LockBackendInterface $lock,
+    protected TypedConfigManagerInterface $typedConfigManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ModuleInstallerInterface $moduleInstaller,
+    protected ThemeHandlerInterface $themeHandler,
+    protected TranslationManager $stringTranslation,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected ThemeExtensionList $themeExtensionList
+  ) { }
 
   /**
    * Creates a ConfigImporter instance.
