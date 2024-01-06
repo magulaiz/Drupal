@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
-use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -281,10 +280,11 @@ class PageCache implements HttpKernelInterface {
 
     if ($expire === Cache::PERMANENT || $expire > $request_time) {
       $tags = $response->getCacheableMetadata()->getCacheTags();
-      if ($response instanceof AttachmentsInterface) {
-        $response->setAttachments([]);
-      }
-      $this->set($request, $response, $expire, $tags);
+      // Create a minimal response object with only the content, status code,
+      // and headers. This avoid storing unnecessary information like
+      // cacheability and attachments which are not needed on cache hits.
+      $cached_response = new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
+      $this->set($request, $cached_response, $expire, $tags);
     }
 
     return TRUE;
