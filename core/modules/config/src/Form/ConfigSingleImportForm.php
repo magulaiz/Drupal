@@ -52,7 +52,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *
    * @var \Drupal\Core\Config\ConfigImporterFactory
    */
-  protected $configImporterFactory;
+  protected ConfigImporterFactory $configImporterFactory;
 
   /**
    * If the config exists, this is that object. Otherwise, FALSE.

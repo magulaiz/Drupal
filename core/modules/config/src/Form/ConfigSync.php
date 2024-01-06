@@ -69,7 +69,7 @@ class ConfigSync extends FormBase {
    *
    * @var \Drupal\Core\Config\ConfigImporterFactory
    */
-  protected $configImporterFactory;
+  protected ConfigImporterFactory $configImporterFactory;
 
   /**
    * Constructs the object.
