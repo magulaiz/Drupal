@@ -274,8 +274,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         $form_state->setErrorByName('import', $this->t('There are no changes to import.'));
       }
       else {
-        // DI!
-        $config_importer = \Drupal::service('config.importer.factory')->createConfigImporter($storage_comparer);
+        $config_importer = $this->configImporterFactory->createConfigImporter($storage_comparer);
 
         try {
           $config_importer->validate();
