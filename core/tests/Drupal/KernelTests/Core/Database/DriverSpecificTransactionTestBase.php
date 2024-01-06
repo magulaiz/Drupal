@@ -431,7 +431,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     }
     else {
-      // $this->assertFalse($this->connection->inTransaction());
+      $this->assertFalse($this->connection->inTransaction());
     }
 
     $savepoint->commit();
@@ -442,7 +442,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
     }
     else {
-      // $this->assertFalse($this->connection->inTransaction());
+      $this->assertFalse($this->connection->inTransaction());
     }
 
     $transaction->commit();
@@ -452,7 +452,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertFalse($this->connection->inTransaction());
     }
     else {
-      // $this->assertFalse($this->connection->inTransaction());
+      $this->assertFalse($this->connection->inTransaction());
     }
   }
 
@@ -483,36 +483,35 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    */
   public function testTransactionWithDdlStatement(): void {
     // First, test that a commit works normally, even with DDL statements.
-    $transaction = $this->createRootTransaction('', FALSE);
-    $this->insertRow('row');
+    $transaction = $this->createRootTransaction();
     $this->executeDDLStatement();
-    $transaction->commit();
-    $this->assertRowPresent('row');
+    unset($transaction);
+    $this->assertRowPresent('David');
 
     // Even in different order.
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
     $this->executeDDLStatement();
     $this->insertRow('row');
-    $transaction->commit();
+    unset($transaction);
     $this->assertRowPresent('row');
 
     // Even with stacking.
     $this->cleanUp();
-    $transaction = $this->createRootTransaction('', FALSE);
-    $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
+    $transaction = $this->createRootTransaction();
+    $transaction2 = $this->createFirstSavepointTransaction();
     $this->executeDDLStatement();
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
-    $transaction3->commit();
+    unset($transaction3);
     unset($transaction);
     $this->assertRowPresent('row');
 
     // A transaction after a DDL statement should still work the same.
     $this->cleanUp();
-    $transaction = $this->createRootTransaction('', FALSE);
-    $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
+    $transaction = $this->createRootTransaction();
+    $transaction2 = $this->createFirstSavepointTransaction();
     $this->executeDDLStatement();
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
@@ -527,22 +526,21 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // For database servers that support transactional DDL, a rollback
       // of a transaction including DDL statements should be possible.
       $this->cleanUp();
-      $transaction = $this->createRootTransaction('', FALSE);
-      $this->insertRow('row');
+      $transaction = $this->createRootTransaction();
       $this->executeDDLStatement();
       $transaction->rollBack();
       unset($transaction);
-      $this->assertRowAbsent('row');
+      $this->assertRowAbsent('David');
 
       // Including with stacking.
       $this->cleanUp();
-      $transaction = $this->createRootTransaction('', FALSE);
-      $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
+      $transaction = $this->createRootTransaction();
+      $transaction2 = $this->createFirstSavepointTransaction();
       $this->executeDDLStatement();
-      $transaction2->commit();
+      unset($transaction2);
       $transaction3 = $this->connection->startTransaction();
       $this->insertRow('row');
-      $transaction3->commit();
+      unset($transaction3);
       $transaction->rollBack();
       unset($transaction);
       $this->assertRowAbsent('row');
@@ -551,16 +549,16 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // For database servers that do not support transactional DDL,
       // the DDL statement should commit the transaction stack.
       $this->cleanUp();
-      $transaction = $this->createRootTransaction('', FALSE);
+      $transaction = $this->createRootTransaction();
       $reflectionMethod = new \ReflectionMethod(get_class($this->connection->transactionManager()), 'getConnectionTransactionState');
       $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
       $this->assertEquals(ClientConnectionTransactionState::Active, $reflectionMethod->invoke($this->connection->transactionManager()));
-      $this->insertRow('row');
 
       $this->executeDDLStatement();
+
       $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
       $this->assertEquals(ClientConnectionTransactionState::Voided, $reflectionMethod->invoke($this->connection->transactionManager()));
-      $this->assertRowPresent('row');
+      $this->assertRowPresent('David');
 
       // Try to rollback the root transaction. Since the DDL already committed
       // it, it should fail.
@@ -571,7 +569,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       catch (TransactionOutOfOrderException $e) {
         $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty/", $e->getMessage());
         unset($transaction);
-        $this->assertRowPresent('row');
+        $this->assertRowPresent('David');
       }
     }
   }

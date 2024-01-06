@@ -289,6 +289,12 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * {@inheritdoc}
    */
   public function unpile(string $name, string $id): void {
+    // If this was voided, cannot commit again.
+    // @todo ONLY IF VOIDED, NOT EXPLICITLY COMMITTED OR ROLLED BACK.
+    if (isset($this->voidedItems[$id]) && $this->voidedItems[$id]->name === $name) {
+      return;
+    }
+
     // If there is no $id to commit, or if $id does not correspond to the one
     // in the stack for that $name, the commit is out of order.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
