@@ -185,8 +185,8 @@ class ViewExecutableTest extends UnitTestCase {
     $container->set('plugin.manager.views.display', $display_plugin_manager);
     \Drupal::setContainer($container);
 
-    $executable = new ViewExecutable($this->view, $this->user, $this->viewsData, $this->routeProvider);
     $this->expectDeprecation('Calling Drupal\views\ViewExecutable::__construct without the $display_plugin_manager argument is deprecated in drupal:10.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/341034');
+    $executable = new ViewExecutable($this->view, $this->user, $this->viewsData, $this->routeProvider);
   }
 
   /**

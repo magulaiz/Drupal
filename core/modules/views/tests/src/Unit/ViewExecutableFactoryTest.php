@@ -96,8 +96,8 @@ class ViewExecutableFactoryTest extends UnitTestCase {
     $container->set('plugin.manager.views.display', $display_plugin_manager);
     \Drupal::setContainer($container);
 
-    $viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData, $this->routeProvider);
     $this->expectDeprecation('Calling Drupal\views\ViewExecutableFactory::__construct without the $display_plugin_manager argument is deprecated in drupal:10.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3410349');
+    $viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData, $this->routeProvider);
 
   }
 
