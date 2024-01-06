@@ -71,8 +71,11 @@ class CKEditor5Test extends CKEditor5TestBase {
 
   /**
    * Ensures that attribute values are encoded.
+   *
+   * @group legacy
    */
   public function testAttributeEncoding() {
+    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
