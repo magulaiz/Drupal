@@ -264,7 +264,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('Syd');
 
     // Commit root. Corresponds to 'COMMIT' on the database.
-    $transaction->commit();
+    unset($transaction);
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
     $this->assertRowPresent('Syd');
@@ -306,7 +306,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
 
     // Commit root. Corresponds to 'COMMIT' on the database.
-    $transaction->commit();
+    unset($transaction);
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
     $this->assertRowPresent('Syd');
@@ -425,7 +425,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->executeDDLStatement();
 
     // For database servers that do not support transactional DDL, the entire
-    // client transaction was autocommitted.
+    // client transaction was auto-committed.
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     if ($this->connection->supportsTransactionalDDL()) {
@@ -437,7 +437,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     }
 
     // For database servers that do not support transactional DDL, we can not
-    // commit something that was autocommitted already.
+    // commit something that was auto-committed already.
     if ($this->connection->supportsTransactionalDDL()) {
       $savepoint->commit();
     }
@@ -452,7 +452,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     }
 
     // For database servers that do not support transactional DDL, we can not
-    // commit something that was autocommitted already.
+    // commit something that was auto-committed already.
     if ($this->connection->supportsTransactionalDDL()) {
       $transaction->commit();
     }
@@ -989,6 +989,75 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->expectDeprecation('Drupal\\Core\\Database\\Connection::popCommittableTransactions() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
     $this->expectDeprecation('Drupal\\Core\\Database\\Connection::doCommit() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
     $this->connection->popTransaction('foo');
+  }
+
+  /**
+   * Tests savepoint transaction rollback.
+   */
+  public function testRollbackSavepointExplicitCommit(): void {
+    $transaction = $this->createRootTransaction();
+    $savepoint = $this->createFirstSavepointTransaction();
+
+    // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
+    // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
+    $savepoint->rollBack();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Syd');
+
+    // Commit root. Corresponds to 'COMMIT' on the database.
+    $transaction->commit();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertRowPresent('Syd');
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+  }
+
+  /**
+   * Tests savepoint transaction commit after rollback.
+   */
+  public function testCommitAfterRollbackSameSavepointExplicitCommit(): void {
+    $transaction = $this->createRootTransaction();
+    $savepoint = $this->createFirstSavepointTransaction();
+
+    // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
+    // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
+    $savepoint->rollBack();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Syd');
+
+    // Try committing savepoint. Should fail since it was released already.
+    try {
+      $savepoint->commit();
+      $this->fail('Expected TransactionOutOfOrderException was not thrown');
+    }
+    catch (\Exception $e) {
+      $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+      $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction/", $e->getMessage());
+    }
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertRowPresent('Syd');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Commit root. Corresponds to 'COMMIT' on the database.
+    $transaction->commit();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertRowPresent('Syd');
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
   }
 
 }
