@@ -1230,7 +1230,14 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $transaction = $this->createRootTransaction();
       $this->executeDDLStatement();
       $transaction->rollBack();
-      $transaction->commit();
+      // Cannot commit a transaction just rolled back.
+      try {
+        $transaction->commit();
+        $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
+      }
+      catch (TransactionOutOfOrderException $e) {
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+      }
       $this->assertRowAbsent('David');
 
       // Including with stacking.
@@ -1243,7 +1250,14 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('row');
       $transaction3->commit();
       $transaction->rollBack();
-      $transaction->commit();
+      // Cannot commit a transaction just rolled back.
+      try {
+        $transaction->commit();
+        $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
+      }
+      catch (TransactionOutOfOrderException $e) {
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+      }
       $this->assertRowAbsent('row');
     }
     else {
@@ -1277,7 +1291,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
         $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
       }
       catch (TransactionOutOfOrderException $e) {
-        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
         $this->assertRowPresent('David');
       }
       // There should be no problem to let the Transaction object go out of
