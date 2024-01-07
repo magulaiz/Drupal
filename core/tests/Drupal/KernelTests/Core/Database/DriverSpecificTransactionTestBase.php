@@ -1210,6 +1210,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
       if ($this->connection->supportsTransactionalDDL()) {
         $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction/", $e->getMessage());
+      }
       else {
         $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
       }
