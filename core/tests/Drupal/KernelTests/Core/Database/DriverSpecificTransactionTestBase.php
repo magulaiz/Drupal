@@ -416,7 +416,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * Tests commit does not fail when committing after DDL.
+   * Tests commit after DDL.
    */
   public function testCommitAfterDdl(): void {
     $transaction = $this->createRootTransaction();
@@ -424,6 +424,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     $this->executeDDLStatement();
 
+    // For database servers that do not support transactional DDL, the entire
+    // client transaction was autocommitted.
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     if ($this->connection->supportsTransactionalDDL()) {
@@ -434,7 +436,11 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertFalse($this->connection->inTransaction());
     }
 
-    $savepoint->commit();
+    // For database servers that do not support transactional DDL, we can not
+    // commit something that was autocommitted already.
+    if ($this->connection->supportsTransactionalDDL()) {
+      $savepoint->commit();
+    }
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     if ($this->connection->supportsTransactionalDDL()) {
@@ -445,15 +451,14 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->assertFalse($this->connection->inTransaction());
     }
 
-    $transaction->commit();
+    // For database servers that do not support transactional DDL, we can not
+    // commit something that was autocommitted already.
+    if ($this->connection->supportsTransactionalDDL()) {
+      $transaction->commit();
+    }
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
-    if ($this->connection->supportsTransactionalDDL()) {
-      $this->assertFalse($this->connection->inTransaction());
-    }
-    else {
-      $this->assertFalse($this->connection->inTransaction());
-    }
+    $this->assertFalse($this->connection->inTransaction());
   }
 
   /**
