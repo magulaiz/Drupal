@@ -581,7 +581,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
         $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
       }
       catch (TransactionOutOfOrderException $e) {
-        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty/", $e->getMessage());
+        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
         unset($transaction);
         $this->assertRowPresent('David');
       }
@@ -1091,31 +1091,90 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests transactions mixed with DDL statements.
    */
   public function testTransactionWithDdlStatementExplicitCommit(): void {
-    // First, test that a commit works normally, even with DDL statements.
+    // A DDL statement auto-commits the transaction in database that do not
+    // support transactional DDL.
     $transaction = $this->createRootTransaction();
     $this->executeDDLStatement();
-    $transaction->commit();
+    if ($this->connection->supportsTransactionalDDL()) {
+      $transaction->commit();
+    }
+    else {
+      try {
+        $transaction->commit();
+        $this->fail('Expected TransactionOutOfOrderException was not thrown');
+      }
+      catch (\Exception $e) {
+        $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+      }
+    }
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertRowPresent('David');
 
-    // Even in different order.
+    // INSERT after the DDL.
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
     $this->executeDDLStatement();
     $this->insertRow('row');
-    $transaction->commit();
+    if ($this->connection->supportsTransactionalDDL()) {
+      $transaction->commit();
+    }
+    else {
+      try {
+        $transaction->commit();
+        $this->fail('Expected TransactionOutOfOrderException was not thrown');
+      }
+      catch (\Exception $e) {
+        $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+      }
+    }
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertRowPresent('row');
 
-    // Even with stacking.
+    // Execute DDL when savepoint active, commit, open a new transaction,
+    // commit it, commit initial transaction.
     $this->cleanUp();
     $transaction = $this->createRootTransaction();
     $transaction2 = $this->createFirstSavepointTransaction();
     $this->executeDDLStatement();
-    $transaction2->commit();
+    if ($this->connection->supportsTransactionalDDL()) {
+      $transaction2->commit();
+      $this->assertTrue($this->connection->inTransaction());
+      $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+    }
+    else {
+      try {
+        $transaction2->commit();
+        $this->fail('Expected TransactionOutOfOrderException was not thrown');
+      }
+      catch (\Exception $e) {
+        $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+      }
+      $this->assertFalse($this->connection->inTransaction());
+      $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+    }
     $transaction3 = $this->connection->startTransaction();
-    $this->insertRow('row');
     $transaction3->commit();
-    $transaction->commit();
-    $this->assertRowPresent('row');
+    if ($this->connection->supportsTransactionalDDL()) {
+      $transaction->commit();
+      $this->assertFalse($this->connection->inTransaction());
+      $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+    }
+    else {
+      try {
+        $transaction->commit();
+        $this->fail('Expected TransactionOutOfOrderException was not thrown');
+      }
+      catch (\Exception $e) {
+        $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+        $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+      }
+    }
+    $this->assertRowPresent('David');
 
     // A transaction after a DDL statement should still work the same.
     $this->cleanUp();
@@ -1176,7 +1235,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
         $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
       }
       catch (TransactionOutOfOrderException $e) {
-        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty/", $e->getMessage());
+        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
         $transaction->commit();
         $this->assertRowPresent('David');
       }
@@ -1209,7 +1268,16 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('inner');
     // Now rollback the inner transaction.
     $transaction2->rollBack();
-    $transaction2->commit();
+    // Try committing the transaction. Should fail since it was rolled back
+    // already.
+    try {
+      $transaction2->commit();
+      $this->fail('Expected TransactionOutOfOrderException was not thrown');
+    }
+    catch (\Exception $e) {
+      $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+      $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction/", $e->getMessage());
+    }
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
     $this->insertRow('outer-after-inner-rollback');
@@ -1331,8 +1399,11 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       ])
       ->execute();
 
-    // Commit the transaction.
-    $transaction->commit();
+    // Commit the transaction, but only if transactional DDL is supported.
+    // Otherwise, it would already have auto-committed.
+    if ($this->connection->supportsTransactionalDDL()) {
+      $transaction->commit();
+    }
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
     $this->assertEquals('24', $saved_age);
@@ -1398,10 +1469,16 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
-    // Unpile the inner (savepoint) Transaction object, it should be a no-op
-    // anyway given it was dropped by the database already, and removed from
-    // our transaction stack.
-    $savepoint2->commit();
+    // Commit the inner (savepoint) Transaction object, it should fail given
+    // the main transaction was committed already.
+    try {
+      $savepoint2->commit();
+      $this->fail('Expected TransactionOutOfOrderException was not thrown');
+    }
+    catch (\Exception $e) {
+      $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+      $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+    }
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
@@ -1425,14 +1502,21 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests post-transaction callback executes after transaction rollback.
    */
   public function testRootTransactionEndCallbackCalledOnRollbackExplicitCommit(): void {
-    $transaction = $this->createRootTransaction('', FALSE);
+    $transaction = $this->createRootTransaction();
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
-    $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
     $transaction->rollBack();
     $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
-    $transaction->commit();
-    $this->assertRowAbsent('row');
+    // Try committing transaction. Should fail since it was rolled back already.
+    try {
+      $transaction->commit();
+      $this->fail('Expected TransactionOutOfOrderException was not thrown');
+    }
+    catch (\Exception $e) {
+      $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+      $this->assertMatchesRegularExpression("/^Error attempting commit of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+    }
+    $this->assertRowAbsent('David');
     // The row insert should be missing since the client rollback occurs after
     // the processing of the callbacks.
     $this->assertRowAbsent('rtcRollback');
