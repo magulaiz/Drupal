@@ -1269,9 +1269,20 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       }
       catch (TransactionOutOfOrderException $e) {
         $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
-        $transaction->commit();
         $this->assertRowPresent('David');
       }
+      // Same for a commit.
+      try {
+        $transaction->commit();
+        $this->fail('A TransactionOutOfOrderException was expected, but it was not thrown.');
+      }
+      catch (TransactionOutOfOrderException $e) {
+        $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .* empty /", $e->getMessage());
+        $this->assertRowPresent('David');
+      }
+      // There should be no problem to let the Transaction object go out of
+      // scope.
+      unset($transaction);
     }
   }
 
