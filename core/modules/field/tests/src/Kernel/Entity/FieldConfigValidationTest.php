@@ -87,6 +87,44 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testImmutableProperties(array $valid_values = []): void {
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* field_type won't match the config schema for the
+    // settings of the *new* field_type.
+    $this->entity->set('settings', []);
+    parent::testImmutableProperties($valid_values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyKeysMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyKeysMissing([
+      'dependencies' => [
+        // @see ::testInvalidDependencies()
+        // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
+        '' => 'This field requires a field storage.',
+      ],
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyValuesMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyValuesMissing([
+      'dependencies' => [
+        // @see ::testInvalidDependencies()
+        // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
+        '' => 'This field requires a field storage.',
+      ],
+    ]);
+  }
+
+  /**
    * Tests that the field type plugin's existence is validated.
    */
   public function testFieldTypePluginIsValidated(): void {

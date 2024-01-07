@@ -28,6 +28,18 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testImmutableProperties(array $valid_values = []): void {
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* source won't match the config schema for the
+    // settings of the *new* source.
+    $this->entity->set('source_configuration', []);
+    parent::testImmutableProperties($valid_values);
+  }
+
+  /**
    * Tests that the media source plugin's existence is validated.
    */
   public function testMediaSourceIsValidated(): void {

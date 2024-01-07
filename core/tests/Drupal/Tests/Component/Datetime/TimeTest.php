@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Datetime;
 
 use Drupal\Component\Datetime\Time;
@@ -130,7 +132,7 @@ namespace Drupal\Component\Datetime;
 /**
  * Shadow time() system call.
  *
- * @returns int
+ * @return int
  */
 function time() {
   return 12345678;
@@ -139,8 +141,8 @@ function time() {
 /**
  * Shadow microtime system call.
  *
- * @returns float
+ * @return float
  */
-function microtime() {
+function microtime(bool $as_float = FALSE) {
   return 1234567.89;
 }

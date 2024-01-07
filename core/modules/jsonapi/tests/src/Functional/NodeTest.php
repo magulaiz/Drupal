@@ -20,6 +20,7 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Node" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class NodeTest extends ResourceTestBase {
 
@@ -176,7 +177,6 @@ class NodeTest extends ResourceTestBase {
             'langcode' => 'en',
           ],
           'promote' => TRUE,
-          'revision_log' => NULL,
           'revision_timestamp' => '1973-11-29T21:33:09+00:00',
           // @todo Attempt to remove this in https://www.drupal.org/project/drupal/issues/2933518.
           'revision_translation_affected' => TRUE,
@@ -251,7 +251,7 @@ class NodeTest extends ResourceTestBase {
       'data' => [
         'type' => 'node--camelids',
         'attributes' => [
-          'title' => 'Dramallama',
+          'title' => 'Drama llama',
         ],
       ],
     ];
