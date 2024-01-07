@@ -106,21 +106,6 @@ class Transaction {
   }
 
   /**
-   * Commits the transaction.
-   *
-   * Depending on the state of the transaction stack, this leads to a COMMIT
-   * operation (if this transaction is a root one), or to a RELEASE SAVEPOINT
-   * operation (if this transaction is a savepoint one).
-   */
-  public function commit(): void {
-    if (!$this->connection->transactionManager()) {
-      @trigger_error('Calling ' . __METHOD__ . '() with no TransactionManager available is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Ensure the database driver implements a TransactionManager. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
-      return;
-    }
-    $this->connection->transactionManager()->unpile($this->name, $this->id);
-  }
-
-  /**
    * Rolls back the transaction.
    *
    * Depending on the state of the transaction stack, this leads to a ROLLBACK
@@ -139,6 +124,21 @@ class Transaction {
     // @phpstan-ignore-next-line
     $this->connection->rollBack($this->name);
     // End of BC layer.
+  }
+
+  /**
+   * Commits the transaction.
+   *
+   * Depending on the state of the transaction stack, this leads to a COMMIT
+   * operation (if this transaction is a root one), or to a RELEASE SAVEPOINT
+   * operation (if this transaction is a savepoint one).
+   */
+  public function commit(): void {
+    if (!$this->connection->transactionManager()) {
+      @trigger_error('Calling ' . __METHOD__ . '() with no TransactionManager available is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Ensure the database driver implements a TransactionManager. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+      return;
+    }
+    $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 
 }
