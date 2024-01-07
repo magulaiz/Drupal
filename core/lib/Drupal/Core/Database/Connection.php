@@ -1895,12 +1895,12 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Transaction
    *
    * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
-   *   commit the connection, void the Transaction objects instead.
+   *   commit the connection, commit the Transaction objects instead.
    *
    * @see https://www.drupal.org/node/3381002
    */
   public function commit() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, void the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, commit the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     throw new TransactionExplicitCommitNotAllowedException();
   }
 

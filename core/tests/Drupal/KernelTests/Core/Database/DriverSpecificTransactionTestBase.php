@@ -660,7 +660,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests transaction stacking, commit, and rollback.
    *
    * @todo change this test to legacy once commit-on-destruct is deprecated.
-   *   Replaced by ::ttestTransactionStackingExplicitCommit().
+   *   Replaced by ::testTransactionStackingExplicitCommit().
    */
   public function testTransactionStacking(): void {
     // Standard case: pop the inner transaction before the outer transaction.
@@ -962,9 +962,6 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
   /**
    * Tests TransactionManager failure.
-   *
-   * @todo change this test to legacy once commit-on-destruct is deprecated.
-   *   Replaced by ::testTransactionManagerFailureOnPendingStackItemsExplicitCommit().
    */
   public function testTransactionManagerFailureOnPendingStackItems(): void {
     $connectionInfo = Database::getConnectionInfo();
@@ -1002,7 +999,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->expectDeprecation('Drupal\\Core\\Database\\Connection::addRootTransactionEndCallback() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface::addPostTransactionCallback() instead. See https://www.drupal.org/node/3381002');
     $this->connection->addRootTransactionEndCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::commit() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, void the Transaction objects instead. See https://www.drupal.org/node/3381002');
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::commit() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, commit the Transaction objects instead. See https://www.drupal.org/node/3381002');
     try {
       $this->connection->commit();
     }
@@ -1439,24 +1436,6 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // The row insert should be missing since the client rollback occurs after
     // the processing of the callbacks.
     $this->assertRowAbsent('rtcRollback');
-  }
-
-  /**
-   * Tests TransactionManager failure.
-   */
-  public function testTransactionManagerFailureOnPendingStackItemsExplicitCommit(): void {
-    $connectionInfo = Database::getConnectionInfo();
-    Database::addConnectionInfo('default', 'test_fail', $connectionInfo['default']);
-    $testConnection = Database::getConnection('test_fail');
-
-    // Add a fake item to the stack.
-    $reflectionMethod = new \ReflectionMethod(get_class($testConnection->transactionManager()), 'addStackItem');
-    $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Savepoint));
-
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
-    $testConnection->commit();
-    Database::closeConnection('test_fail');
   }
 
 }
