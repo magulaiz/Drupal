@@ -160,7 +160,7 @@ class IncludeResolver {
         }
       }
       foreach ($references as $target_type_and_rev => $ids) {
-        list($target_type, $revision_type) = explode(':', $target_type_and_rev);
+        [$target_type, $revision_type] = explode(':', $target_type_and_rev) + [1 => NULL];
         $entity_storage = $this->entityTypeManager->getStorage($target_type);
         $targeted_entities = ($revision_type === 'revision_ids')
           ? $entity_storage->loadMultipleRevisions($ids)
