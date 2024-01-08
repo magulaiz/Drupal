@@ -445,7 +445,7 @@ function template_preprocess_username(&$variables) {
  * @param \Drupal\user\UserInterface $account
  *   The account to log in.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
  *    Drupal\user\UserSessionHandler::login() instead.
  *
  * @see https://www.drupal.org/node/3379194
@@ -1216,13 +1216,13 @@ function user_toolbar() {
 /**
  * Logs the current user out.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
  *   Drupal\user\UserSessionHandler::logout() instead.
  *
  * @see https://www.drupal.org/node/3379194
  */
 function user_logout() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionHandler::logout() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionHandler::logout() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
   \Drupal::service('user.session_handler')->logout();
 }
 
