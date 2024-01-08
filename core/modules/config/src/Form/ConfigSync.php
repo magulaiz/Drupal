@@ -135,7 +135,7 @@ class ConfigSync extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs the object.
@@ -443,8 +443,16 @@ class ConfigSync extends FormBase {
 
   /**
    * Helper function to get Config name url param.
+   *
+   * @param string $config_type
+   *   The config type.
+   * @param string $config_name
+   *   The config name.
+   *
+   * @return string
+   *   Returns the config name URL parameter.
    */
-  public function getConfigNameUrlParam($config_type, $config_name) {
+  public function getConfigNameUrlParam(string $config_type, string $config_name) {
 
     // Initialize config name url param.
     $config_name_url_param = $config_name;

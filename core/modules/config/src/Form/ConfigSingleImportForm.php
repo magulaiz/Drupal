@@ -138,7 +138,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
-  protected $syncStorage;
+  protected StorageInterface $syncStorage;
 
   /**
    * Constructs a new ConfigSingleImportForm.
@@ -149,8 +149,6 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *   The config storage.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Config\StorageInterface $sync_storage
-   *   The sync storage.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher used to notify subscribers of config import events.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
@@ -169,16 +167,13 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *   The module extension list.
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
+   * @param \Drupal\Core\Config\StorageInterface $sync_storage
+   *   The sync storage.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, StorageInterface $sync_storage = NULL, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL, StorageInterface $sync_storage = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configStorage = $config_storage;
     $this->renderer = $renderer;
-    if ($sync_storage === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $sync_storage argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3412290', E_USER_DEPRECATED);
-      $sync_storage = \Drupal::service('config.storage.sync');
-    }
-    $this->syncStorage = $sync_storage;
 
     // Services necessary for \Drupal\Core\Config\ConfigImporter.
     $this->eventDispatcher = $event_dispatcher;
@@ -194,6 +189,12 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $extension_list_theme = \Drupal::service('extension.list.theme');
     }
     $this->themeExtensionList = $extension_list_theme;
+    // Service for getting staged configuration.
+    if ($sync_storage === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $sync_storage argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3412290', E_USER_DEPRECATED);
+      $sync_storage = \Drupal::service('config.storage.sync');
+    }
+    $this->syncStorage = $sync_storage;
   }
 
   /**
@@ -204,7 +205,6 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $container->get('entity_type.manager'),
       $container->get('config.storage'),
       $container->get('renderer'),
-      $container->get('config.storage.sync'),
       $container->get('event_dispatcher'),
       $container->get('config.manager'),
       $container->get('lock.persistent'),
@@ -213,7 +213,8 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $container->get('module_installer'),
       $container->get('theme_handler'),
       $container->get('extension.list.module'),
-      $container->get('extension.list.theme')
+      $container->get('extension.list.theme'),
+      $container->get('config.storage.sync')
     );
   }
 
@@ -309,7 +310,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     // Then need to update import text area,
     // with config data.
     if ($config_type && $config_name) {
-      $form['import']['#value'] = $this->updateImport($config_type, $config_name);
+      $form['import']['#value'] = $this->getStagedConfigByName($config_type, $config_name);
     }
     $form['advanced'] = [
       '#type' => 'details',
@@ -330,9 +331,17 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   }
 
   /**
-   * Handles switching the import textarea.
+   * Helper function to get staged config by name.
+   *
+   * @param string $config_type
+   *   The config type.
+   * @param string $config_name
+   *   The config name.
+   *
+   * @return string
+   *   Returns the config data.
    */
-  public function updateImport($config_type, $config_name) {
+  protected function getStagedConfigByName(string $config_type, string $config_name) {
     // Determine the full config name for the selected config entity.
     if ($config_type !== 'system.simple') {
       // Get config type definition and append config prefix.
