@@ -16,7 +16,7 @@ class FieldLanguage extends EntityField {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  public function access(AccountInterface $account): bool {
     // No point in displaying the language field on monolingual sites,
     // as only one language value is available.
     return $this->languageManager->isMultilingual() && parent::access($account);

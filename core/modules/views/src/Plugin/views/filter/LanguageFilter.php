@@ -84,7 +84,7 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  public function access(AccountInterface $account): bool {
     return $this->languageManager->isMultilingual() && parent::access($account);
   }
 
