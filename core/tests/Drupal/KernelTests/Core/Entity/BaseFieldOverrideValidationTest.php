@@ -40,14 +40,17 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
     // settings from the *old* field_type won't match the config schema for the
     // settings of the *new* field_type.
     $this->entity->set('settings', []);
-    parent::testImmutableProperties($valid_values);
+    parent::testImmutableProperties(['field_type' => 'string']);
   }
 
   /**
    * Tests that the field type plugin's existence is validated.
    */
   public function testFieldTypePluginIsValidated(): void {
-    $this->entity->set('field_type', 'invalid');
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly chnage its field_type property to some invalid value.
+    $this->entity = $this->entity->createDuplicate()
+      ->set('field_type', 'invalid');
     $this->assertValidationErrors([
       'field_type' => "The 'invalid' plugin does not exist.",
     ]);
