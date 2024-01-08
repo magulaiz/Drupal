@@ -52,6 +52,12 @@ trait SchemaCheckTrait {
         'This value should not be blank.',
       ],
     ],
+    // @todo Fix taxonomy_settings migration in https://www.drupal.org/project/drupal/issues/3413126.
+    'taxonomy.settings' => [
+      '' => [
+        "'maintain_index_table' is a required key.",
+      ],
+    ],
   ];
 
   /**
