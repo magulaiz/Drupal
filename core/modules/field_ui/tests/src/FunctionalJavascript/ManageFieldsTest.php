@@ -306,6 +306,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $buttons->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
     $field_name = 'test_field_2';
+    $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', $field_name);
     $assert_session->pageTextNotContains('Choose an option below');
 
