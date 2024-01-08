@@ -120,9 +120,6 @@ class TextWithSummaryItem extends TextItemBase {
           [
             ':input[name="settings[required_summary]"]' => ['checked' => FALSE],
           ],
-          [
-            ':input[name="settings[display_summary]"]' => ['checked' => FALSE],
-          ],
         ],
       ],
     ];
