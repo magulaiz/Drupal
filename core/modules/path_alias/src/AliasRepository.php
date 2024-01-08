@@ -138,20 +138,29 @@ class AliasRepository implements AliasRepositoryInterface {
    *   that language it will search paths without language.
    */
   protected function addLanguageFallback(SelectInterface $query, $langcode) {
-    // Always get the language-specific alias before the language-neutral one,
-    // and always ensure those are candidates even if the language manager does
-    // not return them. For example 'de' is less than 'und' so the order needs
-    // to be ASC, while 'xx-lolspeak' is more than 'und' so the order needs to
-    // be DESC. Modules that extend the list of languages to fall back on by
-    // implementing hook_language_fallback_candidates_path_alias_alter() may
-    // also need to alter the ordering in the query, which they can do via
-    // hook_query_path_alias_language_fallback_alter().
-    $langcode_list = [$langcode => $langcode] + $this->languageManager->getFallbackCandidates([
-      'langcode' => $langcode,
-      'operation' => 'path_alias',
-    ]) + [LanguageInterface::LANGCODE_NOT_SPECIFIED => LanguageInterface::LANGCODE_NOT_SPECIFIED];
+    $is_multilingual = $this->languageManager->isMultilingual();
 
+    $langcode_list = [$langcode => $langcode];
     if ($langcode !== LanguageInterface::LANGCODE_NOT_SPECIFIED) {
+      // Always get the language-specific alias before the language-neutral one,
+      // and always ensure those are candidates even if the language manager
+      // does not return them. For example 'de' is less than 'und' so the order
+      // needs to be ASC, while 'xx-lolspeak' is more than 'und' so the order
+      // needs to be DESC.
+      if ($is_multilingual) {
+        // Modules that extend the list of languages to fall back on by
+        // implementing hook_language_fallback_candidates_path_alias_alter() may
+        // also need to alter the ordering in the query, which they can do via
+        // hook_query_path_alias_language_fallback_alter().
+        $fallback_candidates = $this->languageManager->getFallbackCandidates([
+          'langcode' => $langcode,
+          'operation' => 'path_alias',
+        ]);
+        $langcode_list += array_combine($fallback_candidates, $fallback_candidates);
+      }
+
+      $langcode_list += [LanguageInterface::LANGCODE_NOT_SPECIFIED => LanguageInterface::LANGCODE_NOT_SPECIFIED];
+
       if ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
         $query->orderBy('base_table.langcode', 'DESC');
       }
@@ -163,7 +172,7 @@ class AliasRepository implements AliasRepositoryInterface {
 
     // Only add a tag to facilitate altering the query when there are more
     // possible languages than the requested one and the standard fallback.
-    if (count($langcode_list) > 2) {
+    if ($is_multilingual && count($langcode_list) > 2) {
       $query->addTag('path_alias_language_fallback');
     }
   }
