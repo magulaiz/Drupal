@@ -95,9 +95,8 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     // settings from the *old* field_type won't match the config schema for the
     // settings of the *new* field_type.
     $this->entity->set('settings', []);
-    parent::testImmutableProperties([
-      'field_type' => 'string',
-    ]);
+    $valid_values['field_type'] = 'string';
+    parent::testImmutableProperties($valid_values);
   }
 
   /**
