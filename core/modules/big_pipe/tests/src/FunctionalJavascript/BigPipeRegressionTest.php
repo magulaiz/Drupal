@@ -82,7 +82,7 @@ JS;
     $this->assertTrue($this->container->get('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
 
     $this->drupalLogin($this->drupalCreateUser());
-    $messages_markup = '<div role="contentinfo" aria-label="Status message"';
+    $messages_markup = '<div role="region" aria-label="Status message"';
 
     $test_routes = [
       // Messages placeholder rendered first.

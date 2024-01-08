@@ -35,10 +35,10 @@
       <div{{ attributes
         .addClass(classes)
         .setAttribute('data-drupal-selector', 'messages')
-        .setAttribute('role', 'contentinfo')
+        .setAttribute('role', 'region')
         .setAttribute('aria-label', status_headings[type])
         }}>
-        <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert"{% endif %}>
+        <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert" {% elseif type == 'status' or type == 'warning' %} role="status"{% endif %}>
           {% if status_headings[type] %}
             <div class="messages__header">
             <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
