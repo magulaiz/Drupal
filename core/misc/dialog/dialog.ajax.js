@@ -253,7 +253,7 @@
     $element.on('click.dialog', '.dialog-cancel', (e, dialog) => {
       if (dialog && typeof dialog.close === 'function') {
         dialog.close('cancel');
-      }  
+      }
       e.preventDefault();
       e.stopPropagation();
     });
