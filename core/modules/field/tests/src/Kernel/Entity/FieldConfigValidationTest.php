@@ -95,7 +95,9 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     // settings from the *old* field_type won't match the config schema for the
     // settings of the *new* field_type.
     $this->entity->set('settings', []);
-    parent::testImmutableProperties($valid_values);
+    parent::testImmutableProperties([
+      'field_type' => 'string',
+    ]);
   }
 
   /**
@@ -128,9 +130,12 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    * Tests that the field type plugin's existence is validated.
    */
   public function testFieldTypePluginIsValidated(): void {
-    // We need to clear the current settings, or we will get validation errors
-    // because the old settings are not supported by the new field type.
-    $this->entity->set('settings', [])
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its immutable properties.
+    $this->entity = $this->entity->createDuplicate()
+      // We need to clear the current settings, or we will get validation errors
+      // because the old settings are not supported by the new field type.
+      ->set('settings', [])
       ->set('field_type', 'invalid');
 
     $this->assertValidationErrors([
@@ -146,7 +151,10 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
       ->set('field_test_disable_broken_entity_reference_handler', TRUE);
     $this->enableModules(['field_test']);
 
-    $this->entity->set('field_type', 'entity_reference')
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its immutable properties.
+    $this->entity = $this->entity->createDuplicate()
+      ->set('field_type', 'entity_reference')
       ->set('settings', ['handler' => 'non_existent']);
 
     $this->assertValidationErrors([

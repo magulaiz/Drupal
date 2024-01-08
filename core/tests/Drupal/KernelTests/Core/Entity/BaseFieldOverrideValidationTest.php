@@ -48,7 +48,7 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
    */
   public function testFieldTypePluginIsValidated(): void {
     // The `field_type` property is immutable, so we need to clone the entity in
-    // order to cleanly chnage its field_type property to some invalid value.
+    // order to cleanly change its field_type property to some invalid value.
     $this->entity = $this->entity->createDuplicate()
       ->set('field_type', 'invalid');
     $this->assertValidationErrors([
