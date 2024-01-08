@@ -7,7 +7,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests the basic display plugin.
@@ -15,7 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * @group views
  */
 class DisplayTest extends ViewTestBase {
-  use StringTranslationTrait;
+
   /**
    * Views used by this test.
    *
@@ -484,7 +483,7 @@ class DisplayTest extends ViewTestBase {
     $view1['page[path]'] = 'admin/' . $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view1, 'Save and edit');
-    $this->assertSession()->responseContains($this->t('The view %view has been saved.', ['%view' => $view1['label']]));
+    $this->assertSession()->responseContains('The view <em class="placeholder">' . $view1['label'] . '</em> has been saved.');
   }
 
 }
