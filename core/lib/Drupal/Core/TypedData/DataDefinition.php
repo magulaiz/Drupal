@@ -267,11 +267,13 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
     // 1. when a value is required, the `NotNull` constraint is added
     //    automatically, and then both the `NotNull` and `NotBlank` constraints
     //    would generate a a different message for the same problem.
-    // 2. when a value is optional (i.e. `nullable: true` is set), then NULL is
-    //    a valid value and `NotBlank` should not trigger a validation error.
+    // 2. when a value is explicitly optional (i.e. `nullable: true` is set),
+    //    then NULL is a valid value and `NotBlank` should not trigger a
+    //    validation error.
     // @see ::isRequired()
     // @see \Drupal\Core\TypedData\TypedDataManager::getDefaultConstraints()
-    if (array_key_exists('NotBlank', $constraints)) {
+    // @see \Drupal\Core\Config\TypedConfigManager::buildDataDefinition()
+    if (array_key_exists('NotBlank', $constraints) && ($this->isRequired() || isset($this->definition['nullable']) ?? FALSE === TRUE)) {
       $constraints['NotBlank']['allowNull'] = TRUE;
     }
     return $constraints;
