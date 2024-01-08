@@ -161,6 +161,26 @@ final class ComponentPluginManager extends DefaultPluginManager {
   }
 
   /**
+   * Gets all definitions except the ones that are replaced.
+   *
+   * @return mixed[]
+   *   An array of plugin definitions (empty array if no definitions were
+   *   found). Keys are plugin IDs.
+   *
+   * @internal
+   */
+  public function getActiveDefinitions(): array {
+    $definitions = $this->getDefinitions();
+    foreach ($definitions as $definition) {
+      if (!empty($definition['replaces'])) {
+        unset($definitions[$definition['replaces']]);
+      }
+    }
+
+    return $definitions;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function clearCachedDefinitions(): void {
