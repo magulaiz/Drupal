@@ -160,7 +160,12 @@ class AliasRepository implements AliasRepositoryInterface {
       }
     }
     $query->condition('base_table.langcode', $langcode_list, 'IN');
-    $query->addTag('path_alias_language_fallback');
+
+    // Only add a tag to facilitate altering the query when there are more
+    // possible languages than the requested one and the standard fallback.
+    if (count($langcode_list) > 2) {
+      $query->addTag('path_alias_language_fallback');
+    }
   }
 
 }
