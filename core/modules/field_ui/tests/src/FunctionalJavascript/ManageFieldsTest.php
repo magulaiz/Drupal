@@ -302,9 +302,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     $modal = $this->getSession()->getPage()->find('css', '.ui-dialog-content');
     $modal->clickLink('Test field');
     $assert_session->assertWaitOnAjaxRequest();
-    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
-    $buttons->pressButton('Continue');
-    $assert_session->assertWaitOnAjaxRequest();
     $field_name = 'test_field_2';
     $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', $field_name);
