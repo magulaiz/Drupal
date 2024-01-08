@@ -148,12 +148,23 @@ class IncludeResolver {
 
           // Support entity reference fields that don't have the referenced
           // target type stored in settings.
-          $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
+          $target_type = $field_item->entity->getEntityTypeId();
+          $field_item_properties = $field_item->getProperties();
+          if (array_key_exists('target_revision_id', $field_item_properties)) {
+            // Load the revision id.
+            $references[$target_type . ':revision_ids'][] = $field_item->get('target_revision_id')->getValue();
+          }
+          else {
+            $references[$target_type . ':ids'][] = $field_item->get($field_item::mainPropertyName())->getValue();
+          }
         }
       }
-      foreach ($references as $target_type => $ids) {
+      foreach ($references as $target_type_and_rev => $ids) {
+        list($target_type, $revision_type) = explode(':', $target_type_and_rev);
         $entity_storage = $this->entityTypeManager->getStorage($target_type);
-        $targeted_entities = $entity_storage->loadMultiple(array_unique($ids));
+        $targeted_entities = ($revision_type === 'revision_ids')
+          ? $entity_storage->loadMultipleRevisions($ids)
+          : $entity_storage->loadMultiple(array_unique($ids));
         $access_checked_entities = array_map(function (EntityInterface $entity) {
           return $this->entityAccessChecker->getAccessCheckedResourceObject($entity);
         }, $targeted_entities);
