@@ -79,7 +79,7 @@ class LinkFormatter extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'trim_length' => '80',
+      'trim_length' => 0,
       'url_only' => '',
       'url_plain' => '',
       'rel' => '',
@@ -97,8 +97,8 @@ class LinkFormatter extends FormatterBase {
       '#type' => 'number',
       '#title' => $this->t('Trim link text length'),
       '#field_suffix' => $this->t('characters'),
-      '#default_value' => $this->getSetting('trim_length'),
-      '#min' => 1,
+      '#default_value' => $this->getSetting('trim_length') ?? 0,
+      '#min' => 0,
       '#description' => $this->t('Leave blank to allow unlimited link text lengths.'),
     ];
     $elements['url_only'] = [
