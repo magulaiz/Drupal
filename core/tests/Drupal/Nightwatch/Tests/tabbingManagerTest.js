@@ -73,8 +73,7 @@ module.exports = {
             '[not constrained] Tabbing third element focuses fourth element.',
           );
         },
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
 
     // Tab through the form with tabbing constrained to the container that has
     // the first, second, and third inputs. Tabbing out of the third (final)
@@ -143,8 +142,7 @@ module.exports = {
             '[constrained] Tabbing final element focuses the first.',
           );
         },
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
 
     // Confirm shift+tab on the first element focuses the third (final).
     browser

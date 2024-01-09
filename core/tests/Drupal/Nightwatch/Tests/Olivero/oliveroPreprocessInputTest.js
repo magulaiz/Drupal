@@ -91,8 +91,7 @@ module.exports = {
         checkboxSelector,
         'title',
         'Checkboxes test (Required)',
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
   'Check form element classes by type': (browser) => {
     browser.drupalRelativeURL('/form_test/form-labels');
@@ -101,15 +100,13 @@ module.exports = {
         'form-element',
         `form-element--type-${inputType.type}`,
         `form-element--api-${inputType.api}`,
-      ])
-      .drupalLogAndEnd({ onlyOnError: false });
+      ]);
     });
     booleanInputTypes.forEach((booleanInputType) => {
       browser.assert.hasClass(booleanInputType.selector, [
         'form-boolean',
         `form-boolean--type-${booleanInputType.type}`,
-      ])
-      .drupalLogAndEnd({ onlyOnError: false });
+      ]);
     });
   },
 };

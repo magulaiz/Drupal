@@ -28,8 +28,7 @@ module.exports = {
     browser
       .drupalRelativeURL('/node/1')
       .assert.textContains('body', 'Article without comments')
-      .assert.not.elementPresent(commentCountSelector)
-      .drupalLogAndEnd({ onlyOnError: false });
+      .assert.not.elementPresent(commentCountSelector);
   },
   'Article with comments should display count': (browser) => {
     browser
@@ -37,7 +36,6 @@ module.exports = {
       .assert.textContains('body', 'Article with comments')
       .assert.elementPresent(commentTitleSelector)
       .assert.elementPresent(commentCountSelector)
-      .assert.textContains(commentCountSelector, '2')
-      .drupalLogAndEnd({ onlyOnError: false });
+      .assert.textContains(commentCountSelector, '2');
   },
 };

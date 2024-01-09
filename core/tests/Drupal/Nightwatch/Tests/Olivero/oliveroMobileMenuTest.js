@@ -32,8 +32,7 @@ const focusTrapCheck = (browser, parentSelector, tabCount, tabBackwards) => {
       },
       [parentSelector],
       (result) => {
-        browser.assert.ok(result.value)
-        .drupalLogAndEnd({ onlyOnError: false });
+        browser.assert.ok(result.value);
       },
     )
     // Release SHIFT key.
@@ -90,8 +89,7 @@ module.exports = {
         `[aria-controls="${buttonSubMenuId}"]`,
         'aria-expanded',
         'true',
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
   'Verify mobile menu focus trap': (browser) => {
     browser.drupalRelativeURL('/').click(mobileNavButtonSelector);
@@ -179,8 +177,7 @@ module.exports = {
         (result) => {
           browser.assert.ok(result.value);
         },
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
   'Verify clicks on hashes close mobile menu': (browser) => {
     browser
@@ -189,8 +186,7 @@ module.exports = {
       .click(mobileNavButtonSelector)
       .waitForElementVisible(headerNavSelector)
       .click('[href="#footer"]')
-      .waitForElementNotVisible(headerNavSelector)
-      .drupalLogAndEnd({ onlyOnError: false });
+      .waitForElementNotVisible(headerNavSelector);
   },
   'Verify mobile menu works when Big Pipe when authenticated': (browser) => {
     browser.drupalInstallModule('big_pipe').drupalLoginAsAdmin(() => {
@@ -198,8 +194,7 @@ module.exports = {
         .drupalRelativeURL('/')
         .assert.not.visible(headerNavSelector)
         .click(mobileNavButtonSelector)
-        .waitForElementVisible(headerNavSelector)
-        .drupalLogAndEnd({ onlyOnError: false });
+        .waitForElementVisible(headerNavSelector);
     });
   },
 };

@@ -58,8 +58,7 @@ module.exports = {
       // We should have 2 messages of each type
       .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 2)
       .assert.elementCount(`${mainMessagesContainer} > .messages--warning`, 2)
-      .assert.elementCount(`${mainMessagesContainer} > .messages--error`, 2)
-      .drupalLogAndEnd({ onlyOnError: false });
+      .assert.elementCount(`${mainMessagesContainer} > .messages--error`, 2);
   },
 
   'Verify customized placement of javascript-created messages': (browser) => {
@@ -97,7 +96,6 @@ module.exports = {
       .assert.elementCount(
         `${secondaryMessagesContainer} > .messages--error`,
         1,
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
 };

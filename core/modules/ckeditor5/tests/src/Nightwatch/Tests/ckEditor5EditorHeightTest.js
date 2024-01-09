@@ -232,8 +232,7 @@ module.exports = {
               'Source editing height is set to 18 rows (default).',
             );
           },
-        )
-        .drupalLogAndEnd({ onlyOnError: false });
+        );
     });
   },
 };

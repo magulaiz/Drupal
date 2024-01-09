@@ -31,7 +31,6 @@ module.exports = {
       // Sticky header should remain open after page reload in open state.
       .drupalRelativeURL('/node')
       .assert.visible(mainMenuSelector)
-      .assert.attributeEquals(buttonSelector, 'aria-checked', 'true')
-      .drupalLogAndEnd({ onlyOnError: false });
+      .assert.attributeEquals(buttonSelector, 'aria-checked', 'true');
   },
 };

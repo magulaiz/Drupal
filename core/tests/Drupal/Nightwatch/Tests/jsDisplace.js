@@ -121,7 +121,6 @@ module.exports = {
             'Drupal.displace() properly sets CSS variables.',
           );
         },
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
 };

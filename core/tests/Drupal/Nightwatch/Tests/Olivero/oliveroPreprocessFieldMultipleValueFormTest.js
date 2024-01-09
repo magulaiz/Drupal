@@ -36,7 +36,6 @@ module.exports = {
         'form-item__label--multiple-value-form',
         'js-form-required',
         'form-required',
-      ])
-      .drupalLogAndEnd({ onlyOnError: false });
+      ]);
   },
 };

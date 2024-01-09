@@ -32,7 +32,6 @@ module.exports = {
     browser.waitForElementVisible(
       '#edit-item-visible-when-number-trigger-filled-by-spinner',
       1000,
-    )
-    .drupalLogAndEnd({ onlyOnError: false });
+    );
   },
 };

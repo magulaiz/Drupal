@@ -42,8 +42,7 @@ testCases.forEach((testCase) => {
       browser
         .drupalRelativeURL(testCase.path)
         .axeInject()
-        .axeRun('body', testCase.options || {})
-        .drupalLogAndEnd({ onlyOnError: false });
+        .axeRun('body', testCase.options || {});
     });
   };
 });

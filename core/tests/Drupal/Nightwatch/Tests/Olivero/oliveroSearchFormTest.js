@@ -97,8 +97,7 @@ module.exports = {
       .drupalRelativeURL('/')
       .click(mobileNavButtonSelector)
       .waitForElementVisible(headerNavSelector)
-      .waitForElementVisible(`${searchNarrowSelector} ${searchFormSelector}`)
-      .drupalLogAndEnd({ onlyOnError: false });
+      .waitForElementVisible(`${searchNarrowSelector} ${searchFormSelector}`);
   },
   'submit button styled as primary on forms with <= 2 actions': (browser) => {
     browser
@@ -106,8 +105,7 @@ module.exports = {
       .drupalRelativeURL('/form-test/object-controller-builder')
       .assert.elementPresent(
         '#edit-actions input[type=submit].button--primary',
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
   'search page is altered': (browser) => {
     browser
@@ -126,7 +124,6 @@ module.exports = {
       .assert.elementPresent('#edit-basic input[type=submit].button--primary')
       .assert.elementPresent(
         '#edit-advanced input[type=submit].button--primary',
-      )
-      .drupalLogAndEnd({ onlyOnError: false });
+      );
   },
 };
