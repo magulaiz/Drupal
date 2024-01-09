@@ -58,6 +58,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
   /**
    * {@inheritdoc}
+   * @phpstan-ignore-next-line
    */
   protected function setUp(): void {
     // Skip the parent setup method because it requires the bundle to exist.
