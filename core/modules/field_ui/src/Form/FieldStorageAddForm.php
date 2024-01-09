@@ -332,6 +332,9 @@ class FieldStorageAddForm extends FormBase {
    *   The current state of the form.
    */
   protected function addFieldOptionsForGroup(array &$form, FormStateInterface $form_state): void {
+    // Set title.
+    $title = ucfirst(str_replace('_',' ' ,$form_state->getValue('new_storage_type')));
+    $form['#title'] = "Add ($title)";
     // Field label and field_name.
     $form['new_storage_wrapper'] = [
       '#type' => 'container',
