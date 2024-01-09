@@ -31,7 +31,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * Tests creating and deleting content.
    */
-  public function testCreatingContent(): void {
+  public function testCreatingContent() {
     $this->drupalGet('node/add/moderated_content');
     $this->submitForm([
       'title[0][value]' => 'moderated content',
