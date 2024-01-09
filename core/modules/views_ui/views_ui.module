@@ -350,11 +350,11 @@ function views_ui_truncate($string, $length) {
   // Strip any HTML. This might shorten it to be less than $length;
   $raw_string = PlainTextOutput::renderFromHtml($string);
   if (mb_strlen($raw_string) <= $length) {
-    // Return the original string because without html it is less than $length.
+    // Return the original string because without HTML it is less than $length.
     return $string;
   }
 
-  // If the raw string is longer then use the regular truncate function.
-  // Safeness is no longer important because the string contains no HTML.
+  // Ensure the string length does not exceed $length. Safeness is no longer
+  // important because the string contains no HTML.
   return Unicode::truncate($raw_string, $length, TRUE, TRUE);
 }
