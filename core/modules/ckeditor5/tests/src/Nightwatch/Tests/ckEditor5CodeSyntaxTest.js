@@ -148,7 +148,8 @@ module.exports = {
         .assert.valueContains(
           '.ck-source-editing-area textarea',
           '<pre><code class="language-yml">',
-        );
+        )
+        .drupalLogAndEnd({ onlyOnError: false });
     });
   },
 };
