@@ -70,7 +70,7 @@
     $table
       .find('th.select-all')
       .prepend(
-        $(Drupal.theme('checkbox'))[0].getAttribute('title', strings.selectAll),
+        $(Drupal.theme('checkbox')).setAttribute('title', strings.selectAll),
       )
       .on('click', (event) => {
         if (event.target.matches('input[type="checkbox"]')) {

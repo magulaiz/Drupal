@@ -17,12 +17,12 @@
         (event) => {
           const $summary = $(event.currentTarget);
           const open =
-            $(event.currentTarget.parentNode)[0].getAttribute('open') === 'open'
+            event.currentTarget.parentNode.getAttribute('open') === 'open'
               ? 'false'
               : 'true';
 
-          $summary[0].setAttribute('aria-expanded', open);
-          $summary[0].setAttribute('aria-pressed', open);
+          event.currentTarget.setAttribute('aria-expanded', open);
+          event.currentTarget.setAttribute('aria-pressed', open);
         },
       );
     },

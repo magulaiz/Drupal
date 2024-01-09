@@ -38,7 +38,7 @@
         pathInfo.currentPathIsAdmin &&
         escapeAdminPath !== null
       ) {
-        $(toolbarEscape)[0].setAttribute('href', escapeAdminPath);
+        toolbarEscape.setAttribute('href', escapeAdminPath);
       }
     },
   };

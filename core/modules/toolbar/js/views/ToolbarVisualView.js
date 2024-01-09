@@ -256,7 +256,7 @@
       updateBarAttributes() {
         const isOriented = this.model.get('isOriented');
         if (isOriented) {
-          this.$el.find('.toolbar-bar')[0].setAttribute('data-offset-top', '');
+          this.$el.find('.toolbar-bar').setAttribute('data-offset-top', '');
         } else {
           this.$el.find('.toolbar-bar').removeAttr('data-offset-top');
         }
@@ -312,7 +312,7 @@
         // Remove data-offset attributes from the trays so they can be refreshed.
         $trays.removeAttr('data-offset-left data-offset-right data-offset-top');
         // If an active vertical tray exists, mark it as an offset element.
-        $trays[0].forEach((tray) => {
+        $trays.forEach((tray) => {
           if (
             tray.classList.contains('toolbar-tray-vertical') &&
             tray.classList.contains('is-active')
@@ -321,7 +321,7 @@
           }
         });
         // If an active horizontal tray exists, mark it as an offset element.
-        $trays[0].forEach((tray) => {
+        $trays.forEach((tray) => {
           if (
             tray.classList.contains('toolbar-tray-horizontal') &&
             tray.classList.contains('is-active')

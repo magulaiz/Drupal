@@ -42,10 +42,7 @@
 
     const toggleCollapsed = () => {
       if (window.matchMedia('(min-width: 48em)').matches) {
-        if (
-          $tab.hasClass('is-horizontal') &&
-          !$tab[0].getAttribute('data-width')
-        ) {
+        if ($tab.hasClass('is-horizontal') && !tab.getAttribute('data-width')) {
           let width = 0;
 
           $target.find('.js-tabs-link').each((index, value) => {
@@ -57,7 +54,7 @@
         // Collapse the tabs if the combined width of the tabs is greater than
         // the width of the parent container.
         const isHorizontal =
-          $tab[0].getAttribute('data-width') <= $tab.outerWidth();
+          tab.getAttribute('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
         $tab.find('button').attr('aria-expanded', null);
         toggleOrder(isHorizontal);
@@ -71,7 +68,7 @@
 
     $target.find('.js-tab').each((index, element) => {
       const $item = $(element);
-      $item[0].setAttribute('data-original-order', $item.index());
+      element.setAttribute('data-original-order', $item.index());
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);

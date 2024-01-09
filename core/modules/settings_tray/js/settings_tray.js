@@ -153,7 +153,7 @@
       .filter(
         (instance) =>
           instance &&
-          $(instance.element)[0].getAttribute('data-dialog-renderer') ===
+          instance.element.getAttribute('data-dialog-renderer') ===
             'off_canvas',
       )
       /**

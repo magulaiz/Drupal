@@ -721,8 +721,8 @@
         const $label = $(e.target)
           .closest('.js-form-item, .js-form-wrapper')
           .find(label);
-        $(e.target)[0].setAttribute('required', 'required');
-        $(e.target)[0].setAttribute('aria-required', 'true');
+        e.target.setAttribute('required', 'required');
+        e.target.setAttribute('aria-required', 'true');
         // Avoids duplicate required markers on initialization.
         if (!$label.hasClass('js-form-required').length) {
           $label.addClass('js-form-required form-required');

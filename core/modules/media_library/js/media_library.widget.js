@@ -98,7 +98,7 @@
         // focus of screen readers. We need to give screen readers time to shift
         // the focus as well before the button is disabled.
         setTimeout(() => {
-          $(button)[0].setAttribute('disabled', 'disabled');
+          button.setAttribute('disabled', 'disabled');
         }, 50);
       });
     },

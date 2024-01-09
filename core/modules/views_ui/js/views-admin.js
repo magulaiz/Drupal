@@ -398,7 +398,7 @@
         .addClass('last');
       $displayButtons.each(function () {
         const $this = $(this);
-        this.value = $this[0].getAttribute('data-drupal-dropdown-label');
+        this.value = this.getAttribute('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
 
@@ -1298,9 +1298,7 @@
       $(once('views', 'a.views-remove-link', context)).on(
         'click',
         function (event) {
-          const id = $(this)[0]
-            .getAttribute('id')
-            .replace('views-remove-link-', '');
+          const id = this.id.replace('views-remove-link-', '');
           $context.find(`#views-row-${id}`).hide();
           $context.find(`#views-removed-${id}`).prop('checked', true);
           event.preventDefault();
@@ -1312,9 +1310,7 @@
       $(once('display', 'a.display-remove-link', context)).on(
         'click',
         function (event) {
-          const id = $(this)[0]
-            .getAttribute('id')
-            .replace('display-remove-link-', '');
+          const id = this.id.replace('display-remove-link-', '');
           $context.find(`#display-row-${id}`).hide();
           $context.find(`#display-removed-${id}`).prop('checked', true);
           event.preventDefault();

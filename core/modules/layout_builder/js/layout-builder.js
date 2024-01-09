@@ -62,12 +62,12 @@
         if (query.length >= 2) {
           // Attribute to note which categories are closed before opening all.
           $categories
-            .find('.js-layout-builder-category:not([open])')[0]
+            .find('.js-layout-builder-category:not([open])')
             .setAttribute('remember-closed', '');
 
           // Open all categories so every block is available to filtering.
           $categories
-            .find('.js-layout-builder-category')[0]
+            .find('.js-layout-builder-category')
             .setAttribute('open', '');
           // Toggle visibility of links based on query.
           $filterLinks.each(toggleBlockEntry);
@@ -215,7 +215,7 @@
         .not(
           (index, element) =>
             $(element).closest('[data-contextual-id]').length > 0,
-        )[0]
+        )
         .setAttribute('tabindex', -1);
     },
   };
@@ -435,7 +435,7 @@
        * disable content preview in the Layout Builder UI.
        */
       if (!isContentPreview) {
-        $layoutBuilderContentPreview[0].setAttribute('checked', false);
+        $layoutBuilderContentPreview.setAttribute('checked', false);
         disableContentPreview();
       }
     },
