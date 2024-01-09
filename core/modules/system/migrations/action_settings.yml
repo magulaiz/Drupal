@@ -1,5 +1,6 @@
 id: action_settings
 label: Action configuration
+deprecation_message: Deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3413338
 migration_tags:
   - Drupal 6
   - Drupal 7
