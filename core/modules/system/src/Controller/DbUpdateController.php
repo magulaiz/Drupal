@@ -14,6 +14,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Update\Update;
 use Drupal\Core\Update\UpdateRegistry;
+use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,6 +82,13 @@ class DbUpdateController extends ControllerBase {
   protected $postUpdateRegistry;
 
   /**
+   * The update hook registry.
+   *
+   * @var \Drupal\Core\Update\UpdateHookRegistry
+   */
+  protected $updateHookRegistry;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -103,6 +111,8 @@ class DbUpdateController extends ControllerBase {
    *   The asset query string.
    * @param \Drupal\Core\Update\Update|null $update
    *   The update service.
+   * @param \Drupal\Core\Update\UpdateHookRegistry $update_hook_registry
+   *   The update hook registry.
    *
    * @see https://www.drupal.org/node/3013060
    */
@@ -117,6 +127,7 @@ class DbUpdateController extends ControllerBase {
     UpdateRegistry $post_update_registry,
     protected ?AssetQueryStringInterface $assetQueryString = NULL,
     protected ?Update $update = NULL,
+    UpdateHookRegistry $update_hook_registry,
   ) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
@@ -135,7 +146,7 @@ class DbUpdateController extends ControllerBase {
       @trigger_error('Calling ' . __METHOD__ . ' without the $update argument is deprecated in drupal:10.2.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
       $this->update = \Drupal::service('update');
     }
-
+    $this->updateHookRegistry = $update_hook_registry;
   }
 
   /**
@@ -153,6 +164,7 @@ class DbUpdateController extends ControllerBase {
       $container->get('update.post_update_registry'),
       $container->get('asset.query_string'),
       $container->get(Update::class),
+      $container->get('update.update_hook_registry'),
     );
   }
 
@@ -649,7 +661,7 @@ class DbUpdateController extends ControllerBase {
         // correct place. (The updates are already sorted, so we can simply base
         // this on the first one we come across in the above foreach loop.)
         if (isset($start[$update['module']])) {
-          \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
+          $this->updateHookRegistry->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
         $batch_builder->addOperation([$this->update, 'doOne'], [$update['module'], $update['number'], $dependency_map[$function]]);

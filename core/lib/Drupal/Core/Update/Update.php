@@ -12,21 +12,32 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 
 /**
- * The update utility class.
+ * Drupal database update API.
  *
- * @package Drupal\Core\Update.
+ * This class provides functions for executing database updates within the context of a Drupal installation.
+ * It is included and utilized extensively by the update.php script.
  */
 class Update {
 
   use StringTranslationTrait;
   use DependencySerializationTrait;
 
+  /**
+   * The logger channel factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
   protected LoggerChannelInterface $systemLogger;
 
+  /**
+   * The logger channel factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
   protected LoggerChannelInterface $updateLogger;
 
   /**
-   * Constructor of update utility.
+   * Update constructor.
    *
    * @param \Drupal\Core\Update\UpdateHookRegistry $updateRegistry
    *   The update registry.
@@ -59,7 +70,7 @@ class Update {
    * @return array
    *   A requirements info array.
    *
-   * @internal
+   * @see getRequirements()
    */
   public function systemSchemaRequirements(): array {
     $requirements = [];
@@ -76,7 +87,7 @@ class Update {
     else {
       $requirements['minimum schema'] += [
         'value' => 'The installed schema version does not meet the minimum.',
-        'severity' => \REQUIREMENT_ERROR,
+        'severity' => REQUIREMENT_ERROR,
         'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must upgrade your site to Drupal 8 first, see https://www.drupal.org/docs/8/upgrade.',
       ];
     }
@@ -86,6 +97,9 @@ class Update {
 
   /**
    * Checks update requirements and reports errors and (optionally) warnings.
+   *
+   * @return array
+   *   The system schema requirements.
    */
   public function getRequirements(): array {
     // Because this is one of the earliest points in the update process,
@@ -99,7 +113,7 @@ class Update {
   }
 
   /**
-   * Helper to detect and fix 'missing' schema information.
+   * Detect and fix 'missing' schema information with the helper.
    *
    * Repairs the case where a module has no schema version recorded.
    * This has to be done prior to updates being run, otherwise the update
@@ -111,7 +125,7 @@ class Update {
    *
    * @internal
    */
-  public function fixMissingSchema(): void {
+  private function fixMissingSchema(): void {
     $versions = $this->updateRegistry->getAllInstalledVersions();
     $enabled_modules = $this->moduleHandler->getModuleList();
 
@@ -182,20 +196,20 @@ class Update {
    * set the #finished property to the percentage completed that it is, as a
    * fraction of 1.
    *
-   * @param $module
+   * @param string $module
    *   The module whose update will be run.
-   * @param $number
+   * @param int $number
    *   The update number to run.
-   * @param $dependency_map
+   * @param array $dependency_map
    *   An array whose keys are the names of all update functions that will be
    *   performed during this batch process, and whose values are arrays of other
    *   update functions that each one depends on.
-   * @param $context
+   * @param array $context
    *   The batch context array.
    *
    * @see resolveDependencies()
    */
-  public function doOne(string $module, int $number, array $dependency_map, &$context): void {
+  public function doOne(string $module, int $number, array $dependency_map, array &$context): void {
     $function = $module . '_update_' . $number;
 
     // If this update was aborted in a previous step, or has a dependency that
@@ -246,7 +260,7 @@ class Update {
       $this->updateRegistry->setInstalledVersion($module, $number);
     }
 
-    $context['message'] = t('Updating @module', ['@module' => $module]);
+    $context['message'] = $this->t('Updating @module', ['@module' => $module]);
   }
 
 }
