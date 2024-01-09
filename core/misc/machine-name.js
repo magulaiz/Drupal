@@ -120,15 +120,10 @@
       Object.keys(settings.machineName).forEach((sourceId) => {
         const options = settings.machineName[sourceId];
 
-        const $source = $(
-          once(
-            'machine-name',
-            $context.find(sourceId).addClass('machine-name-source'),
-          ),
-        );
-        const $target = $context
-          .find(options.target)
-          .addClass('machine-name-target');
+        const $source = $(once('machine-name', $context.find(sourceId)));
+        $source[0].classList.add('machine-name-source');
+        const $target = $context.find(options.target);
+        $target[0].classList.add('machine-name-target');
         const $suffix = $context.find(options.suffix);
         const $wrapper = $target.closest('.js-form-item');
         // All elements have to exist.
@@ -152,7 +147,7 @@
         // Figure out the maximum length for the machine name.
         options.maxlength = $target.attr('maxlength');
         // Hide the form item container of the machine name form element.
-        $wrapper.addClass('hidden');
+        $wrapper[0].classList.add('hidden');
         if ($target.attr('required')) {
           $target
             .removeAttr('required')

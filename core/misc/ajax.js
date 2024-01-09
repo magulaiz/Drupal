@@ -1432,7 +1432,7 @@
     changed(ajax, response, status) {
       const $element = $(response.selector);
       if (!$element.hasClass('ajax-changed')) {
-        $element.addClass('ajax-changed');
+        $element[0].classList.add('ajax-changed');
         if (response.asterisk) {
           $element
             .find(response.asterisk)

@@ -113,11 +113,13 @@
             $this.next('tr').length === 0 ||
             !$this.next('tr')[0].matches('.draggable')
           ) {
-            $this.removeClass('region-populated').addClass('region-empty');
+            $this.removeClass('region-populated');
+            $this[0].classList.add('region-empty');
           }
           // This region has become populated.
           else if (this.matches('.region-empty')) {
-            $this.removeClass('region-empty').addClass('region-populated');
+            $this.removeClass('region-empty');
+            $this[0].classList.add('region-populated');
           }
         });
       }
@@ -136,7 +138,7 @@
         const $rowObject = $(rowObject);
         if (!rowObject.element.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
-          $rowObject.addClass('drag-previous');
+          $rowObject[0].element.classList.add('drag-previous');
         }
       }
 
@@ -204,12 +206,10 @@
             /([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/,
             '$2',
           );
-          regionField
-            .removeClass(`block-region-${oldRegionName}`)
-            .addClass(`block-region-${regionName}`);
-          weightField
-            .removeClass(`block-weight-${oldRegionName}`)
-            .addClass(`block-weight-${regionName}`);
+          regionField.removeClass(`block-region-${oldRegionName}`);
+          regionField.classList.add(`block-region-${regionName}`);
+          weightField.removeClass(`block-weight-${oldRegionName}`);
+          weightField.classList.add(`block-weight-${regionName}`);
           regionField[0].value = regionName;
         }
 

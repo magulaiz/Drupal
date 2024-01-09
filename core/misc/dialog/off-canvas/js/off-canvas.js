@@ -79,7 +79,7 @@
       // Clean up previous dialog event handlers.
       Drupal.offCanvas.removeOffCanvasEvents($element);
 
-      $('body').addClass('js-off-canvas-dialog-open');
+      $('body')[0].classList.add('js-off-canvas-dialog-open');
       // @see http://api.jqueryui.com/position/
       settings.position = {
         my: 'left top',

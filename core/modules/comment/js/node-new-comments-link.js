@@ -17,17 +17,9 @@
    *   The placeholder element passed in as a parameter.
    */
   function hide($placeholder) {
-    return (
-      $placeholder
-        // Find the parent <li>.
-        .closest('.comment-new-comments')
-        // Find the preceding <li>, if any, and give it the 'last' class.
-        .prev()
-        .addClass('last')
-        // Go back to the parent <li> and hide it.
-        .end()
-        .hide()
-    );
+    const $placeholderClosest = $placeholder.closest('.comment-new-comments');
+    $placeholderClosest.prev()[0].classList.add('last');
+    return $placeholderClosest.end().hide();
   }
 
   /**

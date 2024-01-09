@@ -19,7 +19,10 @@
             currentUserID
           );
         })
-        .addClass('by-viewer');
+        .toArray()
+        .forEach((element) => {
+          element.classList.add('by-viewer');
+        });
     },
   };
 })(jQuery, Drupal, drupalSettings);
