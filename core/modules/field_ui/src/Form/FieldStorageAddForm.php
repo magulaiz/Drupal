@@ -232,13 +232,7 @@ class FieldStorageAddForm extends FormBase {
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
     $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
-
-    if (array_key_exists('new_storage_type', $form_state->getUserInput())) {
-      $new_storage_type = $form_state->getUserInput()['new_storage_type'];
-      if (isset($new_storage_type) && $form_state->getStorage()['field_type_options'][$new_storage_type]['display_as_group']) {
-        $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
-      }
-    }
+    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
   /**
