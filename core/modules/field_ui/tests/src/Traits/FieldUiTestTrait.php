@@ -41,10 +41,7 @@ trait FieldUiTestTrait {
     $initial_edit = [
       'new_storage_type' => $field_type,
     ];
-    $second_edit = [
-      'label' => $label,
-      'field_name' => $field_name,
-    ];
+    $second_edit = [];
 
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
@@ -77,7 +74,11 @@ trait FieldUiTestTrait {
     // Assert that the field is not created.
     $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
-      $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
+      $field_edit = [
+        'label' => $label,
+        'field_name' => $field_name,
+      ];
+      $this->assertSession()->pageTextContains("These settings apply to the new field everywhere it is used.");
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
 

@@ -52,6 +52,8 @@ trait FieldUiJSTestTrait {
     }
     $field_card?->click();
     $page->findButton('Continue')->click();
+
+    $this->assertSession()->waitForField('edit-label');
     $field_label = $page->findField('edit-label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
@@ -59,13 +61,9 @@ trait FieldUiJSTestTrait {
     $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
     $this->assertNotEmpty($machine_name);
     $page->findButton('Edit')->press();
-
     $field_field_name = $page->findField('field_name');
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
-
-    $page->findButton('Continue')->click();
-    $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
       // Second step: Save field settings.
       $page->findButton('Save settings')->click();

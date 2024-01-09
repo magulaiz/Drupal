@@ -386,7 +386,9 @@ class FieldConfigEditForm extends EntityForm {
     }
     // Missing field name.
     if (!$form_state->getValue('field_name')) {
-      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
+      if ($this->entity->isNew()) {
+        $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
+      }
     }
     // Field name validation.
     else {
