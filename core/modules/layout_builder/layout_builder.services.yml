@@ -4,6 +4,7 @@ services:
   layout_builder.tempstore_repository:
     class: Drupal\layout_builder\LayoutTempstoreRepository
     arguments: ['@tempstore.shared']
+  Drupal\layout_builder\LayoutTempstoreRepositoryInterface: '@layout_builder.tempstore_repository'
   access_check.entity.layout_builder_access:
     class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
     tags:
