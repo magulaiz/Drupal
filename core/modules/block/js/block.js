@@ -207,9 +207,9 @@
             '$2',
           );
           regionField.removeClass(`block-region-${oldRegionName}`);
-          regionField.classList.add(`block-region-${regionName}`);
+          regionField[0].classList.add(`block-region-${regionName}`);
           weightField.removeClass(`block-weight-${oldRegionName}`);
-          weightField.classList.add(`block-weight-${regionName}`);
+          weightField[0].classList.add(`block-weight-${regionName}`);
           regionField[0].value = regionName;
         }
 
