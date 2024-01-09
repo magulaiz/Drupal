@@ -121,9 +121,9 @@
         const options = settings.machineName[sourceId];
 
         const $source = $(once('machine-name', $context.find(sourceId)));
-        $source[0].classList.add('machine-name-source');
+        $source[0]?.classList.add('machine-name-source');
         const $target = $context.find(options.target);
-        $target[0].classList.add('machine-name-target');
+        $target[0]?.classList.add('machine-name-target');
         const $suffix = $context.find(options.suffix);
         const $wrapper = $target.closest('.js-form-item');
         // All elements have to exist.
