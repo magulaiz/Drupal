@@ -394,7 +394,6 @@ class ExposedFormTest extends ViewTestBase {
     $display['display_options']['filters']['title']['expose']['required'] = FALSE;
     $view->save();
 
-    // Test for regression: https://www.drupal.org/node/3327193
     $this->drupalGet('test_exposed_form_required_filters');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -415,9 +414,10 @@ class ExposedFormTest extends ViewTestBase {
     $this->drupalGet('test_exposed_form_required_filters');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Ensure that only article results are displayed by default when required.
+    // Ensure that results are filtered by default when input is required, since
+    // the first filter will be selected by default if "Select all" is not an
+    // option.
     $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 5);
-
   }
 
   /**
