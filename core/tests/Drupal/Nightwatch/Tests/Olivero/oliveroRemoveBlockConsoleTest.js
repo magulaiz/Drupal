@@ -52,6 +52,7 @@ module.exports = {
         (result) => {
           browser.assert.ok(result.value, 'Verify no console errors exist.');
         },
-      );
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
   },
 };

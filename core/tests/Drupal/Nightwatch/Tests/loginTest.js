@@ -19,6 +19,7 @@ module.exports = {
       .drupalRelativeURL('/admin/reports')
       .waitForElementVisible('body', 1000)
       .assert.textContains('h1', 'Reports')
-      .assert.noDeprecationErrors();
+      .assert.noDeprecationErrors()
+      .drupalLogAndEnd({ onlyOnError: false });
   },
 };

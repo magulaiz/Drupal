@@ -29,7 +29,8 @@ module.exports = {
       .waitForElementVisible(primaryTabsWrapper)
       .assert.visible(activeTab)
       .assert.visible(inactiveTab)
-      .assert.not.visible(mobileToggle);
+      .assert.not.visible(mobileToggle)
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   'Verify mobile tab display and click functionality': (browser) => {
     browser
@@ -45,6 +46,7 @@ module.exports = {
       .assert.attributeEquals(mobileToggle, 'aria-expanded', 'true')
       .click(mobileToggle)
       .waitForElementNotVisible(inactiveTab)
-      .assert.attributeEquals(mobileToggle, 'aria-expanded', 'false');
+      .assert.attributeEquals(mobileToggle, 'aria-expanded', 'false')
+      .drupalLogAndEnd({ onlyOnError: false });
   },
 };

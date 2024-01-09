@@ -94,7 +94,8 @@ module.exports = {
       .assert.valueEquals(
         selectors.primaryColor.color,
         colorSchemes.default.base_primary_color,
-      );
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   'Olivero Settings - color inputs stay synchronized': (browser) => {
     browser
@@ -107,6 +108,7 @@ module.exports = {
       .assert.valueEquals(selectors.primaryColor.color, '#00ff00')
       .updateValue(selectors.primaryColor.text, '#0000ff')
       .assert.valueEquals(selectors.primaryColor.color, '#0000ff');
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   'Olivero Settings - color selections impact olivero theme': (browser) => {
     browser
@@ -118,7 +120,8 @@ module.exports = {
       .drupalRelativeURL('/')
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
-      .to.have.css('backgroundColor', 'rgb(255, 0, 0)');
+      .to.have.css('backgroundColor', 'rgb(255, 0, 0)')
+      .drupalLogAndEnd({ onlyOnError: false });
 
     browser
       .drupalRelativeURL('/admin/appearance/settings/olivero')
@@ -129,6 +132,7 @@ module.exports = {
       .drupalRelativeURL('/')
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
-      .to.have.css('backgroundColor', 'rgb(122, 69, 135)');
+      .to.have.css('backgroundColor', 'rgb(122, 69, 135)')
+      .drupalLogAndEnd({ onlyOnError: false });
   },
 };

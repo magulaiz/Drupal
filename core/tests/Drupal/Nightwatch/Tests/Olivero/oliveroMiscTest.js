@@ -40,7 +40,8 @@ module.exports = {
           browser.assert.ok(
             result.value,
             'Check that <link rel="preload"> tags properly reference font.',
-          );
+          )
+          .drupalLogAndEnd({ onlyOnError: false });
         },
       )
       // Check that the CSS @font-face declaration has loaded the font.
@@ -59,7 +60,8 @@ module.exports = {
           browser.assert.ok(
             result.value,
             'Check that the CSS @font-face declaration has loaded the font.',
-          );
+          )
+          .drupalLogAndEnd({ onlyOnError: false });
         },
       );
   },

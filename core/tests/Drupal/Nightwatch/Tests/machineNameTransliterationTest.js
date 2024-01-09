@@ -242,7 +242,8 @@ module.exports = {
         (result) => {
           browser.assert.equal(result.value, iteration.expectedMachineName);
         },
-      );
-    });
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
+    })
   },
 };

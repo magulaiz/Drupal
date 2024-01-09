@@ -16,6 +16,7 @@ module.exports = {
         '#ajax_test_form_promise_wrapper',
         '12345',
         'Ajax commands execution order confirmed',
-      );
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
   },
 };

@@ -976,7 +976,8 @@ module.exports = {
             );
           });
         },
-      );
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   // The remaining tests are ported from jQuery UI's QUnit tests.
   'my, at, of': (browser) => {
@@ -1036,7 +1037,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'multiple elements': (browser) => {
     browser.execute(
@@ -1072,7 +1074,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   positions: (browser) => {
     browser.execute(
@@ -1124,7 +1127,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   of: (browser) => {
     browser.execute(
@@ -1300,7 +1304,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   offsets: (browser) => {
     browser.execute(
@@ -1406,7 +1411,8 @@ module.exports = {
           browser.assert.equal(value, true, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   using: (browser) => {
     browser.execute(
@@ -1489,7 +1495,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: fit, no collision': (browser) => {
     browser.execute(
@@ -1539,7 +1546,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: fit, collision': (browser) => {
     browser.execute(
@@ -1618,7 +1626,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: flip, no collision': (browser) => {
     browser.execute(
@@ -1667,7 +1676,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: flip, collision': (browser) => {
     browser.execute(
@@ -1716,7 +1726,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: flipfit, no collision': (browser) => {
     browser.execute(
@@ -1765,7 +1776,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: flipfit, collision': (browser) => {
     browser.execute(
@@ -1814,7 +1826,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: none, no collision': (browser) => {
     browser.execute(
@@ -1863,7 +1876,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: none, collision': (browser) => {
     browser.execute(
@@ -1912,7 +1926,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: fit, with margin': (browser) => {
     browser.execute(
@@ -1965,7 +1980,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'collision: flip, with margin': (browser) => {
     browser.execute(
@@ -2033,7 +2049,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   within: (browser) => {
     browser.execute(
@@ -2163,7 +2180,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'with scrollbars': (browser) => {
     browser.execute(
@@ -2254,7 +2272,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   fractions: (browser) => {
     browser.execute(
@@ -2281,7 +2300,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'bug #5280: consistent results (avoid fractional values)': (browser) => {
     browser.execute(
@@ -2320,7 +2340,8 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
   'bug #8710: flip if flipped position fits more': (browser) => {
     browser.execute(
@@ -2384,6 +2405,7 @@ module.exports = {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },
-    );
+    )
+    .drupalLogAndEnd({ onlyOnError: false });
   },
 };

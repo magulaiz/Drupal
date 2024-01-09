@@ -58,7 +58,8 @@ module.exports = {
         `[aria-controls="${buttonSubMenuId}"]`,
         'aria-expanded',
         'true',
-      );
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   'Verify Olivero desktop menu hover functionality': (browser) => {
     browser
@@ -80,7 +81,8 @@ module.exports = {
         `[aria-controls="${buttonSubMenuId}"]`,
         'aria-expanded',
         'true',
-      );
+      )
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   'Verify desktop menu converts to mobile if it gets too long': (browser) => {
     browser
@@ -93,6 +95,7 @@ module.exports = {
         // the primary navigation to be too long, and switch into mobile mode.
         document.querySelector('.site-branding__name').style.width = '350px';
       }, [])
-      .assert.elementPresent('body.is-always-mobile-nav');
+      .assert.elementPresent('body.is-always-mobile-nav')
+      .drupalLogAndEnd({ onlyOnError: false });
   },
 };
