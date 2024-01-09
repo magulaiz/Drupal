@@ -630,17 +630,6 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Submit handler for resetting the form.
-   */
-  public function startOver($form, FormStateInterface &$form_state) {
-    // Need to do this as the parameters for buildForm are retained on rebuild.
-    $entity_type_id = $this->entityTypeId;
-    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-    $form_state->setRedirect("field_ui.field_storage_config_add_$entity_type_id", $route_parameters_back);
-  }
-
-  /**
    * Submit form #ajax callback.
    *
    * @param array $form
