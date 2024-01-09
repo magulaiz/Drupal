@@ -14,8 +14,8 @@ module.exports = {
   afterEach: (browser, done) => {
     // Writes the console log - used by the "logAndEnd" command.
     if (
-      browser.drupalLogConsole &&
-      (!browser.drupalLogConsoleOnlyOnError ||
+      browser.globals.drupalLogConsole &&
+      (!browser.globals.drupalLogConsoleOnlyOnError ||
         browser.currentTest.results.errors > 0 ||
         browser.currentTest.results.failed > 0)
     ) {

@@ -13,8 +13,8 @@
  */
 exports.command = function drupalLogAndEnd({ onlyOnError = true }, callback) {
   const self = this;
-  this.drupalLogConsole = true;
-  this.drupalLogConsoleOnlyOnError = onlyOnError;
+  this.globals.drupalLogConsole = true;
+  this.globals.drupalLogConsoleOnlyOnError = onlyOnError;
 
   // Nightwatch doesn't like it when no actions are added in a command file.
   // https://github.com/nightwatchjs/nightwatch/issues/1792
