@@ -15,27 +15,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class BlockContentConfigSubscriber implements EventSubscriberInterface {
 
   /**
-   * The route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs the BlockContentConfigSubscriber.
    *
    * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
@@ -45,10 +24,7 @@ class BlockContentConfigSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(RouteBuilderInterface $router_builder, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    $this->routeBuilder = $router_builder;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected RouteBuilderInterface $router_builder, protected CacheTagsInvalidatorInterface $cache_tags_invalidator, protected EntityTypeManagerInterface $entity_type_manager) {
   }
 
   /**
@@ -57,12 +33,12 @@ class BlockContentConfigSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The ConfigCrudEvent to process.
    */
-  public function onSave(ConfigCrudEvent $event) {
+  public function onSave(ConfigCrudEvent $event): void {
     $saved_config = $event->getConfig();
     if ($saved_config->getName() === 'block_content.settings' && $event->isChanged('standalone_url')) {
-      $this->cacheTagsInvalidator->invalidateTags([
+      $this->cache_tags_invalidator->invalidateTags([
         // The configuration change triggers entity type definition changes,
-        // which in turn triggers routes to appear or disappear.
+        // which in turn triggers routes to behave differently.
         // @see block_content_entity_type_alter()
         'entity_types',
         // The 'rendered' cache tag needs to be explicitly invalidated to ensure
@@ -77,8 +53,8 @@ class BlockContentConfigSubscriber implements EventSubscriberInterface {
       // respected by the entity type plugin manager. See
       // https://www.drupal.org/project/drupal/issues/3001284 and
       // https://www.drupal.org/project/drupal/issues/3013659.
-      $this->entityTypeManager->clearCachedDefinitions();
-      $this->routeBuilder->setRebuildNeeded();
+      $this->entity_type_manager->clearCachedDefinitions();
+      $this->router_builder->setRebuildNeeded();
     }
   }
 

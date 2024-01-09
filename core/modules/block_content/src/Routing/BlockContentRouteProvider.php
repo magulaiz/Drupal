@@ -2,12 +2,15 @@
 
 namespace Drupal\block_content\Routing;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Provides HTML routes for block content pages.
@@ -15,41 +18,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlockContentRouteProvider extends AdminHtmlRouteProvider {
 
   /**
-   * The block content settings config.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $config;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, protected ImmutableConfig $config) {
     parent::__construct($entity_type_manager, $entity_field_manager);
-    $this->config = $config_factory->get('block_content.settings');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type): DefaultHtmlRouteProvider|BlockContentRouteProvider|EntityHandlerInterface|static {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
-      $container->get('config.factory')
+      $container->get('config.factory')->get('block_content.settings')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCanonicalRoute(EntityTypeInterface $entity_type) {
+  protected function getCanonicalRoute(EntityTypeInterface $entity_type): Route {
     if ($this->config->get('standalone_url')) {
       return parent::getCanonicalRoute($entity_type);
     }
-    else {
-      return parent::getEditFormRoute($entity_type);
-    }
+    return parent::getEditFormRoute($entity_type);
   }
 
 }

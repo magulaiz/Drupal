@@ -103,6 +103,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
    */
   public function testAddSettingsUpdate(): void {
     $config = $this->config('block_content.settings');
+    $this->assertTrue($config->isNew());
     $this->assertNull($config->get('standalone_url'));
 
     $this->runUpdates();
