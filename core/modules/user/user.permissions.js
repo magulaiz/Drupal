@@ -12,6 +12,9 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attaches functionality to the permissions table.
    */
+  var TOGGLE_PROCESSED = 'machine-name-toggle-processed';
+  var SHOW_MACHINE_NAMES = Drupal.t('Show machine names');
+  var HIDE_MACHINE_NAMES = Drupal.t('Hide machine names');
   Drupal.behaviors.permissions = {
     attach(context) {
       once('permissions', 'table#permissions').forEach((table) => {
@@ -66,6 +69,24 @@
 
         // Re-insert the table into the DOM.
         $ancestor[method]($table);
+      });
+      // Toggle machine names for permissions.
+      var machineNames = document.querySelectorAll('.permissions-machine-name');
+      machineNames.forEach(function (machineName) {
+        machineName.style.display = 'none';
+      });
+      var toggleLinks = document.querySelectorAll('.toggle-machine-names a');
+      toggleLinks.forEach(function (toggleLink) {
+        if (toggleLink.classList.contains(TOGGLE_PROCESSED)) {
+          return;
+        }
+        toggleLink.classList.add(TOGGLE_PROCESSED);
+        toggleLink.addEventListener('click', function () {
+          machineNames.forEach(function (machineName) {
+            machineName.style.display = (machineName.style.display === 'none' || machineName.style.display === '') ? 'block' : 'none';
+          });
+          toggleLink.textContent = (machineNames[0].style.display === 'block') ? HIDE_MACHINE_NAMES : SHOW_MACHINE_NAMES;
+        });
       });
     },
 
