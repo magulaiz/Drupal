@@ -263,7 +263,7 @@
         .removeClass('first')
         .filter(':visible')
         .eq(0)[0]
-        .classList.add('first');
+        ?.classList.add('first');
       // Hide the details element.
       this.details.hide().removeAttr('open');
       this.details[0].classList.add('vertical-tab--hidden');
