@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererPlaceholdersTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
@@ -12,8 +9,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -844,9 +841,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @see testNonScalarLazybuilderCallbackContext
+   * @see testNonScalarLazyBuilderCallbackContext
    */
-  public function testScalarLazybuilderCallbackContext() {
+  public function testScalarLazyBuilderCallbackContext() {
     $element = [];
     $element['#lazy_builder'] = [
       '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',
@@ -868,7 +865,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testNonScalarLazybuilderCallbackContext() {
+  public function testNonScalarLazyBuilderCallbackContext() {
     $element = [];
     $element['#lazy_builder'] = [
       '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',
@@ -960,8 +957,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
-    $this->controllerResolver->expects($this->any())
-      ->method('getControllerFromDefinition')
+    $this->callableResolver->expects($this->any())
+      ->method('getCallableFromDefinition')
       ->willReturnArgument(0);
     $this->setupThemeManagerForDetails();
 
@@ -1141,7 +1138,7 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
     return [
       'another' => [
         '#create_placeholder' => TRUE,
-        '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', [$animal]],
+        '#lazy_builder' => [PlaceholdersTest::class . '::callback', [$animal]],
       ],
     ];
   }

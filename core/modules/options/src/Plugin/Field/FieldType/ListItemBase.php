@@ -93,6 +93,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (!array_key_exists('allowed_values', $form_state->getStorage())) {
       $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
     }
+    $form['field_storage_submit']['#submit'][] = [static::class, 'submitFieldStorageUpdate'];
+    $form['field_storage_submit']['#limit_validation_errors'] = [];
 
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
@@ -122,6 +124,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#attributes' => [
         'id' => 'allowed-values-order',
         'data-field-list-table' => TRUE,
+        'class' => ['allowed-values-table'],
       ],
       '#tabledrag' => [
         [
@@ -131,7 +134,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         ],
       ],
       '#attached' => [
-        'library' => ['core/drupal.fieldListKeyboardNavigation'],
+        'library' => [
+          'core/drupal.fieldListKeyboardNavigation',
+          'field_ui/drupal.field_ui',
+        ],
       ],
     ];
 
@@ -185,6 +191,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#default_value' => 0,
         '#attributes' => ['class' => ['weight']],
       ];
+      // Disable the remove button if there is only one row in the table.
+      if ($max === 0) {
+        $element['allowed_values']['table'][0]['delete']['#attributes']['disabled'] = 'disabled';
+      }
       if ($delta < count($allowed_values)) {
         $query = \Drupal::entityQuery($entity_type_id)
           ->accessCheck(FALSE)
@@ -261,6 +271,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $delta = $element['table']['#max_delta'];
     $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content" data-drupal-selector="field-list-add-more-focus-target">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
     $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
+    // Enable the remove button for the first row if there are more rows.
+    if ($delta > 0 && isset($element['table'][0]['delete']['#attributes']['disabled']) && !isset($element['table'][0]['item']['key']['#attributes']['disabled'])) {
+      unset($element['table'][0]['delete']['#attributes']['disabled']);
+    }
 
     $response = new AjaxResponse();
     $response->addCommand(new InsertCommand(NULL, $element));
@@ -285,12 +299,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $remaining_allowed_values = array_diff($allowed_values, [$item_to_be_removed]);
     $form_state->set('allowed_values', $remaining_allowed_values);
 
-    $delta = $button['#delta'];
-    $user_input = $form_state->getUserInput();
     // The user input is directly modified to preserve the rest of the data on
     // the page as it cannot be rebuilt from a fresh form state.
-    unset($user_input['settings']['allowed_values']['table'][$delta]);
-    $user_input['settings']['allowed_values']['table'] = array_values($user_input['settings']['allowed_values']['table']);
+    $user_input = $form_state->getUserInput();
+    NestedArray::unsetValue($user_input, $element['#parents']);
+
+    // Reset the keys in the array.
+    $table_parents = $element['#parents'];
+    array_pop($table_parents);
+    $new_values = array_values(NestedArray::getValue($user_input, $table_parents));
+    NestedArray::setValue($user_input, $table_parents, $new_values);
+
     $form_state->setUserInput($user_input);
     $form_state->set('items_count', $form_state->get('items_count') - 1);
 
@@ -342,7 +361,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     }, Element::children($element['table'])), function ($item) {
       return $item;
     });
-    if ($reordered_items = $form_state->getValue(['settings', 'allowed_values', 'table'])) {
+    if ($reordered_items = $form_state->getValue([...$element['#parents'], 'table'])) {
       uksort($items, function ($a, $b) use ($reordered_items) {
         $a_weight = $reordered_items[$a]['weight'] ?? 0;
         $b_weight = $reordered_items[$b]['weight'] ?? 0;
@@ -384,7 +403,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $values = [];
 
     if (is_string($list)) {
-      trigger_error('Passing a string to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and will be removed from drupal:11.0.0. Use an array instead.', E_USER_DEPRECATED);
+      trigger_error('Passing a string to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and will cause an error from drupal:11.0.0. Use an array instead. See https://www.drupal.org/node/3376368', E_USER_DEPRECATED);
       $list = explode("\n", $list);
       $list = array_map('trim', $list);
       $list = array_filter($list, 'strlen');
@@ -542,6 +561,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   protected static function castAllowedValue($value) {
     return $value;
+  }
+
+  /**
+   * Resets the static variable on field storage update.
+   */
+  public static function submitFieldStorageUpdate() {
+    drupal_static_reset('options_allowed_values');
   }
 
 }

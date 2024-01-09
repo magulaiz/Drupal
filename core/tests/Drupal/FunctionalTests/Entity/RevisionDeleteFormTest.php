@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests deleting a revision with revision delete form.
  *
  * @group Entity
+ * @group #slow
  * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionDeleteForm
  */
 class RevisionDeleteFormTest extends BrowserTestBase {
@@ -51,6 +52,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    * @dataProvider providerPageTitle
    */
   public function testPageTitle(string $entityTypeId, string $expectedQuestion): void {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entityTypeId);
 
     $entity = $storage->create([
@@ -157,9 +159,10 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     $entity->save();
 
     // Reload the entity.
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_revpub');
     /** @var \Drupal\entity_test\Entity\EntityTestRevPub $revision */
-    $revision = \Drupal::entityTypeManager()->getStorage('entity_test_revpub')
-      ->loadRevision($revisionId);
+    $revision = $storage->loadRevision($revisionId);
     // Check default but not latest.
     $this->assertTrue($revision->isDefaultRevision());
     $this->assertFalse($revision->isLatestRevision());
@@ -185,8 +188,9 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     $entity->save();
 
     // Reload the entity.
-    $revision = \Drupal::entityTypeManager()->getStorage('entity_test_rev')
-      ->loadRevision($revisionId);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+    $revision = $storage->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision-delete-form'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertTrue($revision->access('delete revision', $this->rootUser, FALSE));
@@ -218,6 +222,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     if (count($permissions) > 0) {
       $this->drupalLogin($this->createUser($permissions));
     }
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entityTypeId);
 
     $entity = $storage->create([

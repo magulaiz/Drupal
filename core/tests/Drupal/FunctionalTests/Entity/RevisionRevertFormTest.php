@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests reverting a revision with revision revert form.
  *
  * @group Entity
+ * @group #slow
  * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionRevertForm
  */
 class RevisionRevertFormTest extends BrowserTestBase {
@@ -52,6 +53,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    * @dataProvider providerPageTitle
    */
   public function testPageTitle(string $entityTypeId, string $expectedQuestion): void {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entityTypeId);
 
     $entity = $storage->create([
@@ -150,8 +152,9 @@ class RevisionRevertFormTest extends BrowserTestBase {
     $entity->save();
 
     // Reload the entity.
-    $revision = \Drupal::entityTypeManager()->getStorage('entity_test_rev')
-      ->loadRevision($revisionId);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+    $revision = $storage->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision-revert-form'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertTrue($revision->access('revert', $this->rootUser, FALSE));
@@ -181,6 +184,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
     if (count($permissions) > 0) {
       $this->drupalLogin($this->createUser($permissions));
     }
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entityTypeId);
 
     $entity = $storage->create([
@@ -303,6 +307,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
     $count = $this->countRevisions($entity->getEntityTypeId());
 
     // Load the revision to be copied.
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $targetRevision */
     $targetRevision = $storage->loadRevision($targetRevertRevisionId);
