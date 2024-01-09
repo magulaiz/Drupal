@@ -32,7 +32,7 @@
           )
           .toArray()
           .forEach((element) => {
-            element.classList.add('js-form-required form-required');
+            element.classList.add('js-form-required', 'form-required');
           });
       }
     },
