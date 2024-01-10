@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the user module.
  */
 
+// cspell:ignore jsonpaths
+
 /**
  * Implements hook_schema().
  */
