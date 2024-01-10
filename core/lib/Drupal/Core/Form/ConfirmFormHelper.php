@@ -32,7 +32,7 @@ class ConfirmFormHelper {
       // @todo Revisit this in https://www.drupal.org/node/2418219.
       try {
         $base_path = $request->getBasePath();
-        if ($base_path && strpos($options['path'], $base_path) === 0) {
+        if ($base_path && str_starts_with($options['path'], $base_path)) {
           $options['path'] = substr($options['path'], mb_strlen($base_path));
         }
         $url = Url::fromUserInput('/' . ltrim($options['path'], '/'), $options);
