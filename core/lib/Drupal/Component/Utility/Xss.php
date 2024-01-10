@@ -202,9 +202,6 @@ class Xss {
    *   Cleaned up version of the HTML attributes.
    */
   protected static function attributes($attributes, ?string $element) {
-    if ($element === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without passing the HTML elem is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3413401', E_USER_DEPRECATED);
-    }
     $attributes_array = [];
     $mode = 0;
     $attribute_name = '';
