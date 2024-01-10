@@ -33,6 +33,11 @@ system.admin_config:
   description: 'Administer settings.'
   route_name: system.admin_config
   weight: 0
+system.admin_config_block:
+  route_name: system.admin_config_block
+  parent: system.admin_config
+  title: Block
+  weight: -10
 system.admin_config_media:
   route_name: system.admin_config_media
   parent: system.admin_config

@@ -59,26 +59,18 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $controller;
 
   /**
-   * The block_content settings config.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $config;
-
-  /**
    * Constructs a RouteSubscriber object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, protected ConfigFactoryInterface $configFactory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
-    $this->config = $config_factory->get('block_content.settings');
   }
 
   /**
@@ -99,7 +91,7 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
     }
 
-    if ($this->config->get('standalone_url') && $route = $collection->get('entity.block_content.canonical')) {
+    if ($this->configFactory->get('block_content.settings')->get('standalone_url') && $route = $collection->get('entity.block_content.canonical')) {
       $route->setPath('/admin/content/block/{block_content}');
       $defaults = $route->getDefaults();
       unset($defaults['_entity_form']);
