@@ -274,6 +274,10 @@ class Xss {
           $working = 1;
           // Attribute value, a URL after href= for instance.
           if (preg_match('/^"([^"]*)"(\s+|$)/', $attributes, $match)) {
+            // The "data" URL scheme syntax.
+            // @see https://www.rfc-editor.org/rfc/rfc2397#section-3
+            // Media types are case-insensitive.
+            // @see https://datatracker.ietf.org/doc/html/rfc6838#section-4.2
             if ($element === 'img' && preg_match('/^data:image\/(?!svg\+xml;base64,)[^;]+;base64,/i', $match[1]) === 1) {
               $value = $match[1];
             }
