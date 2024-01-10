@@ -1867,11 +1867,6 @@ function install_finish_translations(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_finished(&$install_state) {
-  $profile = $install_state['parameters']['profile'];
-
-  // Installation profiles are always loaded last.
-  module_set_weight($profile, 1000);
-
   // Build the router once after installing all modules.
   // This would normally happen upon KernelEvents::TERMINATE, but since the
   // installer does not use an HttpKernel, that event is never triggered.

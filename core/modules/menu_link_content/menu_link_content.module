@@ -127,3 +127,16 @@ function menu_link_content_entity_predelete(EntityInterface $entity) {
     }
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function menu_link_content_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'path_update' || $hook == 'path_insert' || $hook == 'path_delete') {
+    // Move menu_link_content_path_*() implementations to the end of the list so
+    // that they occur after system_path_*().
+    $group = $implementations['menu_link_content'];
+    unset($implementations['menu_link_content']);
+    $implementations['menu_link_content'] = $group;
+  }
+}

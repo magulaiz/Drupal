@@ -48,9 +48,6 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     $this->setUpCurrentUser(['uid' => 0]);
     $this->installEntitySchema('menu_link_content');
 
-    // Ensure that the weight of module_link_content is higher than system.
-    // @see menu_link_content_install()
-    module_set_weight('menu_link_content', 1);
   }
 
   /**
