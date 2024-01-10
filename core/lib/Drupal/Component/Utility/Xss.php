@@ -274,7 +274,7 @@ class Xss {
           $working = 1;
           // Attribute value, a URL after href= for instance.
           if (preg_match('/^"([^"]*)"(\s+|$)/', $attributes, $match)) {
-            if ($element === 'img' && preg_match('/^data:image\/(?!svg\+xml;base64,)[^;]+;base64,/', $match[1]) === 1) {
+            if ($element === 'img' && preg_match('/^data:image\/(?!svg\+xml;base64,)[^;]+;base64,/i', $match[1]) === 1) {
               $value = $match[1];
             }
             else {

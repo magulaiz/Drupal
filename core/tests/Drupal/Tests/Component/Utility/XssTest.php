@@ -431,6 +431,12 @@ class XssTest extends TestCase {
         'Inline image with data uri that references an SVG',
         ['img'],
       ],
+      [
+        '<img src="data:image/SVG+XML;base64,foo">',
+        '<img src="data:image/svg+xml;base64,foo">',
+        'Inline image with data uri that references an SVG (uppercase version)',
+        ['img'],
+      ],
       // Netscape 4.x javascript entities.
       [
         '<br size="&{alert(0)}">',
