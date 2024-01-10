@@ -16,6 +16,7 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Header\MailboxHeader;
 
@@ -60,6 +61,13 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
   protected $instances = [];
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs the MailManager object.
    *
    * @param \Traversable $namespaces
@@ -77,8 +85,10 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    *   The string translation service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack used to retrieve the current request.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation, RendererInterface $renderer) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation, RendererInterface $renderer, RequestStack $request_stack = NULL) {
     parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Mail\MailInterface', 'Drupal\Core\Annotation\Mail');
     $this->alterInfo('mail_backend_info');
     $this->setCacheBackend($cache_backend, 'mail_backend_plugins');
@@ -86,6 +96,11 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     $this->loggerFactory = $logger_factory;
     $this->stringTranslation = $string_translation;
     $this->renderer = $renderer;
+    if (!$request_stack) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $request_stack argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3160453', E_USER_DEPRECATED);
+      $request_stack = \Drupal::service('request_stack');
+    }
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -281,7 +296,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     // Attempt to convert relative URLs to absolute.
     foreach ($message['body'] as &$body_part) {
       if ($body_part instanceof MarkupInterface) {
-        $body_part = Markup::create(Html::transformRootRelativeUrlsToAbsolute((string) $body_part, \Drupal::request()->getSchemeAndHttpHost()));
+        $body_part = Markup::create(Html::transformRootRelativeUrlsToAbsolute((string) $body_part, $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost()));
       }
     }
 
