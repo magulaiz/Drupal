@@ -15,7 +15,6 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Theme
  * @group legacy
- * @group #slow
  */
 class ThemeRenderAndAutoescapeTest extends KernelTestBase {
 
