@@ -13,6 +13,8 @@ use Drupal\user_data_test\JsonBackedUserData;
  * Test the example JSON-backed user data service.
  *
  * This is a bit of a showcase of functionality for JSON data storage.
+ *
+ * @group user
  */
 class JsonBackedUserDataExampleTest extends KernelTestBase {
 
