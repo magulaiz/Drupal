@@ -148,6 +148,10 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    *
    * @return string
    *   Returns a string containing a web accessible URL for the resource.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
+   *   Use StreamWrapperGetUrlInterface::getUrl instead.
+   * @see https://www.drupal.org/node/3376920
    */
   public function getExternalUrl();
 

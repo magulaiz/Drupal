@@ -39,7 +39,7 @@ class ComputedFileUrlTest extends KernelTestBase {
 
     $typed_data = new ComputedFileUrl($definition->reveal(), $this->randomMachineName(), $parent->reveal());
 
-    $expected = base_path() . $this->siteDirectory . '/files/druplicon.txt';
+    $expected = $this->siteDirectory . '/files/druplicon.txt';
 
     $this->assertSame($expected, $typed_data->getValue());
     // Do this a second time to confirm the same value is returned but the value

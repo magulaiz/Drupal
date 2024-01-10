@@ -5,6 +5,7 @@ namespace Drupal\Core\StreamWrapper;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Provides support for storing publicly accessible files with the Drupal file
  * interface.
  */
-class PublicStream extends LocalStream {
+class PublicStream extends LocalStream implements StreamWrapperGetUrlInterface {
 
   /**
    * {@inheritdoc}
@@ -47,8 +48,34 @@ class PublicStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
+    // TODO: Add deprecation warning.
+    return $this->getUrl()->toString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrl() : Url {
     $path = str_replace('\\', '/', $this->getTarget());
-    return static::baseUrl() . '/' . UrlHelper::encodePath($path);
+
+    $settings_base_url = Settings::get('file_public_base_url', '');
+    if ($settings_base_url) {
+      // When file_public_base_url is set, the URI will become full URL, so it's
+      // must be encoded as Url::fromUri() expects correct URL.
+      $uri = $settings_base_url . '/' . UrlHelper::encodePath($path);
+    }
+    elseif (str_starts_with(static::basePath(), 'vfs://')) {
+      $uri = static::basePath() . '/' . $path;
+    }
+    else {
+      $uri = 'base:/' . static::basePath() . '/' . $path;
+    }
+
+    // UnroutedUrlAssembler adds script when page is being accessed with
+    // a script name in the URL, but this is a file - no script is needed.
+    $options = ['script' => ''];
+
+    return Url::fromUri($uri, $options);
   }
 
   /**

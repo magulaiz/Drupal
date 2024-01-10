@@ -613,6 +613,11 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
+
+    // Allow 'vfs' protocol for testing, so URLs are properly built.
+    $filter_protocols = $container->getParameter('filter_protocols');
+    $filter_protocols[] = 'vfs';
+    $container->setParameter('filter_protocols', $filter_protocols);
   }
 
   /**

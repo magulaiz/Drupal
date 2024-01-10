@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  * Provides support for storing temporarily accessible files with the Drupal
  * file interface.
  */
-class TemporaryStream extends LocalStream {
+class TemporaryStream extends LocalStream implements StreamWrapperGetUrlInterface {
 
   /**
    * {@inheritdoc}
@@ -44,8 +44,15 @@ class TemporaryStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
+    return $this->getUrl()->toString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrl() : Url {
     $path = str_replace('\\', '/', $this->getTarget());
-    return Url::fromRoute('system.temporary', [], ['absolute' => TRUE, 'query' => ['file' => $path]])->toString();
+    return Url::fromRoute('system.temporary', [], ['absolute' => TRUE, 'query' => ['file' => $path]]);
   }
 
 }

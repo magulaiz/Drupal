@@ -3,14 +3,16 @@
 namespace Drupal\file_test\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\ReadOnlyStream;
+use Drupal\Core\StreamWrapper\StreamWrapperGetUrlInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\Url;
 
 /**
  * Helper class for testing the stream wrapper registry.
  *
  * Dummy external stream wrapper implementation (dummy-external-readonly://).
  */
-class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
+class DummyExternalReadOnlyWrapper extends ReadOnlyStream implements StreamWrapperGetUrlInterface {
 
   /**
    * {@inheritdoc}
@@ -37,8 +39,15 @@ class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
+    return $this->getUrl()->toString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrl(): Url {
     [, $target] = explode('://', $this->uri, 2);
-    return 'https://www.dummy-external-readonly.com/' . $target;
+    return Url::fromUri('https://www.dummy-external-readonly.com/' . $target);
   }
 
   /**
