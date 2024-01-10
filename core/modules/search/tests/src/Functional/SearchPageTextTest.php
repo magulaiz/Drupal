@@ -83,7 +83,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains('search yielded no results');
     $this->assertSession()->pageTextContains('Search');
-    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Search | Drupal');
+    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
     $this->assertSession()->pageTextNotContains('Node');
     $this->assertSession()->pageTextNotContains('Node');
     $this->assertSession()->pageTextContains('Content');
@@ -98,20 +98,20 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertSession()->titleEquals('Search for Every word is like an unnecessary stain on silence and… | Search | Drupal');
+    $this->assertSession()->titleEquals('Search for Every word is like an unnecessary stain on silence and… | Drupal');
 
     // Search for a string with a lot of special characters.
     $search_terms = 'Hear nothing > "see nothing" `feel' . " '1982.";
     $edit['keys'] = $search_terms;
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Search | Drupal');
+    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
 
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains('Search');
-    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($this->searchingUser->getAccountName(), 60, TRUE, TRUE) . ' | Search | Drupal');
+    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($this->searchingUser->getAccountName(), 60, TRUE, TRUE) . ' | Drupal');
 
     $this->clickLink('About searching');
     $this->assertSession()->pageTextContains('About searching');
