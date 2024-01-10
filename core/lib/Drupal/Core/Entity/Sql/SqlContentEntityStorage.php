@@ -1534,7 +1534,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function fromStoredValue(mixed $value, array $column_attributes): mixed {
     if ($column_attributes['type'] === 'json') {
-      return json_decode($value, TRUE, flags: JSON_THROW_ON_ERROR);
+      return json_decode($value, TRUE, JSON_THROW_ON_ERROR);
     }
     if (!empty($column_attributes['serialize'])) {
       // @todo Hardening - Provide a way to guard allowed classes.

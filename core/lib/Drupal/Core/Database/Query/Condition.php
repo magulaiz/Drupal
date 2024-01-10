@@ -148,7 +148,7 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
       throw new InvalidQueryException(sprintf(
         'Operator %s is not supported by %s. Allowed operators include: %s',
         $operator,
-        __CLASS__ . '::' . __METHOD__,
+        __METHOD__,
         implode(', ', $allowed_operators),
       ));
     }
