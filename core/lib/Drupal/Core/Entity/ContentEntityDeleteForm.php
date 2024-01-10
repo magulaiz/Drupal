@@ -64,6 +64,9 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
     if (!$entity->isDefaultTranslation()) {
       $untranslated_entity = $entity->getUntranslated();
       $untranslated_entity->removeTranslation($entity->language()->getId());
+      if ($untranslated_entity instanceof RevisionLogInterface) {
+        $untranslated_entity->setRevisionLogMessage($message);
+      }
       $untranslated_entity->save();
       $form_state->setRedirectUrl($untranslated_entity->toUrl('canonical'));
     }
