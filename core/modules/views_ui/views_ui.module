@@ -5,6 +5,8 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -336,15 +338,23 @@ function views_ui_views_analyze(ViewExecutable $view) {
 }
 
 /**
- * Truncate strings to a set length and provide a '...' if they truncated.
+ * Truncate strings to a set length and provide a '…' if they truncated.
  *
  * This is often used in the UI to ensure long strings fit.
  */
 function views_ui_truncate($string, $length) {
-  if (mb_strlen($string) > $length) {
-    $string = mb_substr($string, 0, $length);
-    $string .= '...';
+  if (mb_strlen($string) <= $length) {
+    return $string;
   }
 
-  return $string;
+  // Strip any HTML. This might shorten it to be less than $length;
+  $raw_string = PlainTextOutput::renderFromHtml($string);
+  if (mb_strlen($raw_string) <= $length) {
+    // Return the original string because without HTML it is less than $length.
+    return $string;
+  }
+
+  // Ensure the string length does not exceed $length. Safeness is no longer
+  // important because the string contains no HTML.
+  return Unicode::truncate($raw_string, $length, TRUE, TRUE);
 }
