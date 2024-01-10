@@ -194,7 +194,7 @@ abstract class QueryBase implements QueryInterface {
    */
   public function range($start = NULL, $length = NULL) {
     $this->range = [
-      'start' => $start,
+      'start' => $start ?? 0,
       'length' => $length,
     ];
     return $this;
