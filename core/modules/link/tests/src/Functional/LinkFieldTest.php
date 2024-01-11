@@ -898,10 +898,7 @@ class LinkFieldTest extends BrowserTestBase {
    * @param string $field_name
    *   The field name.
    * @param array $valid_entries
-   *   The values to be saved in the link field.
-   *
-   * @return string
-   *   The rendered HTML output.
+   *   The values to be saved in the link field..
    */
   protected function assertDeletedEntries(string $field_name, array $valid_entries): void {
     $entities_created = [];
