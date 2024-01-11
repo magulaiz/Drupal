@@ -72,7 +72,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static  {
     return new static(
       $configuration,
       $plugin_id,
@@ -122,7 +122,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, FormStateInterface $form_state) {
+  public function blockForm($form, FormStateInterface $form_state) : array {
     $form['base_route_title'] = [
       '#type' => 'radios',
       '#title' => $this->t('Title to be displayed'),
@@ -139,7 +139,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, FormStateInterface $form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) : void {
     $this->configuration['base_route_title'] = (bool) $form_state->getValue('base_route_title');
   }
 

@@ -23,7 +23,7 @@ function block_removed_post_updates() {
 /**
  * Add 'base_route_title' setting for page title blocks.
  */
-function block_post_update_add_base_route_title_page_title(&$sandbox = NULL) {
+function block_post_update_add_base_route_title_page_title(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'block', function (BlockInterface $block) {
       if ($block->get('plugin') == 'page_title_block') {

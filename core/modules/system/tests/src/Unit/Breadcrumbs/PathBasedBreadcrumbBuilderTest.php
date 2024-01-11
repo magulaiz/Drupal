@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Breadcrumbs;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -16,9 +21,11 @@ use Drupal\Core\Utility\RequestGenerator;
 use Drupal\system\PathBasedBreadcrumbBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -32,63 +39,63 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @var \Drupal\system\PathBasedBreadcrumbBuilder
    */
-  protected $builder;
+  protected PathBasedBreadcrumbBuilder $builder;
 
   /**
    * The mocked title resolver.
    *
    * @var \Drupal\Core\Controller\TitleResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $titleResolver;
+  protected TitleResolverInterface|MockObject $titleResolver;
 
   /**
    * The mocked access manager.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $accessManager;
+  protected AccessManagerInterface|MockObject $accessManager;
 
   /**
    * The request matching mock object.
    *
    * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $requestMatcher;
+  protected RequestMatcherInterface|MockObject $requestMatcher;
 
   /**
    * The mocked route request context.
    *
    * @var \Drupal\Core\Routing\RequestContext|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $context;
+  protected RequestContext|MockObject $context;
 
   /**
    * The mocked current user.
    *
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $currentUser;
+  protected AccountInterface|MockObject $currentUser;
 
   /**
    * The mocked path processor.
    *
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $pathProcessor;
+  protected InboundPathProcessorInterface|MockObject $pathProcessor;
 
   /**
    * The mocked path matcher service.
    *
    * @var \Drupal\Core\Path\PathMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $pathMatcher;
+  protected PathMatcherInterface|MockObject $pathMatcher;
 
   /**
    * The request generator service.
    *
    * @var \Drupal\Core\Utility\RequestGenerator|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $requestGenerator;
+  protected RequestGenerator|MockObject $requestGenerator;
 
   /**
    * {@inheritdoc}

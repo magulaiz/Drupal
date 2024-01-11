@@ -134,10 +134,10 @@ class RequestGeneratorTest extends UnitTestCase {
   /**
    * Data provider for testGenerateRequestForPathWithException().
    *
-   * @return array
+   * @return \Generator
    *   The test cases.
    */
-  public function providerTestGenerateRequestForPathWithException() {
+  public function providerTestGenerateRequestForPathWithException(): \Generator {
     yield 'ParamNotConvertedException' => [ParamNotConvertedException::class, ''];
     yield 'ResourceNotFoundException' => [ResourceNotFoundException::class, ''];
     yield 'MethodNotAllowedException' => [MethodNotAllowedException::class, []];

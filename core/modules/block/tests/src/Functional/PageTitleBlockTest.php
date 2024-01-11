@@ -117,7 +117,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    * @return array[][]
    *   The test cases.
    */
-  public function providerTestContextualizeTitleOnNodeOperationPages() {
+  public function providerTestContextualizeTitleOnNodeOperationPages() : array {
     return [
       'node with random title' => [$this->randomMachineName(8)],
       'node with title set to 0' => ['0'],

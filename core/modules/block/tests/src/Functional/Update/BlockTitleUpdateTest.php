@@ -27,7 +27,7 @@ class BlockTitleUpdateTest extends UpdatePathTestBase {
    * @return array[][]
    *   The test cases.
    */
-  public function providerTestPostUpdateAddContextualizePageTitle() {
+  public function providerTestPostUpdateAddContextualizePageTitle() : array {
     return [
       'Stark theme' => ['stark', FALSE],
       // For claro the 'base_route_title' configuration is enabled by default.
