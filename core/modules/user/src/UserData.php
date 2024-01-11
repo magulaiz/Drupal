@@ -34,7 +34,7 @@ class UserData implements UserDataInterface {
       ->fields('ud')
       ->condition('module', $module);
     if (isset($uid)) {
-      $query->condition('uid', $uid);
+      $query->condition('uid', (int) $uid);
     }
     if (isset($name)) {
       $query->condition('name', $name);
@@ -80,7 +80,7 @@ class UserData implements UserDataInterface {
     }
     $this->connection->merge('users_data')
       ->keys([
-        'uid' => $uid,
+        'uid' => (int) $uid,
         'module' => $module,
         'name' => $name,
       ])

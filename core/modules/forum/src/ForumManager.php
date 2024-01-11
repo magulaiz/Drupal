@@ -323,7 +323,7 @@ class ForumManager implements ForumManagerInterface {
     if (empty($this->history[$nid])) {
       $result = $this->connection->select('history', 'h')
         ->fields('h', ['nid', 'timestamp'])
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       foreach ($result as $t) {
         $this->history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;
@@ -485,7 +485,7 @@ class ForumManager implements ForumManagerInterface {
     $query->leftJoin('history', 'h', '[n].[nid] = [h].[nid] AND [h].[uid] = :uid', [':uid' => $uid]);
     $query->addExpression('COUNT([n].[nid])', 'count');
     return $query
-      ->condition('status', 1)
+      ->condition('status', TRUE)
       // @todo This should be actually filtering on the desired node status
       //   field language and just fall back to the default language.
       ->condition('n.default_langcode', 1)

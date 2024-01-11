@@ -43,7 +43,7 @@ class EntityTestController extends ControllerBase {
 
     $query = $this->entityTypeManager()->getStorage('entity_test')->getQuery()
       ->accessCheck(TRUE)
-      ->condition($entity_reference_field_name . '.target_id', $referenced_entity_id);
+      ->condition($entity_reference_field_name . '.target_id', (int) $referenced_entity_id);
     $entities = $this->entityTypeManager()
       ->getStorage('entity_test')
       ->loadMultiple($query->execute());

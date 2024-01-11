@@ -570,7 +570,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // Get the revision IDs.
         $revision_ids = [];
         foreach ($values as $entity_values) {
-          $revision_ids[] = $entity_values[$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT];
+          $revision_ids[] = (int) $entity_values[$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT];
         }
         $query->condition('revision.' . $this->revisionKey, $revision_ids, 'IN');
       }
@@ -638,12 +638,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function doDeleteRevisionFieldItems(ContentEntityInterface $revision) {
     $this->database->delete($this->revisionTable)
-      ->condition($this->revisionKey, $revision->getRevisionId())
+      ->condition($this->revisionKey, (int) $revision->getRevisionId())
       ->execute();
 
     if ($this->revisionDataTable) {
       $this->database->delete($this->revisionDataTable)
-        ->condition($this->revisionKey, $revision->getRevisionId())
+        ->condition($this->revisionKey, (int) $revision->getRevisionId())
         ->execute();
     }
 
@@ -661,7 +661,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Default to the original entity language if not explicitly specified
       // otherwise.
       if (!array_key_exists($this->defaultLangcodeKey, $values)) {
-        $values[$this->defaultLangcodeKey] = 1;
+        $values[$this->defaultLangcodeKey] = TRUE;
       }
       // If the 'default_langcode' flag is explicitly not set, we do not care
       // whether the queried values are in the original entity language or not.
@@ -927,7 +927,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             $this->database
               ->update($this->revisionTable)
               ->fields((array) $record)
-              ->condition($this->revisionKey, $entity->getRevisionId())
+              ->condition($this->revisionKey, (int) $entity->getRevisionId())
               ->execute();
           }
         }
@@ -1004,7 +1004,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $value = $revision ? $entity->getRevisionId() : $entity->id();
       // Delete and insert to handle removed values.
       $this->database->delete($table_name)
-        ->condition($key, $value)
+        ->condition($key, (is_numeric($value) ? (int) $value : $value))
         ->execute();
     }
 
@@ -1173,7 +1173,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $this->database
         ->update($this->revisionTable)
         ->fields((array) $record)
-        ->condition($this->revisionKey, $entity->getRevisionId())
+        ->condition($this->revisionKey, (int) $entity->getRevisionId())
         ->execute();
     }
     return $entity->getRevisionId();
@@ -1236,7 +1236,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $results = $this->database->select($table, 't')
         ->fields('t')
         ->condition(!$load_from_revision ? 'entity_id' : 'revision_id', $ids, 'IN')
-        ->condition('deleted', 0)
+        ->condition('deleted', FALSE)
         ->condition('langcode', $langcodes, 'IN')
         ->orderBy('delta')
         ->execute();
@@ -1335,13 +1335,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // of an entity.
         if ($entity->isDefaultRevision()) {
           $this->database->delete($table_name)
-            ->condition('entity_id', $id)
+            ->condition('entity_id', (is_numeric($id) ? (int) $id : $id))
             ->execute();
         }
         if ($this->entityType->isRevisionable()) {
           $this->database->delete($revision_name)
-            ->condition('entity_id', $id)
-            ->condition('revision_id', $vid)
+            ->condition('entity_id', (is_numeric($id) ? (int) $id : $id))
+            ->condition('revision_id', (int) $vid)
             ->execute();
         }
       }
@@ -1421,11 +1421,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
       $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
       $this->database->delete($table_name)
-        ->condition('entity_id', $entity->id())
+        ->condition('entity_id', (is_numeric($entity->id()) ? (int) $entity->id() : $entity->id()))
         ->execute();
       if ($this->entityType->isRevisionable()) {
         $this->database->delete($revision_name)
-          ->condition('entity_id', $entity->id())
+          ->condition('entity_id', (is_numeric($entity->id()) ? (int) $entity->id() : $entity->id()))
           ->execute();
       }
     }
@@ -1447,8 +1447,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
         $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
         $this->database->delete($revision_name)
-          ->condition('entity_id', $entity->id())
-          ->condition('revision_id', $vid)
+          ->condition('entity_id', (is_numeric($entity->id()) ? (int) $entity->id() : $entity->id()))
+          ->condition('revision_id', (int) $vid)
           ->execute();
       }
     }
@@ -1672,8 +1672,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     foreach ($entity_query->execute() as $row) {
       $item_query = $this->database->select($table_name, 't', ['fetch' => \PDO::FETCH_ASSOC])
         ->fields('t')
-        ->condition('entity_id', $row['entity_id'])
-        ->condition('deleted', 1)
+        ->condition('entity_id', (is_numeric($row['entity_id']) ? (int) $row['entity_id'] : $row['entity_id']))
+        ->condition('deleted', TRUE)
         ->orderBy('delta');
 
       foreach ($item_query->execute() as $item_row) {
@@ -1711,13 +1711,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $is_deleted);
     $revision_id = $this->entityType->isRevisionable() ? $entity->getRevisionId() : $entity->id();
     $this->database->delete($table_name)
-      ->condition('revision_id', $revision_id)
-      ->condition('deleted', 1)
+      ->condition('revision_id', (int) $revision_id)
+      ->condition('deleted', TRUE)
       ->execute();
     if ($this->entityType->isRevisionable()) {
       $this->database->delete($revision_name)
-        ->condition('revision_id', $revision_id)
-        ->condition('deleted', 1)
+        ->condition('revision_id', (int) $revision_id)
+        ->condition('deleted', TRUE)
         ->execute();
     }
   }

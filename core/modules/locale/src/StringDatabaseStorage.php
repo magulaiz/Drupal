@@ -143,13 +143,13 @@ class StringDatabaseStorage implements StringStorageInterface {
           // Make sure that the name isn't longer than 255 characters.
           $name = substr($name, 0, 255);
           if (!$lid) {
-            $this->dbDelete('locales_location', ['sid' => $string->getId(), 'type' => $type, 'name' => $name])
+            $this->dbDelete('locales_location', ['sid' => (int) $string->getId(), 'type' => $type, 'name' => $name])
               ->execute();
           }
           elseif ($lid === TRUE) {
             // This is a new location to add, take care not to duplicate.
             $this->connection->merge('locales_location', $this->options)
-              ->keys(['sid' => $string->getId(), 'type' => $type, 'name' => $name])
+              ->keys(['sid' => (int) $string->getId(), 'type' => $type, 'name' => $name])
               ->fields(['version' => \Drupal::VERSION])
               ->execute();
             $created = TRUE;
@@ -176,7 +176,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     if ($string->getId() && $string->getVersion() != $version) {
       $string->setVersion($version);
       $this->connection->update('locales_source', $this->options)
-        ->condition('lid', $string->getId())
+        ->condition('lid', (int) $string->getId())
         ->fields(['version' => $version])
         ->execute();
     }

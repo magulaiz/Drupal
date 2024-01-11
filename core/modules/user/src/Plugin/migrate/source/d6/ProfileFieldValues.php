@@ -40,7 +40,7 @@ class ProfileFieldValues extends DrupalSqlBase {
       ->fields('pv', ['fid', 'value']);
     $query->leftJoin('profile_fields', 'pf', '[pf].[fid] = [pv].[fid]');
     $query->fields('pf', ['name', 'type']);
-    $query->condition('uid', $row->getSourceProperty('uid'));
+    $query->condition('uid', (int) $row->getSourceProperty('uid'));
     $results = $query->execute();
 
     foreach ($results as $profile_value) {

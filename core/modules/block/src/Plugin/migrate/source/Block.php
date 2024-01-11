@@ -139,7 +139,7 @@ class Block extends DrupalSqlBase {
         if ($type == 'feed') {
           $item_count = $this->select('aggregator_feed', 'af')
             ->fields('af', ['block'])
-            ->condition('fid', $id)
+            ->condition('fid', (int) $id)
             ->execute()
             ->fetchField();
         }

@@ -149,6 +149,9 @@ class DefaultMenuLinkTreeManipulators {
     $this->collectNodeLinks($tree, $node_links);
     if ($node_links) {
       $nids = array_keys($node_links);
+      foreach ($nids as &$nid) {
+        $nid = (int) $nid;
+      }
 
       $query = $this->entityTypeManager->getStorage('node')->getQuery();
       $query->accessCheck(TRUE);
@@ -165,7 +168,7 @@ class DefaultMenuLinkTreeManipulators {
       else {
         $access_result->addCacheContexts(['user.node_grants:view']);
         if (!$this->moduleHandler->hasImplementations('node_grants') && !$this->account->hasPermission('view any unpublished content')) {
-          $query->condition('status', NodeInterface::PUBLISHED);
+          $query->condition('status', (bool) NodeInterface::PUBLISHED);
         }
       }
 

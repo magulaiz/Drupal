@@ -89,11 +89,11 @@ abstract class FieldableEntity extends DrupalSqlBase {
     $query = $this->select($table, 't')
       ->fields('t')
       ->condition('entity_type', $entity_type)
-      ->condition('entity_id', $entity_id)
+      ->condition('entity_id', (is_numeric($entity_id) ? (int) $entity_id : $entity_id))
       ->condition('deleted', 0)
       ->orderBy('delta');
     if (isset($revision_id)) {
-      $query->condition('revision_id', $revision_id);
+      $query->condition('revision_id', (int) $revision_id);
     }
     // Add 'language' as a query condition if it has been defined by Entity
     // Translation.

@@ -184,12 +184,12 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     );
 
     $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
-    $ids = $query->condition('changed', $changed_en)->condition('default_langcode', '1')->execute();
+    $ids = $query->condition('changed', $changed_en)->condition('default_langcode', TRUE)->execute();
 
     $this->assertEquals($entity->id(), reset($ids), 'Entity query can access changed time of default language.');
 
     $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
-    $ids = $query->condition('changed', $changed_de)->condition('default_langcode', '1')->execute();
+    $ids = $query->condition('changed', $changed_de)->condition('default_langcode', TRUE)->execute();
 
     $this->assertEmpty(
       $ids,

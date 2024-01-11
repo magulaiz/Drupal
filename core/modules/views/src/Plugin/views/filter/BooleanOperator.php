@@ -253,18 +253,18 @@ class BooleanOperator extends FilterPluginBase {
       if ($this->accept_null) {
         if ($query_operator === self::EQUAL) {
           $condition = ($this->query->getConnection()->condition('OR'))
-            ->condition($field, 0, $query_operator)
+            ->condition($field, FALSE, $query_operator)
             ->isNull($field);
         }
         else {
           $condition = ($this->query->getConnection()->condition('AND'))
-            ->condition($field, 0, $query_operator)
+            ->condition($field, FALSE, $query_operator)
             ->isNotNull($field);
         }
         $this->query->addWhere($this->options['group'], $condition);
       }
       else {
-        $this->query->addWhere($this->options['group'], $field, 0, $query_operator);
+        $this->query->addWhere($this->options['group'], $field, FALSE, $query_operator);
       }
     }
     else {
@@ -272,14 +272,14 @@ class BooleanOperator extends FilterPluginBase {
         // Forces a self::EQUAL operator instead of a self::NOT_EQUAL for
         // performance reasons.
         if ($query_operator === self::EQUAL) {
-          $this->query->addWhere($this->options['group'], $field, 1, self::EQUAL);
+          $this->query->addWhere($this->options['group'], $field, TRUE, self::EQUAL);
         }
         else {
-          $this->query->addWhere($this->options['group'], $field, 0, self::EQUAL);
+          $this->query->addWhere($this->options['group'], $field, FALSE, self::EQUAL);
         }
       }
       else {
-        $this->query->addWhere($this->options['group'], $field, 1, $query_operator);
+        $this->query->addWhere($this->options['group'], $field, TRUE, $query_operator);
       }
     }
   }

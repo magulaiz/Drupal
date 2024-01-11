@@ -163,8 +163,8 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       // not show unpublished books.
       $nid = \Drupal::entityQuery('node')
         ->accessCheck(TRUE)
-        ->condition('nid', $node->book['bid'], '=')
-        ->condition('status', NodeInterface::PUBLISHED)
+        ->condition('nid', (int) $node->book['bid'], '=')
+        ->condition('status', (bool) NodeInterface::PUBLISHED)
         ->execute();
 
       // Only show the block if the user has view access for the top-level node.

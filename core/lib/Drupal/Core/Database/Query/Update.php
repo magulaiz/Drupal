@@ -143,6 +143,10 @@ class Update extends Query implements ConditionInterface {
     }
 
     if (count($this->condition)) {
+      if ($this->getConditionParameterTypeCheck()) {
+        $this->getConditionParameterTypeCheck()->checkParameterTypes([$this->table], $this->conditions());
+      }
+
       $this->condition->compile($this->connection, $this);
       $update_values = array_merge($update_values, $this->condition->arguments());
     }

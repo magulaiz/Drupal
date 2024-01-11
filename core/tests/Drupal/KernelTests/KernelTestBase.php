@@ -402,6 +402,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
     }
 
+    // Lets the database know that we are in testing mode.
+    Database::getConnection()->setInTesting(TRUE);
+
     if ($modules) {
       $this->container->get('module_handler')->loadAll();
     }

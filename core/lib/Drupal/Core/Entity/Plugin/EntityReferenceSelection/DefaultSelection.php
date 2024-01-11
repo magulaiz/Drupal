@@ -375,6 +375,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
   public function validateReferenceableEntities(array $ids) {
     $result = [];
     if ($ids) {
+      foreach ($ids as &$id) {
+        if (is_numeric($id)) {
+          $id = (int) $id;
+        }
+      }
       $target_type = $this->configuration['target_type'];
       $entity_type = $this->entityTypeManager->getDefinition($target_type);
       $query = $this->buildEntityQuery();

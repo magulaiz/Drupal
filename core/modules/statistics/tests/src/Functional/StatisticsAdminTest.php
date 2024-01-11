@@ -181,7 +181,7 @@ class StatisticsAdminTest extends BrowserTestBase {
 
     $result = Database::getConnection()->select('node_counter', 'nc')
       ->fields('nc', ['daycount'])
-      ->condition('nid', $this->testNode->id(), '=')
+      ->condition('nid', (int) $this->testNode->id(), '=')
       ->execute()
       ->fetchField();
     $this->assertEmpty($result, 'Daycount is zero.');

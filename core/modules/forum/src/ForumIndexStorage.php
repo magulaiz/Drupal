@@ -63,7 +63,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function delete(NodeInterface $node) {
     $this->database->delete('forum')
-      ->condition('nid', $node->id())
+      ->condition('nid', (int) $node->id())
       ->execute();
   }
 
@@ -72,8 +72,8 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function deleteRevision(NodeInterface $node) {
     $this->database->delete('forum')
-      ->condition('nid', $node->id())
-      ->condition('vid', $node->getRevisionId())
+      ->condition('nid', (int) $node->id())
+      ->condition('vid', (int) $node->getRevisionId())
       ->execute();
   }
 
@@ -83,7 +83,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
   public function update(NodeInterface $node) {
     $this->database->update('forum')
       ->fields(['tid' => $node->forum_tid])
-      ->condition('vid', $node->getRevisionId())
+      ->condition('vid', (int) $node->getRevisionId())
       ->execute();
   }
 
@@ -91,7 +91,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    * {@inheritdoc}
    */
   public function updateIndex(NodeInterface $node) {
-    $nid = $node->id();
+    $nid = (int) $node->id();
     $count = $this->database->query("SELECT COUNT([cid]) FROM {comment_field_data} [c] INNER JOIN {forum_index} [i] ON [c].[entity_id] = [i].[nid] WHERE [c].[entity_id] = :nid AND [c].[field_name] = 'comment_forum' AND [c].[entity_type] = 'node' AND [c].[status] = :status AND [c].[default_langcode] = 1", [
       ':nid' => $nid,
       ':status' => CommentInterface::PUBLISHED,
@@ -108,7 +108,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
           'comment_count' => $count,
           'last_comment_timestamp' => $last_reply->created,
         ])
-        ->condition('nid', $nid)
+        ->condition('nid', (int) $nid)
         ->execute();
     }
     else {
@@ -119,7 +119,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
           'comment_count' => 0,
           'last_comment_timestamp' => $node->getCreatedTime(),
         ])
-        ->condition('nid', $nid)
+        ->condition('nid', (int) $nid)
         ->execute();
     }
   }
@@ -157,7 +157,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function deleteIndex(NodeInterface $node) {
     $this->database->delete('forum_index')
-      ->condition('nid', $node->id())
+      ->condition('nid', (int) $node->id())
       ->execute();
   }
 

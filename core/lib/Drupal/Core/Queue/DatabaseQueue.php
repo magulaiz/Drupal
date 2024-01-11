@@ -142,7 +142,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         ->fields([
           'expire' => \Drupal::time()->getCurrentTime() + $lease_time,
         ])
-        ->condition('item_id', $item->item_id)
+        ->condition('item_id', (int) $item->item_id)
         ->condition('expire', 0);
       // If there are affected rows, this update succeeded.
       if ($update->execute()) {
@@ -161,7 +161,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         ->fields([
           'expire' => 0,
         ])
-        ->condition('item_id', $item->item_id);
+        ->condition('item_id', (int) $item->item_id);
       return (bool) $update->execute();
     }
     catch (\Exception $e) {
@@ -188,7 +188,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         ->fields([
           'expire' => $expire,
         ])
-        ->condition('item_id', $item->item_id);
+        ->condition('item_id', (int) $item->item_id);
       return (bool) $update->execute();
     }
     catch (\Exception $e) {
@@ -204,7 +204,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   public function deleteItem($item) {
     try {
       $this->connection->delete(static::TABLE_NAME)
-        ->condition('item_id', $item->item_id)
+        ->condition('item_id', (int) $item->item_id)
         ->execute();
     }
     catch (\Exception $e) {

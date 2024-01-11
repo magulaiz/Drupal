@@ -238,6 +238,13 @@ abstract class Connection {
   private array $enabledEvents = [];
 
   /**
+   * Whether we are in testing mode.
+   *
+   * @var bool
+   */
+  protected $inTesting = FALSE;
+
+  /**
    * The transaction manager.
    */
   protected TransactionManagerInterface|FALSE $transactionManager;
@@ -1046,7 +1053,7 @@ abstract class Connection {
   public function select($table, $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
     $class = $this->getDriverClass('Select');
-    return new $class($this, $table, $alias, $options);
+    return new $class($this, $table, $alias, $options, $this->inTesting);
   }
 
   /**
@@ -2208,6 +2215,29 @@ abstract class Connection {
     // @todo: allow a backtrace including all arguments as an option.
     // See https://www.drupal.org/project/drupal/issues/3401906
     return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+  }
+
+  /**
+   * Change the in testing mode.
+   *
+   * @param bool $mode
+   *   The in testing mode to be set.
+   *
+   * @return $this
+   */
+  public function setInTesting(bool $mode = FALSE): Connection {
+    $this->inTesting = $mode;
+
+    return $this;
+  }
+
+  /**
+   * Return the in testing value.
+   *
+   * @return bool
+   */
+  public function inTesting(): bool {
+    return $this->inTesting;
   }
 
 }

@@ -254,7 +254,7 @@ class TemporaryQueryGuard {
         // Allow access only to reusable blocks.
         // @see \Drupal\block_content\BlockContentAccessControlHandler::checkAccess()
         if (isset(static::$fieldManager->getBaseFieldDefinitions($entity_type_id)['reusable'])) {
-          $specific_condition = new EntityCondition('reusable', 1);
+          $specific_condition = new EntityCondition('reusable', TRUE);
           $cacheability->addCacheTags($entity_type->getListCacheTags());
         }
         break;
@@ -284,7 +284,7 @@ class TemporaryQueryGuard {
         // @see \Drupal\file\FileAccessControlHandler::checkAccess()
         $specific_condition = new EntityConditionGroup('OR', [
           new EntityCondition('uri', 'public://', 'STARTS_WITH'),
-          new EntityCondition('uid', $current_user->id()),
+          new EntityCondition('uid', (int) $current_user->id()),
         ]);
         $cacheability->addCacheTags($entity_type->getListCacheTags());
         break;
@@ -303,7 +303,7 @@ class TemporaryQueryGuard {
       case 'user':
         // Disallow querying values of the anonymous user.
         // @see \Drupal\user\UserAccessControlHandler::checkAccess()
-        $specific_condition = new EntityCondition('uid', '0', '!=');
+        $specific_condition = new EntityCondition('uid', 0, '!=');
         break;
     }
 
@@ -377,7 +377,7 @@ class TemporaryQueryGuard {
       $access_result = $access_results[JSONAPI_FILTER_AMONG_ENABLED];
       $cacheability->addCacheableDependency($access_result);
       if ($access_result->isAllowed()) {
-        $conditions[] = new EntityCondition($status_field_name, 1);
+        $conditions[] = new EntityCondition($status_field_name, TRUE);
         $cacheability->addCacheTags($entity_type->getListCacheTags());
       }
     }
@@ -391,7 +391,7 @@ class TemporaryQueryGuard {
       if ($access_result->isAllowed()) {
         $cacheability->addCacheContexts(['user']);
         if ($account->isAuthenticated()) {
-          $conditions[] = new EntityCondition($owner_field_name, $account->id());
+          $conditions[] = new EntityCondition($owner_field_name, (int) $account->id());
           $cacheability->addCacheTags($entity_type->getListCacheTags());
         }
       }

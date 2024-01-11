@@ -61,7 +61,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
   public function getChildRelativeDepth($book_link, $max_depth) {
     $query = $this->connection->select('book');
     $query->addField('book', 'depth');
-    $query->condition('bid', $book_link['bid']);
+    $query->condition('bid', (int) $book_link['bid']);
     $query->orderBy('depth', 'DESC');
     $query->range(0, 1);
 
@@ -80,7 +80,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
    */
   public function delete($nid) {
     return $this->connection->delete('book')
-      ->condition('nid', $nid)
+      ->condition('nid', (int) $nid)
       ->execute();
   }
 
@@ -102,7 +102,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
     for ($i = 1; $i <= $max_depth; $i++) {
       $query->orderBy('p' . $i, 'ASC');
     }
-    $query->condition('bid', $bid);
+    $query->condition('bid', (int) $bid);
     if (!empty($parameters['expanded'])) {
       $query->condition('pid', $parameters['expanded'], 'IN');
     }
@@ -144,7 +144,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
     return $this->connection
       ->update('book')
       ->fields($fields)
-      ->condition('nid', $nid)
+      ->condition('nid', (int) $nid)
       ->execute();
   }
 
@@ -160,7 +160,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
     }
 
     $query->expression('depth', '[depth] + :depth', [':depth' => $shift]);
-    $query->condition('bid', $original['bid']);
+    $query->condition('bid', (int) $original['bid']);
     $p = 'p1';
     for ($i = 1; !empty($original[$p]); $p = 'p' . ++$i) {
       $query->condition($p, $original[$p]);
@@ -174,9 +174,9 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
    */
   public function countOriginalLinkChildren($original) {
     return $this->connection->select('book', 'b')
-      ->condition('bid', $original['bid'])
-      ->condition('pid', $original['pid'])
-      ->condition('nid', $original['nid'], '<>')
+      ->condition('bid', (int) $original['bid'])
+      ->condition('pid', (int) $original['pid'])
+      ->condition('nid', (int) $original['nid'], '<>')
       ->countQuery()
       ->execute()->fetchField();
   }

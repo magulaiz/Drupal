@@ -134,7 +134,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->fields([
         'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
-      ->condition('fid', $node_file_r3->id())
+      ->condition('fid', (int) $node_file_r3->id())
       ->execute();
     \Drupal::service('cron')->run();
 
@@ -152,7 +152,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->fields([
         'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
-      ->condition('fid', $node_file_r1->id())
+      ->condition('fid', (int) $node_file_r1->id())
       ->execute();
     \Drupal::service('cron')->run();
     $this->assertFileDoesNotExist($node_file_r1->getFileUri());

@@ -91,10 +91,10 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
           ])
           ->condition('workspace', $affected_workspaces, 'IN')
           ->condition('target_entity_type_id', $entity->getEntityTypeId())
-          ->condition('target_entity_id', $entity->id())
+          ->condition('target_entity_id', (int) $entity->id())
           // Only update descendant workspaces if they have the same initial
           // revision, which means they are currently inheriting content.
-          ->condition('target_entity_revision_id', $tracked_revision_id)
+          ->condition('target_entity_revision_id', (int) $tracked_revision_id)
           ->execute();
       }
 
@@ -154,6 +154,13 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
+        if (is_array($entity_ids)) {
+          foreach ($entity_ids as &$entity_id) {
+            if (is_numeric($entity_id)) {
+              $entity_id = (int) $entity_id;
+            }
+          }
+        }
         $query->condition('target_entity_id', $entity_ids, 'IN');
       }
     }
@@ -251,10 +258,11 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity) {
+    $entity_id = is_numeric($entity->id()) ? (int) $entity->id() : $entity->id();
     $query = $this->database->select(static::TABLE)
       ->fields(static::TABLE, ['workspace'])
       ->condition('target_entity_type_id', $entity->getEntityTypeId())
-      ->condition('target_entity_id', $entity->id());
+      ->condition('target_entity_id', $entity_id);
 
     return $query->execute()->fetchCol();
   }
@@ -289,10 +297,16 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
+        foreach ($entity_ids as &$entity_id) {
+          $entity_id = (int) $entity_id;
+        }
         $query->condition('target_entity_id', $entity_ids, 'IN');
       }
 
       if ($revision_ids) {
+        foreach ($revision_ids as &$revision_id) {
+          $revision_id = (int) $revision_id;
+        }
         $query->condition('target_entity_revision_id', $revision_ids, 'IN');
       }
     }

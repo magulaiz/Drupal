@@ -258,14 +258,14 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertCount(2, $entities, new FormattableMarkup('%entity_type: Two entities correctly loaded by name.', ['%entity_type' => $entity_type]));
     // @todo The default language condition should go away in favor of an
     // explicit parameter.
-    $entities = $storage->loadByProperties(['name' => $properties[$langcode]['name'][0], $default_langcode_key => 0]);
+    $entities = $storage->loadByProperties(['name' => $properties[$langcode]['name'][0], $default_langcode_key => FALSE]);
     $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity correctly loaded by name translation.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadByProperties([$langcode_key => $default_langcode, 'name' => $name]);
     $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity correctly loaded by name and language.', ['%entity_type' => $entity_type]));
 
     $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0]]);
     $this->assertCount(0, $entities, new FormattableMarkup('%entity_type: No entity loaded by name translation specifying the translation language.', ['%entity_type' => $entity_type]));
-    $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0], $default_langcode_key => 0]);
+    $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0], $default_langcode_key => FALSE]);
     $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity loaded by name translation and language specifying to look for translations.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadByProperties(['user_id' => $properties[$langcode]['user_id'][0], $default_langcode_key => NULL]);
     $this->assertCount(2, $entities, new FormattableMarkup('%entity_type: Two entities loaded by uid without caring about property translatability.', ['%entity_type' => $entity_type]));

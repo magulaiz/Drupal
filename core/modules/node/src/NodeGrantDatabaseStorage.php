@@ -81,10 +81,10 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query = $this->database->select('node_access');
     $query->addExpression('1');
     // Only interested for granting in the current operation.
-    $query->condition('grant_' . $operation, 1, '>=');
+    $query->condition('grant_' . $operation, TRUE);
     // Check for grants for this node and the correct langcode.
     $nids = $query->andConditionGroup()
-      ->condition('nid', $node->id())
+      ->condition('nid', (int) $node->id())
       ->condition('langcode', $node->language()->getId());
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.
@@ -133,7 +133,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query->addExpression('COUNT(*)');
     $query
       ->condition('nid', 0)
-      ->condition('grant_view', 1, '>=');
+      ->condition('grant_view', TRUE);
 
     $grants = $this->buildGrantsQueryCondition(node_access_grants('view', $account));
 
@@ -214,7 +214,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function write(NodeInterface $node, array $grants, $realm = NULL, $delete = TRUE) {
     if ($delete) {
-      $query = $this->database->delete('node_access')->condition('nid', $node->id());
+      $query = $this->database->delete('node_access')->condition('nid', (int) $node->id());
       if ($realm) {
         $query->condition('realm', [$realm, 'all'], 'IN');
       }
@@ -290,6 +290,10 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    * {@inheritdoc}
    */
   public function deleteNodeRecords(array $nids) {
+    foreach ($nids as &$nid) {
+      $nid = (int) $nid;
+    }
+
     $this->database->delete('node_access')
       ->condition('nid', $nids, 'IN')
       ->execute();

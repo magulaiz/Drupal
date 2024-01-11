@@ -670,7 +670,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
       // Unpublish nodes (current revisions).
       $nids = \Drupal::entityQuery('node')
         ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       node_mass_update($nids, ['status' => 0], NULL, TRUE);
@@ -695,7 +695,7 @@ function node_user_predelete($account) {
   // Delete nodes (current revisions).
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
   $nids = \Drupal::entityQuery('node')
-    ->condition('uid', $account->id())
+    ->condition('uid', (int) $account->id())
     ->accessCheck(FALSE)
     ->execute();
   // Delete old revisions.
@@ -734,16 +734,19 @@ function node_get_recent($number = 10) {
     // have some unpublished nodes to view before adding the condition.
     $access_query = \Drupal::entityQuery('node')
       ->accessCheck(TRUE)
-      ->condition('uid', $account->id())
-      ->condition('status', NodeInterface::NOT_PUBLISHED);
+      ->condition('uid', (int) $account->id())
+      ->condition('status', (bool) NodeInterface::NOT_PUBLISHED);
     if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {
+      foreach ($own_unpublished as &$nid) {
+        $nid = (int) $nid;
+      }
       $query->orConditionGroup()
-        ->condition('status', NodeInterface::PUBLISHED)
+        ->condition('status', (bool) NodeInterface::PUBLISHED)
         ->condition('nid', $own_unpublished, 'IN');
     }
     else {
       // If not, restrict the query to published nodes.
-      $query->condition('status', NodeInterface::PUBLISHED);
+      $query->condition('status', (bool) NodeInterface::PUBLISHED);
     }
   }
   $nids = $query
@@ -1174,7 +1177,7 @@ function _node_access_rebuild_batch_operation(&$context) {
   // Process the next 20 nodes.
   $limit = 20;
   $nids = \Drupal::entityQuery('node')
-    ->condition('nid', $context['sandbox']['current_node'], '>')
+    ->condition('nid', (int) $context['sandbox']['current_node'], '>')
     ->sort('nid', 'ASC')
     // Disable access checking since all nodes must be processed even if the
     // user does not have access. And unless the current user has the bypass

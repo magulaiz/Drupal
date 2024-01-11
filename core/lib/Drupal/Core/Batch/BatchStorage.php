@@ -92,7 +92,7 @@ class BatchStorage implements BatchStorageInterface {
   public function delete($id) {
     try {
       $this->connection->delete('batch')
-        ->condition('bid', $id)
+        ->condition('bid', (int) $id)
         ->execute();
     }
     catch (\Exception $e) {
@@ -107,7 +107,7 @@ class BatchStorage implements BatchStorageInterface {
     try {
       $this->connection->update('batch')
         ->fields(['batch' => serialize($batch)])
-        ->condition('bid', $batch['id'])
+        ->condition('bid', (int) $batch['id'])
         ->execute();
     }
     catch (\Exception $e) {
@@ -142,7 +142,7 @@ class BatchStorage implements BatchStorageInterface {
         'token' => $this->csrfToken->get($batch['id']),
         'batch' => serialize($batch),
       ])
-      ->condition('bid', $batch['id'])
+      ->condition('bid', (int) $batch['id'])
       ->execute();
   }
 

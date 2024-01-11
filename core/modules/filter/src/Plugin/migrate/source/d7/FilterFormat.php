@@ -49,7 +49,7 @@ class FilterFormat extends DrupalSqlBase {
     $filters = $this->select('filter', 'f')
       ->fields('f')
       ->condition('format', $row->getSourceProperty('format'))
-      ->condition('status', 1)
+      ->condition('status', TRUE)
       ->execute()
       ->fetchAllAssoc('name');
 

@@ -53,11 +53,20 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
     $field_label = $items->getFieldDefinition()->getLabel();
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
     $property_name = $field_storage_definitions[$field_name]->getMainPropertyName();
+    $property_type = $field_storage_definitions[$field_name]->getPropertyDefinition($property_name)->getDataType() ?? FALSE;
 
     $id_key = $entity_type->getKey('id');
     $is_multiple = $field_storage_definitions[$field_name]->isMultiple();
     $is_new = $entity->isNew();
     $item_values = array_column($items->getValue(), $property_name);
+    foreach ($item_values as &$item_value) {
+      if ($property_type === 'integer') {
+        $item_value = (int) $item_value;
+      }
+      if ($property_type === 'boolean') {
+        $item_value = (bool) $item_value;
+      }
+    }
 
     // Check if any item values for this field already exist in other entities.
     $query = $this->entityTypeManager
@@ -67,7 +76,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
       ->condition($field_name, $item_values, 'IN')
       ->groupBy("$field_name.$property_name");
     if (!$is_new) {
-      $entity_id = $entity->id();
+      $entity_id = is_numeric($entity->id()) ? (int) $entity->id() : $entity->id();
       $query->condition($id_key, $entity_id, '<>');
     }
     $results = $query->execute();
