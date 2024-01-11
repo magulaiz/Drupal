@@ -70,7 +70,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function get($name)
+        public function get($name): \Drupal\Core\Config\ImmutableConfig
         {
             return $this->lazyLoadItself()->get($name);
         }
@@ -78,7 +78,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function getEditable($name)
+        public function getEditable($name): \Drupal\Core\Config\Config
         {
             return $this->lazyLoadItself()->getEditable($name);
         }
@@ -86,7 +86,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function loadMultiple(array $names)
+        public function loadMultiple(array $names): array
         {
             return $this->lazyLoadItself()->loadMultiple($names);
         }
@@ -94,7 +94,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function reset($name = NULL)
+        public function reset($name = NULL): \static
         {
             return $this->lazyLoadItself()->reset($name);
         }
@@ -102,7 +102,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function rename($old_name, $new_name)
+        public function rename($old_name, $new_name): \static
         {
             return $this->lazyLoadItself()->rename($old_name, $new_name);
         }
@@ -110,7 +110,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function getCacheKeys()
+        public function getCacheKeys(): array
         {
             return $this->lazyLoadItself()->getCacheKeys();
         }
@@ -118,7 +118,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function clearStaticCache()
+        public function clearStaticCache(): \static
         {
             return $this->lazyLoadItself()->clearStaticCache();
         }
@@ -126,7 +126,7 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function listAll($prefix = '')
+        public function listAll($prefix = ''): array
         {
             return $this->lazyLoadItself()->listAll($prefix);
         }
@@ -134,9 +134,9 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function addOverride(\Drupal\Core\Config\ConfigFactoryOverrideInterface $config_factory_override)
+        public function addOverride(\Drupal\Core\Config\ConfigFactoryOverrideInterface $config_factory_override): void
         {
-            return $this->lazyLoadItself()->addOverride($config_factory_override);
+            $this->lazyLoadItself()->addOverride($config_factory_override);
         }
 
     }
