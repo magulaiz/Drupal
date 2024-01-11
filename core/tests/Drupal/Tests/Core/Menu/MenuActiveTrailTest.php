@@ -196,7 +196,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    * @see https://www.drupal.org/project/drupal/issues/3399221
    * @covers ::resolveCacheMiss
    */
-  public function testParallelCacheBuildForNumericMenus() {
+  public function testParallelCacheBuildForNumericMenus(): void {
     // Set up a request with a route name and object.
     $mock_route = new Route('');
     /** @var \Symfony\Component\HttpFoundation\Request $request */
