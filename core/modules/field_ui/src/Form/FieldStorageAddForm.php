@@ -197,6 +197,7 @@ class FieldStorageAddForm extends FormBase {
           // If it is a category, set return value as the category label.
           // Otherwise, set it as the field type id.
           '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
+          '#display_as_group' => $display_as_group ? 'true' : 'false',
           '#attributes' => [
             'class' => ['field-option-radio'],
           ],
@@ -232,7 +233,7 @@ class FieldStorageAddForm extends FormBase {
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
     $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
-    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
+    $form['actions']['submit']['#submit'][] = [$this, 'rebuildWithOptions'];
   }
 
   /**
@@ -485,8 +486,15 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Submit handler for displaying fields after a group is selected.
    */
-  public static function rebuildWithOptions($form, FormStateInterface &$form_state) {
-    $form_state->setRebuild();
+  public function rebuildWithOptions($form, FormStateInterface &$form_state) {
+    $storage_type = $form_state->getValue('new_storage_type');
+    $storage_type_list = $form['add']['new_storage_type'];
+    if (array_key_exists($storage_type, $storage_type_list) &&  $storage_type_list[$storage_type]['radio']['#display_as_group'] === 'false') {
+      $this->submitForm($form, $form_state);
+    }
+    else {
+      $form_state->setRebuild();
+    }
   }
 
   /**
