@@ -198,9 +198,9 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * The original array of shutdown function callbacks.
    *
-   * @var \Drupal\Core\Shutdown\CallbackStack
+   * @var \Drupal\Core\Shutdown\CallbackStack|null
    */
-  protected CallbackStack $originalShutdownCallbacks;
+  protected ?CallbackStack $originalShutdownCallbacks = NULL;
 
   /**
    * The original container.
@@ -358,7 +358,6 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->originalShutdownCallbacks = new CallbackStack();
     parent::setUp();
 
     $this->setUpAppRoot();
