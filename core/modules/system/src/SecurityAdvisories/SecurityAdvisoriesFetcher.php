@@ -333,13 +333,12 @@ final class SecurityAdvisoriesFetcher implements CronSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function run() {
+  public function runCron(): void {
     if ($this->config->get('enabled')) {
       // Fetch the security advisories so that they will be pre-fetched during
       // _system_advisories_requirements() and system_page_top().
       $this->getSecurityAdvisories();
     }
-    return TRUE;
   }
 
 }
