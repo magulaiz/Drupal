@@ -584,10 +584,12 @@ class InlineBlockTest extends InlineBlockTestBase {
     // Add a basic block with the body field set.
     $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
-    // Confirm with only 1 type the "Create content block" link goes directly t
+    // Confirm with only 1 type the "Create content block" link goes directly to
     // block add form.
     $assert_session->linkNotExists('Basic block');
     $this->clickLink('Create content block');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Create inline block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->fieldExists('Title');
 
@@ -608,6 +610,8 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->linkExists('Advanced block');
 
     $this->clickLink('Advanced block');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Create inline block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->fieldExists('Title');
   }
