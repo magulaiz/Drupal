@@ -388,7 +388,8 @@ class BigPipeTest extends BrowserTestBase {
         $this->assertSession()->responseNotContains($expected_placeholder_replacement);
         continue;
       }
-      $this->assertSession()->elementTextContains('xpath', $xpath, $expected_ajax_response);
+      $element = $this->assertSession()->elementExists('xpath', $xpath);
+      $this->assertStringContainsString($expected_ajax_response, $element->getHtml());
       $this->assertSession()->responseContains($expected_placeholder_replacement);
       $pos = strpos($this->getSession()->getPage()->getContent(), $expected_placeholder_replacement);
       $placeholder_replacement_positions[$pos] = $big_pipe_placeholder_id;
