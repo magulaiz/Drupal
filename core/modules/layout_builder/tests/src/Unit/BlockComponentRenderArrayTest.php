@@ -122,6 +122,8 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
+      '#attributes' => [],
+      '#contextual_links' => [],
       '#in_preview' => FALSE,
     ];
 
@@ -198,6 +200,8 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
+      '#attributes' => [],
+      '#contextual_links' => [],
       '#in_preview' => FALSE,
     ];
 
@@ -445,6 +449,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
         ],
         'max-age' => -1,
       ],
+      '#contextual_links' => [],
     ];
 
     $subscriber->onBuildRender($event);
@@ -473,6 +478,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#cache' => [
         'tags' => ['empty_build_cache_test'],
       ],
+      '#contextual_links' => [],
     ];
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());

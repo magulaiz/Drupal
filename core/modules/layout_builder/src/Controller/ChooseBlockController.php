@@ -119,7 +119,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
             '@entity_type' => $this->entityTypeManager->getDefinition('block_content')->getSingularLabel(),
           ]),
           '#attributes' => $this->getAjaxAttributes(),
-          '#access' => $this->currentUser->hasPermission('create and edit custom blocks'),
+          '#access' => $this->currentUser->hasPermission('create and edit custom blocks') || $this->currentUser->hasPermission('create and edit accessible custom blocks'),
         ];
         $build['add_block']['#attributes']['class'][] = 'inline-block-create-button';
       }
@@ -182,6 +182,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
     $build = [];
     $inline_blocks_category = (string) $this->t('Inline blocks');
     if (isset($blocks[$inline_blocks_category])) {
+      $this->filterInlineBlocksByAccess($blocks[$inline_blocks_category]);
       $build['links'] = $this->getBlockLinks($section_storage, $delta, $region, $blocks[$inline_blocks_category]);
       $build['links']['#attributes']['class'][] = 'inline-block-list';
       foreach ($build['links']['#links'] as &$link) {
@@ -203,6 +204,27 @@ class ChooseBlockController implements ContainerInjectionInterface {
     }
     $build['links']['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
     return $build;
+  }
+
+  /**
+   * Filter inline blocks by access.
+   *
+   * @param mixed[] $inline_blocks
+   *   Inline block definitions array.
+   */
+  protected function filterInlineBlocksByAccess(array &$inline_blocks) {
+    // Unrestricted access - return early.
+    if ($this->currentUser->hasPermission('create and edit custom blocks')) {
+      return;
+    }
+
+    $blockAccessControlHandler = $this->entityTypeManager->getAccessControlHandler('block_content');
+    foreach (array_keys($inline_blocks) as $block_id) {
+      [, $bundle] = explode(':', $block_id);
+      if (!$blockAccessControlHandler->createAccess($bundle, $this->currentUser)) {
+        unset($inline_blocks[$block_id]);
+      }
+    }
   }
 
   /**
