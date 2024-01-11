@@ -48,3 +48,8 @@ global_events:
     js/global_events.js: {}
   dependencies:
     - core/drupal.ajax
+
+external-font:
+  css:
+    component:
+      //fonts.googleapis.com/css?family=Open+Sans: { type: external, minified: true }

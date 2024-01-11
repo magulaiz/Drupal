@@ -7,13 +7,15 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\AlertCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides content for dialog tests.
  */
-class AjaxTestController {
+class AjaxTestController implements TrustedCallbackInterface {
 
   /**
    * Example content for dialog testing.
@@ -455,6 +457,45 @@ class AjaxTestController {
    */
   public function httpMethodsDialog(): array {
     return ['#markup' => 'Modal dialog contents'];
+  }
+
+  /**
+   * Lazy builds placeholder with external css library.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function externalFonts() {
+    return [
+      'item1' => [
+        '#lazy_builder' => [static::class . '::buildExternalFonts', []],
+        '#create_placeholder' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Returns a placeholder with library that contains external fonts.
+   *
+   * @return array
+   *   The render array.
+   */
+  public static function buildExternalFonts() {
+    return [
+      '#markup' => Markup::create('<p id="ajax-text-external-font">Contains External Font</p>'),
+      '#attached' => [
+        'library' => [
+          'ajax_test/external-font',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Lists the trusted callbacks provided by the implementing class.
+   */
+  public static function trustedCallbacks() {
+    return ['buildExternalFonts'];
   }
 
 }
