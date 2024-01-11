@@ -226,7 +226,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $basic_html_format_with_media_embed['format'] = 'basic_html_with_media_embed';
     // Add media_embed filter, update filter_html filter settings.
     $basic_html_format_with_media_embed['filters']['media_embed'] = ['status' => TRUE];
-    $new_value = $current_value . ' <drupal-media data-entity-type data-entity-uuid data-align data-caption alt>';
+    $new_value = $current_value . ' <drupal-media data-entity-type data-entity-uuid data-align data-caption alt> <drupal-media-inline data-entity-type data-entity-uuid data-align data-caption alt>';
     NestedArray::setValue($basic_html_format_with_media_embed, $allowed_html_parents, $new_value);
     FilterFormat::create($basic_html_format_with_media_embed)->save();
     $basic_html_editor_with_media_embed = Editor::create(
@@ -246,6 +246,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $basic_html_format_with_media_embed_view_mode_invalid['format'] = 'basic_html_with_media_embed_view_mode_enabled_no_view_modes_configured';
     $current_value_media_embed = NestedArray::getValue($basic_html_format_with_media_embed, $allowed_html_parents);
     $new_value = str_replace('<drupal-media data-entity-type data-entity-uuid data-align data-caption alt>', '<drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode>', $current_value_media_embed);
+    $new_value = str_replace('<drupal-media-inline data-entity-type data-entity-uuid data-align data-caption alt>', '<drupal-media-inline data-entity-type data-entity-uuid data-align data-caption alt data-view-mode>', $new_value);
     NestedArray::setValue($basic_html_format_with_media_embed_view_mode_invalid, $allowed_html_parents, $new_value);
     FilterFormat::create($basic_html_format_with_media_embed_view_mode_invalid)->save();
     $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured = Editor::create(
