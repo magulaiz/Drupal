@@ -510,7 +510,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     }
 
     if (UrlHelper::isExternal($path)) {
-      $errors[] = $this->t("Path component '{$path}' is external. External URL is not accepted as view path.");
+      $errors[] = $this->t('Path component %path is external. External URL is not accepted as view path.', ['%path' => $path]);
     }
 
     $path_sections = explode('/', $path);
