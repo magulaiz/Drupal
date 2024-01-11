@@ -95,7 +95,7 @@ class Cron implements CronInterface {
    *
    * @var \Drupal\Core\CronSubscriberInterface[]
    */
-  protected $cronServices = [];
+  protected array $cronSubscribers = [];
 
   /**
    * Constructs a cron object.
@@ -323,7 +323,7 @@ class Cron implements CronInterface {
     $logger = $time_logging_enabled ? $this->logger : new NullLogger();
 
     // Also call all tagged services.
-    foreach ($this->cronServices as $cron_service) {
+    foreach ($this->cronSubscribers as $cron_service) {
       $service_class = get_class($cron_service);
       if (!$service_previous) {
         $logger->info('Starting execution of service @class.', [
@@ -396,8 +396,15 @@ class Cron implements CronInterface {
     usleep($microseconds);
   }
 
-  public function addCronService(CronInterface $cron) {
-    $this->cronServices[] = $cron;
+  /**
+   * Add a cron subscriber.
+   *
+   * @param \Drupal\Core\CronSubscriberInterface $cron_subscriber
+   *
+   * @return void
+   */
+  public function addCronSubscriber(CronSubscriberInterface $cron_subscriber) {
+    $this->cronSubscribers[] = $cron_subscriber;
   }
 
 }
