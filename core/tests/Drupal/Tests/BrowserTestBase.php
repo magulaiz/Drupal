@@ -358,6 +358,7 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    $this->originalShutdownCallbacks = new CallbackStack();
     parent::setUp();
 
     $this->setUpAppRoot();
