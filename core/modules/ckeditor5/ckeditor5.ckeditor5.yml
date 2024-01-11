@@ -552,17 +552,22 @@ ckeditor5_tableColumnResize:
   ckeditor5:
     plugins:
       - table.TableColumnResize
+      - tableColResize.TableColResize
+    config:
+      tableColResize:
+        dataAttribute: data-resize-width
   drupal:
     label: Table Column Resize
+    library: ckeditor5/internal.drupal.ckeditor5.tableColumnResize
     conditions:
+      filter: filter_resize_tablecolumns
       plugins:
         - ckeditor5_table
-        # When arbitrary HTML is already allowed, it's harmless to enable CKEditor 5's UI for table cell properties.
-        - ckeditor5_arbitraryHtmlSupport
     elements:
+      - <table data-resize-width>
       - <colgroup>
       - <col>
-      - <col style>
+      - <col data-resize-width>
 
 ckeditor5_image:
   ckeditor5:
