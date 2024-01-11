@@ -93,7 +93,7 @@ class Cron implements CronInterface {
   /**
    * List of tagged services that implement the cron interface.
    *
-   * @var \Drupal\Core\CronInterface[]
+   * @var \Drupal\Core\CronSubscriberInterface[]
    */
   protected $cronServices = [];
 
@@ -340,7 +340,7 @@ class Cron implements CronInterface {
       Timer::start('cron_' . $service_class);
 
       try {
-        $cron_service->run();
+        $cron_service->runCron();
       }
       catch (\Exception $e) {
         Error::logException($this->logger, $e);

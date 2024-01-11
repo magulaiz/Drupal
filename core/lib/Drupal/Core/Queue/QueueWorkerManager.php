@@ -3,7 +3,7 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\CronInterface;
+use Drupal\Core\CronSubscriberInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Queue\Attribute\QueueWorker;
@@ -16,7 +16,7 @@ use Drupal\Core\Queue\Attribute\QueueWorker;
  * @see \Drupal\Core\Annotation\QueueWorker
  * @see plugin_api
  */
-class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerManagerInterface, CronInterface {
+class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerManagerInterface, CronSubscriberInterface {
 
   /**
    * Constructs a QueueWorkerManager object.
@@ -67,7 +67,7 @@ class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerMana
   /**
    * {@inheritdoc}
    */
-  public function run() {
+  public function runCron(): void {
     // Clean up any garbage in the queue service.
     $queue_factory = \Drupal::service('queue');
 
@@ -78,7 +78,6 @@ class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerMana
         $queue->garbageCollection();
       }
     }
-    return TRUE;
   }
 
 }

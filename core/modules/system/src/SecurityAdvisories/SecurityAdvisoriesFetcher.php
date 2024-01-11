@@ -4,7 +4,7 @@ namespace Drupal\system\SecurityAdvisories;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\CronInterface;
+use Drupal\Core\CronSubscriberInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Defines a service to get security advisories.
  */
-final class SecurityAdvisoriesFetcher implements CronInterface {
+final class SecurityAdvisoriesFetcher implements CronSubscriberInterface {
 
   /**
    * The key to use to store the advisories feed response.

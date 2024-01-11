@@ -4,13 +4,13 @@ namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Core\CronInterface;
+use Drupal\Core\CronSubscriberInterface;
 use Drupal\Core\Database\Connection;
 
 /**
  * Defines the key/value store factory for the database backend.
  */
-class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterface, CronInterface {
+class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterface, CronSubscriberInterface {
 
   /**
    * Holds references to each instantiation so they can be terminated.
@@ -80,9 +80,8 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   /**
    * {@inheritdoc}
    */
-  public function run() {
+  public function runCron(): void {
     $this->garbageCollection();
-    return TRUE;
   }
 
 }
