@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DependencyInjection\DependencySerializationTest.
- */
-
 namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Component\DependencyInjection\ReverseContainer;
@@ -79,6 +74,9 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setContainer(ContainerInterface $container = NULL) {
     $this->container = $container;

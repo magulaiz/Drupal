@@ -650,6 +650,12 @@ class ConfigImporter {
           $this->totalConfigurationToProcess += count($this->getUnprocessedConfiguration($op, $collection));
         }
       }
+
+      // Adjust the totals for system.theme.
+      // @see \Drupal\Core\Config\ConfigImporter::processExtension
+      if ($this->processedSystemTheme) {
+        $this->totalConfigurationToProcess++;
+      }
     }
     $operation = $this->getNextConfigurationOperation();
     if (!empty($operation)) {
@@ -985,6 +991,9 @@ class ConfigImporter {
     }
     else {
       $config = new Config($name, $this->storageComparer->getTargetStorage($collection), $this->eventDispatcher, $this->typedConfigManager);
+    }
+    if ($old_data = $this->storageComparer->getTargetStorage($collection)->read($name)) {
+      $config->initWithData($old_data);
     }
     if ($op == 'delete') {
       $config->delete();

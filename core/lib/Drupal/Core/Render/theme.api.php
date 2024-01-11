@@ -547,7 +547,7 @@ function hook_preprocess(&$variables, $hook) {
   }
 
   if (!isset($hooks)) {
-    $hooks = theme_get_registry();
+    $hooks = \Drupal::service('theme.registry')->get();
   }
 
   // Determine the primary theme function argument.
@@ -610,7 +610,26 @@ function hook_preprocess_HOOK(&$variables) {
  * must otherwise make sure that the hook implementation is available at
  * any given time.
  *
- * @todo Add @code sample.
+ * Suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ *
+ * In the following example, we provide suggestions to
+ * node templates based bundle, id, and view mode.
+ *
+ * @code
+ * function node_theme_suggestions_node(array $variables) {
+ *   $suggestions = [];
+ *   $node = $variables['elements']['#node'];
+ *   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+ *   $suggestions[] = 'node__' . $sanitized_view_mode;
+ *   $suggestions[] = 'node__' . $node->bundle();
+ *   $suggestions[] = 'node__' . $node->bundle() . '__' . $sanitized_view_mode;
+ *   $suggestions[] = 'node__' . $node->id();
+ *   $suggestions[] = 'node__' . $node->id() . '__' . $sanitized_view_mode;
+ *
+ *   return $suggestions;
+ * }
+ *
+ * @endcode
  *
  * @param array $variables
  *   An array of variables passed to the theme hook. Note that this hook is
@@ -649,6 +668,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * In the following example, we provide an alternative template suggestion to
  * node and taxonomy term templates based on the user being logged in.
+ *
  * @code
  * function MYMODULE_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
  *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, array('node', 'taxonomy_term'))) {
@@ -658,8 +678,9 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * @endcode
  *
- * @param array $suggestions
- *   An array of alternate, more specific names for template files.
+ * @param array &$suggestions
+ *   An array of alternate, more specific names for template files, passed by
+ *   reference.
  * @param array $variables
  *   An array of variables passed to the theme hook. Note that this hook is
  *   invoked before any variable preprocessing.
@@ -668,9 +689,6 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   then $hook will be 'node', not 'node__article'. The specific hook called
  *   (in this case 'node__article') is available in
  *   $variables['theme_hook_original'].
- *
- * @return array
- *   An array of theme suggestions.
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
@@ -838,8 +856,7 @@ function hook_element_plugin_alter(array &$definitions) {
 }
 
 /**
- * Perform necessary alterations to the JavaScript before it is presented on
- * the page.
+ * Alters JavaScript before it is presented on the page.
  *
  * @param $javascript
  *   An array of all JavaScript being presented on the page.
@@ -872,31 +889,31 @@ function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface 
 function hook_library_info_build() {
   $libraries = [];
   // Add a library whose information changes depending on certain conditions.
-  $libraries['mymodule.zombie'] = [
+  $libraries['zombie'] = [
     'dependencies' => [
       'core/once',
     ],
   ];
   if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {
-    $libraries['mymodule.zombie'] += [
+    $libraries['zombie'] += [
       'js' => [
-        'mymodule.zombie.min.js' => [],
+        'zombie.min.js' => [],
       ],
       'css' => [
         'base' => [
-          'mymodule.zombie.min.css' => [],
+          'zombie.min.css' => [],
         ],
       ],
     ];
   }
   else {
-    $libraries['mymodule.zombie'] += [
+    $libraries['zombie'] += [
       'js' => [
-        'mymodule.zombie.js' => [],
+        'zombie.js' => [],
       ],
       'css' => [
         'base' => [
-          'mymodule.zombie.css' => [],
+          'zombie.css' => [],
         ],
       ],
     ];
@@ -908,7 +925,7 @@ function hook_library_info_build() {
   // the library (of course) not be loaded but no notices or errors will be
   // triggered.
   if (Drupal::moduleHandler()->moduleExists('vampirize')) {
-    $libraries['mymodule.vampire'] = [
+    $libraries['vampire'] = [
       'js' => [
         'js/vampire.js' => [],
       ],
@@ -977,8 +994,14 @@ function hook_js_settings_alter(array &$settings, \Drupal\Core\Asset\AttachedAss
  * and themes that may be using the library.
  *
  * @param array $libraries
- *   An associative array of libraries registered by $extension. Keyed by
- *   internal library name and passed by reference.
+ *   An associative array of libraries, passed by reference. The array key
+ *   for any particular library will be the name registered in *.libraries.yml.
+ *   In the example below, the array key would be $libraries['foo'].
+ *   @code
+ *   foo:
+ *     js:
+ *       .......
+ *   @endcode
  * @param string $extension
  *   Can either be 'core' or the machine name of the extension that registered
  *   the libraries.

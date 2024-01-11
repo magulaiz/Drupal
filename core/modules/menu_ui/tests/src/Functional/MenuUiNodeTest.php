@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\menu_ui\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
@@ -77,6 +79,9 @@ class MenuUiNodeTest extends BrowserTestBase {
     // adds the "user.roles:authenticated" cache context.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.roles:authenticated');
+
+    // Assert the description of "Available menus" checkboxes field.
+    $this->assertSession()->pageTextContains('Content of this type can be placed in the selected menus.');
 
     // Verify that the menu link title has the correct maxlength.
     $title_max_length = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');
@@ -291,30 +296,36 @@ class MenuUiNodeTest extends BrowserTestBase {
     $config->set('url.prefixes.' . $langcodes[0], $langcodes[0]);
     $config->save();
 
-    $this->rebuildContainer();
-
     $languages = [];
     foreach ($langcodes as $langcode) {
       $languages[$langcode] = ConfigurableLanguage::load($langcode);
     }
 
-    // Use a UI form submission to make the node type and menu link content entity translatable.
-    $this->drupalLogout();
-    $this->drupalLogin($this->rootUser);
-    $edit = [
-      'entity_types[node]' => TRUE,
-      'entity_types[menu_link_content]' => TRUE,
-      'settings[node][page][settings][language][language_alterable]' => TRUE,
-      'settings[node][page][translatable]' => TRUE,
-      'settings[node][page][fields][title]' => TRUE,
-      'settings[menu_link_content][menu_link_content][translatable]' => TRUE,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    // Enable translation for page.
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'page');
+    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
+    $config->setLanguageAlterable(TRUE);
+    $config->save();
 
-    // Log out and back in as normal user.
-    $this->drupalLogout();
-    $this->drupalLogin($this->editor);
+    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager->setEnabled('node', 'page', TRUE);
+    $content_translation_manager->setBundleTranslationSettings('node', 'page', [
+      'untranslatable_fields_hide' => FALSE,
+    ]);
+
+    // Enable translation for menu_link_content.
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content');
+    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
+    $config->setLanguageAlterable(TRUE);
+    $config->save();
+
+    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager->setEnabled('menu_link_content', 'menu_link_content', TRUE);
+    $content_translation_manager->setBundleTranslationSettings('menu_link_content', 'menu_link_content', [
+      'untranslatable_fields_hide' => FALSE,
+    ]);
+
+    $this->rebuildContainer();
 
     // Create a node.
     $node_title = $this->randomMachineName(8);

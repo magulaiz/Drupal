@@ -212,46 +212,38 @@
   Drupal.behaviors.autocomplete = {
     attach(context) {
       // Act on textfields with the "form-autocomplete" class.
-      const $formAutocomplete = $(
-        once('autocomplete', 'input.form-autocomplete', context),
-      );
+      once('autocomplete', 'input.form-autocomplete, input.js-form-autocomplete', context).forEach(
+        (element) => {
+          const $autocomplete = $(element);
+          if (!$autocomplete.hasClass('js-form-autocomplete')) {
+            Drupal.deprecationError({
+              message:
+                'The form-autocomplete class is deprecated. Please use js-form-autocomplete instead.',
+            });
+          }
 
-      // Act on textfields with the "js-form-autocomplete" class.
-      const $jsFormAutocomplete = $(
-        once('autocomplete', 'input.js-form-autocomplete', context),
-      );
-
-      const $autocomplete = $formAutocomplete || $jsFormAutocomplete;
-
-      if ($autocomplete.length) {
-        if (!$autocomplete.hasClass('js-form-autocomplete')) {
-          Drupal.deprecationError({
-            message:
-              'The form-autocomplete class is deprecated. Please use js-form-autocomplete instead.',
+          // Allow options to be overridden per instance.
+          const blacklist = $autocomplete.attr(
+            'data-autocomplete-first-character-blacklist',
+          );
+          $.extend(autocomplete.options, {
+            firstCharacterBlacklist: blacklist || '',
           });
-        }
+          // Use jQuery UI Autocomplete on the textfield.
+          $autocomplete.autocomplete(autocomplete.options).each(function () {
+            $(this).data('ui-autocomplete')._renderItem =
+              autocomplete.options.renderItem;
+          });
 
-        // Allow options to be overridden per instance.
-        const blacklist = $autocomplete.attr(
-          'data-autocomplete-first-character-blacklist',
-        );
-        $.extend(autocomplete.options, {
-          firstCharacterBlacklist: blacklist || '',
-        });
-        // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options).each(function () {
-          $(this).data('ui-autocomplete')._renderItem =
-            autocomplete.options.renderItem;
-        });
-
-        // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
-        $autocomplete.on('compositionstart.autocomplete', () => {
-          autocomplete.options.isComposing = true;
-        });
-        $autocomplete.on('compositionend.autocomplete', () => {
-          autocomplete.options.isComposing = false;
-        });
-      }
+          // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
+          $autocomplete.on('compositionstart.autocomplete', () => {
+            autocomplete.options.isComposing = true;
+          });
+          $autocomplete.on('compositionend.autocomplete', () => {
+            autocomplete.options.isComposing = false;
+          });
+        },
+      );
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
