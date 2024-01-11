@@ -94,17 +94,19 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function reset($name = NULL): \static
+        public function reset($name = NULL): static
         {
-            return $this->lazyLoadItself()->reset($name);
+            $this->lazyLoadItself()->reset($name);
+            return $this;
         }
 
         /**
          * {@inheritdoc}
          */
-        public function rename($old_name, $new_name): \static
+        public function rename($old_name, $new_name): static
         {
-            return $this->lazyLoadItself()->rename($old_name, $new_name);
+            $this->lazyLoadItself()->rename($old_name, $new_name);
+            return $this;
         }
 
         /**
@@ -118,9 +120,10 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function clearStaticCache(): \static
+        public function clearStaticCache(): static
         {
-            return $this->lazyLoadItself()->clearStaticCache();
+            $this->lazyLoadItself()->clearStaticCache();
+            return $this;
         }
 
         /**
