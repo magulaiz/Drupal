@@ -917,7 +917,7 @@ class LinkFieldTest extends BrowserTestBase {
     $referenced_node->delete();
     foreach ($entities_created as $entity_edit_path) {
       $this->drupalGet($entity_edit_path);
-      $this->assertSession()->fieldValueNotEquals("{$field_name}[0][uri]", $node_title);
+      $this->assertSession()->fieldValueNotEquals("{$field_name}[0][uri]", $node_title . ' (1)');
       $this->assertSession()->fieldValueNotEquals("{$field_name}[0][uri]", "entity:node/1");
     }
   }
