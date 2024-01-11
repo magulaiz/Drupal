@@ -400,6 +400,7 @@ class Cron implements CronInterface {
    * Add a cron subscriber.
    *
    * @param \Drupal\Core\CronSubscriberInterface $cron_subscriber
+   *   The cron subscriber.
    *
    * @return void
    */
