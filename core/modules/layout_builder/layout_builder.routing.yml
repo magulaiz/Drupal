@@ -99,16 +99,12 @@ layout_builder.update_block:
     _form: '\Drupal\layout_builder\Form\UpdateBlockForm'
     _title: 'Configure block'
   requirements:
-    _layout_builder_update_block_access: 'edit'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
       section_storage:
         layout_builder_tempstore: TRUE
-      delta:
-        type: string
-      uuid:
-        type: string
 
 layout_builder.move_block_form:
   path: '/layout_builder/move/block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}'
@@ -134,10 +130,6 @@ layout_builder.remove_block:
     parameters:
       section_storage:
         layout_builder_tempstore: TRUE
-      delta:
-        type: string
-      uuid:
-        type: string
 
 layout_builder.move_block:
   path: '/layout_builder/move/block/{section_storage_type}/{section_storage}/{delta_from}/{delta_to}/{region_to}/{block_uuid}/{preceding_block_uuid}'

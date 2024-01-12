@@ -14,8 +14,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\layout_builder\SectionStorageInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -71,13 +69,6 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
   protected $currentUser;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -92,20 +83,13 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    *   The entity display repository.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Psr\Log\LoggerInterface|null $logger
-   *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, AccountInterface $current_user, LoggerInterface $logger = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, AccountInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->entityDisplayRepository = $entity_display_repository;
     $this->currentUser = $current_user;
-    if (!$logger) {
-      @trigger_error('The logger service must be passed to InlineBlock::__construct(). It was added in drupal:9.4.0 and will be required before drupal:11.0.0.', E_USER_DEPRECATED);
-      $logger = \Drupal::service('logger.channel.layout_builder');
-    }
-    $this->logger = $logger;
     if (!empty($this->configuration['block_revision_id']) || !empty($this->configuration['block_serialized'])) {
       $this->isNew = FALSE;
     }
@@ -121,8 +105,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('entity_display.repository'),
-      $container->get('current_user'),
-      $container->get('logger.channel.layout_builder')
+      $container->get('current_user')
     );
   }
 
@@ -228,22 +211,20 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
   }
 
   /**
-   * Checks if this block can be edited.
+   * Checks if this block can be added.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account being checked.
    */
-  public function editAccess(
-    AccountInterface $account,
-    SectionStorageInterface $section_storage,
-    $operation = 'edit'
+  public function blockAddAccess(
+    AccountInterface $account
   ): AccessResult {
-    if ($account->hasPermission('create and edit custom blocks')) {
-      return AccessResult::allowed()->addCacheContexts(['user.permissions']);
-    }
-    $block = $this->getEntity();
-    $block->addAccessDependency($section_storage);
-    return $block->access($operation, $account, TRUE);
+    $block_bundle = $this->getEntity()->bundle();
+    return AccessResult::allowedIfHasPermissions($account, [
+      'create and edit custom blocks',
+      'create ' . $block_bundle . ' block content',
+      'administer block content',
+    ], 'OR');
   }
 
   /**
@@ -251,18 +232,14 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    */
   public function build() {
     $block = $this->getEntity();
-    if (!$block) {
-      return ['#markup' => $this->t('This block is broken or missing. You may be missing content or you might need to enable the original module.')];
-    }
     return $this->entityTypeManager->getViewBuilder($block->getEntityTypeId())->view($block, $this->configuration['view_mode']);
   }
 
   /**
    * Loads or creates the block content entity of the block.
    *
-   * @return \Drupal\block_content\BlockContentInterface|null
-   *   The block content entity, or NULL if a revision was specified but can not
-   *   be loaded.
+   * @return \Drupal\block_content\BlockContentInterface
+   *   The block content entity.
    */
   protected function getEntity() {
     if (!isset($this->blockContent)) {
@@ -271,9 +248,6 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       }
       elseif (!empty($this->configuration['block_revision_id'])) {
         $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
-        if (!$entity) {
-          $this->logger->error('Unable to load inline block content entity with revision ID %vid.', ['%vid' => $this->configuration['block_revision_id']]);
-        }
         $this->blockContent = $entity;
       }
       else {
