@@ -226,7 +226,7 @@ class AssetResolver implements AssetResolverInterface {
     // support translation of JavaScript files via hook_js_alter().
     $libraries_to_load = $this->getLibrariesToLoad($assets);
     if (empty($libraries_to_load)) {
-      return [[], []];
+      return [];
     }
     $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) (count($assets->getSettings()) > 0) . ':' . (int) $optimize;
 
