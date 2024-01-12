@@ -135,9 +135,23 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () use ($account) {
       $this->submitLoginForm($account);
     });
+<<<<<<< HEAD
     $this->assertSame(47, $performance_data->getQueryCount());
     $this->assertSame(83, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
+=======
+    $this->assertLessThanOrEqual(51, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(47, $performance_data->getQueryCount());
+    // This test observes a variable number of cache operations, so to avoid random
+    // test failures, assert greater than equal the highest and lowest number
+    // observed during test runs.
+    // See https://www.drupal.org/project/drupal/issues/3402610
+    $this->assertLessThanOrEqual(30, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(28, $performance_data->getCacheGetCount());
+
+    $this->assertLessThanOrEqual(4, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(1, $performance_data->getCacheSetCount());
+>>>>>>> 0be0135c97 (Fix js early return and adjust tests.)
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
   }
 
