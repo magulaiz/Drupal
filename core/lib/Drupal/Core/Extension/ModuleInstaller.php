@@ -247,12 +247,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // into its statically cached list.
         \Drupal::service('extension.list.module')->reset();
 
-        // Update the kernel to include it.
-        $this->updateKernel($module_filenames);
-
         // Load the module's .module and .install files.
         $this->moduleHandler->load($module);
         $this->moduleHandler->loadInclude($module, 'install');
+
+        // Update the kernel to include it.
+        $this->updateKernel($module_filenames);
 
         if (!InstallerKernel::installationAttempted()) {
           // Replace the route provider service with a version that will rebuild
