@@ -142,8 +142,6 @@ class SectionRenderTest extends UnitTestCase {
       'content' => [
         'some_uuid' => $render_array,
       ],
-      '#attributes' => [],
-      '#contextual_links' => [],
     ];
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
@@ -226,7 +224,6 @@ class SectionRenderTest extends UnitTestCase {
       'content' => [
         'some_uuid' => $render_array,
       ],
-      '#contextual_links' => [],
     ];
     $result = (new Section('layout_onecol', [], $section))->toRenderArray([], TRUE);
     $this->assertEquals($expected, $result);
@@ -289,8 +286,6 @@ class SectionRenderTest extends UnitTestCase {
       'content' => [
         'some_uuid' => $render_array,
       ],
-      '#attributes' => [],
-      '#contextual_links' => [],
     ];
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
