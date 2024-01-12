@@ -721,7 +721,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @covers ::getRenderTokens
    * @covers ::getTokenValuesRecursive
    */
-  public function testGetRenderTokensWithQuery(array $query_params, array $expected) {
+  public function testGetRenderTokensWithQuery(array $query_params, array $expected): void {
     $request = new Request($query_params);
     $this->executable->expects($this->any())
       ->method('getRequest')
@@ -745,23 +745,29 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestGetRenderTokensWithQuery() {
+  public function providerTestGetRenderTokensWithQuery(): array {
     $data = [];
     // No query parameters.
-    $data[] = [[], [
-      '{{ id }}' => 'last rendered output',
-    ]];
-    // Invalid query parameters.
-    $data[] = [[
-      '&invalid' => [
-        'a' => 1,
-        'b' => [1, 2],
-        1 => 2,
+    $data[] = [
+      [],
+      [
+        '{{ id }}' => 'last rendered output',
       ],
-      'invalid.entry' => 'ignore me',
-    ], [
-      '{{ id }}' => 'last rendered output',
-    ]];
+    ];
+    // Invalid query parameters.
+    $data[] = [
+      [
+        '&invalid' => [
+          'a' => 1,
+          'b' => [1, 2],
+          1 => 2,
+        ],
+        'invalid.entry' => 'ignore me',
+      ],
+      [
+        '{{ id }}' => 'last rendered output',
+      ],
+    ];
     // Process only valid query parameters.
     $data[] = [
       [
