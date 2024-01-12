@@ -35,6 +35,9 @@ services:
     class: \Drupal\Core\ExampleClass
     public: false
   Drupal\Core\ExampleClass: ~
+  example_tagged_iterator:
+    class: \Drupal\Core\ExampleClass
+    arguments: [!tagged_iterator foo.bar]"
 YAML;
 
     vfsStream::setup('drupal', NULL, [
