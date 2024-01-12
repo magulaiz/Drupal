@@ -32,7 +32,16 @@ class UserSessionHandler {
   ) {}
 
   /**
-   * {@inheritdoc}
+   * Finalizes the login process and logs in a user.
+   *
+   * The function logs in the user, records a watchdog message about the new
+   * session, saves the login timestamp, calls hook_user_login(), and generates
+   * a new session.
+   *
+   * The current user is replaced with the passed in account.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user account to log in.
    */
   public function login(UserInterface $user): void {
     $this->accountProxy->setAccount($user);
@@ -55,7 +64,7 @@ class UserSessionHandler {
   }
 
   /**
-   * {@inheritdoc}
+   * Logs the current user out.
    */
   public function logout(): void {
     $this->logger->info('Session closed for %name.', ['%name' => $this->accountProxy->getAccountName()]);
