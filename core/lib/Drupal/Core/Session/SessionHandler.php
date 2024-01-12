@@ -31,11 +31,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   protected $connection;
 
   /**
-   * The session data.
-   */
-  protected array $data = [];
-
-  /**
    * Constructs a new SessionHandler instance.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -67,14 +62,10 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   public function read(#[\SensitiveParameter] string $sid): string|false {
     $data = '';
     if (!empty($sid)) {
-      if (isset($this->data[$sid])) {
-        return $this->data[$sid];
-      }
       // Read the session data from the database.
       $query = $this->connection
         ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
       $data = (string) $query->fetchField();
-      $this->data[$sid] = $data;
     }
     return $data;
   }
@@ -83,7 +74,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function write(#[\SensitiveParameter] string $sid, string $value): bool {
-    unset($this->data[$sid]);
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
       'uid' => $request->getSession()->get('uid', 0),
@@ -109,7 +99,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function destroy(#[\SensitiveParameter] string $sid): bool {
-    unset($this->data[$sid]);
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
