@@ -1,4 +1,3 @@
-
 services:
   logger.syslog:
     class: Drupal\syslog\Logger\SysLog
