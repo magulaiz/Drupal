@@ -38,7 +38,7 @@ class ConfigEntityImportTest extends KernelTestBase {
    * Runs test methods for each module within a single test run.
    */
   public function testConfigUpdateImport() {
-    $this->installConfig(['action', 'block', 'filter', 'image']);
+    $this->installConfig(['system', 'action', 'block', 'filter', 'image']);
     $this->container->get('theme_installer')->install(['olivero']);
     $config_storage = $this->container->get('config.storage');
     // Ensure the 'system.site' config.

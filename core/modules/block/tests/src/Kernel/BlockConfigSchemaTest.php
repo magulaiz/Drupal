@@ -52,6 +52,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
 
     $this->typedConfig = \Drupal::service('config.typed');
     $this->blockManager = \Drupal::service('plugin.manager.block');
+    $this->installConfig(['system']);
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('node');
