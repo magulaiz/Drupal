@@ -547,10 +547,8 @@ class ImageItem extends FileItem {
   /**
    * Render API callback that moves resize elements up a level.
    *
-   * The elements (i.e. 'handler_settings') are moved for easier processing by
+   * The elements (i.e. 'resize_policy') are moved for easier processing by
    * the validation and submission handlers.
-   *
-   * @see _entity_reference_field_settings_process()
    */
   public static function formProcessMergeParent($element) {
     $parents = $element['#parents'];
@@ -558,4 +556,5 @@ class ImageItem extends FileItem {
     $element['#parents'] = $parents;
     return $element;
   }
+
 }
