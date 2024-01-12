@@ -35,9 +35,9 @@ class CommandsTest extends WebDriverTestBase {
 
     // Tests the 'add_css' command.
     $page->pressButton("AJAX 'add_css' command");
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($this->cssSelect('link[href="my/file.css"]'), 'Local CSS loaded');
-    $this->assertNotEmpty($this->cssSelect('link[href="https://example.com/css?family=Open+Sans"]'), 'Remote CSS loaded');
+    $this->assertWaitPageContains('my/file.css');
+    $this->assertSession()->elementExists('css', 'link[href="my/file.css"]');
+    $this->assertSession()->elementExists('css', 'link[href="https://example.com/css?family=Open+Sans"]');
 
     // Tests the 'after' command.
     $page->pressButton("AJAX 'After': Click to put something after the div");
