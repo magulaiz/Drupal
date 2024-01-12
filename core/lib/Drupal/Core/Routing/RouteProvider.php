@@ -215,12 +215,19 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * {@inheritdoc}
    */
   public function preLoadRoutes($names) {
+    $e = new \Exception();
+
+    file_put_contents('/tmp/routes.txt', print_r(array_keys($this->routes), 1) . "\n" . $e->getTraceAsString() . "\n", FILE_APPEND);
     if (empty($names)) {
       throw new \InvalidArgumentException('You must specify the route names to load');
     }
 
     $routes_to_load = array_diff($names, array_keys($this->routes), array_keys($this->serializedRoutes));
     if ($routes_to_load) {
+
+    file_put_contents('/tmp/routes_to_load.txt', 'names: ' . print_r($names, 1) . "\n", FILE_APPEND);
+    file_put_contents('/tmp/routes_to_load.txt', 'routes: ' . print_r(array_keys($this->routes), 1) . "\n", FILE_APPEND);
+    file_put_contents('/tmp/routes_to_load.txt', 'serialized: ' . print_r(array_keys($this->serializedRoutes), 1) . "\n", FILE_APPEND);
 
       $cid = static::ROUTE_LOAD_CID_PREFIX . hash('sha512', serialize($routes_to_load));
       if ($cache = $this->cache->get($cid)) {
