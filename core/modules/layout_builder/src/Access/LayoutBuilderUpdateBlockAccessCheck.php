@@ -38,11 +38,13 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
 
     // Case in tests leading to OutOfBoundsException('Invalid delta "0"').
     // @todo Investigate.
-    $plugin = NULL;
-    if ($delta != 0) {
+    try {
       $section = $section_storage->getSection($delta);
       $component = $section->getComponent($uuid);
       $plugin = $component->getPlugin();
+    }
+    catch (\OutOfBoundsException $e) {
+      $plugin = NULL;
     }
 
     return $this->doCheckAccess($section_storage, $account, $section_operation, 'edit', $plugin);
