@@ -218,10 +218,10 @@ class ChooseBlockController implements ContainerInjectionInterface {
       return;
     }
 
-    $blockAccessControlHandler = $this->entityTypeManager->getAccessControlHandler('block_content');
     foreach (array_keys($inline_blocks) as $block_id) {
-      [, $bundle] = explode(':', $block_id);
-      if (!$blockAccessControlHandler->createAccess($bundle, $this->currentUser)) {
+      [, $block_bundle] = explode(':', $block_id);
+      $bundle_premission = 'create ' . $block_bundle . ' block content';
+      if (!$this->currentUser->hasPermission($bundle_premission)) {
         unset($inline_blocks[$block_id]);
       }
     }
