@@ -477,7 +477,7 @@ class DisplayTest extends ViewTestBase {
     $view1['page[path]'] = 'https://www.' . $this->randomMachineName(16) . '.com';
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view1, 'Save and edit');
-    $this->assertSession()->responseContains('Path component ' . "'" . $view1['page[path]'] . "'" . ' is external. External URL is not accepted as view path.');
+    $this->assertSession()->responseContains('Path component <em class="placeholder">' . $view1['page[path]'] . '</em> is external. External URL is not accepted as view path.');
 
     // Saving view with internal url.
     $view1['page[path]'] = 'admin/' . $this->randomMachineName(16);
