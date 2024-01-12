@@ -70,7 +70,9 @@ trait FieldUiTestTrait {
       }
     }
     $this->submitForm($initial_edit, 'Continue');
-    $this->submitForm($second_edit, 'Continue');
+    if ($this->getSession()->getPage()->hasButton('Continue')) {
+      $this->submitForm($second_edit, 'Continue');
+    }
     // Assert that the field is not created.
     $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {

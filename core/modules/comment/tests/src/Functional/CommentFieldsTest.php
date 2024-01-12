@@ -158,7 +158,6 @@ class CommentFieldsTest extends CommentTestBase {
     ];
     $this->drupalGet('admin/config/people/accounts/fields/add-field');
     $this->submitForm($edit, 'Continue');
-    $this->submitForm([], 'Continue');
     $temp_store = \Drupal::service('tempstore.private')->get('field_ui');
     $field_name = $temp_store->get('temp_name');
 

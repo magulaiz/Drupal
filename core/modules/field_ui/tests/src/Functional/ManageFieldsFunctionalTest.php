@@ -129,7 +129,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
     $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit2, 'Save settings');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
@@ -137,7 +137,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
     $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit2, 'Save settings');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
@@ -257,10 +257,10 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
       'label' => $this->randomMachineName(),
       'field_name' => 'tags',
     ];
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit, 'Save settings');
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-    $this->assertSession()->addressEquals($url);
+    $this->assertStringContainsString("/admin/structure/types/manage/$this->contentType/add-field/node/", $this->getSession()->getCurrentUrl());
   }
 
   /**
@@ -406,13 +406,13 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     ];
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
     $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit2, 'Save settings');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
-    $this->assertSession()->pageTextContains($this->fieldLabel . ' settings for ' . $this->contentType);
+    $this->assertSession()->pageTextContains('Field settings for ' . $this->contentType);
   }
 
   /**

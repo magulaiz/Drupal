@@ -215,11 +215,8 @@ class ManageFieldsTest extends BrowserTestBase {
       'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
-    $edit = [
-      'label' => 'Test field',
-      'field_name' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->getSession()->getPage()->fillField('label', 'Test field');
+    $this->getSession()->getPage()->fillField('field_name', 'test_field');
     // Make changes to the storage form.
     $edit = ['field_storage[subform][cardinality_number]' => 5];
     $storage_form_url = $this->getUrl();
@@ -233,11 +230,8 @@ class ManageFieldsTest extends BrowserTestBase {
       'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
-    $edit = [
-      'label' => 'Test field',
-      'field_name' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->getSession()->getPage()->fillField('label', 'Test field');
+    $this->getSession()->getPage()->fillField('field_name', 'test_field');
     $allowed_no_of_values = $page->findField('field_storage[subform][cardinality_number]')->getValue();
     // Assert that the changes made by any user do not affect other users until
     // the field is saved.
