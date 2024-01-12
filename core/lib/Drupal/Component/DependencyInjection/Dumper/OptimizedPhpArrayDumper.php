@@ -357,7 +357,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * Gets a private service definition in a suitable format.
    *
-   * @param string $id
+   * @param string|null $id
    *   The ID of the service to get a private definition for.
    * @param \Symfony\Component\DependencyInjection\Definition $definition
    *   The definition to process.
@@ -365,7 +365,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   (optional) Whether the service will be shared with others.
    *   By default this parameter is FALSE.
    *
-   * @return object
+   * @return object{type: 'private_service', id: string, value: array, shared: bool}
    *   A very lightweight private service value object.
    */
   protected function getPrivateServiceCall($id, Definition $definition, $shared = FALSE) {
@@ -549,6 +549,13 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   A suitable representation of the service closure reference.
    */
   protected function getServiceClosureCall(string $id, int $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+    $definition = $this->container->getDefinition($id);
+    if (!$definition->isPublic()) {
+      $object = $this->getPrivateServiceCall(NULL, $definition);
+      $object->type = 'service_closure_private';
+      return $object;
+    }
+
     return (object) [
       'type' => 'service_closure',
       'id' => $id,

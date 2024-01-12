@@ -442,7 +442,7 @@ class Container implements ContainerInterface, ResetInterface {
           continue;
         }
         // Create private service.
-        elseif ($type == 'private_service') {
+        elseif ($type == 'private_service' || $type === 'service_closure_private') {
           $id = $argument->id;
 
           // Does the private service already exist.
@@ -455,6 +455,10 @@ class Container implements ContainerInterface, ResetInterface {
           $arguments[$key] = $this->createService($argument->value, $id);
           if ($argument->shared) {
             $this->privateServices[$id] = $arguments[$key];
+          }
+
+          if ($type === 'service_closure_private') {
+            $arguments[$key] = fn () => $arguments[$key];
           }
 
           continue;
