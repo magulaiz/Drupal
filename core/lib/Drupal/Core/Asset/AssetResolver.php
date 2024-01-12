@@ -59,11 +59,6 @@ class AssetResolver implements AssetResolverInterface {
   protected $cache;
 
   /**
-   * Assets.
-   */
-  protected $assets;
-
-  /**
    * Constructs a new AssetResolver instance.
    *
    * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
@@ -134,12 +129,11 @@ class AssetResolver implements AssetResolverInterface {
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter().
     $libraries_to_load = $this->getLibrariesToLoad($assets);
-    $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) $optimize;
-    if (isset($this->assets[$cid])) {
-      return $this->assets[$cid];
+    if (empty($libraries_to_load)) {
+      return [];
     }
+    $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) $optimize;
     elseif ($cached = $this->cache->get($cid)) {
-      $this->assets[$cid] = $cached->data;
       return $cached->data;
     }
 
@@ -189,7 +183,6 @@ class AssetResolver implements AssetResolverInterface {
       }
     }
     $this->cache->set($cid, $css, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
-    $this->assets[$cid] = $css;
 
     return $css;
   }
@@ -232,13 +225,12 @@ class AssetResolver implements AssetResolverInterface {
     // hook_library_info_alter(). Additionally add the current language to
     // support translation of JavaScript files via hook_js_alter().
     $libraries_to_load = $this->getLibrariesToLoad($assets);
+    if (empty($libraries_to_load)) {
+      return [];
+    }
     $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) (count($assets->getSettings()) > 0) . ':' . (int) $optimize;
 
-    if (isset($this->assets[$cid])) {
-      [$js_assets_header, $js_assets_footer, $settings, $settings_in_header] = $this->assets[$cid];
-    }
-    elseif ($cached = $this->cache->get($cid)) {
-      $this->assets[$cid] = $cached->data;
+    if ($cached = $this->cache->get($cid)) {
       [$js_assets_header, $js_assets_footer, $settings, $settings_in_header] = $cached->data;
     }
     else {
