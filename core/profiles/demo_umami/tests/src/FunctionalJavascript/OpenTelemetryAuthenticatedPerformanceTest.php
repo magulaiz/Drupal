@@ -28,7 +28,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
   /**
    * Logs front page tracing data with an authenticated user and warm cache.
    */
-  public function testFrontPageAuthenticatedWarmCache() {
+  public function testFrontPageAuthenticatedWarmCache(): void {
     $this->drupalGet('<front>');
     $this->drupalGet('<front>');
 
