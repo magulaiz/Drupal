@@ -133,7 +133,7 @@ class AssetResolver implements AssetResolverInterface {
       return [];
     }
     $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) $optimize;
-    elseif ($cached = $this->cache->get($cid)) {
+    if ($cached = $this->cache->get($cid)) {
       return $cached->data;
     }
 
