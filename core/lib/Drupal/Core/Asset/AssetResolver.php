@@ -59,9 +59,9 @@ class AssetResolver implements AssetResolverInterface {
   protected $cache;
 
   /**
-   * Assets.
+   * Static cache of assets already calculated during the request.
    */
-  protected $assets;
+  protected array $assets = [];
 
   /**
    * Constructs a new AssetResolver instance.
