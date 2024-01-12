@@ -262,20 +262,31 @@ class ImageItem extends FileItem {
       '#field_suffix' => ' ' . $this->t('pixels'),
       '#suffix' => '</div>',
     ];
-    $element['resize_policy'] = [
+    $resize_visibility = [
+      ':input[name="settings[max_resolution][x]"]' => ['!value' => ''],
+      ':input[name="settings[max_resolution][y]"]' => ['!value' => ''],
+    ];
+    $element['resize'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Images exceeding maximum dimensions'),
+      '#weight' => 4.3,
+      '#open' => TRUE,
+      '#tree' => TRUE,
+      '#process' => [[static::class, 'formProcessMergeParent']],
+      '#states' => [
+        'visible' => $resize_visibility,
+      ],
+    ];
+    $element['resize']['resize_policy'] = [
       '#title' => $this->t('Image resize policy'),
       '#type' => 'radios',
       '#default_value' => $settings['resize_policy'] ?? FALSE,
-      '#weight' => 4.3,
       '#options' => [
         'resize_larger_images' => $this->t('Resize proportionally'),
         'reject_larger_images_with_error' => $this->t('Reject'),
       ],
       '#states' => [
-        'visible' => [
-          ':input[name="settings[max_resolution][x]"]' => ['!value' => ''],
-          ':input[name="settings[max_resolution][y]"]' => ['!value' => ''],
-        ],
+        'visible' => $resize_visibility,
       ],
     ];
 
@@ -533,4 +544,18 @@ class ImageItem extends FileItem {
     return TRUE;
   }
 
+  /**
+   * Render API callback that moves resize elements up a level.
+   *
+   * The elements (i.e. 'handler_settings') are moved for easier processing by
+   * the validation and submission handlers.
+   *
+   * @see _entity_reference_field_settings_process()
+   */
+  public static function formProcessMergeParent($element) {
+    $parents = $element['#parents'];
+    array_pop($parents);
+    $element['#parents'] = $parents;
+    return $element;
+  }
 }
