@@ -12,6 +12,10 @@ services:
     arguments: ['@plugin.manager.block']
     tags:
       - { name: access_check, applies_to: _layout_builder_add_block_access }
+  access_check.entity.layout_builder_update_block_access:
+    class: Drupal\layout_builder\Access\LayoutBuilderUpdateBlockAccessCheck
+    tags:
+      - { name: access_check, applies_to: _layout_builder_update_block_access }
   plugin.manager.layout_builder.section_storage:
     class: Drupal\layout_builder\SectionStorage\SectionStorageManager
     parent: default_plugin_manager

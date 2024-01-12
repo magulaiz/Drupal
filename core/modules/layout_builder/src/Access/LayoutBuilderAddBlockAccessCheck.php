@@ -2,12 +2,8 @@
 
 namespace Drupal\layout_builder\Access;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockManagerInterface;
-use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
-use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\Routing\Route;
 
@@ -19,7 +15,7 @@ use Symfony\Component\Routing\Route;
  * @internal
  *   Tagged services are internal.
  */
-class LayoutBuilderAddBlockAccessCheck implements AccessInterface {
+class LayoutBuilderAddBlockAccessCheck extends LayoutBuilderBlockAccessBase {
 
   /**
    * Constructor.
@@ -47,24 +43,10 @@ class LayoutBuilderAddBlockAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(SectionStorageInterface $section_storage, string $plugin_id, AccountInterface $account, Route $route) {
+    $section_operation = $route->getRequirement('_layout_builder_add_block_access');
     $plugin = $this->blockManager->createInstance($plugin_id, []);
-    $operation = $route->getRequirement('_layout_builder_access');
 
-    $access = $section_storage->access($operation, $account, TRUE);
-    if ($plugin instanceof InlineBlock) {
-      $access = $access->andIf($plugin->blockAddAccess($account, $section_storage, $operation));
-    }
-
-    // Check for the global permission unless the section storage checks
-    // permissions itself.
-    if (!$section_storage->getPluginDefinition()->get('handles_permission_check')) {
-      $access = $access->andIf(AccessResult::allowedIfHasPermission($account, 'configure any layout'));
-    }
-
-    if ($access instanceof RefinableCacheableDependencyInterface) {
-      $access->addCacheableDependency($section_storage);
-    }
-    return $access;
+    return $this->doCheckAccess($section_storage, $account, $section_operation, 'create', $plugin);
   }
 
 }
