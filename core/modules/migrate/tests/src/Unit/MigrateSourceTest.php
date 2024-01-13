@@ -312,7 +312,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $row2 = $this->prophesize(Row::class);
     $row2->rehash()
       ->shouldBeCalled();
-    $row2->shouldSkip()
+    $row2->getSkip()
       ->willReturn(FALSE)
       ->shouldBeCalled();
     $module_handler->invokeAll('migrate_prepare_row', [$row2, $source, $migration])

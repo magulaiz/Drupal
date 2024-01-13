@@ -209,8 +209,8 @@ class SubProcess extends ProcessPluginBase {
         }
         $new_row = new Row($new_value + $source);
         $migrate_executable->processRow($new_row, $this->configuration['process']);
-        if ($new_row->shouldSkip()) {
-          $row->skip($new_row->skipMessage(), $new_row->saveToMapOnSkip());
+        if ($new_row->getSkip()) {
+          $row->skip($new_row->getSkipMessage(), $new_row->getSaveToMap());
           return NULL;
         }
         $destination = $new_row->getDestination();

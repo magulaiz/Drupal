@@ -292,17 +292,30 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   public function prepareRow(Row $row) {
     $result = TRUE;
     try {
-      $result_hook = $this->getModuleHandler()
-        ->invokeAll('migrate_prepare_row', [$row, $this, $this->migration]);
-      $result_named_hook = $this->getModuleHandler()->invokeAll(
-        'migrate_' . $this->migration->id() . '_prepare_row',
-        [$row, $this, $this->migration]
-      );
+      $skip = FALSE;
+      $hook_result = [];
+      $args = [$row, $this, $this->migration];
+      $closure = function (callable $hook, string $module) use ($args, &$hook_result, &$skip) {
+        if ($skip) {
+          return;
+        }
+        $result = call_user_func_array($hook, $args);
+        if ($args[0]->getSkip()) {
+          $skip = TRUE;
+          return;
+        }
+        if (isset($result)) {
+          $hook_result[] = $result;
+        }
+      };
+      $this->getModuleHandler()
+        ->invokeAllWith('migrate_prepare_row', $closure);
+      $this->getModuleHandler()
+        ->invokeAllWith('migrate_' . $this->migration->id() . '_prepare_row', $closure);
+
       // We will skip if any hook returned FALSE.
-      $skip = $row->shouldSkip()
-        || ($result_hook && in_array(FALSE, $result_hook))
-        || ($result_named_hook && in_array(FALSE, $result_named_hook));
-      $save_to_map = !$row->shouldSkip() || $row->saveToMapOnSkip();
+      $skip |= in_array(FALSE, $hook_result);
+      $save_to_map = !$skip || $row->getSaveToMap();
     }
     catch (MigrateSkipRowException $e) {
       $skip = TRUE;
@@ -320,8 +333,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $this->idMap->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
         $this->currentRow = NULL;
         $this->currentSourceIds = NULL;
-        if ($row->skipMessage()) {
-          $this->idMap->saveMessage($row->getSourceIdValues(), $row->skipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
+        if ($row->getSkipMessage()) {
+          $this->idMap->saveMessage($row->getSourceIdValues(), $row->getSkipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
         }
       }
       $result = FALSE;

@@ -399,7 +399,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
-      if ($row->shouldSkip()) {
+      if ($row->getSkip()) {
         return;
       }
       $this->processPipeline($row, $destination, $plugins, $value);
@@ -456,7 +456,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
         }
         $value = $new_value;
-        if ($break || $row->shouldSkip()) {
+        if ($break || $row->getSkip()) {
           break;
         }
       }
@@ -479,7 +479,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         $multiple = $plugin->multiple();
       }
-      if ($row->shouldSkip()) {
+      if ($row->getSkip()) {
         return;
       }
     }

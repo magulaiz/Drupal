@@ -57,7 +57,7 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
     $value = (new SkipOnEmpty($configuration, 'skip_on_empty', []))
       ->transform(' ', $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame(' ', $value);
-    $this->assertFalse($this->row->shouldSkip());
+    $this->assertFalse($this->row->getSkip());
   }
 
   /**

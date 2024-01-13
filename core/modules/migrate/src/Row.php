@@ -36,7 +36,7 @@ class Row {
    *
    * @var bool
    */
-  protected bool $shouldSkip = FALSE;
+  protected bool $skip = FALSE;
 
   /**
    * Message indicating why the row is being skipped.
@@ -50,7 +50,7 @@ class Row {
    *
    * @var bool
    */
-  protected bool $saveToMapOnSkip = TRUE;
+  protected bool $saveToMap = TRUE;
 
   /**
    * Level separator of destination and source properties.
@@ -462,9 +462,9 @@ class Row {
    *   Whether the row should be saved to the migrate map.
    */
   public function skip(string $message = '', bool $save_to_map = TRUE): void {
-    $this->shouldSkip = TRUE;
+    $this->skip = TRUE;
     $this->skipMessage = $message;
-    $this->saveToMapOnSkip = $save_to_map;
+    $this->saveToMap = $save_to_map;
   }
 
   /**
@@ -473,8 +473,8 @@ class Row {
    * @return bool
    *   A boolean value indicating whether the row should be skipped.
    */
-  public function shouldSkip(): bool {
-    return $this->shouldSkip;
+  public function getSkip(): bool {
+    return $this->skip;
   }
 
   /**
@@ -483,7 +483,7 @@ class Row {
    * @return string
    *   The skip message.
    */
-  public function skipMessage(): string {
+  public function getSkipMessage(): string {
     return $this->skipMessage;
   }
 
@@ -493,8 +493,8 @@ class Row {
    * @return bool
    *   A boolean value indicating if the skipped row should be saved.
    */
-  public function saveToMapOnSkip(): bool {
-    return $this->saveToMapOnSkip;
+  public function getSaveToMap(): bool {
+    return $this->saveToMap;
   }
 
 }
