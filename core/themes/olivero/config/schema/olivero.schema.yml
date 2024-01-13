@@ -3,6 +3,8 @@
 olivero.settings:
   type: theme_settings
   label: 'olivero settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     third_party_settings:
       type: mapping
