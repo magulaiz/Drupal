@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
 use GuzzleHttp\Exception\GuzzleException;
 use Drupal\Tests\StreamCapturer;
@@ -10,6 +11,7 @@ use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
@@ -17,6 +19,7 @@ use PHPUnit\Framework\SkippedTestError;
  * @group PHPUnit
  * @group Test
  * @group KernelTests
+ * @group #slow
  */
 class KernelTestBaseTest extends KernelTestBase {
 
@@ -235,6 +238,34 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
+   * Tests that a usable session is on the request.
+   *
+   * @covers ::bootKernel
+   */
+  public function testSessionOnRequest(): void {
+    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+    $session = $this->container->get('request_stack')->getSession();
+
+    $session->set('some-val', 'do-not-cleanup');
+    $this->assertEquals('do-not-cleanup', $session->get('some-val'));
+
+    $session->set('some-other-val', 'do-cleanup');
+    $this->assertEquals('do-cleanup', $session->remove('some-other-val'));
+  }
+
+  /**
+   * Tests deprecation of modified request stack lacking a session.
+   *
+   * @covers ::tearDown
+   *
+   * @group legacy
+   */
+  public function testDeprecatedSessionMissing(): void {
+    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
+    $this->container->get('request_stack')->push(Request::create('/'));
+  }
+
+  /**
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
   public function testLocalTimeZone() {
@@ -363,6 +394,19 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Test that the module that is providing the database driver is enabled.
     $this->assertSame(1, \Drupal::service('extension.list.module')->get($module)->status);
+  }
+
+  /**
+   * Tests the deprecation of accessing the randomGenerator property directly.
+   *
+   * @group legacy
+   */
+  public function testGetRandomGeneratorPropertyDeprecation() {
+    $this->expectDeprecation('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445');
+    // We purposely test accessing an undefined property here. We need to tell
+    // PHPStan to ignore that.
+    // @phpstan-ignore-next-line
+    $this->assertInstanceOf(Random::class, $this->randomGenerator);
   }
 
 }

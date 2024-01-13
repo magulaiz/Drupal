@@ -25,7 +25,6 @@ class HandlerAllTest extends ViewTestBase {
    * @var array
    */
   protected static $modules = [
-    'book',
     'block',
     'comment',
     'contact',
@@ -68,7 +67,7 @@ class HandlerAllTest extends ViewTestBase {
 
       // Go through all fields and there through all handler types.
       foreach ($info as $field => $field_info) {
-        // Table is a reserved key for the metainformation.
+        // Table is a reserved key for the meta-information.
         if ($field != 'table' && !in_array("$base_table:$field", $exclude)) {
           $item = [
             'table' => $base_table,

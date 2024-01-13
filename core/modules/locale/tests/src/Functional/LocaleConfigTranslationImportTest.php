@@ -151,7 +151,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->submitForm(['predefined_langcode' => 'af'], 'Add language');
 
     // Add the system branding block to the page.
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site_branding']);
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm(['site_slogan' => 'Test site slogan'], 'Save configuration');
     $this->drupalGet('admin/config/system/site-information/translate/af/edit');
@@ -176,7 +176,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // Install any module.
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[dblog][enable]' => 'dblog'], 'Install');
-    $this->assertSession()->pageTextContains('Module Database Logging has been enabled.');
+    $this->assertSession()->pageTextContains('Module Database Logging has been installed.');
 
     // Get the front page and ensure that the translated configuration still
     // appears.

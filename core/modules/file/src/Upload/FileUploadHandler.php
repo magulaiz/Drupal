@@ -13,6 +13,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\FileRepositoryInterface;
+use Drupal\file\Validation\FileValidatorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException;
 use Symfony\Component\HttpFoundation\File\Exception\ExtensionFileException;
@@ -92,6 +93,13 @@ class FileUploadHandler {
   protected $fileRepository;
 
   /**
+   * The file validator.
+   *
+   * @var \Drupal\file\Validation\FileValidatorInterface
+   */
+  protected FileValidatorInterface $fileValidator;
+
+  /**
    * Constructs a FileUploadHandler object.
    *
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
@@ -108,10 +116,12 @@ class FileUploadHandler {
    *   The current user.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\file\FileRepositoryInterface $fileRepository
+   * @param \Drupal\file\FileRepositoryInterface|null $fileRepository
    *   The file repository.
+   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
+   *   The file validator.
    */
-  public function __construct(FileSystemInterface $fileSystem, EntityTypeManagerInterface $entityTypeManager, StreamWrapperManagerInterface $streamWrapperManager, EventDispatcherInterface $eventDispatcher, MimeTypeGuesserInterface $mimeTypeGuesser, AccountInterface $currentUser, RequestStack $requestStack, FileRepositoryInterface $fileRepository = NULL) {
+  public function __construct(FileSystemInterface $fileSystem, EntityTypeManagerInterface $entityTypeManager, StreamWrapperManagerInterface $streamWrapperManager, EventDispatcherInterface $eventDispatcher, MimeTypeGuesserInterface $mimeTypeGuesser, AccountInterface $currentUser, RequestStack $requestStack, FileRepositoryInterface $fileRepository = NULL, FileValidatorInterface $file_validator = NULL) {
     $this->fileSystem = $fileSystem;
     $this->entityTypeManager = $entityTypeManager;
     $this->streamWrapperManager = $streamWrapperManager;
@@ -124,6 +134,11 @@ class FileUploadHandler {
       $fileRepository = \Drupal::service('file.repository');
     }
     $this->fileRepository = $fileRepository;
+    if (!$file_validator) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $file_validator argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+      $file_validator = \Drupal::service('file.validator');
+    }
+    $this->fileValidator = $file_validator;
   }
 
   /**
@@ -141,47 +156,58 @@ class FileUploadHandler {
    *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
    *     until the filename is unique.
    *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
+   * @param bool $throw
+   *   (optional) Whether to throw an exception if the file is invalid.
    *
    * @return \Drupal\file\Upload\FileUploadResult
    *   The created file entity.
    *
    * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
-   *   Thrown when a file upload error occurred.
+   *    Thrown when a file upload error occurred and $throws is TRUE.
    * @throws \Drupal\Core\File\Exception\FileWriteException
-   *   Thrown when there is an error moving the file.
+   *    Thrown when there is an error moving the file and $throws is TRUE.
    * @throws \Drupal\Core\File\Exception\FileException
-   *   Thrown when a file system error occurs.
+   *    Thrown when a file system error occurs and $throws is TRUE.
    * @throws \Drupal\file\Upload\FileValidationException
-   *   Thrown when file validation fails.
+   *    Thrown when file validation fails and $throws is TRUE.
    */
-  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE): FileUploadResult {
+  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE, bool $throw = TRUE): FileUploadResult {
     $originalName = $uploadedFile->getClientOriginalName();
-
-    if (!$uploadedFile->isValid()) {
+    // @phpstan-ignore-next-line
+    if ($throw && !$uploadedFile->isValid()) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $throw argument as TRUE is deprecated in drupal:10.3.0 and will be removed in drupal:11.0.0. Use \Drupal\file\Upload\FileUploadResult::getViolations() instead. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
+      // @phpstan-ignore-next-line
       switch ($uploadedFile->getError()) {
         case \UPLOAD_ERR_INI_SIZE:
+          // @phpstan-ignore-next-line
           throw new IniSizeFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_FORM_SIZE:
+          // @phpstan-ignore-next-line
           throw new FormSizeFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_PARTIAL:
+          // @phpstan-ignore-next-line
           throw new PartialFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_NO_FILE:
+          // @phpstan-ignore-next-line
           throw new NoFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_CANT_WRITE:
+          // @phpstan-ignore-next-line
           throw new CannotWriteFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_NO_TMP_DIR:
+          // @phpstan-ignore-next-line
           throw new NoTmpDirFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_EXTENSION:
+          // @phpstan-ignore-next-line
           throw new ExtensionFileException($uploadedFile->getErrorMessage());
 
       }
-
+      // @phpstan-ignore-next-line
       throw new FileException($uploadedFile->getErrorMessage());
     }
 
@@ -194,7 +220,7 @@ class FileUploadHandler {
     }
 
     // A file URI may already have a trailing slash or look like "public://".
-    if (substr($destination, -1) != '/') {
+    if (!str_ends_with($destination, '/')) {
       $destination .= '/';
     }
 
@@ -222,12 +248,25 @@ class FileUploadHandler {
     $file->setSize($uploadedFile->getSize());
 
     // Add in our check of the file name length.
-    $validators['file_validate_name_length'] = [];
+    $validators['FileNameLength'] = [];
+
+    $result = new FileUploadResult();
 
     // Call the validation functions specified by this function's caller.
-    $errors = file_validate($file, $validators);
-    if (!empty($errors)) {
-      throw new FileValidationException('File validation failed', $filename, $errors);
+    $violations = $this->fileValidator->validate($file, $validators);
+    if (count($violations) > 0) {
+      $result->addViolations($violations);
+      return $result;
+    }
+
+    if ($throw) {
+      $errors = [];
+      foreach ($violations as $violation) {
+        $errors[] = $violation->getMessage();
+      }
+      if (!empty($errors)) {
+        throw new FileValidationException('File validation failed', $filename, $errors);
+      }
     }
 
     $file->setFileUri($destinationFilename);
@@ -248,8 +287,7 @@ class FileUploadHandler {
       }
     }
 
-    $result = (new FileUploadResult())
-      ->setOriginalFilename($originalName)
+    $result->setOriginalFilename($originalName)
       ->setSanitizedFilename($filename)
       ->setFile($file);
 
@@ -263,11 +301,17 @@ class FileUploadHandler {
 
     // We can now validate the file object itself before it's saved.
     $violations = $file->validate();
-    foreach ($violations as $violation) {
-      $errors[] = $violation->getMessage();
+    if ($throw) {
+      foreach ($violations as $violation) {
+        $errors[] = $violation->getMessage();
+      }
+      if (!empty($errors)) {
+        throw new FileValidationException('File validation failed', $filename, $errors);
+      }
     }
-    if (!empty($errors)) {
-      throw new FileValidationException('File validation failed', $filename, $errors);
+    if (count($violations) > 0) {
+      $result->addViolations($violations);
+      return $result;
     }
 
     // If we made it this far it's safe to record this file in the database.
@@ -323,21 +367,30 @@ class FileUploadHandler {
    */
   protected function handleExtensionValidation(array &$validators): string {
     // Build a list of allowed extensions.
-    if (isset($validators['file_validate_extensions'])) {
-      if (!isset($validators['file_validate_extensions'][0])) {
-        // If 'file_validate_extensions' is set and the list is empty then the
-        // caller wants to allow any extension. In this case we have to remove the
-        // validator or else it will reject all extensions.
-        unset($validators['file_validate_extensions']);
+    if (isset($validators['FileExtension'])) {
+      if (!isset($validators['FileExtension']['extensions'])) {
+        // If 'FileExtension' is set and the list is empty then the caller wants
+        // to allow any extension. In this case we have to remove the validator
+        // or else it will reject all extensions.
+        unset($validators['FileExtension']);
       }
     }
     else {
+      if (!empty($validators['file_validate_extensions'][0])) {
+        // The deprecated 'file_validate_extensions' has configuration, so that
+        // should be used.
+        $validators['FileExtension']['extensions'] = $validators['file_validate_extensions'][0];
+        @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+        return $validators['FileExtension']['extensions'];
+      }
+
       // No validator was provided, so add one using the default list.
       // Build a default non-munged safe list for
       // \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName().
-      $validators['file_validate_extensions'] = [self::DEFAULT_EXTENSIONS];
+      $validators['FileExtension'] = ['extensions' => self::DEFAULT_EXTENSIONS];
+
     }
-    return $validators['file_validate_extensions'][0] ?? '';
+    return $validators['FileExtension']['extensions'] ?? '';
   }
 
   /**

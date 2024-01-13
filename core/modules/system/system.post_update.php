@@ -7,7 +7,10 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityFormModeInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_removed_post_updates().
@@ -99,4 +102,113 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
  */
 function system_post_update_enable_password_compatibility() {
   \Drupal::service('module_installer')->install(['phpass']);
+}
+
+/**
+ * Remove redundant asset state and config.
+ */
+function system_post_update_remove_asset_entries() {
+  \Drupal::state()->delete('drupal_css_cache_files');
+  \Drupal::state()->delete('system.js_cache_files');
+  $config = \Drupal::configFactory()->getEditable('system.performance');
+  $config->clear('stale_file_threshold');
+  $config->save();
+}
+
+/**
+ * Remove redundant asset query string state.
+ */
+function system_post_update_remove_asset_query_string() {
+  \Drupal::state()->delete('system.css_js_query_string');
+}
+
+/**
+ * Update description for view modes.
+ */
+function system_post_update_add_description_to_entity_view_mode(array &$sandbox = NULL): void {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+
+  $callback = function (EntityViewModeInterface $entity_view_mode) {
+    return $entity_view_mode->get('description') === NULL;
+  };
+
+  $config_entity_updater->update($sandbox, 'entity_view_mode', $callback);
+}
+
+/**
+ * Update description for form modes.
+ */
+function system_post_update_add_description_to_entity_form_mode(array &$sandbox = NULL): void {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+
+  $callback = function (EntityFormModeInterface $entity_form_mode) {
+    return $entity_form_mode->get('description') === NULL;
+  };
+
+  $config_entity_updater->update($sandbox, 'entity_form_mode', $callback);
+}
+
+/**
+ * Updates system.theme.global:logo.url config if it's still at the default.
+ */
+function system_post_update_set_blank_log_url_to_null() {
+  $global_theme_settings = \Drupal::configFactory()->getEditable('system.theme.global');
+  if ($global_theme_settings->get('logo.url') === '') {
+    $global_theme_settings
+      ->set('logo.url', NULL)
+      ->save(TRUE);
+  }
+}
+
+/**
+ * Add new default mail transport dsn.
+ */
+function system_post_update_mailer_dsn_settings() {
+}
+
+/**
+ * Add new default mail transport dsn.
+ */
+function system_post_update_mailer_structured_dsn_settings() {
+  $config = \Drupal::configFactory()->getEditable('system.mail');
+  $config->set('mailer_dsn', [
+    'scheme' => 'sendmail',
+    'host' => 'default',
+    'user' => NULL,
+    'password' => NULL,
+    'port' => NULL,
+    'options' => [],
+  ])->save();
+}
+
+/**
+ * Fix path in README.txt in CONFIG_SYNC_DIRECTORY.
+ */
+function system_post_update_amend_config_sync_readme_url() {
+  $configuration_directory = Settings::get('config_sync_directory');
+  $readme_path = $configuration_directory . '/README.txt';
+  if (!file_exists($readme_path)) {
+    // No operation if the original file is not there.
+    return;
+  }
+  $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
+  if (!$writable) {
+    // Cannot write the README.txt file, nothing to do.
+    return;
+  }
+  $original_content = file_get_contents($readme_path);
+  $changed_content = str_replace('admin/config/development/configuration/sync', 'admin/config/development/configuration', $original_content);
+  file_put_contents($readme_path, $changed_content);
+  return \t('Amended configuration synchronization readme file content.');
+}
+
+/**
+ * Adds default value for the mail_notification config parameter.
+ */
+function system_post_update_mail_notification_setting() {
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  // If the value doesn't exist it always returns NULL.
+  if (is_null($config->get('mail_notification'))) {
+    $config->set('mail_notification', NULL)->save();
+  }
 }

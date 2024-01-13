@@ -129,7 +129,7 @@ function ajax_forms_test_advanced_commands_css_callback($form, FormStateInterfac
 function ajax_forms_test_advanced_commands_data_callback($form, FormStateInterface $form_state) {
   $selector = '#data_div';
   $response = new AjaxResponse();
-  $response->addCommand(new DataCommand($selector, 'testkey', 'testvalue'));
+  $response->addCommand(new DataCommand($selector, 'testkey', 'test_value'));
   return $response;
 }
 
@@ -205,6 +205,10 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInte
   $response->addCommand(new AddCssCommand([
     [
       'href' => 'my/file.css',
+      'media' => 'all',
+    ],
+    [
+      'href' => 'https://example.com/css?family=Open+Sans',
       'media' => 'all',
     ],
   ]));

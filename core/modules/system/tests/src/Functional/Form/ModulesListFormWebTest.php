@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests \Drupal\system\Form\ModulesListForm.
  *
  * @group Form
+ * @group #slow
  */
 class ModulesListFormWebTest extends BrowserTestBase {
 
@@ -71,20 +72,20 @@ class ModulesListFormWebTest extends BrowserTestBase {
     // Enable a module that does not define permissions.
     $edit = ['modules[layout_discovery][enable]' => 'layout_discovery'];
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Layout Discovery has been enabled.');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Layout Discovery has been installed.');
     $this->assertSession()->elementNotExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a");
 
     // Enable a module that defines permissions.
     $edit = ['modules[action][enable]' => 'action'];
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Actions UI has been enabled.');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Actions UI has been installed.');
     $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/action')]");
 
     // Enable a module that has dependencies and both define permissions.
     $edit = ['modules[content_moderation][enable]' => 'content_moderation'];
     $this->submitForm($edit, 'Install');
     $this->submitForm([], 'Continue');
-    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", '2 modules have been enabled: Content Moderation, Workflows.');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", '2 modules have been installed: Content Moderation, Workflows.');
     $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/content_moderation%2Cworkflows')]");
   }
 
@@ -122,6 +123,34 @@ BROKEN;
   }
 
   /**
+   * Tests the module form with a module with an empty description in info.yml.
+   */
+  public function testModulesListFormWithEmptyDescriptionInfoFile() {
+    $path = \Drupal::getContainer()
+      ->getParameter('site.path') . "/modules/missing_description";
+    mkdir($path, 0777, TRUE);
+    $file_path = "$path/missing_description.info.yml";
+
+    $yml = <<<BROKEN
+name: Module with empty description
+type: module
+core_version_requirement: '*'
+description:
+BROKEN;
+
+    file_put_contents($file_path, $yml);
+
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->assertSession()
+      ->pageTextContains("Module with empty description");
+
+    // Check that the module filter text box is available.
+    $this->assertSession()->elementExists('xpath', '//input[@name="text"]');
+  }
+
+  /**
    * Confirm that module 'Required By' descriptions include dependent themes.
    */
   public function testRequiredByThemeMessage() {
@@ -153,7 +182,7 @@ BROKEN;
     $edit = ['modules[changing_module][enable]' => 'changing_module'];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->pageTextContains('Module Module that changes has been enabled.');
+    $this->assertSession()->pageTextContains('Module Module that changes has been installed.');
 
     file_put_contents($file_path, Yaml::encode($incompatible_info));
     $this->drupalGet('admin/modules');

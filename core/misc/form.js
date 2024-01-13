@@ -31,7 +31,14 @@
    */
   $.fn.drupalGetSummary = function () {
     const callback = this.data('summaryCallback');
-    return this[0] && callback ? callback(this[0]).trim() : '';
+
+    if (!this[0] || !callback) {
+      return '';
+    }
+
+    const result = callback(this[0]);
+
+    return result ? result.trim() : '';
   };
 
   /**
@@ -118,7 +125,9 @@
     attach() {
       function onFormSubmit(e) {
         const $form = $(e.currentTarget);
-        const formValues = $form.serialize();
+        const formValues = new URLSearchParams(
+          new FormData(e.target),
+        ).toString();
         const previousValues = $form.attr('data-drupal-form-submit-last');
         if (previousValues === formValues) {
           e.preventDefault();
@@ -177,7 +186,7 @@
   Drupal.behaviors.formUpdated = {
     attach(context) {
       const $context = $(context);
-      const contextIsForm = $context.is('form');
+      const contextIsForm = context.tagName === 'FORM';
       const $forms = $(
         once('form-updated', contextIsForm ? $context : $context.find('form')),
       );
@@ -212,7 +221,7 @@
     },
     detach(context, settings, trigger) {
       const $context = $(context);
-      const contextIsForm = $context.is('form');
+      const contextIsForm = context.tagName === 'FORM';
       if (trigger === 'unload') {
         once
           .remove(

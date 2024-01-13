@@ -664,7 +664,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   // The 'success' parameter means no fatal PHP errors were detected. All
  *   // other error management should be handled using 'results'.
  *   if ($success) {
- *     $message = \Drupal::translation()->formatPlural(count($results), 'One post processed.', '@count posts processed.');
+ *     $message = \Drupal::translation()->formatPlural(count($results), 'One item processed.', '@count items processed.');
  *   }
  *   else {
  *     $message = t('Finished with an error.');
@@ -939,7 +939,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
       $query_options['op'] = 'finished';
       $error_url->setOption('query', $query_options);
 
-      $batch['error_message'] = t('Please continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
+      $batch['error_message'] = t('Continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
 
       // Clear the way for the redirection to the batch processing page, by
       // saving and unsetting the 'destination', if there is any.

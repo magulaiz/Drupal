@@ -223,7 +223,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         }
         $project_data['extra'][] = [
           'label' => t('Project not secure'),
-          'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
+          'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately uninstalling everything included by this project is strongly recommended!'),
         ];
         break;
 
@@ -235,7 +235,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         }
         $project_data['extra'][] = [
           'label' => t('Project revoked'),
-          'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
+          'data' => t('This project has been revoked, and is no longer available for download. Uninstalling everything included by this project is strongly recommended!'),
         ];
         break;
 
@@ -246,7 +246,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         }
         $project_data['extra'][] = [
           'label' => t('Project not supported'),
-          'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
+          'data' => t('This project is no longer supported, and is no longer available for download. Uninstalling everything included by this project is strongly recommended!'),
         ];
         break;
 
@@ -387,7 +387,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         $project_data['extra'][] = [
           'class' => ['release-revoked'],
           'label' => t('Release revoked'),
-          'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+          'data' => t('Your currently installed release has been revoked, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
         ];
       }
       elseif ($release->isUnsupported()) {
@@ -398,7 +398,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         $project_data['extra'][] = [
           'class' => ['release-not-supported'],
           'label' => t('Release not supported'),
-          'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+          'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
         ];
       }
     }
@@ -462,7 +462,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     }
 
     // Look for the 'recommended' version if we haven't found it yet (see
-    // phpdoc at the top of this function for the definition).
+    // PHPDoc at the top of this function for the definition).
     if (!isset($project_data['recommended'])
         && $release_major_version == $target_major) {
       if ($recommended_version_without_extra !== $release_version_without_extra) {
