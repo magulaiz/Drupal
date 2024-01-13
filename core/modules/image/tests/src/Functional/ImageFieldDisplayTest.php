@@ -15,6 +15,7 @@ use Drupal\user\RoleInterface;
  * Tests the display of image fields.
  *
  * @group image
+ * @group #slow
  */
 class ImageFieldDisplayTest extends ImageFieldTestBase {
 
@@ -260,7 +261,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $field = $this->createImageField($field_name, 'article', [], $field_settings, $widget_settings);
 
-    // Verify that the min/max resolution set on the field are properly
+    // Verify that the min/max dimensions set on the field are properly
     // extracted, and displayed, on the image field's configuration form.
     $this->drupalGet('admin/structure/types/manage/article/fields/' . $field->id());
     $this->assertSession()->fieldValueEquals('settings[max_resolution][x]', '100');
