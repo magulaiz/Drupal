@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\ajax_test\Controller\AjaxTestController;
@@ -167,8 +169,12 @@ class DialogTest extends WebDriverTestBase {
     // Press buttons in the dialog to ensure there are no AJAX errors.
     $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Hello world');
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_text = $this->getSession()->evaluateScript('document.activeElement.textContent');
+    $this->assertEquals('Do it', $has_focus_text);
     $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Preview');
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_text = $this->getSession()->evaluateScript('document.activeElement.textContent');
+    $this->assertEquals('Do it', $has_focus_text);
 
     // Reset: close the form.
     $form_dialog->findButton('Close')->press();
