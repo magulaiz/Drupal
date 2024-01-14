@@ -4,6 +4,7 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds services with specific tags to "kernel_destruct_subscriber" service.
@@ -22,10 +23,10 @@ class RegisterServicesForDestructionPass implements CompilerPassInterface {
       return;
     }
 
-    $definition = $container->getDefinition('kernel_destruct_subscriber');
+    $destructor = new Reference('kernel_destruct_subscriber');
     $services = $container->findTaggedServiceIds('needs_destruction');
     foreach ($services as $id => $attributes) {
-      $definition->addMethodCall('registerService', [$id]);
+      $container->getDefinition($id)->setConfigurator([$destructor, 'registerService']);
     }
   }
 
