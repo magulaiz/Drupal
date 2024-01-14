@@ -219,11 +219,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
         try {
           foreach ($pipeline as $destination_property_name => $plugins) {
             $this->processPipeline($row, $destination_property_name, $plugins, NULL);
-            if ($row->shouldSkip()) {
-              if ($row->saveToMapOnSkip()) {
+            if ($row->getSkip()) {
+              if ($row->getSaveToMap()) {
                 $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
               }
-              if ($message = trim($row->skipMessage())) {
+              if ($message = trim($row->getSkipMessage())) {
                 $msg = sprintf("%s:%s: %s", $this->migration->getPluginId(), $destination_property_name, $message);
                 $this->saveMessage($msg, MigrationInterface::MESSAGE_INFORMATIONAL);
               }
