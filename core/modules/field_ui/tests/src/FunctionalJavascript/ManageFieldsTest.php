@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
@@ -343,8 +345,8 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_text');
     $page = $this->getSession()->getPage();
     $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
+    $this->assertSession()->assertExpectedAjaxRequest(1);
     $page->findButton('Save settings')->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->pageTextContains('Limit must be higher than or equal to 1.');
   }
 
