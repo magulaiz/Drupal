@@ -43,8 +43,10 @@ class DbLogTest extends KernelTestBase {
     $count = Database::getConnection()->select('watchdog')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan($row_limit, $count, "Dblog row count of $count exceeds row limit of $row_limit");
 
-    // Get the number of enabled modules. Cron adds a log entry for each module.
-    $implementation_count = 0;
+    // Get the number of enabled modules. Cron adds a log entry for each module
+    // and service. Get the number of tagged services from the container, this
+    // works in kernel tests as it is a container builder instance.
+    $implementation_count = count($this->container->findTaggedServiceIds('cron'));
     \Drupal::moduleHandler()->invokeAllWith(
       'cron',
       function (callable $hook, string $module) use (&$implementation_count) {
