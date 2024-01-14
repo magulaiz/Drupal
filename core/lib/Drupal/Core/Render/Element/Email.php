@@ -92,11 +92,13 @@ class Email extends FormElement {
     }
 
     // Validate each email address.
+    /** @var \Drupal\Component\Utility\EmailValidator $validator */
+    $validator = \Drupal::service('email.validator');
     $invalid_emails = [];
     foreach ($emails as $delta => $email) {
       $email = trim($email);
       $emails[$delta] = $email;
-      if (!\Drupal::service('email.validator')->isValid($email)) {
+      if (!$validator->isValid($email)) {
         $invalid_emails[] = $email;
       }
     }
