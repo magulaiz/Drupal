@@ -143,7 +143,7 @@ function image_file_download($uri) {
   if (str_starts_with($path, 'styles/')) {
     $args = explode('/', $path);
 
-    // Discard "styles", style name, and scheme from the path
+    // Discard "styles", style name, and scheme from the path.
     $args = array_slice($args, 3);
 
     // Then the remaining parts are the path to the image.
@@ -181,6 +181,49 @@ function image_file_download($uri) {
     return -1;
   }
 
+  // Private file access for image fields' default images.
+  // Default images are displayed as a fallback when an image is not uploaded to
+  // an image field.
+  if (strpos($path, 'default_images/') === 0) {
+    $image = \Drupal::service('image.factory')->get($uri);
+    $user = \Drupal::currentUser();
+    /** @var Drupal\image\ImageFieldManager $image_field_service */
+    $image_field_service = \Drupal::service('image.field_manager');
+    $default_images = $image_field_service->getDefaultImageFields();
+    $has_access = FALSE;
+
+    // If the image being requested for download is being used as the default
+    // image for any fields, then grant access if the user has 'view' access to
+    // at least one of those fields.
+    if (isset($default_images[$uri])) {
+      foreach ($default_images[$uri] as $field_config_id) {
+        $field = \Drupal::entityTypeManager()
+          ->getStorage('field_config')
+          ->load($field_config_id);
+        $field_definition = $field->getItemDefinition()->getFieldDefinition();
+        $access_control_handler = \Drupal::entityTypeManager()
+          ->getAccessControlHandler($field->get('entity_type'));
+
+        if ($has_access = $access_control_handler->fieldAccess('view', $field_definition, $user)) {
+          // As long as the user has view access to at least one of the fields,
+          // that uses this image as a default, we can exit this foreach loop,
+          // and grant access.
+          break;
+        }
+      }
+    }
+    if ($image->isValid() && $has_access) {
+      return [
+        // Send headers describing the image's size, and MIME-type.
+        'Content-Type' => $image->getMimeType(),
+        'Content-Length' => $image->getFileSize(),
+        // By not explicitly setting them here, this uses normal Drupal
+        // Expires, Cache-Control and ETag headers to prevent proxy or
+        // browser caching of private images.
+      ];
+    }
+  }
+  
   // If it is the sample image we need to grant access.
   $samplePath = \Drupal::config('image.settings')->get('preview_image');
   if ($path === $samplePath) {
