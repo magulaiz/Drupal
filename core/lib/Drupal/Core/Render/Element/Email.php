@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
  * Provides a form input element for entering an email address.
@@ -109,11 +110,13 @@ class Email extends FormElement {
     if (!$invalid_emails) {
       return;
     }
-    elseif (count($invalid_emails) === 1) {
-      $form_state->setError($element, t('The email address %mail is not valid. Use the format user@example.com.', ['%mail' => reset($invalid_emails)]));
-    }
     else {
-      $form_state->setError($element, t('The email addresses %mails are not valid. Use the format user@example.com.', ['%mails' => implode(', ', $invalid_emails)]));
+      $form_state->setError($element, new PluralTranslatableMarkup(
+        count($invalid_emails),
+        'The email address %mails is not valid. Use the format user@example.com.',
+        'The email addresses %mails are not valid. Use the format user@example.com.',
+        ['%mails' => implode(', ', $invalid_emails)],
+      ));
     }
   }
 
