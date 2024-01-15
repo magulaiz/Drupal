@@ -723,7 +723,7 @@
           .find(label);
         // Avoids duplicate required markers on initialization.
         if (!$label.hasClass('js-form-required').length) {
-          $label.addClass('js-form-required form-required');
+          $label[0].classList.add('js-form-required', 'form-required');
         }
       } else {
         $(e.target)
