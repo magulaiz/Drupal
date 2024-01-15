@@ -570,7 +570,7 @@ class LinkFieldTest extends BrowserTestBase {
     $state->set('entity_test.form.null_link_test', 1);
     // Increase the cardinality by 1 and reload entity edit form. This triggers
     // 'entity_test_form_entity_test_form_alter' which calls validation
-    // constarints associated with the entity.
+    // constraints associated with the entity.
     $fieldStorage->setCardinality(4)->save();
     $this->getSession()->reload();
     $this->assertSession()->elementNotExists("xpath", "//div[@data-drupal-messages]//*[contains(text(), 'deprecated')]");
