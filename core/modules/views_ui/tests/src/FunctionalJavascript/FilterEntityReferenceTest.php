@@ -120,7 +120,6 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $page->find('css', '.ui-dialog .ui-dialog-buttonpane')->pressButton('Apply');
     $assert->waitForElementRemoved('css', '.ui-dialog');
 
-
     // Wait for the Views Preview to show up with the new reference field.
     $assert->waitForField('field_test_config_target_id_reference[]');
     $this->assertTrue($page->findField('field_test_target_id_reference[]')
@@ -210,7 +209,6 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $assert->waitForField('options[sub_handler]');
 
     $page->selectFieldOption('options[sub_handler]', 'default:node_type');
-    //$this->htmlOutput($page->getHtml());
 
     // Choose the default handler using the select widget with article type
     // checked.
@@ -266,4 +264,5 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $this->assertTrue($page->find('css', 'input[name="field_test_config_target_id_reference"]')
       ->hasAttribute('data-autocomplete-path'));
   }
+
 }
