@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserSessionHandler;
+use Drupal\user\UserSessionFinalizer;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -75,8 +75,8 @@ class UserController extends ControllerBase {
    *   The flood service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
-   *   The user session handler.
+   * @param \Drupal\user\UserSessionFinalizer|null $userSessionFinalizer
+   *   The user session finalizer.
    */
   public function __construct(
     DateFormatterInterface $date_formatter,
@@ -85,7 +85,7 @@ class UserController extends ControllerBase {
     LoggerInterface $logger,
     FloodInterface $flood,
     protected ?TimeInterface $time = NULL,
-    protected ?UserSessionHandler $userSessionHandler = NULL,
+    protected ?UserSessionFinalizer $userSessionFinalizer = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
@@ -96,9 +96,9 @@ class UserController extends ControllerBase {
       @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
       $this->time = \Drupal::service('datetime.time');
     }
-    if ($this->userSessionHandler === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $userSessionHandler argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $this->userSessionHandler = \Drupal::service('user.session_handler');
+    if ($this->userSessionFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $userSessionFinalizer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionFinalizer = \Drupal::service('user.session_finalizer');
     }
   }
 
@@ -113,7 +113,7 @@ class UserController extends ControllerBase {
       $container->get('logger.factory')->get('user'),
       $container->get('flood'),
       $container->get('datetime.time'),
-      $container->get('user.session_handler')
+      $container->get('user.session_finalizer')
     );
   }
 
@@ -142,7 +142,7 @@ class UserController extends ControllerBase {
     if ($account->isAuthenticated()) {
       // The current user is already logged in.
       if ($account->id() == $uid) {
-        $this->userSessionHandler->logout();
+        $this->userSessionFinalizer->finalizeLogout();
         // We need to begin the redirect process again because logging out will
         // destroy the session.
         return $this->redirect(
@@ -271,7 +271,7 @@ class UserController extends ControllerBase {
     $this->flood->clear('user.failed_login_user', $identifier);
     $this->flood->clear('user.http_login', $identifier);
 
-    $this->userSessionHandler->login($user);
+    $this->userSessionFinalizer->finalizeLogin($user);
     $this->logger->info('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
     $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. It is recommended that you set your password.'));
     // Let the user's password be changed without the current password
@@ -408,7 +408,7 @@ class UserController extends ControllerBase {
    */
   public function logout() {
     if ($this->currentUser()->isAuthenticated()) {
-      $this->userSessionHandler->logout();
+      $this->userSessionFinalizer->finalizeLogout();
     }
     return $this->redirect('<front>');
   }

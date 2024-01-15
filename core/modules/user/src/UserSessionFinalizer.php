@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Handler for user sessions.
  */
-class UserSessionHandler {
+final class UserSessionFinalizer {
 
   /**
    * Creates a new UserSessionHandler.
@@ -43,7 +43,7 @@ class UserSessionHandler {
    * @param \Drupal\user\UserInterface $user
    *   The user account to log in.
    */
-  public function login(UserInterface $user): void {
+  public function finalizeLogin(UserInterface $user): void {
     $this->accountProxy->setAccount($user);
     $this->logger->info('Session opened for %name.', ['%name' => $user->getAccountName()]);
     // Update the user table timestamp noting user has logged in.
@@ -66,7 +66,7 @@ class UserSessionHandler {
   /**
    * Logs the current user out.
    */
-  public function logout(): void {
+  public function finalizeLogout(): void {
     $this->logger->info('Session closed for %name.', ['%name' => $this->accountProxy->getAccountName()]);
 
     $this->moduleHandler->invokeAll('user_logout', [$this->accountProxy]);

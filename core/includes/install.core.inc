@@ -1856,7 +1856,7 @@ function install_finished(&$install_state) {
     // This has to be done after drupal_flush_all_caches()
     // to avoid session regeneration.
     $account = User::load(1);
-    \Drupal::service('user.session_handler')->login($account);
+    \Drupal::service('user.session_finalizer')->finalizeLogin($account);
   }
 
   $success_message = t('Congratulations, you installed @drupal!', [

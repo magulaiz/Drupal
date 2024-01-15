@@ -6,7 +6,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\Url;
-use Drupal\user\UserSessionHandler;
+use Drupal\user\UserSessionFinalizer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -37,15 +37,15 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The maintenance mode.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\user\UserSessionHandler|null $userSessionHandler
-   *   The user session handler.
+   * @param \Drupal\user\UserSessionFinalizer|null $userSessionFinalizer
+   *   The user session finalizer.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account, protected ?UserSessionHandler $userSessionHandler = NULL) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account, protected ?UserSessionFinalizer $userSessionFinalizer = NULL) {
     $this->maintenanceMode = $maintenance_mode;
     $this->account = $account;
-    if (!$userSessionHandler) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionHandler argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $this->userSessionHandler = \Drupal::service('user.session_handler');
+    if (!$this->userSessionFinalizer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalizer argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionFinalizer = \Drupal::service('user.session_finalizer');
     }
   }
 
@@ -58,7 +58,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onMaintenanceModeRequest(RequestEvent $event) {
     // If the site is offline, log out unprivileged users.
     if ($this->account->isAuthenticated()) {
-      $this->userSessionHandler->logout();
+      $this->userSessionFinalizer->finalizeLogout();
       // Redirect to homepage.
       $event->setResponse(
         new RedirectResponse(Url::fromRoute('<front>')->toString())
