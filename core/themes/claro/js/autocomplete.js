@@ -10,7 +10,7 @@
         (value) => {
           const $input = $(value);
           const classRemove = ($autoCompleteElem) => {
-            $autoCompleteElem.removeClass('is-autocompleting');
+            $autoCompleteElem[0].classList.remove('is-autocompleting');
             $autoCompleteElem
               .siblings('[data-drupal-selector="autocomplete-message"]')[0]
               .classList.add('hidden');
@@ -22,8 +22,8 @@
               if (result) {
                 event.target.classList.add('is-autocompleting');
                 $(event.target)
-                  .siblings('[data-drupal-selector="autocomplete-message"]')
-                  .removeClass('hidden');
+                  .siblings('[data-drupal-selector="autocomplete-message"]')[0]
+                  .classList.remove('hidden');
               }
 
               return result;

@@ -171,7 +171,7 @@
             !$passwordMatchStatus.html() === confirmMessage
           ) {
             if (confirmTextWrapperClassesToRemove) {
-              $passwordMatchStatus.removeClass(
+              $passwordMatchStatus[0].classList.remove(
                 confirmTextWrapperClassesToRemove,
               );
             }
@@ -213,8 +213,8 @@
             }
 
             if (passwordStrengthBarClassesToRemove) {
-              password.$strengthBar.removeClass(
-                passwordStrengthBarClassesToRemove,
+              password.$strengthBar[0].classList.remove(
+                passwordStrengthBarClassesToRemove.split(' '),
               );
             }
             // Adjust the length of the strength indicator.
@@ -232,9 +232,10 @@
           } else {
             $passwordConfirmMessage[0].style.visibility = 'hidden';
           }
-
           if (widgetClassesToRemove) {
-            $passwordWidget.removeClass(widgetClassesToRemove);
+            $passwordWidget[0].classList.remove(
+              widgetClassesToRemove.split(' '),
+            );
             addWidgetClasses();
           }
         };
