@@ -317,7 +317,7 @@ class EntityReference extends ManyToOne {
       ], TRUE);
 
       $form[$subform_key] = $subform;
-      $this->removeRequiredOfSubformChildrens($form[$subform_key], $sub_handler);
+      $this->removeRequiredOfSubformChildrens($form[$subform_key]);
     }
 
     $form['widget'] = [
