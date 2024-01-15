@@ -45,6 +45,11 @@ class EntityReference extends ManyToOne {
   const WIDGET_SELECT_LIMIT = 100;
 
   /**
+   * The subform prefix.
+   */
+  const SUBFORM_PREFIX = 'reference_';
+
+  /**
    * The all value.
    */
   const ALL_VALUE = 'All';
@@ -233,30 +238,42 @@ class EntityReference extends ManyToOne {
     // Copy the active sub_handler_settings into the handler specific settings
     // to set the defaults to match the saved options on build.
     if (!empty($this->options['sub_handler']) && !empty($this->options['sub_handler_settings'])) {
-      $this->options['reference_' . $this->options['sub_handler']] = $this->options['sub_handler_settings'];
+      $this->options[static::SUBFORM_PREFIX . $this->options['sub_handler']] = $this->options['sub_handler_settings'];
     }
 
     foreach ($this->getSubHandlerOptions() as $sub_handler => $sub_handler_label) {
-      $form['reference_' . $sub_handler] = [
+      $subform_key = static::SUBFORM_PREFIX . $sub_handler;
+      $subform = [
         '#type' => 'fieldset',
         '#title' => $this->t('Reference type "@type"', [
           '@type' => $sub_handler_label,
         ]),
+        '#tree' => TRUE,
+        '#parents' => [
+          'options',
+          $subform_key,
+        ],
+        // Make the sub handler settings conditional on the selected selection
+        // handler.
+        '#states' => [
+          'visible' => [
+            'select[name="options[sub_handler]"]' => ['value' => $sub_handler],
+          ],
+        ],
       ];
 
       // Build the sub form and sub for state.
       $selection_handler = $this->getSelectionHandler($sub_handler);
-      if (!empty($this->options['reference_' . $sub_handler])) {
+      if (!empty($this->options[$subform_key])) {
         $selection_config = $selection_handler->getConfiguration();
         $selection_config = NestedArray::mergeDeepArray([
           $selection_config,
-          $this->options['reference_' . $sub_handler],
+          $this->options[$subform_key],
         ], TRUE);
         $selection_handler->setConfiguration($selection_config);
       }
-      $subform_state = SubformState::createForSubform($form['reference_' . $sub_handler], $form, $form_state);
-      $subform_state->setLimitValidationErrors(TRUE);
-      $sub_handler_settings = $selection_handler->buildConfigurationForm($form['reference_' . $sub_handler], $subform_state);
+      $subform_state = SubformState::createForSubform($subform, $form, $form_state);
+      $sub_handler_settings = $selection_handler->buildConfigurationForm($subform, $subform_state);
 
       switch ($sub_handler) {
         case 'views':
@@ -294,24 +311,13 @@ class EntityReference extends ManyToOne {
         }
       }
 
-      $form['reference_' . $sub_handler] = NestedArray::mergeDeepArray([
-        $form['reference_' . $sub_handler],
+      $subform = NestedArray::mergeDeepArray([
+        $subform,
         $sub_handler_settings,
       ], TRUE);
-      $form['reference_' . $sub_handler]['#parents'] = [
-        'options',
-        'reference_' . $sub_handler,
-      ];
 
-      $this->setRequiredViaStatesOnChildren($form['reference_' . $sub_handler], $sub_handler);
-
-      // Make the sub handler settings conditional on the selected selection
-      // handler.
-      $form['reference_' . $sub_handler]['#states'] = [
-        'visible' => [
-          'select[name="options[sub_handler]"]' => ['value' => $sub_handler],
-        ],
-      ];
+      $form[$subform_key] = $subform;
+      $this->removeRequiredOfSubformChildrens($form[$subform_key], $sub_handler);
     }
 
     $form['widget'] = [
@@ -329,28 +335,20 @@ class EntityReference extends ManyToOne {
   }
 
   /**
-   * Change the required to conditionally required only to prevent focus errors.
+   * Remove the required property to prevent focus errors.
    *
    * @param array $element
    *   The form element.
-   * @param string $sub_handler
-   *   The sub handler to conditionally require the field for.
    */
-  protected function setRequiredViaStatesOnChildren(array &$element, $sub_handler) {
+  protected function removeRequiredOfSubformChildrens(array &$element) {
     if (isset($element['#required']) && $element['#required']) {
       $element['#required'] = FALSE;
       $element['#element_validate'][] = [static::class, 'validateRequired'];
-      // @todo Conditionally required does not work within config handler extra.
-      // $element['#states'] = [
-      // 'required' => [
-      // 'select[name="options[sub_handler]"]' => ['value' => $sub_handler],
-      // ],
-      // ];
     }
 
     // Recursively apply to nested fields within the handler sub form.
     foreach (Element::children($element) as $delta) {
-      $this->setRequiredViaStatesOnChildren($element[$delta], $sub_handler);
+      $this->removeRequiredOfSubformChildrens($element[$delta]);
     }
   }
 
@@ -369,9 +367,9 @@ class EntityReference extends ManyToOne {
 
     // Config extra handler does not output validation messages and
     // closes the modal with no feedback to the user.
-    // @todo Find or create a core issue and link here.
-    // $form_state->setError($element, t('This field is required.'));
+    // @todo https://www.drupal.org/project/drupal/issues/3163740.
   }
+
 
   /**
    * {@inheritdoc}
@@ -379,30 +377,28 @@ class EntityReference extends ManyToOne {
   public function validateExtraOptionsForm($form, FormStateInterface $form_state) {
     $options = $form_state->getValue('options');
     $sub_handler = $options['sub_handler'];
-    $subform_state = SubformState::createForSubform($form['reference_' . $sub_handler], $form, $form_state);
-
-    // Reapply required checks.
-    $this->validateRequiredFields($form['reference_' . $sub_handler], $sub_handler, $form_state);
+    $subform = $form[static::SUBFORM_PREFIX . $sub_handler];
+    $subform_state = SubformState::createForSubform($subform, $form, $form_state);
 
     // Copy handler_settings from options to settings to be compatible with
     // selection plugins.
     $subform_options = $form_state->getValue([
       'options',
-      'reference_' . $sub_handler,
+      static::SUBFORM_PREFIX . $sub_handler,
     ]);
     $subform_state->setValue([
       'settings',
     ], $subform_options);
     $this->getSelectionHandler($sub_handler)
-      ->validateConfigurationForm($form, $subform_state);
+      ->validateConfigurationForm($subform, $subform_state);
 
     // Store the sub handler options in sub_handler_settings.
     $form_state->setValue(['options', 'sub_handler_settings'], $subform_options);
 
     // Remove options that are not from the selected sub_handler.
     foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {
-      if (isset($options['reference_' . $sub_handler_option])) {
-        $form_state->unsetValue(['options', 'reference_' . $sub_handler_option]);
+      if (isset($options[static::SUBFORM_PREFIX . $sub_handler_option])) {
+        $form_state->unsetValue(['options', static::SUBFORM_PREFIX . $sub_handler_option]);
       }
     }
 
@@ -410,39 +406,18 @@ class EntityReference extends ManyToOne {
   }
 
   /**
-   * Check required fields in sub handler for selections.
-   *
-   * @param array $element
-   *   The form element.
-   * @param string $sub_handler
-   *   The sub handler to conditionally require the field for.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state to allow errors to be set.
-   */
-  protected function validateRequiredFields(array &$element, $sub_handler, FormStateInterface $form_state) {
-    if (isset($element['#required']) && $element['#required']) {
-      $form_state->setError($element, $this->t('This field is required.'));
-    }
-
-    // Recursively apply to nested fields within the handler sub form.
-    foreach (Element::children($element) as $delta) {
-      $this->setRequiredViaStatesOnChildren($element[$delta], $sub_handler);
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function submitExtraOptionsForm($form_options, FormStateInterface $form_state) {
+  public function submitExtraOptionsForm($form, FormStateInterface $form_state) {
     $sub_handler = $form_state->getValue('options')['sub_handler'];
 
     // Ensure that only the select sub handler option is saved.
     foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {
       if ($sub_handler_option == $sub_handler) {
-        $this->options['sub_handler_settings'] = $this->options['reference_' . $sub_handler_option];
+        $this->options['sub_handler_settings'] = $this->options[static::SUBFORM_PREFIX . $sub_handler_option];
       }
-      if (isset($this->options['reference_' . $sub_handler_option])) {
-        unset($this->options['reference_' . $sub_handler_option]);
+      if (isset($this->options[static::SUBFORM_PREFIX . $sub_handler_option])) {
+        unset($this->options[static::SUBFORM_PREFIX . $sub_handler_option]);
       }
     }
   }
