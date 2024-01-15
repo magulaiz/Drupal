@@ -21,8 +21,10 @@ use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\media\Event\MediaBuildEmbedEvent;
 use Drupal\media\MediaInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a filter to embed media items using a custom tag.
@@ -85,6 +87,8 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    */
   protected $loggerFactory;
 
+  protected EventDispatcherInterface $eventDispatcher;
+
   /**
    * An array of counters for the recursive rendering protection.
    *
@@ -119,7 +123,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityRepository = $entity_repository;
     $this->entityTypeManager = $entity_type_manager;
@@ -127,6 +131,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     $this->entityTypeBundleInfo = $bundle_info;
     $this->renderer = $renderer;
     $this->loggerFactory = $logger_factory;
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -142,7 +147,8 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $container->get('entity_display.repository'),
       $container->get('entity_type.bundle.info'),
       $container->get('renderer'),
-      $container->get('logger.factory')
+      $container->get('logger.factory'),
+      $container->get('event_dispatcher'),
     );
   }
 
@@ -326,6 +332,9 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $build = $media && ($view_mode || $view_mode_id === EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE)
         ? $this->renderMedia($media, $view_mode_id, $langcode)
         : $this->renderMissingMediaIndicator();
+
+      $event = $this->eventDispatcher->dispatch(new MediaBuildEmbedEvent($view_mode_id, $media, $build, $node));
+      $build = $event->getBuild();
 
       if (empty($build['#attributes']['class'])) {
         $build['#attributes']['class'] = [];
