@@ -301,6 +301,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // translatable.
     $path = 'admin/structure/types/manage/article/fields/node.article.field_article_text';
     $this->drupalGet($path);
+    file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html',$this->getSession()->getPage()->getContent());
     $this->assertSession()->fieldDisabled('edit-translatable');
     $this->assertSession()->pageTextContains('To configure translation for this field, enable language support for this type.');
 

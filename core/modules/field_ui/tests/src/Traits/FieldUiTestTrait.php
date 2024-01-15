@@ -76,10 +76,10 @@ trait FieldUiTestTrait {
     // Assert that the field is not created.
     $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
-      $field_edit = [
+      $field_edit = array_merge([
         'label' => $label,
         'field_name' => $field_name,
-      ];
+      ], $field_edit);
       $this->assertSession()->pageTextContains("These settings apply to the new field everywhere it is used.");
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);

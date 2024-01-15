@@ -173,12 +173,11 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->submitForm([
       'new_storage_type' => 'email',
     ], 'Continue');
+    $this->submitForm([], 'Update settings');
     $this->submitForm([
       'label' => 'Email',
       'field_name' => 'email',
-    ], 'Continue');
-    $this->submitForm([], 'Update settings');
-    $this->submitForm([], 'Save settings');
+    ], 'Save settings');
 
     $type = $this->randomMachineName(16);
     $name = $this->randomString();
