@@ -2,58 +2,52 @@
 
 namespace Drupal\system\Plugin\Block;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a block to display 'Site branding' elements.
+ * Provides a block to display Cron status.
  *
  * @Block(
  *   id = "system_cron_status_block",
  *   admin_label = @Translation("Cron status"),
- *   forms = {
- *     "settings_tray" = "Drupal\system\Form\SystemBrandingOffCanvasForm",
- *   },
  * )
  */
 class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
+  use StringTranslationTrait;
 
   /**
-   * Stores the configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * Creates a SystemBrandingBlock instance.
+   * Constructs a new CronStatusBlock instance.
    *
    * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   An array of configuration settings.
+   * @param mixed $plugin_id
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
+   *   The form builder service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The configuration factory service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
+   * @param \Drupal\Component\Datetime\Time $time
+   *   The time service.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
+   *   The date formatter service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FormBuilderInterface $form_builder, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected FormBuilderInterface $formBuilder, protected ConfigFactoryInterface $configFactory, protected StateInterface $state, protected Time $time, protected DateFormatterInterface $dateFormatter) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->configFactory = $config_factory;
-    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -65,7 +59,10 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $plugin_id,
       $plugin_definition,
       $container->get('form_builder'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('state'),
+      $container->get('datetime.time'),
+      $container->get('date.formatter')
     );
   }
 
@@ -82,14 +79,14 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $threshold_error = $cron_config->get('threshold.requirements_error');
 
     // Determine when cron last ran.
-    $cron_last = \Drupal::state()->get('system.cron_last');
+    $cron_last =  $this->state->get('system.cron_last');
     if (!is_numeric($cron_last)) {
-      $cron_last = \Drupal::state()->get('install_time', 0);
+      $cron_last =  $this->state->get('install_time', 0);
     }
 
     // Determine severity based on time since cron last ran.
     $severity = -1;
-    $request_time = \Drupal::time()->getRequestTime();
+    $request_time =  $this->time->getRequestTime();
     if ($request_time - $cron_last > $threshold_error) {
       $severity = 2;
     }
@@ -98,11 +95,11 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
     }
 
     // Set summary and description based on values determined above.
-    $summary = t('Last run @time ago', ['@time' => \Drupal::service('date.formatter')->formatTimeDiffSince($cron_last)]);
+    $summary = $this->t('Last run @time ago', ['@time' => $this->dateFormatter->formatTimeDiffSince($cron_last)]);
 
 
     $x['cron'] = [
-      'title' => t('Cron maintenance tasks'),
+      'title' => $this->t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
     ];
@@ -110,11 +107,11 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
     if ($severity != -1) {
       $data['cron']['description'][] = [
         [
-          '#markup' => t('Cron has not run recently.'),
+          '#markup' => $this->t('Cron has not run recently.'),
           '#suffix' => ' ',
         ],
         [
-          '#markup' => t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/cron']),
+          '#markup' => $this->t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/cron']),
           '#suffix' => ' ',
         ],
       ];
@@ -123,7 +120,7 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
       [
         '#type' => 'link',
         '#prefix' => '(',
-        '#title' => t('more information'),
+        '#title' => $this->t('more information'),
         '#suffix' => ')',
         '#url' => Url::fromRoute('system.cron_settings'),
       ],
@@ -131,7 +128,7 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
         '#prefix' => '<span class="cron-description__run-cron">',
         '#suffix' => '</span>',
         '#type' => 'link',
-        '#title' => t('Run cron'),
+        '#title' => $this->t('Run cron'),
         '#url' => Url::fromRoute('system.run_cron'),
         '#attributes' => [
           'class' => ['button', 'button--small', 'button--primary', 'system-status-general-info__run-cron'],
