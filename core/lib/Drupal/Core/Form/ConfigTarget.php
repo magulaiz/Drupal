@@ -6,6 +6,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Config;
+use Laravel\SerializableClosure\Serializers\Signed as SignedSerializableClosure;
 
 /**
  * Represents the mapping of a config property to a form element.
@@ -43,6 +44,13 @@ final class ConfigTarget {
   public readonly mixed $fromConfig;
 
   /**
+   * Used to store the serialized closure when necessary.
+   *
+   * @var string|null
+   */
+  private ?string $fromConfigSerialized = NULL;
+
+  /**
    * Transforms a value submitted by the form before it is set in the config.
    *
    * @var callable|null
@@ -50,6 +58,13 @@ final class ConfigTarget {
    * @see ::setValue()
    */
   public readonly mixed $toConfig;
+
+  /**
+   * Used to store the serialized closure when necessary.
+   *
+   * @var string|null
+   */
+  private ?string $toConfigSerialized = NULL;
 
   /**
    * Constructs a ConfigTarget object.
@@ -257,6 +272,40 @@ final class ConfigTarget {
    */
   private function isMultiTarget(): bool {
     return count($this->propertyPaths) > 1;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep(): array {
+    $vars = get_object_vars($this);
+    if ($this->toConfig instanceof \Closure) {
+      $this->toConfigSerialized = serialize(new SignedSerializableClosure($this->toConfig));
+      unset($vars['toConfig']);
+    }
+    else {
+      unset($vars['toConfigSerialized']);
+    }
+    if ($this->fromConfig instanceof \Closure) {
+      $this->fromConfigSerialized = serialize(new SignedSerializableClosure($this->fromConfig));
+      unset($vars['fromConfig']);
+    }
+    else {
+      unset($vars['fromConfigSerialized']);
+    }
+    return array_keys($vars);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __wakeup(): void {
+    if ($this->toConfigSerialized !== NULL) {
+      $this->toConfig = unserialize($this->toConfigSerialized)->getClosure();
+    }
+    if ($this->fromConfigSerialized !== NULL) {
+      $this->fromConfig = unserialize($this->fromConfigSerialized)->getClosure();
+    }
   }
 
 }

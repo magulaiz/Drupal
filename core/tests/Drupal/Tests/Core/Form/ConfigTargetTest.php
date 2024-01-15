@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Drupal\Tests\UnitTestCase;
+use Laravel\SerializableClosure\SerializableClosure;
 use Prophecy\Argument;
 
 /**
@@ -58,56 +59,6 @@ class ConfigTargetTest extends UnitTestCase {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('Two #config_targets both target "admin_compact_mode" in the "system.site" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
     $test_form->storeConfigKeyToFormElementMap($form, $form_state);
-  }
-
-  /**
-   * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
-   * @dataProvider providerTestFormCacheable
-   */
-  public function testFormCacheable(bool $expected, ?callable $fromConfig, ?callable $toConfig): void {
-    $form = [
-      'test' => [
-        '#type' => 'text',
-        '#default_value' => 'A test',
-        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', $fromConfig, $toConfig),
-        '#name' => 'test',
-        '#array_parents' => ['test'],
-      ],
-    ];
-
-    $test_form = new class(
-      $this->prophesize(ConfigFactoryInterface::class)->reveal(),
-      $this->prophesize(TypedConfigManagerInterface::class)->reveal(),
-    ) extends ConfigFormBase {
-      use RedundantEditableConfigNamesTrait;
-
-      public function getFormId() {
-        return 'test';
-      }
-
-    };
-    $form_state = new FormState();
-    // Make the form cacheable.
-    $form_state
-      ->setRequestMethod('POST')
-      ->setCached();
-
-    $test_form->storeConfigKeyToFormElementMap($form, $form_state);
-
-    $this->assertSame($expected, $form_state->isCached());
-  }
-
-  public function providerTestFormCacheable(): array {
-    $closure = fn (bool $something): string => $something ? 'Yes' : 'No';
-    return [
-      'No callables' => [TRUE, NULL, NULL],
-      'Serializable fromConfig callable' => [TRUE, "intval", NULL],
-      'Serializable toConfig callable' => [TRUE, NULL, "boolval"],
-      'Serializable callables' => [TRUE, "intval", "boolval"],
-      'Unserializable fromConfig callable' => [FALSE, $closure, NULL],
-      'Unserializable toConfig callable' => [FALSE, NULL, $closure],
-      'Unserializable callables' => [FALSE, $closure, $closure],
-    ];
   }
 
   /**
@@ -369,6 +320,38 @@ class ConfigTargetTest extends UnitTestCase {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage($expected_exception_message);
     $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testSerialization(): void {
+    SerializableClosure::setSecretKey(random_bytes(16));
+
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      'something',
+      fromConfig: fn (int $first): string => "$first",
+    );
+
+    /** @var \Drupal\Core\Form\ConfigTarget $config_target */
+    $config_target = unserialize(serialize($config_target));
+
+    $this->assertSame('1', ($config_target->fromConfig)(1));
+    $this->assertNull($config_target->toConfig);
+
+    $config_target = new ConfigTarget(
+      'foo.settings',
+      'something',
+      toConfig: fn (int $first): string => "$first",
+    );
+
+    /** @var \Drupal\Core\Form\ConfigTarget $config_target */
+    $config_target = unserialize(serialize($config_target));
+
+    $this->assertSame('1', ($config_target->toConfig)(1));
+    $this->assertNull($config_target->fromConfig);
+
   }
 
 }

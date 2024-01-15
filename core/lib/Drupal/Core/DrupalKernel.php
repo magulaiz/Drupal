@@ -23,6 +23,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Laravel\SerializableClosure\SerializableClosure;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -605,6 +606,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set the allowed protocols.
     UrlHelper::setAllowedProtocols($this->container->getParameter('filter_protocols'));
+
+    // Configure Serializable Closure signing for security.
+    // @todo Use hash salt and private key - but it is not always available
+    //   here.
+    SerializableClosure::setSecretKey('find_a_way_make_this_secure');
 
     $this->prepared = TRUE;
   }

@@ -172,11 +172,6 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
-      elseif ($target->toConfig instanceof \Closure || $target->fromConfig instanceof \Closure) {
-        // If the form is using closures as toConfig or fromConfig callables
-        // then form cannot be cached.
-        $form_state->disableCache();
-      }
 
       foreach ($target->propertyPaths as $property_path) {
         if (isset($map[$target->configName][$property_path])) {

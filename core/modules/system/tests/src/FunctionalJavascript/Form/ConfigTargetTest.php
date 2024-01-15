@@ -25,8 +25,6 @@ class ConfigTargetTest extends WebDriverTestBase {
 
   /**
    * Tests #config_target with no callbacks.
-   *
-   * If a #config_target has no callbacks, the form can be cached.
    */
   public function testTree(): void {
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable */
@@ -54,9 +52,7 @@ class ConfigTargetTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests #config_target with callbacks.
-   *
-   * If a #config_target has closures as callbacks, form cache will be disabled.
+   * Tests #config_target with closure callbacks.
    */
   public function testNested(): void {
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable */
@@ -73,7 +69,7 @@ class ConfigTargetTest extends WebDriverTestBase {
     $page->selectFieldOption('test1', 'Option 2');
     $assert_session->waitForText('Option 3');
     $assert_session->pageTextContains('Option 3');
-    $this->assertCount(0, $key_value_expirable->getAll());
+    $this->assertCount(1, $key_value_expirable->getAll());
 
     $page->pressButton('Save configuration');
     $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
