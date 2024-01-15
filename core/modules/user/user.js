@@ -172,7 +172,7 @@
           ) {
             if (confirmTextWrapperClassesToRemove) {
               $passwordMatchStatus[0].classList.remove(
-                confirmTextWrapperClassesToRemove,
+                ...confirmTextWrapperClassesToRemove.split(' '),
               );
             }
             $passwordMatchStatus
@@ -213,8 +213,8 @@
             }
 
             if (passwordStrengthBarClassesToRemove) {
-              password.$strengthBar[0].classList.remove(
-                passwordStrengthBarClassesToRemove.split(' '),
+              password.$strengthBar.removeClass(
+                ...passwordStrengthBarClassesToRemove.split(' '),
               );
             }
             // Adjust the length of the strength indicator.
@@ -234,7 +234,7 @@
           }
           if (widgetClassesToRemove) {
             $passwordWidget[0].classList.remove(
-              widgetClassesToRemove.split(' '),
+              ...widgetClassesToRemove.split(' '),
             );
             addWidgetClasses();
           }
