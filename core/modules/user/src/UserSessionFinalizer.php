@@ -14,12 +14,12 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Handler for user sessions.
+ * Finalizer for user sessions.
  */
 final class UserSessionFinalizer {
 
   /**
-   * Creates a new UserSessionHandler.
+   * Creates a new UserSessionFinalizer.
    */
   public function __construct(
     protected AccountProxyInterface $accountProxy,
