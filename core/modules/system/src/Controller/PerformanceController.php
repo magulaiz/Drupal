@@ -23,8 +23,8 @@ class PerformanceController extends ControllerBase {
     $cache_clear = $this->formBuilder()->getForm(ClearCacheForm::class);
     $cache_clear['clear_cache'] = [
       '#type' => 'details',
-        '#title' => $this->t('Clear cache'),
-        '#open' => true,
+      '#title' => $this->t('Clear cache'),
+      '#open' => TRUE,
       'clear' => $cache_clear['clear'],
     ];
     unset($cache_clear['clear']);
