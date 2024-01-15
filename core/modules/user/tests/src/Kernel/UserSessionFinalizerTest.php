@@ -15,12 +15,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Tests the user session handler.
+ * Tests the user session finalizer.
  *
  * @group user
  * @coversDefaultClass \Drupal\user\UserSessionFinalizer
  */
-class UserSessionHandlerTest extends KernelTestBase {
+class UserSessionFinalizerTest extends KernelTestBase {
 
   use UserCreationTrait;
 

@@ -38,7 +38,7 @@ class RegisterForm extends AccountForm {
     protected ?UserSessionFinalizer $userSessionFinalizer = NULL,
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
-    if (!$userSessionFinalizer) {
+    if (!$this->userSessionFinalizer) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalizer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
       $this->userSessionFinalizer = \Drupal::service('user.session_finalizer');
     }
