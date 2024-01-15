@@ -20,7 +20,12 @@ class PerformanceController extends ControllerBase {
    */
   public function build(): array {
     return [
-      'cache_clear' => $this->formBuilder()->getForm(ClearCacheForm::class),
+      'cache_clear' => [
+        '#type' => 'details',
+        '#title' => $this->t('Clear cache'),
+        '#open' => true,
+        $this->formBuilder()->getForm(ClearCacheForm::class),
+      ],
       'performance' => $this->formBuilder()->getForm(PerformanceForm::class),
     ];
   }
