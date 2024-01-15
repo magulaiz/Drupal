@@ -1,4 +1,4 @@
-name: 'Block test'
+name: 'System block test'
 type: module
 description: 'Support module for system block testing.'
 package: Testing

@@ -10,6 +10,8 @@ use Drupal\Tests\BrowserTestBase;
  * Tests clear cache block behavior.
  *
  * @group Block
+ *
+ * @see \Drupal\system\Plugin\Block\ClearCacheBlock
  */
 class ClearCacheBlockTest extends BrowserTestBase {
 
@@ -18,7 +20,7 @@ class ClearCacheBlockTest extends BrowserTestBase {
    */
   protected static $modules = [
     'block',
-    'block_test',
+    'system_block_test',
   ];
 
   /**
