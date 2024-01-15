@@ -1,0 +1,8 @@
+name: 'Block test'
+type: module
+description: 'Support module for system block testing.'
+package: Testing
+version: VERSION
+
+dependencies:
+  - drupal:block

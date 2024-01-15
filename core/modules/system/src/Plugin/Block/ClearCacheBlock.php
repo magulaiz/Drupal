@@ -2,9 +2,11 @@
 
 namespace Drupal\system\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\system\Form\ClearCacheForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -59,6 +61,13 @@ class ClearCacheBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public function build(): array {
     return $this->formBuilder->getForm(ClearCacheForm::class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockAccess(AccountInterface $account) {
+    return AccessResult::allowedIfHasPermission($account, 'administer site configuration');
   }
 
 }

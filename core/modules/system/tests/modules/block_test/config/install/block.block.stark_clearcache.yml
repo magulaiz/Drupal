@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - stark
+id: stark_clearcache
+theme: stark
+region: content
+weight: 0
+provider: null
+plugin: system_clear_cache_block
+settings:
+  id: system_clear_cache_block
+  label: 'Clear cache block'
+  label_display: visible
+  provider: system
+visibility: {  }
