@@ -34,10 +34,8 @@ class AnnounceBlock extends BlockBase implements ContainerFactoryPluginInterface
    *   The plugin implementation definition.
    * @param \Drupal\announcements_feed\AnnounceRenderer $announceRenderer
    *   The AnnounceRenderer service.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected AnnounceRenderer $announceRenderer, protected AccountInterface $currentUser) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected AnnounceRenderer $announceRenderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -49,16 +47,15 @@ class AnnounceBlock extends BlockBase implements ContainerFactoryPluginInterface
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('announcements_feed.renderer'),
-      $container->get('current_user')
+      $container->get('announcements_feed.renderer')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account, $return_as_object = FALSE) {
-    return AccessResult::allowedIfHasPermission($this->currentUser, 'access announcements');
+  public function blockAccess(AccountInterface $account) {
+    return AccessResult::allowedIfHasPermission($account, 'access announcements');
   }
 
   /**
