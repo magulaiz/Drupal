@@ -168,6 +168,7 @@ function update_theme() {
  * Implements hook_cron().
  */
 function update_cron() {
+  throw new \Exception('whoops');
   $update_config = \Drupal::config('update.settings');
   $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
