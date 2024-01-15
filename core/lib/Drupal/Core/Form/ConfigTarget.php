@@ -6,6 +6,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Config;
+use Laravel\SerializableClosure\Serializers\Signed as SignedSerializableClosure;
 
 /**
  * Represents the mapping of a config property to a form element.
@@ -43,6 +44,13 @@ final class ConfigTarget {
   public readonly mixed $fromConfig;
 
   /**
+   * Used to store the serialized closure when necessary.
+   *
+   * @var string|null
+   */
+  private ?string $fromConfigSerialized;
+
+  /**
    * Transforms a value submitted by the form before it is set in the config.
    *
    * @var callable|null
@@ -50,6 +58,13 @@ final class ConfigTarget {
    * @see ::setValue()
    */
   public readonly mixed $toConfig;
+
+  /**
+   * Used to store the serialized closure when necessary.
+   *
+   * @var string|null
+   */
+  private ?string $toConfigSerialized;
 
   /**
    * Constructs a ConfigTarget object.
@@ -257,6 +272,25 @@ final class ConfigTarget {
    */
   private function isMultiTarget(): bool {
     return count($this->propertyPaths) > 1;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep(): array {
+    $this->toConfigSerialized = $this->toConfig !== NULL ? serialize(new SignedSerializableClosure($this->toConfig)) : NULL;
+    $this->fromConfigSerialized = $this->fromConfig !== NULL ? serialize(new SignedSerializableClosure($this->fromConfig)) : NULL;
+    $vars = get_object_vars($this);
+    unset($vars['toConfig'], $vars['fromConfig']);
+    return array_keys($vars);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __wakeup(): void {
+    $this->toConfig = $this->toConfigSerialized !== NULL ? unserialize($this->toConfigSerialized)->getClosure() : NULL;
+    $this->fromConfig = $this->fromConfigSerialized !== NULL ? unserialize($this->fromConfigSerialized)->getClosure() : NULL;
   }
 
 }
