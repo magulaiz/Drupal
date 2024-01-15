@@ -370,7 +370,6 @@ class EntityReference extends ManyToOne {
     // @todo https://www.drupal.org/project/drupal/issues/3163740.
   }
 
-
   /**
    * {@inheritdoc}
    */
