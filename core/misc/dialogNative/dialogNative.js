@@ -36,7 +36,7 @@
    * Creates a native html5 dialog.
    *
    * @param {HTMLElement} element
-   *   The HTML element to be inserted into the dialog.
+   *   The HTML element to be inserted into the dialog container.
    * @param {object} settings
    *   The settings for the dialog.
    * @param {string} [settings.dialogClass]
@@ -114,73 +114,14 @@
   /**
    * @typedef {object} Drupal.dialog~dialogDefinition
    *
-   * @param {HTMLElement} element
-   *   The HTML element to be inserted into the dialog.
-   * @param {object} options
+   * @param {HTMLElement|string} element
+   *   The HTML element / string to be inserted into the dialog container.
+   * @param {object} settings
    *   The dialog options.
-   * @prop {boolean} open
-   *   Is the dialog open or not.
-   * @prop {*} returnValue
-   *   Return value of the dialog.
-   * @prop {function} show
-   *   Method to display the dialog on the page.
-   * @prop {function} showModal
-   *   Method to display the dialog as a modal on the page.
-   * @prop {function} close
-   *   Method to hide the dialog from the page.
    * @return {HTMLElement} dialog
    *   The dialog element.
    */
-  Drupal.dialogNative = function dialogNative(element, options) {
-    let undef;
-    const dialog = {
-      open: false,
-      returnValue: undef,
-      element: undef,
-    };
-
-    function openDialog(settings) {
-      settings = { ...drupalSettings.dialog, ...options, ...settings };
-      // Trigger a global event to allow scripts to bind events to the dialog.
-      window.dispatchEvent(
-        new CustomEvent('dialogNative:beforecreate', {
-          detail: { dialog, element, settings },
-        }),
-      );
-      dialog.element = createDialog(element, settings);
-      dialog.open = true;
-      dialog.element.showModal();
-      window.dispatchEvent(
-        new CustomEvent('dialogNative:aftercreate', {
-          detail: { dialog, element, settings },
-        }),
-      );
-    }
-
-    function closeDialog(value) {
-      window.dispatchEvent(
-        new CustomEvent('dialogNative:beforeclose', {
-          detail: [dialog, element],
-        }),
-      );
-      dialog.element.close();
-      dialog.returnValue = value;
-      dialog.open = false;
-      window.dispatchEvent(
-        new CustomEvent('dialogNative:afterclose', {
-          detail: [dialog, element],
-        }),
-      );
-    }
-
-    dialog.show = () => {
-      openDialog({ modal: false });
-    };
-    dialog.showModal = () => {
-      openDialog({ modal: true });
-    };
-    dialog.close = closeDialog;
-
-    return dialog;
+  Drupal.dialogNative = function dialogNative(element, settings) {
+    return createDialog(element, settings);
   };
 })();
