@@ -317,7 +317,7 @@ class EntityReference extends ManyToOne {
       ], TRUE);
 
       $form[$subform_key] = $subform;
-      $this->removeRequiredOfSubformChildrens($form[$subform_key]);
+      $this->removeRequiredOfSubformChildren($form[$subform_key]);
     }
 
     $form['widget'] = [
@@ -340,7 +340,7 @@ class EntityReference extends ManyToOne {
    * @param array $element
    *   The form element.
    */
-  protected function removeRequiredOfSubformChildrens(array &$element) {
+  protected function removeRequiredOfSubformChildren(array &$element) {
     if (isset($element['#required']) && $element['#required']) {
       $element['#required'] = FALSE;
       $element['#element_validate'][] = [static::class, 'validateRequired'];
@@ -348,7 +348,7 @@ class EntityReference extends ManyToOne {
 
     // Recursively apply to nested fields within the handler sub form.
     foreach (Element::children($element) as $delta) {
-      $this->removeRequiredOfSubformChildrens($element[$delta]);
+      $this->removeRequiredOfSubformChildren($element[$delta]);
     }
   }
 
