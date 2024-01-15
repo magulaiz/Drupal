@@ -44,9 +44,9 @@ class BlockContextualLinksTest extends WebDriverTestBase {
   }
 
   /**
-   * Test to ensure that remove contextual link is present in the block.
+   * Test to ensure that contextual links are present in the block.
    */
-  public function testBlockContextualRemoveLinks() {
+  public function testBlockContextualLinks() {
     // Ensure that contextual filter links are visible on the page.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('<front>');
@@ -60,6 +60,10 @@ class BlockContextualLinksTest extends WebDriverTestBase {
     $expected_remove_block_link = base_path() . 'admin/structure/block/manage/' . $this->blockId . '/delete';
     $actual_remove_block_link = parse_url($this->getSession()->getPage()->findLink('Remove block')->getAttribute('href'));
     $this->assertEquals($expected_remove_block_link, $actual_remove_block_link['path']);
+
+    $expected_disable_block_link = base_path() . 'admin/structure/block/manage/' . $this->blockId . '/disable';
+    $actual_disable_block_link = parse_url($this->getSession()->getPage()->findLink('Disable block')->getAttribute('href'));
+    $this->assertEquals($expected_disable_block_link, $actual_disable_block_link['path']);
   }
 
 }
