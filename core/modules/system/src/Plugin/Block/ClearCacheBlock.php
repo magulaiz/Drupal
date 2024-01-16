@@ -21,7 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ClearCacheBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
-
   /**
    * Creates a ClearCacheBlock instance.
    *
