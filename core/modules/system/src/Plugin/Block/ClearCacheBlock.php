@@ -3,6 +3,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -20,15 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ClearCacheBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
 
   /**
-   * Creates a SystemBrandingBlock instance.
+   * Creates a ClearCacheBlock instance.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -36,18 +31,17 @@ class ClearCacheBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param mixed $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FormBuilderInterface $form_builder) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected FormBuilderInterface $formBuilder) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->formBuilder = $form_builder;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $configuration,
       $plugin_id,
@@ -66,7 +60,7 @@ class ClearCacheBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function blockAccess(AccountInterface $account) {
+  public function blockAccess(AccountInterface $account): AccessResultInterface {
     return AccessResult::allowedIfHasPermission($account, 'administer site configuration');
   }
 
