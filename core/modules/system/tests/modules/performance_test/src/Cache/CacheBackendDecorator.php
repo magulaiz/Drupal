@@ -41,31 +41,6 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
   }
 
   /**
-   * Logs a cache operation.
-   *
-   * @param array $tags
-   *   The cache IDs.
-   * @param float $start
-   *   The start microtime.
-   * @param float $stop
-   *   The stop microtime.
-   *
-   * @return void
-   */
-  protected function logCacheTagsInvalidation(array $tags, float $start, float $stop): void {
-    // @todo
-    return;
-    $this->performanceDataCollector->addCacheOperation([
-      'operation' => $operation,
-      'cids' => implode(', ', $cids),
-      'bin' => $this->bin,
-      'start' => $start,
-      'stop' => $stop,
-    ]);
-  }
-
-
-  /**
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE): object|bool {
@@ -152,10 +127,7 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
    */
   public function invalidateTags(array $tags) {
     if ($this->cacheBackend instanceof CacheTagsInvalidatorInterface) {
-      $start = microtime(TRUE);
       $this->cacheBackend->invalidateTags($tags);
-      $stop = microtime(TRUE);
-      $this->logCacheTagsInvalidation($tags, $start, $stop);
     }
   }
 
