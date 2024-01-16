@@ -48,7 +48,7 @@ class AnnounceBlockTest extends WebDriverTestBase {
   /**
    * Testing announce feed block visibility.
    */
-  public function testAnnounceWithoutPermission() {
+  public function testAnnounceWithoutPermission(): void {
     // User with "access announcements" permission.
     $account = $this->drupalCreateUser([
       'access announcements',
@@ -64,7 +64,6 @@ class AnnounceBlockTest extends WebDriverTestBase {
     // Block is not accessible without permission.
     $this->drupalLogout();
     $assert_session->pageTextNotContains('Announcements Feed');
-
   }
 
 }

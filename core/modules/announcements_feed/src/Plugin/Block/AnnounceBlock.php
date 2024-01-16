@@ -6,6 +6,7 @@ namespace Drupal\announcements_feed\Plugin\Block;
 
 use Drupal\announcements_feed\AnnounceRenderer;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -42,7 +43,7 @@ class AnnounceBlock extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $configuration,
       $plugin_id,
@@ -54,14 +55,14 @@ class AnnounceBlock extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * {@inheritdoc}
    */
-  public function blockAccess(AccountInterface $account) {
+  public function blockAccess(AccountInterface $account): AccessResultInterface {
     return AccessResult::allowedIfHasPermission($account, 'access announcements');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return $this->announceRenderer->render();
   }
 
