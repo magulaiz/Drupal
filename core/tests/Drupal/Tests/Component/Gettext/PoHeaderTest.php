@@ -10,9 +10,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Unit tests for the Gettext PO file header handling features.
  *
- * @see Drupal\Component\Gettext\PoHeader.
- *
- * @group Gettext
+ * @coversDefaultClass \Drupal\Component\Gettext\PoHeader
+ * @group gettext
  */
 class PoHeaderTest extends TestCase {
 
@@ -28,6 +27,7 @@ class PoHeaderTest extends TestCase {
    *   Array of expected plural positions keyed by plural value.
    *
    * @dataProvider providerTestPluralsFormula
+   * @covers ::parsePluralForms
    */
   public function testPluralsFormula($plural, $expected) {
     $p = new PoHeader();
@@ -368,6 +368,56 @@ class PoHeaderTest extends TestCase {
         ],
       ],
     ];
+  }
+
+  /**
+   * @covers ::getPluralForms
+   * @covers ::parseHeader
+   * @covers ::setFromString
+   * @covers ::__toString
+   */
+  public function testSetFromString() {
+    $header = "Project-Id-Version: Drupal core (7.11)\n"
+      . "POT-Creation-Date: 2012-02-12 22:59+0000\n"
+      . "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n
+      Language-Team: Catalan\n
+      MIME-Version: 1.0\n
+      Content-Type: text/plain; charset=utf-8\n"
+      . "Content-Transfer-Encoding: 8bit\n"
+      . "Plural-Forms: nplurals=2; plural=(n>1);\n";
+
+    $p = new PoHeader();
+    $p->setFromString($header);
+    $this->assertEquals('nplurals=2; plural=(n>1);', $p->getPluralForms());
+
+    $language = 'Spanish';
+    $project = 'Drupal core';
+    $p->setLanguageName($language);
+    $p->setProjectName($project);
+
+    $this->assertStringContainsString('Spanish translation of Drupal core', (string) $p);
+  }
+
+  /**
+   * @covers ::getLanguageName
+   * @covers ::setLanguageName
+   */
+  public function testGetSetLanguageName() {
+    $language = 'Spanish';
+    $p = new PoHeader();
+    $p->setLanguageName($language);
+    $this->assertEquals($language, $p->getLanguageName());
+  }
+
+  /**
+   * @covers ::getProjectName
+   * @covers ::setProjectName
+   */
+  public function testGetSetProjectName() {
+    $project = 'Drupal core';
+    $p = new PoHeader();
+    $p->setProjectName($project);
+    $this->assertEquals($project, $p->getProjectName());
   }
 
 }
