@@ -31,10 +31,9 @@
       if (timestamp > lastViewTimestamp) {
         // Turn the placeholder into an actual "new" indicator.
         placeholder.textContent = newCommentString;
-        $placeholder
-          .removeClass('hidden')
-          .closest('.js-comment')[0] // Add 'new' class to the comment, so it can be styled.
-          .classList.add('new');
+        const $placeholderElement = $placeholder.closest('.js-comment');
+        $placeholderElement[0].classList.remove('hidden');
+        $placeholderElement[0].classList.add('new');
 
         // Insert "new" anchor just before the "comment-<cid>" anchor if
         // this is the first new comment in the DOM.

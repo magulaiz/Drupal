@@ -699,7 +699,7 @@
       if (self.rowObject && self.rowObject.changed === true) {
         item.classList.add('drag');
         if (self.oldRowElement) {
-          $(self.oldRowElement).removeClass('drag-previous');
+          $(self.oldRowElement)[0].classList.remove('drag-previous');
         }
         self.oldRowElement = item;
         if (self.striping === true) {
@@ -780,7 +780,7 @@
     // Set the document to use the move cursor during drag.
     $('body')[0].classList.add(this.dragOrientation);
     if (self.oldRowElement) {
-      $(self.oldRowElement).removeClass('drag-previous');
+      $(self.oldRowElement)[0].classList.remove('drag-previous');
     }
 
     // Set the initial y coordinate so the direction can be calculated in
@@ -899,9 +899,9 @@
         self.rowObject.removeIndentClasses();
       }
       if (self.oldRowElement) {
-        $(self.oldRowElement).removeClass('drag-previous');
+        $(self.oldRowElement)[0].classList.remove('drag-previous');
       }
-      $droppedRow.removeClass('drag');
+      $droppedRow[0].classList.remove('drag');
       $droppedRow[0].classList.add('drag-previous');
       self.oldRowElement = droppedRow;
       self.onDrop();
@@ -911,7 +911,7 @@
     // Functionality specific only to pointerup events.
     if (self.dragObject !== null) {
       self.dragObject = null;
-      $('body').removeClass(self.dragOrientation);
+      $('body')[0].classList.remove(self.dragOrientation);
       clearInterval(self.scrollInterval);
     }
   };
@@ -1687,10 +1687,15 @@
     Object.keys(this.children || {}).forEach((n) => {
       $(this.children[n])
         .find('.js-indentation')
-        .removeClass('tree-child')
-        .removeClass('tree-child-first')
-        .removeClass('tree-child-last')
-        .removeClass('tree-child-horizontal');
+        .toArray()
+        .forEach((element) => {
+          element.classList.remove(
+            'tree-child',
+            'tree-child-first',
+            'tree-child-last',
+            'tree-child-horizontal',
+          );
+        });
     });
   };
 

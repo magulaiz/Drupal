@@ -104,7 +104,7 @@
      * @return {undefined}
      */
     beforeClose({ $element }) {
-      $('body').removeClass('js-off-canvas-dialog-open');
+      $('body')[0].classList.remove('js-off-canvas-dialog-open');
       // Remove all *.off-canvas events
       Drupal.offCanvas.removeOffCanvasEvents($element);
       Drupal.offCanvas.resetPadding();

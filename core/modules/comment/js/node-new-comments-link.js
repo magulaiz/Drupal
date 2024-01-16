@@ -17,8 +17,11 @@
    *   The placeholder element passed in as a parameter.
    */
   function hide($placeholder) {
+    // Find the parent <li>.
     const $placeholderClosest = $placeholder.closest('.comment-new-comments');
+    // Find the preceding <li>, if any, and give it the 'last' class.
     $placeholderClosest.prev()[0].classList.add('last');
+    // Go back to the parent <li> and hide it.
     return $placeholderClosest.end().hide();
   }
 
@@ -42,17 +45,12 @@
    *   The placeholder element passed in as a parameter.
    */
   function show($placeholder) {
-    return (
-      $placeholder
-        // Find the parent <li>.
-        .closest('.comment-new-comments')
-        // Find the preceding <li>, if any, and remove its 'last' class, if any.
-        .prev()
-        .removeClass('last')
-        // Go back to the parent <li> and show it.
-        .end()
-        .show()
-    );
+    // Find the parent <li>.
+    const $placeholderClosest = $placeholder.closest('.comment-new-comments');
+    // Find the preceding <li>, if any, and remove its 'last' class, if any.
+    $placeholderClosest.prev()[0].classList.remove('last');
+    // Go back to the parent <li> and show it.
+    return $placeholderClosest.end().hide();
   }
 
   /**
@@ -115,8 +113,8 @@
             '@count new comments',
           );
           $placeholderItem
-            .attr('href', result.first_new_comment_link)
-            .removeClass('hidden');
+            .attr('href', result.first_new_comment_link)[0]
+            ?.classList.remove('hidden');
           show($placeholderItem);
         }
       });

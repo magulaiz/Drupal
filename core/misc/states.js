@@ -730,7 +730,10 @@
           .removeAttr('required aria-required')
           .closest('.js-form-item, .js-form-wrapper')
           .find('label.js-form-required')
-          .removeClass('js-form-required form-required');
+          .toArray()
+          .forEach((element) => {
+            element.classList.remove('js-form-required', 'form-required');
+          });
       }
     }
   });

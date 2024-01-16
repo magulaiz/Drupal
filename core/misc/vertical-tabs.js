@@ -91,10 +91,8 @@
               details: $that,
             });
             tabList.append(verticalTab.item);
-            $that
-              .removeClass('collapsed')
-              .removeAttr('open')
-              .data('verticalTab', verticalTab);
+            $that.removeAttr('open').data('verticalTab', verticalTab);
+            $that[0].classList.remove('collapsed');
             $that[0].classList.add('vertical-tabs__pane');
             if (this.id === focusID) {
               tabFocus = $that;
