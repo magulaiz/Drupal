@@ -36,7 +36,7 @@
             (index, oldHtml) =>
               `<span class="visually-hidden">${oldHtml}</span>`,
           );
-          $fullLabel.removeClass('visually-hidden');
+          $fullLabel[0].classList.remove('visually-hidden');
         }
 
         // Set up the edit/hide summary link.

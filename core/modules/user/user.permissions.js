@@ -38,7 +38,6 @@
         // permission table would be polluted with redundant entries. This is
         // deliberate, but desirable when we automatically check them.
         const $dummy = $(Drupal.theme('checkbox'))
-          .removeClass('form-checkbox')
           .attr('disabled', 'disabled')
           .attr('checked', 'checked')
           .attr(
@@ -48,6 +47,7 @@
             ),
           )
           .hide();
+        $dummy[0].classList.remove('form-checkbox');
         $dummy[0].classList.add('dummy-checkbox', 'js-dummy-checkbox');
 
         $table

@@ -1146,7 +1146,10 @@
     attach(context) {
       $(once('dropbutton-icon', '.dropbutton', context))
         .find('.icon')
-        .removeClass('icon');
+        .toArray()
+        .forEach((element) => {
+          element.classList.remove('icon');
+        });
     },
   };
 

@@ -111,7 +111,7 @@
         this.updateBarAttributes();
 
         $('[data-toolbar-anti-flicker-loading]').remove();
-        $('html').removeClass([
+        $('html')[0].classList.remove([
           'toolbar-loading',
           'toolbar-horizontal',
           'toolbar-vertical',
@@ -120,7 +120,7 @@
           'toolbar-oriented',
           'toolbar-anti-flicker',
         ]);
-        $('body').removeClass('toolbar-loading');
+        $('body')[0].classList.remove('toolbar-loading');
 
         // Load the subtrees if the orientation of the toolbar is changed to
         // vertical. This condition responds to the case that the toolbar switches
@@ -209,10 +209,10 @@
         const $tab = $(this.model.get('activeTab'));
         // Deactivate the previous tab.
         $(this.model.previous('activeTab'))
-          .removeClass('is-active')
-          .prop('aria-pressed', false);
+          .prop('aria-pressed', false)[0]
+          ?.classList.remove('is-active');
         // Deactivate the previous tray.
-        $(this.model.previous('activeTray')).removeClass('is-active');
+        $(this.model.previous('activeTray'))[0]?.classList.remove('is-active');
 
         // The stored active tab is removed as updateTabs() can be called when
         // a tray is explicitly closed, thus not replaced with a new active tab.

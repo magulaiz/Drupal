@@ -27,14 +27,14 @@
       // When a row is swapped, keep previous and next page classes set.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         $table
-          .find('tr.taxonomy-term-preview')
-          .removeClass('taxonomy-term-preview');
+          .find('tr.taxonomy-term-preview')[0]
+          .classList.remove('taxonomy-term-preview');
         $table
-          .find('tr.taxonomy-term-divider-top')
-          .removeClass('taxonomy-term-divider-top');
+          .find('tr.taxonomy-term-divider-top')[0]
+          .classList.remove('taxonomy-term-divider-top');
         $table
-          .find('tr.taxonomy-term-divider-bottom')
-          .removeClass('taxonomy-term-divider-bottom');
+          .find('tr.taxonomy-term-divider-bottom')[0]
+          .classList.remove('taxonomy-term-divider-bottom');
 
         const tableBody = $table[0].tBodies[0];
         if (backStep) {
