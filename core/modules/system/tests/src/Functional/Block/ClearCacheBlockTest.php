@@ -20,7 +20,6 @@ class ClearCacheBlockTest extends BrowserTestBase {
    */
   protected static $modules = [
     'block',
-    'system_block_test',
   ];
 
   /**
@@ -36,6 +35,9 @@ class ClearCacheBlockTest extends BrowserTestBase {
 
     $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
+    $this->clearCacheBlock = $this->placeBlock('system_clear_cache_block', [
+      'label' => 'Clear cache block',
+    ]);
   }
 
   /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
+use Drupal\block\BlockInterface;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -32,7 +33,7 @@ class AnnounceBlockTest extends WebDriverTestBase {
    *
    * @var \Drupal\block\Entity\Block
    */
-  protected $announceBlock;
+  protected BlockInterface $announceBlock;
 
   /**
    * {@inheritdoc}
