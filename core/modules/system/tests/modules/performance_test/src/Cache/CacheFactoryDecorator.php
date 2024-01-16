@@ -7,8 +7,6 @@ namespace Drupal\performance_test\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\performance_test\PerformanceDataCollector;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Decorates a cache factory to register all calls to the cache system.
@@ -22,7 +20,7 @@ class CacheFactoryDecorator implements CacheFactoryInterface {
    */
   protected array $cacheBackends = [];
 
-  public function __construct(protected readonly CacheFactoryInterface $cacheFactory, protected readonly PerformanceDataCollector $performanceDataCollector) { }
+  public function __construct(protected readonly CacheFactoryInterface $cacheFactory, protected readonly PerformanceDataCollector $performanceDataCollector) {}
 
   /**
    * {@inheritdoc}
