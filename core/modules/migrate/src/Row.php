@@ -475,7 +475,7 @@ class Row {
    * Indicates whether the row should be skipped.
    *
    * @return bool
-   *   A boolean value indicating whether the row should be skipped.
+   *   TRUE if the row should be skipped.
    */
   public function getSkip(): bool {
     return $this->skip;
@@ -495,7 +495,7 @@ class Row {
    * Indicates whether the skipped row should be saved to the map.
    *
    * @return bool
-   *   A boolean value indicating if the skipped row should be saved.
+   *   TRUE if the skipped row should be saved.
    */
   public function getSaveToMap(): bool {
     return $this->saveToMap;

@@ -314,7 +314,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         ->invokeAllWith('migrate_' . $this->migration->id() . '_prepare_row', $closure);
 
       // We will skip if any hook returned FALSE.
-      $skip |= in_array(FALSE, $hook_result);
+      $skip = $skip || in_array(FALSE, $hook_result);
       $save_to_map = !$skip || $row->getSaveToMap();
     }
     catch (MigrateSkipRowException $e) {
