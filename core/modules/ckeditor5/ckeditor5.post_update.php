@@ -27,7 +27,7 @@ function ckeditor5_removed_post_updates() {
  * Creates the ckeditor_inline view mode for media entities.
  */
 function ckeditor5_post_update_create_ckeditor_inline_view_mode() {
-  $config_path = \Drupal::service('extension.list.profile')->getPath('standard') . '/config/optional';
+  $config_path = \Drupal::service('extension.list.module')->getPath('ckeditor5') . '/config/optional';
   $source = new FileStorage($config_path);
   $entity_type_manager = \Drupal::entityTypeManager();
   $module_handler = \Drupal::moduleHandler();
@@ -35,11 +35,6 @@ function ckeditor5_post_update_create_ckeditor_inline_view_mode() {
   if ($module_handler->moduleExists('media')) {
     $entity_type_manager->getStorage('entity_view_mode')
       ->create($source->read('core.entity_view_mode.media.ckeditor_inline'))
-      ->save();
-  }
-  if ($module_handler->moduleExists('image')) {
-    $entity_type_manager->getStorage('entity_view_display')
-      ->create($source->read('core.entity_view_display.media.image.ckeditor_inline'))
       ->save();
   }
 }
