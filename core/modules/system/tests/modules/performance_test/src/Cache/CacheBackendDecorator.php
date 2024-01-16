@@ -44,7 +44,9 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE): object|bool {
-    return $this->cacheBackend->get($cid, $allow_invalid);
+    $cids = [$cid];
+    $cache = $this->getMultiple($cids, $allow_invalid);
+    return reset($cache);
   }
 
   /**
@@ -64,7 +66,13 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
-    $this->cacheBackend->set($cid, $data, $expire, $tags);
+    $this->setMultiple([
+      $cid => [
+        'data' => $data,
+        'expire' => $expire,
+        'tags' => $tags,
+      ],
+    ]);
   }
 
   /**
@@ -82,7 +90,7 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
    * {@inheritdoc}
    */
   public function delete($cid) {
-    $this->cacheBackend->delete($cid);
+    $this->deleteMultiple([$cid]);
   }
 
   /**
