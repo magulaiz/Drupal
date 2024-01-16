@@ -6,6 +6,9 @@ namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 use Drupal\block\BlockInterface;
+use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Access\AccessResultNeutral;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -50,10 +53,12 @@ class AnnounceBlockTest extends WebDriverTestBase {
    * Testing announce feed block visibility.
    */
   public function testAnnounceWithoutPermission() {
-    // User with "access announcements" permission.
+    // User with "access announcements" permission and anonymous session.
     $account = $this->drupalCreateUser([
       'access announcements',
     ]);
+    $anonymous_account = new AnonymousUserSession();
+
     $this->drupalLogin($account);
     $this->drupalGet('<front>');
 
@@ -66,6 +71,12 @@ class AnnounceBlockTest extends WebDriverTestBase {
     $this->drupalLogout();
     $assert_session->pageTextNotContains('Announcements Feed');
 
+    // Test access() method return type.
+    $this->assertTrue($this->announceBlock->getPlugin()->access($account));
+    $this->assertTrue($this->announceBlock->getPlugin()->access($account, TRUE) instanceof AccessResultAllowed);
+
+    $this->assertFalse($this->announceBlock->getPlugin()->access($anonymous_account));
+    $this->assertFalse($this->announceBlock->getPlugin()->access($anonymous_account, TRUE) instanceof AccessResultNeutral);
   }
 
 }
