@@ -460,11 +460,15 @@ class Row {
    *   The message to save.
    * @param bool $save_to_map
    *   Whether the row should be saved to the migrate map.
+   *
+   * @return $this
+   *   The called Row object.
    */
-  public function skip(string $message = '', bool $save_to_map = TRUE): void {
+  public function skip(string $message = '', bool $save_to_map = TRUE): self {
     $this->skip = TRUE;
     $this->skipMessage = $message;
     $this->saveToMap = $save_to_map;
+    return $this;
   }
 
   /**
