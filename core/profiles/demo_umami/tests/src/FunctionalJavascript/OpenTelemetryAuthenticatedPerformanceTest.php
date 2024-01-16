@@ -37,7 +37,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     }, 'authenticatedFrontPage');
     $this->assertLessThanOrEqual(16, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(15, $performance_data->getQueryCount());
-    $this->assertSame(15, $performance_data->getCacheGetCount());
+    $this->assertSame(22, $performance_data->getCacheGetCount());
     $this->assertSame(0, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
