@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Block;
 
+use Drupal\block\BlockInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -26,6 +27,13 @@ class ClearCacheBlockTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * The clear cache block instance.
+   *
+   * @var \Drupal\block\BlockInterface
+   */
+  protected BlockInterface $clearCacheBlock;
 
   /**
    * {@inheritdoc}
