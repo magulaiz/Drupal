@@ -129,7 +129,12 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       ],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'users4');
-    $this->assertStringContainsString('views_test_data.uid = users4.uid', $join_info['condition']);
+    if (\Drupal::database()->databaseType() === 'pgsql') {
+      $this->assertStringContainsString('views_test_data.uid::text = users4.uid::text', $join_info['condition']);
+    }
+    else {
+      $this->assertStringContainsString('views_test_data.uid = users4.uid', $join_info['condition']);
+    }
     $this->assertStringContainsString('users4.name = :views_join_condition_0', $join_info['condition']);
     $this->assertStringContainsString('users4.name IN ( :views_join_condition_1[] )', $join_info['condition']);
     $this->assertSame($join_info['arguments'][':views_join_condition_1[]'], [$random_name_2, $random_name_3, $random_name_4]);
