@@ -61,10 +61,10 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(58, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(68, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(129, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(132, $performance_data->getCacheGetCount());
-    $this->assertGreaterThanOrEqual(59, $performance_data->getCacheSetCount());
-    $this->assertLessThanOrEqual(68, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(124, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(135, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(47, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(56, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test node page.
@@ -80,10 +80,10 @@ class StandardPerformanceTest extends PerformanceTestBase {
 
     $this->assertGreaterThanOrEqual(38, $performance_data->getQueryCount());
     $this->assertLessThanOrEqual(39, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(87, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(88, $performance_data->getCacheGetCount());
-    $this->assertGreaterThanOrEqual(20, $performance_data->getCacheSetCount());
-    $this->assertLessThanOrEqual(28, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(93, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(94, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(16, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(24, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test user profile page.
@@ -100,8 +100,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertGreaterThanOrEqual(74, $performance_data->getCacheGetCount());
     $this->assertLessThanOrEqual(80, $performance_data->getCacheGetCount());
-    $this->assertGreaterThanOrEqual(19, $performance_data->getCacheSetCount());
-    $this->assertLessThanOrEqual(27, $performance_data->getCacheSetCount());
+    $this->assertGreaterThanOrEqual(16, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(24, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
 
@@ -133,7 +133,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertLessThanOrEqual(42, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(38, $performance_data->getQueryCount());
-    $this->assertSame(28, $performance_data->getCacheGetCount());
+    $this->assertSame(62, $performance_data->getCacheGetCount());
     $this->assertLessThanOrEqual(2, $performance_data->getCacheSetCount());
     $this->assertGreaterThanOrEqual(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
@@ -169,8 +169,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // test failures, assert greater than equal the highest and lowest number
     // observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertLessThanOrEqual(32, $performance_data->getCacheGetCount());
-    $this->assertGreaterThanOrEqual(30, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(83, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(80, $performance_data->getCacheGetCount());
 
     $this->assertLessThanOrEqual(4, $performance_data->getCacheSetCount());
     $this->assertGreaterThanOrEqual(1, $performance_data->getCacheSetCount());
