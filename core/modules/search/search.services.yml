@@ -19,3 +19,19 @@ services:
     class: Drupal\search\SearchTextProcessor
     arguments: ['@transliteration', '@config.factory', '@module_handler']
   Drupal\search\SearchTextProcessorInterface: '@search.text_processor'
+
+  select_extender_factory.search_query:
+    class: Drupal\search\SearchQueryFactory
+    arguments: ['@config.factory', '@search.text_processor']
+    tags:
+      - { name: backend_overridable }
+  Drupal\search\SearchQueryFactory: '@select_extender_factory.search_query'
+  Drupal\search\SearchQuery: '@select_extender_factory.search_query'
+
+  select_extender_factory.views_search_query:
+    class: Drupal\search\ViewsSearchQueryFactory
+    arguments: ['@config.factory', '@search.text_processor']
+    tags:
+      - { name: backend_overridable }
+  Drupal\search\ViewsSearchQueryFactory: '@select_extender_factory.views_search_query'
+  Drupal\search\ViewsSearchQuery: '@select_extender_factory.views_search_query'

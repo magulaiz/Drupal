@@ -933,23 +933,14 @@ abstract class Connection {
    *
    * @return string
    *   The name of the class that should be used for this driver.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   standard autoloading in the methods that return database operations.
+   *
+   * @see https://www.drupal.org/node/3217534
    */
   public function getDriverClass($class) {
-    match($class) {
-      'Install\\Tasks',
-      'ExceptionHandler',
-      'Select',
-      'Insert',
-      'Merge',
-      'Upsert',
-      'Update',
-      'Delete',
-      'Truncate',
-      'Schema',
-      'Condition',
-      'Transaction' => @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED),
-      default => NULL,
-    };
+    @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     if (empty($this->driverClasses[$class])) {
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
       if (class_exists($driver_class)) {
@@ -1018,6 +1009,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new ExceptionHandler instance directly.
    */
   public function exceptionHandler() {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('ExceptionHandler');
     return new $class();
   }
@@ -1045,6 +1037,7 @@ abstract class Connection {
    */
   public function select($table, $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Select');
     return new $class($this, $table, $alias, $options);
   }
@@ -1068,6 +1061,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Insert instance directly.
    */
   public function insert($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Insert');
     return new $class($this, $table, $options);
   }
@@ -1118,6 +1112,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Merge instance directly.
    */
   public function merge($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Merge');
     return new $class($this, $table, $options);
   }
@@ -1139,6 +1134,7 @@ abstract class Connection {
    *   an abstract class.
    */
   public function upsert($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Upsert');
     return new $class($this, $table, $options);
   }
@@ -1162,6 +1158,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Update instance directly.
    */
   public function update($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Update');
     return new $class($this, $table, $options);
   }
@@ -1185,6 +1182,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Delete instance directly.
    */
   public function delete($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Delete');
     return new $class($this, $table, $options);
   }
@@ -1205,6 +1203,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Query\Truncate instance directly.
    */
   public function truncate($table, array $options = []) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Truncate');
     return new $class($this, $table, $options);
   }
@@ -1222,6 +1221,7 @@ abstract class Connection {
    */
   public function schema() {
     if (empty($this->schema)) {
+      // @phpstan-ignore-next-line
       $class = $this->getDriverClass('Schema');
       $this->schema = new $class($this);
     }
@@ -1242,6 +1242,7 @@ abstract class Connection {
    * @todo in drupal:11.0.0, return a new Condition instance directly.
    */
   public function condition($conjunction) {
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Condition');
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
     // should only be created from the database layer. This will allow database
@@ -1454,6 +1455,7 @@ abstract class Connection {
     if ($this->transactionManager()) {
       return $this->transactionManager()->push($name);
     }
+    // @phpstan-ignore-next-line
     $class = $this->getDriverClass('Transaction');
     return new $class($this, $name);
   }
@@ -2040,8 +2042,14 @@ abstract class Connection {
    *
    * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    *   If the container has not been initialized yet.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   dependency injection instead.
+   *
+   * @see https://www.drupal.org/node/3218001
    */
   public function getPagerManager(): PagerManagerInterface {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
     return \Drupal::service('pager.manager');
   }
 
