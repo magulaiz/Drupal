@@ -29,7 +29,6 @@ class CacheFactoryDecorator implements CacheFactoryInterface {
   public function get($bin): CacheBackendInterface {
     if (!isset($this->cacheBackends[$bin])) {
       $cache_backend = $this->cacheFactory->get($bin);
-      file_put_contents('/tmp/class.txt', get_class($cache_backend) . "\n", FILE_APPEND);
       // Don't log memory cache operations.
       if (!$cache_backend instanceof MemoryCacheInterface && !is_a($cache_backend, 'Drupal\Core\Cache\MemoryBackend')) {
         $this->cacheBackends[$bin] = new CacheBackendDecorator($this->performanceDataCollector, $cache_backend, $bin);
