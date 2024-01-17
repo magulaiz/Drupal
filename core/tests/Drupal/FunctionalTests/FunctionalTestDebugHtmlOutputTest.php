@@ -22,7 +22,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
    * Creates one page of debug HTML output.
    */
   public function testFunctionalTestDebugHtmlOutput(): void {
-    $this->drupalGet('/');
+    $this->drupalGet('<front>');
   }
 
 }
