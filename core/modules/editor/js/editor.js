@@ -138,7 +138,6 @@
       const confirmationDialog = Drupal.dialogNative(`<div>${message}</div>`, {
         title: Drupal.t('Change text format?'),
         dialogClass: 'editor-change-text-format-modal',
-        resizable: false,
         buttons: [
           {
             text: Drupal.t('Continue'),
@@ -163,17 +162,8 @@
             },
           },
         ],
-        // Prevent this modal from being closed without the user making a choice
-        // as per http://stackoverflow.com/a/5438771.
         closeOnEscape: false,
-        create() {
-          $(this).parent().find('.ui-dialog-titlebar-close').remove();
-        },
         beforeClose: false,
-        close(event) {
-          // Automatically destroy the DOM element that was used for the dialog.
-          $(event.target).remove();
-        },
       });
 
       confirmationDialog.showModal();
