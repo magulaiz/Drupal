@@ -192,7 +192,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->pressButton('Continue');
     $assert_session->pageTextContains('Choose an option below');
     $field_name = 'test_field_1';
-    $page->fillField('label', $field_name);
     $page->pressButton('Continue');
     $assert_session->pageTextContains('You need to choose an option.');
     $assert_session->elementNotExists('css', '[name="new_storage_type"].error');
@@ -204,31 +203,26 @@ class ManageFieldsTest extends WebDriverTestBase {
     $email_field->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="email"]')->isSelected());
     $page->pressButton('Continue');
-    $assert_session->pageTextNotContains('Choose an option below');
-    $page->pressButton('Back');
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
 
     $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]')->getParent());
     $text->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="plain_text"]')->isSelected());
     $page->pressButton('Continue');
     $assert_session->pageTextContains('Choose an option below');
-
-    $page->fillField('label', $field_name);
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
     $page->pressButton('Continue');
-
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
-
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
+    $page->fillField('label', $field_name);
+    $default_value = $assert_session->fieldExists('set_default_value');
+    $default_value->check();
     $default_input_1_name = 'default_value_input[field_test_field_1][0][value]';
     $default_input_1 = $assert_session->fieldExists($default_input_1_name);
     $this->assertFalse($default_input_1->isVisible());
 
-    $default_value = $assert_session->fieldExists('set_default_value');
-    $default_value->check();
     $assert_session->waitForElementVisible('xpath', $default_value->getXpath());
     $default_input_1->setValue('There can be only one!');
     $default_input_2_name = 'default_value_input[field_test_field_1][1][value]';

@@ -232,7 +232,6 @@ class FieldStorageAddForm extends FormBase {
     ];
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
-    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
     $form['actions']['submit']['#submit'][] = [$this, 'rebuildWithOptions'];
   }
 
@@ -248,9 +247,9 @@ class FieldStorageAddForm extends FormBase {
     $form['actions']['back'] = [
       '#type' => 'submit',
       '#value' => $this->t('Back'),
-      '#submit' => ['::startOver'],
+      '#submit' => [[$this, 'startOver']],
     ];
-
+    $form['actions']['back']['#validate'][] = '::justUnset';
     $field_type_options = $form_state->get('field_type_options');
     $new_storage_type = $form_state->getValue('new_storage_type');
     $form['new_storage_type'] = [
@@ -325,24 +324,17 @@ class FieldStorageAddForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function validateGroupOrField(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('new_storage_type')) {
       $form_state->setErrorByName('add', $this->t('You need to select a field type.'));
     }
-  }
-
-  /**
-   * Validates the second step (field storage selection) of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function validateFieldType(array $form, FormStateInterface $form_state) {
-    if (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper')) {
+    if (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper') && $form_state->getValue('new_storage_type')) {
       $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to choose an option.'));
     }
+  }
+
+  public static function justUnset(array &$form, FormStateInterface $form_state) {
+    $form_state->unsetValue('new_storage_type');
   }
 
   /**
@@ -500,8 +492,8 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Submit handler for resetting the form.
    */
-  public static function startOver($form, FormStateInterface &$form_state) {
-    $form_state->unsetValue('new_storage_type');
+  public function startOver($form, FormStateInterface &$form_state) {
+    // Need to do this as the parameters for buildForm are retained on rebuild.
     $form_state->setRebuild();
   }
 
