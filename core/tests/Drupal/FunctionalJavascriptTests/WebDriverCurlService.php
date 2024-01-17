@@ -118,6 +118,7 @@ class WebDriverCurlService extends CurlService {
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
         $result = curl_exec($curl);
+        $rawResult = NULL;
         if ($result !== FALSE) {
           $rawResult = trim($result);
         }
