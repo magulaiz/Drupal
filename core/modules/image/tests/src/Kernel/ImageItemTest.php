@@ -213,7 +213,7 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertSame([0, '32x32'], [
       $validators['FileImageDimensions']['maxDimensions'],
       $validators['FileImageDimensions']['minDimensions'],
-      ]);
+    ]);
 
     $field_definition->setSetting('min_resolution', NULL)
       ->setSetting('max_resolution', '1024x768')
