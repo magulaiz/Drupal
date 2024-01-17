@@ -65,6 +65,7 @@ function filter_theme() {
         'children' => NULL,
         'description' => NULL,
         'attributes' => [],
+        'disabled' => FALSE,
       ],
     ],
     'filter_guidelines' => [
