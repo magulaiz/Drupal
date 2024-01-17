@@ -204,25 +204,36 @@ class ImageItemTest extends FieldKernelTestBase {
     $field_definition = $items->getFieldDefinition();
 
     $validators = $item->getUploadValidators();
-    $this->assertArrayHasKey('file_validate_is_image', $validators);
-    $this->assertArrayNotHasKey('file_validate_image_resolution', $validators);
+    $this->assertArrayHasKey('FileIsImage', $validators);
+    $this->assertArrayNotHasKey('FileImageDimensions', $validators);
 
     $field_definition->setSetting('min_resolution', '32x32')->save();
     $validators = $item->getUploadValidators();
-    $this->assertArrayHasKey('file_validate_is_image', $validators);
-    $this->assertSame([0, '32x32'], $validators['file_validate_image_resolution']);
+    $this->assertArrayHasKey('FileIsImage', $validators);
+    $this->assertSame([0, '32x32'], [
+      $validators['FileImageDimensions']['maxDimensions'],
+      $validators['FileImageDimensions']['minDimensions'],
+      ]);
 
     $field_definition->setSetting('min_resolution', NULL)
       ->setSetting('max_resolution', '1024x768')
       ->save();
     $validators = $item->getUploadValidators();
-    $this->assertArrayHasKey('file_validate_is_image', $validators);
-    $this->assertSame(['1024x768', 0], $validators['file_validate_image_resolution']);
+    $this->assertArrayHasKey('FileIsImage', $validators);
+    $this->assertArrayHasKey('FileImageDimensions', $validators);
+    $this->assertSame(['1024x768', 0], [
+      $validators['FileImageDimensions']['maxDimensions'],
+      $validators['FileImageDimensions']['minDimensions'],
+    ]);
 
     $field_definition->setSetting('min_resolution', '32x32')->save();
     $validators = $item->getUploadValidators();
-    $this->assertArrayHasKey('file_validate_is_image', $validators);
-    $this->assertSame(['1024x768', '32x32'], $validators['file_validate_image_resolution']);
+    $this->assertArrayHasKey('FileIsImage', $validators);
+    $this->assertArrayHasKey('FileImageDimensions', $validators);
+    $this->assertSame(['1024x768', '32x32'], [
+      $validators['FileImageDimensions']['maxDimensions'],
+      $validators['FileImageDimensions']['minDimensions'],
+    ]);
   }
 
 }

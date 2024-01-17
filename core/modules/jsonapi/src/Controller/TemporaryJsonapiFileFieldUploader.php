@@ -442,7 +442,7 @@ class TemporaryJsonapiFileFieldUploader {
 
     $validators = $item->getUploadValidators();
     // Add in our check of the file name length.
-    $validators['file_validate_name_length'] = [];
+    $validators['FileNameLength'] = [];
 
     return $validators;
   }
