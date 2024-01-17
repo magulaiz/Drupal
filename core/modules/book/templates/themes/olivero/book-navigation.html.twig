@@ -26,9 +26,10 @@
  * - book_title: The book/node title of the current outline being viewed.
  *
  * @see template_preprocess_book_navigation()
+ * @see olivero_preprocess_book_navigation()
  */
 #}
-{{ attach_library('claro/classy.book-navigation') }}
+{{ attach_library('book/olivero.book') }}
 {% if tree or has_links %}
   <nav id="book-navigation-{{ book_id }}" class="book-navigation" role="navigation" aria-labelledby="book-label-{{ book_id }}">
     {{ tree }}
@@ -37,18 +38,18 @@
       <ul class="book-pager">
       {% if prev_url %}
         <li class="book-pager__item book-pager__item--previous">
-          <a href="{{ prev_url }}" rel="prev" title="{{ 'Go to previous page'|t }}"><b>{{ '‹'|t }}</b> {{ prev_title }}</a>
+          <a class="book-pager__link book-pager__link--previous" href="{{ prev_url }}" rel="prev" title="{{ 'Go to previous page'|t }}">{{ prev_title }}</a>
         </li>
       {% endif %}
       {% if parent_url %}
         <li class="book-pager__item book-pager__item--center">
-          <a href="{{ parent_url }}" title="{{ 'Go to parent page'|t }}">{{ 'Up'|t }}</a>
+          <a class="book-pager__link book-pager__link--center" href="{{ parent_url }}" title="{{ 'Go to parent page'|t }}">{{ 'Up'|t }}</a>
         </li>
       {% endif %}
       {% if next_url %}
         <li class="book-pager__item book-pager__item--next">
-          <a href="{{ next_url }}" rel="next" title="{{ 'Go to next page'|t }}">{{ next_title }} <b>{{ '›'|t }}</b></a>
-        </li>
+          <a class="book-pager__link book-pager__link--next" href="{{ next_url }}" rel="next" title="{{ 'Go to next page'|t }}">{{ next_title }}</a>
+       </li>
       {% endif %}
     </ul>
     {% endif %}

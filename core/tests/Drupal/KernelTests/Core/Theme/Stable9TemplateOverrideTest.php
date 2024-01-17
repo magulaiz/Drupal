@@ -30,6 +30,11 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
     // but an actual template does not exist.
     'views-form-views-form',
     'views-view-grid-responsive',
+    'book-navigation',
+    'book-tree',
+    'book-export-html',
+    'book-node-export-html',
+    'book-all-books-block',
   ];
 
   /**

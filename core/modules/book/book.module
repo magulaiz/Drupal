@@ -55,7 +55,9 @@ function book_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function book_theme() {
-  return [
+  $theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+  $module_path = \Drupal::service('extension.list.module')->getPath('book');
+  $theme_hooks = [
     'book_navigation' => [
       'variables' => ['book_link' => NULL],
     ],
@@ -72,6 +74,19 @@ function book_theme() {
       'variables' => ['node' => NULL, 'content' => NULL, 'children' => NULL],
     ],
   ];
+
+  if (in_array($theme, [
+    'claro',
+    'olivero',
+    'stable9',
+    'umami',
+  ])) {
+    foreach ($theme_hooks as $name => $val) {
+      $theme_hooks[$name]['path'] = $module_path . '/templates/themes/' . $theme;
+    }
+  }
+
+  return $theme_hooks;
 }
 
 /**
