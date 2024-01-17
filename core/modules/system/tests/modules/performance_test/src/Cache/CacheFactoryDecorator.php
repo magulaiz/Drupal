@@ -7,6 +7,7 @@ namespace Drupal\performance_test\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\performance_test\PerformanceDataCollector;
 
 /**
@@ -30,7 +31,7 @@ class CacheFactoryDecorator implements CacheFactoryInterface {
     if (!isset($this->cacheBackends[$bin])) {
       $cache_backend = $this->cacheFactory->get($bin);
       // Don't log memory cache operations.
-      if (!$cache_backend instanceof MemoryCacheInterface && !is_a($cache_backend, 'Drupal\Core\Cache\MemoryBackend')) {
+      if (!$cache_backend instanceof MemoryCacheInterface && !$cache_backend instanceof MemoryBackend) {
         $this->cacheBackends[$bin] = new CacheBackendDecorator($this->performanceDataCollector, $cache_backend, $bin);
       }
       else {

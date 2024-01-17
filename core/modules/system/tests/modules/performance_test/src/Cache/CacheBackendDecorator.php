@@ -117,7 +117,7 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
    * {@inheritdoc}
    */
   public function invalidate($cid) {
-    $this->cacheBackend->invalidate($cid);
+    $this->invalidateMultiple([$cid]);
   }
 
   /**
