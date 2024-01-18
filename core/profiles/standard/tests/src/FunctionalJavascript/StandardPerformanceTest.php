@@ -105,10 +105,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->submitLoginForm($account);
     });
 
-    // This test observes a variable number of database queries, so to avoid
-    // random test failures, assert greater than equal the highest and lowest
-    // number of queries observed during test runs.
-    // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertSame(38, $performance_data->getQueryCount());
     $this->assertSame(62, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
@@ -140,10 +136,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->submitLoginForm($account);
     });
     $this->assertSame(47, $performance_data->getQueryCount());
-    // This test observes a variable number of cache operations, so to avoid random
-    // test failures, assert greater than equal the highest and lowest number
-    // observed during test runs.
-    // See https://www.drupal.org/project/drupal/issues/3402610
     $this->assertSame(83, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
