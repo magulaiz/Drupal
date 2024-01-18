@@ -326,14 +326,15 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     if ($row->getSkip()) {
       // Make sure we replace any previous messages for this item with any
       // new ones.
+      if ($row->getSkipMessage()) {
+        $this->idMap->saveMessage($row->getSourceIdValues(), $row->getSkipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
+      }
       if ($row->getSaveToMap()) {
         $this->idMap->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
         $this->currentRow = NULL;
         $this->currentSourceIds = NULL;
-        if ($row->getSkipMessage()) {
-          $this->idMap->saveMessage($row->getSourceIdValues(), $row->getSkipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
-        }
       }
+
       return FALSE;
     }
     if ($this->trackChanges) {
