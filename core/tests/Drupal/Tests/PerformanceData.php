@@ -27,14 +27,24 @@ class PerformanceData {
   protected int $queryCount = 0;
 
   /**
-   * The number of cache gets recorded.
+   * The number of cache get queries recorded.
    */
   protected int $cacheGetCount = 0;
+
+  /**
+   * The actual cache gets recorded.
+   */
+  protected array $cacheGets = [];
 
   /**
    * The number of cache sets recorded.
    */
   protected int $cacheSetCount = 0;
+
+  /**
+   * The actual cache sets recorded.
+   */
+  protected array $cacheSets = [];
 
   /**
    * The number of cache deletes recorded.
@@ -124,6 +134,26 @@ class PerformanceData {
    */
   public function getCacheGetCount(): int {
     return $this->cacheGetCount;
+  }
+
+  /**
+   * Sets the cache gets.
+   *
+   * @param array $gets
+   *   The cache gets recorded.
+   */
+  public function setCacheGets(array $gets): void {
+    $this->cacheGets = $gets;
+  }
+
+  /**
+   * Gets the cache gets.
+   *
+   * @return array
+   *   The cache gets recorded.
+   */
+  public function getCacheGets(): array {
+    return $this->cacheGets;
   }
 
   /**
