@@ -275,13 +275,13 @@ class ThemeTest extends BrowserTestBase {
       '#ffff',
       '#00000',
       '#FFFFF ',
-      '00#000'
+      '00#000',
     ];
     $valid_hex_codes = [
       '0F0',
       '#F0F',
       '#2ecc71',
-      '0074cc'
+      '0074cc',
     ];
 
     // Visit Olivero's theme settings page.
