@@ -81,12 +81,10 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   Migration state service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    * @param \Drupal\Core\Extension\ModuleExtensionList|\Drupal\Core\Extension\ModuleHandlerInterface $module_extension_list
-   *    The module extension list.
+   *   The module extension list.
    */
   public function __construct(
     StateInterface $state,
@@ -94,7 +92,6 @@ class ReviewForm extends MigrateUpgradeFormBase {
     PrivateTempStoreFactory $tempstore_private,
     MigrationState $migrationState,
     ConfigFactoryInterface $config_factory,
-    ModuleHandlerInterface $module_handler,
     protected ?TimeInterface $time = NULL,
     ModuleExtensionList|ModuleHandlerInterface $module_extension_list
   ) {
