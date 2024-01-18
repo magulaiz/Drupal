@@ -346,7 +346,8 @@ class Datetime extends DateElementBase {
    */
   public static function validateDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
     $input_exists = FALSE;
-    $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
+    $values = $form_state->getValues();
+    $input = NestedArray::getValue($values, $element['#parents'], $input_exists);
     if ($input_exists) {
 
       $title = static::getElementTitle($element, $complete_form);
