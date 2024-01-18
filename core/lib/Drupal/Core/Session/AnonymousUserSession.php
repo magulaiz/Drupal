@@ -3,7 +3,7 @@
 namespace Drupal\Core\Session;
 
 /**
- * An account implementation representing an anonymous userb.
+ * An account implementation representing an anonymous userbs.
  */
 class AnonymousUserSession extends UserSession {
 

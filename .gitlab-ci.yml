@@ -413,14 +413,5 @@ default:
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=$GIT_DEPTH origin "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
-    - |
-      EXIT_CODE=0
-      for f in `git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA --name-only`
-      do
-        echo "Checking file $PWD/$f"
-        echo "$PWD/$f" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin || EXIT_CODE_LAST_COMMAND=$?
-        if [[ $EXIT_CODE_LAST_COMMAND -ne 0 ]]; then
-            EXIT_CODE=1
-        fi
-      done
-      exit $EXIT_CODE
+    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA --name-only|while read r;do echo "$CI_PROJECT_DIR/$r";done > $CI_PROJECT_DIR/modified.txt
+    - yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list $CI_PROJECT_DIR/modified.txt
