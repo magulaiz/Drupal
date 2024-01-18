@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * gibberish safnaosf
+ */
+
 declare(strict_types=1);
 
 namespace Drupal\Tests;
@@ -270,7 +274,7 @@ trait UiHelperTrait {
    *   Options to be passed to Url::fromUri().
    *
    * @return string
-   *   An absolute URL stringo.
+   *   An absolute URL stringos.
    */
   protected function buildUrl($path, array $options = []) {
     global $base_path;
