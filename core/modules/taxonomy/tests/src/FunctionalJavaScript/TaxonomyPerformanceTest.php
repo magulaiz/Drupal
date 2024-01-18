@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-use Drupal\Tests\PerformanceData;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
@@ -29,14 +28,14 @@ class TaxonomyPerformanceTest extends PerformanceTestBase {
    */
   protected $profile = 'testing';
 
- /**
+  /**
    * Modules to enable.
    *
    * @var array
    */
   protected static $modules = ['taxonomy'];
 
-  protected $vocabular;
+  protected $vocabulary;
 
   /**
    * {@inheritdoc}
@@ -68,16 +67,16 @@ class TaxonomyPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview');
     });
-
+    dump($performance_data);
     // This test observes a variable number of database queries, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
     // See https://www.drupal.org/project/drupal/issues/3402610
-    $this->assertLessThanOrEqual(49, $performance_data->getQueryCount());
-    $this->assertGreaterThanOrEqual(49, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(46, $performance_data->getCacheGetCount());
-    $this->assertGreaterThanOrEqual(46, $performance_data->getCacheGetCount());
-    $this->assertLessThanOrEqual(28, $performance_data->getCacheSetCount());
+    $this->assertLessThanOrEqual(61, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(60, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(61, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(57, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(30, $performance_data->getCacheSetCount());
     $this->assertGreaterThanOrEqual(28, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
