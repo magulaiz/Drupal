@@ -123,7 +123,7 @@ class CacheableMetadata implements RefinableCacheableDependencyInterface {
     else {
       $result->cacheMaxAge = Cache::mergeMaxAges($this->cacheMaxAge, $other->cacheMaxAge);
     }
-    assert($result instanceof \Drupal\Core\Cache\CacheableMetadata);
+    assert($result instanceof CacheableMetadata);
     return $result;
   }
 
