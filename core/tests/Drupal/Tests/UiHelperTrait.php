@@ -1,7 +1,7 @@
 <?php
 
 /**
- * gibberish safnaosf
+ * gibberish safnaosfa
  */
 
 declare(strict_types=1);
