@@ -608,6 +608,12 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   there was an error. Function returns NULL if no file was uploaded.
  *
  * @see _file_save_upload_from_form()
+ *
+ * @todo move this logic to a service in https://www.drupal.org/node/2244513.
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
+ * Use FileSaveUpload service instead.
+ *
+ * @see https://www.drupal.org/node/2244513
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
   static $upload_cache;
@@ -779,7 +785,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $replacements[$original] = $file->id();
           break;
 
-        // Essential file data
+        // Essential file data.
         case 'name':
           $replacements[$original] = $file->getFilename();
           break;
@@ -1426,7 +1432,7 @@ function file_icon_map($mime_type) {
     case 'application/x-pef-executable':
       return 'application-x-executable';
 
-    // Acrobat types
+    // Acrobat types.
     case 'application/pdf':
     case 'application/x-pdf':
     case 'applications/vnd.pdf':
