@@ -25,19 +25,13 @@ module.exports = {
           '[data-drupal-selector="edit-editor-settings-toolbar"]',
         )
         .click('.ckeditor5-toolbar-button-sourceEditing') // Select the Source Editing button.
-        // Hit the down arrow key to move it to the toolbar.
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ARROW_DOWN);
-        })
+        .keys(browser.Keys.DOWN) // Hit the down arrow key to move it to the toolbar.
         // Wait for new source editing vertical tab to be present before continuing.
         .waitForElementVisible(
           '[href*=edit-editor-settings-plugins-ckeditor5-sourceediting]',
         )
         .click('.ckeditor5-toolbar-item-codeBlock') // Select the Code Block button.
-        // Hit the down arrow key to move it to the toolbar.
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ARROW_DOWN);
-        })
+        .keys(browser.Keys.DOWN) // Hit the down arrow key to move it to the toolbar.
         // Wait for new code editing vertical tab to be present before continuing.
         .waitForElementVisible(
           '[href*=edit-editor-settings-plugins-ckeditor5-codeblock]',
@@ -71,11 +65,11 @@ module.exports = {
         .click(
           '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
         )
-        .assert.textContains(
+        .assert.containsText(
           '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) .ck-button__label',
           'Twig',
         )
-        .assert.textContains(
+        .assert.containsText(
           '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) .ck-button__label',
           'YML',
         )
@@ -85,10 +79,7 @@ module.exports = {
           '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) button',
         )
         .waitForElementVisible('.ck-editor__main pre[data-language="Twig"]')
-        // Press 'X' to ensure there's data in CKEditor before switching to source view.
-        .perform(function () {
-          return this.actions().sendKeys('x');
-        })
+        .keys('x') // Press 'X' to ensure there's data in CKEditor before switching to source view.
         .pause(50)
 
         // Go into source editing and verify that correct CSS class is added.
@@ -102,24 +93,15 @@ module.exports = {
         // Go back into WYSIWYG mode and hit enter three times to break out of code block.
         .click('.ck-source-editing-button') // Disable source editing.
         .waitForElementVisible('.ck-editor__editable:not(.ck-hidden)')
-        // Go to end of line.
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ARROW_RIGHT);
-        })
+        .keys(browser.Keys.RIGHT) // Go to end of line.
         .pause(50)
 
         // Hit Enter three times to break out of CKEditor's code block.
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ENTER);
-        })
+        .keys(browser.Keys.ENTER)
         .pause(50)
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ENTER);
-        })
+        .keys(browser.Keys.ENTER)
         .pause(50)
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ENTER);
-        })
+        .keys(browser.Keys.ENTER)
         .pause(50)
 
         // Open up the code syntax dropdown, and click the 2nd item (which should be 'YML').
@@ -129,10 +111,7 @@ module.exports = {
         .click(
           '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) button',
         )
-        // Press 'X' to ensure there's data in CKEditor before switching to source view.
-        .perform(function () {
-          return this.actions().sendKeys('x');
-        })
+        .keys('x') // Press 'X' to ensure there's data in CKEditor before switching to source view.
 
         // Go into source editing and verify that correct CSS class is added.
         .click('.ck-source-editing-button')
