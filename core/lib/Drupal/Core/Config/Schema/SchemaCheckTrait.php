@@ -13,6 +13,7 @@ use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Provides a trait for checking configuration schema.
@@ -109,10 +110,10 @@ trait SchemaCheckTrait {
       $violations = $this->schema->validate();
       $filtered_violations = array_filter(
         iterator_to_array($violations),
-        fn(ConstraintViolation $v) => !static::isViolationForIgnoredPropertyPath($v),
+        fn(ConstraintViolationInterface $v) => !static::isViolationForIgnoredPropertyPath($v),
       );
       $validation_errors = array_map(
-        fn(ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
+        fn(ConstraintViolationInterface $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
         $filtered_violations
       );
       // @todo Decide in https://www.drupal.org/project/drupal/issues/3395099 when/how to trigger deprecation errors or even failures for contrib modules.
