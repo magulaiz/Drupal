@@ -6,6 +6,7 @@ use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests the menu link tree.
@@ -15,6 +16,8 @@ use Drupal\Tests\Core\Menu\MenuLinkMock;
  * @see \Drupal\Core\Menu\MenuLinkTree
  */
 class MenuLinkTreeTest extends KernelTestBase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * The tested menu link tree.
@@ -135,8 +138,11 @@ class MenuLinkTreeTest extends KernelTestBase {
 
   /**
    * Tests for MenuLinkManager::menuNameInUse() method.
+   *
+   * @group legacy
    */
   public function testMenuNameInUseMethod() {
+    $this->expectDeprecation('Drupal\Core\Menu\MenuLinkManager::menuNameInUse is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/2736647.');
     /** @var \Drupal\system\MenuStorage $storage */
     $menu_storage = \Drupal::entityTypeManager()->getStorage('menu');
     $menu_storage->create(['id' => 'menu1', 'label' => 'Menu 1'])->save();
