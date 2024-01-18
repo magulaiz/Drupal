@@ -67,7 +67,6 @@ class TaxonomyPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview');
     });
-    dump($performance_data);
     // This test observes a variable number of database queries, so to avoid
     // random test failures, assert greater than equal the highest and lowest
     // number of queries observed during test runs.
