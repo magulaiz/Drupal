@@ -473,13 +473,13 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * Runs a process plugin.
    *
    * @param \Drupal\migrate\Row $row
-   *    The $row to be processed.
+   *   The $row to be processed.
    * @param string $destination
-   *    The destination property name.
+   *   The destination property name.
    * @param \Drupal\migrate\Plugin\MigrateProcessInterface $plugin
-   *    The process plugin.
+   *   The process plugin.
    * @param mixed $value
-   *    Initial value to transform.
+   *   Initial value to transform.
    *
    * @return mixed|null
    *   The processed value.
