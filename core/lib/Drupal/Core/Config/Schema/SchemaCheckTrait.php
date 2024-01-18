@@ -12,7 +12,6 @@ use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -129,14 +128,14 @@ trait SchemaCheckTrait {
   /**
    * Determines whether this violation is for an ignored Config property path.
    *
-   * @param \Symfony\Component\Validator\ConstraintViolation $v
+   * @param \Symfony\Component\Validator\ConstraintViolationInterface $v
    *   A validation constraint violation for a Config object.
    *
    * @return bool
    *   TRUE when the violation is for an ignored configuration property path,
    *   FALSE otherwise.
    */
-  protected static function isViolationForIgnoredPropertyPath(ConstraintViolation $v): bool {
+  protected static function isViolationForIgnoredPropertyPath(ConstraintViolationInterface $v): bool {
     // When the validated object is a config entity wrapped in a
     // ConfigEntityAdapter, some work is necessary to map from e.g.
     // `entity:comment_type` to the corresponding `comment.type.*`.
