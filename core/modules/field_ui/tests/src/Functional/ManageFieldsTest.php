@@ -158,11 +158,6 @@ class ManageFieldsTest extends BrowserTestBase {
       'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
-    $edit = [
-      'label' => 'Test field',
-      'field_name' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
     $this->assertSession()->statusMessageNotContains('Saved');
 
     // Change the storage form values.
@@ -179,18 +174,16 @@ class ManageFieldsTest extends BrowserTestBase {
       'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
-    $edit = [
-      'label' => 'Test field',
-      'field_name' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
     // Assert that the values in the field storage form are reset.
     $this->assertEquals(1, $page->findField('field_storage[subform][cardinality_number]')->getValue());
 
     // Assert that the field is created with the new settings.
     $this->submitForm([], 'Update settings');
     $this->assertSession()->statusMessageNotContains('Saved');
-    $this->submitForm([], 'Save settings');
+    $this->submitForm([
+      'label' => 'Test field',
+      'field_name' => 'test_field',
+    ], 'Save settings');
     $this->assertSession()->statusMessageContains('Saved');
 
     $this->assertEquals(1, FieldStorageConfig::loadByName('node', 'field_test_field')->getCardinality());
@@ -215,8 +208,6 @@ class ManageFieldsTest extends BrowserTestBase {
       'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
-    $this->getSession()->getPage()->fillField('label', 'Test field');
-    $this->getSession()->getPage()->fillField('field_name', 'test_field');
     // Make changes to the storage form.
     $edit = ['field_storage[subform][cardinality_number]' => 5];
     $storage_form_url = $this->getUrl();
@@ -247,6 +238,8 @@ class ManageFieldsTest extends BrowserTestBase {
     // Assert that the user can go on with configuring a field with a machine
     // that is already taken.
     $this->assertSession()->pageTextNotContains('error');
+    $this->getSession()->getPage()->fillField('label', 'Test field');
+    $this->getSession()->getPage()->fillField('field_name', 'test_field');
     $this->submitForm([], 'Save settings');
     // An error is thrown only after the final 'Save'.
     $this->assertSession()->statusMessageContains("An error occurred while saving the field: 'field_storage_config' entity with ID 'node.field_test_field' already exists.");
@@ -266,11 +259,6 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->drupalGet($bundle_path . '/fields/add-field');
     $edit = [
       'new_storage_type' => 'test_field',
-    ];
-    $this->submitForm($edit, 'Continue');
-    $edit = [
-      'label' => 'Test field',
-      'field_name' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
 
@@ -294,8 +282,10 @@ class ManageFieldsTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet("$bundle_path/fields/node.{$node_type->id()}.test_field");
-    $this->submitForm([], 'Save settings');
-    $this->assertSession()->statusMessageContains('Saved test_field configuration.', 'status');
+    $this->submitForm([
+      'label' => 'Test field',
+    ], 'Save settings');
+    $this->assertSession()->statusMessageContains('Saved Test field configuration.', 'status');
   }
 
   /**
@@ -313,7 +303,7 @@ class ManageFieldsTest extends BrowserTestBase {
       'set_default_value' => '1',
       "default_value_input[$field_name][0][target_id]" => $this->adminUser->label() . ' (' . $this->adminUser->id() . ')',
     ];
-    $this->fieldUIAddNewField($bundle_path, 'user_reference', NULL, 'field_ui:entity_reference:user', [], $field_edit);
+    $this->fieldUIAddNewField($bundle_path, 'user_reference', NULL, 'field_ui:entity_reference:user', [], $field_edit, TRUE, 'kittens');
     $field = FieldConfig::loadByName('node', 'kittens', $field_name);
     $this->assertEquals([['target_id' => $this->adminUser->id()]], $field->getDefaultValue(User::create(['name' => '1337'])));
   }

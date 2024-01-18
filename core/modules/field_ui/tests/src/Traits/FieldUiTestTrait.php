@@ -33,7 +33,7 @@ trait FieldUiTestTrait {
    *   (optional) Parameter for conditional execution of second and third step
    *   (Saving the storage settings and field settings). Defaults to 'TRUE'.
    */
-  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE) {
+  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE, $bundle = NULL) {
     // Generate a label containing only letters and numbers to prevent random
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
@@ -46,6 +46,7 @@ trait FieldUiTestTrait {
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
     if ($bundle_path !== NULL) {
+      $base_bundle_path = $bundle_path;
       $bundle_path = "$bundle_path/fields/add-field";
       // First step: 'Add field' page.
       $this->drupalGet($bundle_path);
@@ -76,10 +77,10 @@ trait FieldUiTestTrait {
     // Assert that the field is not created.
     $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
-      $field_edit = array_merge([
+      $field_edit_ini = [
         'label' => $label,
         'field_name' => $field_name,
-      ], $field_edit);
+      ];
       $this->assertSession()->pageTextContains("These settings apply to the new field everywhere it is used.");
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
@@ -103,9 +104,14 @@ trait FieldUiTestTrait {
       $this->submitForm($prefixed_storage_edit, 'Update settings');
 
       // Third step: 'Field settings' form.
-      $this->submitForm($field_edit, 'Save settings');
+      $this->submitForm($field_edit_ini, 'Save settings');
       $this->assertSession()->pageTextContains("Saved $label configuration.");
-
+      if ($field_edit) {
+        $this->drupalGet($base_bundle_path . "/fields/node.$bundle.field_$field_name");
+        file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html', $this->getSession()->getPage()->getContent());
+        $this->submitForm($field_edit, 'Save settings');
+        $this->assertSession()->pageTextContains("Saved $label configuration.");
+      }
       // Check that the field appears in the overview form.
       $this->assertFieldExistsOnOverview($label);
     }
