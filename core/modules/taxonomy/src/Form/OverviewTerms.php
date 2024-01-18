@@ -510,9 +510,7 @@ class OverviewTerms extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Sort term order based on weight.
-    $terms = $form_state->getValue('terms');
-    uasort($terms, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
-    $form_state->setValue('terms', $terms);
+    uasort($form_state->getValue('terms'), ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
 
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $changed_terms = [];
