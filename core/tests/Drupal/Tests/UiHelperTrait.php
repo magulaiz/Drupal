@@ -270,7 +270,7 @@ trait UiHelperTrait {
    *   Options to be passed to Url::fromUri().
    *
    * @return string
-   *   An absolute URL string.
+   *   An absolute URL stringo.
    */
   protected function buildUrl($path, array $options = []) {
     global $base_path;
