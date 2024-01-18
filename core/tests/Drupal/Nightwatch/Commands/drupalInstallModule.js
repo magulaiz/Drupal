@@ -17,11 +17,10 @@ exports.command = function drupalInstallModule(modules, force, callback) {
     this.drupalRelativeURL('/admin/modules');
     modules.forEach((module) => {
       // Filter module list to ensure that collapsable <details> elements are expanded.
-      this
-        .updateValue(
-          'form.system-modules [data-drupal-selector="edit-text"]',
-          module,
-        )
+      this.updateValue(
+        'form.system-modules [data-drupal-selector="edit-text"]',
+        module,
+      )
         .waitForElementVisible(
           `form.system-modules [name="modules[${module}][enable]"]`,
           10000,
