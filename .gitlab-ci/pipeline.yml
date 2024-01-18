@@ -82,6 +82,7 @@ variables:
     - "--no-sandbox"
     - "--log-path=/builds/chromedriver.log"
     - "--whitelisted-ips="
+    - "--allowed-origins=*"
 
 .run-tests: &run-tests
   script:
