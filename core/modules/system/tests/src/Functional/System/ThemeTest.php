@@ -291,14 +291,14 @@ class ThemeTest extends BrowserTestBase {
     foreach ($invalid_hex_codes as $invalid_hex) {
       $this->submitForm(['base_primary_color' => $invalid_hex], 'Save configuration');
       // Invalid hex codes should throw error.
-      $this->assertSession()->pageTextContains('"' . $invalid_hex . '" is not a valid hexadecimal color.');
+      $this->assertSession()->statusMessageContains('"' . $invalid_hex . '" is not a valid hexadecimal color.', 'error');
       $this->assertTrue($this->getSession()->getPage()->findField('base_primary_color')->hasClass('error'));
     }
 
     // Test valid hex color codes.
     foreach ($valid_hex_codes as $valid_hex) {
       $this->submitForm(['base_primary_color' => $valid_hex], 'Save configuration');
-      $this->assertSession()->pageTextContains('The configuration options have been saved.');
+      $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
       $this->assertSame($valid_hex, $this->config('olivero.settings')->get('base_primary_color'));
     }
   }
