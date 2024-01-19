@@ -364,14 +364,12 @@
     async attach(element, format) {
       // eslint-disable-next-line import/no-unresolved
       const module = await import('ckeditor5');
-      console.log('ck5 module', module);
       CKEditor5 = module;
 
       const { ClassicEditor } = module;
-      const { toolbar, plugins, config, language, noHtmlRestrictions } =
+      const { toolbar, plugins, config, language } =
         format.editorSettings;
-      //
-      console.log('FORMAT', format);
+
       const corePlugins = plugins.filter((pluginDefinition) => {
         const [, name] = pluginDefinition.split('.');
         return typeof CKEditor5[name] !== 'undefined';
@@ -384,7 +382,11 @@
       // but in some tests it isn't present. As a workaround, we add info
       // for all plugins created by the ckeditor5 module, since we know the
       // relevant paths.
-
+      // \Drupal\Tests\ckeditor5\FunctionalJavascript\CKEditor5Test::testEmphasis
+      // is one of the tests that will fail without this.
+      // The drupalSettings.ckPluginMap is added in ckeditor5_library_info_alter
+      // and seems to always work in manual tests, but testEmphasis() confirms
+      // there are scenarios where it doesn't work.
       const internalLibraryMap = {
         drupalElementStyle:
           '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
@@ -444,7 +446,7 @@
       };
       // Set the id immediately so that it is available when onChange is called.
       const id = setElementId(element);
-      console.log('editor config for the editor', editorConfig);
+
       ClassicEditor.create(element, editorConfig)
         .then((editor) => {
           /**
@@ -638,6 +640,7 @@
       };
       const id = setElementId(element);
       const { DecoupledEditor } = editorDecoupled;
+
       DecoupledEditor.create(element, config)
         .then((editor) => {
           Drupal.CKEditor5Instances.set(id, editor);

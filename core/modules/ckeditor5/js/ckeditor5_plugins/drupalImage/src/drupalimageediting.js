@@ -313,6 +313,7 @@ function modelImageStyleToDataAttribute() {
   function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
+
     const mappedAlignment = alignmentMapping.find(
       (value) => value.modelValue === data.attributeNewValue,
     );

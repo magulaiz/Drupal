@@ -2,7 +2,6 @@
 // cspell:ignore drupalemphasisediting
 
 import { Plugin } from 'ckeditor5/src/core';
-// eslint-disable-next-line import/extensions
 import DrupalEmphasisEditing from './drupalemphasisediting.js';
 
 /**

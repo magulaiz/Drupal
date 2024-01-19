@@ -297,6 +297,7 @@ export default class DrupalElementStyleUi extends Plugin {
         });
 
       if (items.length !== buttonViews.length) {
+        // Could not get to the image style utils in the browser object, so using logWarning.
         logWarning('image-style-configuration-definition-invalid', {
           dropdown: dropdownConfig,
         });

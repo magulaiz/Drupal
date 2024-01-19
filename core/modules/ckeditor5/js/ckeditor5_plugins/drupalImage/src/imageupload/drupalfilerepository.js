@@ -31,6 +31,7 @@ export default class DrupalFileRepository extends Plugin {
    */
   init() {
     const options = this.editor.config.get('drupalImageUpload');
+
     if (!options) {
       return;
     }
