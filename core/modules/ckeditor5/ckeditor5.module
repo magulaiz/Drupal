@@ -432,14 +432,15 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
       if (isset($library_data['dependencies'])) {
         foreach ($library_data['dependencies'] as $key => $dependency) {
           if (str_contains($dependency, 'core/ckeditor5')) {
-            unset ($library_data['dependencies'][$key]);
+            unset($library_data['dependencies'][$key]);
           }
         }
       }
       // Re-key to avoid skipped numeric indexes.
       if (count($library_data['dependencies']) === 0) {
         unset($library_data['dependencies']);
-      } else {
+      }
+      else {
         $library_data['dependencies'] = array_values($library_data['dependencies']);
       }
       if (isset($library_data['js'])) {
@@ -450,7 +451,6 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
 
         foreach ($library_data['js'] as $path => $settings) {
           if (str_contains($path, 'build/')) {
-            $path_info = pathinfo($path);
             $new_path = str_replace(['build/', '.js'], ['ckeditor5_plugins/', '/src/index.js'], $path);
             $import_path = "/$extension_path/$new_path";
             $dr_path = DRUPAL_ROOT . $import_path;
@@ -514,17 +514,17 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
     // the correct translation file can be attached depending on the current
     // language. This makes sure that caching caches the appropriate language.
     // Only create libraries for languages that have a mapping to Drupal.
-//    foreach ($ckeditor_langcodes as $langcode) {
-//      $libraries['ckeditor5.translations.' . $langcode] = [
-//        'remote' => $libraries['ckeditor5']['remote'],
-//        'version' => $libraries['ckeditor5']['version'],
-//        'license' => $libraries['ckeditor5']['license'],
-//        'dependencies' => [
-//          'core/ckeditor5',
-//          'core/ckeditor5.translations',
-//        ],
-//      ];
-//    }
+    foreach ($ckeditor_langcodes as $langcode) {
+      $libraries['ckeditor5.translations.' . $langcode] = [
+        'remote' => $libraries['ckeditor5']['remote'],
+        'version' => $libraries['ckeditor5']['version'],
+        'license' => $libraries['ckeditor5']['license'],
+        'dependencies' => [
+          'core/ckeditor5',
+          'core/ckeditor5.translations',
+        ],
+      ];
+    }
   }
 
   // Copied from \Drupal\Core\Asset\LibraryDiscoveryParser::buildByExtension().
@@ -786,7 +786,7 @@ function ckeditor5_preprocess_html(&$variables) {
       'ckeditor5/src/clipboard' => '/core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
       '@ckeditor/ckeditor5-image/src/image/imageloadobserver' => '/core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
       '@ckeditor/ckeditor5-image/src/imagetextalternative/imagetextalternativecommand' => '/core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
-    ]
+    ],
   ]);
   $importmap = [
     '#tag' => 'script',
