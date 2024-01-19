@@ -24,13 +24,6 @@ ckeditor5:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v40.2.0/LICENSE.md
     gpl-compatible: true
-#  js:
-    # This file is not aggregated to force the creation of a new aggregate file
-    # containing all files between this one and the next non-aggregated file
-    # (if it exists). The files loaded after this one will include CKEditor 5
-    # translations, enabled plugins, and the rest of the JavaScript needed on
-    # the page.
-    # assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js: { preprocess: false, minified: true }
   dependencies:
     - core/ckeditor5.translations
 
@@ -41,8 +34,6 @@ ckeditor5.editorClassic:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v40.2.0/LICENSE.md
     gpl-compatible: true
-#  js:
-    # assets/vendor/ckeditor5/editor-classic/editor-classic.js: { minified: true }
   dependencies:
     - core/ckeditor5
 
@@ -53,8 +44,6 @@ ckeditor5.editorDecoupled:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v40.2.0/LICENSE.md
     gpl-compatible: true
-#  js:
-    # assets/vendor/ckeditor5/editor-decoupled/editor-decoupled.js: { minified: true }
   dependencies:
     - core/ckeditor5
     - core/ckeditor5.htmlSupport
@@ -440,9 +429,9 @@ internal.jquery_ui:
     assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
   css:
     component:
-     assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
+      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
     theme:
-     assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
+      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
 
@@ -460,8 +449,8 @@ drupal.autocomplete:
   # @todo replace with solution found in https://drupal.org/node/3076171
   css:
     component:
-     assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
-     assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
   dependencies:
     - core/jquery
     - core/internal.jquery_ui
@@ -548,11 +537,11 @@ drupal.dialog:
   # @todo replace with solution found in https://drupal.org/node/2158943
   css:
     component:
-     assets/vendor/jquery.ui/themes/base/dialog.css: { weight: -11.4 }
-     assets/vendor/jquery.ui/themes/base/button.css: { weight: -11.5 }
-     assets/vendor/jquery.ui/themes/base/checkboxradio.css: { weight: -11.6 }
-     assets/vendor/jquery.ui/themes/base/resizable.css: { weight: -11.6 }
-     assets/vendor/jquery.ui/themes/base/controlgroup.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/dialog.css: { weight: -11.4 }
+      assets/vendor/jquery.ui/themes/base/button.css: { weight: -11.5 }
+      assets/vendor/jquery.ui/themes/base/checkboxradio.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/resizable.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/controlgroup.css: { weight: -11.7 }
   dependencies:
     - core/jquery
     - core/internal.jquery_ui
@@ -846,7 +835,7 @@ normalize:
     gpl-compatible: true
   css:
     base:
-     assets/vendor/normalize-css/normalize.css: { weight: -20 }
+      assets/vendor/normalize-css/normalize.css: { weight: -20 }
 
 once:
   remote: https://git.drupalcode.org/project/once
