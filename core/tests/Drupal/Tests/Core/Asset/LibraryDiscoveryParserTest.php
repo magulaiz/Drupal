@@ -117,13 +117,9 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    */
   public function testBuildByExtensionSimple() {
     FileCacheFactory::setPrefix('testing');
+    // Use the default file cache configuration.
     FileCacheFactory::setConfiguration([
-      'library_parser' => [
-        'class' => '\Drupal\Component\FileCache\FileCache',
-        'collection' => 'library_parser',
-        'cache_backend_class' => NULL,
-        'cache_backend_configuration' => [],
-      ],
+      'library_parser' => [],
     ]);
     $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
     $this->moduleHandler->expects($this->atLeastOnce())
