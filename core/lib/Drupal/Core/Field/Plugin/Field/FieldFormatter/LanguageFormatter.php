@@ -120,12 +120,10 @@ class LanguageFormatter extends StringFormatter {
     // \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED
     // and \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_APPLICABLE are
     // not returned from the language manager above.
+      $value = '';
     if (isset($item->language)) {
       $name = isset($languages[$item->language->getId()]) ? $languages[$item->language->getId()]->getName() : $item->language->getId();
       $value = ['#plain_text' => $name];
-    }
-    else {
-      $value = '';
     }
     return $value;
   }
