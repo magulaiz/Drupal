@@ -7,6 +7,7 @@ namespace Drupal\Tests\layout_builder\Kernel;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,6 +49,11 @@ final class InlineBlockAccessTest extends KernelTestBase {
   ];
 
   /**
+   * UUIDs of inline blocks added to the test layout.
+   */
+  private array $uuids;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -82,6 +88,17 @@ final class InlineBlockAccessTest extends KernelTestBase {
     $this->entityViewDisplay->enableLayoutBuilder();
     $this->entityViewDisplay->save();
     $this->sectionStorage->setContextValue('display', $this->entityViewDisplay);
+
+    // Add 2 blocks to the layout.
+    $uuidGenerator = $this->container->get('uuid');
+    foreach (self::BLOCK_TYPE_IDS as $block_type_id) {
+      $uuid = $uuidGenerator->generate();
+      $this->uuids[$block_type_id] = $uuid;
+      $component = new SectionComponent($uuid, 'content', [
+        'id' => 'inline_block:' . $block_type_id,
+      ]);
+      $this->sectionStorage->getSection(0)->appendComponent($component);
+    }
     $this->sectionStorage->save();
   }
 
@@ -89,11 +106,12 @@ final class InlineBlockAccessTest extends KernelTestBase {
    * Test inline block list contents.
    */
   public function testInlineBlockList() {
-    // Restricted access user test first.
+    // Login as a restricted access user.
     $this->drupalSetUpCurrentUser([], [
       'configure any layout',
       'create and edit accessible custom blocks',
       'create ' . self::BLOCK_TYPE_IDS[0] . ' block content',
+      'edit any ' . self::BLOCK_TYPE_IDS[0] . ' block content',
     ]);
 
     $url = Url::fromRoute('layout_builder.choose_inline_block', [
@@ -110,6 +128,7 @@ final class InlineBlockAccessTest extends KernelTestBase {
     $this->assertStringNotContainsString(self::BLOCK_TYPE_IDS[1], $content);
 
     foreach (self::BLOCK_TYPE_IDS as $block_type_id) {
+      // Create access test.
       $url = Url::fromRoute('layout_builder.add_block', [
         'section_storage_type' => 'defaults',
         'section_storage' => $this->sectionStorage->getStorageId(),
@@ -125,9 +144,24 @@ final class InlineBlockAccessTest extends KernelTestBase {
       else {
         $this->assertEquals(403, $response->getStatusCode());
       }
-    }
 
-    // create and edit custom blocks
+      // Edit access test.
+      $url = Url::fromRoute('layout_builder.update_block', [
+        'section_storage_type' => 'defaults',
+        'section_storage' => $this->sectionStorage->getStorageId(),
+        'delta' => 0,
+        'region' => 'content',
+        'uuid' => $this->uuids[$block_type_id],
+      ]);
+      $request = Request::create($url->toString());
+      $response = $this->container->get('http_kernel')->handle($request);
+      if ($block_type_id === 'accessible_block_bundle') {
+        $this->assertEquals(200, $response->getStatusCode());
+      }
+      else {
+        $this->assertEquals(403, $response->getStatusCode());
+      }
+    }
   }
 
 }
