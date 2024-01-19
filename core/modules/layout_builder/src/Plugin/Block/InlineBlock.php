@@ -219,7 +219,10 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    *   The performed operation (create or edit).
    */
   public function blockOperationAccess(AccountInterface $account, string $operation): AccessResult {
-    $result = AccessResult::allowedIfHasPermission($account, 'create and edit custom blocks');
+    $result = AccessResult::allowedIfHasPermissions($account, [
+      'configure any layout',
+      'create and edit custom blocks',
+    ]);
     if ($result->isAllowed()) {
       return $result;
     }
