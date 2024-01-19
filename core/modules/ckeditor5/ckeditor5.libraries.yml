@@ -25,7 +25,6 @@ internal.drupal.ckeditor5.htmlEngine:
 internal.drupal.ckeditor5:
   js:
     js/ckeditor5.js: {}
-#    /core/assets/vendor/ckeditor5/build/ckeditor.browser.js: { attributes: {type: 'module'}}
   css:
     theme:
       css/editor.css: { }
@@ -36,9 +35,6 @@ internal.drupal.ckeditor5:
     - core/drupal
     - core/drupal.ajax
     - core/drupal.debounce
-#    - core/ckeditor5.editorClassic
-#    - core/ckeditor5.editorDecoupled
-#    - core/ckeditor5
     - editor/drupal.editor
     - ckeditor5/internal.drupal.ckeditor5.stylesheets
     - core/drupalSettings

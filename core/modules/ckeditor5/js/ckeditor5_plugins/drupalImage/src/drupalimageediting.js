@@ -9,6 +9,7 @@ import { ImageLoadObserver } from '@ckeditor/ckeditor5-image/src/image/imageload
 // used in the new install method.
 const setViewAttributes = (writer, viewAttributes, viewElement) => {
   if (viewAttributes.attributes) {
+    // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(viewAttributes.attributes)) {
       writer.setAttribute(key, value, viewElement);
     }

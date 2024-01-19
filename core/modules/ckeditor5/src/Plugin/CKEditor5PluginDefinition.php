@@ -236,10 +236,10 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
     // recursive loop
     // if ($definition['drupal']['admin_library'] !== FALSE) {
     // [$extension, $library] = explode('/', $definition['drupal']['admin_library'], 2);
-    //    if (\Drupal::service('library.discovery')->getLibraryByName($extension, $library) === FALSE) {
-    //      throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a "drupal.admin_library" key whose asset library "%s" does not exist.', $id, $definition['drupal']['admin_library']));
-    //    }
-    //  }
+    // if (\Drupal::service('library.discovery')->getLibraryByName($extension, $library) === FALSE) {
+    //    throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a "drupal.admin_library" key whose asset library "%s" does not exist.', $id, $definition['drupal']['admin_library']));
+    // }
+    // }
   }
 
   /**
