@@ -367,8 +367,7 @@
       CKEditor5 = module;
 
       const { ClassicEditor } = module;
-      const { toolbar, plugins, config, language } =
-        format.editorSettings;
+      const { toolbar, plugins, config, language } = format.editorSettings;
 
       const corePlugins = plugins.filter((pluginDefinition) => {
         const [, name] = pluginDefinition.split('.');
