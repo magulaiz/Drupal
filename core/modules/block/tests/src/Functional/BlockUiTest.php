@@ -414,7 +414,7 @@ class BlockUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test if drag orienration on block layout page was applied with success.
+   * Test if drag orientation on block layout page was applied with success.
    */
   public function testBlockIconDragOrientation() {
     $this->drupalGet('admin/structure/block');
