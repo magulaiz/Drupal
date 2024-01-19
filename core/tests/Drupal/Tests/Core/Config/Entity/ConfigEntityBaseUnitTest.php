@@ -661,7 +661,6 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // After creating the entity, change the configuration using the entity.
     $entity->set('the_plugin_collection_config', [$instance_id => ['id' => $instance_id, 'foo' => 'new_value']]);
 
-    // Check that the plugin instance value.
     $this->assertSame($expected_value, $instance->getConfiguration()['foo']);
   }
 
