@@ -118,7 +118,7 @@
       dialog.open = false;
 
       domElement.dispatchEvent(
-        new CustomEvent('dialogAfterclose', {
+        new CustomEvent('dialog:afterclose', {
           bubbles: true,
           detail: {
             dialog,

@@ -410,7 +410,7 @@
       if (!once('media-library-clear-selection', 'html').length) {
         return;
       }
-      window.addEventListener('dialogAfterclose', () => {
+      window.addEventListener('dialog:afterclose', () => {
         Drupal.MediaLibrary.currentSelection = [];
       });
     },

@@ -310,7 +310,7 @@
     });
   }
 
-  window.addEventListener('dialogAfterclose', (e) => {
+  window.addEventListener('dialog:afterclose', (e) => {
     const $element = $(e.target);
     if (Drupal.offCanvas.isOffCanvas($element)) {
       // Remove the highlight from all elements.

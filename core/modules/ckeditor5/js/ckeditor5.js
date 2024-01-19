@@ -673,7 +673,7 @@
   });
 
   // Respond to dialogs that are closed, removing the current save handler.
-  window.addEventListener('dialogAfterclose', () => {
+  window.addEventListener('dialog:afterclose', () => {
     if (Drupal.ckeditor5.saveCallback) {
       Drupal.ckeditor5.saveCallback = null;
     }
