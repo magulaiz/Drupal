@@ -2,8 +2,8 @@
 /* cspell:ignore drupalelementstylecommand */
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
-import DrupalElementStyleCommand from './drupalelementstylecommand';
-import { groupNameToModelAttributeKey } from '../utils';
+import DrupalElementStyleCommand from './drupalelementstylecommand.js';
+import { groupNameToModelAttributeKey } from '../utils.js';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting

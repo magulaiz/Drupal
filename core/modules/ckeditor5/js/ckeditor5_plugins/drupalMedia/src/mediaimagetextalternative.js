@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Plugin } from 'ckeditor5/src/core';
-import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediaimagetextalternativeediting';
-import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimagetextalternativeui';
+import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediaimagetextalternativeediting.js';
+import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimagetextalternativeui.js';
 
 /**
  * The media image text alternative plugin.

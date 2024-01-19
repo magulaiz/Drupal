@@ -1,8 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore imagecaption */
 import { Command } from 'ckeditor5/src/core';
-import { getClosestSelectedDrupalMediaElement, isDrupalMedia } from '../utils';
-import { getMediaCaptionFromModelSelection } from './utils';
+import {
+  getClosestSelectedDrupalMediaElement,
+  isDrupalMedia,
+} from '../utils.js';
+import { getMediaCaptionFromModelSelection } from './utils.js';
 
 /**
  * Gets the caption model element from the media model selection.

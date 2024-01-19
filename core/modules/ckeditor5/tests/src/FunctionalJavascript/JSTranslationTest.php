@@ -64,6 +64,8 @@ class JSTranslationTest extends CKEditor5TestBase {
     // @see core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediatoolbar.js
     $locale_storage = $this->container->get('locale.storage');
     $string = $locale_storage->findString(['source' => 'Drupal Media toolbar', 'context' => '']);
+    // I suspect this is failing because CKEditor5 plugins are not currently loaded
+    // via the library API, but as direct imports.
     $this->assertNotEmpty($string, 'String from JavaScript file saved.');
   }
 

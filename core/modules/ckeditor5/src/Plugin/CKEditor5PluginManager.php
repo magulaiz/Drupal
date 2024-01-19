@@ -335,10 +335,16 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       ];
     }
 
-    return [
+    $plugin_config = [
       'plugins' => $this->mergeDefinitionValues('getCKEditor5Plugins', $definitions),
       'config' => NestedArray::mergeDeepArray($config),
     ];
+
+    if ($editor->getFilterFormat()->getHtmlRestrictions() === FALSE) {
+      $plugin_config['noHtmlRestrictions'] = TRUE;
+    }
+
+    return $plugin_config;
   }
 
   /**

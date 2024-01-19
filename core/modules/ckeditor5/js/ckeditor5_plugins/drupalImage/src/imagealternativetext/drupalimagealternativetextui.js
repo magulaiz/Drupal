@@ -10,13 +10,47 @@ import {
   ButtonView,
   ContextualBalloon,
   clickOutsideHandler,
+  BalloonPanelView,
 } from 'ckeditor5/src/ui';
-import {
-  repositionContextualBalloon,
-  getBalloonPositionData,
-} from '@ckeditor/ckeditor5-image/src/image/ui/utils';
-import ImageAlternativeTextFormView from './ui/imagealternativetextformview';
-import MissingAlternativeTextView from './ui/missingalternativetextview';
+// import {
+//   repositionContextualBalloon,
+//   getBalloonPositionData,
+// } from '@ckeditor/ckeditor5-image/src/image/ui/utils';
+import ImageAlternativeTextFormView from './ui/imagealternativetextformview.js';
+import MissingAlternativeTextView from './ui/missingalternativetextview.js';
+
+function getBalloonPositionData(editor) {
+  const editingView = editor.editing.view;
+  const defaultPositions = BalloonPanelView.defaultPositions;
+  const imageUtils = editor.plugins.get('ImageUtils');
+  return {
+    target: editingView.domConverter.mapViewToDom(
+      imageUtils.getClosestSelectedImageWidget(editingView.document.selection),
+    ),
+    positions: [
+      defaultPositions.northArrowSouth,
+      defaultPositions.northArrowSouthWest,
+      defaultPositions.northArrowSouthEast,
+      defaultPositions.southArrowNorth,
+      defaultPositions.southArrowNorthWest,
+      defaultPositions.southArrowNorthEast,
+      defaultPositions.viewportStickyNorth,
+    ],
+  };
+}
+
+function repositionContextualBalloon(editor) {
+  const balloon = editor.plugins.get('ContextualBalloon');
+  const imageUtils = editor.plugins.get('ImageUtils');
+  if (
+    imageUtils.getClosestSelectedImageWidget(
+      editor.editing.view.document.selection,
+    )
+  ) {
+    const position = getBalloonPositionData(editor);
+    balloon.updatePosition(position);
+  }
+}
 
 /**
  * The Drupal-specific image alternative text UI plugin.

@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupalmediacaption drupalmediacaptionediting drupalmediacaptionui */
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalMediaCaptionEditing from './drupalmediacaption/drupalmediacaptionediting';
-import DrupalMediaCaptionUI from './drupalmediacaption/drupalmediacaptionui';
+import DrupalMediaCaptionEditing from './drupalmediacaption/drupalmediacaptionediting.js';
+import DrupalMediaCaptionUI from './drupalmediacaption/drupalmediacaptionui.js';
 
 /**
  * Provides the caption feature on Drupal media elements.

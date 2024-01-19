@@ -3,8 +3,8 @@
 import { Plugin } from 'ckeditor5/src/core';
 import { Element, enablePlaceholder } from 'ckeditor5/src/engine';
 import { toWidgetEditable } from 'ckeditor5/src/widget';
-import { isDrupalMedia } from '../utils';
-import ToggleDrupalMediaCaptionCommand from './drupalmediacaptioncommand';
+import { isDrupalMedia } from '../utils.js';
+import ToggleDrupalMediaCaptionCommand from './drupalmediacaptioncommand.js';
 
 /**
  * A view to model converter for Drupal Media caption.

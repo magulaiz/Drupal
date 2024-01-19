@@ -2,8 +2,8 @@
 /* cspell:ignore drupalimageuploadediting drupalfilerepository */
 
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalImageUploadEditing from './drupalimageuploadediting';
-import DrupalFileRepository from './drupalfilerepository';
+import DrupalImageUploadEditing from './drupalimageuploadediting.js';
+import DrupalFileRepository from './drupalfilerepository.js';
 
 /**
  * Integrates the CKEditor image upload with Drupal.

@@ -3,7 +3,9 @@
  * CKEditor 5 implementation of {@link Drupal.editors} API.
  */
 
-((Drupal, debounce, CKEditor5, $, once) => {
+((Drupal, debounce, $, once) => {
+  let CKEditor5 = {};
+
   /**
    * The CKEditor 5 instances.
    *
@@ -178,16 +180,25 @@
    *   List of JavaScript Classes to add in the extraPlugins property of config.
    */
   function selectPlugins(plugins) {
-    return plugins.map((pluginDefinition) => {
-      const [build, name] = pluginDefinition.split('.');
-      if (CKEditor5[build] && CKEditor5[build][name]) {
-        return CKEditor5[build][name];
-      }
+    return plugins
+      .filter((pluginDefinition) => {
+        const [build, name] = pluginDefinition.split('.');
+        return typeof CKEditor5[name] !== 'undefined';
+      })
+      .map((pluginDefinition) => {
+        const [build, name] = pluginDefinition.split('.');
+        if (typeof CKEditor5[name] !== 'undefined') {
+          return CKEditor5[name];
+        }
+        if (CKEditor5[build] && CKEditor5[build][name]) {
+          return CKEditor5[build][name];
+        }
 
-      // eslint-disable-next-line no-console
-      console.warn(`Failed to load ${build} - ${name}`);
-      return null;
-    });
+        // eslint-disable-next-line no-console
+        console.warn(`Failed to load ${build} - ${name}`);
+        return null;
+      })
+      .filter((item) => item !== null);
   }
 
   /**
@@ -350,13 +361,81 @@
      * @param {string} format
      *   The text format for the editor.
      */
-    attach(element, format) {
-      const { editorClassic } = CKEditor5;
-      const { toolbar, plugins, config, language } = format.editorSettings;
-      const extraPlugins = selectPlugins(plugins);
+    async attach(element, format) {
+      // eslint-disable-next-line import/no-unresolved
+      const module = await import('ckeditor5');
+      console.log('ck5 module', module);
+      CKEditor5 = module;
+
+      const { ClassicEditor } = module;
+      const { toolbar, plugins, config, language, noHtmlRestrictions } =
+        format.editorSettings;
+      //
+      console.log('FORMAT', format);
+      const corePlugins = plugins.filter((pluginDefinition) => {
+        const [, name] = pluginDefinition.split('.');
+        return typeof CKEditor5[name] !== 'undefined';
+      });
+      const nonCorePlugins = plugins.filter(
+        (plugin) => corePlugins.indexOf(plugin) === -1,
+      );
+
+      // This information *should* be available in drupalSettings.ckPluginMap,
+      // but in some tests it isn't present. As a workaround, we add info
+      // for all plugins created by the ckeditor5 module, since we know the
+      // relevant paths.
+
+      const internalLibraryMap = {
+        drupalElementStyle:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        drupalImage:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalImage/src/index.js',
+        drupalImageUpload:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalImage/src/index.js',
+        drupalInsertImage:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalImage/src/index.js',
+        drupalLinkMedia:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        drupalMedia:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        drupalMediaCaption:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        mediaImageTextAlternative:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        mediaImageTextAlternativeEditing:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        mediaImageTextAlternativeUi:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
+        drupalEmphasis:
+          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalEmphasis/src/index.js',
+      };
+
+      const nonCoreImports = {};
+      nonCorePlugins.forEach((plugin) => {
+        const [, name] = plugin.split('.');
+        const lcName = `${name.charAt(0).toLowerCase()}${name.slice(1)}`;
+        const libraryPath =
+          (drupalSettings.ckPluginMap && drupalSettings.ckPluginMap[lcName]) ||
+          internalLibraryMap[lcName];
+
+        if (libraryPath) {
+          nonCoreImports[name] = libraryPath;
+        }
+      });
+
+      const builtInPlugins = selectPlugins(corePlugins);
+
+      nonCoreImports.DrupalHtmlEngine =
+        '/core/modules/ckeditor5/js/ckeditor5_plugins/DrupalHtmlEngine/src/index.js';
+      const additionalPlugins = await Promise.all(
+        Object.entries(nonCoreImports).map(async ([name, path]) => {
+          const imported = await import(path);
+          return imported.default[name];
+        }),
+      );
       const pluginConfig = processConfig(config);
       const editorConfig = {
-        extraPlugins,
+        extraPlugins: [...builtInPlugins, ...additionalPlugins],
         toolbar,
         ...pluginConfig,
         // Language settings have a conflict between the editor localization
@@ -365,8 +444,7 @@
       };
       // Set the id immediately so that it is available when onChange is called.
       const id = setElementId(element);
-      const { ClassicEditor } = editorClassic;
-
+      console.log('editor config for the editor', editorConfig);
       ClassicEditor.create(element, editorConfig)
         .then((editor) => {
           /**
@@ -560,7 +638,6 @@
       };
       const id = setElementId(element);
       const { DecoupledEditor } = editorDecoupled;
-
       DecoupledEditor.create(element, config)
         .then((editor) => {
           Drupal.CKEditor5Instances.set(id, editor);
@@ -681,4 +758,4 @@
       Drupal.ckeditor5.saveCallback = null;
     }
   });
-})(Drupal, Drupal.debounce, CKEditor5, jQuery, once);
+})(Drupal, Drupal.debounce, jQuery, once);

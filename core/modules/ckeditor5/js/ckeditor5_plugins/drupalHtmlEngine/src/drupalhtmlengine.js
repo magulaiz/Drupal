@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore drupalhtmlwriter
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalHtmlWriter from './drupalhtmlwriter';
+import DrupalHtmlWriter from './drupalhtmlwriter.js';
 
 /**
  * A plugin that overrides the CKEditor HTML writer.

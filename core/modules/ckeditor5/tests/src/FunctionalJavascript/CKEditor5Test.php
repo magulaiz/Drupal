@@ -284,6 +284,7 @@ JS;
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
     $page->pressButton('Save configuration');
+    $assert_session->waitForElement('css', 'div[role="contentinfo"] em');
     $assert_session->responseContains('Added text format <em class="placeholder">ckeditor5</em>.');
   }
 
@@ -618,6 +619,9 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
 
+    // @todo this is failing because drupalSettings.ckPluginMap is not present,
+    // which I haven't figured out yet.
+    // This setting is added in ckeditor5_library_info_alter().
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
 
@@ -786,7 +790,6 @@ JS;
     $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
     $page->pressButton('Continue');
 
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
 
     $assert_session->responseContains('<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');

@@ -1,8 +1,8 @@
 // cspell:ignore imageupload insertimage drupalimage drupalimageupload drupalinsertimage
 
-import DrupalImage from './drupalimage';
-import DrupalImageUpload from './imageupload/drupalimageupload';
-import DrupalInsertImage from './insertimage/drupalinsertimage';
+import DrupalImage from './drupalimage.js';
+import DrupalImageUpload from './imageupload/drupalimageupload.js';
+import DrupalInsertImage from './insertimage/drupalinsertimage.js';
 
 /**
  * @private

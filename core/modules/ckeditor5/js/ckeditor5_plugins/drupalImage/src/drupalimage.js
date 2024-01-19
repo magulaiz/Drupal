@@ -2,8 +2,8 @@
 /* cspell:ignore drupalimageediting drupalimagealternativetext */
 
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalImageEditing from './drupalimageediting';
-import DrupalImageAlternativeText from './drupalimagealternativetext';
+import DrupalImageEditing from './drupalimageediting.js';
+import DrupalImageAlternativeText from './drupalimagealternativetext.js';
 
 /**
  * @private

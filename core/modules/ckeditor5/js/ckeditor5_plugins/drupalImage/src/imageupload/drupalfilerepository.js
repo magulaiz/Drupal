@@ -4,7 +4,7 @@
 import { Plugin } from 'ckeditor5/src/core';
 import { FileRepository } from 'ckeditor5/src/upload';
 import { logWarning } from 'ckeditor5/src/utils';
-import DrupalImageUploadAdapter from './drupalimageuploadadapter';
+import DrupalImageUploadAdapter from './drupalimageuploadadapter.js';
 
 /**
  * Provides a Drupal upload adapter.
@@ -31,7 +31,6 @@ export default class DrupalFileRepository extends Plugin {
    */
   init() {
     const options = this.editor.config.get('drupalImageUpload');
-
     if (!options) {
       return;
     }

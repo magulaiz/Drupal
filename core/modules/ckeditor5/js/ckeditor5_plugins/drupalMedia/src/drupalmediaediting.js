@@ -4,9 +4,9 @@
 import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
-import InsertDrupalMediaCommand from './insertdrupalmedia';
-import { getPreviewContainer, isDrupalMedia } from './utils';
-import { METADATA_ERROR } from './mediaimagetextalternative/utils';
+import InsertDrupalMediaCommand from './insertdrupalmedia.js';
+import { getPreviewContainer, isDrupalMedia } from './utils.js';
+import { METADATA_ERROR } from './mediaimagetextalternative/utils.js';
 
 /**
  * @module drupalMedia/drupalmediaediting
