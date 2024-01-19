@@ -189,8 +189,6 @@
       ? this.table.dataset.dragOrientation
       : 'drag';
 
-    console.log(this.dragOrientation);
-
     /**
      * Keeps track of rows that have changed.
      */
