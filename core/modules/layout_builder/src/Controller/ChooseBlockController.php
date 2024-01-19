@@ -220,8 +220,8 @@ class ChooseBlockController implements ContainerInjectionInterface {
 
     foreach (array_keys($inline_blocks) as $block_id) {
       [, $block_bundle] = explode(':', $block_id);
-      $bundle_premission = 'create ' . $block_bundle . ' block content';
-      if (!$this->currentUser->hasPermission($bundle_premission)) {
+      $bundle_permission = 'create ' . $block_bundle . ' block content';
+      if (!$this->currentUser->hasPermission($bundle_permission)) {
         unset($inline_blocks[$block_id]);
       }
     }

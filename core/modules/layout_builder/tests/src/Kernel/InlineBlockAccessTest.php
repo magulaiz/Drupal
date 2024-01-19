@@ -93,7 +93,7 @@ final class InlineBlockAccessTest extends KernelTestBase {
     ]);
     $entity_view_display->enableLayoutBuilder();
     $entity_view_display->save();
-    $entity_view_display->setContextValue('display', $this->entityViewDisplay);
+    $this->sectionStorage->setContextValue('display', $entity_view_display);
 
     // Add 2 blocks to the layout.
     $uuidGenerator = $this->container->get('uuid');
