@@ -275,6 +275,8 @@ class Html {
    *   A \DOMDocument that represents the loaded HTML snippet.
    */
   public static function load($html) {
+    // Instantiate the HTML5 parser, but without the HTML5 namespace being
+    // added to the DOM document.
     $html5 = new HTML5(['disable_html_ns' => TRUE, 'encoding' => 'UTF-8']);
 
     // Attach the provided HTML inside the body. Rely on the HTML5 parser to
