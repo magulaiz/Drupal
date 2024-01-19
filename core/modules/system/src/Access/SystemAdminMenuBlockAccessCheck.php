@@ -82,8 +82,12 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       ->setTopLevelOnly()
       ->onlyEnabledLinks();
 
-    $tree = $this->menuLinkTree->load(NULL, $parameters);
+    $route = $this->router->getRouteCollection()->get($link->getRouteName());
+    if ($route && empty($route->getRequirement('_access_admin_menu_block_page'))) {
+      return AccessResult::allowed();
+    }
 
+    $tree = $this->menuLinkTree->load(NULL, $parameters);
     if (empty($tree)) {
       $route = $this->router->getRouteCollection()->get($link->getRouteName());
       if ($route) {
@@ -99,7 +103,9 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
 
       // If access is allowed to this element in the tree check for access to
       // its own children.
-      return AccessResult::allowedIf($this->hasAccessToChildMenuItems($element->link, $account)->isAllowed());
+      if ($this->hasAccessToChildMenuItems($element->link, $account)->isAllowed()) {
+        return AccessResult::allowed();
+      }
     }
     return AccessResult::neutral();
   }
