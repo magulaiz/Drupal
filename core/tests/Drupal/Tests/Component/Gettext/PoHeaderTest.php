@@ -29,7 +29,7 @@ class PoHeaderTest extends TestCase {
    * @dataProvider providerTestPluralsFormula
    * @covers ::parsePluralForms
    */
-  public function testPluralsFormula($plural, $expected) {
+  public function testPluralsFormula(string $plural, array $expected) {
     $p = new PoHeader();
     $parsed = $p->parsePluralForms($plural);
     [$nplurals, $new_plural] = $parsed;
@@ -376,7 +376,7 @@ class PoHeaderTest extends TestCase {
    * @covers ::setFromString
    * @covers ::__toString
    */
-  public function testSetFromString() {
+  public function testSetFromString(): void {
     $header = "Project-Id-Version: Drupal core (7.11)\n"
       . "POT-Creation-Date: 2012-02-12 22:59+0000\n"
       . "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n
@@ -402,7 +402,7 @@ class PoHeaderTest extends TestCase {
    * @covers ::getLanguageName
    * @covers ::setLanguageName
    */
-  public function testGetSetLanguageName() {
+  public function testGetSetLanguageName(): void {
     $language = 'Spanish';
     $p = new PoHeader();
     $p->setLanguageName($language);
@@ -413,7 +413,7 @@ class PoHeaderTest extends TestCase {
    * @covers ::getProjectName
    * @covers ::setProjectName
    */
-  public function testGetSetProjectName() {
+  public function testGetSetProjectName(): void {
     $project = 'Drupal core';
     $p = new PoHeader();
     $p->setProjectName($project);

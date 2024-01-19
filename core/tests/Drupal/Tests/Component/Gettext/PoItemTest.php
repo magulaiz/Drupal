@@ -33,7 +33,7 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::getLangcode
      * @covers ::setLangcode
      */
-    public function testGetSetLangcode() {
+    public function testGetSetLangcode(): void {
       $langcode = 'es';
       $this->poItem->setLangcode($langcode);
       $this->assertEquals($langcode, $this->poItem->getLangcode());
@@ -43,7 +43,7 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::getContext
      * @covers ::setContext
      */
-    public function testGetSetContext() {
+    public function testGetSetContext(): void {
       $context = 'context';
       $this->poItem->setContext($context);
       $this->assertEquals($context, $this->poItem->getContext());
@@ -53,7 +53,7 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::getSource
      * @covers ::setSource
      */
-    public function testGetSetSource() {
+    public function testGetSetSource(): void {
       $source = 'Source string';
       $this->poItem->setSource($source);
       $this->assertEquals($source, $this->poItem->getSource());
@@ -63,7 +63,7 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::getTranslation
      * @covers ::setTranslation
      */
-    public function testGetSetTranslation() {
+    public function testGetSetTranslation(): void {
       $translation = 'Translated string';
       $this->poItem->setTranslation($translation);
       $this->assertEquals($translation, $this->poItem->getTranslation());
@@ -73,7 +73,7 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::isPlural
      * @covers ::setPlural
      */
-    public function testPlural() {
+    public function testPlural(): void {
       $this->poItem->setPlural(FALSE);
       $this->assertFalse($this->poItem->isPlural());
 
@@ -85,7 +85,7 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::getComment
      * @covers ::setComment
      */
-    public function testGetSetComment() {
+    public function testGetSetComment(): void {
       $comment = 'Translation comment';
       $this->poItem->setComment($comment);
       $this->assertEquals($comment, $this->poItem->getComment());
@@ -100,9 +100,17 @@ namespace Drupal\Tests\Component\Gettext {
      * @covers ::isPlural
      * @covers ::__toString
      * @covers ::formatItem
+     *
+     * @param array $values
+     *   An associative array of expected results.
+     * @param string $expectedOutput
+     *   The expected message.
+     * @param bool $expectedIsPlural
+     *   Whether the PoItem is plural.
+     *
      * @dataProvider setFromArrayDataProvider
      */
-    public function testSetFromArray($values, $expectedOutput, $expectedIsPlural) {
+    public function testSetFromArray(array $values, string $expectedOutput, bool $expectedIsPlural): void {
       $this->poItem->setFromArray($values);
 
       $source = $expectedIsPlural ? explode(\DELIMITER, $values['source']) : $values['source'];
@@ -118,7 +126,7 @@ namespace Drupal\Tests\Component\Gettext {
     /**
      * Data provider for testSetFromArray.
      */
-    public function setFromArrayDataProvider() {
+    public function setFromArrayDataProvider(): array {
       return [
         [
           [
