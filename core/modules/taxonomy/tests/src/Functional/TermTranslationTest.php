@@ -124,13 +124,13 @@ class TermTranslationTest extends TaxonomyTestBase {
 
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
     // Test current language terms are listed(en)
-    $this->drupalget('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/add');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/add');
     $this->assertSession()->pageTextContains('one');
     $this->assertSession()->pageTextContains('two');
     $this->assertSession()->pageTextContains('three');
 
     // Test current language terms are listed(hu)
-    $this->drupalget('hu/admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/add');
+    $this->drupalGet('hu/admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/add');
     $this->assertSession()->pageTextContains('translatedOne');
     $this->assertSession()->pageTextContains('translatedTwo');
     $this->assertSession()->pageTextContains('translatedThree');
