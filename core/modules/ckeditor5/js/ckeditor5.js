@@ -386,29 +386,19 @@
       // The drupalSettings.ckPluginMap is added in ckeditor5_library_info_alter
       // and seems to always work in manual tests, but testEmphasis() confirms
       // there are scenarios where it doesn't work.
+      const prefix = `${drupalSettings.path.baseUrl}core/modules/ckeditor5/js/ckeditor5_plugins/`;
       const internalLibraryMap = {
-        drupalElementStyle:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        drupalImage:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalImage/src/index.js',
-        drupalImageUpload:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalImage/src/index.js',
-        drupalInsertImage:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalImage/src/index.js',
-        drupalLinkMedia:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        drupalMedia:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        drupalMediaCaption:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        mediaImageTextAlternative:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        mediaImageTextAlternativeEditing:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        mediaImageTextAlternativeUi:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js',
-        drupalEmphasis:
-          '/core/modules/ckeditor5/js/ckeditor5_plugins/drupalEmphasis/src/index.js',
+        drupalElementStyle: `${prefix}drupalMedia/src/index.js`,
+        drupalImage: `${prefix}drupalImage/src/index.js`,
+        drupalImageUpload: `${prefix}drupalImage/src/index.js`,
+        drupalInsertImage: `${prefix}drupalImage/src/index.js`,
+        drupalLinkMedia: `${prefix}drupalMedia/src/index.js`,
+        drupalMedia: `${prefix}drupalMedia/src/index.js`,
+        drupalMediaCaption: `${prefix}drupalMedia/src/index.js`,
+        mediaImageTextAlternative: `${prefix}drupalMedia/src/index.js`,
+        mediaImageTextAlternativeEditing: `${prefix}drupalMedia/src/index.js`,
+        mediaImageTextAlternativeUi: `${prefix}drupalMedia/src/index.js`,
+        drupalEmphasis: `${prefix}drupalEmphasis/src/index.js`,
       };
 
       const nonCoreImports = {};
