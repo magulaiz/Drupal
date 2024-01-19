@@ -216,21 +216,24 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->pressButton('Continue');
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
+    $temp_store = \Drupal::service('tempstore.private')->get('field_ui');
+    $field_name = $temp_store->get('temp_name');
     $page->fillField('label', $field_name);
-    $default_value = $assert_session->fieldExists('set_default_value');
-    $default_value->check();
-    $default_input_1_name = 'default_value_input[field_test_field_1][0][value]';
+    $default_input_1_name = "default_value_input[$field_name][0][value]";
     $default_input_1 = $assert_session->fieldExists($default_input_1_name);
     $this->assertFalse($default_input_1->isVisible());
 
+    $default_value = $assert_session->fieldExists('set_default_value');
+    $default_value->check();
     $assert_session->waitForElementVisible('xpath', $default_value->getXpath());
     $default_input_1->setValue('There can be only one!');
-    $default_input_2_name = 'default_value_input[field_test_field_1][1][value]';
+    $default_input_2_name = "default_value_input[$field_name][1][value]";
     $assert_session->fieldNotExists($default_input_2_name);
     $cardinality = $assert_session->fieldExists('field_storage[subform][cardinality_number]');
     $cardinality->setValue(2);
     $default_input_2 = $assert_session->waitForField($default_input_2_name);
     // Ensure the default value for first input is retained.
+    $assert_session->waitForField($default_input_1_name);
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
     $page->findField($default_input_2_name)->setValue('But maybe also two?');
     $cardinality->setValue('1');

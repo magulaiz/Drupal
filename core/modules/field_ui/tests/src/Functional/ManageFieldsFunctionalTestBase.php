@@ -92,6 +92,7 @@ class ManageFieldsFunctionalTestBase extends BrowserTestBase {
       'administer users',
       'administer account settings',
       'administer user display',
+      'administer modules',
     ]);
     $this->drupalLogin($admin_user);
 

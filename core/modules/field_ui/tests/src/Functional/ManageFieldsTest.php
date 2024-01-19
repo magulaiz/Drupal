@@ -242,7 +242,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->getSession()->getPage()->fillField('field_name', 'test_field');
     $this->submitForm([], 'Save settings');
     // An error is thrown only after the final 'Save'.
-    $this->assertSession()->statusMessageContains("An error occurred while saving the field: 'field_storage_config' entity with ID 'node.field_test_field' already exists.");
+    $this->assertSession()->statusMessageContains("The machine-readable name is already in use. It must be unique.");
   }
 
   /**

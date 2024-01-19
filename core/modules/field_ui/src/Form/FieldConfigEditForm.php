@@ -427,6 +427,7 @@ class FieldConfigEditForm extends EntityForm {
       $existing_values = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_config_values'] ?: $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_config_values'];
       $new_entity_values = $existing_values;
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
+      $new_entity_values['translatable'] = TRUE;
       $new_entity_values += [
         'entity_type' => $this->entity->getEntityTypeId(),
         'type' => $this->entity->getType(),
@@ -434,6 +435,8 @@ class FieldConfigEditForm extends EntityForm {
       unset($new_entity_values['label']);
       $new_entity_values['field_storage'] = $this->entityTypeManager->getStorage('field_storage_config')->create($new_entity_values);
       $this->entity->delete();
+      // We don't want the field instance to be translatable tby default.
+      $new_entity_values['translatable'] = FALSE;
       $this->entity = $this->entityTypeManager->getStorage('field_config')->create($new_entity_values);
       $this->copyFormValuesToEntity($this->entity, $form, $form_state);
     }
