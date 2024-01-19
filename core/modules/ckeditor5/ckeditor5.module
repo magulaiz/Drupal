@@ -452,10 +452,11 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
         foreach ($library_data['js'] as $path => $settings) {
           if (str_contains($path, 'build/')) {
             $new_path = str_replace(['build/', '.js'], ['ckeditor5_plugins/', '/src/index.js'], $path);
-            $base_path = base_path();
-            $import_path = "$base_path$extension_path/$new_path";
-            $dr_path = DRUPAL_ROOT . $import_path;
-            $import_file_contents = str_replace("\n", '', file_get_contents($dr_path));
+            $import_path = "$extension_path/$new_path";
+            $dr_path = DRUPAL_ROOT . '/' . $import_path;
+            $contents = file_get_contents($dr_path);
+            assert(is_string($contents), "Need to get contents from file $dr_path");
+            $import_file_contents = str_replace("\n", '', file_get_contents($contents));
             preg_match('/export\s*default\s*\{\s*(.*)\}/', $import_file_contents, $results);
             $exports = explode(',', $results[1]);
             foreach ($exports as $export) {
