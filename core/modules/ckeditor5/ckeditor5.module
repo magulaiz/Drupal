@@ -409,6 +409,8 @@ function _ckeditor5_get_langcode_mapping($lang = FALSE) {
 
 /**
  * Implements hook_library_info_alter().
+ *
+ * @throws \Exception
  */
 function ckeditor5_library_info_alter(&$libraries, $extension) {
   static $definitions = NULL;
@@ -455,14 +457,17 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
             $import_path = "$extension_path/$new_path";
             $dr_path = DRUPAL_ROOT . '/' . $import_path;
             $contents = file_get_contents($dr_path);
+            if (!is_string($contents)) {
+              throw new Exception("COULD NOT GET FILE FROM $dr_path");
+            }
             assert(is_string($contents), "Need to get contents from file $dr_path");
-            $import_file_contents = str_replace("\n", '', file_get_contents($contents));
+            $import_file_contents = str_replace("\n", '', $contents);
             preg_match('/export\s*default\s*\{\s*(.*)\}/', $import_file_contents, $results);
             $exports = explode(',', $results[1]);
             foreach ($exports as $export) {
               $trimmed = trim($export);
               if (!empty($export)) {
-                $library_data['drupalSettings']['ckPluginMap'][lcfirst($trimmed)] = $import_path;
+                $library_data['drupalSettings']['ckPluginMap'][lcfirst($trimmed)] = base_path() . $import_path;
               }
             }
             unset($library_data['js'][$path]);
