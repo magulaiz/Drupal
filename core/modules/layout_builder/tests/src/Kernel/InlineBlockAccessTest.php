@@ -8,6 +8,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\SectionComponent;
+use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -49,6 +50,11 @@ final class InlineBlockAccessTest extends KernelTestBase {
   ];
 
   /**
+   * Section storage used for this test.
+   */
+  private SectionStorageInterface $sectionStorage;
+
+  /**
    * UUIDs of inline blocks added to the test layout.
    */
   private array $uuids;
@@ -80,14 +86,14 @@ final class InlineBlockAccessTest extends KernelTestBase {
     // Set up test section storage.
     $this->sectionStorage = $this->container->get('plugin.manager.layout_builder.section_storage')
       ->createInstance('defaults');
-    $this->entityViewDisplay = $this->container->get('entity_type.manager')->getStorage('entity_view_display')->create([
+    $entity_view_display = $this->container->get('entity_type.manager')->getStorage('entity_view_display')->create([
       'targetEntityType' => 'user',
       'bundle' => 'user',
       'mode' => 'default',
     ]);
-    $this->entityViewDisplay->enableLayoutBuilder();
-    $this->entityViewDisplay->save();
-    $this->sectionStorage->setContextValue('display', $this->entityViewDisplay);
+    $entity_view_display->enableLayoutBuilder();
+    $entity_view_display->save();
+    $entity_view_display->setContextValue('display', $this->entityViewDisplay);
 
     // Add 2 blocks to the layout.
     $uuidGenerator = $this->container->get('uuid');
