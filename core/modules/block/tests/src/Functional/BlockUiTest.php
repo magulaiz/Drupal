@@ -413,4 +413,12 @@ class BlockUiTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
   }
 
+  /**
+   * Test if drag orienration on block layout page was applied with success.
+   */
+  public function testBlockIconDragOrientation() {
+    $this->drupalGet('admin/structure/block');
+    $this->assertSession()->responseContains('<table id="blocks" data-drag-orientation="drag-y" data-drupal-selector="edit-blocks"');
+  }
+
 }
