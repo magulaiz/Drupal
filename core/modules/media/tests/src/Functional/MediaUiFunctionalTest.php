@@ -2,11 +2,6 @@
 
 namespace Drupal\Tests\media\Functional;
 
-use Behat\Mink\Element\NodeElement;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Url;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
