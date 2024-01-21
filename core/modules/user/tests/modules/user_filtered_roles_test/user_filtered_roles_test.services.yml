@@ -1,0 +1,5 @@
+services:
+  user_role_filter_test.role_filter:
+    class: Drupal\user_filtered_roles_test\EventSubscriber\RoleFilterSubscriber
+    tags:
+      - { name: 'event_subscriber' }

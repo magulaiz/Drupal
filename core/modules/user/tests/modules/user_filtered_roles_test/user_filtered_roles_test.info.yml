@@ -1,0 +1,5 @@
+name: 'User role filter test'
+type: module
+description: 'For testing the RoleFilter event'
+package: Testing
+version: VERSION

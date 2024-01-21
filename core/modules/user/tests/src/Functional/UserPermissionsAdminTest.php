@@ -59,4 +59,53 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     ], $role->getPermissions());
   }
 
+  /**
+   * Confirms that RoleFilterEvent can filter the roles UI listing.
+   */
+  public function testRoleFilterEvent() {
+    \Drupal::service('module_installer')->install(['user_permissions_test']);
+    $this->resetAll();
+    $this->rebuildContainer();
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer permissions',
+    ]));
+    $this->drupalGet('admin/people/permissions');
+
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', '.permissions th.checkbox'));
+
+    // Just assert there are greater than 6 permissions available so we know
+    // there are more overall permissions than what appears once the event
+    // subscriber in `user_filtered_permissions_test` is running.
+    $this->assertGreaterThan(1, $items);
+    $this->assertNotFalse(array_search('Anonymous user', $items));
+    $this->assertNotFalse(array_search('Authenticated user', $items));
+
+    $this->drupalGet('admin/people/roles');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody > tr > td:first-child'));
+    $this->assertGreaterThan(1, $items);
+    $this->assertNotFalse(array_search('Anonymous user', $items));
+    $this->assertNotFalse(array_search('Authenticated user', $items));
+
+    // Enable a module that filters anonymous and authenticated roles.
+    \Drupal::service('module_installer')->install(['user_filtered_roles_test']);
+    $this->resetAll();
+    $this->rebuildContainer();
+
+    $this->drupalGet('admin/people/permissions');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', '.permissions th.checkbox'));
+    $this->assertCount(1, $items);
+    $this->assertFalse(array_search('Anonymous user', $items));
+    $this->assertFalse(array_search('Authenticated user', $items));
+
+    $this->drupalGet('admin/people/roles');
+    $items = array_map(fn($item) => $item->getText(),
+      $this->getSession()->getPage()->findAll('css', 'tbody > tr > td:first-child'));
+    $this->assertCount(1, $items);
+    $this->assertFalse(array_search('Anonymous user', $items));
+    $this->assertFalse(array_search('Authenticated user', $items));
+  }
+
 }
