@@ -116,7 +116,8 @@
             "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --"
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
+        "delete-tests": "./core/scripts/delete-tests.sh"
     },
     "repositories": [
         {
