@@ -42,6 +42,32 @@ abstract class ResourceTestBase extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   *
+   * @see $entity
+   */
+  protected static $entityTypeId = 'entity_test';
+
+  /**
+   * {@inheritdoc}
+   *
+   * @see $entity
+   */
+  protected static $resourceTypeName = 'entity_test--entity_test';
+
+  /**
+   * The POST URI.
+   *
+   * @var string
+   */
+  protected static $postUri = '/jsonapi/entity_test/entity_test/field_rest_file_test';
+
+  protected function setUp(): void {
+    parent::setUp();
+    $this->doSetUp();
+  }
+
+  /**
    * Tests GETting an individual resource, plus edge cases to ensure good DX.
    */
   public function testGetIndividual() {
