@@ -144,7 +144,7 @@ class FieldConfigEditForm extends EntityForm {
         '#required' => FALSE,
       ];
     }
-    // $this->addAjaxCallbacks($form['new_storage_wrapper']);
+    $this->addAjaxCallbacks($form['new_storage_wrapper']);
     $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),
