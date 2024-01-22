@@ -83,6 +83,8 @@ image.effect.image_scale_and_crop:
 
 image.settings:
   type: config_object
+  constraints:
+    FullyValidatable: ~
   mapping:
     preview_image:
       type: string
