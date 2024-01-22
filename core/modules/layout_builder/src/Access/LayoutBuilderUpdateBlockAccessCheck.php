@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\Routing\Route;
 
@@ -15,6 +16,16 @@ use Symfony\Component\Routing\Route;
  *   Tagged services are internal.
  */
 class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Block\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
+   *   The Layout Builder tempstore repository service.
+   */
+  public function __construct(
+    protected readonly LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
+  ) {}
 
   /**
    * Checks routing access to the layout.
@@ -36,16 +47,11 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
   public function access(SectionStorageInterface $section_storage, string $delta, string $uuid, AccountInterface $account, Route $route) {
     $section_operation = $route->getRequirement('_layout_builder_update_block_access');
 
-    // Case in tests leading to OutOfBoundsException('Invalid delta "0"').
-    // @todo Investigate.
-    try {
-      $section = $section_storage->getSection($delta);
-      $component = $section->getComponent($uuid);
-      $plugin = $component->getPlugin();
-    }
-    catch (\OutOfBoundsException $e) {
-      $plugin = NULL;
-    }
+    // Load the current state of sections if during edition.
+    $section_storage = $this->layoutTempstoreRepository->get($section_storage);
+    $section = $section_storage->getSection($delta);
+    $component = $section->getComponent($uuid);
+    $plugin = $component->getPlugin();
 
     return $this->doCheckAccess($section_storage, $account, $section_operation, 'edit', $plugin);
   }

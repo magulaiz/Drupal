@@ -222,7 +222,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     $result = AccessResult::allowedIfHasPermissions($account, [
       'configure any layout',
       'create and edit custom blocks',
-    ]);
+    ], 'OR');
     if ($result->isAllowed()) {
       return $result;
     }

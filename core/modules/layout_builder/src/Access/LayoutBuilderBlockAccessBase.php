@@ -28,6 +28,7 @@ abstract class LayoutBuilderBlockAccessBase implements AccessInterface {
     ?BlockPluginInterface $plugin
   ) {
     $access = $section_storage->access($section_operation, $account, TRUE);
+
     if ($plugin instanceof InlineBlock) {
       $access = $access->andIf($plugin->blockOperationAccess($account, $block_operation));
     }
