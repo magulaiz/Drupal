@@ -7,7 +7,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
-use Drupal\Core\File\Exception\FileModeException;
 use Drupal\Core\File\Exception\FileNotExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\NotRegularDirectoryException;
@@ -88,7 +87,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function chmod($uri, $mode = NULL, bool $throw = FALSE) {
+  public function chmod($uri, $mode = NULL) {
     if (!isset($mode)) {
       if (is_dir($uri)) {
         $mode = $this->settings->get('file_chmod_directory', static::CHMOD_DIRECTORY);
@@ -98,14 +97,7 @@ class FileSystem implements FileSystemInterface {
       }
     }
 
-    if (@chmod($uri, $mode)) {
-      return TRUE;
-    }
-
-    if ($throw) {
-      throw new FileModeException("The file permissions could not be set on $uri.");
-    }
-    return FALSE;
+    return @chmod($uri, $mode);
   }
 
   /**
