@@ -146,7 +146,7 @@
    */
   Drupal.behaviors.MediaLibraryViewsDisplay = {
     attach(context) {
-      const $view = context.classList.contains('js-media-library-view')
+      const $view = context?.classList?.contains('js-media-library-view')
         ? $(context)
         : $('.js-media-library-view', context);
 

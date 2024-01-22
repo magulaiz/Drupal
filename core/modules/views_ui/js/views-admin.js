@@ -1027,7 +1027,7 @@
             const $existingOperatorLabel = $firstCell.find(
               '.views-operator-label',
             );
-            if ($nextRow[0].classList.contains('draggable')) {
+            if ($nextRow[0]?.classList.contains('draggable')) {
               // If an operator label was already there, replace it with the new
               // one.
               if ($existingOperatorLabel.length) {

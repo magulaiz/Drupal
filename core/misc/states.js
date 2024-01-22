@@ -722,7 +722,7 @@
           .closest('.js-form-item, .js-form-wrapper')
           .find(label);
         // Avoids duplicate required markers on initialization.
-        if (!$label[0].classList.contains('js-form-required')) {
+        if (!$label[0]?.classList.contains('js-form-required')) {
           $label[0]?.classList.add('js-form-required', 'form-required');
         }
       } else {
