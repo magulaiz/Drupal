@@ -12,6 +12,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
@@ -24,7 +25,7 @@ use Psr\Http\Message\ResponseInterface;
  * @group jsonapi
  * @group #slow
  */
-class FileUploadBehaviorTest extends ResourceTestBase {
+class FileUploadBehaviorTest extends BrowserTestBase {
   use ResourceTestTrait;
 
   /**
