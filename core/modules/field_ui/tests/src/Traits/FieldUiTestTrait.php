@@ -106,9 +106,18 @@ trait FieldUiTestTrait {
       $this->submitForm($prefixed_storage_edit, 'Update settings');
 
       // Third step: 'Field settings' form.
+      $uses_field_name = FALSE;
+      foreach (array_keys($field_edit) as $key) {
+        if (str_contains($key, 'field_')) {
+          $uses_field_name = TRUE;
+        }
+      }
+      if ($field_edit && !$uses_field_name) {
+        $field_edit_ini = array_merge($field_edit_ini, $field_edit);
+      }
       $this->submitForm($field_edit_ini, 'Save settings');
       $this->assertSession()->pageTextContains("Saved $label configuration.");
-      if ($field_edit) {
+      if ($field_edit && $uses_field_name) {
         $this->drupalGet($base_bundle_path . "/fields/node.$bundle.field_$field_name");
         $this->submitForm($field_edit, 'Save settings');
         $this->assertSession()->pageTextContains("Saved $label configuration.");

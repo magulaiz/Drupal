@@ -366,7 +366,8 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
     $boolean_field->click();
     $page->findButton('Continue')->click();
-    $page->findButton('Continue')->click();
+    $this->submitForm([], 'Save settings');
+    file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html',$this->getSession()->getPage()->getContent());
     $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
   }
 
