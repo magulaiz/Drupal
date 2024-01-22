@@ -1,17 +1,16 @@
 #!/bin/bash
 
-export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
 git fetch -vn --depth=3 origin "+${CI_MERGE_REQUEST_DIFF_BASE_SHA}:${CI_MERGE_REQUEST_DIFF_BASE_SHA}"
+git log -1 ${CI_MERGE_REQUEST_DIFF_BASE_SHA}
 
-echo "ℹ️ Changes from ${TARGET_BRANCH}"
+echo "ℹ️ Changes from ${CI_MERGE_REQUEST_DIFF_BASE_SHA}"
 git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only
-echo "If this list contains more files than what you changed, then you need to rebase your branch."
 
 echo "1️⃣ Reverting non test changes"
 if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
 git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
   echo "↩️ Reverting $file";
-  git checkout refs/heads/${TARGET_BRANCH} -- $file;
+  git checkout ${CI_MERGE_REQUEST_DIFF_BASE_SHA} -- $file;
 done
 fi
 if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
