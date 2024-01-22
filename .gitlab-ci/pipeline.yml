@@ -219,7 +219,7 @@ variables:
   variables:
     KUBERNETES_CPU_REQUEST: "24"
     FF_NETWORK_PER_BUILD: 1
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://chrome:9515"]'
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
   tags:
     - performance-test-runner
   services:
