@@ -447,7 +447,7 @@
           // current language.
         }
       }
-      console.log('editor config', editorConfig);
+
       ClassicEditor.create(element, editorConfig)
         .then((editor) => {
           /**
