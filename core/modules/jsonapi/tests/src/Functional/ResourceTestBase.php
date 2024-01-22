@@ -60,6 +60,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $resourceTypeName = 'entity_test--entity_test';
 
   /**
+   * Whether the tested JSON:API resource is versionable.
+   *
+   * @var bool
+   */
+  protected static $resourceTypeIsVersionable = FALSE;
+
+  /**
    * The POST URI.
    *
    * @var string
