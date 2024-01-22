@@ -8,7 +8,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Entity\Entity\EntityLinkSuggester;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
@@ -41,6 +41,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     'datetime_range',
     'language',
     'content_translation',
+    'system',
   ];
 
   /**
@@ -48,6 +49,11 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // Ensure core/modules/system/config/install/core.entity_link_suggester.everything.yml
+    // is installed.
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->installConfig(['system']);
 
     // Create text format, associate CKEditor 5, validate.
     FilterFormat::create([
@@ -78,7 +84,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
           // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::defaultConfiguration()
           'ckeditor5_link_entity_suggestions' => [
             'allow_download_links' => TRUE,
-            'suggestions' => NULL,
+            'suggester' => 'core.entity_link_suggester.everything',
           ],
         ],
       ],
@@ -116,12 +122,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $user->save();
     $this->container->get('current_user')->setAccount($user);
 
-    DateFormat::create([
-      'id' => 'fallback',
-      'label' => 'Fallback',
-      'pattern' => 'Y-m-d',
-    ])->save();
-
     // Create the translation language.
     $this->installConfig(['language']);
     ConfigurableLanguage::createFromLangcode('de')->save();
@@ -138,6 +138,38 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'title' => 'Deutsch foo',
     ])->setCreatedTime(1695058272);
     $translation->save();
+
+    // Create various other EntityLinkSuggesters:
+    EntityLinkSuggester::create([
+      'admin_label' => 'Nodes only',
+      'id' => 'nodes_only',
+      'entity_types' => [
+        'node' => [
+          'entity_type' => 'node',
+          'bundles' => NULL,
+        ],
+      ],
+    ])->save();
+    EntityLinkSuggester::create([
+      'admin_label' => 'Articles only',
+      'id' => 'articles_only',
+      'entity_types' => [
+        'node' => [
+          'entity_type' => 'node',
+          'bundles' => ['article'],
+        ],
+      ],
+    ])->save();
+    EntityLinkSuggester::create([
+      'admin_label' => 'Users only',
+      'id' => 'users_only',
+      'entity_types' => [
+        'node' => [
+          'entity_type' => 'user',
+          'bundles' => NULL,
+        ],
+      ],
+    ])->save();
   }
 
   /**
@@ -148,7 +180,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    */
   public function providerEntityLinkSuggestions(): \Generator {
     $suggestion_node_1_en = [
-      'description' => 'by sofie on 2023-09-19',
+      'description' => 'by sofie on Tue, 09/19/2023 - 03:31',
       'entity_type_id' => 'node',
       'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
       'group' => 'Content - Basic page',
@@ -159,7 +191,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
     $suggestion_node_1_de = [
-      'description' => 'by sofie on 2023-09-19',
+      'description' => 'by sofie on Tue, 09/19/2023 - 03:31',
       'entity_type_id' => 'node',
       'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
       'group' => 'Content - Basic page',
@@ -171,7 +203,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ];
 
     $suggestion_user_1 = [
-      'description' => 'on 1992-01-06',
+      'description' => 'on Mon, 01/06/1992 - 23:52',
       'entity_type_id' => 'user',
       'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b08',
       'group' => 'User',
@@ -186,7 +218,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="f"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => NULL,
+        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'search term' => 'f',
       'host entity type' => 'node',
@@ -199,7 +231,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=default (everything), host entity type=user, host entity langcode=en, search term="f"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => NULL,
+        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'search term' => 'f',
       'host entity type' => 'user',
@@ -214,9 +246,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => [
-          ['entity_type_id' => 'node', 'bundles' => NULL],
-        ],
+        'suggester' => 'core.entity_link_suggester.nodes_only',
       ],
       'search term' => 'f',
       'host entity type' => 'node',
@@ -228,9 +258,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=users only, host entity type=node, host entity langcode=en, search term="f"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => [
-          ['entity_type_id' => 'user', 'bundles' => NULL],
-        ],
+        'suggester' => 'core.entity_link_suggester.users_only',
       ],
       'search term' => 'f',
       'host entity type' => 'node',
@@ -244,9 +272,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=article nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => [
-          ['entity_type_id' => 'node', 'bundles' => ['article']],
-        ],
+        'suggester' => 'core.entity_link_suggester.articles_only',
       ],
       'search term' => 'f',
       'host entity type' => 'node',
@@ -265,7 +291,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="fo"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => NULL,
+        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'search term' => 'fo',
       'host entity type' => 'node',
@@ -277,7 +303,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="fo"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => NULL,
+        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'search term' => 'fo',
       'host entity type' => 'node',
@@ -292,7 +318,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="Deutsch"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => NULL,
+        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'search term' => 'Deutsch',
       'host entity type' => 'node',
@@ -304,7 +330,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="Deutsch"' => [
       'configuration' => [
         'allow_download_links' => TRUE,
-        'suggestions' => NULL,
+        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'search term' => 'Deutsch',
       'host entity type' => 'node',
