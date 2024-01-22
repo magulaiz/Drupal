@@ -52,7 +52,7 @@ class HandlerAllTest extends ViewsKernelTestBase {
   /**
    * Tests most of the handlers.
    */
-  public function testHandlers() {
+  public function testHandlers(): void {
     $this->installEntitySchema('comment');
     $this->installEntitySchema('file');
     $this->installEntitySchema('node');
