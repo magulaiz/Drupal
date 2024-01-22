@@ -53,27 +53,6 @@ trait ResourceTestTrait {
   use JsonApiRequestTestTrait;
 
   /**
-   * The tested entity type.
-   *
-   * @var string
-   */
-  protected static $entityTypeId = NULL;
-
-  /**
-   * The name of the tested JSON:API resource type.
-   *
-   * @var string
-   */
-  protected static $resourceTypeName = NULL;
-
-  /**
-   * Whether the tested JSON:API resource is versionable.
-   *
-   * @var bool
-   */
-  protected static $resourceTypeIsVersionable = FALSE;
-
-  /**
    * The JSON:API resource type for the tested entity type plus bundle.
    *
    * Necessary for looking up public (alias) or internal (actual) field names.
