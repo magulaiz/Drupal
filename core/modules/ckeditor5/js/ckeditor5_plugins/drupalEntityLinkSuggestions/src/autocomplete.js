@@ -1,4 +1,4 @@
-/* eslint-disable no-var, camelcase, prefer-template, no-use-before-define, vars-on-top, jquery/no-val */
+/* eslint-disable no-var, prefer-template, no-use-before-define, vars-on-top, jquery/no-val */
 // cspell:ignore linkit
 
 const $ = jQuery;
