@@ -289,13 +289,11 @@ class EntityLinksTest extends KernelTestBase {
 
     $expected_url = str_replace('<SITE_DIRECTORY>', $this->siteDirectory, $expected_url);
     $download_attribute_or_not = $has_download_attribute ? ' download' : '';
-    // @todo Remove this in https://www.drupal.org/project/drupal/issues/2441811.
-    $download_attribute_or_not_filtered = $has_download_attribute ? ' download=""' : '';
     $this->assertFilterProcessResult(
       '<a data-entity-type="media" data-entity-uuid="' . $media->uuid() . '"' . $download_attribute_or_not . ' href="something?query=string#fragment">Link text</a>',
       'en',
       (new FilterProcessResult())
-        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s"%s href="%s?query=string#fragment">Link text</a>', $media->uuid(), $download_attribute_or_not_filtered, $expected_url))
+        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s"%s href="%s?query=string#fragment">Link text</a>', $media->uuid(), $download_attribute_or_not, $expected_url))
         ->setCacheTags($expected_cache_tags)
         ->setCacheContexts([])
         ->setCacheMaxAge(Cache::PERMANENT)
