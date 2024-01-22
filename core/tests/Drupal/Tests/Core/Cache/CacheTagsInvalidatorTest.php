@@ -7,7 +7,6 @@ namespace Drupal\Tests\Core\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidator;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
-use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
 
 /**
