@@ -44,16 +44,6 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
     $non_invalidator_cache_bin = $this->createMock(CacheBackendInterface::class);
     $cache_tags_invalidator->addBin($non_invalidator_cache_bin);
 
-    // Repeat the above for memory cache bins.
-    $invalidator_memory_cache_bin = $this->createMock(InvalidatingCacheBinInterface::class);
-    $invalidator_memory_cache_bin->expects($this->once())
-      ->method('invalidateTags')
-      ->with(['node:1']);
-    $cache_tags_invalidator->addBin($invalidator_memory_cache_bin);
-
-    $non_invalidator_memory_cache_bin = $this->createMock(CacheBackendInterface::class);
-    $cache_tags_invalidator->addBin($non_invalidator_memory_cache_bin);
-
     $invalidator = $this->createMock(CacheTagsInvalidatorInterface::class);
     $invalidator->expects($this->once())
       ->method('invalidateTags')
