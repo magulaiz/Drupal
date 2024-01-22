@@ -793,6 +793,8 @@ function ckeditor5_preprocess_html(&$variables) {
       'ckeditor5/src/clipboard' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
       '@ckeditor/ckeditor5-image/src/image/imageloadobserver' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
       '@ckeditor/ckeditor5-image/src/imagetextalternative/imagetextalternativecommand' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'cktranslations/' => base_path() . 'core/assets/vendor/ckeditor5/ckeditor5-dll/translations/',
+
     ],
   ]);
   $importmap = [

@@ -436,6 +436,18 @@
       // Set the id immediately so that it is available when onChange is called.
       const id = setElementId(element);
 
+      if (drupalSettings.path.currentLanguage) {
+        try {
+          const translations = await import(
+            `cktranslations/${drupalSettings.path.currentLanguage}.js`
+          );
+          editorConfig.translations = translations;
+        } catch (err) {
+          // Intentionally empty - it just means no translation file for the
+          // current language.
+        }
+      }
+      console.log('editor config', editorConfig);
       ClassicEditor.create(element, editorConfig)
         .then((editor) => {
           /**
