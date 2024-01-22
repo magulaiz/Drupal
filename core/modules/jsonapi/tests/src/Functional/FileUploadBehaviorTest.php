@@ -67,6 +67,13 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    */
   protected static $postUri = '/jsonapi/entity_test/entity_test/field_rest_file_test';
 
+ /**
+   * Whether the tested JSON:API resource is versionable.
+   *
+   * @var bool
+   */
+  protected static $resourceTypeIsVersionable = FALSE;
+
   /**
    * Test file data.
    *
