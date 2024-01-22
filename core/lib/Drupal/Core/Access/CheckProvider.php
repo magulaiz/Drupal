@@ -62,7 +62,7 @@ class CheckProvider implements CheckProviderInterface {
    */
   public function __construct(
     array $dynamic_requirements_map,
-    protected ContainerInterface $container,
+    protected readonly ContainerInterface $container,
   ) {
     $this->dynamicRequirementMap = $dynamic_requirements_map;
   }
