@@ -27,6 +27,7 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
   /**
    * @covers ::invalidateTags
    * @covers ::addInvalidator
+   * @covers ::addBin
    */
   public function testInvalidateTags() {
     $cache_tags_invalidator = new CacheTagsInvalidator();
