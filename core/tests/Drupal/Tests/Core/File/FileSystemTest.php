@@ -82,8 +82,16 @@ class FileSystemTest extends UnitTestCase {
    */
   public function testChmodUnsuccessful() {
     vfsStream::setup('dir');
+    $this->assertFalse($this->fileSystem->chmod('vfs://dir/test.txt'));
+  }
+
+  /**
+   * @covers ::chmod
+   */
+  public function testChmodUnsuccessfulThrow() {
+    vfsStream::setup('dir');
     $this->expectException(FileModeException::class);
-    $this->fileSystem->chmod('vfs://dir/test.txt');
+    $this->fileSystem->chmod('vfs://dir/test.txt', NULL, TRUE);
   }
 
   /**

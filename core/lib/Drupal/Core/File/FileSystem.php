@@ -88,7 +88,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function chmod($uri, $mode = NULL) {
+  public function chmod($uri, $mode = NULL, bool $throw = FALSE) {
     if (!isset($mode)) {
       if (is_dir($uri)) {
         $mode = $this->settings->get('file_chmod_directory', static::CHMOD_DIRECTORY);
@@ -102,7 +102,10 @@ class FileSystem implements FileSystemInterface {
       return TRUE;
     }
 
-    throw new FileModeException("The file permissions could not be set on $uri.");
+    if ($throw) {
+      throw new FileModeException("The file permissions could not be set on $uri.");
+    }
+    return FALSE;
   }
 
   /**

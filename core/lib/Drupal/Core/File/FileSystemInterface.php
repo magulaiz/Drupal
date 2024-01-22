@@ -88,13 +88,16 @@ interface FileSystemInterface {
    * @param int $mode
    *   Integer value for the permissions. Consult PHP chmod() documentation for
    *   more information.
+   * @param bool $throw
+   *   (optional) Indicates if an exception should be thrown on failure.
+   *   Defaults to FALSE.
    *
    * @return bool
    *   TRUE for success, FALSE in the event of an error.
    *
    * @ingroup php_wrappers
    */
-  public function chmod($uri, $mode = NULL);
+  public function chmod($uri, $mode = NULL, bool $throw = FALSE);
 
   /**
    * Deletes a file.
