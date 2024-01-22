@@ -29,11 +29,11 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
                   [attribute]: value,
                 }
               : // Special case: the "download" attribute.
-              // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
-              // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
-              value === true
-              ? { download: '' }
-              : {},
+                // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
+                // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
+                value === true
+                ? { download: '' }
+                : {},
             { priority: 5 },
           );
 
