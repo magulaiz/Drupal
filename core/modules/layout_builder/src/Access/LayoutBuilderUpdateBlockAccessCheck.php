@@ -4,6 +4,7 @@ namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\Routing\Route;
 
@@ -45,15 +46,19 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
    *   The access result.
    */
   public function access(SectionStorageInterface $section_storage, string $delta, string $uuid, AccountInterface $account, Route $route) {
-    $section_operation = $route->getRequirement('_layout_builder_update_block_access');
+    $access = parent::baseAccess($section_storage, $account, $route->getRequirement('_layout_builder_update_block_access'));
+    if ($access->isAllowed()) {
+      // Load the current state of sections if during edition.
+      $section_storage = $this->layoutTempstoreRepository->get($section_storage);
+      $section = $section_storage->getSection($delta);
+      $component = $section->getComponent($uuid);
+      $plugin = $component->getPlugin();
+      if ($plugin instanceof InlineBlock) {
+        $access = $access->andIf($plugin->blockOperationAccess($account, 'edit'));
+      }
+    }
 
-    // Load the current state of sections if during edition.
-    $section_storage = $this->layoutTempstoreRepository->get($section_storage);
-    $section = $section_storage->getSection($delta);
-    $component = $section->getComponent($uuid);
-    $plugin = $component->getPlugin();
-
-    return $this->doCheckAccess($section_storage, $account, $section_operation, 'edit', $plugin);
+    return $access;
   }
 
 }

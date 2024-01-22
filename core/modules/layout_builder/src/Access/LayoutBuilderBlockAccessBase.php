@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\SectionStorageInterface;
 
 /**
@@ -18,20 +16,14 @@ use Drupal\layout_builder\SectionStorageInterface;
 abstract class LayoutBuilderBlockAccessBase implements AccessInterface {
 
   /**
-   * The actual access checker that uses the block plugin.
+   * Checks base route access requirements.
    */
-  protected function doCheckAccess(
+  protected function baseAccess(
     SectionStorageInterface $section_storage,
     AccountInterface $account,
     string $section_operation,
-    string $block_operation,
-    ?BlockPluginInterface $plugin
-  ) {
+  ): AccessResult {
     $access = $section_storage->access($section_operation, $account, TRUE);
-
-    if ($plugin instanceof InlineBlock) {
-      $access = $access->andIf($plugin->blockOperationAccess($account, $block_operation));
-    }
 
     // Check for the global permission unless the section storage checks
     // permissions itself.

@@ -23,6 +23,7 @@ use Drupal\layout_builder\Form\DefaultsEntityForm;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\layout_builder\Form\OverridesEntityForm;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
@@ -268,6 +269,11 @@ function layout_builder_block_content_access(EntityInterface $entity, $operation
 
   if ($account->hasPermission('create and edit custom blocks')) {
     return AccessResult::allowed();
+  }
+  if ($account->hasPermission('create and edit accessible custom blocks')) {
+    if ($account->hasPermission(InlineBlock::getBundlePermission($entity->bundle(), $operation))) {
+      return AccessResult::allowed();
+    }
   }
   return AccessResult::forbidden();
 }
