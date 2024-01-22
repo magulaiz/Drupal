@@ -49,7 +49,6 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'create and edit custom blocks',
       'access contextual links',
     ]));
   }
