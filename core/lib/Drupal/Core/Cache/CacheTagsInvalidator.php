@@ -21,7 +21,7 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface[]
    */
-  protected $bins = [];
+  protected array $bins = [];
 
   /**
    * {@inheritdoc}
