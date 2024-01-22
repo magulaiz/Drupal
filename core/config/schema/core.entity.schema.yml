@@ -1,8 +1,8 @@
 # Schema for Configuration files of the entity module.
 
-core.entity_link_suggestions.*:
+core.entity_link_suggester.*:
   type: config_entity
-  label: 'Entity Link Suggestions'
+  label: 'Entity Link Suggester'
   mapping:
     id:
       type: machine_name
@@ -21,8 +21,9 @@ core.entity_link_suggestions.*:
         NotBlank:
           allowNull: true
           message: "Allow suggestions for at least one entity type, or specify null to allow suggestions for all."
-        UniqueLabelInList:
-          labelKey: entity_type
+        # @todo Move this constraint out of the CKEditor 5 module, into core.
+        #UniqueLabelInList:
+        #  labelKey: entity_type
       sequence:
         type: mapping
         mapping:
