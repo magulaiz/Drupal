@@ -42,16 +42,16 @@ function renderItem(ul, item) {
 function renderMenu(ul, items) {
   var self = this.element.autocomplete('instance');
 
-  var grouped_items = {};
+  var groupedItems = {};
   items.forEach(function (item) {
     const group = item.hasOwnProperty('group') ? item.group : '';
-    if (!grouped_items.hasOwnProperty(group)) {
-      grouped_items[group] = [];
+    if (!groupedItems.hasOwnProperty(group)) {
+      groupedItems[group] = [];
     }
-    grouped_items[group].push(item);
+    groupedItems[group].push(item);
   });
 
-  $.each(grouped_items, function (group, items) {
+  $.each(groupedItems, function (group, items) {
     if (group.length) {
       ul.append(
         '<li class="linkit-result-line--group ui-menu-divider">' +
