@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Asset;
 
-@trigger_error('The ' . __NAMESPACE__ . '\JsCollectionOptimizer is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use ' . __NAMESPACE__ . '\JsCollectionOptimizerLazy. See https://www.drupal.org/node/2888767', E_USER_DEPRECATED);
-
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -67,6 +65,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    *   The file system service.
    */
   public function __construct(AssetCollectionGrouperInterface $grouper, AssetOptimizerInterface $optimizer, AssetDumperInterface $dumper, StateInterface $state, FileSystemInterface $file_system) {
+    @trigger_error('The ' . __NAMESPACE__ . '\JsCollectionOptimizer is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use ' . __NAMESPACE__ . '\JsCollectionOptimizerLazy. See https://www.drupal.org/node/2888767', E_USER_DEPRECATED);
     $this->grouper = $grouper;
     $this->optimizer = $optimizer;
     $this->dumper = $dumper;
