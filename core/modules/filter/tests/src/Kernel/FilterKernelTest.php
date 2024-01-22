@@ -413,10 +413,10 @@ class FilterKernelTest extends KernelTestBase {
     // here.
     // cSpell:disable
     $tests = [
-      // Single line breaks should be changed to <br /> tags, while paragraphs
+      // Single line breaks should be changed to <br> tags, while paragraphs
       // separated with double line breaks should be enclosed with <p></p> tags.
       "aaa\nbbb\n\nccc" => [
-        "<p>aaa<br />\nbbb</p>\n<p>ccc</p>" => TRUE,
+        "<p>aaa<br>\nbbb</p>\n<p>ccc</p>" => TRUE,
       ],
       // Skip contents of certain block tags entirely.
       "<script>aaa\nbbb\n\nccc</script>
@@ -449,7 +449,7 @@ class FilterKernelTest extends KernelTestBase {
       ],
       "<pre>aaa\nbbb\nccc</pre>\nddd\neee" => [
         "<pre>aaa\nbbb\nccc</pre>" => TRUE,
-        "<p>ddd<br />\neee</p>" => TRUE,
+        "<p>ddd<br>\neee</p>" => TRUE,
       ],
       // Comments remain unchanged and subsequent lines/paragraphs are
       // transformed normally.
@@ -1064,8 +1064,8 @@ class FilterKernelTest extends KernelTestBase {
     $f = Html::normalize('<img src="http://example.com/test.jpg">test</img>');
     $this->assertEquals('<img src="http://example.com/test.jpg">test', $f, 'HTML corrector -- Fix self-closing single tags.');
 
-    $f = Html::normalize('<br></br>');
-    $this->assertEquals('<br><br>', $f, "HTML corrector -- Transform empty tags to a self-closed tag if the tag's content model is EMPTY.");
+    $f = Html::normalize('<br>');
+    $this->assertEquals('<br>', $f, "HTML corrector -- Transform empty tags to a self-closed tag if the tag's content model is EMPTY.");
 
     $f = Html::normalize('<div></div>');
     $this->assertEquals('<div></div>', $f, "HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY.");
