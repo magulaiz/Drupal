@@ -31,7 +31,7 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
   public function testInvalidateTags() {
     $cache_tags_invalidator = new CacheTagsInvalidator();
 
-    $invalidator_cache_bin = $this->createMock(InvalidatingCacheBinInterface::class);
+    $invalidator_cache_bin = $this->createMock(InvalidatingCacheBackendInterface::class);
     $invalidator_cache_bin->expects($this->once())
       ->method('invalidateTags')
       ->with(['node:1']);
@@ -54,4 +54,4 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
 
 }
 
-interface InvalidatingCacheBinInterface extends CacheTagsInvalidatorInterface, CacheBackendInterface {}
+interface InvalidatingCacheBackendInterface extends CacheTagsInvalidatorInterface, CacheBackendInterface {}
