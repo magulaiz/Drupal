@@ -144,7 +144,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Load the database(s).
     foreach ($this->databaseDumpFiles as $file) {
-      if (substr($file, -3) == '.gz') {
+      if (str_ends_with($file, '.gz')) {
         $file = "compress.zlib://$file";
       }
       require $file;
@@ -182,7 +182,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     ];
 
     // Force every update hook to only run one entity per batch.
-    $settings['entity_update_batch_size'] = (object) [
+    $settings['settings']['entity_update_batch_size'] = (object) [
       'value' => 1,
       'required' => TRUE,
     ];

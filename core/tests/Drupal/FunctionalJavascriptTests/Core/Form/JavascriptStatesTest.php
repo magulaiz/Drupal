@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Core\Form;
 
 use Drupal\filter\Entity\FilterFormat;
@@ -25,7 +27,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['form_test'];
+  protected static $modules = ['form_test', 'big_pipe'];
 
   /**
    * {@inheritdoc}
