@@ -1608,10 +1608,16 @@ function install_profile_modules(&$install_state) {
   arsort($non_required);
 
   $batch_builder = new BatchBuilder();
-  foreach ($required + $non_required as $module => $weight) {
+  $module_groups = array_chunk($required + $non_required, Settings::get('core.multi-module-install', 20), TRUE);
+
+  foreach ($module_groups as $module_group) {
+    $names = [];
+    foreach ($module_group as $module => $weight) {
+      $names[] = $files[$module]->info['name'];
+    }
     $batch_builder->addOperation(
       '_install_module_batch',
-      [$module, $files[$module]->info['name']],
+      [array_keys($module_group), $names],
     );
   }
   $batch_builder
@@ -1913,9 +1919,10 @@ function install_finished(&$install_state) {
  * Performs batch installation of modules.
  */
 function _install_module_batch($module, $module_name, &$context) {
-  \Drupal::service('module_installer')->install([$module], FALSE);
-  $context['results'][] = $module;
-  $context['message'] = t('Installed %module module.', ['%module' => $module_name]);
+  $module = (array) $module;
+  \Drupal::service('module_installer')->install($module, FALSE);
+  $context['results'] = array_merge($context['results'], $module);
+  $context['message'] = t('Installed %module module(s).', ['%module' => implode(', ', $module_name)]);
 }
 
 /**
