@@ -4,7 +4,7 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\media\MediaTranslationHandler;
 
 /**
  * Tests multilanguage fields logic.
@@ -58,7 +58,7 @@ class MediaTranslationTest extends MediaKernelTestBase {
 
     // Check if the translation handler uses the content_translation handler.
     $translation_handler_class = $entity_type->getHandlerClass('translation');
-    $this->assertEquals(ContentTranslationHandler::class, $translation_handler_class, 'Translation handler is set to use the content_translation handler.');
+    $this->assertEquals(MediaTranslationHandler::class, $translation_handler_class, 'Translation handler is set to use the content_translation handler.');
 
     // Prepare the field translations.
     $source_field_definition = $this->testTranslationMediaType->getSource()->getSourceFieldDefinition($this->testTranslationMediaType);
