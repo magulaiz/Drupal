@@ -12,10 +12,22 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Defines the entity links suggester configuration entity class.
  *
- * Entity link suggesters …
+ * Entity link suggesters allow crafting a consistent linking experience across
+ * forms, entity types, fields and widgets. Each entity link suggester can be
+ * configured to suggest links for all every (linkable) entity type or for only
+ * a subset of (linkable) entity types. For each entity type that has bundles,
+ * it's possible to restrict to a subset of those as well.
+ * Entity link suggesters do not perform the actual querying. They only contain
+ * instructions to be followed. It is strongly recommended to not use entity
+ * queries, but to use entity reference selection plugins to perform the actual
+ * querying.
  *
- * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllFormModes()
- * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModes()
+ * @see \Drupal\Core\Entity\Entity\EntityLinkSuggesterInterface::isLinkableEntityType
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
+ *
+ * The CKEditor 5 module provides a sample implementation.
+ *
+ * @see \Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::getSuggestions()
  *
  * @ConfigEntityType(
  *   id = "entity_link_suggester",
@@ -46,7 +58,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "admin_label"
+ *     "label" = "admin_label",
  *   },
  *   config_export = {
  *     "id",
