@@ -122,7 +122,7 @@ class CacheBackendDecorator implements CacheBackendInterface, CacheTagsInvalidat
     $start = microtime(TRUE);
     $this->cacheBackend->invalidate($cid);
     $stop = microtime(TRUE);
-    $this->logCacheOperation($cids, $start, $stop, 'invalidate');
+    $this->logCacheOperation($cid, $start, $stop, 'invalidate');
   }
 
   /**
