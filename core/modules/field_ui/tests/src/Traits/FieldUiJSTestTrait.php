@@ -64,6 +64,7 @@ trait FieldUiJSTestTrait {
     $field_field_name = $page->findField('field_name');
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
+    $this->assertSession()->waitForField('description');
     $page->findField('description')->focus();
     $this->assertSession()->assertWaitOnAjaxRequest();
     if ($save_settings) {
