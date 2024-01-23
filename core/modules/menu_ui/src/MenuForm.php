@@ -168,9 +168,7 @@ class MenuForm extends EntityForm {
     if ($this->entityTypeManager->getStorage('menu')->getQuery()->condition('id', $value)->range(0, 1)->count()->execute()) {
       return TRUE;
     }
-
-    // Check for a link assigned to this menu.
-    return $this->menuLinkManager->menuNameInUse($value);
+    return FALSE;
   }
 
   /**
