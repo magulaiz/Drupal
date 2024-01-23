@@ -71,8 +71,6 @@ class CKEditor5ImageController extends ControllerBase {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|null $event_dispatcher
    *   The event dispatcher.
    * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
-   *   The CKEditor 5 plugin manager.
-   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface|null $pluginManager
    *   The file validator.
    */
   public function __construct(
