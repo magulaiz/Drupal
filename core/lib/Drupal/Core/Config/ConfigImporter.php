@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -750,10 +751,16 @@ class ConfigImporter {
       foreach ($types as $type) {
         $unprocessed = $this->getUnprocessedExtensions($type);
         if (!empty($unprocessed[$op])) {
+          if ($type === 'module' && $op === 'install') {
+            $name = array_slice($unprocessed[$op], 0, Settings::get('core.multi-module-install', 20));
+          }
+          else {
+            $name = array_shift($unprocessed[$op]);
+          }
           return [
             'op' => $op,
             'type' => $type,
-            'name' => array_shift($unprocessed[$op]),
+            'name' => $name,
           ];
         }
       }
@@ -865,16 +872,17 @@ class ConfigImporter {
    *   The type of extension, either 'module' or 'theme'.
    * @param string $op
    *   The change operation.
-   * @param string $name
-   *   The name of the extension to process.
+   * @param string|array $names
+   *   The name or names of the extension to process.
    */
-  protected function processExtension($type, $op, $name) {
+  protected function processExtension($type, $op, $names) {
+    $names = (array) $names;
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op([$name], FALSE);
+      $this->moduleInstaller->$op($names, FALSE);
       // Installing a module can cause a kernel boot therefore inject all the
       // services again.
       $this->reInjectMe();
@@ -893,10 +901,11 @@ class ConfigImporter {
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;
       }
-      \Drupal::service('theme_installer')->$op([$name]);
+      \Drupal::service('theme_installer')->$op($names);
     }
-
-    $this->setProcessedExtension($type, $op, $name);
+    foreach ($names as $name) {
+      $this->setProcessedExtension($type, $op, $name);
+    }
   }
 
   /**
