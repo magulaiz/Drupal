@@ -134,10 +134,10 @@ trait PerformanceTestTrait {
         if (in_array($operation['operation'], ['get', 'getMultiple'])) {
           $cache_get_count++;
         }
-        elseif (in_array($operation['operation'], ['set','setMultiple'])) {
+        elseif (in_array($operation['operation'], ['set', 'setMultiple'])) {
           $cache_set_count++;
         }
-        elseif (in_array($operation['operation'], ['delete','deleteMultiple'])) {
+        elseif (in_array($operation['operation'], ['delete', 'deleteMultiple'])) {
           $cache_delete_count++;
         }
       }
