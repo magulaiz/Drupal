@@ -508,7 +508,6 @@ namespacing
 navs
 ndocs
 necolas
-negatable
 negotiatiors
 newcol
 newfieldinitial
