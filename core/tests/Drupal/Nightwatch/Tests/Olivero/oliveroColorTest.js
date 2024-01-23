@@ -121,8 +121,7 @@ module.exports = {
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
       .to.have.css('backgroundColor', 'rgb(255, 0, 0)');
-    browser
-      .drupalLogAndEnd({ onlyOnError: false });
+    browser.drupalLogAndEnd({ onlyOnError: false });
 
     browser
       .drupalRelativeURL('/admin/appearance/settings/olivero')
@@ -134,7 +133,6 @@ module.exports = {
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
       .to.have.css('backgroundColor', 'rgb(122, 69, 135)');
-    browser
-      .drupalLogAndEnd({ onlyOnError: false });
+    browser.drupalLogAndEnd({ onlyOnError: false });
   },
 };
