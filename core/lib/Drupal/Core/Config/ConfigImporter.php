@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Utility\DiffArray;
 use Drupal\Core\Config\Importer\MissingContentEvent;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -453,7 +454,8 @@ class ConfigImporter {
     arsort($install_required);
     arsort($install_non_required);
 
-    $this->extensionChangelist['module']['install'] = array_keys($install_required + $install_non_required);
+    $this->extensionChangelist['module']['install'] = array_merge(array_keys($install_required), array_chunk(array_keys($install_non_required), 10));
+    dump($this->extensionChangelist['module']['install']);
 
     // If we're installing the install profile ensure it comes last. This will
     // occur when installing a site from configuration.
@@ -514,7 +516,7 @@ class ConfigImporter {
   protected function getUnprocessedExtensions($type) {
     $changelist = $this->getExtensionChangelist($type);
     return [
-      'install' => array_diff($changelist['install'], $this->processedExtensions[$type]['install']),
+      'install' => DiffArray::diffAssocRecursive($changelist['install'], $this->processedExtensions[$type]['install']),
       'uninstall' => array_diff($changelist['uninstall'], $this->processedExtensions[$type]['uninstall']),
     ];
   }
@@ -860,16 +862,26 @@ class ConfigImporter {
    *   The type of extension, either 'module' or 'theme'.
    * @param string $op
    *   The change operation.
-   * @param string $name
+   * @param string|array $name
    *   The name of the extension to process.
    */
   protected function processExtension($type, $op, $name) {
+    if (is_array($name)) {
+      if ($type !== 'module' && $op !== 'install') {
+        throw new \RuntimeException('oh uh!');
+      }
+    }
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op([$name], FALSE);
+      if (is_array($name)) {
+        $this->moduleInstaller->multiInstall($name);
+      }
+      else {
+        $this->moduleInstaller->$op([$name], FALSE);
+      }
       // Installing a module can cause a kernel boot therefore reinject all the
       // services.
       $this->reInjectMe();

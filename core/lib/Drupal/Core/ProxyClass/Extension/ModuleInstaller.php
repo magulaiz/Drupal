@@ -86,6 +86,14 @@ namespace Drupal\Core\ProxyClass\Extension {
         /**
          * {@inheritdoc}
          */
+        public function multiInstall(array $module_list)
+        {
+            return $this->lazyLoadItself()->multiInstall($module_list);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function uninstall(array $module_list, $uninstall_dependents = true)
         {
             return $this->lazyLoadItself()->uninstall($module_list, $uninstall_dependents);

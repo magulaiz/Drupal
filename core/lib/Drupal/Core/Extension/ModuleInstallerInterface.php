@@ -88,4 +88,6 @@ interface ModuleInstallerInterface {
    */
   public function validateUninstall(array $module_list);
 
+  public function multiInstall(array $module_list);
+
 }

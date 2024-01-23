@@ -141,10 +141,13 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     // Ensure that all modules being installed have their dependencies met.
     $installs = $config_importer->getExtensionChangelist('module', 'install');
     foreach ($installs as $module) {
-      $missing_dependencies = [];
-      foreach (array_keys($module_data[$module]->requires) as $required_module) {
-        if (!isset($core_extension['module'][$required_module])) {
-          $missing_dependencies[] = $module_data[$required_module]->info['name'];
+      $modules = (array) $module;
+      foreach ($modules as $module) {
+        $missing_dependencies = [];
+        foreach (array_keys($module_data[$module]->requires) as $required_module) {
+          if (!isset($core_extension['module'][$required_module])) {
+            $missing_dependencies[] = $module_data[$required_module]->info['name'];
+          }
         }
       }
       if (!empty($missing_dependencies)) {
