@@ -383,6 +383,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
       \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
     }
 
+    if (count($module_list) > 1) {
+      // Record the fact that it was multi-installed.
+      // @todo this feels for testing purposes only. Maybe remove later.
+      \Drupal::logger('system')->info('%modules installed with a single container rebuild.', ['%modules' => implode(', ', $module_list)]);
+    }
+
     if (!InstallerKernel::installationAttempted()) {
       // If the container was rebuilt during hook_install() it might not have
       // the 'router.route_provider.old' service.
