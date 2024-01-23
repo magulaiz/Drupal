@@ -508,10 +508,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       // Now install the module's schema if necessary.
       $this->installSchema($module);
+    }
 
-      // Clear plugin manager caches.
-      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
+    // Clear plugin manager caches.
+    \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
+    foreach ($module_list as $module) {
       // Set the schema version to the number of the last update provided by
       // the module, or the minimum core schema version.
       $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
@@ -600,8 +602,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invoke($module, 'install', [$sync_status]);
 
       // Record the fact that it was installed.
-      // dblog causes this to break!
-      // \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
+      \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
     }
     // Record the fact that it was multi-installed.
     \Drupal::logger('system')->info('%modules installed with a single container rebuild.', ['%modules' => implode(', ', $module_list)]);

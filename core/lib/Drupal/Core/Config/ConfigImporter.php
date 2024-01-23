@@ -454,7 +454,7 @@ class ConfigImporter {
     arsort($install_required);
     arsort($install_non_required);
 
-    $this->extensionChangelist['module']['install'] = array_merge(array_keys($install_required), array_chunk(array_keys($install_non_required), 10));
+    $this->extensionChangelist['module']['install'] = array_merge(array_keys($install_required), array_chunk(array_keys($install_non_required), 50));
     dump($this->extensionChangelist['module']['install']);
 
     // If we're installing the install profile ensure it comes last. This will
