@@ -38,7 +38,7 @@ class QueueFactory implements ContainerAwareInterface {
   public function __construct(Settings $settings, protected ContainerInterface|array|null $container = NULL) {
     $this->settings = $settings;
     if (is_array($this->container) || $this->container === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/123123', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3402611', E_USER_DEPRECATED);
       $this->container = \Drupal::getContainer();
     }
   }
@@ -53,7 +53,7 @@ class QueueFactory implements ContainerAwareInterface {
    * @see https://www.drupal.org/node/123123
    */
   public function setContainer(?ContainerInterface $container): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/123123', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/3402611', E_USER_DEPRECATED);
     $this->container = $container;
   }
 
