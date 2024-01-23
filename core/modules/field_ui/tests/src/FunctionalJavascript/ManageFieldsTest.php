@@ -216,10 +216,10 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->pressButton('Continue');
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
-    $temp_store = \Drupal::service('tempstore.private')->get('field_ui');
-    $field_name = $temp_store->get('temp_name');
     $page->fillField('label', $field_name);
-    $default_input_1_name = "default_value_input[$field_name][0][value]";
+    $page->findField('description')->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $default_input_1_name = "default_value_input[field_test_field_1][0][value]";
     $default_input_1 = $assert_session->fieldExists($default_input_1_name);
     $this->assertFalse($default_input_1->isVisible());
 
@@ -227,7 +227,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $default_value->check();
     $assert_session->waitForElementVisible('xpath', $default_value->getXpath());
     $default_input_1->setValue('There can be only one!');
-    $default_input_2_name = "default_value_input[$field_name][1][value]";
+    $default_input_2_name = "default_value_input[field_test_field_1][1][value]";
     $assert_session->fieldNotExists($default_input_2_name);
     $cardinality = $assert_session->fieldExists('field_storage[subform][cardinality_number]');
     $cardinality->setValue(2);
@@ -280,12 +280,11 @@ class ManageFieldsTest extends WebDriverTestBase {
     $test_field->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
     $page->pressButton('Continue');
+    $assert_session->pageTextNotContains('Choose an option below');
     $field_name = 'test_field_2';
     $page->fillField('label', $field_name);
-    $assert_session->pageTextNotContains('Choose an option below');
-
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
+    $page->findField('description')->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
@@ -367,6 +366,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $boolean_field->click();
     $page->findButton('Continue')->click();
     $this->submitForm([], 'Save settings');
+    file_put_contents('/Users/omkar.podey/www/drupal/sites/test.html',$this->getSession()->getPage()->getContent());
     $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
   }
 

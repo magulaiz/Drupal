@@ -64,6 +64,8 @@ trait FieldUiJSTestTrait {
     $field_field_name = $page->findField('field_name');
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
+    $page->findField('description')->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     if ($save_settings) {
       // Second step: Save field settings.
       $page->findButton('Save settings')->click();
@@ -110,8 +112,11 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->responseNotContains('&amp;lt;');
 
     // Second step: 'Field settings' form.
-    $this->submitForm($field_edit, 'Save settings');
-    $this->assertSession()->pageTextContains("Saved $label configuration.");
+    $this->getSession()->getPage()->fillField('edit-label', $label);
+    $this->getSession()->getPage()->findField('description')->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->pressButton('Save settings');
+    $this->assertTrue($this->assertSession()->waitForText("Saved $label configuration."));
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
@@ -144,6 +149,7 @@ trait FieldUiJSTestTrait {
       if ($field_card) {
         break;
       }
+      $this->assertSession()->waitForButton('Back');
       $this->getSession()->getPage()->pressButton('Back');
     }
     return $field_card->getParent();
