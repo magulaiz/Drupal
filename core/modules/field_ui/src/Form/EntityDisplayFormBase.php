@@ -247,16 +247,16 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#default_value' => $default,
         ];
       }
-      $route_name = 'entity.entity_' . $this->displayContext . '_mode.add_form';
-      $route_label = $this->t('Add new @display_context mode', ['@display_context' => $this->displayContext]);
-
-      $route_arguments = ['entity_type_id' => $this->entity->getTargetEntityTypeId()];
 
       // Create a URL for the form route.
-      $url = Url::fromRoute($route_name, $route_arguments, ['query' => ['bundle' => $this->entity->getTargetBundle()]]);
+      $url = Url::fromRoute(
+        "entity.entity_{$this->displayContext}_mode.add_form",
+        ['entity_type_id' => $this->entity->getTargetEntityTypeId()],
+        ['query' => ['bundle' => $this->entity->getTargetBundle()]],
+      );
       $form['modes']['add_new_display_mode'] = [
         '#type' => 'link',
-        '#title' => $route_label,
+        '#title' => $this->t('Add new @display_context mode', ['@display_context' => $this->displayContext]),
         '#url' => $url,
         '#attributes' => [
           'class' => ['use-ajax'],
