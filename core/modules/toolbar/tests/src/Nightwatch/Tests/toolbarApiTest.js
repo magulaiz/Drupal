@@ -39,7 +39,8 @@ module.exports = {
         sessionStorage.clear();
       })
       .drupalRelativeURL('/')
-      .waitForElementPresent('#toolbar-administration', 50000, 1000, false);
+      .waitForElementPresent('#toolbar-administration', 50000, 1000, false)
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   after(browser) {
     browser.drupalUninstall();
