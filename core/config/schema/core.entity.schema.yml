@@ -2,6 +2,8 @@
 
 core.entity_link_suggester.*:
   type: config_entity
+  constraints:
+    FullyValidatable: ~
   label: 'Entity Link Suggester'
   mapping:
     id:
