@@ -62,7 +62,13 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $form = parent::buildForm($form, $form_state, $entity_type_id);
     // Add an ajax callback when the form is loaded from respective field UI's.
-    if ($this->getRequest()->query->get('bundle')) {
+    if ($bundle = $this->getRequest()->query->get('bundle')) {
+      // Validate the bundle to avoid CSRF.
+      $allowed_bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+      if (array_key_exists($bundle, $allowed_bundles)) {
+        $form['bundles_by_entity']['#default_value'][] = $bundle;
+      }
+      // Add an ajax callback when the form is loaded from respective field UIs.
       $form['actions']['submit']['#ajax'] = [
         'callback' => '::ajaxSubmit',
       ];
@@ -74,11 +80,6 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
       '@entity-type' => $definition->getLabel(),
       '%label' => $this->entityType->getSingularLabel(),
     ]);
-    $bundle = $this->getRequest()->query->get('bundle') ?: NULL;
-    // Validate the bundle to avoid CSRF.
-    if (in_array($bundle, array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id)))) {
-      $form['bundles_by_entity']['#default_value'][] = $bundle ?? [];
-    }
     $form['#prefix'] = '<div id="mode-add-form-wrapper">';
     $form['#suffix'] = '</div>';
     return $form;
