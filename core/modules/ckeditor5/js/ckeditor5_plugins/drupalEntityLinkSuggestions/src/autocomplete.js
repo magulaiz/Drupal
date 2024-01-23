@@ -1,4 +1,3 @@
-/* eslint-disable no-var, prefer-template, no-use-before-define, vars-on-top, jquery/no-val */
 // cspell:ignore linkit
 
 const $ = jQuery;
@@ -15,17 +14,14 @@ const $ = jQuery;
  *   jQuery collection of the ul element.
  */
 function renderItem(ul, item) {
-  var $line = $('<li>').addClass('linkit-result-line');
-  var $wrapper = $('<div>').addClass('linkit-result-line-wrapper');
+  const $line = $('<li class="linkit-result-line">');
+  const $wrapper = $('<div class="linkit-result-line-wrapper">');
   $wrapper.append(
-    $('<span>').html(item.label).addClass('linkit-result-line--title'),
+    `<span class="linkit-result-line--title">${item.label}</span>`,
   );
-
   if (item.hasOwnProperty('description')) {
     $wrapper.append(
-      $('<span>')
-        .html(item.description)
-        .addClass('linkit-result-line--description'),
+      `<span class="linkit-result-line--description">${item.description}</span>`,
     );
   }
   return $line.append($wrapper).appendTo(ul);
@@ -40,10 +36,8 @@ function renderItem(ul, item) {
  *   An Array of items that match the user typed term.
  */
 function renderMenu(ul, items) {
-  var self = this.element.autocomplete('instance');
-
-  var groupedItems = {};
-  items.forEach(function (item) {
+  const groupedItems = {};
+  items.forEach((item) => {
     const group = item.hasOwnProperty('group') ? item.group : '';
     if (!groupedItems.hasOwnProperty(group)) {
       groupedItems[group] = [];
@@ -51,17 +45,15 @@ function renderMenu(ul, items) {
     groupedItems[group].push(item);
   });
 
-  $.each(groupedItems, function (group, items) {
-    if (group.length) {
+  Object.keys(groupedItems).forEach((groupLabel) => {
+    const groupItems = groupedItems[groupLabel];
+    if (groupLabel.length) {
       ul.append(
-        '<li class="linkit-result-line--group ui-menu-divider">' +
-          group +
-          '</li>',
+        `<li class="linkit-result-line--group ui-menu-divider">${groupLabel}</li>`,
       );
     }
-
-    $.each(items, function (index, item) {
-      self._renderItemData(ul, item);
+    groupItems.forEach((item) => {
+      this.element.autocomplete('instance')._renderItemData(ul, item);
     });
   });
 }
@@ -87,6 +79,8 @@ export default function initializeAutocomplete(element, settings) {
    */
   function sourceData(request, response) {
     const { cache } = autocomplete;
+    const { term } = request;
+
     /**
      * Transforms the data object into an array and update autocomplete results.
      *
@@ -99,7 +93,6 @@ export default function initializeAutocomplete(element, settings) {
     }
 
     // Get the desired term and construct the autocomplete URL for it.
-    var term = request.term;
 
     // Check if the term is already cached.
     if (cache.hasOwnProperty(term)) {
@@ -138,14 +131,14 @@ export default function initializeAutocomplete(element, settings) {
     .autocomplete('widget')
     .addClass('ck-reset_all-excluded linkit-ui-autocomplete');
 
-  $auto.on('click', function () {
-    $auto.autocomplete('search', $auto.val());
+  $auto.on('click', () => {
+    $auto.autocomplete('search', $auto[0].value);
   });
 
-  $auto.on('compositionstart.autocomplete', function () {
+  $auto.on('compositionstart.autocomplete', () => {
     options.isComposing = true;
   });
-  $auto.on('compositionend.autocomplete', function () {
+  $auto.on('compositionend.autocomplete', () => {
     options.isComposing = false;
   });
 

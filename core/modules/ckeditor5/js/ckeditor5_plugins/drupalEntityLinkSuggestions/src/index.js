@@ -15,7 +15,6 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   init() {
-    this._state = {};
     const editor = this.editor;
     // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to DrupalImage not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
     editor.plugins.get('LinkUI')._createViews();
@@ -24,6 +23,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
     const attrs = editor.plugins.get(
       'DrupalEntityLinkSuggestionsEditing',
     ).attrs;
+
     const exposedAttributes = {
       download: {
         label: Drupal.t('Download link'),
@@ -63,7 +63,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
     previewButton.unbind('label');
     previewButton.bind('label').to(linkActionsView, 'href', (href) => {
       if (href && href.startsWith('entity:')) {
-        console.log('TODO: intercept clicks to this link');
+        console.log('TODO: intercept clicks to this link', href);
         return Drupal.t('Internal link to !entity-uri', {
           '!entity-uri': href,
         });
@@ -75,7 +75,6 @@ class DrupalEntityLinkSuggestions extends Plugin {
   _createExtraButtonView(modelName, options) {
     const editor = this.editor;
     const locale = editor.locale;
-    const linkCommand = editor.commands.get('link');
     const linkFormView = editor.plugins.get('LinkUI').formView;
 
     const buttonView = new SwitchButtonView(editor.locale);

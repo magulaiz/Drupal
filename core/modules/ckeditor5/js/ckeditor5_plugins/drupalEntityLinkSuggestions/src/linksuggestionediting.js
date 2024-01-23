@@ -21,19 +21,23 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
       editor.conversion.for('downcast').attributeToElement({
         model: attribute,
         view: (value, { writer }) => {
+          // eslint-disable-next-line no-nested-ternary
+          const attributes = {[attribute]: value}
+
+          // Special case: the "download" attribute.
+          // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
+          // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
+          if (attribute === 'download') {
+            if (value === true) {
+              delete attributes.download;
+            } else {
+              attributes.download = '';
+            }
+          }
+
           const linkViewElement = writer.createAttributeElement(
             'a',
-            // eslint-disable-next-line no-nested-ternary
-            attribute !== 'download'
-              ? {
-                  [attribute]: value,
-                }
-              : // Special case: the "download" attribute.
-                // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
-                // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
-                value === true
-                ? { download: '' }
-                : {},
+            attributes,
             { priority: 5 },
           );
 
