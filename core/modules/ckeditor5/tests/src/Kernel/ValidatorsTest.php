@@ -1612,10 +1612,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_link_entity_suggestions.suggester' => [
-          'This value should not be null.',
-          "The '' config does not exist.",
-        ],
+        'settings.plugins.ckeditor5_link_entity_suggestions.suggester' => 'This value should not be null.',
       ],
     ];
 
