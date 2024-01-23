@@ -448,20 +448,24 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
         // Check selected plugin settings to display edit link or not.
         $settings_form = $plugin->settingsForm($form, $form_state);
-        $third_party_settings_form = $this->thirdPartySettingsForm($plugin, $field_definition, $form, $form_state);
-        if (!empty($settings_form) || !empty($third_party_settings_form)) {
-          $field_row['settings_edit'] = $base_button + [
-            '#type' => 'image_button',
-            '#name' => $field_name . '_settings_edit',
-            '#src' => 'core/misc/icons/787878/cog.svg',
-            '#attributes' => ['class' => ['field-plugin-settings-edit'], 'alt' => $this->t('Edit')],
-            '#op' => 'edit',
-            // Do not check errors for the 'Edit' button, but make sure we get
-            // the value of the 'plugin type' select.
-            '#limit_validation_errors' => [['fields', $field_name, 'type']],
-            '#prefix' => '<div class="field-plugin-settings-edit-wrapper">',
-            '#suffix' => '</div>',
-          ];
+        // Check if $settings_form is empty before invoking third-party settings form.
+        if (empty($settings_form)) {
+          $third_party_settings_form = $this->thirdPartySettingsForm($plugin, $field_definition, $form, $form_state);
+          
+          if (!empty($third_party_settings_form)) {
+            $field_row['settings_edit'] = $base_button + [
+              '#type' => 'image_button',
+              '#name' => $field_name . '_settings_edit',
+              '#src' => 'core/misc/icons/787878/cog.svg',
+              '#attributes' => ['class' => ['field-plugin-settings-edit'], 'alt' => $this->t('Edit')],
+              '#op' => 'edit',
+              // Do not check errors for the 'Edit' button, but make sure we get
+              // the value of the 'plugin type' select.
+              '#limit_validation_errors' => [['fields', $field_name, 'type']],
+              '#prefix' => '<div class="field-plugin-settings-edit-wrapper">',
+              '#suffix' => '</div>',
+            ];
+          }
         }
       }
     }
