@@ -30,10 +30,18 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    *   The entity type bundle service.
    * @param \Drupal\Core\Entity\EntityDisplayRepository $entityDisplayRepository
    *   The entity display repository.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $routeBuilder
-   *   The route builder.
+   * @param \Drupal\Core\Routing\RouteBuilderInterface|null $routeBuilder
+   *   (optional) The route builder.
    */
-  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, protected EntityDisplayRepositoryInterface $entityDisplayRepository, protected RouteBuilderInterface $routeBuilder) {
+  public function __construct(
+    EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    EntityDisplayRepositoryInterface $entityDisplayRepository,
+    protected ?RouteBuilderInterface $routeBuilder = NULL,
+  ) {
+    if (is_null($this->routeBuilder)) {
+      @trigger_error('Calling ' . __CLASS__ . '::_construct() without the $routeBuilder argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2721727', E_USER_DEPRECATED);
+      $this->routeBuilder = \Drupal::service('router.builder');
+    }
     parent::__construct($entityTypeBundleInfo, $entityDisplayRepository);
   }
 
