@@ -227,6 +227,7 @@ variables:
     - <<: *with-chrome
   script:
     #  Determine DB driver.
+    # Dummy line to get test to run.
     - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
