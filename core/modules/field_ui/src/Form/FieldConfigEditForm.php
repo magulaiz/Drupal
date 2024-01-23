@@ -123,7 +123,6 @@ class FieldConfigEditForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#default_value' => $this->entity->isNew() ? '' : $this->entity->getLabel(),
       '#size' => 30,
-      '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
