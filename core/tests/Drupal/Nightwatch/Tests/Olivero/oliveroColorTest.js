@@ -120,7 +120,8 @@ module.exports = {
       .drupalRelativeURL('/')
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
-      .to.have.css('backgroundColor', 'rgb(255, 0, 0)')
+      .to.have.css('backgroundColor', 'rgb(255, 0, 0)');
+    browser
       .drupalLogAndEnd({ onlyOnError: false });
 
     browser
@@ -132,7 +133,8 @@ module.exports = {
       .drupalRelativeURL('/')
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
-      .to.have.css('backgroundColor', 'rgb(122, 69, 135)')
+      .to.have.css('backgroundColor', 'rgb(122, 69, 135)');
+    browser
       .drupalLogAndEnd({ onlyOnError: false });
   },
 };
