@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
@@ -51,6 +52,12 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   protected $bin;
 
+  /**
+   * The serializer to use.
+   *
+   * @var \Drupal\Component\Serialization\ObjectAwareSerializationInterface
+   */
+  protected $serializer;
 
   /**
    * The database connection.
@@ -78,8 +85,10 @@ class DatabaseBackend implements CacheBackendInterface {
    * @param int $max_rows
    *   (optional) The maximum number of rows that are allowed in this cache bin
    *   table.
+   * @param \Drupal\Component\Serialization\ObjectAwareSerializationInterface|null $serializer
+   *   (optional) The serializer to use.
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, ObjectAwareSerializationInterface $serializer = NULL) {
     // All cache tables should be prefixed with 'cache_'.
     $bin = 'cache_' . $bin;
 
@@ -87,6 +96,11 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
     $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
+    if (!$serializer) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.0.4 and it will be required in drupal:10.1.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
+      $serializer = \Drupal::service('serialization.phpserialize');
+    }
+    $this->serializer = $serializer;
   }
 
   /**
@@ -169,7 +183,7 @@ class DatabaseBackend implements CacheBackendInterface {
 
     // Unserialize and return the cached data.
     if ($cache->serialized) {
-      $cache->data = unserialize($cache->data);
+      $cache->data = $this->serializer->decode($cache->data);
     }
 
     return $cache;
@@ -252,7 +266,7 @@ class DatabaseBackend implements CacheBackendInterface {
         }
 
         if (!is_string($item['data'])) {
-          $fields['data'] = serialize($item['data']);
+          $fields['data'] = $this->serializer->encode($item['data']);
           $fields['serialized'] = 1;
         }
         else {

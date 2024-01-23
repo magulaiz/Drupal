@@ -2,10 +2,18 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
 
 class DatabaseBackendFactory implements CacheFactoryInterface {
+
+  /**
+   * The serializer to use.
+   *
+   * @var \Drupal\Component\Serialization\ObjectAwareSerializationInterface
+   */
+  protected $serializer;
 
   /**
    * The database connection.
@@ -37,13 +45,20 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    *   The cache tags checksum provider.
    * @param \Drupal\Core\Site\Settings $settings
    *   (optional) The site settings.
+   * @param \Drupal\Component\Serialization\ObjectAwareSerializationInterface|null $serializer
+   *   (optional) The serializer to use.
    *
    * @throws \BadMethodCallException
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, Settings $settings = NULL) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, Settings $settings = NULL, ObjectAwareSerializationInterface $serializer = NULL) {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
     $this->settings = $settings ?: Settings::getInstance();
+    if (!$serializer) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.0.4 and it will be required in drupal:10.1.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
+      $serializer = \Drupal::service('serialization.phpserialize');
+    }
+    $this->serializer = $serializer;
   }
 
   /**
@@ -57,7 +72,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    */
   public function get($bin) {
     $max_rows = $this->getMaxRowsForBin($bin);
-    return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $max_rows);
+    return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $max_rows, $this->serializer);
   }
 
   /**
