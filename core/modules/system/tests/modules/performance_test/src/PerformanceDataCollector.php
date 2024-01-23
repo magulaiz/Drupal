@@ -21,11 +21,6 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
   protected array $cacheOperations = [];
 
   /**
-   * Cache operations collected during the request.
-   */
-  protected array $cacheTagInvalidations = [];
-
-  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
@@ -50,13 +45,6 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
   }
 
   /**
-   * Adds a cache tag invalidation.
-   */
-  public function addCacheTagInvalidation(array $invalidation) {
-    $this->cacheTagInvalidations[] = $invalidation;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function destruct(): void {
@@ -77,11 +65,9 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
     $existing_data = $collection->get('performance_test_data') ?? [
       'database_events' => [],
       'cache_operations' => [],
-      'cache_tag_invalidations' => [],
     ];
     $existing_data['database_events'] = array_merge($existing_data['database_events'], $database_events);
     $existing_data['cache_operations'] = array_merge($existing_data['cache_operations'], $this->cacheOperations);
-    $existing_data['cache_tag_invalidations'] = array_merge($existing_data['cache_tag_invalidations'], $this->cacheTagInvalidations);
     $collection->set('performance_test_data', $existing_data);
     $lock->release('performance_test');
   }

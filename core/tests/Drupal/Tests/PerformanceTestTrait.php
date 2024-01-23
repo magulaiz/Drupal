@@ -131,13 +131,13 @@ trait PerformanceTestTrait {
         }
       }
       foreach ($performance_test_data['cache_operations'] as $operation) {
-        if ($operation['operation'] === 'getMultiple') {
+        if (in_array($operation['operation'], ['get', 'getMultiple'])) {
           $cache_get_count++;
         }
-        elseif ($operation['operation'] === 'setMultiple') {
+        elseif (in_array($operation['operation'], ['set','setMultiple'])) {
           $cache_set_count++;
         }
-        elseif ($operation['operation'] === 'deleteMultiple') {
+        elseif (in_array($operation['operation'], ['delete','deleteMultiple'])) {
           $cache_delete_count++;
         }
       }
