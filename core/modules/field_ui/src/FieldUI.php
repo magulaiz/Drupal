@@ -44,15 +44,13 @@ class FieldUI {
    */
   public static function getDisplayRouteInfo(string $entity_type_id, string $bundle, bool $view_mode): ?Url {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
-    if ($entity_type->get('field_ui_base_route')) {
-      if ($view_mode) {
-        return new Url("entity.entity_view_display.{$entity_type_id}.default", static::getRouteBundleParameter($entity_type, $bundle));
-      }
-      else {
-        return new Url("entity.entity_form_display.{$entity_type_id}.default", static::getRouteBundleParameter($entity_type, $bundle));
-      }
+    if (!$entity_type->get('field_ui_base_route')) {
+      return NULL;
     }
-    return NULL;
+    return new Url(
+      'entity.entity_' . ($view_mode ? 'view' : 'form') . "_display.{$entity_type_id}.default",
+      static::getRouteBundleParameter($entity_type, $bundle),
+    );
   }
 
   /**
