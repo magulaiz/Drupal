@@ -429,6 +429,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
           try {
             $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
           }
+          catch (MigrateSkipProcessPluginException $e) {
+            // Continue on as only this plugin should be skipped.
+            $new_value[] = NULL;
+          }
           catch (MigrateSkipProcessException $e) {
             $new_value[] = NULL;
             $break = TRUE;
@@ -451,6 +455,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $plugin->reset();
         try {
           $value = $plugin->transform($value, $this, $row, $destination);
+        }
+        catch (MigrateSkipProcessPluginException $e) {
+          // Continue on as only this plugin should be skipped.
+          $value = NULL;
         }
         catch (MigrateSkipProcessException $e) {
           $value = NULL;
