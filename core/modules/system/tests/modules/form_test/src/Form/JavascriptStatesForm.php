@@ -610,7 +610,7 @@ class JavascriptStatesForm extends FormBase {
       '#title' => 'Textfield in details',
     ];
 
-    // Elemets responding to 'empty' state of the textfield.
+    // Elements responding to 'empty' state of the textfield.
     $form['checkbox_checked_when_textfield_trigger_empty'] = [
       '#type' => 'checkbox',
       '#title' => 'Checkbox checked when textfield trigger empty',

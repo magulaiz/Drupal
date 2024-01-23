@@ -360,7 +360,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
 
-    // Test the empty state behaviour of the textfield.
+    // Test the empty state behavior of the textfield.
     $checkbox_checked_target = $page->findField('checkbox_checked_when_textfield_trigger_empty');
     $this->assertNotEmpty($checkbox_checked_target);
     $checkbox_unchecked_target = $page->findField('checkbox_unchecked_when_textfield_trigger_empty');
@@ -375,7 +375,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $textfield_in_details = $details->findField('textfield_in_details');
     $this->assertNotEmpty($textfield_in_details);
 
-    // Check if all elemets have the desired 'empty' state behaviour.
+    // Check if all elements have the desired 'empty' state behavior.
     $this->assertTrue($checkbox_checked_target->isChecked());
     $this->assertFalse($checkbox_unchecked_target->isChecked());
     $this->assertFalse($select_invisible_target->isVisible());
