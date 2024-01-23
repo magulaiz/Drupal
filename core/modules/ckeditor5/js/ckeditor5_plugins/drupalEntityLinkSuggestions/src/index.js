@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies, no-throw-literal, prefer-template */
+/* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore linksuggestionediting focusables
 
 import { Plugin } from 'ckeditor5/src/core';
@@ -15,14 +15,12 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   init() {
-    const editor = this.editor;
+    const { editor } = this;
     // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to DrupalImage not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
     editor.plugins.get('LinkUI')._createViews();
 
     // Some of the attributes supported by this plugin are exposed in the UI.
-    const attrs = editor.plugins.get(
-      'DrupalEntityLinkSuggestionsEditing',
-    ).attrs;
+    const { attrs } = editor.plugins.get('DrupalEntityLinkSuggestionsEditing');
 
     const exposedAttributes = {
       download: {
@@ -49,7 +47,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   _handleEntityLinkPreviews() {
-    const editor = this.editor;
+    const { editor } = this;
     const linkActionsView = editor.plugins.get('LinkUI').actionsView;
     const previewButton = linkActionsView.previewButtonView;
     previewButton.unbind('isEnabled');
@@ -73,8 +71,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   _createExtraButtonView(modelName, options) {
-    const editor = this.editor;
-    const locale = editor.locale;
+    const { editor } = this;
     const linkFormView = editor.plugins.get('LinkUI').formView;
 
     const buttonView = new SwitchButtonView(editor.locale);
@@ -86,7 +83,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
     buttonView.on('execute', () => {
       this.set(modelName, !buttonView.isOn);
     });
-    this.on(`change:${modelName}`, (evt, propertyName, newValue, oldValue) => {
+    this.on(`change:${modelName}`, (evt, propertyName, newValue) => {
       buttonView.isOn = newValue === true;
       buttonView.isVisible = typeof newValue === 'boolean';
     });
@@ -101,7 +98,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   _enableLinkAutocomplete() {
-    const editor = this.editor;
+    const { editor } = this;
     const hostEntityTypeId = editor.sourceElement.getAttribute(
       'data-ckeditor5-host-entity-type',
     );

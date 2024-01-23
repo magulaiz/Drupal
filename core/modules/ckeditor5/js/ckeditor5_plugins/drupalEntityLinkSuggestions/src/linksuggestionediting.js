@@ -12,32 +12,31 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
   }
 
   _allowAndConvertExtraAttributes() {
-    const editor = this.editor;
+    const { editor } = this;
 
     editor.model.schema.extend('$text', { allowAttributes: this.attrs });
 
-    // Model -> View (DOM)
     this.attrs.forEach((attribute) => {
       editor.conversion.for('downcast').attributeToElement({
         model: attribute,
         view: (value, { writer }) => {
           // eslint-disable-next-line no-nested-ternary
-          const attributes = {[attribute]: value}
+          const viewAttributes = { [attribute]: value };
 
           // Special case: the "download" attribute.
           // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
           // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
           if (attribute === 'download') {
             if (value === true) {
-              delete attributes.download;
+              delete viewAttributes.download;
             } else {
-              attributes.download = '';
+              viewAttributes.download = '';
             }
           }
 
           const linkViewElement = writer.createAttributeElement(
             'a',
-            attributes,
+            viewAttributes,
             { priority: 5 },
           );
 
@@ -49,7 +48,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         },
       });
 
-      // View (DOM/DATA) -> Model
       editor.conversion.for('upcast').elementToAttribute({
         view: {
           name: 'a',
@@ -72,7 +70,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
   }
 
   _addExtraAttributesOnLinkCommandExecute() {
-    const editor = this.editor;
+    const { editor } = this;
     const linkCommand = editor.commands.get('link');
     let linkCommandExecuting = false;
 
@@ -98,11 +96,11 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         // being executed by this function.
         linkCommandExecuting = true;
         const extraAttributeValues = args[args.length - 1];
-        const model = this.editor.model;
-        const selection = model.document.selection;
+        const { model } = editor;
+        const { selection } = model.document;
 
         // Wrapping the original command execution in a model.change() block to
-        // make sure there's a single undo step when the extra attribute is added.
+        // ensure there is a single undo step when the extra attribute is added.
         model.change((writer) => {
           editor.execute('link', ...args);
 
@@ -149,9 +147,9 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
   }
 
   _removeExtraAttributesOnUnlinkCommandExecute() {
-    const editor = this.editor;
+    const { editor } = this;
     const unlinkCommand = editor.commands.get('unlink');
-    const model = this.editor.model;
+    const { model } = editor;
     const selection = model.document.selection;
 
     let isUnlinkingInProgress = false;
@@ -212,11 +210,11 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
   }
 
   _refreshExtraAttributeValues() {
-    const editor = this.editor;
+    const { editor } = this;
     const attributes = this.attrs;
     const linkCommand = editor.commands.get('link');
-    const model = this.editor.model;
-    const selection = model.document.selection;
+    const { model } = editor;
+    const { selection } = model.document;
 
     attributes.forEach((attribute) => {
       linkCommand.set(attribute, null);
