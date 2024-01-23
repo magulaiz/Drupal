@@ -66,9 +66,13 @@
           ? switcher
           : !$item[0].classList.contains('open');
       // Toggle the item open state.
-      $item[0].classList.toggle('open', switcher);
+      $item.toArray().forEach((element) => {
+        element.classList.toggle('open', switcher);
+      });
       // Twist the toggle.
-      $toggle[0].classList.toggle('open', switcher);
+      $toggle.toArray().forEach((element) => {
+        element.classList.toggle('open', switcher);
+      });
       // Adjust the toggle text.
       $toggle.find('.action').each((index, element) => {
         // Expand Structure, Collapse Structure.
