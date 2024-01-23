@@ -188,7 +188,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is
    * no replacement.
    *
-   * @see https://www.drupal.org/project/drupal/issues/2736647.
+   * @see https://www.drupal.org/project/drupal/issues/2736647
    */
   public function menuNameInUse($menu_name);
 
