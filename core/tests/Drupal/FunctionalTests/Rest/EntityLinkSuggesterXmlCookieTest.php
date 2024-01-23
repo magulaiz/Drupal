@@ -10,7 +10,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
 /**
  * @group rest
  */
-class EntityLinkSuggesterJsonCookieTest extends EntityLinkSuggesterResourceTestBase {
+class EntityLinkSuggesterXmlCookieTest extends EntityLinkSuggesterResourceTestBase {
 
   use CookieResourceTestTrait;
   use XmlEntityNormalizationQuirksTrait;

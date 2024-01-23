@@ -10,7 +10,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
 /**
  * @group rest
  */
-class EntityLinkSuggesterJsonAnonTest extends EntityLinkSuggesterResourceTestBase {
+class EntityLinkSuggesterXmlAnonTest extends EntityLinkSuggesterResourceTestBase {
 
   use AnonResourceTestTrait;
   use XmlEntityNormalizationQuirksTrait;
