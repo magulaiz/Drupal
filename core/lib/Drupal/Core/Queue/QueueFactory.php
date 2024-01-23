@@ -3,8 +3,8 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Site\Settings;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the queue factory.
@@ -28,10 +28,33 @@ class QueueFactory implements ContainerAwareInterface {
   protected $settings;
 
   /**
-   * Constructs a queue factory.
+   * Constructs QueueFactory object.
+   *
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The site settings.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface|array|null $container
+   *   The service container.
    */
-  public function __construct(Settings $settings) {
+  public function __construct(Settings $settings, protected ContainerInterface|array|null $container = NULL) {
     $this->settings = $settings;
+    if (is_array($this->container) || $this->container === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/123123', E_USER_DEPRECATED);
+      $this->container = \Drupal::getContainer();
+    }
+  }
+
+  /**
+   * Sets the service container.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
+   *    Instead, you should pass the container as an argument in the
+   *    __construct() method.
+   *
+   * @see https://www.drupal.org/node/123123
+   */
+  public function setContainer(?ContainerInterface $container): void {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/123123', E_USER_DEPRECATED);
+    $this->container = $container;
   }
 
   /**
