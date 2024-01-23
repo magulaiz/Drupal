@@ -34,10 +34,14 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
       $header[] = t('Operations');
     }
 
+    $dragY = !empty($form['#attributes']['dragY']) ? 'drag-y' : '';
     $table = [
       '#type' => 'table',
       '#header' => $header,
-      '#attributes' => ['id' => 'language-negotiation-methods-' . $type],
+      '#attributes' => [
+        'id' => 'language-negotiation-methods-' . $type,
+        'data-drag-orientation' => $dragY,
+      ],
       '#tabledrag' => [
         [
           'action' => 'order',
