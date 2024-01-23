@@ -55,7 +55,7 @@ class ConditionManagerTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::execute
    */
-  public function testExecute() {
+  public function testExecute(): void {
     $execution_result = $this->randomMachineName();
 
     $condition = $this->createMock(ConditionInterface::class);

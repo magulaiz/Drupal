@@ -16,7 +16,7 @@ abstract class NegatableConditionPluginBase extends ConditionPluginBase implemen
   /**
    * {@inheritdoc}
    */
-  public function evaluateIsNegated($evaluation_result): bool {
+  public function evaluateIsNegated(bool $evaluation_result): bool {
     return $this->isNegated() ? !$evaluation_result : $evaluation_result;
   }
 

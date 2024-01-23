@@ -20,6 +20,6 @@ interface NegatableConditionInterface extends ConditionInterface {
    * @return bool
    *   TRUE if the result is FALSE, FALSE otherwise.
    */
-  public function evaluateIsNegated($evaluation_result);
+  public function evaluateIsNegated(bool $evaluation_result): bool;
 
 }
