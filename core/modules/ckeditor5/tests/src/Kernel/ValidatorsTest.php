@@ -62,8 +62,9 @@ class ValidatorsTest extends KernelTestBase {
 
     // Ensure core/modules/system/config/install/core.entity_link_suggester.everything.yml
     // is installed.
-    $this->container->get('theme_installer')->install(['stark']);
     $this->installConfig(['system']);
+    // Avoid needing to install the Stark theme.
+    $this->config('system.theme')->delete();
   }
 
   /**
