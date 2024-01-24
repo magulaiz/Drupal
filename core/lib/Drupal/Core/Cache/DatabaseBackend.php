@@ -88,7 +88,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * @param \Drupal\Component\Serialization\ObjectAwareSerializationInterface|null $serializer
    *   (optional) The serializer to use.
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, ObjectAwareSerializationInterface $serializer = NULL) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, ?ObjectAwareSerializationInterface $serializer = NULL) {
     // All cache tables should be prefixed with 'cache_'.
     $bin = 'cache_' . $bin;
 
@@ -97,7 +97,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->checksumProvider = $checksum_provider;
     $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
     if (!$serializer) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.0.4 and it will be required in drupal:10.1.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
       $serializer = \Drupal::service('serialization.phpserialize');
     }
     $this->serializer = $serializer;
