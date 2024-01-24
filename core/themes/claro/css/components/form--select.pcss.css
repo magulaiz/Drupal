@@ -33,7 +33,7 @@
   }
 
   /**
-   * Prevent long select value to break the node form layout.
+   * Prevent long select values from breaking the node form layout.
    */
   @nest .node-form & {
     max-width: 60rem;
