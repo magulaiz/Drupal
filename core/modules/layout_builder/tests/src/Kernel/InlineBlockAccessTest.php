@@ -111,7 +111,7 @@ final class InlineBlockAccessTest extends KernelTestBase {
   /**
    * Test inline block list contents.
    */
-  public function testInlineBlockList() {
+  public function testInlineBlockList(): void {
     // Login as a restricted access user.
     $this->drupalSetUpCurrentUser([], [
       'configure any layout',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
@@ -227,7 +228,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement|null
    *   The link or NULL if not found.
    */
-  protected function getContextualLink($selector, $link_locator) {
+  protected function getContextualLink($selector, $link_locator): ?NodeElement {
     $element = $this->getSession()->getPage()->find('css', $selector);
     return $element->findLink($link_locator);
   }
