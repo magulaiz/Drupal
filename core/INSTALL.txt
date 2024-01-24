@@ -106,7 +106,7 @@ INSTALLATION
    the following commands (assuming you want version x.y.z of Drupal in .tar.gz
    format):
 
-     wget https://www.drupal.org/download-x.y.z/tar.gz -O drupal-x.y.z.tar.gz
+     wget https://www.drupal.org/files/projects/drupal-x.y.z.tar.gz
      tar -zxvf drupal-x.y.z.tar.gz
 
    This will create a new directory drupal-x.y.z/ containing all Drupal files
