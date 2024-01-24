@@ -520,6 +520,12 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->execute();
     $this->assertSame(['5', '6', '7'], array_values($this->queryResults));
 
+    // Request an empty range.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range(0, 0)
+      ->execute();
+    $this->assertEmpty($this->queryResults);
+
     // Apply a pager with limit 4.
     $this->queryResults = $this->entityStorage->getQuery()
       ->pager('4', 0)
