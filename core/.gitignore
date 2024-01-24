@@ -3,6 +3,16 @@
 node_modules
 yarn-error.log
 
+# Ignore yarn files
+# @see https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # Ignore overrides of core's phpcs.xml.dist and phpunit.xml.dist.
 phpcs.xml
 phpunit.xml
