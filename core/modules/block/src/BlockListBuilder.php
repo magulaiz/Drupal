@@ -264,7 +264,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           aria-pressed="false"
           href="#"
           data-toggle-region="' . $region . '"
-          class="button button--small region-filter-control">' . $showFiltered . '</a>',
+          class="button--small region-filter-control">' . $showFiltered . '</a>',
       ];
 
       $form['region-' . $region]['title'] = [

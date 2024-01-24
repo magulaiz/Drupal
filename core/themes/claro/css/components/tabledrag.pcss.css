@@ -78,6 +78,26 @@ body.drag {
   background: url(../../images/icons/000f33/eye-close.svg) no-repeat center;
   background-size: contain;
 }
+
+a.region-filter-control {
+  color: #55565c;
+  text-decoration: none;
+}
+
+.js-form-item-search-blocks.form-item--search-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.js-form-item-search-blocks.form-item--search-blocks label {
+  width: 100%;
+}
+
+.block-filter-region-text {
+  margin-right: 10px;
+}
+
 .region-filter-control-opened::before {
   background: url(../../images/icons/000f33/eye-open.svg) no-repeat center;
 }
@@ -93,7 +113,12 @@ body.drag {
 }
 .js-input-filter-goto-element.has-block-results {
   cursor: pointer;
-  color: var(--color-link);
+  color: #55565c;
+}
+
+.js-input-filter-goto-element.has-block-results::after {
+  background: url(../../images/icons/545560/chevron-down.svg) no-repeat center;
+  background-size: contain;
 }
 
 /* Make sure of the disabled block has the success style when filtered. */
