@@ -19,8 +19,9 @@ interface ThemeManagerInterface {
    * details.
    *
    * @param string|string[] $hook
-   *   The name of the theme hook to call or an array of names of theme hooks to
-   *   call.
+   *   The name of the theme hook to call. An array of strings can also be
+   *   provided, but should only be used if '__' suggestion expansion is more
+   *   complicated than a string can provide.
    * @param array $variables
    *   An associative array of theme variables.
    *
