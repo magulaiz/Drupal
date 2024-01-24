@@ -2,16 +2,15 @@
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\locale\Locale;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests translation update's effects on configuration translations.
  *
  * @group locale
  */
-class ConfigOverriddesPreventonInstall extends BrowserTestBase {
+class ModuleInstallConfigTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -33,7 +32,7 @@ class ConfigOverriddesPreventonInstall extends BrowserTestBase {
   }
 
   /**
-   * Tests configuration translations after any module/theme insatll.
+   * Tests configuration translations after any module/theme install.
    */
   public function testConfigTranslationImport() {
     $admin_user = $this->drupalCreateUser([
@@ -44,7 +43,7 @@ class ConfigOverriddesPreventonInstall extends BrowserTestBase {
       'administer permissions',
       'administer account settings',
       'administer nodes',
-      'administer content types'
+      'administer content types',
     ]);
     $this->drupalLogin($admin_user);
 
@@ -69,15 +68,15 @@ class ConfigOverriddesPreventonInstall extends BrowserTestBase {
     // Check and update the translation status. This will import the de
     // translations of locale_test_translate module.
     $this->drupalGet('admin/config/regional/language');
-    $edit = ['site_default_language'=>'de'];
+    $edit = ['site_default_language' => 'de'];
     $this->submitForm($edit, 'Save configuration');
 
     $this->importPoFile($this->getPoFileWithConfigDe(), ['langcode' => 'de']);
-    //install book module to test the configuration language code.
+    // Install book module to test the configuration language code.
     $this->drupalGet('admin/modules');
     $edit = ['modules[book][enable]' => TRUE];
     $this->submitForm($edit, 'Install');
-    //test this book config edit page for translation overrides or not.
+    // Test this book config edit page for translation overrides or not.
     $this->drupalGet('admin/structure/types/manage/book');
     $this->drupalGet('/en/admin/structure/types/manage/book');
     $this->assertSession()->fieldValueEquals('name', 'Book page');
@@ -101,6 +100,10 @@ class ConfigOverriddesPreventonInstall extends BrowserTestBase {
     $this->submitForm($options, 'Import');
     $file_system->unlink($name);
   }
+
+  /**
+   * Helper function that returns a .po file with configuration translations.
+   */
   public function getPoFileWithConfigDe() {
     return <<< EOF
       msgid ""
@@ -118,7 +121,7 @@ class ConfigOverriddesPreventonInstall extends BrowserTestBase {
       msgstr "Deutsch"
 
       msgid "Book page"
-      msgstr "Buchseite"
+      msgstr "Book page german"
 
       EOF;
   }
