@@ -135,7 +135,7 @@
 
       // Filter rows when search text is entered.
       $input.on({
-        keyup: Drupal.debounce(jQuery.proxy(this.filterUpdate, this), 200),
+        input: Drupal.debounce(jQuery.proxy(this.filterUpdate, this), 200),
         click: Drupal.debounce(jQuery.proxy(this.filterUpdate, this), 200),
         keydown: preventEnterKey,
       });
