@@ -40,6 +40,14 @@
   background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
 }
 
+/**
+   * Prevent long select value to break the node form layout.
+   */
+
+.node-form .form-element--type-select {
+  max-width: 60rem;
+}
+
 @media (forced-colors: active) {
   .form-element--type-select,
   .form-element--type-select:focus,

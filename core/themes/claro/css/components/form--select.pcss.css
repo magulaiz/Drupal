@@ -31,6 +31,13 @@
       background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
     }
   }
+
+  /**
+   * Prevent long select value to break the node form layout.
+   */
+  @nest .node-form & {
+    max-width: 60rem;
+  }
 }
 
 @media (forced-colors: active) {
