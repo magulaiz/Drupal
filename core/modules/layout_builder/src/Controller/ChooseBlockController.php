@@ -213,7 +213,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    * @param mixed[] $inline_blocks
    *   Inline block definitions array.
    */
-  protected function filterInlineBlocksByAccess(array &$inline_blocks) {
+  protected function filterInlineBlocksByAccess(array &$inline_blocks): void {
     // Unrestricted access - return early.
     if ($this->currentUser->hasPermission('create and edit custom blocks')) {
       return;

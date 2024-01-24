@@ -21,7 +21,7 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\Block\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The Layout Builder tempstore repository service.
    */
   public function __construct(
@@ -46,7 +46,7 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
    *   The access result.
    */
   public function access(SectionStorageInterface $section_storage, string $delta, string $uuid, AccountInterface $account, Route $route) {
-    $access = parent::baseAccess($section_storage, $account, $route->getRequirement('_layout_builder_update_block_access'));
+    $access = $this->baseAccess($section_storage, $account, $route->getRequirement('_layout_builder_update_block_access'));
     if ($access->isAllowed()) {
       // Load the current state of sections if during edition.
       $section_storage = $this->layoutTempstoreRepository->get($section_storage);

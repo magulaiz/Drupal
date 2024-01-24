@@ -217,6 +217,9 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    *   The account being checked.
    * @param string $operation
    *   The performed operation (create or edit).
+   *
+   * @return \Drupal\Core\Access\AccessResult
+   *   The access result.
    */
   public function blockOperationAccess(AccountInterface $account, string $operation): AccessResult {
     $result = AccessResult::allowedIfHasPermission($account, 'create and edit custom blocks');
@@ -235,7 +238,10 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    * Gets permission for block bundle operation.
    */
   public static function getBundlePermission(string $block_bundle, string $operation): string {
-    return $operation === 'create' ? 'create ' . $block_bundle . ' block content' : $operation . ' any ' . $block_bundle . ' block content';
+    if ($operation === 'create') {
+      return 'create ' . $block_bundle . ' block content';
+    }
+    return $operation . ' any ' . $block_bundle . ' block content';
   }
 
   /**
