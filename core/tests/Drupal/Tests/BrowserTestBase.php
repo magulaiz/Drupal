@@ -493,7 +493,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * This method is called after the last test of this test class is run.
    */
-  public static function tearDownAfterClass(): void   {
+  public static function tearDownAfterClass(): void {
     self::assertGreaterThan(0, self::$visitCount, 'Functional(Javascript) test classes should visit at least one URL.');
     parent::tearDownAfterClass();
   }
