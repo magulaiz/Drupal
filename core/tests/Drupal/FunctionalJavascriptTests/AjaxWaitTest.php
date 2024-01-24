@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that unnecessary or untracked XHRs will cause a test failure.
  *
@@ -34,6 +36,7 @@ class AjaxWaitTest extends WebDriverTestBase {
    * Tests that an untracked XHR triggers a deprecation error.
    */
   public function testUntrackedXhr(): void {
+    BrowserTestBase::$visitCount++;
     $this->getSession()->executeScript(<<<JS
 let xhr = new XMLHttpRequest();
 xhr.open('GET', '/foobar');

@@ -236,6 +236,7 @@ trait UiHelperTrait {
     }
 
     $session->visit($url);
+    BrowserTestBase::$visitCount++;
     $out = $session->getPage()->getContent();
 
     // Ensure that any changes to variables in the other thread are picked up.
