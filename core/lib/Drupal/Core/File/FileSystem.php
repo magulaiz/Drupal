@@ -53,14 +53,14 @@ class FileSystem implements FileSystemInterface {
    *   The stream wrapper manager.
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
-   * @param \Psr\Log\LoggerInterface $logger
+   * @param \Psr\Log\LoggerInterface|null $logger
    *   (optional) The file logger channel.
    */
   public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger = NULL) {
     $this->streamWrapperManager = $stream_wrapper_manager;
     $this->settings = $settings;
     if ($logger) {
-      @trigger_error('Calling FileSystem::__construct() with the $logger argument is deprecated in drupal:9.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3071798', E_USER_DEPRECATED);
+      @trigger_error('Calling FileSystem::__construct() with the $logger argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3071798', E_USER_DEPRECATED);
     }
   }
 
