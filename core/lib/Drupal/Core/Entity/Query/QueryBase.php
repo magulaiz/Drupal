@@ -193,10 +193,10 @@ abstract class QueryBase implements QueryInterface {
    * {@inheritdoc}
    */
   public function range($start = NULL, $length = NULL) {
-    $this->range = $start || $length ? [
+    $this->range = is_null($start) && is_null($length) ? [] : [
       'start' => $start ?? 0,
       'length' => $length,
-    ] : [];
+    ];
     return $this;
   }
 
