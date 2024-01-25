@@ -29,18 +29,23 @@ class HandlerAllTest extends ViewsKernelTestBase {
     'block',
     'comment',
     'contact',
+    'dblog',
     'field',
     'filter',
     'file',
+    'forum',
     'history',
+    'image',
     'language',
     'locale',
+    'media',
     'node',
     'search',
     'system',
     'options',
     'taxonomy',
     'text',
+    'tracker',
     'user',
   ];
 
@@ -55,11 +60,14 @@ class HandlerAllTest extends ViewsKernelTestBase {
   public function testHandlers(): void {
     $this->installEntitySchema('comment');
     $this->installEntitySchema('file');
+    $this->installEntitySchema('media');
     $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
     $this->installSchema('file', ['file_usage']);
-
+    $this->installSchema('forum', ['forum_index']);
+    $this->installSchema('dblog', ['watchdog']);
+    $this->installSchema('tracker', ['tracker_user']);
     // Create the comment body field storage.
     FieldStorageConfig::create([
       'type' => 'text_long',
