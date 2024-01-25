@@ -193,12 +193,8 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
     }
     elseif ($form_state->get('operation') === 'edit') {
       $form['source_field']['#access'] = FALSE;
-      $fields = $this->entityFieldManager->getFieldDefinitions('media', $form_state->get('type')->id());
-      $form['source_field_message'] = [
-        '#markup' => $this->t('%field_name field is used to store the essential information about the media item.', [
-          '%field_name' => $fields[$this->configuration['source_field']]->getLabel(),
-        ]),
-      ];
+      $form['source_actions'] = \Drupal::service('plugin.manager.menu.local_action')->getActionsForRoute('entity.media.field_ui_fields');
+      $form['source_fields'] = $this->entityTypeManager->getListBuilder('field_config')->render('media', $form_state->get('type')->id());
     }
 
     return $form;
