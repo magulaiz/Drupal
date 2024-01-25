@@ -81,7 +81,7 @@
     // Abort search if the first character is in firstCharacterBlacklist.
     if (
       term.length > 0 &&
-      options.firstCharacterBlacklist.indexOf(term[0]) !== -1
+      options.firstCharacterBlacklist.includes(term[0])
     ) {
       return false;
     }
