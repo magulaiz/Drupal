@@ -27,6 +27,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     'test_argument_default_fixed',
     'test_argument_default_current_user',
     'test_argument_default_node',
+    'test_argument_default_node_type',
     'test_argument_default_query_param',
   ];
 
@@ -168,6 +169,49 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node1->getTitle());
     $this->drupalGet('node/' . $node2->id());
     $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node2->getTitle());
+  }
+
+  /**
+   * Tests node type default argument.
+   */
+  public function testArgumentDefaultNodeType() {
+    // Create a user that has permission to place a view block.
+    $permissions = [
+      'administer views',
+      'administer blocks',
+      'bypass node access',
+      'access user profiles',
+      'view all revisions',
+    ];
+    $views_admin = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($views_admin);
+
+    // Create nodes where should show themselves again as view block.
+    $node_type1 = NodeType::create(['type' => 'page', 'name' => 'Page']);
+    $node_type1->save();
+    $node_type2 = NodeType::create(['type' => 'article', 'name' => 'Article']);
+    $node_type2->save();
+    $node1 = Node::create(['title' => 'Test page 1', 'type' => 'page']);
+    $node1->save();
+    $node2 = Node::create(['title' => 'Test article 1', 'type' => 'article']);
+    $node2->save();
+
+    // Place the block, visit the pages that display the block, and check that
+    // the nodes we expect appear in the respective pages.
+    $id = 'view-block-id';
+    $this->drupalPlaceBlock("views_block:test_argument_default_node_type-block_1", ['id' => 'view_block_id']);
+    $this->drupalGet('node/' . $node1->id());
+    $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node1->getTitle());
+    $this->assertSession()->elementTextNotContains('xpath', '//*[@id="block-' . $id . '"]', $node2->getTitle());
+    $this->drupalGet('node/' . $node2->id());
+    $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node2->getTitle());
+    $this->assertSession()->elementTextNotContains('xpath', '//*[@id="block-' . $id . '"]', $node1->getTitle());
+
+    // Check the view from node preview page.
+    $node3 = $this->drupalCreateNode(['title' => 'Title 1', 'type' => 'page']);
+    $this->drupalGet($node3->toUrl('edit-form'));
+    $this->submitForm(['title[0][value]' => 'Title 2'], 'Preview');
+    $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node3->getTitle());
   }
 
   /**
