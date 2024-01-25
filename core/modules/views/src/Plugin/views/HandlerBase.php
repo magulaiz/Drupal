@@ -710,6 +710,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
       return $join;
     }
+    return NULL;
   }
 
   /**

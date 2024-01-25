@@ -2536,11 +2536,6 @@ parameters:
 			path: modules/views/src/Plugin/views/HandlerBase.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\:\\:getTableJoin\\(\\) should return Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\JoinPluginBase but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/HandlerBase.php
-
-		-
 			message: "#^Variable \\$group_types might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/HandlerBase.php
