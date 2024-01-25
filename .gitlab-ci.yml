@@ -328,7 +328,8 @@ default:
     paths:
       - core/node_modules/
   script:
-    - yarn --cwd ./core install
+    - corepack enable
+    - cd core && yarn install
 
 ################
 # Lint Jobs
@@ -380,7 +381,9 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+    - corepack enable
+    - cd core
+    - yarn run lint:core-js-passing --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -391,7 +394,9 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - corepack enable
+    - cd core
+    - yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
@@ -402,8 +407,10 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - yarn run --cwd=./core build:css --check
-    - cd core && yarn run -s check:ckeditor5
+    - corepack enable
+    - cd core
+    - yarn run build:css --check
+    - yarn run check:ckeditor5
 
 '📔 Spell-checking':
   <<: [ *with-yarn, *default-job-settings-lint ]
@@ -414,4 +421,6 @@ default:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=$GIT_DEPTH origin "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
-    - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+    - corepack enable
+    - cd core
+    - echo $MODIFIED | tr ' ' '\n' | yarn run spellcheck:core --no-must-find-files --file-list stdin
