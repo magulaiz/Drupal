@@ -1625,7 +1625,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view all revisions',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user.permissions'],
       [],
       TRUE,
     ];
