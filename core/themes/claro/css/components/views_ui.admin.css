@@ -86,3 +86,7 @@ html.js .js-only {
 html.js span.js-only {
   display: inline;
 }
+
+.views-display-disabled-link {
+  opacity: 0.5;
+}
