@@ -213,10 +213,9 @@
                 'js-show-filtered-quantity',
               );
             }
-            filteredRegionStatus.textContent = Drupal.t(
-              '@invisible filtered',
-              { '@invisible': invisible },
-            );
+            filteredRegionStatus.textContent = Drupal.t('@invisible filtered', {
+              '@invisible': invisible,
+            });
           }
 
           const regionEmptyMessage = el.nextElementSibling.nextElementSibling;

@@ -98,9 +98,9 @@ body.drag {
 }
 
 a.region-filter-control {
-  color: #55565c;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: #55565c;
 }
 
 .js-form-item-search-blocks.form-item--search-blocks {
@@ -145,9 +145,9 @@ a.region-filter-control {
 /* Make sure of the disabled block has the success style when filtered. */
 
 .block-disabled.js-filter-block-visible.color-success {
+  opacity: 1;
   color: #325e1c;
   background-color: #f3faef;
-  opacity: 1;
 }
 
 /* Empty region message row in table. */
