@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests URL aliases for taxonomy terms.
@@ -13,8 +12,6 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
  * @group path
  */
 class PathTaxonomyTermTest extends PathTestBase {
-
-  use TaxonomyTestTrait;
 
   /**
    * Modules to enable.
