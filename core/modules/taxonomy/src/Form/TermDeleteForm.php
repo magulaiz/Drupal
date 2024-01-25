@@ -91,7 +91,6 @@ class TermDeleteForm extends ContentEntityDeleteForm {
       'The @entity-type-plural @labels and %label have been deleted.',
       [
         '@entity-type' => $entity->getEntityType()->getSingularLabel(),
-        // @todo Use pluralized entity type label once available, see https://www.drupal.org/node/1850080
         '@entity-type-plural' => $this->t('taxonomy terms'),
         '%label' => $deleted_last->label(),
         '@labels' => new FormattableMarkup(
@@ -119,7 +118,6 @@ class TermDeleteForm extends ContentEntityDeleteForm {
       $deleted_last = end($deleted);
       $deleted_head = array_slice($deleted, 0, -1);
       $this->logger($entity->getEntityType()->getProvider())->notice('The @entity-type @labels and %label have been deleted.', [
-        // @todo Use pluralized entity type label once available, see https://www.drupal.org/node/1850080
         '@entity-type' => 'taxonomy terms',
         '%label' => $deleted_last->label(),
         '@labels' => new FormattableMarkup(
