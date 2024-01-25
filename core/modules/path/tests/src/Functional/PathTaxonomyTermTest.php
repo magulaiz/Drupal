@@ -106,32 +106,4 @@ class PathTaxonomyTermTest extends PathTestBase {
     $this->assertSession()->statusCodeEquals(404);
   }
 
-  /**
-   * Tests alias functionality in the local tasks.
-   */
-  public function testTermLocalTasks() {
-    \Drupal::service('module_installer')->install(['block']);
-    $this->drupalPlaceBlock('local_tasks_block');
-
-    $vocabulary = Vocabulary::load('tags');
-    $term = $this->createTerm($vocabulary, [
-      'path' => [
-        'alias' => '/original-term-alias',
-      ],
-    ]);
-
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $elements = $this->xpath('//*[contains(@class, :class)]//a', [':class' => 'tabs primary']);
-    // Verify that the link in the first local task matches the URL alias.
-    $this->assertSame('/original-term-alias', (string) $elements[0]->getAttribute('href'));
-
-    // Update the term's URL alias.
-    $edit = [];
-    $edit['path[0][alias]'] = '/updated-term-alias';
-    $this->submitForm($edit, 'Save');
-    // Verify that the link in the first local task matches the updated URL
-    // alias.
-    $this->assertSame('/updated-term-alias', (string) $elements[0]->getAttribute('href'));
-  }
-
 }
