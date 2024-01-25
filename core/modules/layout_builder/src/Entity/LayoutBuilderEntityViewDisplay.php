@@ -217,7 +217,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         'label' => t('Layout'),
       ]);
       $field->setTranslatable(FALSE);
-
       $field->save();
     }
   }

@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Access;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\Plugin\Block\InlineBlock;
@@ -43,7 +44,7 @@ class LayoutBuilderAddBlockAccessCheck extends LayoutBuilderBlockAccessBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(SectionStorageInterface $section_storage, string $plugin_id, AccountInterface $account, Route $route) {
+  public function access(SectionStorageInterface $section_storage, string $plugin_id, AccountInterface $account, Route $route): AccessResultInterface {
     $access = parent::baseAccess($section_storage, $account, $route->getRequirement('_layout_builder_add_block_access'));
     if ($access->isAllowed()) {
       $plugin = $this->blockManager->createInstance($plugin_id, []);

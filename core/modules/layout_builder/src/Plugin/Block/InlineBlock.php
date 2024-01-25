@@ -4,6 +4,7 @@ namespace Drupal\layout_builder\Plugin\Block;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
+use Drupal\block_content\BlockContentPermissions;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
@@ -207,7 +208,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     if ($entity = $this->getEntity()) {
       return $entity->access('view', $account, TRUE);
     }
-    return AccessResult::allowedIfHasPermission($account, 'administer blocks');
+    return AccessResult::forbidden();
   }
 
   /**
@@ -230,18 +231,8 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     $block_bundle = $this->getEntity()->bundle();
     return AccessResult::allowedIfHasPermissions($account, [
       'create and edit accessible custom blocks',
-      static::getBundlePermission($block_bundle, $operation),
+      BlockContentPermissions::getBundlePermission($block_bundle, $operation),
     ]);
-  }
-
-  /**
-   * Gets permission for block bundle operation.
-   */
-  public static function getBundlePermission(string $block_bundle, string $operation): string {
-    if ($operation === 'create') {
-      return 'create ' . $block_bundle . ' block content';
-    }
-    return $operation . ' any ' . $block_bundle . ' block content';
   }
 
   /**

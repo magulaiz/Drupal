@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Access;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Plugin\Block\InlineBlock;
@@ -45,7 +46,7 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(SectionStorageInterface $section_storage, string $delta, string $uuid, AccountInterface $account, Route $route) {
+  public function access(SectionStorageInterface $section_storage, string $delta, string $uuid, AccountInterface $account, Route $route): AccessResultInterface {
     $access = $this->baseAccess($section_storage, $account, $route->getRequirement('_layout_builder_update_block_access'));
     if ($access->isAllowed()) {
       // Load the current state of sections if during edition.

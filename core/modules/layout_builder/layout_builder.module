@@ -5,6 +5,7 @@
  * Provides hook implementations for Layout Builder.
  */
 
+use Drupal\block_content\BlockContentPermissions;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
@@ -23,7 +24,6 @@ use Drupal\layout_builder\Form\DefaultsEntityForm;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\layout_builder\Form\OverridesEntityForm;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
@@ -271,7 +271,7 @@ function layout_builder_block_content_access(EntityInterface $entity, $operation
     return AccessResult::allowed();
   }
   if ($account->hasPermission('create and edit accessible custom blocks')) {
-    if ($account->hasPermission(InlineBlock::getBundlePermission($entity->bundle(), $operation))) {
+    if ($account->hasPermission(BlockContentPermissions::getBundlePermission($entity->bundle(), $operation))) {
       return AccessResult::allowed();
     }
   }

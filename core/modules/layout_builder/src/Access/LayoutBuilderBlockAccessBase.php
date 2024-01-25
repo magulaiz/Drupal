@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -22,7 +23,7 @@ abstract class LayoutBuilderBlockAccessBase implements AccessInterface {
     SectionStorageInterface $section_storage,
     AccountInterface $account,
     string $section_operation,
-  ): AccessResult {
+  ): AccessResultInterface {
     $access = $section_storage->access($section_operation, $account, TRUE);
 
     // Check for the global permission unless the section storage checks

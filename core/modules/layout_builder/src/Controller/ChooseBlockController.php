@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Controller;
 
+use Drupal\block_content\BlockContentPermissions;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -11,7 +12,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
-use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -221,7 +221,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
 
     foreach (array_keys($inline_blocks) as $block_id) {
       [, $block_bundle] = explode(':', $block_id);
-      if (!$this->currentUser->hasPermission(InlineBlock::getBundlePermission($block_bundle, 'create'))) {
+      if (!$this->currentUser->hasPermission(BlockContentPermissions::getBundlePermission($block_bundle, 'create'))) {
         unset($inline_blocks[$block_id]);
       }
     }
