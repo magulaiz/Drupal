@@ -129,6 +129,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
 
     $command = [
       $phpunit_bin,
+      '--display-deprecations',
       '--log-junit',
       escapeshellarg($phpunit_file),
     ];

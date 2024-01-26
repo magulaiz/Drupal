@@ -76,7 +76,7 @@
     </testsuite>
   </testsuites>
   <!-- Settings for coverage reports. -->
-  <source>
+  <source ignoreSuppressionOfDeprecations="true">
     <include>
       <directory>./includes</directory>
       <directory>./lib</directory>
