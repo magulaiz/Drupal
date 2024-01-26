@@ -175,6 +175,8 @@ class ConnectionTest extends DatabaseTestBase {
 
   /**
    * Tests deprecation of ::getUnprefixedTablesMap().
+   *
+   * @group legacy
    */
   #[IgnoreDeprecations]
   public function testDeprecatedGetUnprefixedTablesMap() {
@@ -191,6 +193,8 @@ class ConnectionTest extends DatabaseTestBase {
 
   /**
    * Tests deprecation of ::tablePrefix().
+   *
+   * @group legacy
    */
   #[IgnoreDeprecations]
   public function testDeprecatedTablePrefix(): void {
