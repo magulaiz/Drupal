@@ -75,7 +75,7 @@ class LocalActionTest extends BrowserTestBase {
    */
   protected function assertLocalAction(array $actions): void {
     $elements = $this->xpath('//a[contains(@class, :class)]', [
-      ':class' => 'button-action',
+      ':class' => 'button--action',
     ]);
     $index = 0;
     foreach ($actions as $action) {
@@ -85,7 +85,7 @@ class LocalActionTest extends BrowserTestBase {
       // so use a pattern instead to check the raw content.
       // This behavior is a bug in libxml, see
       // https://bugs.php.net/bug.php?id=49437.
-      $this->assertSession()->responseMatches('@<a [^>]*class="[^"]*button-action[^"]*"[^>]*>' . preg_quote($title, '@') . '</@');
+      $this->assertSession()->responseMatches('@<a [^>]*class="[^"]*button--action[^"]*"[^>]*>' . '[\s]*<span aria-hidden="true">[\+]</span>' . preg_quote($title, '@') . '</@');
       $this->assertEquals($url->toString(), $elements[$index]->getAttribute('href'));
       $index++;
     }

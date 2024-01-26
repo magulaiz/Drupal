@@ -22,7 +22,7 @@ tips:
     plugin: text
     label: 'The action'
     weight: 2
-    selector: .button-action
+    selector: .button--action
     body: 'The action button of awesome'
   tour-test-3:
     id: tour-test-3
