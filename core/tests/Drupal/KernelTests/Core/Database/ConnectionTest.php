@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests of the core database system.
@@ -174,9 +175,8 @@ class ConnectionTest extends DatabaseTestBase {
 
   /**
    * Tests deprecation of ::getUnprefixedTablesMap().
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedGetUnprefixedTablesMap() {
     $this->expectDeprecation('Drupal\Core\Database\Connection::getUnprefixedTablesMap() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3257198');
     $this->assertIsArray($this->connection->getUnprefixedTablesMap());
@@ -191,9 +191,8 @@ class ConnectionTest extends DatabaseTestBase {
 
   /**
    * Tests deprecation of ::tablePrefix().
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedTablePrefix(): void {
     $this->expectDeprecation('Drupal\Core\Database\Connection::tablePrefix() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849');
     $this->assertIsString($this->connection->tablePrefix());
