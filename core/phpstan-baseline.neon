@@ -1139,11 +1139,6 @@ parameters:
 			path: modules/block/tests/src/Unit/Plugin/migrate/process/BlockSettingsTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\block\\\\Unit\\\\Plugin\\\\migrate\\\\process\\\\BlockThemeDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/block/tests/src/Unit/Plugin/migrate/process/BlockThemeDeprecationTest.php
-
-		-
 			message: "#^Variable \\$dependency in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/block_content/src/BlockContentAccessControlHandler.php
@@ -1157,11 +1152,6 @@ parameters:
 			message: "#^Method Drupal\\\\block_content\\\\BlockContentTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/block_content/src/BlockContentTypeForm.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\block_content\\\\Functional\\\\BlockContentRedirectTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
-			path: modules/block_content/tests/src/Functional/BlockContentRedirectTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1812,11 +1802,6 @@ parameters:
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\editor\\\\Kernel\\\\EditorDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: modules/editor/tests/src/Kernel/EditorDeprecationTest.php
-
-		-
 			message: "#^@dataProvider providerTestBlackListMode related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/editor/tests/src/Unit/EditorXssFilter/StandardTest.php
@@ -1927,11 +1912,6 @@ parameters:
 			path: modules/field_ui/tests/src/Functional/ManageFieldsMultipleTypesTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\field_ui\\\\Functional\\\\ManageFieldsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/field_ui/tests/src/Functional/ManageFieldsTest.php
-
-		-
 			message: "#^@dataProvider providerBundleSelection related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/field_ui/tests/src/FunctionalJavascript/DisplayModeBundleSelectionTest.php
@@ -2022,33 +2002,8 @@ parameters:
 			path: modules/file/tests/src/Kernel/FileManagedUnitTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\FileUploadHandlerTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileUploadHandlerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\LegacyFileModuleTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/LegacyFileModuleTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\LegacyFileThemeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 3
-			path: modules/file/tests/src/Kernel/LegacyFileThemeTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\LegacyValidateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: modules/file/tests/src/Kernel/LegacyValidateTest.php
-
-		-
 			message: "#^@dataProvider providerTestFileValidateExtensionsOnUri related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: modules/file/tests/src/Kernel/LegacyValidatorTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\LegacyValidatorTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 6
 			path: modules/file/tests/src/Kernel/LegacyValidatorTest.php
 
 		-
@@ -2057,19 +2012,9 @@ parameters:
 			path: modules/file/tests/src/Kernel/Plugin/Validation/Constraint/FileExtensionConstraintValidatorTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\Upload\\\\LegacyFileUploadHandlerTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Upload/LegacyFileUploadHandlerTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Kernel/UsageTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Kernel\\\\Validation\\\\FileValidatorTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: modules/file/tests/src/Kernel/Validation/FileValidatorTest.php
 
 		-
 			message: "#^@dataProvider validateProvider related method must be static in PHPUnit 10 and newer\\.$#"
@@ -2275,11 +2220,6 @@ parameters:
 			path: modules/jsonapi/tests/src/Functional/ExternalNormalizersTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\NodeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/NodeTest.php
-
-		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
 			count: 1
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
@@ -2352,11 +2292,6 @@ parameters:
 		-
 			message: "#^@dataProvider getRelatableResourceTypesProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 2
-			path: modules/jsonapi/tests/src/Kernel/ResourceType/RelatedResourceTypesTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\jsonapi\\\\Kernel\\\\ResourceType\\\\RelatedResourceTypesTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
 			path: modules/jsonapi/tests/src/Kernel/ResourceType/RelatedResourceTypesTest.php
 
 		-
@@ -2789,11 +2724,6 @@ parameters:
 			path: modules/media/tests/src/Functional/FieldFormatter/OEmbedFormatterTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\media\\\\Functional\\\\FieldFormatter\\\\OembedUpdateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/media/tests/src/Functional/FieldFormatter/OembedUpdateTest.php
-
-		-
 			message: "#^@dataProvider providerMediaTypeCreationForm related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/media/tests/src/Functional/MediaTypeCreationTest.php
@@ -2847,11 +2777,6 @@ parameters:
 			message: "#^@dataProvider providerCreateAccess related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaDeprecationTest.php
 
 		-
 			message: "#^@dataProvider providerAccessUnpublished related method must be static in PHPUnit 10 and newer\\.$#"
@@ -2960,11 +2885,6 @@ parameters:
 			message: "#^Variable \\$uuid might not be defined\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\MenuLinkContentDeprecationsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentDeprecationsTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -3101,16 +3021,6 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/Plugin/MigrationTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\Plugin\\\\MigrationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 3
-			path: modules/migrate/tests/src/Kernel/Plugin/MigrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\Plugin\\\\id_map\\\\SqlDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/Plugin/id_map/SqlDeprecationTest.php
-
-		-
 			message: "#^@dataProvider providerTestEnsureTables related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/Plugin/id_map/SqlTest.php
@@ -3209,11 +3119,6 @@ parameters:
 			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate\\\\Unit\\\\MigrateSqlIdMapTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapTest.php
-
-		-
 			message: "#^@dataProvider dependencyProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Unit/MigrationPluginManagerTest.php
@@ -3226,11 +3131,6 @@ parameters:
 		-
 			message: "#^@dataProvider getValidMigrationDependenciesProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: modules/migrate/tests/src/Unit/MigrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate\\\\Unit\\\\MigrationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
 			path: modules/migrate/tests/src/Unit/MigrationTest.php
 
 		-
@@ -3627,21 +3527,6 @@ parameters:
 			path: modules/mysql/src/Driver/Database/mysql/Insert.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\mysql\\\\Kernel\\\\mysql\\\\ConnectionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/mysql/tests/src/Kernel/mysql/ConnectionTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\mysql\\\\Kernel\\\\mysql\\\\MysqlDriverLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 6
-			path: modules/mysql/tests/src/Kernel/mysql/MysqlDriverLegacyTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\mysql\\\\Kernel\\\\mysql\\\\NextIdTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: modules/mysql/tests/src/Kernel/mysql/NextIdTest.php
-
-		-
 			message: "#^Variable \\$string_ascii_check might not be defined\\.$#"
 			count: 1
 			path: modules/mysql/tests/src/Kernel/mysql/SchemaTest.php
@@ -3730,11 +3615,6 @@ parameters:
 			message: "#^Variable \\$changed in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\node\\\\Kernel\\\\NodeDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
-			path: modules/node/tests/src/Kernel/NodeDeprecationTest.php
 
 		-
 			message: "#^@dataProvider providerTestRevisionOperations related method must be static in PHPUnit 10 and newer\\.$#"
@@ -3845,19 +3725,9 @@ parameters:
 			path: modules/pgsql/src/Update10101.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\pgsql\\\\Kernel\\\\pgsql\\\\PgsqlDriverLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 9
-			path: modules/pgsql/tests/src/Kernel/pgsql/PgsqlDriverLegacyTest.php
-
-		-
 			message: "#^@dataProvider providerComputedConstraintName related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/pgsql/tests/src/Unit/SchemaTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\phpass\\\\Unit\\\\LegacyPasswordHashingTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/phpass/tests/src/Unit/LegacyPasswordHashingTest.php
 
 		-
 			message: "#^@dataProvider providerLongPasswords related method must be static in PHPUnit 10 and newer\\.$#"
@@ -3873,16 +3743,6 @@ parameters:
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\responsive_image\\\\Functional\\\\ResponsiveImageLazyLoadUpdateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/responsive_image/tests/src/Functional/ResponsiveImageLazyLoadUpdateTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\responsive_image\\\\Functional\\\\ResponsiveImageOrderMultipliersNumericallyUpdateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/responsive_image/tests/src/Functional/ResponsiveImageOrderMultipliersNumericallyUpdateTest.php
 
 		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
@@ -4073,16 +3933,6 @@ parameters:
 			path: modules/sqlite/src/Driver/Database/sqlite/Connection.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\sqlite\\\\Kernel\\\\sqlite\\\\ConnectionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/sqlite/tests/src/Kernel/sqlite/ConnectionTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\sqlite\\\\Kernel\\\\sqlite\\\\SqliteDriverLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 8
-			path: modules/sqlite/tests/src/Kernel/sqlite/SqliteDriverLegacyTest.php
-
-		-
 			message: "#^@dataProvider providerCreateConnectionOptionsFromUrl related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/sqlite/tests/src/Unit/ConnectionTest.php
@@ -4238,11 +4088,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\system\\\\Functional\\\\Module\\\\DeprecatedTemplateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Module/DeprecatedTemplateTest.php
-
-		-
 			message: "#^@dataProvider providerTestThemeInstallWithModuleDependencies related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
@@ -4311,11 +4156,6 @@ parameters:
 			message: "#^@dataProvider providerShowAdvisories related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/system/tests/src/Kernel/SecurityAdvisories/SecurityAdvisoriesFetcherTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\system\\\\Kernel\\\\System\\\\SystemFunctionsLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
-			path: modules/system/tests/src/Kernel/System/SystemFunctionsLegacyTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -4397,11 +4237,6 @@ parameters:
 			path: modules/system/tests/src/Unit/Transliteration/MachineNameControllerTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\system\\\\Unit\\\\Transliteration\\\\MachineNameControllerTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/system/tests/src/Unit/Transliteration/MachineNameControllerTest.php
-
-		-
 			message: "#^Variable \\$help_message might not be defined\\.$#"
 			count: 1
 			path: modules/taxonomy/src/Form/OverviewTerms.php
@@ -4440,11 +4275,6 @@ parameters:
 			message: "#^@dataProvider providerTestGetTermWithParent related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/taxonomy/tests/src/Functional/Rest/TermResourceTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\TermKernelTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: modules/taxonomy/tests/src/Kernel/TermKernelTest.php
 
 		-
 			message: "#^Variable \\$depth_count might not be defined\\.$#"
@@ -4492,11 +4322,6 @@ parameters:
 			path: modules/tour/src/TipPluginBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\tour\\\\Kernel\\\\TourTipLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/tour/tests/src/Kernel/TourTipLegacyTest.php
-
-		-
 			message: "#^@dataProvider routeProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/tour/tests/src/Unit/Entity/TourTest.php
@@ -4528,11 +4353,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider incompatibleUpdatesTableProvider related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/update/tests/src/Functional/UpdateManagerUpdateTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateManagerUpdateTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: modules/update/tests/src/Functional/UpdateManagerUpdateTest.php
 
@@ -4708,11 +4528,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Kernel\\\\LegacyUserTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/LegacyUserTest.php
 
 		-
 			message: "#^@dataProvider providerTestUserRole related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5130,11 +4945,6 @@ parameters:
 			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Entity\\\\ViewValidationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Entity/ViewValidationTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
@@ -5406,11 +5216,6 @@ parameters:
 			path: modules/views_ui/tests/src/Kernel/TagTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views_ui\\\\Kernel\\\\TruncateDeprecateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/views_ui/tests/src/Kernel/TruncateDeprecateTest.php
-
-		-
 			message: "#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/workflows/src/Form/WorkflowEditForm.php
@@ -5496,11 +5301,6 @@ parameters:
 			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceAssociationDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAssociationDeprecationTest.php
-
-		-
 			message: "#^@dataProvider providerTestAllowedEntityCrudInNonDefaultWorkspace related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 3
 			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
@@ -5561,11 +5361,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ExternalCommandRequirementTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 8
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
 			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:parseTestMethodAnnotations\\(\\)\\.$#"
 			count: 8
 			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
@@ -5617,24 +5412,9 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalJavascriptTests\\\\Ajax\\\\CommandsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/Ajax/CommandsTest.php
-
-		-
 			message: "#^@dataProvider formModeProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalJavascriptTests/Ajax/FormValuesTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalJavascriptTests\\\\AjaxWaitTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/AjaxWaitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalJavascriptTests\\\\JavascriptDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalJavascriptTests/JavascriptDeprecationTest.php
 
 		-
 			message: "#^@dataProvider machineNameInputOutput related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5667,21 +5447,6 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalTests\\\\BrowserTestBaseTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/BrowserTestBaseTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalTests\\\\Core\\\\Container\\\\ServiceDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalTests/Core/Container/ServiceDeprecationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalTests\\\\Core\\\\Test\\\\PhpUnitBridgeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalTests/Core/Test/PhpUnitBridgeTest.php
-
-		-
 			message: "#^@dataProvider providerPageTitle related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalTests/Entity/RevisionDeleteFormTest.php
@@ -5705,11 +5470,6 @@ parameters:
 			message: "#^@dataProvider providerRevisionPage related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalTests/Entity/RevisionViewTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalTests\\\\Installer\\\\InstallerDeprecatedDriverNameTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalTests/Installer/InstallerDeprecatedDriverNameTest.php
 
 		-
 			message: "#^@dataProvider providerTestAssetLoading related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5757,26 +5517,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Asset/DeprecatedAssetsTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Asset\\\\DeprecatedAssetsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Asset/DeprecatedAssetsTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Asset\\\\LegacyAssetTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Asset/LegacyAssetTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Asset\\\\LibraryDiscoveryIntegrationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
-			path: tests/Drupal/KernelTests/Core/Asset/LibraryDiscoveryIntegrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Bootstrap\\\\LegacyBootstrapTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Bootstrap/LegacyBootstrapTest.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
@@ -5785,11 +5525,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 12
 			path: tests/Drupal/KernelTests/Core/Cache/GenericCacheBackendUnitTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Common\\\\LegacyCommonTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Common/LegacyCommonTest.php
 
 		-
 			message: "#^@dataProvider providerConfigEntityUninstallComplex related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5817,16 +5552,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigSchemaDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigSchemaDeprecationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigSchemaTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigSchemaTest.php
-
-		-
 			message: "#^@dataProvider providerCheckConfigSchema related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Config/SchemaCheckTraitTest.php
@@ -5842,19 +5567,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Config/Storage/StorageReplaceDataWrapperTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/ConnectionTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectError\\(\\)\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/ConnectionTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\DatabaseLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/DatabaseLegacyTest.php
 
 		-
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
@@ -5867,44 +5582,14 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\DriverSpecificTransactionTestBase\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 8
-			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificTransactionTestBase.php
-
-		-
 			message: "#^Caught class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificTransactionTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\FetchTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/FetchTest.php
-
-		-
 			message: "#^@dataProvider providerContribDriverLog related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Database/LoggingTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\LoggingTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/LoggingTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\MergeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/MergeTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\NextIdTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/NextIdTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\QueryTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/QueryTest.php
 
 		-
 			message: "#^@dataProvider providerExtend related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5923,11 +5608,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerRegularExpressionCondition related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/SelectTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\SelectTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Database/SelectTest.php
 
@@ -6002,11 +5682,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDefinitionUpdateTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDeprecationTest.php
-
-		-
 			message: "#^@dataProvider derivativesProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDeriverTest.php
@@ -6062,34 +5737,14 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Extension\\\\ExperimentalDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Extension/ExperimentalDeprecationTest.php
-
-		-
 			message: "#^@dataProvider coreModuleListDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Extension/ModuleConfigureRouteTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Extension\\\\ModuleHandlerDeprecatedHookTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Extension/ModuleHandlerDeprecatedHookTest.php
-
-		-
 			message: "#^@dataProvider providerTestInvalidCoreInstall related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Extension/ModuleInstallerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Extension\\\\ModuleInstallerTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Extension/ModuleInstallerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Extension\\\\ModuleLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Extension/ModuleLegacyTest.php
 
 		-
 			message: "#^@dataProvider getClassTestCases related method must be static in PHPUnit 10 and newer\\.$#"
@@ -6114,11 +5769,6 @@ parameters:
 		-
 			message: "#^@dataProvider providerTestImageFiles related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Image\\\\ToolkitGdTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 6
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
 
 		-
@@ -6185,11 +5835,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Routing\\\\LegacyMatcherDumperTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Routing/LegacyMatcherDumperTest.php
-
-		-
 			message: "#^@dataProvider providerDuplicateRoutePaths related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Routing/RouteProviderTest.php
@@ -6198,16 +5843,6 @@ parameters:
 			message: "#^@dataProvider providerMixedCaseRoutePaths related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Routing/RouteProviderTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Site\\\\LegacySettingsRewriteTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Site/LegacySettingsRewriteTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\State\\\\LegacyStateTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/State/LegacyStateTest.php
 
 		-
 			message: "#^@dataProvider providerTestUriScheme related method must be static in PHPUnit 10 and newer\\.$#"
@@ -6235,33 +5870,13 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Test\\\\Comparator\\\\MarkupInterfaceComparatorTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
-
-		-
 			message: "#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Test\\\\PhpUnitBridgeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Test/PhpUnitBridgeTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Test\\\\TestSetupTraitTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/TestSetupTraitTest.php
-
-		-
 			message: "#^@dataProvider provider40xThemeSuggestions related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: tests/Drupal/KernelTests/Core/Theme/RegistryTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Theme\\\\RegistryTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 3
 			path: tests/Drupal/KernelTests/Core/Theme/RegistryTest.php
 
 		-
@@ -6270,24 +5885,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Theme/ThemeInstallerTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Theme\\\\ThemeInstallerTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Theme/ThemeInstallerTest.php
-
-		-
 			message: "#^@dataProvider providerTestThemeRenderAndAutoescape related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Theme/ThemeRenderAndAutoescapeTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Theme\\\\ThemeRenderAndAutoescapeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Theme/ThemeRenderAndAutoescapeTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Theme\\\\TwigDeprecationsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 5
-			path: tests/Drupal/KernelTests/Core/Theme/TwigDeprecationsTest.php
 
 		-
 			message: "#^@dataProvider providerTestMarkupInterfaceEmpty related method must be static in PHPUnit 10 and newer\\.$#"
@@ -6333,11 +5933,6 @@ parameters:
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\KernelTestBaseTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
 
 		-
 			message: "#^Caught class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
@@ -6497,11 +6092,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Datetime/DateTimePlusTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\DependencyInjection\\\\ContainerTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
-
-		-
 			message: "#^@dataProvider getAliasesDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
@@ -6518,11 +6108,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider publicPrivateDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\DependencyInjection\\\\Dumper\\\\OptimizedPhpArrayDumperTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
 
@@ -6545,16 +6130,6 @@ parameters:
 			message: "#^@dataProvider provideTestDiff related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Diff/Engine/DiffEngineTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Diff\\\\Engine\\\\DiffEngineTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Component/Diff/Engine/DiffEngineTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Diff\\\\Engine\\\\DiffOpTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Diff/Engine/DiffOpTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Diff\\\\Engine\\\\DiffOpTest\\:\\:expectError\\(\\)\\.$#"
@@ -6600,16 +6175,6 @@ parameters:
 			message: "#^@dataProvider providerWriteData related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Gettext/PoStreamWriterTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\FileStorageReadOnlyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageReadOnlyTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\FileStorageTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\FileStorageTest\\:\\:expectWarning\\(\\)\\.$#"
@@ -6799,11 +6364,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Plugin/PluginBaseTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Plugin\\\\PluginHelperLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/PluginHelperLegacyTest.php
-
-		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Component/Plugin/PluginManagerBaseTest.php
@@ -6820,11 +6380,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerTestUnexpectedPlaceholder related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Render/FormattableMarkupTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Render\\\\FormattableMarkupTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Render/FormattableMarkupTest.php
 
@@ -6974,11 +6529,6 @@ parameters:
 		-
 			message: "#^@dataProvider providerTestTransformRootRelativeUrlsToAbsoluteAssertion related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Utility\\\\HtmlTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
 			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
 
 		-
@@ -7322,11 +6872,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Ajax/AjaxCommandsTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Ajax\\\\AjaxCommandsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Ajax/AjaxCommandsTest.php
-
-		-
 			message: "#^@dataProvider providerTestMissingData related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Annotation/PluralTranslationTest.php
@@ -7375,17 +6920,7 @@ parameters:
 			path: tests/Drupal/Tests/Core/Asset/LibraryDependencyResolverTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Asset\\\\LibraryDiscoveryCollectorTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryCollectorTest.php
-
-		-
 			message: "#^@dataProvider providerTestCssAssert related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryParserTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Asset\\\\LibraryDiscoveryParserTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryParserTest.php
 
@@ -7421,11 +6956,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider mergeTagsProvider related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Cache/CacheTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Cache\\\\CacheTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Cache/CacheTest.php
 
@@ -7566,11 +7096,6 @@ parameters:
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Config\\\\Entity\\\\ConfigEntityStorageTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityStorageTest.php
 
 		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
@@ -7755,11 +7280,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
-			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectError\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
@@ -7775,24 +7295,9 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/DatabaseTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\DatabaseTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Database/DatabaseTest.php
-
-		-
 			message: "#^@dataProvider providerDbInstallerObject related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\InstallerObjectTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\LogTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 6
-			path: tests/Drupal/Tests/Core/Database/LogTest.php
 
 		-
 			message: "#^@dataProvider providerTestExceptionMessage related method must be static in PHPUnit 10 and newer\\.$#"
@@ -7896,11 +7401,6 @@ parameters:
 		-
 			message: "#^@dataProvider providerTestTrustedHosts related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Core/DrupalKernel/DrupalKernelTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\DrupalKernel\\\\DrupalKernelTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
 			path: tests/Drupal/Tests/Core/DrupalKernel/DrupalKernelTest.php
 
 		-
@@ -8109,11 +7609,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Entity/FieldDefinitionTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueEntityStorageTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Entity/KeyValueStore/KeyValueEntityStorageTest.php
-
-		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/KeyValueStore/KeyValueEntityStorageTest.php
@@ -8249,19 +7744,9 @@ parameters:
 			path: tests/Drupal/Tests/Core/Extension/DatabaseDriverListTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Extension\\\\DatabaseDriverListTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Extension/DatabaseDriverListTest.php
-
-		-
 			message: "#^@dataProvider providerCreateFromString related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Extension/DependencyTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Extension\\\\ExtensionDiscoveryTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Extension/ExtensionDiscoveryTest.php
 
 		-
 			message: "#^@dataProvider providerCheckIncompatibility related method must be static in PHPUnit 10 and newer\\.$#"
@@ -8324,16 +7809,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Extension/InfoParserUnitTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Extension\\\\InfoParserUnitTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Extension/InfoParserUnitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Extension\\\\LegacyExtensionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Extension/LegacyExtensionTest.php
-
-		-
 			message: """
 				#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#
@@ -8365,11 +7840,6 @@ parameters:
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
 			count: 16
 			path: tests/Drupal/Tests/Core/Field/FieldItemListTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Field\\\\InternalViolationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Field/InternalViolationTest.php
 
 		-
 			message: "#^@dataProvider providerMaxLength related method must be static in PHPUnit 10 and newer\\.$#"
@@ -8656,11 +8126,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Http/ClientFactoryTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Http\\\\RequestStackLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Http/RequestStackLegacyTest.php
-
-		-
 			message: "#^@dataProvider providerTestCreateRequest related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Http/TrustedHostsRequestFactoryTest.php
@@ -8697,11 +8162,6 @@ parameters:
 			message: "#^@dataProvider providerTestLog related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Logger/LoggerChannelTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Menu\\\\DefaultMenuLinkTreeManipulatorsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Menu/DefaultMenuLinkTreeManipulatorsTest.php
 
 		-
 			message: "#^@dataProvider providerTestGetWeight related method must be static in PHPUnit 10 and newer\\.$#"
@@ -8775,11 +8235,6 @@ parameters:
 			message: "#^@dataProvider providerTestSetRouteParameterConverters related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/ParamConverter/ParamConverterManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Password\\\\PasswordHashingLegacyTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Password/PasswordHashingLegacyTest.php
 
 		-
 			message: "#^@dataProvider providerLongPasswords related method must be static in PHPUnit 10 and newer\\.$#"
@@ -8867,19 +8322,9 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/DefaultLazyPluginCollectionTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Plugin\\\\DefaultLazyPluginCollectionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/DefaultLazyPluginCollectionTest.php
-
-		-
 			message: "#^@dataProvider providerTestProcessDefinition related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/DefaultPluginManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Plugin\\\\DefaultSingleLazyPluginCollectionTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/DefaultSingleLazyPluginCollectionTest.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\Discovery\\\\TestContainerDerivativeDiscovery has an unused parameter \\$example_service\\.$#"
@@ -9120,11 +8565,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Routing\\\\RouterUnsupportedTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Routing/RouterUnsupportedTest.php
-
-		-
 			message: "#^@dataProvider providerCreateFromRedirectResponse related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Routing/TrustedRedirectResponseTest.php
@@ -9140,11 +8580,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Routing/UrlGeneratorTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Routing\\\\UrlGeneratorTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 4
-			path: tests/Drupal/Tests/Core/Routing/UrlGeneratorTest.php
-
-		-
 			message: "#^@dataProvider errorTypeProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
@@ -9156,11 +8591,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerTestUntrustedCallbacks related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Security\\\\DoTrustedCallbackTraitTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
 
@@ -9260,11 +8690,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Site/SettingsTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Site\\\\SettingsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Site/SettingsTest.php
-
-		-
 			message: "#^@dataProvider providerTestSetContentLengthHeader related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/StackMiddleware/ContentLengthTest.php
@@ -9301,11 +8726,6 @@ parameters:
 			message: "#^@dataProvider providerTestTranslatePlaceholder related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/StringTranslation/TranslationManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\StringTranslation\\\\TranslationWrapperTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/StringTranslation/TranslationWrapperTest.php
 
 		-
 			message: """
@@ -9381,29 +8801,14 @@ parameters:
 			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\BrowserTestBaseTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/BrowserTestBaseTest.php
-
-		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Core/Test/BrowserTestBaseTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\PhpUnitBridgeIsolatedTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/PhpUnitBridgeIsolatedTest.php
-
-		-
 			message: "#^@dataProvider providerTestWillNeverRun related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/PhpUnitBridgeRequiresTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\PhpUnitBridgeTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/PhpUnitBridgeTest.php
 
 		-
 			message: "#^@dataProvider providerTestSummarizeResults related method must be static in PHPUnit 10 and newer\\.$#"
@@ -9527,11 +8932,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/UrlTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\UrlTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/UrlTest.php
-
-		-
 			message: "#^@dataProvider callableResolverExceptionHandlingTestCases related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Utility/CallableResolverTest.php
@@ -9573,11 +8973,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Utility/LinkGeneratorTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Utility\\\\LinkGeneratorTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Utility/LinkGeneratorTest.php
-
-		-
 			message: """
 				#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#
@@ -9592,11 +8987,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerTestReplaceEscaping related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Utility/TokenTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Utility\\\\TokenTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Utility/TokenTest.php
 
@@ -9624,24 +9014,9 @@ parameters:
 			path: tests/Drupal/Tests/DrupalTestBrowser.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\ExpectDeprecationTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/ExpectDeprecationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\PhpUnitWarningsTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/PhpUnitWarningsTest.php
-
-		-
 			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/UnitTestCase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\UnitTestCaseTest\\:\\:expectDeprecation\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/UnitTestCaseTest.php
 
 		-
 			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\BuildTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"

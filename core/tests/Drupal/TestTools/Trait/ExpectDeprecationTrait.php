@@ -12,9 +12,7 @@ namespace Drupal\TestTools\Trait;
 trait ExpectDeprecationTrait {
 
   public function expectDeprecation(string $message): void {
-
     // @todo Do something clever here.
-
   }
 
 }
