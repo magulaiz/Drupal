@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
@@ -149,6 +150,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       ],
       'auto_create' => FALSE,
       'auto_create_bundle' => NULL,
+      'include_disabled_config' => NULL,
     ] + parent::defaultConfiguration();
   }
 
@@ -201,6 +203,20 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       $form['target_bundles'] = [
         '#type' => 'value',
         '#value' => [],
+      ];
+    }
+
+    if ($entity_type instanceof ConfigEntityTypeInterface && $entity_type->hasKey('status')) {
+      $form['include_disabled_config'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Include disabled entities'),
+        '#default_value' => (bool) $configuration['include_disabled_config'],
+      ];
+    }
+    else {
+      $form['include_disabled_config'] = [
+        '#type' => 'value',
+        '#value' => NULL,
       ];
     }
 
@@ -480,6 +496,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     // Add the sort option.
     if ($configuration['sort']['field'] !== '_none') {
       $query->sort($configuration['sort']['field'], $configuration['sort']['direction']);
+    }
+
+    // Filter disabled configuration entities.
+    if (isset($configuration['include_disabled_config']) && !$configuration['include_disabled_config'] && $entity_type instanceof ConfigEntityTypeInterface && $entity_type->hasKey('status')) {
+      $query->condition($entity_type->getKey('status'), TRUE);
     }
 
     return $query;
