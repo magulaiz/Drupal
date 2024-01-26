@@ -112,15 +112,6 @@ variables:
 # Documentation: https://docs.gitlab.com/ee/ci/jobs/
 ################
 
-'🌐️️ PHPUnit Functional':
-  <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 7
-  variables:
-    TESTSUITE: PHPUnit-Functional
-    KUBERNETES_CPU_REQUEST: "24"
-  services:
-    - <<: *with-database
-
 '🩹 Test-only changes':
   <<: [ *with-composer, *default-job-settings ]
   when: manual
@@ -131,6 +122,29 @@ variables:
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
+'🖱️️️ PHPUnit Functional Javascript':
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
+  parallel: 2
+  variables:
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 15
+    KUBERNETES_CPU_REQUEST: "24"
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
+
+'🌐️️ PHPUnit Functional':
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
+  parallel: 7
+  variables:
+    TESTSUITE: PHPUnit-Functional
+    KUBERNETES_CPU_REQUEST: "24"
+  services:
+    - <<: *with-database
+
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 2
@@ -139,20 +153,6 @@ variables:
     KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
-
-'🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 2
-  variables:
-    TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
-    KUBERNETES_CPU_REQUEST: "8"
-  services:
-    - <<: *with-database
-    - <<: *with-chrome
-  after_script:
-    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
-    - cp /builds/chromedriver.log ./
 
 '👷️️️ PHPUnit Build':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
@@ -175,7 +175,7 @@ variables:
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
-    KUBERNETES_CPU_REQUEST: "3"
+    KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -192,6 +192,7 @@ variables:
     - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless --dns-prefetch-disable'" >> ./core/.env
     - echo "DRUPAL_TEST_WEBDRIVER_PORT='9515'" >> ./core/.env
     - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
+    - echo "COLUMNS=1000" >> ./core/.env
     - chown -R www-data:www-data ./sites /var/www
     - sudo -u www-data yarn run --cwd=./core test:nightwatch --workers=4
   after_script:
