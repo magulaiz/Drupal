@@ -126,6 +126,8 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $block = $this->getEntity();
+    $operation = $block->isNew() ? 'create' : 'edit';
+    $block_form_access = $this->blockOperationAccess($this->currentUser, $operation);
 
     // Add the entity form display in a process callback so that #parents can
     // be successfully propagated to field widgets.
@@ -133,7 +135,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       '#type' => 'container',
       '#process' => [[static::class, 'processBlockForm']],
       '#block' => $block,
-      '#access' => $this->currentUser->hasPermission('create and edit custom blocks'),
+      '#access' => $block_form_access->isAllowed(),
     ];
 
     $options = $this->entityDisplayRepository->getViewModeOptionsByBundle('block_content', $block->bundle());
@@ -212,7 +214,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
   }
 
   /**
-   * Checks if this block can be added.
+   * Checks access to perform a given operation on this block.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account being checked.
