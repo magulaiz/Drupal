@@ -22,10 +22,10 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\VarDumper\VarDumper;
 

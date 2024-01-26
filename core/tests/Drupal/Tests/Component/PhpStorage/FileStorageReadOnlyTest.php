@@ -7,7 +7,7 @@ namespace Drupal\Tests\Component\PhpStorage;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\PhpStorage\FileReadOnlyStorage;
 use Drupal\Component\Utility\Random;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Drupal\TestTools\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Component\PhpStorage\FileReadOnlyStorage

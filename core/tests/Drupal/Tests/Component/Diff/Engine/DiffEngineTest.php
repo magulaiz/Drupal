@@ -9,8 +9,8 @@ use Drupal\Component\Diff\Engine\DiffOpAdd;
 use Drupal\Component\Diff\Engine\DiffOpCopy;
 use Drupal\Component\Diff\Engine\DiffOpChange;
 use Drupal\Component\Diff\Engine\DiffOpDelete;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Test DiffEngine class.

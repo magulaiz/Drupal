@@ -11,11 +11,11 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.

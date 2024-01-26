@@ -23,6 +23,7 @@ use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
@@ -36,7 +37,6 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 
 /**

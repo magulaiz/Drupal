@@ -8,8 +8,8 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 // cspell:ignore répét répété
 

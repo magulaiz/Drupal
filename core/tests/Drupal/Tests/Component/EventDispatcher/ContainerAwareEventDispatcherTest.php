@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\EventDispatcher;
 
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,7 +14,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event as SymfonyEvent;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Drupal\Component\EventDispatcher\Event;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Unit tests for the ContainerAwareEventDispatcher.

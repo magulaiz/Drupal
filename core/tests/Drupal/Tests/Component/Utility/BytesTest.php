@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests bytes size parsing helper methods.

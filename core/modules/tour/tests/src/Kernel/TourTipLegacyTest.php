@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\tour\Kernel;
 
+use Drupal\TestTools\ExpectDeprecationTrait;
 use Drupal\tour\TourTipPluginInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\tour\TourTipPluginInterface

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\TestTools\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Ensures Drupal has test coverage of Symfony's deprecation testing.

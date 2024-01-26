@@ -6,8 +6,8 @@ namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;
 use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Test DiffOp base class.
