@@ -2,7 +2,6 @@
 
 namespace Drupal\media\Controller;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -127,21 +126,6 @@ class MediaFilterController implements ContainerInjectionInterface {
       ->setPrivate()
       // Allow the end user to cache it for up to 5 minutes.
       ->setMaxAge(300);
-  }
-
-  /**
-   * Checks access based on media_embed filter status on the text format.
-   *
-   * @param \Drupal\filter\FilterFormatInterface $filter_format
-   *   The text format for which to check access.
-   *
-   * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
-   */
-  public static function formatUsesMediaEmbedFilter(FilterFormatInterface $filter_format) {
-    $filters = $filter_format->filters();
-    return AccessResult::allowedIf($filters->has('media_embed') && $filters->get('media_embed')->status)
-      ->addCacheableDependency($filter_format);
   }
 
   /**
