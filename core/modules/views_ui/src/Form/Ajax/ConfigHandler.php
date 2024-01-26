@@ -234,6 +234,10 @@ class ConfigHandler extends ViewsFormBase {
     // Create a new handler and unpack the options from the form onto it. We
     // can use that for storage.
     $handler = Views::handlerManager($handler_type)->getHandler($item, $override);
+    // Sync plugin_id with that of $handler. The handlerManager uses override if
+    // present, otherwise that defined in views data. This ensures the config
+    // matches the schema.yml definition.
+    $item['plugin_id'] = $handler->getPluginId();
     $handler->init($executable, $executable->display_handler, $item);
 
     // Add the incoming options to existing options because items using

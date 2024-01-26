@@ -22,6 +22,7 @@ display:
       title: 'Recent comments'
       fields:
         subject:
+          plugin_id: field
           id: subject
           table: comment_field_data
           field: subject
@@ -30,7 +31,6 @@ display:
           admin_label: ''
           entity_type: comment
           entity_field: subject
-          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -76,6 +76,7 @@ display:
           settings:
             link_to_entity: true
         changed:
+          plugin_id: field
           id: changed
           table: comment_field_data
           field: changed
@@ -84,7 +85,6 @@ display:
           admin_label: ''
           entity_type: comment
           entity_field: changed
-          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -146,19 +146,20 @@ display:
         type: tag
       empty:
         area_text_custom:
+          plugin_id: text_custom
           id: area_text_custom
           table: views
           field: area_text_custom
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: text_custom
           label: ''
           empty: true
           content: 'No comments available.'
           tokenize: false
       sorts:
         created:
+          plugin_id: date
           id: created
           table: comment_field_data
           field: created
@@ -167,13 +168,13 @@ display:
           admin_label: ''
           entity_type: comment
           entity_field: created
-          plugin_id: date
           order: DESC
           expose:
             label: ''
             field_identifier: created
           exposed: false
         cid:
+          plugin_id: standard
           id: cid
           table: comment_field_data
           field: cid
@@ -182,7 +183,6 @@ display:
           admin_label: ''
           entity_type: comment
           entity_field: cid
-          plugin_id: standard
           order: DESC
           expose:
             label: ''
@@ -190,12 +190,12 @@ display:
           exposed: false
       filters:
         status:
+          plugin_id: boolean
           id: status
           table: comment_field_data
           field: status
           entity_type: comment
           entity_field: status
-          plugin_id: boolean
           value: '1'
           group: 1
           expose:
@@ -203,13 +203,13 @@ display:
             operator_limit_selection: false
             operator_list: {  }
         status_node:
+          plugin_id: boolean
           id: status_node
           table: node_field_data
           field: status
           relationship: node
           entity_type: node
           entity_field: status
-          plugin_id: boolean
           value: '1'
           group: 1
           expose:
@@ -234,10 +234,10 @@ display:
         type: views_query
       relationships:
         node:
+          plugin_id: standard
           id: node
           table: comment_field_data
           field: node
-          plugin_id: standard
           required: true
       display_extenders: {  }
     cache_metadata:

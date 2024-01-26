@@ -88,8 +88,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_file: true
-          plugin_id: file
+          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''

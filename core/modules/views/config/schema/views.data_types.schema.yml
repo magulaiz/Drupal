@@ -292,15 +292,6 @@ views_sort:
     exposed:
       type: boolean
       label: 'Expose this sort to visitors, to allow them to change it'
-    plugin_id:
-      type: string
-      label: 'Plugin ID'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.sort
-          # @todo Remove this line and fix all views in core which use invalid
-          # sort plugins in https://drupal.org/i/3387325.
-          allowFallback: true
 
 views_sort_expose:
   type: mapping
@@ -322,19 +313,13 @@ views_area:
     empty:
       type: boolean
       label: 'Should the area be displayed on empty results.'
-    plugin_id:
-      type: string
-      label: 'Plugin ID'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.area
-          # @todo Remove this line and fix all views in core which use invalid
-          # area plugins in https://drupal.org/i/3387325.
-          allowFallback: true
 
 views_handler:
   type: mapping
   mapping:
+    plugin_id:
+      type: string
+      label: 'The plugin ID'
     id:
       type: string
       label: 'A unique ID per handler type'
@@ -359,9 +344,6 @@ views_handler:
     entity_field:
       type: string
       label: 'The corresponding entity field'
-    plugin_id:
-      type: string
-      label: 'The plugin ID'
 
 views_argument:
   type: views_handler
@@ -451,15 +433,6 @@ views_argument:
     break_phrase:
       type: boolean
       label: 'Allow multiple values'
-    plugin_id:
-      type: string
-      label: 'Plugin ID'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.argument
-          # @todo Remove this line and fix all views in core which use invalid
-          # argument plugins in https://drupal.org/i/3387325.
-          allowFallback: true
 
 views_exposed_form:
   type: mapping
@@ -577,6 +550,38 @@ views_field:
         html:
           type: boolean
           label: 'Field can contain HTML'
+        alias:
+          type: boolean
+          label: 'Alias'
+          nullable: true
+        fragment:
+          type: string
+          label: 'Fragment'
+          nullable: true
+        language:
+          type: string
+          label: 'Language'
+          nullable: true
+        link_attributes:
+          type: sequence
+          label: 'Link attributes'
+          nullable: true
+        query:
+          type: sequence
+          label: 'Query'
+          nullable: true
+        url:
+          type: string
+          label: 'Url'
+          nullable: true
+        entity_type:
+          type: string
+          label: 'Entity type'
+          nullable: true
+        entity:
+          type: string
+          label: 'Entity'
+          nullable: true
     element_type:
       type: string
       label: 'HTML element'
@@ -616,15 +621,6 @@ views_field:
     destination:
       type: boolean
       label: 'Append a destination query string to operation links.'
-    plugin_id:
-      type: string
-      label: 'Plugin ID'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.field
-          # @todo Remove this line and fix all views in core which use invalid
-          # field plugins in https://drupal.org/i/3387325.
-          allowFallback: true
 
 views_pager:
   type: mapping
@@ -828,15 +824,6 @@ views_filter:
           sequence:
             type: views.filter.group_item.[%parent.%parent.%parent.plugin_id]
             label: 'Group item'
-    plugin_id:
-      type: string
-      label: 'Plugin ID'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.filter
-          # @todo Remove this line and fix all views in core which use invalid
-          # filter plugins in https://drupal.org/i/3387325.
-          allowFallback: true
 
 views_filter_group_item:
   type: mapping
@@ -861,15 +848,6 @@ views_relationship:
     required:
       type: boolean
       label: 'Require this relationship'
-    plugin_id:
-      type: string
-      label: 'The plugin ID'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.views.relationship
-          # @todo Remove this line and fix all views in core which use invalid
-          # relationship plugins in https://drupal.org/i/3387325.
-          allowFallback: true
 
 views_query:
   type: mapping

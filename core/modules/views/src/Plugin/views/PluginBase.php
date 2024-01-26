@@ -140,10 +140,10 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     $this->view = $view;
     $this->options = $this->options ?? [];
-    $this->setOptionDefaults($this->options, $this->defineOptions());
+    $this->setOptionDefaults($this->options, $definition = $this->defineOptions());
     $this->displayHandler = $display;
 
-    $this->unpackOptions($this->options, $options);
+    $this->unpackOptions($this->options, $options, $definition, FALSE);
   }
 
   /**

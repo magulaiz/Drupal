@@ -22,6 +22,7 @@ display:
     display_options:
       fields:
         title:
+          plugin_id: field
           id: title
           table: node_field_data
           field: title
@@ -30,7 +31,6 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: title
-          plugin_id: field
           label: Title
           exclude: false
           alter:
@@ -73,6 +73,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
         name:
+          plugin_id: field
           id: name
           table: users_field_data
           field: name
@@ -81,7 +82,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: name
-          plugin_id: field
           label: Author
           exclude: false
           alter:
@@ -125,6 +125,7 @@ display:
           hide_alter_empty: true
           type: user_name
         changed:
+          plugin_id: field
           id: changed
           table: node_field_data
           field: changed
@@ -133,7 +134,6 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: changed
-          plugin_id: field
           label: 'Last update'
           exclude: false
           alter:
@@ -229,6 +229,7 @@ display:
       sorts: {  }
       arguments:
         title:
+          plugin_id: string
           id: title
           table: node_field_data
           field: title
@@ -237,7 +238,6 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: title
-          plugin_id: string
           default_action: default
           exception:
             title_enable: true
@@ -262,12 +262,12 @@ display:
           break_phrase: false
       filters:
         status:
+          plugin_id: boolean
           id: status
           table: node_field_data
           field: status
           entity_type: node
           entity_field: status
-          plugin_id: boolean
           value: '1'
           group: 1
           expose:
@@ -275,6 +275,7 @@ display:
             operator_limit_selection: false
             operator_list: {  }
         langcode:
+          plugin_id: language
           id: langcode
           table: node_field_data
           field: langcode
@@ -283,7 +284,6 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: langcode
-          plugin_id: language
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -360,13 +360,13 @@ display:
           query_tags: {  }
       relationships:
         uid:
+          plugin_id: standard
           id: uid
           table: node_field_data
           field: uid
           relationship: none
           group_type: group
           admin_label: author
-          plugin_id: standard
           required: false
       use_ajax: true
       header: {  }
@@ -395,6 +395,7 @@ display:
           items_per_page: 0
       arguments:
         title:
+          plugin_id: string
           id: title
           table: node_field_data
           field: title
@@ -403,7 +404,6 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: title
-          plugin_id: string
           default_action: summary
           exception:
             title_enable: true
