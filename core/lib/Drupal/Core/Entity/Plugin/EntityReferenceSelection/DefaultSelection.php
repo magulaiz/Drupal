@@ -162,6 +162,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $entity_type_id = $configuration['target_type'];
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+    $selected_bundles = [];
 
     if ($entity_type->hasKey('bundle')) {
       $bundle_options = [];
