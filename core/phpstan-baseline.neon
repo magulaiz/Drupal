@@ -9629,46 +9629,6 @@ parameters:
 			path: tests/Drupal/Tests/ExpectDeprecationTest.php
 
 		-
-			message: "#^Instantiated class Symfony\\\\Bridge\\\\PhpUnit\\\\SymfonyTestsListener not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/DrupalListener.php
-
-		-
-			message: "#^Access to undefined constant Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:COLOR_DEFAULT\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:write\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:writeNewLine\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:writeWithColor\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:__construct\\(\\) calls parent\\:\\:__construct\\(\\) but Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter does not extend any class\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:printResult\\(\\) calls parent\\:\\:printResult\\(\\) but Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter does not extend any class\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
-			message: "#^Parameter \\$result of method Drupal\\\\Tests\\\\Listeners\\\\HtmlOutputPrinter\\:\\:printResult\\(\\) has invalid type PHPUnit\\\\Framework\\\\TestResult\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\PhpUnitWarningsTest\\:\\:expectDeprecation\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/PhpUnitWarningsTest.php

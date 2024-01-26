@@ -7,7 +7,6 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
-use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 
 /**
  * Discovers available tests.
@@ -117,8 +116,6 @@ class TestDiscovery {
     }
 
     $loader = require __DIR__ . '/../../../../../autoload.php';
-    // Ensure we have a valid TestCase class.
-    ClassWriter::mutateTestBase($loader);
 
     return $this->testNamespaces;
   }
