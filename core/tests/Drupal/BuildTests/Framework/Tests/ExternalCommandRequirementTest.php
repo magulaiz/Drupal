@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\BuildTests\Framework\Tests;
 
 use Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait;
-use Drupal\TestTools\ExpectDeprecationTrait;
+use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\TestCase;
 

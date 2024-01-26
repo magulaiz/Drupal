@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\TestTools\ExpectDeprecationTrait;
+use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

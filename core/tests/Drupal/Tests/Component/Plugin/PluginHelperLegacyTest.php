@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginHelper;
-use Drupal\TestTools\ExpectDeprecationTrait;
+use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -9,7 +9,7 @@ use Drupal\Component\Diff\Engine\DiffOpAdd;
 use Drupal\Component\Diff\Engine\DiffOpCopy;
 use Drupal\Component\Diff\Engine\DiffOpChange;
 use Drupal\Component\Diff\Engine\DiffOpDelete;
-use Drupal\TestTools\ExpectDeprecationTrait;
+use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

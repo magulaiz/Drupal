@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestTools;
+namespace Drupal\TestTools\Trait;
 
 /**
  * Manage expected deprecations.
