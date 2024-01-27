@@ -25,6 +25,15 @@ if (FALSE) {
     public function tearDownErrorHandler(): void {
     }
 
+    public function expectError(): void {
+    }
+
+    public function expectErrorMessage(string $message): void {
+    }
+
+    public function expectErrorMessageMatches(string $regularExpression): void {
+    }
+
   }
 
 }
