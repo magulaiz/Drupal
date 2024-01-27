@@ -19,7 +19,10 @@ if (FALSE) {
    */
   trait PhpUnitCompatibilityTrait {
 
-    public function tearDownExpectedTriggeredErrors(): void {
+    public function setUpErrorHandler(): void {
+    }
+
+    public function tearDownErrorHandler(): void {
     }
 
   }

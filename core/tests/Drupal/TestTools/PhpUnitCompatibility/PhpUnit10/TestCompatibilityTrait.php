@@ -19,31 +19,26 @@ trait TestCompatibilityTrait {
   protected $previouslyDefinedErrorHandler;
 
   protected bool $expectedError = FALSE;
+  protected ?string $expectedErrorMessage = NULL;
+  protected ?string $expectedErrorMessageRegularExpression = NULL;
 
   protected bool $actualError = FALSE;
   protected ?string $actualErrorMessage = NULL;
 
-  public function tearDownExpectedTriggeredErrors(): void {
-    if ($this->previouslyDefinedErrorHandler !== NULL) {
-      self::assertSame($this->expectedError, $this->actualError, $this->expectedError ?
-        'An error was expected, but it was not triggered' :
-        'An unexpected error was triggered'
-      );
-      restore_error_handler();
-    }
-  }
-
-  public function expectError(): void {
-    $this->expectedError = TRUE;
+  public function setUpErrorHandler(): void {
     if ($this->previouslyDefinedErrorHandler === NULL) {
+      // Get current handler.
+      $handler = set_error_handler('var_dump');
+      restore_error_handler();
+
       $this->previouslyDefinedErrorHandler = set_error_handler(
-        function (
-          int $code,
-          string $message
-        ) {
-          if (E_USER_ERROR === $code || E_ERROR === $code) {
+        function(int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use($handler): bool {
+          if ((E_USER_ERROR === $errno || E_ERROR === $errno) && $this->expectedError) {
             $this->actualError = TRUE;
-            $this->actualErrorMessage = $message;
+            $this->actualErrorMessage = $errstr;
+          }
+          else {
+            call_user_func($handler, $errno, $errstr, $errfile, $errline);
           }
           return TRUE;
         }
@@ -51,4 +46,26 @@ trait TestCompatibilityTrait {
     }
   }
 
+  public function tearDownErrorHandler(): void {
+    if ($this->previouslyDefinedErrorHandler !== NULL) {
+      if ($this->expectedError) {
+        self::assertTrue($this->actualError, 'An error was expected, but it was not triggered');
+      }
+      restore_error_handler();
+    }
+  }
+
+  public function expectError(): void {
+    $this->expectedError = TRUE;
+  }
+
+  public function expectErrorMessage(string $message): void {
+    $this->expectedError = TRUE;
+    $this->expectedErrorMessage = $message;
+  }
+
+  public function expectErrorMessageMatches(string $regularExpression): void {
+    $this->expectedError = TRUE;
+    $this->expectedErrorMessageRegularExpression = $regularExpression;
+  }
 }

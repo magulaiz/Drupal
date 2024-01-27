@@ -57,6 +57,9 @@ abstract class UnitTestCase extends TestCase {
     // a previous test does not leak into this test.
     \Drupal::unsetContainer();
 
+    // Check expected E_* triggered errors.
+    $this->setUpErrorHandler();
+
     // Ensure that the NullFileCache implementation is used for the FileCache as
     // unit tests should not be relying on caches implicitly.
     FileCacheFactory::setConfiguration([FileCacheFactory::DISABLE_CACHE => TRUE]);
@@ -71,7 +74,7 @@ abstract class UnitTestCase extends TestCase {
    */
   protected function tearDown(): void {
     // Check expected E_* triggered errors.
-    $this->tearDownExpectedTriggeredErrors();
+    $this->tearDownErrorHandler();
 
     parent::tearDown();
   }

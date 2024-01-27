@@ -8,6 +8,7 @@ use Drupal\Component\Diff\Engine\DiffOp;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  * @group Diff
  * @group legacy
  */
+#[IgnoreDeprecations]
 class DiffOpTest extends TestCase {
 
   use ExpectDeprecationTrait;
@@ -31,9 +33,19 @@ class DiffOpTest extends TestCase {
   /**
    * {@inheritdoc}
    */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Check expected E_* triggered errors.
+    $this->setUpErrorHandler();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown(): void {
     // Check expected E_* triggered errors.
-    $this->tearDownExpectedTriggeredErrors();
+    $this->tearDownErrorHandler();
 
     parent::tearDown();
   }
