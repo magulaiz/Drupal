@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit10;
 
+// cspell:ignore errno errstr errfile errline
+
 /**
  * Drupal's forward compatibility layer with multiple versions of PHPUnit.
  *
@@ -32,7 +34,7 @@ trait TestCompatibilityTrait {
       restore_error_handler();
 
       $this->previouslyDefinedErrorHandler = set_error_handler(
-        function(int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use($handler): bool {
+        function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($handler): bool {
           if ((E_USER_ERROR === $errno || E_ERROR === $errno) && $this->expectedError) {
             $this->actualError = TRUE;
             $this->actualErrorMessage = $errstr;
@@ -68,4 +70,5 @@ trait TestCompatibilityTrait {
     $this->expectedError = TRUE;
     $this->expectedErrorMessageRegularExpression = $regularExpression;
   }
+
 }
