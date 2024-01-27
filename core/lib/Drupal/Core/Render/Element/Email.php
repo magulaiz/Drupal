@@ -53,6 +53,7 @@ class Email extends FormElement {
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => self::EMAIL_MAX_LENGTH,
+      '#multiple' => FALSE,
       '#autocomplete_route_name' => FALSE,
       '#process' => [
         [$class, 'processAutocomplete'],
