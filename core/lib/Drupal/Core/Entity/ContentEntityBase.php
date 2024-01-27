@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\ComputedFieldItemListInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -550,7 +551,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // Get the values of instantiated field objects, only serialize the values.
     foreach ($this->fields as $name => $fields) {
       foreach ($fields as $langcode => $field) {
-        $this->values[$name][$langcode] = $field->getValue();
+        if (!$field instanceof ComputedFieldItemListInterface) {
+          $this->values[$name][$langcode] = $field->getValue();
+        }
       }
     }
     $this->fields = [];
