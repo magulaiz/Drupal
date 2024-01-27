@@ -84,7 +84,6 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function load() {
     $entities = $this->storage->loadByProperties(['locked' => FALSE]);
-
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
     uasort($entities, [$this->entityType->getClass(), 'sort']);
@@ -153,7 +152,16 @@ class LanguageListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
+
+    foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
+      if (isset($this->entities[$id]) && $this->entities[$id]->get($this->weightKey) != $value['weight']) {
+        // Save entity only when its weight was changed.
+        // Keep original language name - fixes issue 3380392
+        $this->entities[$id]->setName($this->languageManager->getNativeLanguages()[$id]->getName());
+        $this->entities[$id]->set($this->weightKey, $value['weight']);
+        $this->entities[$id]->save();
+      }
+    }
 
     // Save the default language if changed.
     $new_id = $form_state->getValue('site_default_language');
