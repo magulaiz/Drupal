@@ -293,24 +293,6 @@ class EntityReference extends ManyToOne {
           $sub_handler_settings['auto_create_bundle']['#access'] = FALSE;
       }
 
-      // Workaround for https://www.drupal.org/project/drupal/issues/2651418.
-      // @todo Remove the below when the referenced issue is fixed.
-      foreach (Element::children($sub_handler_settings) as $key) {
-        if (\array_key_exists('#ajax', $sub_handler_settings[$key]) &&
-          !\is_array($sub_handler_settings[$key]['#ajax'])
-        ) {
-          $sub_handler_settings[$key]['#ajax'] = [];
-        }
-
-        foreach (Element::children($sub_handler_settings[$key]) as $sub_key) {
-          if (\array_key_exists('#ajax', $sub_handler_settings[$key][$sub_key]) &&
-            !\is_array($sub_handler_settings[$key][$sub_key]['#ajax'])
-          ) {
-            $sub_handler_settings[$key][$sub_key]['#ajax'] = [];
-          }
-        }
-      }
-
       $subform = NestedArray::mergeDeepArray([
         $subform,
         $sub_handler_settings,
