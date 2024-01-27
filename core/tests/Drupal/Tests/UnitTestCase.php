@@ -69,6 +69,16 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
+  protected function tearDown(): void {
+    // Check expected E_* triggered errors.
+    $this->tearDownExpectedTriggeredErrors();
+
+    parent::tearDown();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function __get(string $name) {
     if ($name === 'randomGenerator') {
       @trigger_error('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445', E_USER_DEPRECATED);

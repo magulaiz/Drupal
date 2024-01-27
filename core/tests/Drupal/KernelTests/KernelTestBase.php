@@ -710,6 +710,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->container = NULL;
     new Settings([]);
 
+    // Check expected E_* triggered errors.
+    $this->tearDownExpectedTriggeredErrors();
+
     parent::tearDown();
   }
 
