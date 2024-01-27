@@ -13,6 +13,9 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
  * - #default_value: An RFC-compliant email address.
  * - #size: The size of the input element in characters.
  * - #pattern: A string for the native HTML5 pattern attribute.
+ * - #multiple: (optional) Indicates whether you can input one or more email
+ *   addresses. Multiple email addresses must be comma-separated.
+ *   Default is FALSE.
  *
  * Example usage:
  * @code
