@@ -121,6 +121,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
       'url_plain' => TRUE,
       'rel' => '0',
       'target' => '0',
+      'external_target' => '',
     ];
     $component = $display->getComponent('field_test_link');
     $this->assertSame($expected, $component);
