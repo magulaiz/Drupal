@@ -45,8 +45,9 @@ class UrlConversionTest extends UnitTestCase {
     $root = dirname(__FILE__, 7);
     return [
       'MySql without prefix' => [
-        'mysql://test_user:test_pass@test_host:3306/test_database',
+        'mysql://test_user:test_pass@test_host:3306/test_database?module=mysql',
         [
+          'module' => 'mysql',
           'driver' => 'mysql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -59,8 +60,9 @@ class UrlConversionTest extends UnitTestCase {
         FALSE,
       ],
       'SQLite, relative to root, without prefix' => [
-        'sqlite://localhost/test_database',
+        'sqlite://localhost/test_database?module=sqlite',
         [
+          'module' => 'sqlite',
           'driver' => 'sqlite',
           'host' => 'localhost',
           'database' => $root . '/test_database',
@@ -70,8 +72,9 @@ class UrlConversionTest extends UnitTestCase {
         FALSE,
       ],
       'MySql with prefix' => [
-        'mysql://test_user:test_pass@test_host:3306/test_database#bar',
+        'mysql://test_user:test_pass@test_host:3306/test_database?module=mysql#bar',
         [
+          'module' => 'mysql',
           'driver' => 'mysql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -85,8 +88,9 @@ class UrlConversionTest extends UnitTestCase {
         FALSE,
       ],
       'SQLite, relative to root, with prefix' => [
-        'sqlite://localhost/test_database#foo',
+        'sqlite://localhost/test_database?module=sqlite#foo',
         [
+          'module' => 'sqlite',
           'driver' => 'sqlite',
           'host' => 'localhost',
           'database' => $root . '/test_database',
@@ -97,8 +101,9 @@ class UrlConversionTest extends UnitTestCase {
         FALSE,
       ],
       'SQLite, absolute path, without prefix' => [
-        'sqlite://localhost//baz/test_database',
+        'sqlite://localhost//baz/test_database?module=sqlite',
         [
+          'module' => 'sqlite',
           'driver' => 'sqlite',
           'host' => 'localhost',
           'database' => '/baz/test_database',
@@ -110,6 +115,7 @@ class UrlConversionTest extends UnitTestCase {
       'MySQL contrib test driver without prefix' => [
         'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test',
         [
+          'module' => 'driver_test',
           'driver' => 'DrivertestMysql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -134,6 +140,7 @@ class UrlConversionTest extends UnitTestCase {
       'MySQL contrib test driver with prefix' => [
         'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#bar',
         [
+          'module' => 'driver_test',
           'driver' => 'DrivertestMysql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -159,6 +166,7 @@ class UrlConversionTest extends UnitTestCase {
       'PostgreSQL contrib test driver without prefix' => [
         'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test',
         [
+          'module' => 'driver_test',
           'driver' => 'DrivertestPgsql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -183,6 +191,7 @@ class UrlConversionTest extends UnitTestCase {
       'PostgreSQL contrib test driver with prefix' => [
         'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#bar',
         [
+          'module' => 'driver_test',
           'driver' => 'DrivertestPgsql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -206,8 +215,9 @@ class UrlConversionTest extends UnitTestCase {
         TRUE,
       ],
       'MySql with a custom query parameter' => [
-        'mysql://test_user:test_pass@test_host:3306/test_database?extra=value',
+        'mysql://test_user:test_pass@test_host:3306/test_database?module=mysql&extra=value',
         [
+          'module' => 'mysql',
           'driver' => 'mysql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -216,39 +226,13 @@ class UrlConversionTest extends UnitTestCase {
           'port' => 3306,
           'namespace' => 'Drupal\mysql\Driver\Database\mysql',
           'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
-        ],
-        FALSE,
-      ],
-      'MySql with the module name mysql' => [
-        'mysql://test_user:test_pass@test_host:3306/test_database?module=mysql',
-        [
-          'driver' => 'mysql',
-          'username' => 'test_user',
-          'password' => 'test_pass',
-          'host' => 'test_host',
-          'database' => 'test_database',
-          'port' => 3306,
-          'namespace' => 'Drupal\mysql\Driver\Database\mysql',
-          'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
-        ],
-        FALSE,
-      ],
-      'PostgreSql without the module name set' => [
-        'pgsql://test_user:test_pass@test_host/test_database',
-        [
-          'driver' => 'pgsql',
-          'username' => 'test_user',
-          'password' => 'test_pass',
-          'host' => 'test_host',
-          'database' => 'test_database',
-          'namespace' => 'Drupal\pgsql\Driver\Database\pgsql',
-          'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
         ],
         FALSE,
       ],
       'PostgreSql with the module name pgsql' => [
         'pgsql://test_user:test_pass@test_host/test_database?module=pgsql',
         [
+          'module' => 'pgsql',
           'driver' => 'pgsql',
           'username' => 'test_user',
           'password' => 'test_pass',
@@ -262,6 +246,7 @@ class UrlConversionTest extends UnitTestCase {
       'SQLite, relative to root, without prefix and with the module name sqlite' => [
         'sqlite://localhost/test_database?module=sqlite',
         [
+          'module' => 'sqlite',
           'driver' => 'sqlite',
           'host' => 'localhost',
           'database' => $root . '/test_database',
@@ -271,6 +256,17 @@ class UrlConversionTest extends UnitTestCase {
         FALSE,
       ],
     ];
+  }
+
+  /**
+   * Tests ::convertDbUrlToConnectionInfo() deprecation for missing module.
+   *
+   * @group legacy
+   */
+  public function testMissingModuleInUrlConversion(): void {
+    $this->expectDeprecation('Not passing a ?module=db_driver_module part in the $url argument of Drupal\Core\Database\Database::convertDbUrlToConnectionInfo() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492');
+    $this->expectDeprecation('Not passing a ?module=db_driver_module part in the $url argument of Drupal\Core\Database\Connection::createConnectionOptionsFromUrl() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. All database connection URLs must have the module specified. See https://www.drupal.org/node/3129492');
+    Database::convertDbUrlToConnectionInfo('pgsql://test_user:test_pass@test_host/test_database', $this->root);
   }
 
   /**
