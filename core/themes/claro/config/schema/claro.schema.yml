@@ -3,6 +3,8 @@
 claro.settings:
   type: theme_settings
   label: 'Claro settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     third_party_settings:
       type: mapping
