@@ -9,6 +9,8 @@ field.settings:
       label: 'Maximum number of field data records to purge'
       constraints:
         NotNull: []
+        Range:
+          min: 0
 
 field.storage.*.*:
   type: config_entity
