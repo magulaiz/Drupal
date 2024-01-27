@@ -225,7 +225,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
 
     $configuration = $this->block->getConfiguration();
 
-    $section = $this->sectionStorage->getSection($this->delta);
+    $section = $this->sectionStorage->getSections(FALSE)[$this->delta];
     $section->getComponent($this->uuid)->setConfiguration($configuration);
 
     $this->layoutTempstoreRepository->set($this->sectionStorage);
@@ -272,7 +272,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
    *   The current layout section.
    */
   public function getCurrentSection() {
-    return $this->sectionStorage->getSection($this->delta);
+    return $this->sectionStorage->getSections(FALSE)[$this->delta];
   }
 
   /**

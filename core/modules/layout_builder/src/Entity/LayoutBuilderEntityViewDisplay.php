@@ -99,8 +99,18 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
-    return $this->getThirdPartySetting('layout_builder', 'sections', []);
+  public function getSections(bool $key_by_uuid = TRUE) {
+    $sections = $this->getThirdPartySetting('layout_builder', 'sections', []);
+    if ($key_by_uuid) {
+      return $sections;
+    }
+    else {
+      $sections_numerically_keyed = [];
+      foreach ($sections as $section) {
+        $sections_numerically_keyed[$section->getWeight()] = $section;
+      }
+      return $sections_numerically_keyed;
+    }
   }
 
   /**
@@ -113,7 +123,12 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       $this->unsetThirdPartySetting('layout_builder', 'sections');
     }
     else {
-      $this->setThirdPartySetting('layout_builder', 'sections', array_values($sections));
+      $sections_to_set = [];
+      foreach (array_values($sections) as $weight => $section) {
+        $section->setWeight($weight);
+        $sections_to_set[$section->getUuid()] = $section;
+      }
+      $this->setThirdPartySetting('layout_builder', 'sections', $sections_to_set);
     }
     return $this;
   }
@@ -236,7 +251,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function getDefaultRegion() {
     if ($this->hasSection(0)) {
-      return $this->getSection(0)->getDefaultRegion();
+      return $this->getSections(FALSE)[0]->getDefaultRegion();
     }
 
     return parent::getDefaultRegion();
@@ -314,8 +329,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     $build = [];
     if ($storage) {
-      foreach ($storage->getSections() as $delta => $section) {
-        $build[$delta] = $section->toRenderArray($contexts);
+      foreach ($storage->getSections() as $uuid => $section) {
+        $build[$uuid] = $section->toRenderArray($contexts);
       }
     }
     // The render array is built based on decisions made by @SectionStorage
@@ -379,13 +394,13 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     // Loop through all sections and determine if the removed dependencies are
     // used by their layout plugins.
-    foreach ($this->getSections() as $delta => $section) {
+    foreach ($this->getSections() as $section_uuid => $section) {
       $layout_dependencies = $this->getPluginDependencies($section->getLayout());
       $layout_removed_dependencies = $this->getPluginRemovedDependencies($layout_dependencies, $dependencies);
       if ($layout_removed_dependencies) {
         // @todo Allow the plugins to react to their dependency removal in
         //   https://www.drupal.org/project/drupal/issues/2579743.
-        $this->removeSection($delta);
+        $this->removeSection($section_uuid);
         $changed = TRUE;
       }
       // If the section is not removed, loop through all components.
@@ -453,11 +468,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   protected function getDefaultSection() {
     // If no section exists, append a new one.
     if (!$this->hasSection(0)) {
-      $this->appendSection(new Section('layout_onecol'));
+      $this->appendSection((new Section('layout_onecol'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0));
     }
 
     // Return the first section.
-    return $this->getSection(0);
+    return $this->getSections(FALSE)[0];
   }
 
   /**

@@ -2,6 +2,8 @@
 
 namespace Drupal\layout_builder;
 
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Provides a trait for maintaining a list of sections.
  *
@@ -37,12 +39,19 @@ trait SectionListTrait {
   /**
    * {@inheritdoc}
    */
-  public function getSection($delta) {
-    if (!$this->hasSection($delta)) {
-      throw new \OutOfBoundsException(sprintf('Invalid delta "%s"', $delta));
+  public function getSection($uuid) {
+    if (is_int($uuid)) {
+      @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
+    }
+    if (Uuid::isValid($uuid)) {
+      foreach ($this->getSections() as $section) {
+        if ($section->getUuid() === $uuid) {
+          return $section;
+        }
+      }
     }
 
-    return $this->getSections()[$delta];
+    throw new \Exception(sprintf('Invalid uuid "%s"', $uuid));
   }
 
   /**
@@ -57,8 +66,21 @@ trait SectionListTrait {
    */
   protected function setSection($delta, Section $section) {
     $sections = $this->getSections();
-    $sections[$delta] = $section;
-    $this->setSections($sections);
+    if ($delta >= $this->count()) {
+      $sections[$section->getUuid()] = $section;
+      $this->setSections($sections);
+    }
+    else {
+      foreach ($sections as $original_section) {
+        if ($original_section->getWeight() == $delta) {
+          // @todo Use https://www.drupal.org/node/66183 once resolved.
+          $start = array_slice($sections, 0, $delta);
+          $end = array_slice($sections, $delta + 1);
+          $this->setSections(array_merge($start, [$section->getUuid() => $section], $end));
+          break;
+        }
+      }
+    }
     return $this;
   }
 
@@ -85,7 +107,7 @@ trait SectionListTrait {
       // @todo Use https://www.drupal.org/node/66183 once resolved.
       $start = array_slice($this->getSections(), 0, $delta);
       $end = array_slice($this->getSections(), $delta);
-      $this->setSections(array_merge($start, [$section], $end));
+      $this->setSections(array_merge($start, [$section->getUuid() => $section], $end));
     }
     else {
       $this->appendSection($section);
@@ -105,7 +127,7 @@ trait SectionListTrait {
       throw new \Exception('A blank section must only be added to an empty list');
     }
 
-    $this->appendSection(new Section('layout_builder_blank'));
+    $this->appendSection((new Section('layout_builder_blank'))->setUuid(\Drupal::service('uuid')->generate())->setWeight(0));
     return $this;
   }
 
@@ -124,26 +146,37 @@ trait SectionListTrait {
   protected function hasBlankSection() {
     // A blank section will only ever exist when the delta is 0, as added by
     // ::removeSection().
-    return $this->hasSection(0) && $this->getSection(0)->getLayoutId() === 'layout_builder_blank';
+    return $this->hasSection(0) && $this->getSections(FALSE)[0]->getLayoutId() === 'layout_builder_blank';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function removeSection($delta) {
-    // Clear the section list if there is currently a blank section.
-    if ($this->hasBlankSection()) {
-      $this->removeAllSections();
+  public function removeSection($uuid) {
+    if (is_int($uuid)) {
+      @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
     }
+    if (Uuid::isValid($uuid)) {
+      // Clear the section list if there is currently a blank section.
+      if ($this->hasBlankSection()) {
+        $this->removeAllSections();
+      }
 
-    $sections = $this->getSections();
-    unset($sections[$delta]);
-    $this->setSections($sections);
-    // Add a blank section when the last section is removed.
-    if (empty($sections)) {
-      $this->addBlankSection();
+      $sections = $this->getSections();
+      foreach ($sections as $section_uuid => $section) {
+        if ($section_uuid === $uuid) {
+          unset($sections[$uuid]);
+        }
+      }
+      $this->setSections($sections);
+      // Add a blank section when the last section is removed.
+      if (empty($sections)) {
+        $this->addBlankSection();
+      }
+      return $this;
     }
-    return $this;
+    throw new \Exception(sprintf('Invalid uuid "%s"', $uuid));
+
   }
 
   /**
@@ -167,7 +200,7 @@ trait SectionListTrait {
    *   TRUE if there is a section for this delta, FALSE otherwise.
    */
   protected function hasSection($delta) {
-    return isset($this->getSections()[$delta]);
+    return $delta < count($this->getSections());
   }
 
   /**
@@ -176,8 +209,8 @@ trait SectionListTrait {
   public function __clone() {
     $sections = $this->getSections();
 
-    foreach ($sections as $delta => $item) {
-      $sections[$delta] = clone $item;
+    foreach ($sections as $uuid => $item) {
+      $sections[$uuid] = clone $item;
     }
 
     $this->setSections($sections);

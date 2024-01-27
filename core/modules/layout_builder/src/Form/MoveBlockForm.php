@@ -248,9 +248,9 @@ class MoveBlockForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $region = $this->getSelectedRegion($form_state);
     $delta = $this->getSelectedDelta($form_state);
-    $original_section = $this->sectionStorage->getSection($this->delta);
+    $original_section = $this->sectionStorage->getSections(FALSE)[$this->delta];
     $component = $original_section->getComponent($this->uuid);
-    $section = $this->sectionStorage->getSection($delta);
+    $section = $this->sectionStorage->getSections(FALSE)[$delta];
     if ($delta !== $this->delta) {
       // Remove component from old section and add it to the new section.
       $original_section->removeComponent($this->uuid);
@@ -332,7 +332,7 @@ class MoveBlockForm extends FormBase {
    */
   public function title(SectionStorageInterface $section_storage, $delta, $uuid) {
     $block_label = $section_storage
-      ->getSection($delta)
+      ->getSections(FALSE)[$delta]
       ->getComponent($uuid)
       ->getPlugin()
       ->label();

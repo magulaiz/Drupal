@@ -43,7 +43,7 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    *   The form array.
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
-    $component = $section_storage->getSection($delta)->getComponent($uuid);
+    $component = $section_storage->getSections(FALSE)[$delta]->getComponent($uuid);
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockUpdateHighlightId($uuid);
     return $this->doBuildForm($form, $form_state, $section_storage, $delta, $component);
   }

@@ -64,14 +64,14 @@ class LayoutSectionTest extends BrowserTestBase {
     $data['block_with_global_context'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
+          'section' => (new Section('layout_onecol', [], [
             'baz' => new SectionComponent('baz', 'content', [
               'id' => 'test_context_aware',
               'context_mapping' => [
                 'user' => '@user.current_user_context:current_user',
               ],
             ]),
-          ]),
+          ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338951'),
         ],
       ],
       [
@@ -88,14 +88,14 @@ class LayoutSectionTest extends BrowserTestBase {
     $data['block_with_entity_context'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
+          'section' => (new Section('layout_onecol', [], [
             'baz' => new SectionComponent('baz', 'content', [
               'id' => 'field_block:node:bundle_with_section_field:body',
               'context_mapping' => [
                 'entity' => 'layout_builder.entity',
               ],
             ]),
-          ]),
+          ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338952'),
         ],
       ],
       [
@@ -110,14 +110,17 @@ class LayoutSectionTest extends BrowserTestBase {
       '',
       'MISS',
     ];
+
+    $section_1 = (new Section('layout_onecol', [], [
+      'baz' => new SectionComponent('baz', 'content', [
+        'id' => 'system_powered_by_block',
+      ]),
+    ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338953');
+
     $data['single_section_single_block'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
-            'baz' => new SectionComponent('baz', 'content', [
-              'id' => 'system_powered_by_block',
-            ]),
-          ]),
+          'section' => $section_1,
         ],
       ],
       '.layout--onecol',
@@ -126,26 +129,25 @@ class LayoutSectionTest extends BrowserTestBase {
       '',
       'MISS',
     ];
+
+    $section_2 = (new Section('layout_twocol', [], [
+      'foo' => new SectionComponent('foo', 'first', [
+        'id' => 'test_block_instantiation',
+        'display_message' => 'foo text',
+      ]),
+      'bar' => new SectionComponent('bar', 'second', [
+        'id' => 'test_block_instantiation',
+        'display_message' => 'bar text',
+      ]),
+    ]))->setUuid('9a33d6d2-cc70-446e-b650-baf56f338952')->setWeight(1);
+
     $data['multiple_sections'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
-            'baz' => new SectionComponent('baz', 'content', [
-              'id' => 'system_powered_by_block',
-            ]),
-          ]),
+          'section' => $section_1,
         ],
         [
-          'section' => new Section('layout_twocol', [], [
-            'foo' => new SectionComponent('foo', 'first', [
-              'id' => 'test_block_instantiation',
-              'display_message' => 'foo text',
-            ]),
-            'bar' => new SectionComponent('bar', 'second', [
-              'id' => 'test_block_instantiation',
-              'display_message' => 'bar text',
-            ]),
-          ]),
+          'section' => $section_2,
         ],
       ],
       [
@@ -186,11 +188,11 @@ class LayoutSectionTest extends BrowserTestBase {
   public function testLayoutSectionFormatterAccess() {
     $node = $this->createSectionNode([
       [
-        'section' => new Section('layout_onecol', [], [
+        'section' => (new Section('layout_onecol', [], [
           'baz' => new SectionComponent('baz', 'content', [
             'id' => 'test_access',
           ]),
-        ]),
+        ]))->setUuid(\Drupal::service('uuid')->generate()),
       ],
     ]);
 

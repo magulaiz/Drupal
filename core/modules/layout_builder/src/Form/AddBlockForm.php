@@ -54,7 +54,7 @@ class AddBlockForm extends ConfigureBlockFormBase {
     // Only generate a new component once per form submission.
     if (!$component = $form_state->get('layout_builder__component')) {
       $component = new SectionComponent($this->uuidGenerator->generate(), $region, ['id' => $plugin_id]);
-      $section_storage->getSection($delta)->appendComponent($component);
+      $section_storage->getSections(FALSE)[$delta]->appendComponent($component);
       $form_state->set('layout_builder__component', $component);
     }
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);

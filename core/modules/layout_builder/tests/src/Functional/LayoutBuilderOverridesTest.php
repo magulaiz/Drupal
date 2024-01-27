@@ -126,7 +126,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
     $assert_session->pageTextContains('This is an override');
 
     // Get the UUID of the component.
-    $components = Node::load(1)->get('layout_builder__layout')->getSection(0)->getComponents();
+    $components = Node::load(1)->get('layout_builder__layout')->getSections(FALSE)[0]->getComponents();
     end($components);
     $uuid = key($components);
 

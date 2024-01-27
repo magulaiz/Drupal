@@ -16,7 +16,8 @@ third_party_settings:
     enabled: true
     allow_custom: true
     sections:
-      -
+      4c665d52-e0d6-402d-8dab-fba793c601cb:
+        uuid: 4c665d52-e0d6-402d-8dab-fba793c601cb
         layout_id: layout_onecol
         layout_settings:
           label: ''
@@ -56,6 +57,7 @@ third_party_settings:
                 entity: layout_builder.entity
             weight: 2
             additional: {  }
+        weight: 0
         third_party_settings: {  }
 id: node.page.full
 targetEntityType: node

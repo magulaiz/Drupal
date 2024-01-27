@@ -55,6 +55,21 @@ class LayoutSectionItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function setValue($values, $notify = TRUE) {
+    // If the key was passed as a UUID, convert it to the property name.
+    if (is_array($values)) {
+      $key = current(array_keys($values));
+      if ($values[$key]->getUuid() === $key) {
+        $values = [$this->mainPropertyName() => $values[$key]];
+      }
+    }
+
+    parent::setValue($values, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function mainPropertyName() {
     return 'section';
   }

@@ -8,7 +8,8 @@ third_party_settings:
     enabled: true
     allow_custom: false
     sections:
-      -
+      b3529a4a-aeb2-45c2-845b-30af586c3a47:
+        uuid: b3529a4a-aeb2-45c2-845b-30af586c3a47
         layout_id: layout_twocol_section
         layout_settings:
           column_widths: 50-50
@@ -23,6 +24,7 @@ third_party_settings:
                 entity: layout_builder.entity
             weight: 1
             additional: {  }
+        weight: 0
 id: entity_test.bundle_with_extra_fields.default
 targetEntityType: entity_test
 bundle: bundle_with_extra_fields

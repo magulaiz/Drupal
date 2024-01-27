@@ -36,12 +36,13 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
     parent::setUp();
 
     $section_data = [
-      new Section('layout_test_plugin', [], [
+      '11000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', [], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('11000000-0000-1000-a000-000000000000'),
+      '22000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000')
+        ->setWeight(1),
     ];
     $this->sectionList = $this->getSectionList($section_data);
   }
@@ -62,30 +63,59 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testGetSections() {
     $expected = [
-      new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      0 => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('11000000-0000-1000-a000-000000000000'),
+      1 => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000')
+        ->setWeight(1),
     ];
     $this->assertSections($expected);
+  }
+
+  /**
+   * Tests ::getSections().
+   */
+  public function testGetSectionsByUuid() {
+    $expected = [
+      '11000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
+      ]))->setUuid('11000000-0000-1000-a000-000000000000'),
+      '22000000-0000-1000-a000-000000000000' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000')
+        ->setWeight(1),
+    ];
+    $this->assertSections($expected, TRUE);
   }
 
   /**
    * @covers ::getSection
    */
   public function testGetSection() {
-    $this->assertInstanceOf(Section::class, $this->sectionList->getSection(0));
+    $this->assertInstanceOf(Section::class, $this->sectionList->getSection('11000000-0000-1000-a000-000000000000'));
   }
 
   /**
    * @covers ::getSection
    */
-  public function testGetSectionInvalidDelta() {
-    $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid delta "2"');
-    $this->sectionList->getSection(2);
+  public function testGetSectionInvalidUuid() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "uuid"');
+    $this->sectionList->getSection('uuid');
+  }
+
+  /**
+   * @covers ::getSection
+   *
+   * @group legacy
+   */
+  public function testGetSectionWithDelta() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "0"');
+    $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886');
+    $this->sectionList->getSection(0);
   }
 
   /**
@@ -93,16 +123,18 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testInsertSection() {
     $expected = [
-      new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_onecol'),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('11000000-0000-1000-a000-000000000000'),
+      (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000')
+        ->setWeight(1),
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000')
+        ->setWeight(2),
     ];
 
-    $this->sectionList->insertSection(1, new Section('layout_onecol'));
+    $this->sectionList->insertSection(1, (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000'));
     $this->assertSections($expected);
   }
 
@@ -111,16 +143,18 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testAppendSection() {
     $expected = [
-      new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('11000000-0000-1000-a000-000000000000'),
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_onecol'),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000')
+        ->setWeight(1),
+      (new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000')
+        ->setWeight(2),
     ];
 
-    $this->sectionList->appendSection(new Section('layout_onecol'));
+    $this->sectionList->appendSection((new Section('layout_onecol'))->setUuid('33000000-0000-1000-a000-000000000000'));
     $this->assertSections($expected);
   }
 
@@ -129,9 +163,13 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    *
    * @dataProvider providerTestRemoveAllSections
    */
-  public function testRemoveAllSections($set_blank, $expected) {
+  public function testRemoveAllSections($set_blank) {
+    $expected = [];
     if ($set_blank === NULL) {
       $this->sectionList->removeAllSections();
+    }
+    elseif ($set_blank === TRUE) {
+      $expected = [$this->sectionList->removeAllSections($set_blank)->getSections(FALSE)[0]];
     }
     else {
       $this->sectionList->removeAllSections($set_blank);
@@ -143,11 +181,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * Provides test data for ::testRemoveAllSections().
    */
   public function providerTestRemoveAllSections() {
-    $data = [];
-    $data[] = [NULL, []];
-    $data[] = [FALSE, []];
-    $data[] = [TRUE, [new Section('layout_builder_blank')]];
-    return $data;
+    return [[NULL], [FALSE], [TRUE]];
   }
 
   /**
@@ -155,37 +189,55 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testRemoveSection() {
     $expected = [
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000'),
     ];
 
-    $this->sectionList->removeSection(0);
+    $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
     $this->assertSections($expected);
   }
 
   /**
    * @covers ::removeSection
    */
-  public function testRemoveMultipleSections() {
-    $expected = [
-      new Section('layout_builder_blank'),
-    ];
+  public function testRemoveSectionInvalidUuid() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "uuid"');
+    $this->sectionList->removeSection('uuid');
+  }
 
+  /**
+   * @covers ::removeSection
+   *
+   * @group legacy
+   */
+  public function testRemoveSectionWithDelta() {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Invalid uuid "0"');
+    $this->expectDeprecation('Calling removeSection() with delta as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886');
     $this->sectionList->removeSection(0);
-    $this->sectionList->removeSection(0);
-    $this->assertSections($expected);
+  }
+
+  /**
+   * @covers ::removeSection
+   */
+  public function testRemoveMultipleSections() {
+    $this->sectionList->removeSection('11000000-0000-1000-a000-000000000000');
+    $this->sectionList->removeSection('22000000-0000-1000-a000-000000000000');
+    $expected = $this->sectionList->getSections(FALSE)[0];
+    $this->assertSections([$expected]);
   }
 
   /**
    * Tests __clone().
    */
   public function testClone() {
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections(FALSE)[0]->getLayoutSettings());
 
     $new_section_storage = clone $this->sectionList;
-    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'qwer']);
-    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
+    $new_section_storage->getSections(FALSE)[0]->setLayoutSettings(['asdf' => 'qwer']);
+    $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSections(FALSE)[0]->getLayoutSettings());
   }
 
   /**
@@ -193,9 +245,11 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    *
    * @param \Drupal\layout_builder\Section[] $expected
    *   The expected sections.
+   * @param bool $sections_keyed_by_uuid
+   *   Whether the sections are keyed by uuid. Defaults to FALSE.
    */
-  protected function assertSections(array $expected) {
-    $result = $this->sectionList->getSections();
+  protected function assertSections(array $expected, bool $sections_keyed_by_uuid = FALSE) {
+    $result = $this->sectionList->getSections($sections_keyed_by_uuid);
     $this->assertEquals($expected, $result);
     $this->assertSame(array_keys($expected), array_keys($result));
   }

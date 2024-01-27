@@ -46,15 +46,15 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
-    return $this->getSectionList()->getSections();
+  public function getSections(bool $key_by_uuid = TRUE) {
+    return $this->getSectionList()->getSections($key_by_uuid);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSection($delta) {
-    return $this->getSectionList()->getSection($delta);
+  public function getSection($uuid) {
+    return $this->getSectionList()->getSection($uuid);
   }
 
   /**
@@ -76,8 +76,8 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   /**
    * {@inheritdoc}
    */
-  public function removeSection($delta) {
-    $this->getSectionList()->removeSection($delta);
+  public function removeSection($uuid) {
+    $this->getSectionList()->removeSection($uuid);
     return $this;
   }
 
