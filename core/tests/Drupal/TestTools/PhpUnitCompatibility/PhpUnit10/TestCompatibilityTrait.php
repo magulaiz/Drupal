@@ -11,7 +11,11 @@ namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit10;
  */
 trait TestCompatibilityTrait {
 
-  /** @var null|callable */
+  /*
+   * The previous error handler.
+   *
+   * @var callable|null
+   */
   protected $previouslyDefinedErrorHandler;
 
   protected bool $expectedError = FALSE;
@@ -20,7 +24,7 @@ trait TestCompatibilityTrait {
   protected ?string $actualErrorMessage = NULL;
 
   public function tearDownExpectedTriggeredErrors(): void {
-    if (null !== $this->previouslyDefinedErrorHandler) {
+    if ($this->previouslyDefinedErrorHandler !== NULL) {
       self::assertSame($this->expectedError, $this->actualError, $this->expectedError ?
         'An error was expected, but it was not triggered' :
         'An unexpected error was triggered'
@@ -31,7 +35,7 @@ trait TestCompatibilityTrait {
 
   public function expectError(): void {
     $this->expectedError = TRUE;
-    if (null === $this->previouslyDefinedErrorHandler) {
+    if ($this->previouslyDefinedErrorHandler === NULL) {
       $this->previouslyDefinedErrorHandler = set_error_handler(
         function (
           int $code,
@@ -41,7 +45,7 @@ trait TestCompatibilityTrait {
             $this->actualError = TRUE;
             $this->actualErrorMessage = $message;
           }
-          return true;
+          return TRUE;
         }
       );
     }
