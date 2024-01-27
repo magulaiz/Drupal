@@ -149,7 +149,7 @@ class MachineNameWidgetTest extends WebDriverTestBase {
 
     $test_values = [
       'input' => 'Test value !0-9@',
-      'expected' => 'test_value_0_9',
+      'expected' => 'test_value_0_9_',
     ];
     $test_source_field->setValue($test_values['input']);
 
@@ -164,7 +164,7 @@ class MachineNameWidgetTest extends WebDriverTestBase {
 
     // Load the entity and check that machine name value that was saved is
     // correct.
-    $entity = EntityTestStringId::load('test_value_0_9');
+    $entity = EntityTestStringId::load('test_value_0_9_');
     $this->assertSame($test_values['input'], $entity->get('name')->value);
     $this->assertSame($test_values['expected'], $entity->get('id')->value);
 
