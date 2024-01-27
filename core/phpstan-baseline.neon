@@ -5567,11 +5567,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Config/Storage/StorageReplaceDataWrapperTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectError\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/ConnectionTest.php
-
-		-
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
@@ -7684,6 +7679,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/EventSubscriber/ActiveLinkResponseFilterTest.php
 
 		-
+			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/EventSubscriber/CustomPageExceptionHtmlSubscriberTest.php
+
+		-
 			message: "#^@dataProvider providerTestOn4xx related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/EventSubscriber/ExceptionJsonSubscriberTest.php
@@ -8053,6 +8053,11 @@ parameters:
 			message: "#^@dataProvider providerTestRedirectWithUrl related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Form/FormSubmitterTest.php
+
+		-
+			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Form/FormTestBase.php
 
 		-
 			message: "#^@dataProvider providerTestHandleErrorsWithLimitedValidation related method must be static in PHPUnit 10 and newer\\.$#"

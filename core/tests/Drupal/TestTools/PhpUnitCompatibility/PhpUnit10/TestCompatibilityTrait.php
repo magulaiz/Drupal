@@ -11,7 +11,7 @@ namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit10;
  */
 trait TestCompatibilityTrait {
 
-  /*
+  /**
    * The previous error handler.
    *
    * @var callable|null
