@@ -253,10 +253,11 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
 
+    $this->root = static::getDrupalRoot();
+
     // Check expected E_* triggered errors.
     $this->setUpErrorHandler();
 
-    $this->root = static::getDrupalRoot();
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();

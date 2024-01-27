@@ -57,9 +57,6 @@ abstract class UnitTestCase extends TestCase {
     // a previous test does not leak into this test.
     \Drupal::unsetContainer();
 
-    // Check expected E_* triggered errors.
-    $this->setUpErrorHandler();
-
     // Ensure that the NullFileCache implementation is used for the FileCache as
     // unit tests should not be relying on caches implicitly.
     FileCacheFactory::setConfiguration([FileCacheFactory::DISABLE_CACHE => TRUE]);
@@ -67,6 +64,9 @@ abstract class UnitTestCase extends TestCase {
     FileCacheFactory::setPrefix('prefix');
 
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+
+    // Check expected E_* triggered errors.
+    $this->setUpErrorHandler();
   }
 
   /**

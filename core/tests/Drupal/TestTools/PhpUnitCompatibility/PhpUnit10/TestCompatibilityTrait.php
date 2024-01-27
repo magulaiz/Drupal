@@ -28,6 +28,8 @@ trait TestCompatibilityTrait {
   protected ?string $actualErrorMessage = NULL;
 
   public function setUpErrorHandler(): void {
+    $this->setUpIgnoreDeprecationPatterns();
+
     if ($this->previouslyDefinedErrorHandler === NULL) {
       // Get current handler.
       $handler = set_error_handler('var_dump');
