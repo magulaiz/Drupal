@@ -62,9 +62,9 @@ use Drupal\views\Entity\View;
 class GroupwiseMax extends RelationshipPluginBase {
 
   /**
-   * The namespace of the subquery.
+   * The table aliases used by the subquery.
    */
-  public string $subquery_namespace;
+  protected array $tableAliases;
 
   /**
    * {@inheritdoc}
@@ -111,7 +111,10 @@ class GroupwiseMax extends RelationshipPluginBase {
       '#type' => 'radios',
       '#title' => $this->t('Representative sort order'),
       '#description' => $this->t("The ordering to use for the sort criteria selected above."),
-      '#options' => ['ASC' => $this->t('Ascending'), 'DESC' => $this->t('Descending')],
+      '#options' => [
+        'ASC' => $this->t('Ascending'),
+        'DESC' => $this->t('Descending'),
+      ],
       '#default_value' => $this->options['subquery_order'],
     ];
 
@@ -130,8 +133,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       // - base must the base that our relationship joins towards
       // - must have fields.
       if ($view->get('base_table') == $this->definition['base'] && !empty($view->getDisplay('default')['display_options']['fields'])) {
-        // TODO: check the field is the correct sort?
-        // or let users hang themselves at this stage and check later?
+        // Or let users hang themselves at this stage and check later?
         $views[$view->id()] = $view->id();
       }
     }
@@ -178,7 +180,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * generate the subquery when the options are saved, rather than when the view
    * is run. This saves considerable time.
    *
-   * @param $options
+   * @param array $options
    *   An array of options:
    *    - subquery_sort: the id of a views sort.
    *    - subquery_order: either ASC or DESC.
@@ -186,11 +188,11 @@ class GroupwiseMax extends RelationshipPluginBase {
    * @return string
    *   The subquery SQL string, ready for use in the main query.
    */
-  protected function leftQuery($options) {
+  protected function leftQuery(array $options) {
     // Either load another view, or create one on the fly.
     if ($options['subquery_view']) {
       $temp_view = Views::getView($options['subquery_view']);
-      // Remove all fields from default display
+      // Remove all fields from default display.
       unset($temp_view->display['default']['display_options']['fields']);
     }
     else {
@@ -210,7 +212,6 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // Get the namespace string.
     $temp_view->namespace = (!empty($options['subquery_namespace'])) ? '_' . $options['subquery_namespace'] : '_INNER';
-    $this->subquery_namespace = (!empty($options['subquery_namespace'])) ? '_' . $options['subquery_namespace'] : 'INNER';
 
     // The value we add here does nothing, but doing this adds the right tables
     // and puts in a WHERE clause with a placeholder we can grab later.
@@ -253,48 +254,50 @@ class GroupwiseMax extends RelationshipPluginBase {
     // Make every alias in the subquery safe within the outer query by
     // appending a namespace to it, '_inner' by default.
     $tables = &$subquery->getTables();
+    // Store the used aliases, so we can apply them in all kind of places.
+    $this->tableAliases = [];
     foreach (array_keys($tables) as $table_name) {
-      $tables[$table_name]['alias'] .= $this->subquery_namespace;
+      $this->tableAliases[$table_name] = $tables[$table_name]['alias'];
+    }
+    foreach (array_keys($tables) as $table_name) {
+      $tables[$table_name]['alias'] = $this->tableAliases[$table_name];
       // Namespace the join on every table.
       if (isset($tables[$table_name]['condition'])) {
         $tables[$table_name]['condition'] = $this->conditionNamespace($tables[$table_name]['condition']);
       }
     }
-    // Namespace fields.
-    foreach (array_keys($fields) as $field_name) {
-      $fields[$field_name]['table'] .= $this->subquery_namespace;
-      $fields[$field_name]['alias'] .= $this->subquery_namespace;
-    }
     // Namespace conditions.
     $where = &$subquery->conditions();
     $this->alterSubqueryCondition($subquery, $where);
-    // Not sure why, but our sort order clause doesn't have a table.
-    // TODO: the call to addHandler() above to add the sort handler is probably
-    // wrong -- needs attention from someone who understands it.
-    // In the meantime, this works, but with a leap of faith.
-    $orders = &$subquery->getOrderBy();
-    foreach ($orders as $order_key => $order) {
-      // But if we're using a whole view, we don't know what we have!
-      if ($options['subquery_view']) {
-        [$sort_table, $sort_field] = explode('.', $order_key);
-      }
-      $orders[$sort_table . $this->subquery_namespace . '.' . $sort_field] = $order;
-      unset($orders[$order_key]);
-    }
 
     // The query we get doesn't include the LIMIT, so add it here.
     $subquery->range(0, 1);
 
+    // Clone the query object to force recompilation of the underlying WHERE and
+    // HAVING objects on the next step.
+    $subquery = clone $subquery;
+
+    // Add in Views Query Substitutions such as ***CURRENT_TIME***.
+    views_query_views_alter($subquery);
+
     // Extract the SQL the temporary view built.
     $subquery_sql = $subquery->__toString();
 
-    // Replace the placeholder with the outer, correlated field.
-    // Eg, change the placeholder ':users_uid' into the outer field 'users.uid'.
-    // We have to work directly with the SQL, because putting a name of a field
-    // into a SelectQuery that it does not recognize (because it's outer) just
-    // makes it treat it as a string.
-    $outer_placeholder = ':' . str_replace('.', '_', $this->definition['outer field']);
-    $subquery_sql = str_replace($outer_placeholder, $this->definition['outer field'], $subquery_sql);
+    // Replace subquery argument placeholders.
+    $quoted = $subquery->getArguments();
+    $connection = $subquery->getConnection();
+    foreach ($quoted as $key => $val) {
+      // Replace the **CORRELATED** placeholder with the outer field name.
+      if ($val === '**CORRELATED**') {
+        $quoted[$key] = $this->definition['outer field'];
+      }
+      // Add quotes for all other values.
+      else {
+        $quoted[$key] = $connection->quote($val);
+      }
+    }
+
+    $subquery_sql = strtr($subquery_sql, $quoted);
 
     return $subquery_sql;
   }
@@ -329,14 +332,10 @@ class GroupwiseMax extends RelationshipPluginBase {
    * need to quote each single part to prevent from query exceptions.
    */
   protected function conditionNamespace($string) {
-    $parts = explode(' = ', $string);
-    foreach ($parts as &$part) {
-      if (str_contains($part, '.')) {
-        $part = '"' . str_replace('.', $this->subquery_namespace . '".', $part);
-      }
+    foreach ($this->tableAliases as $table_name => $table_alias) {
+      $string = preg_replace("/\b{$table_name}\b/", '"' . $table_alias . '"', $string);
     }
-
-    return implode(' = ', $parts);
+    return $string;
   }
 
   /**
@@ -384,7 +383,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     }
     $join = Views::pluginManager('join')->createInstance($id, $def);
 
-    // use a short alias for this:
+    // Use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
     $this->alias = $this->query->addRelationship($alias, $join, $this->definition['base'], $this->relationship);
