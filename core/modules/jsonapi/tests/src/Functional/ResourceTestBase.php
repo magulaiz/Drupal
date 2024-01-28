@@ -579,9 +579,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
                 foreach ($field_item_list as $field_item) {
                   /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
                   foreach (TypedDataInternalPropertiesHelper::getNonInternalProperties($field_item) as $property) {
-                    $cacheability->addCacheableDependency(CacheableMetadata::createFromObject($property));
+                    $cacheability->addCacheableDependency($property);
                   }
                 }
+                $cacheability->addCacheableDependency($field_item_list);
               }
             }
           }

@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
+use Drupal\entity_test\Plugin\Field\ComputedTestCacheableReferenceFieldItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestCacheableStringItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
@@ -53,6 +54,13 @@ class EntityTestComputedField extends EntityTest {
       ->setLabel(new TranslatableMarkup('Computed Cacheable String Field Test'))
       ->setComputed(TRUE)
       ->setClass(ComputedTestCacheableStringItemList::class)
+      ->setReadOnly(FALSE)
+      ->setInternal(FALSE);
+
+    $fields['computed_test_cacheable_reference_field'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(new TranslatableMarkup('Computed Cacheable Reference Field Test'))
+      ->setComputed(TRUE)
+      ->setClass(ComputedTestCacheableReferenceFieldItemList::class)
       ->setReadOnly(FALSE)
       ->setInternal(FALSE);
 
