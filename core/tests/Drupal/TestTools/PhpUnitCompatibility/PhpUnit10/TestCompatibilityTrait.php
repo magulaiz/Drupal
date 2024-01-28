@@ -37,6 +37,11 @@ trait TestCompatibilityTrait {
 
       $this->previouslyDefinedErrorHandler = set_error_handler(
         function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($handler): bool {
+          // Collect deprecations regardless of whether they are ignored or not.
+          if (E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) {
+            $this->collectedDeprecations[] = $errstr;
+          }
+
           if ((E_USER_ERROR === $errno || E_ERROR === $errno) && $this->expectedError) {
             $this->actualError = TRUE;
             $this->actualErrorMessage = $errstr;
@@ -63,6 +68,9 @@ trait TestCompatibilityTrait {
       }
       restore_error_handler();
     }
+
+    // Checks if collected deprecations match the expectations.
+    $this->tearDownExpectedDeprecations();
   }
 
   public function expectError(): void {
