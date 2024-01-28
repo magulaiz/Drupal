@@ -55,4 +55,11 @@ trait ExpectDeprecationTrait {
     return (bool) $result;
   }
 
+  public function isTestInLegacyGroup(): bool {
+    [$testMethod] = explode(' ', $this->name());
+    $classDoc = (new \ReflectionClass($this))->getDocComment();
+    $methodDoc = (new \ReflectionMethod($this, $testMethod))->getDocComment();
+    return str_contains($classDoc, '@group legacy') || str_contains($methodDoc, '@group legacy');
+  }
+
 }

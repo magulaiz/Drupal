@@ -44,6 +44,9 @@ trait TestCompatibilityTrait {
           elseif ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isIgnoredDeprecation($errstr)) {
             return TRUE;
           }
+          elseif ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isTestInLegacyGroup()) {
+            return TRUE;
+          }
           else {
             call_user_func($handler, $errno, $errstr, $errfile, $errline);
           }
