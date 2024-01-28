@@ -154,7 +154,7 @@ class MachineNameWidgetTest extends WebDriverTestBase {
     $test_source_field->setValue($test_values['input']);
 
     // Wait the set timeout for fetching the machine name.
-    $this->assertJsCondition('jQuery("#edit-name-0-value-machine-name-suffix .machine-name-value").html() == "' . $test_values['expected'] . '"', 10000, $page->find('css', '#edit-name-0-value-machine-name-suffix .machine-name-value')->getHtml() . ' == ' . $test_values['expected']);
+    $this->assertJsCondition('jQuery("#edit-name-0-value-machine-name-suffix .machine-name-value").html() == "' . $test_values['expected'] . '"');
 
     // Validate the generated machine name.
     $this->assertEquals($test_values['expected'], $id_machine_name_value->getHtml());
