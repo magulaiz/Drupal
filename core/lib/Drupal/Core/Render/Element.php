@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResultInterface;
 
 /**
