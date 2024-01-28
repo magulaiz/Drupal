@@ -130,9 +130,8 @@ class FormErrorHandlerTest extends UnitTestCase {
     $this->messenger->expects($this->exactly(count($messages)))
       ->method('addError')
       ->with(
-        $this->callback(function ($message) use (&$messages) {
-          $this->assertSame(array_shift($messages), $message);
-          return TRUE;
+        $this->callback(function (string $message) use (&$messages): bool {
+          return array_shift($messages) === $message;
         }),
         FALSE
       );
@@ -185,9 +184,8 @@ class FormErrorHandlerTest extends UnitTestCase {
     $this->messenger->expects($this->exactly(count($messages)))
       ->method('addMessage')
       ->with(
-        $this->callback(function ($message) use (&$messages) {
-          $this->assertSame(array_shift($messages), $message);
-          return TRUE;
+        $this->callback(function (string $message) use (&$messages): bool {
+          return array_shift($messages) === $message;
         }),
         'error',
         FALSE
