@@ -3,7 +3,7 @@
 namespace Drupal\Core\Action;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Core\Executable\ExecutableInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -28,15 +28,23 @@ use Drupal\Core\Session\AccountInterface;
  * @see \Drupal\Core\Action\ActionBase
  * @see plugin_api
  */
-interface ActionInterface extends ExecutableInterface, PluginInspectionInterface {
+interface ActionInterface extends PluginInspectionInterface {
 
   /**
-   * Executes the plugin for an array of objects.
+   * Executes the plugin on an array of entities.
    *
-   * @param array $objects
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
-  public function executeMultiple(array $objects);
+  public function executeMultiple(array $entities);
+
+  /**
+   * Executes the plugin on an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   An entity.
+   */
+  public function execute(EntityInterface $entity): void;
 
   /**
    * Checks object access.

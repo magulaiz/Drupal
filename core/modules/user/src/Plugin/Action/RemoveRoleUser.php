@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Removes a role from a user.
@@ -18,15 +19,16 @@ class RemoveRoleUser extends ChangeUserRoleBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($account = NULL) {
+  public function execute(EntityInterface $entity): void {
     $rid = $this->configuration['rid'];
     // Skip removing the role from the user if they already don't have it.
-    if ($account !== FALSE && $account->hasRole($rid)) {
+    /** @var \Drupal\user\UserInterface $entity */
+    if ($entity->hasRole($rid)) {
       // For efficiency manually save the original account before applying
       // any changes.
-      $account->original = clone $account;
-      $account->removeRole($rid);
-      $account->save();
+      $entity->original = clone $entity;
+      $entity->removeRole($rid);
+      $entity->save();
     }
   }
 

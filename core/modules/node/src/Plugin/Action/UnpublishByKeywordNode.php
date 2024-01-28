@@ -5,6 +5,7 @@ namespace Drupal\node\Plugin\Action;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -22,15 +23,16 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($node = NULL) {
+  public function execute(EntityInterface $entity): void {
+    /** @var \Drupal\node\NodeInterface $entity */
     $elements = \Drupal::entityTypeManager()
       ->getViewBuilder('node')
-      ->view(clone $node);
+      ->view(clone $entity);
     $render = \Drupal::service('renderer')->render($elements);
     foreach ($this->configuration['keywords'] as $keyword) {
-      if (str_contains($render, $keyword) || str_contains($node->label(), $keyword)) {
-        $node->setUnpublished();
-        $node->save();
+      if (str_contains($render, $keyword) || str_contains($entity->label(), $keyword)) {
+        $entity->setUnpublished();
+        $entity->save();
         break;
       }
     }

@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -79,8 +80,8 @@ class CancelUser extends ActionBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute($object = NULL) {
-    $this->executeMultiple([$object]);
+  public function execute(EntityInterface $entity): void {
+    $this->executeMultiple([$entity]);
   }
 
   /**

@@ -7,6 +7,7 @@ use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -120,7 +121,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute(EntityInterface $entity = NULL): void {
     if (empty($this->configuration['node'])) {
       $this->configuration['node'] = $entity;
     }

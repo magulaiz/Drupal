@@ -4,6 +4,7 @@ namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver;
 use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -20,7 +21,7 @@ class PublishAction extends EntityActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute(EntityInterface $entity): void {
     $entity->setPublished()->save();
   }
 
