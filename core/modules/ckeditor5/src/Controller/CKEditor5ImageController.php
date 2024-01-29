@@ -38,6 +38,15 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class CKEditor5ImageController extends ControllerBase {
 
   /**
+   * The default allowed image extensions.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0 without replacement.
+   *
+   * @see https://www.drupal.org/node/3384728
+   */
+  const DEFAULT_IMAGE_EXTENSIONS = 'gif png jpg jpeg';
+
+  /**
    * The file system service.
    */
   protected FileSystemInterface $fileSystem;
@@ -149,7 +158,6 @@ class CKEditor5ImageController extends ControllerBase {
 
     $validators = $this->getImageUploadValidators($settings);
 
-    // Create the file.
     $file_uri = "{$destination}/{$filename}";
     $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_RENAME);
 
