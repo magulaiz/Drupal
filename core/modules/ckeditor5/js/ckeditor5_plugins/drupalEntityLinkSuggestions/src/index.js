@@ -50,6 +50,11 @@ class DrupalEntityLinkSuggestions extends Plugin {
     const { editor } = this;
     const linkActionsView = editor.plugins.get('LinkUI').actionsView;
     const previewButton = linkActionsView.previewButtonView;
+    previewButton.set('parentHref');
+
+    previewButton
+      .bind('parentHref')
+      .to(linkActionsView, 'href', this, 'entityMetadata', (value) => value);
     previewButton.unbind('isEnabled');
     previewButton
       .bind('isEnabled')
@@ -59,14 +64,53 @@ class DrupalEntityLinkSuggestions extends Plugin {
         (href) => !!href && !href.startsWith('entity:'),
       );
     previewButton.unbind('label');
-    previewButton.bind('label').to(linkActionsView, 'href', (href) => {
-      if (href && href.startsWith('entity:')) {
-        console.log('TODO: intercept clicks to this link', href);
-        return Drupal.t('Internal link to !entity-uri', {
-          '!entity-uri': href,
-        });
-      }
-      return href || Drupal.t('This link has no URL');
+
+    const bind = previewButton.bindTemplate;
+    previewButton.setTemplate({
+      tag: 'a',
+      attributes: {
+        href: bind.to('parentHref', (hrefValue) => {
+          if (hrefValue && hrefValue.startsWith('entity:')) {
+            return `/${hrefValue.replace('entity:', '')}`;
+          }
+          return hrefValue;
+        }),
+        target: '_blank',
+        class: ['ck', 'ck-link-actions__preview'],
+        'aria-labelledby': 'ck-aria-label-preview-button',
+      },
+      children: [
+        {
+          tag: 'span',
+          attributes: {
+            class: ['ck', 'ck-button'],
+            id: 'ck-aria-label-preview-button',
+          },
+          children: [
+            {
+              text: bind.to('parentHref', (parentHref) => {
+                const { selection } = this.editor.model.document;
+                const entityMetadata = selection.hasAttribute(
+                  'data-entity-metadata',
+                )
+                  ? JSON.parse(selection.getAttribute('data-entity-metadata'))
+                  : {};
+
+                if (
+                  entityMetadata.label &&
+                  (!parentHref || parentHref.startsWith('entity:'))
+                ) {
+                  const group = entityMetadata.group
+                    ? ` (${entityMetadata.group})`
+                    : '';
+                  return `${entityMetadata.label}${group}`;
+                }
+                return parentHref;
+              }),
+            },
+          ],
+        },
+      ],
     });
   }
 
@@ -106,6 +150,8 @@ class DrupalEntityLinkSuggestions extends Plugin {
       'data-ckeditor5-host-entity-langcode',
     );
     const linkFormView = editor.plugins.get('LinkUI').formView;
+    const linkActionsView = editor.plugins.get('LinkUI').actionsView;
+
     let wasAutocompleteAdded = false;
 
     linkFormView.extendTemplate({
@@ -132,7 +178,10 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
     editor.plugins
       .get('ContextualBalloon')
-      .on('set:visibleView', (evt, propertyName, newValue, oldValue) => {
+      .on('set:visibleView', (evt, propertyName, newValue) => {
+        if (newValue === linkActionsView && this.entityMetadata) {
+          linkActionsView.set('metadata', this.entityMetadata);
+        }
         if (newValue === linkFormView) {
           // Ensure the visibility is computed for the `download` switch button when it's not explicitly set (
           // editing an existing link).
@@ -176,16 +225,22 @@ class DrupalEntityLinkSuggestions extends Plugin {
             ),
           selectHandler: (event, { item }) => {
             if (!item.path) {
-              throw 'Missing path param.' + JSON.stringify(item);
+              // eslint-disable-next-line no-throw-literal
+              throw `Missing path param. ${JSON.stringify(item)}`;
             }
 
             if (item.entity_type_id || item.entity_uuid) {
               if (!item.entity_type_id || !item.entity_uuid) {
-                throw 'Missing path param.' + JSON.stringify(item);
+                // eslint-disable-next-line no-throw-literal
+                throw `Missing entity type id and/or entity uuid. ${JSON.stringify(
+                  item,
+                )}`;
               }
 
               this.set('entityType', item.entity_type_id);
               this.set('entityUuid', item.entity_uuid);
+              this.set('entityMetadata', JSON.stringify(item));
+
               if (item.exposed_attributes.download === true) {
                 this.set(
                   'drupalEntityLinkDownload',
@@ -204,6 +259,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
             } else {
               this.set('entityType', null);
               this.set('entityUuid', null);
+              this.set('entityMetadata', null);
               this.set('drupalEntityLinkDownload', null);
             }
 
@@ -211,13 +267,14 @@ class DrupalEntityLinkSuggestions extends Plugin {
             selected = true;
             return false;
           },
-          openHandler: (event) => {
+          openHandler: () => {
             selected = false;
           },
-          closeHandler: (event) => {
+          closeHandler: () => {
             if (!selected) {
               this.set('entityType', null);
               this.set('entityUuid', null);
+              this.set('entityMetadata', null);
               this.set('drupalEntityLinkDownload', null);
             }
             selected = false;
@@ -229,7 +286,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   _handleExtraFormFieldSubmit() {
-    const editor = this.editor;
+    const { editor } = this;
     const linkFormView = editor.plugins.get('LinkUI').formView;
     const linkCommand = editor.commands.get('link');
 
@@ -241,6 +298,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
           'data-entity-type': this.entityType,
           'data-entity-uuid': this.entityUuid,
           download: this.drupalEntityLinkDownload,
+          'data-entity-metadata': this.entityMetadata,
         };
         // Stop the execution of the link command caused by closing the form.
         // Inject the extra attribute value. The highest priority listener here
@@ -269,11 +327,12 @@ class DrupalEntityLinkSuggestions extends Plugin {
   }
 
   _handleDataLoadingIntoExtraFormField() {
-    const editor = this.editor;
+    const { editor } = this;
     const linkCommand = editor.commands.get('link');
 
     this.bind('entityType').to(linkCommand, 'data-entity-type');
     this.bind('entityUuid').to(linkCommand, 'data-entity-uuid');
+    this.bind('entityMetadata').to(linkCommand, 'data-entity-metadata');
     this.bind('drupalEntityLinkDownload').to(linkCommand, 'download');
   }
 
