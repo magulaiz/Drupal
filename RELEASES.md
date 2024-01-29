@@ -1,4 +1,7 @@
 ```mermaid
+---
+displayMode: compact
+---
 %%{
   init: {
     'theme': 'base',
