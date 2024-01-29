@@ -3,7 +3,7 @@ status: true
 dependencies: {  }
 id: image
 label: Image
-description: "Use image or locally hosted image files."
+description: "Use image for locally hosted image files."
 source: image
 queue_thumbnail_downloads: false
 new_revision: true
