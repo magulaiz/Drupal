@@ -23,7 +23,7 @@ class TermWeightTranslationUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that weight field is translated as expected after update hook run.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
     $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
     $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions('taxonomy_term');
