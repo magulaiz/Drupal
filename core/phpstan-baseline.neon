@@ -8997,3 +8997,8 @@ parameters:
 			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\UnitTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
 			count: 1
 			path: tests/TestSuites/UnitTestSuite.php
+
+		-
+			message: "#^@dataProvider hexCodes related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: themes/olivero/tests/src/Unit/OliveroHexToHslTest.php
