@@ -29,6 +29,4 @@ function taxonomy_update_10201(&$sandbox): void {
   // And now we can launch the process for updating the entity type and the
   // database schema, including data migration.
   $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
-
-  return "Made term weight field translatable.";
 }
