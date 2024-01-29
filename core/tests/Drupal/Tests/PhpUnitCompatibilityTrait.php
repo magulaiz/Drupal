@@ -21,7 +21,9 @@ if (FALSE) {
    * in the version-bound trait.
    */
   trait PhpUnitCompatibilityTrait {
-    use Drupal\TestTools\PhpUnitCompatibility\PhpUnit9\TestCompatibilityTrait;
+
+    use \Drupal\TestTools\PhpUnitCompatibility\PhpUnit9\TestCompatibilityTrait;
+
   }
 
 }
