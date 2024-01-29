@@ -38,6 +38,7 @@ class ControllerBaseTest extends KernelTestBase {
     $property = new \ReflectionProperty(SystemTestController::class, 'currentUser');
     $this->assertSame($this->container->get('current_user'), $property->getValue($controller));
 
+    $this->assertSame($this->container->get('private_key'), $controller->state);
     // Test nullables types.
     $this->assertSame($this->container->get('page_cache_kill_switch'), $controller->killSwitch);
     $this->assertSame($this->container->get('page_cache_kill_switch'), $controller->killSwitch2);

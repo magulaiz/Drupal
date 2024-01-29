@@ -7,10 +7,12 @@ use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
+use Drupal\Core\PrivateKey;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -86,6 +88,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
     AccountInterface $current_user,
     RendererInterface $renderer,
     MessengerInterface $messenger,
+    public PrivateKey|StateInterface $state,
     public ?KillSwitch $killSwitch = NULL,
     public KillSwitch|null $killSwitch2 = NULL,
   ) {

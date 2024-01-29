@@ -28,12 +28,39 @@ trait AutowireTrait {
     if (method_exists(static::class, '__construct')) {
       $constructor = new \ReflectionMethod(static::class, '__construct');
       foreach ($constructor->getParameters() as $parameter) {
-        $service = ltrim((string) $parameter->getType(), '?');
+        $type = $parameter->getType();
+        $service = NULL;
+
         foreach ($parameter->getAttributes(Autowire::class) as $attribute) {
           $service = (string) $attribute->newInstance()->value;
         }
 
-        if (!$container->has($service)) {
+        if (!$service && $type instanceof \ReflectionUnionType) {
+          foreach ($type->getTypes() as $subtype) {
+            if (!$subtype->isBuiltin() || $container->has($subtype->getName())) {
+              $service = $subtype->getName();
+              break;
+            }
+          }
+        }
+
+        if (!$service) {
+          $service = $type instanceof \ReflectionNamedType ? $type->getName() : (string) $type;
+        }
+
+        $service_exists = $container->has($service);
+
+        if (!$service_exists && $parameter->isDefaultValueAvailable()) {
+          $args[] = $parameter->getDefaultValue();
+          continue;
+        }
+
+        if (!$service_exists && $parameter->allowsNull()) {
+          $args[] = NULL;
+          continue;
+        }
+
+        if (!$service_exists) {
           throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::_construct()", you should configure its value explicitly.', $service, $parameter->getName(), static::class));
         }
 
