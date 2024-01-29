@@ -1,10 +1,15 @@
-/* eslint-disable import/no-extraneous-dependencies, no-restricted-syntax */
+/* eslint-disable import/no-extraneous-dependencies */
 import { Plugin } from 'ckeditor5/src/core';
 import { findAttributeRange } from 'ckeditor5/src/typing';
 
 export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
   init() {
-    this.attrs = ['data-entity-type', 'data-entity-uuid', 'download'];
+    this.attrs = [
+      'data-entity-type',
+      'data-entity-uuid',
+      'download',
+      'data-entity-metadata',
+    ];
     this._allowAndConvertExtraAttributes();
     this._removeExtraAttributesOnUnlinkCommandExecute();
     this._refreshExtraAttributeValues();
@@ -20,18 +25,14 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
       editor.conversion.for('downcast').attributeToElement({
         model: attribute,
         view: (value, { writer }) => {
-          // eslint-disable-next-line no-nested-ternary
-          const viewAttributes = { [attribute]: value };
-
-          // Special case: the "download" attribute.
-          // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
-          // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
-          if (attribute === 'download') {
-            if (value === true) {
-              delete viewAttributes.download;
-            } else {
-              viewAttributes.download = '';
-            }
+          const viewAttributes = {};
+          if (attribute !== 'download') {
+            // Special case: the "download" attribute.
+            // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
+            // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
+            viewAttributes[attribute] = value;
+          } else if (value === true) {
+            viewAttributes.download = '';
           }
 
           const linkViewElement = writer.createAttributeElement(
@@ -109,7 +110,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
           this.attrs.forEach((attribute) => {
             if (selection.isCollapsed) {
               const node = firstPosition.textNode || firstPosition.nodeBefore;
-
               if (extraAttributeValues[attribute]) {
                 writer.setAttribute(
                   attribute,
@@ -127,6 +127,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
                 attribute,
               );
 
+              // eslint-disable-next-line no-restricted-syntax
               for (const range of ranges) {
                 if (extraAttributeValues[attribute]) {
                   writer.setAttribute(
@@ -150,7 +151,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
     const { editor } = this;
     const unlinkCommand = editor.commands.get('unlink');
     const { model } = editor;
-    const selection = model.document.selection;
+    const { selection } = model.document;
 
     let isUnlinkingInProgress = false;
 
@@ -198,6 +199,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
               }
 
               // Remove the extra attribute from specified ranges.
+              // eslint-disable-next-line no-restricted-syntax
               for (const range of ranges) {
                 writer.removeAttribute(attribute, range);
               }

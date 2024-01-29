@@ -364,7 +364,7 @@ ckeditor5_link_entity_suggestions:
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
     library: ckeditor5/internal.drupal.ckeditor5.link-entity-suggestions
     elements:
-      - <a data-entity-type data-entity-uuid>
+      - <a data-entity-type data-entity-uuid data-entity-metadata>
       - <a download>
     conditions:
       filter: entity_links

@@ -5,6 +5,8 @@ const $ = jQuery;
 /**
  * Override jQuery UI _renderItem function to output HTML by default.
  *
+ * This uses function() syntax as required by jQuery UI.
+ *
  * @param {object} ul
  *   The <ul> element that the newly created <li> element must be appended to.
  * @param {object} item
@@ -29,6 +31,8 @@ function renderItem(ul, item) {
 
 /**
  * Override jQuery UI _renderMenu function to handle groups.
+ *
+ * This uses function() syntax as required by jQuery UI.
  *
  * @param {object} ul
  *   An empty <ul> element to use as the widget's menu.
