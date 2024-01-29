@@ -332,8 +332,8 @@ class LocalTasksTest extends BrowserTestBase {
 
     $this->drupalLogin($this->rootUser);
     // Test the local task block URLs for both node and term entities.
-    $this->testEntityLocalTaskBlockUrl($node, '/original-node-alias');
-    $this->testEntityLocalTaskBlockUrl($term, '/original-term-alias');
+    $this->doTestEntityLocalTaskBlockUrl($node, '/original-node-alias');
+    $this->doTestEntityLocalTaskBlockUrl($term, '/original-term-alias');
   }
 
   /**
@@ -344,7 +344,7 @@ class LocalTasksTest extends BrowserTestBase {
    * @param string $alias
    *   The original path alias of the entity.
    */
-  protected function testEntityLocalTaskBlockUrl(EntityInterface $entity, string $alias): void {
+  protected function doTestEntityLocalTaskBlockUrl(EntityInterface $entity, string $alias): void {
     // Visit the entity's URL.
     $this->drupalGet($entity->toUrl());
     $new_alias = $alias . '-updated';
