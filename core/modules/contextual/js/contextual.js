@@ -20,18 +20,24 @@
   const cachedPermissionsHash = storage.getItem(
     'Drupal.contextual.permissionsHash',
   );
-  const permissionsHash = drupalSettings.user.permissionsHash;
-  if (cachedPermissionsHash !== permissionsHash) {
-    if (typeof permissionsHash === 'string') {
-      _.chain(storage)
-        .keys()
-        .each((key) => {
-          if (key.substring(0, 18) === 'Drupal.contextual.') {
-            storage.removeItem(key);
-          }
-        });
+  const permissionsHashUser = drupalSettings.user.permissionsHash;
+  const linkDefinitionsHashContextual = drupalSettings.contextual.linkDefinitionsHash;
+  if (cachedPermissionsHash !== permissionsHashUser) {
+    if (typeof permissionsHashUser === 'string') {
+      const cachedDefinitionsHash = storage.getItem('Drupal.contextual.linkDefinitionsHash');
+      if (cachedPermissionsHash !== permissionsHashUser || cachedDefinitionsHash !== linkDefinitionsHashContextual) {
+        if (typeof linkDefinitionsHashContextual === 'string') {
+          _.chain(storage)
+            .keys()
+            .each((key) => {
+              if (key.substring(0, 18) === 'Drupal.contextual.') {
+                storage.removeItem(key);
+              }
+            });
+        }
+      }
     }
-    storage.setItem('Drupal.contextual.permissionsHash', permissionsHash);
+    storage.setItem('Drupal.contextual.linkDefinitionsHash', linkDefinitionsHashContextual);
   }
 
   /**

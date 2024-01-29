@@ -69,6 +69,29 @@ class ContextualLinksTest extends WebDriverTestBase {
     $this->drupalGet('user');
     $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
     $this->assertNotEmpty($contextualLinks);
+
+    $this->container->get('module_installer')->install(['contextual_test']);
+    $this->drupalGet('user');
+    $contextualButton = $this->assertSession()->waitForElement('css', '.contextual button');
+    $this->assertNotEmpty($contextualButton);
+    $this->assertContextualLinkWithText('block-configure');
+    $this->assertContextualLinkWithText('contextual-test-link');
+  }
+
+  /**
+   * Assert that contextual link with a text string exists.
+   *
+   * @param string $text
+   *   The text for the link to have.
+   */
+  protected function assertContextualLinkWithText(string $text) {
+    $contextLinks = $this->assertSession()->waitForElement('css', ".contextual-links li a");
+    $this->assertNotEmpty($contextLinks);
+    foreach ($contextLinks as $contextLink) {
+      if ($contextLink->getText() === $text) {
+        break;
+      }
+    }
   }
 
   /**
