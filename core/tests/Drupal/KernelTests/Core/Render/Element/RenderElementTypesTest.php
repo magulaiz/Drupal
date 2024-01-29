@@ -238,16 +238,16 @@ class RenderElementTypesTest extends KernelTestBase {
   }
 
   /**
-   * Test Link element with integer key parameters
+   * Test Link element with integer key parameters.
    */
   public function testLinkWithIntegerKeyParams() {
     $link_array = [
       '#type' => 'link',
       '#title' => 'foo',
-      '#url' => Url::fromUri('internal:/my-page?myparam[2021]=2021'),
+      '#url' => Url::fromUri('internal:/my-page?foo[2021]=2021'),
     ];
     $link_rendered = (string) \Drupal::service('renderer')->renderRoot($link_array);
-    $expected_link = '<a href="/my-page?myparam%5B2021%5D=2021">foo</a>';
+    $expected_link = '<a href="/my-page?foo%5B2021%5D=2021">foo</a>';
     $this->assertSame($expected_link, $link_rendered);
   }
 
