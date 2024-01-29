@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 // cspell:ignore ragdoll
 
@@ -16,6 +18,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group Menu
  */
 class LocalTasksTest extends BrowserTestBase {
+
+  use TaxonomyTestTrait;
 
   /**
    * Modules to enable.
@@ -300,6 +304,74 @@ class LocalTasksTest extends BrowserTestBase {
       ['entity.entity_view_display.node.default', ['node_type' => 'page']],
       ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
     ]);
+  }
+
+  /**
+   * Tests local task block URLs for entities with path aliases.
+   */
+  public function testLocalTaskBlockUrl(): void {
+    // Install necessary modules for the test.
+    \Drupal::service('module_installer')->install(['path', 'taxonomy']);
+
+    // Create a node with a path alias.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $node = $this->drupalCreateNode([
+      'type' => 'page',
+      'path' => [
+        'alias' => '/original-node-alias',
+      ],
+    ]);
+
+    // Create a vocabulary and a term with a path alias.
+    $vocabulary = $this->createVocabulary(['name' => 'tags']);
+    $term = $this->createTerm($vocabulary, [
+      'path' => [
+        'alias' => '/original-term-alias',
+      ],
+    ]);
+
+    $this->drupalLogin($this->rootUser);
+    // Test the local task block URLs for both node and term entities.
+    $this->testEntityLocalTaskBlockUrl($node, '/original-node-alias');
+    $this->testEntityLocalTaskBlockUrl($term, '/original-term-alias');
+  }
+
+  /**
+   * Helper function to test local task block URLs for a given entity and alias.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
+   * @param string $alias
+   *   The original path alias of the entity.
+   */
+  protected function testEntityLocalTaskBlockUrl(EntityInterface $entity, string $alias): void {
+    // Visit the entity's URL.
+    $this->drupalGet($entity->toUrl());
+    $new_alias = $alias . '-updated';
+    // Assert that the local task URL matches the original alias.
+    $this->assertSameLocalTaskUrl($alias);
+    // Update the alias from the entity edit form and save.
+    $this->drupalGet($entity->toUrl('edit-form'));
+    $edit = ['path[0][alias]' => $new_alias];
+    $this->submitForm($edit, 'Save');
+    // Assert that the local task URL matches the new alias.
+    $this->assertSameLocalTaskUrl($new_alias);
+    // Revisit the edit form and assert the local task URL is still correct.
+    $this->drupalGet($entity->toUrl('edit-form'));
+    $this->assertSameLocalTaskUrl($new_alias);
+  }
+
+  /**
+   * Asserts that the local task URL matches the expected alias.
+   *
+   * @param string $alias
+   *   The expected path alias.
+   */
+  protected function assertSameLocalTaskUrl(string $alias): void {
+    $page = $this->getSession()->getPage();
+    // Assert that the href attribute of the 'View' link matches the expected
+    // alias.
+    $this->assertSame($alias, $page->findLink('View')->getAttribute('href'));
   }
 
 }
