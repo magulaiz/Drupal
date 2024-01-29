@@ -25,6 +25,10 @@ class StringData extends PrimitiveBase implements StringInterface {
    */
   #[JsonSchema(['type' => 'string'])]
   public function getCastedValue() {
+    if ($this->value === NULL) {
+      return NULL;
+    }
+
     return $this->getString();
   }
 
