@@ -110,10 +110,7 @@ class Email extends FormElement {
     // Set trimmed email address/es.
     $form_state->setValueForElement($element, implode(',', $emails));
 
-    if (!$invalid_emails) {
-      return;
-    }
-    else {
+    if ($invalid_emails) {
       $form_state->setError($element, new PluralTranslatableMarkup(
         count($invalid_emails),
         'The email address %mails is not valid. Use the format user@example.com.',
