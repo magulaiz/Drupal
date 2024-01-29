@@ -54,6 +54,19 @@ field.formatter.settings.daterange_custom:
       label: 'Separator'
       translation context: 'Date range separator'
 
+field.formatter.settings.daterange_duration:
+  type: field.formatter.settings.datetime_duration
+  label: 'Date range duration display format settings'
+  mapping:
+    granularity:
+      type: integer
+      constraints:
+        Range:
+          min: 1
+          max: 7
+      label: 'Granularity'
+      translation context: 'Date range granularity'
+
 field.widget.settings.daterange_datelist:
   type: mapping
   label: 'Date range select list display format settings'
