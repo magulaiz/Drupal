@@ -7,8 +7,10 @@ use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
@@ -417,13 +419,13 @@ class QueryGroupByTest extends ViewsKernelTestBase {
       'filename' => 'druplicon.jpg',
       'uri' => "public://druplicon.jpg",
       'filemime' => 'image/jpeg',
-      'status' => FILE_STATUS_PERMANENT,
+      'status' => FileInterface::STATUS_PERMANENT,
     ]);
     $file_two = File::create([
       'filename' => 'druplicon-two.jpg',
       'uri' => "public://druplicon-two.jpg",
       'filemime' => 'image/jpeg',
-      'status' => FILE_STATUS_PERMANENT,
+      'status' => FileInterface::STATUS_PERMANENT,
     ]);
 
     $entity_one = EntityTest::create();
