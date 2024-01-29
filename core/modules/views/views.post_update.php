@@ -150,6 +150,17 @@ function views_post_update_pager_heading(?array &$sandbox = NULL): void {
 }
 
 /**
+ * Removes entity display cache metadata from views with rendered entity fields.
+ */
+function views_post_update_rendered_entity_field_cache_metadata(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsRenderedEntityFieldUpdate($view);
+  });
+}
+
+/**
  * Fix views containing entity fields with an empty group column value set.
  */
 function views_post_update_empty_entity_field_group_column(?array &$sandbox = NULL) {
