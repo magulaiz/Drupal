@@ -71,7 +71,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
     $this->routeProvider = $route_provider;
     $this->menuActiveTrail = $menu_active_trail;
     if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3395294', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3395294', E_USER_DEPRECATED);
       $callable_resolver = \Drupal::service('callable_resolver');
     }
     $this->callableResolver = $callable_resolver;
