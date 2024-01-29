@@ -13,7 +13,7 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,7 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface {
 
-  use StringTranslationTrait;
   use LoggerChannelTrait;
 
   /**
@@ -115,7 +114,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
             $derivative['default_formatter'] = $field_type_definition['default_formatter'];
           }
 
-          $derivative['category'] = $this->t('@entity fields', ['@entity' => $entity_type_labels[$entity_type_id]]);
+          $derivative['category'] = new TranslatableMarkup('@entity fields', ['@entity' => $entity_type_labels[$entity_type_id]]);
 
           $derivative['admin_label'] = $field_definition->getLabel();
 
