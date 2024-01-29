@@ -192,7 +192,8 @@ class MessageForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $message = parent::validateForm($form, $form_state);
+    parent::validateForm($form, $form_state);
+    $message = $this->entity;
 
     // Check if flood control has been activated for sending emails.
     if (!$this->currentUser()->hasPermission('administer contact forms') && (!$message->isPersonal() || !$this->currentUser()->hasPermission('administer users'))) {
@@ -206,8 +207,6 @@ class MessageForm extends ContentEntityForm {
         ]));
       }
     }
-
-    return $message;
   }
 
   /**

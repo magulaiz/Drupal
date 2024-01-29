@@ -183,7 +183,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity = $this->buildEntity($form, $form_state);
+    $entity = $this->entity;
 
     $violations = $entity->validate();
 
@@ -216,8 +216,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // The entity was validated.
     $entity->setValidationRequired(FALSE);
     $form_state->setTemporaryValue('entity_validated', TRUE);
-
-    return $entity;
+    $this->entity = $entity;
   }
 
   /**
