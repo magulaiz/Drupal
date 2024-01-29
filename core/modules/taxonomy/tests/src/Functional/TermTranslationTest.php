@@ -145,7 +145,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * Tests that weight field is translated and returns content as expected.
    */
-  public function testTranslatedTermWeight() {
+  public function testTranslatedTermWeight(): void {
     $this->drupalLogin($this->rootUser);
 
     $i = 0;
@@ -160,7 +160,7 @@ class TermTranslationTest extends TaxonomyTestBase {
      * term[1] | weight: 1
      * term[2] | weight: 2
      */
-    $this->drupalget("/admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview");
+    $this->drupalGet("/admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview");
     foreach ($this->terms as $term) {
       $this->assertSession()->fieldValueEquals("terms[tid:{$term->id()}:0][weight]", $term->getWeight());
     }
@@ -176,7 +176,7 @@ class TermTranslationTest extends TaxonomyTestBase {
       $term->getTranslation($this->translateToLangcode)->setWeight($i)->save();
       $i--;
     }
-    $this->drupalget("/{$this->translateToLangcode}/admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview");
+    $this->drupalGet("/{$this->translateToLangcode}/admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview");
     foreach ($this->terms as $term) {
       $this->assertSession()->fieldValueEquals("terms[tid:{$term->id()}:0][weight]", $term->getTranslation($this->translateToLangcode)->getWeight());
     }

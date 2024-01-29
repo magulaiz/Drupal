@@ -15,7 +15,7 @@ function taxonomy_update_last_removed() {
 /**
  * Update term weight field to be translatable.
  */
-function taxonomy_update_9301(&$sandbox) {
+function taxonomy_update_10201(&$sandbox): void {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $definition_update_manager->getEntityType('taxonomy_term');
 
