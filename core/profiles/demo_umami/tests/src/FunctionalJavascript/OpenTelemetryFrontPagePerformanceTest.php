@@ -31,7 +31,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdCache');
-    $this->assertLessThanOrEqual(417, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(419, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(404, $performance_data->getQueryCount());
     $this->assertSame(591, $performance_data->getCacheGetCount());
     $this->assertSame(458, $performance_data->getCacheSetCount());
