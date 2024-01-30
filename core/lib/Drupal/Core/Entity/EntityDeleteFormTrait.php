@@ -119,10 +119,21 @@ trait EntityDeleteFormTrait {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->getEntity()->delete();
-    $this->messenger()->addStatus($this->getDeletionMessage());
-    $form_state->setRedirectUrl($this->getCancelUrl());
-    $this->logDeletionMessage();
+    try {
+      $this->getEntity()->delete();
+      $this->messenger()->addStatus($this->getDeletionMessage());
+      $this->logDeletionMessage();
+    }
+    catch (EntityStorageException $e) {
+      // The 409 (Conflict) status code indicates that the deletion could not be
+      // completed due to a conflict with the current state of the entity.
+      if ($e->getCode() == 409) {
+        $this->messenger()->addStatus($e->getMessage());
+      }
+      else {
+        throw $e;
+      }
+    }
   }
 
 }
