@@ -237,7 +237,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->refreshUpdateStatus($xml_mapping);
     $this->assertSession()->pageTextContains('Security update required!');
     $this->updateProject = 'update_test_basetheme';
-    $this->assertVersionUpdateLinks('Security update', '8.x-1.1');
+    $this->assertVersionUpdateLinks('Recommended security update', '8.x-1.1');
   }
 
   /**
@@ -579,7 +579,7 @@ class UpdateContribTest extends UpdateTestBase {
     // Confirm that messages are displayed for security and 'Also available'
     // updates.
     $this->refreshUpdateStatus(['drupal' => '8.1.1', 'aaa_update_test' => 'core_compatibility.8.x-1.2_8.x-2.2']);
-    $this->assertCoreCompatibilityMessage('8.x-1.2', '8.1.0 to 8.1.1', 'Security update:', FALSE);
+    $this->assertCoreCompatibilityMessage('8.x-1.2', '8.1.0 to 8.1.1', 'Recommended security update:', FALSE);
     $this->assertCoreCompatibilityMessage('8.x-2.2', '8.1.1', 'Also available:', FALSE);
   }
 
@@ -588,7 +588,7 @@ class UpdateContribTest extends UpdateTestBase {
    */
   public function testSecurityUpdateAvailability(): void {
     foreach (static::securityUpdateAvailabilityProvider() as $case) {
-      $this->doTestSecurityUpdateAvailability($case['module_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture']);
+      $this->doTestSecurityUpdateAvailability($case['module_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture'], $case['recommended_security_release']);
     }
   }
 
@@ -603,8 +603,10 @@ class UpdateContribTest extends UpdateTestBase {
    *   The type of update message expected.
    * @param string $fixture
    *   The fixture file to use.
+   * @param string $recommended_security_release
+   *   The recommended security release.
    */
-  protected function doTestSecurityUpdateAvailability($module_version, array $expected_security_releases, $expected_update_message_type, $fixture): void {
+  protected function doTestSecurityUpdateAvailability($module_version, array $expected_security_releases, $expected_update_message_type, $fixture, $recommended_security_release): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -614,7 +616,7 @@ class UpdateContribTest extends UpdateTestBase {
     ]);
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(['drupal' => '8.0.0', 'aaa_update_test' => $fixture]);
-    $this->assertSecurityUpdates('aaa_update_test', $expected_security_releases, $expected_update_message_type, 'table.update:nth-of-type(2)');
+    $this->assertSecurityUpdates('aaa_update_test', $expected_security_releases, $expected_update_message_type, 'table.update:nth-of-type(2)', $recommended_security_release);
   }
 
   /**
@@ -656,6 +658,7 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2',
+        'recommended_security_release' => '1.2',
       ],
       // Two security releases available for module major release 1.
       // 8.x-1.1 security release marked as insecure.
@@ -665,6 +668,7 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.1_8.x-1.2',
+        'recommended_security_release' => '1.2',
       ],
       // Security release available for module major release 2.
       // No releases for next major.
@@ -673,12 +677,14 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_security_releases' => ['8.x-2.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
+        'recommended_security_release' => '2.2',
       ],
       '8.x-2.2, 8.x-1.2 8.x-2.2' => [
         'module_version' => '8.x-2.2',
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
+        'recommended_security_release' => '',
       ],
       // Security release available for module major release 1.
       // Security release also available for next major.
@@ -687,6 +693,7 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
+        'recommended_security_release' => '1.2',
       ],
       // No security release available for module major release 1 but 1.x
       // releases are not marked as insecure.
@@ -696,6 +703,7 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
+        'recommended_security_release' => '',
       ],
       // On latest security release for module major release 1.
       // Security release also available for next major.
@@ -704,12 +712,14 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
+        'recommended_security_release' => '',
       ],
       '8.x-2.0, 8.x-1.2 8.x-2.2' => [
         'module_version' => '8.x-2.0',
         'expected_security_releases' => ['8.x-2.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
+        'recommended_security_release' => '2.2',
       ],
       // @todo In https://www.drupal.org/node/2865920 add test cases:
       //   - 8.x-3.0-beta1 using fixture 'sec.8.x-1.2_8.x-2.2' to ensure that

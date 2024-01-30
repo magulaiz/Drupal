@@ -110,8 +110,10 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The type of update message expected.
    * @param string $update_element_css_locator
    *   The CSS locator for the page element that contains the security updates.
+   * @param string $recommended_security_release
+   *   The recommended security release.
    */
-  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator) {
+  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator, string $recommended_security_release) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->standardTests();
