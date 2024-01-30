@@ -64,6 +64,13 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
 
     $page = $this->getSession()->getPage();
 
+    // Verify that the classes applied to table columns are as expected.
+    $columnClasses = $page->findAll('css', 'thead th');
+    foreach ($columnClasses as $column) {
+      $class = $column->getAttribute('class');
+      $this->assertEquals('views-field', $class);
+    }
+
     // Ensure that the Content we're testing for is in the right order, default
     // sorting is by changed timestamp so the last created node should be first.
     /** @var \Behat\Mink\Element\NodeElement[] $rows */
@@ -79,6 +86,14 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
     $this->assertCount(2, $rows);
     $this->assertStringContainsString('Page A', $rows[0]->getHtml());
     $this->assertStringContainsString('Page B', $rows[1]->getHtml());
+
+    // Assert that the first column contains specific classes
+    $firstColumnClasses = $rows[0]->find('css', 'td:first-child')->getAttribute('class');
+    $this->assertEquals('is-active', $firstColumnClasses);
+
+    // Assert that the second column contains specific classes
+    $secondColumnClasses = $rows[0]->find('css', 'td:nth-child(2)')->getAttribute('class');
+    $this->assertEquals('is-active', $secondColumnClasses);
   }
 
 }
