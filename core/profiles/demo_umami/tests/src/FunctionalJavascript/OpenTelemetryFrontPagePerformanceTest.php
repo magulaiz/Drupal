@@ -70,6 +70,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->rebuildAll();
     // Now visit a different page to warm non-route-specific caches.
     $this->drupalGet('/user/login');
+    sleep(5);
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageCoolCache');
