@@ -1123,7 +1123,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setValidationCanceled($cancel_validation = TRUE): self;
+  public function setValidationCanceled(bool $cancel_validation = TRUE): self;
 
   /**
    * Determines if validation has been canceled.

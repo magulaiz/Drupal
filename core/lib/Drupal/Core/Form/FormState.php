@@ -501,7 +501,7 @@ class FormState implements FormStateInterface {
    *
    * @var bool
    */
-  protected $cancel_validation = FALSE;
+  protected bool $cancel_validation = FALSE;
 
   /**
    * {@inheritdoc}
@@ -908,8 +908,8 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setValidationCanceled($cancel_validation = TRUE): self {
-    $this->cancel_validation = (bool) $cancel_validation;
+  public function setValidationCanceled(bool $cancel_validation = TRUE): self {
+    $this->cancel_validation = $cancel_validation;
     return $this;
   }
 
