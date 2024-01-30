@@ -25,7 +25,7 @@ class GetTestMethodCallerTest extends BrowserTestBase {
     $method_caller = $this->getTestMethodCaller();
     $expected = [
       'file' => __FILE__,
-      'line' => 23,
+      'line' => 25,
       'function' => __CLASS__ . '->' . __FUNCTION__ . '()',
       'class' => BrowserTestBase::class,
       'object' => $this,
