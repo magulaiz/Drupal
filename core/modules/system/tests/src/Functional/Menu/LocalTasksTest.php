@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
