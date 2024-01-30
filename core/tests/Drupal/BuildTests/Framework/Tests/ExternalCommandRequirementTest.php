@@ -133,6 +133,10 @@ class ExternalCommandRequirementTest extends TestCase {
 
 }
 
+
+/**
+ * @deprecated
+ */
 class UsesCommandRequirements {
 
   use ExternalCommandRequirementsTrait;
@@ -145,6 +149,7 @@ class UsesCommandRequirements {
 
 /**
  * @requires externalCommand available_command
+ * @deprecated
  */
 class ClassRequiresAvailable {
 
@@ -158,6 +163,7 @@ class ClassRequiresAvailable {
 
 /**
  * @requires externalCommand unavailable_command
+ * @deprecated
  */
 class ClassRequiresUnavailable {
 
@@ -165,6 +171,9 @@ class ClassRequiresUnavailable {
 
 }
 
+/**
+ * @deprecated
+ */
 class MethodRequires {
 
   use ExternalCommandRequirementsTrait;
