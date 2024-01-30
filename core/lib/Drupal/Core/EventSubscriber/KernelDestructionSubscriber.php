@@ -2,8 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -13,27 +12,24 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @see \Drupal\Core\DestructableInterface
  */
-class KernelDestructionSubscriber implements EventSubscriberInterface, ContainerAwareInterface {
+class KernelDestructionSubscriber implements EventSubscriberInterface {
 
-  use ContainerAwareTrait;
   /**
-   * Holds an array of service ID's that will require destruction.
-   *
-   * @var array
+   * An array of services that require destruction.
    */
-  protected $services = [];
+  protected array $services = [];
 
   /**
    * Registers a service for destruction.
    *
-   * Calls to this method are set up in
+   * Calls to this configurator method are set up in
    * RegisterServicesForDestructionPass::process().
    *
-   * @param string $id
-   *   Name of the service.
+   * @param \Drupal\Core\DestructableInterface $service
+   *   The service to be destructed.
    */
-  public function registerService($id) {
-    $this->services[] = $id;
+  public function registerService(DestructableInterface $service) {
+    $this->services[] = $service;
   }
 
   /**
@@ -43,13 +39,8 @@ class KernelDestructionSubscriber implements EventSubscriberInterface, Container
    *   The event object.
    */
   public function onKernelTerminate(TerminateEvent $event) {
-    foreach ($this->services as $id) {
-      // Check if the service was initialized during this request, destruction
-      // is not necessary if the service was not used.
-      if ($this->container->initialized($id)) {
-        $service = $this->container->get($id);
-        $service->destruct();
-      }
+    foreach ($this->services as $service) {
+      $service->destruct();
     }
   }
 
