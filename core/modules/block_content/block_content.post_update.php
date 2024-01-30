@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\user\Entity\Role;
@@ -85,6 +86,7 @@ function block_content_post_update_sort_permissions(&$sandbox = NULL) {
 }
 
 /**
+<<<<<<< HEAD
  * Add status with settings to all form displays for block_content entities.
  */
 function block_content_post_update_configure_status_field_widget(&$sandbox = NULL) {
@@ -121,7 +123,9 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
     return;
   }
 
-  $published_key = \Drupal::entityDefinitionUpdateManager()->getEntityType('block_content')->getKey('published');
+  $published_key = \Drupal::entityDefinitionUpdateManager()
+    ->getEntityType('block_content')
+    ->getKey('published');
 
   // Get existing field configuration.
   $fields = $view->get("display.default.display_options.fields");
@@ -322,7 +326,8 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
 
   // Add publish action.
   /** @var \Drupal\Core\Config\Config $publish_action */
-  $publish_action = \Drupal::service('config.factory')->getEditable('system.action.block_content_publish_action');
+  $publish_action = \Drupal::service('config.factory')
+    ->getEditable('system.action.block_content_publish_action');
   $config_data_publish = [
     "langcode" => "en",
     "status" => TRUE,
@@ -342,7 +347,8 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
 
   // Add unpublish action.
   /** @var \Drupal\Core\Config\Config $unpublish_action */
-  $unpublish_action = \Drupal::service('config.factory')->getEditable('system.action.block_content_unpublish_action');
+  $unpublish_action = \Drupal::service('config.factory')
+    ->getEditable('system.action.block_content_unpublish_action');
   $config_data_unpublish = [
     "langcode" => "en",
     "status" => TRUE,
@@ -359,4 +365,15 @@ function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
   ];
   $unpublish_action->setData($config_data_unpublish);
   $unpublish_action->save(TRUE);
+}
+
+/**
+ * Update configuration for revision type.
+ */
+function block_content_post_update_revision_type(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'block_content_type', function (BlockContentTypeInterface $block_content_type) {
+      $block_content_type->set('revision', (bool) $block_content_type->get('revision'));
+      return TRUE;
+    });
 }
