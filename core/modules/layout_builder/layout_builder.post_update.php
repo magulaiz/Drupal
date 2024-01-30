@@ -36,4 +36,6 @@ function layout_builder_removed_post_updates(): array {
 /**
  * Ensure cache is cleared so empty extra field blocks are removed from output.
  */
-function layout_builder_post_update_clear_empty_extra_field_blocks(): void {}
+function layout_builder_post_update_clear_empty_extra_field_blocks(): void {
+  // Intentionally empty.
+}
