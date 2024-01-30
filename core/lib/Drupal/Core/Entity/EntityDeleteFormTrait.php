@@ -122,6 +122,7 @@ trait EntityDeleteFormTrait {
     try {
       $this->getEntity()->delete();
       $this->messenger()->addStatus($this->getDeletionMessage());
+      $form_state->setRedirectUrl($this->getCancelUrl());
       $this->logDeletionMessage();
     }
     catch (EntityStorageException $e) {
