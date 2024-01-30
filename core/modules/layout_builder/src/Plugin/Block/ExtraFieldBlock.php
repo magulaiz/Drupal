@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver;
@@ -32,7 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: "extra_field_block",
   deriver: ExtraFieldBlockDeriver::class
 )]
-class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
+class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The entity field manager.
@@ -171,11 +172,39 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
         $merged_cache = $placeholder_cache->merge($built_cache);
         $build[$child] = $built_field;
         $merged_cache->applyTo($build);
+        $build['#pre_render'][] = [static::class, 'preRenderBlock'];
       }
       else {
         static::replaceFieldPlaceholder($build[$child], $built_field, $field_name);
       }
     }
+  }
+
+  /**
+   * Pre-render callback to ensure empty extra_field_block's are not rendered.
+   *
+   * @param array $block_build
+   *   The original block render array.
+   *
+   * @return array
+   *   The modified block render array.
+   */
+  public static function preRenderBlock(array $block_build): array {
+    $content = $block_build['content'] ?? NULL;
+    if ($content === NULL || Element::isEmpty($content)) {
+      // Block content is empty, abort rendering the whole block and preserve
+      // cache metadata.
+      // @see \Drupal\Core\Render\Renderer::doRender
+      $block_build['#printed'] = TRUE;
+    }
+    return $block_build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['preRenderBlock'];
   }
 
   /**

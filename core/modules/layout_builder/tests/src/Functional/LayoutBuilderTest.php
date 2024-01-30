@@ -499,6 +499,10 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // Confirm that the newly added extra field is visible.
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('Extra Field 2 is hidden by default.');
+
+    // Ensure empty extra field and its container are not rendered.
+    /** @see \Drupal\layout_builder\Plugin\Block\ExtraFieldBlock::preRenderBlock */
+    $assert_session->elementNotExists('css', '.block-extra-field-blocknodebundle-with-section-fieldlayout-builder-test-empty');
   }
 
   /**
