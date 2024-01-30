@@ -28,9 +28,15 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     // See https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdCache');
+    $this->assertLessThanOrEqual(419, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(404, $performance_data->getQueryCount());
+    $this->assertLessThanOrEqual(627, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(591, $performance_data->getCacheGetCount());
+    $this->assertSame(458, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertSession()->pageTextContains('Umami');
   }
 
@@ -65,9 +71,15 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->rebuildAll();
     // Now visit a different page to warm non-route-specific caches.
     $this->drupalGet('/user/login');
-    $this->collectPerformanceData(function () {
+    sleep(5);
+    $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageCoolCache');
+    $this->assertLessThanOrEqual(178, $performance_data->getQueryCount());
+    $this->assertGreaterThanOrEqual(178, $performance_data->getQueryCount());
+    $this->assertSame(292, $performance_data->getCacheGetCount());
+    $this->assertSame(121, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
   }
 
 }
