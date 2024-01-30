@@ -9,13 +9,6 @@ use Drupal\Core\Site\Settings;
 class DatabaseBackendFactory implements CacheFactoryInterface {
 
   /**
-   * The serializer to use.
-   *
-   * @var \Drupal\Component\Serialization\ObjectAwareSerializationInterface
-   */
-  protected $serializer;
-
-  /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
@@ -50,15 +43,14 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    *
    * @throws \BadMethodCallException
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, Settings $settings = NULL, ObjectAwareSerializationInterface $serializer = NULL) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, Settings $settings = NULL, protected ?ObjectAwareSerializationInterface $serializer = NULL) {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
     $this->settings = $settings ?: Settings::getInstance();
-    if (!$serializer) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.0.4 and it will be required in drupal:10.1.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $serializer = \Drupal::service('serialization.phpserialize');
+    if ($this->serializer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
+      $this->serializer = \Drupal::service('serialization.phpserialize');
     }
-    $this->serializer = $serializer;
   }
 
   /**
