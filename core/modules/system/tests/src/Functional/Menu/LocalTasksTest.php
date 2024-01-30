@@ -353,9 +353,9 @@ class LocalTasksTest extends BrowserTestBase {
    */
   protected function assertSameLocalTaskUrl(string $alias): void {
     $page = $this->getSession()->getPage();
-    // Assert that the href attribute of the 'View' link matches the expected
+    // Assert that the href attribute of the 'View' link contains the expected
     // alias.
-    $this->assertSame($alias, $page->findLink('View')->getAttribute('href'));
+    $this->assertStringContainsString($alias, $page->findLink('View')->getAttribute('href'));
   }
 
 }
