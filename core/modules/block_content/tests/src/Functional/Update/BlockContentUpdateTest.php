@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional\Update;
 
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -166,65 +165,6 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
         $this->assertEquals(['display_label' => TRUE], $component['settings']);
       }
     }
-  }
-
-  /**
-   * Tests updating the block_content view for publishable block_content blocks.
-   *
-   * @see block_content_update_10201()
-   */
-  public function testBlockContentPublishableUIUpdate() {
-    $view = View::load('block_content');
-    $data = $view->toArray();
-    // Check that new fields exist and that they are in the correct order.
-    $view_fields = $data['display']['default']['display_options']['fields'];
-    $this->assertArrayNotHasKey('block_content_bulk_form', $view_fields);
-    $this->assertArrayNotHasKey('status', $view_fields);
-
-    $this->runUpdates();
-    $assert_session = $this->assertSession();
-
-    // Load and initialize the block_content view.
-    $view = View::load('block_content');
-    $data = $view->toArray();
-    // Check that new fields exist and that they are in the correct order.
-    $view_fields = $data['display']['default']['display_options']['fields'];
-    $this->assertArrayHasKey('block_content_bulk_form', $view_fields);
-    $this->assertArrayHasKey('status', $view_fields);
-    $block_content_bulk_form_position = array_search('block_content_bulk_form', array_keys($view_fields));
-    $this->assertEquals($block_content_bulk_form_position, 0, 'The block_content_bulk_form field is in the correct position');
-    $expected_status_position = array_search('operations', array_keys($view_fields)) - 1;
-    $status_position = array_search('status', array_keys($view_fields));
-    $this->assertEquals($status_position, $expected_status_position, 'The status field is in the correct position');
-    // Check that the new filter exists and is exposed.
-    $this->assertArrayHasKey('status', $data['display']['default']['display_options']['filters']);
-    $this->assertTrue($data['display']['default']['display_options']['filters']['status']['exposed'], 'The status filter is exposed');
-
-    // Create a new user with permissions to administer block_content.
-    $user = $this->drupalCreateUser([
-      'administer blocks',
-      'administer block content',
-      'access block library',
-      'administer block_content display',
-    ]);
-    $this->drupalLogin($user);
-
-    // Create a block.
-    $block_title = 'Test Block';
-    BlockContent::create([
-      'info' => $block_title,
-      'type' => 'basic',
-      'body' => [
-        'value' => $this->randomMachineName(16),
-        'format' => 'plain_text',
-      ],
-    ])->save();
-
-    // Check that the new block is displayed and showing its published status.
-    $this->drupalGet('admin/content/block');
-    $this->assertSession()->statusCodeEquals(200);
-    $assert_session->pageTextContains($block_title);
-    $this->assertBlockStatusDisplayedAs(TRUE);
   }
 
 }

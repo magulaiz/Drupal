@@ -5,13 +5,11 @@
  * Post update functions for Content Block.
  */
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_removed_post_updates().
@@ -99,7 +97,7 @@ function block_content_post_update_revision_type(&$sandbox = NULL) {
 /**
  * Add status with settings to all form displays for block_content entities.
  */
-function block_content_post_update_configure_status_field_widget(&$sandbox = NULL) {
+function block_content_post_update_configure_status_field_widget(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_form_display', function (EntityDisplayInterface $entity_form_display) {
     if ($entity_form_display->getTargetEntityTypeId() === 'block_content' && empty($entity_form_display->getComponent('status'))) {
       $entity_form_display->setComponent('status', [
