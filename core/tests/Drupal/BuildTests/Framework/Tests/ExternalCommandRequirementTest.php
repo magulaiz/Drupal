@@ -133,7 +133,6 @@ class ExternalCommandRequirementTest extends TestCase {
 
 }
 
-
 /**
  * @deprecated
  */
