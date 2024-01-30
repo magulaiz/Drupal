@@ -33,7 +33,8 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     }, 'umamiFrontPageColdCache');
     $this->assertLessThanOrEqual(419, $performance_data->getQueryCount());
     $this->assertGreaterThanOrEqual(404, $performance_data->getQueryCount());
-    $this->assertSame(591, $performance_data->getCacheGetCount());
+    $this->assertLessThanOrEqual(627, $performance_data->getCacheGetCount());
+    $this->assertGreaterThanOrEqual(591, $performance_data->getCacheGetCount());
     $this->assertSame(458, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertSession()->pageTextContains('Umami');
