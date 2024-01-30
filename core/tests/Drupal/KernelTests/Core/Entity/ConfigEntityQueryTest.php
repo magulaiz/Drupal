@@ -506,6 +506,13 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->execute();
     $this->assertSame(['1', '2', '3', '4', '5', '6', '7'], array_values($this->queryResults));
 
+    // Explicitly pass NULL for the range and sort.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range(NULL, NULL)
+      ->sort('id')
+      ->execute();
+    $this->assertSame(['1', '2', '3', '4', '5', '6', '7'], array_values($this->queryResults));
+
     // Omit the optional start parameter for the range.
     $this->queryResults = $this->entityStorage->getQuery()
       ->range(NULL, 1)
