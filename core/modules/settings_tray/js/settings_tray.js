@@ -117,8 +117,17 @@
       }
       closeOffCanvas();
     }
-    getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
-    $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
+    getItemsToToggle()
+      .toArray()
+      .forEach((element) => {
+        element.classList.toggle('js-settings-tray-edit-mode', editMode);
+      });
+
+    $('.edit-mode-inactive')
+      .toArray()
+      .forEach((element) => {
+        element.classList.toggle('visually-hidden', editMode);
+      });
   }
 
   /**

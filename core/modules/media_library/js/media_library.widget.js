@@ -56,11 +56,11 @@
           ? strings.show
           : strings.hide;
         $target
-          .toggleClass('active')
           .closest('.js-media-library-widget')
           .find('.js-media-library-item-weight')
           .parent()
           .toggle();
+        $target[0].classList.toggle('active');
       });
       mediaLibraryToggle.forEach((item) => {
         item.textContent = strings.show;

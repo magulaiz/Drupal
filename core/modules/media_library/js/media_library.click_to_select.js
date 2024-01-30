@@ -38,14 +38,14 @@
       )
         .on('change', ({ currentTarget }) => {
           $(currentTarget)
-            .closest('.js-click-to-select')
-            .toggleClass('checked', $(currentTarget).prop('checked'));
+            .closest('.js-click-to-select')[0]
+            .classList.toggle('checked', $(currentTarget).prop('checked'));
         })
         // Adds is-focus class to the click-to-select element.
         .on('focus blur', ({ currentTarget, type }) => {
           $(currentTarget)
-            .closest('.js-click-to-select')
-            .toggleClass('is-focus', type === 'focus');
+            .closest('.js-click-to-select')[0]
+            .classList.toggle('is-focus', type === 'focus');
         });
 
       // Adds hover class to the click-to-select element.
@@ -57,8 +57,8 @@
         ),
       ).on('mouseover mouseout', ({ currentTarget, type }) => {
         $(currentTarget)
-          .closest('.js-click-to-select')
-          .toggleClass('is-hover', type === 'mouseover');
+          .closest('.js-click-to-select')[0]
+          .classList.toggle('is-hover', type === 'mouseover');
       });
     },
   };

@@ -51,7 +51,7 @@
           });
         });
 
-        $(target).toggleClass('js-hide', !dateString.length);
+        $(target)[0].classList.toggle('js-hide', !dateString.length);
       }
 
       /**

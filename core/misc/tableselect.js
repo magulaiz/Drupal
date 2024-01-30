@@ -91,7 +91,9 @@
             /**
              * @checkbox {HTMLElement}
              */
-            $checkbox.closest('tr').toggleClass('selected', this.checked);
+            $checkbox
+              .closest('tr')[0]
+              .classList.toggle('selected', this.checked);
           });
           // Update the title and the state of the check all box.
           updateSelectAll(event.target.checked);
@@ -108,8 +110,7 @@
         /**
          * @this {HTMLElement}
          */
-        $(this).closest('tr').toggleClass('selected', this.checked);
-
+        $(this).closest('tr')[0].classList.toggle('selected', this.checked);
         // If this is a shift click, we need to highlight everything in the
         // range. Also make sure that we are actually checking checkboxes
         // over a range and that a checkbox has been checked or unchecked before.
@@ -159,7 +160,7 @@
       }
       // Either add or remove the selected class based on the state of the
       // target checkbox.
-      $i.toggleClass('selected', state);
+      $i[0].classList.toggle('selected', state);
       $i.find('input[type="checkbox"]').prop('checked', state);
 
       if (to.nodeType) {
