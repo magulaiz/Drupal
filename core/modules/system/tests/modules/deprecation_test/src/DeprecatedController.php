@@ -12,6 +12,8 @@ class DeprecatedController {
    *
    * @return array
    *   Render array.
+   *
+   * @deprecated
    */
   public function deprecatedMethod() {
     return [
