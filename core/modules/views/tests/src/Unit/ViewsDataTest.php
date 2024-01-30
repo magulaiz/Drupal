@@ -381,7 +381,7 @@ class ViewsDataTest extends UnitTestCase {
 
     $sets = [
       'views_data:en', $expected_views_data,
-      'views_data:views_test_data:en', $expected_views_data['views_test_data']
+      'views_data:views_test_data:en', $expected_views_data['views_test_data'],
     ];
     $this->cacheBackend->expects($this->exactly(count($sets) / 2))
       ->method('set')
