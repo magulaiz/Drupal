@@ -73,6 +73,8 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    *   The renderer.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
+   * @param \Drupal\Core\PrivateKey|\Drupal\Core\State\StateInterface $state
+   *   The state service.
    * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch|null $killSwitch
    *   The page cache kill switch. This is here to test nullable types with
    *   \Drupal\Core\DependencyInjection\AutowireTrait::create().
