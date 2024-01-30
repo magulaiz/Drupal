@@ -13,6 +13,7 @@ class DeprecatedController {
    * @return array
    *   Render array.
    *
+   * phpcs:ignore Drupal.Commenting.Deprecated
    * @deprecated
    */
   public function deprecatedMethod() {

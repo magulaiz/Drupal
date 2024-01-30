@@ -134,6 +134,7 @@ class ExternalCommandRequirementTest extends TestCase {
 }
 
 /**
+ * phpcs:ignore Drupal.Commenting.Deprecated
  * @deprecated
  */
 class UsesCommandRequirements {
@@ -148,6 +149,7 @@ class UsesCommandRequirements {
 
 /**
  * @requires externalCommand available_command
+ * phpcs:ignore Drupal.Commenting.Deprecated
  * @deprecated
  */
 class ClassRequiresAvailable {
@@ -162,6 +164,7 @@ class ClassRequiresAvailable {
 
 /**
  * @requires externalCommand unavailable_command
+ * phpcs:ignore Drupal.Commenting.Deprecated
  * @deprecated
  */
 class ClassRequiresUnavailable {
@@ -171,6 +174,7 @@ class ClassRequiresUnavailable {
 }
 
 /**
+ * phpcs:ignore Drupal.Commenting.Deprecated
  * @deprecated
  */
 class MethodRequires {
