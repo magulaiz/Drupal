@@ -39,6 +39,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
    */
   protected function setUpAuthorization($method) {
     switch ($method) {
+      case 'GET':
       case 'PATCH':
         $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
         break;

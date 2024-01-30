@@ -96,7 +96,7 @@ function block_content_post_update_add_settings() {
  */
 function block_content_post_update_revision_type(&$sandbox = NULL) {
   \Drupal::classResolver(ConfigEntityUpdater::class)
-    ->update($sandbox, 'block_content_type', function(BlockContentTypeInterface $block_content_type) {
+    ->update($sandbox, 'block_content_type', function (BlockContentTypeInterface $block_content_type) {
       $block_content_type->set('revision', (bool) $block_content_type->get('revision'));
       return TRUE;
     });
