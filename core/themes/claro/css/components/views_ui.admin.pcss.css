@@ -89,3 +89,7 @@ html.js {
     }
   }
 }
+
+.views-display-disabled-link {
+  opacity: 0.5;
+}

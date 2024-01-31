@@ -112,6 +112,7 @@
 .views-display-deleted .views-display-columns {
   opacity: 0.25;
 }
+.views-display-disabled-link,
 .views-display-disabled > details > summary,
 .views-display-disabled .details-wrapper > .views-ui-display-tab-bucket > *,
 .views-display-disabled .views-display-columns {

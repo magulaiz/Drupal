@@ -117,6 +117,7 @@ abstract class ViewFormBase extends EntityForm {
       }
       if (isset($display['display_options']['enabled']) && !$display['display_options']['enabled']) {
         $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'views-display-disabled-link';
+        $tabs[$id]['#disabled'] = TRUE;
       }
     }
 

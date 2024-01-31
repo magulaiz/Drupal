@@ -1905,13 +1905,22 @@ function template_preprocess_menu_local_task(&$variables) {
     'localized_options' => [],
   ];
   $link_text = $link['title'];
+  $link_label_parts = [];
 
+  if (!empty($variables['element']['#disabled'])) {
+    $variables['is_disabled'] = TRUE;
+    $link_label_parts[] = t('disabled');
+  }
   if (!empty($variables['element']['#active'])) {
     $variables['is_active'] = TRUE;
+    $link_label_parts[] = t('active');
+  }
 
-    // Add text to indicate active tab for non-visual users.
-    $active = new FormattableMarkup('<span class="visually-hidden">@label</span>', ['@label' => t('(active tab)')]);
-    $link_text = t('@local-task-title@active', ['@local-task-title' => $link_text, '@active' => $active]);
+  // Add text to indicate active or disabled tab for non-visual users.
+  if (!empty($link_label_parts)) {
+    $link_label_text = t('(@states tab)', ['@states' => implode(' ', $link_label_parts)]);
+    $link_label = new FormattableMarkup('<span class="visually-hidden">@label</span>', ['@label' => $link_label_text]);
+    $link_text = t('@local-task-title@label', ['@local-task-title' => $link_text, '@label' => $link_label]);
   }
 
   $link['localized_options']['set_active_class'] = TRUE;
