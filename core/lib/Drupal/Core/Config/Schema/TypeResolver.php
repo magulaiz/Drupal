@@ -74,8 +74,6 @@ class TypeResolver {
    * @return string
    *   The value the expression resolves to, or the given expression if it
    *   cannot be resolved.
-   *
-   * @todo Validate the expression in https://www.drupal.org/project/drupal/issues/3392903
    */
   public static function resolveExpression(string $expression, array|TypedDataInterface $data): string {
     if ($data instanceof TypedDataInterface) {
