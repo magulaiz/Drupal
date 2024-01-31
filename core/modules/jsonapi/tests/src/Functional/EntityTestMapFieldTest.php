@@ -10,6 +10,7 @@ use Drupal\user\Entity\User;
  * JSON:API integration test for the "EntityTestMapField" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class EntityTestMapFieldTest extends ResourceTestBase {
 
@@ -142,7 +143,7 @@ class EntityTestMapFieldTest extends ResourceTestBase {
       'data' => [
         'type' => 'entity_test_map_field--entity_test_map_field',
         'attributes' => [
-          'name' => 'Dramallama',
+          'name' => 'Drama llama',
           'data' => static::$mapValue,
         ],
       ],

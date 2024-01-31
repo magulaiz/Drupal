@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Database;
@@ -20,14 +22,6 @@ use Drupal\Tests\UnitTestCase;
  * @group Database
  */
 class UrlConversionTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->root = dirname(__FILE__, 7);
-  }
 
   /**
    * @covers ::convertDbUrlToConnectionInfo
@@ -402,7 +396,7 @@ class UrlConversionTest extends UnitTestCase {
       'port' => '5432',
       'driver' => 'DrivertestPgsql',
       'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/drivertestpqsql/',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
     ];
     $expected_url7 = 'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test';
 
@@ -415,7 +409,7 @@ class UrlConversionTest extends UnitTestCase {
       'port' => '5432',
       'driver' => 'DrivertestPgsql',
       'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/drivertestpqsql/',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
     ];
     $expected_url8 = 'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#pre';
 

@@ -15,6 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests field form handling.
  *
  * @group field
+ * @group #slow
  */
 class FormTest extends FieldTestBase {
 
@@ -578,9 +579,10 @@ class FormTest extends FieldTestBase {
     $this->assertEquals(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
 
     // Check that the revision is also saved in the revisions table.
-    $entity = $this->container->get('entity_type.manager')
-      ->getStorage($entity_type)
-      ->loadRevision($entity->getRevisionId());
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type);
+    $entity = $storage->loadRevision($entity->getRevisionId());
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
     $this->assertEquals(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
   }
@@ -666,6 +668,9 @@ class FormTest extends FieldTestBase {
   public function testLabelOnMultiValueFields() {
     $user = $this->drupalCreateUser(['administer entity_test content']);
     $this->drupalLogin($user);
+
+    // Ensure that the 'bar' bundle exists, to avoid config validation errors.
+    entity_test_create_bundle('bar', entity_type: 'entity_test_base_field_display');
 
     FieldStorageConfig::create([
       'entity_type' => 'entity_test_base_field_display',

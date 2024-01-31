@@ -11,6 +11,7 @@ use Drupal\views\ViewExecutable;
  * Tests handler UI for views.
  *
  * @group views_ui
+ * @group #slow
  * @see \Drupal\views\Plugin\views\HandlerBase
  */
 class HandlerTest extends UITestBase {
@@ -94,7 +95,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests UI CRUD.
    */
-  public function testUICRUD() {
+  public function testUiCrud() {
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       // Test adding handlers.

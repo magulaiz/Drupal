@@ -9,6 +9,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of field_storage_config entities.
  *
  * @group field
+ * @group #slow
  */
 class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
 
@@ -32,42 +33,14 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
-  public function providerImmutableFields(): array {
-    return [
-      'field_name' => [
-        ['field_name' => 'broken'],
-      ],
-      'entity_type' => [
-        ['entity_type' => 'entity_test'],
-      ],
-      'type' => [
-        ['type' => 'email'],
-      ],
-      'module' => [
-        ['module' => 'entity_test'],
-      ],
-      'custom_storage' => [
-        ['custom_storage' => TRUE],
-      ],
-    ];
-  }
-
   /**
-   * Tests that immutable fields cannot be changed.
-   *
-   * @param array $fields_to_change
-   *   An array of key-value pairs with field names as keys and the value to set
-   *   on the field as values.
-   *
-   * @dataProvider providerImmutableFields
+   * {@inheritdoc}
    */
-  public function testImmutableFields(array $fields_to_change): void {
-    $expected_messages = [];
-    foreach ($fields_to_change as $field_name => $new_value) {
-      $this->entity->set($field_name, $new_value);
-      $expected_messages[''] = "The '$field_name' property cannot be changed.";
-    }
-    $this->assertValidationErrors($expected_messages);
+  public function testImmutableProperties(array $valid_values = []): void {
+    parent::testImmutableProperties($valid_values + [
+      'entity_type' => 'entity_test_with_bundle',
+      'type' => 'email',
+    ]);
   }
 
   /**

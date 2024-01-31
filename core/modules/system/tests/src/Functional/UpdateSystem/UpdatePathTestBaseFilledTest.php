@@ -7,6 +7,8 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
+// cspell:ignore hola usuario
+
 /**
  * Runs UpdatePathTestBaseTest with a dump filled with content.
  *
@@ -379,7 +381,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'telephone',
       'text',
       'toolbar',
-      'tour',
       'tracker',
       'update',
       'user',

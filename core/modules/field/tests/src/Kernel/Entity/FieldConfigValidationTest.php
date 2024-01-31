@@ -3,14 +3,16 @@
 namespace Drupal\Tests\field\Kernel\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMulBundle;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Tests validation of field_config entities.
  *
  * @group field
+ * @group #slow
  */
 class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
@@ -20,22 +22,17 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   protected function setUp(): void {
     parent::setUp();
 
-    // Specifically create a bundle for `entity_test_mul_with_bundle` content
-    // entities confusingly named `entity_test`, to allow testing the modifying
-    // of the `entity_type` field on FieldConfig entities without triggering
-    // additional validation errors.
-    // @see ::providerImmutableFields()
-    EntityTestMulBundle::create([
-      'id' => 'entity_test',
-      'label' => $this->randomString(),
-    ])->save();
+    EntityTestBundle::create(['id' => 'one'])->save();
+    EntityTestMulBundle::create(['id' => 'one'])->save();
 
-    // Similar to the above, but now for testing the immutability of the bundle:
-    // the bundle should exist to only get a validation error for immutability
-    // violation.
+    // Specifically create a bundle for `entity_test_bundle` and
+    // `entity_test_mul_with_bundle` content entities confusingly named
+    // `another`, to allow testing the modifying of the `entity_type` field on
+    // FieldConfig entities without triggering additional validation errors.
     // @see ::providerImmutableFields()
+    EntityTestBundle::create(['id' => 'another'])->save();
     EntityTestMulBundle::create([
-      'id' => 'foo',
+      'id' => 'another',
       'label' => $this->randomString(),
     ])->save();
 
@@ -44,7 +41,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
     $this->entity = FieldConfig::create([
       'field_storage' => $field_storage,
-      'bundle' => 'entity_test',
+      'bundle' => 'one',
     ]);
     $this->entity->save();
   }
@@ -75,30 +72,16 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ]);
   }
 
-  public function providerImmutableFields(): array {
-    return [
-      'field_name' => [
-        ['field_name' => 'broken'],
-      ],
-      'entity_type' => [
-        // @see ::setUp()
-        ['entity_type' => 'entity_test'],
-      ],
-      'field_type' => [
-        ['field_type' => 'email'],
-      ],
-      'bundle' => [
-        // @see ::setUp()
-        ['bundle' => 'foo'],
-      ],
-    ];
-  }
-
   /**
    * Tests that the field type plugin is validated.
    */
   public function testFieldTypePlugin(): void {
     $this->entity->set('field_type', 'non_existent');
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* field_type won't match the config schema for the
+    // settings of the *new* field_type.
+    $this->entity->set('settings', []);
     $this->assertValidationErrors([
       '' => "The 'field_type' property cannot be changed.",
       'field_type' => "The 'non_existent' plugin does not exist.",
@@ -119,7 +102,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->assertValidationErrors([
       '' => "The 'entity_type' property cannot be changed.",
       'entity_type' => "The 'strange_entity' plugin does not exist.",
-      'bundle' => "The 'entity_test' bundle does not exist on the 'strange_entity' entity type.",
+      'bundle' => "The 'one' bundle does not exist on the 'strange_entity' entity type.",
     ]);
 
     // A valid, but non-fieldable, entity type should raise an error.
@@ -127,7 +110,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->assertValidationErrors([
       '' => "The 'entity_type' property cannot be changed.",
       'entity_type' => "The 'field_config' plugin must implement or extend \Drupal\Core\Entity\FieldableEntityInterface.",
-      'bundle' => "The 'entity_test' bundle does not exist on the 'field_config' entity type.",
+      'bundle' => "The 'one' bundle does not exist on the 'field_config' entity type.",
     ]);
   }
 
@@ -155,8 +138,92 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ]);
 
     // Next, try to create it on a bundle that does exist.
-    $this->entity->set('bundle', 'entity_test');
+    $this->entity->set('bundle', 'one');
     $this->assertValidationErrors([]);
+  }
+
+  /**
+   * Tests validation of a field_config's default value.
+   */
+  public function testMultilineTextFieldDefaultValue(): void {
+    // First, create a field storage for which a complex default value exists.
+    $this->enableModules(['text', 'user']);
+    $text_field_storage_config = FieldStorageConfig::create([
+      'type' => 'text_with_summary',
+      'field_name' => 'novel',
+      'entity_type' => 'user',
+    ]);
+    $text_field_storage_config->save();
+
+    $this->entity = FieldConfig::create([
+      'field_storage' => $text_field_storage_config,
+      'bundle' => 'user',
+      'default_value' => [
+        0 => [
+          'value' => "Multi\nLine",
+          'summary' => '',
+          'format' => 'basic_html',
+        ],
+      ],
+      'dependencies' => [
+        'config' => [
+          $text_field_storage_config->getConfigDependencyName(),
+        ],
+      ],
+    ]);
+    $this->assertValidationErrors([]);
+  }
+
+  /**
+   * Tests that the target bundle of the field is checked.
+   */
+  public function testTargetBundleMustExist(): void {
+    $this->entity->set('bundle', 'nope');
+    $this->assertValidationErrors([
+      '' => "The 'bundle' property cannot be changed.",
+      'bundle' => "The 'nope' bundle does not exist on the 'entity_test_mul_with_bundle' entity type.",
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testImmutableProperties(array $valid_values = []): void {
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* field_type won't match the config schema for the
+    // settings of the *new* field_type.
+    $this->entity->set('settings', []);
+    parent::testImmutableProperties([
+      'bundle' => 'another',
+      'field_type' => 'email',
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyKeysMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyKeysMissing([
+      'dependencies' => [
+        // @see ::testInvalidDependencies()
+        // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
+        '' => 'This field requires a field storage.',
+      ],
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyValuesMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyValuesMissing([
+      'dependencies' => [
+        // @see ::testInvalidDependencies()
+        // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
+        '' => 'This field requires a field storage.',
+      ],
+    ]);
   }
 
 }

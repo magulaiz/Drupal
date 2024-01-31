@@ -20,7 +20,7 @@ class WorkspaceViewsKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'workspaces'];
+  protected static $modules = ['views_ui', 'workspaces', 'path_alias'];
 
   /**
    * Tests creating a view of workspace entities.
@@ -32,7 +32,7 @@ class WorkspaceViewsKernelTest extends ViewsKernelTestBase {
     $form = [];
     $form_state = new FormState();
     $form = $wizard->buildForm($form, $form_state);
-    $random_id = strtolower($this->randomMachineName());
+    $random_id = $this->randomMachineName();
     $random_label = $this->randomMachineName();
 
     $form_state->setValues([

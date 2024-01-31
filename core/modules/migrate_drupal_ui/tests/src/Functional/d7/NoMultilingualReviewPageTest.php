@@ -4,7 +4,7 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
-// cspell:ignore Filefield Multiupload Imagefield
+// cspell:ignore Filefield Multiupload Imagefield rulesets
 
 /**
  * Tests Drupal 7 upgrade without translations.
@@ -19,14 +19,12 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'book',
     'config_translation',
     'content_translation',
     'datetime_range',
     'file',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
   ];
 
@@ -52,7 +50,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     return [
       'Block',
       'Block languages',
-      'Book',
       'Bulk Export',
       'Chaos Tools (CTools) AJAX Example',
       'Chaos tools',
@@ -104,7 +101,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Search',
       'Search embedded form',
       'Shortcut',
-      'Statistics',
       'String translation',
       'Stylizer',
       'Synchronize translations',
@@ -151,6 +147,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Book',
       'Breakpoints',
       'Color',
       'Contact translation',
@@ -166,6 +163,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'RDF',
       'References',
       'References UUID',
+      'Statistics',
       'Translation redirect',
       'Translation sets',
       'User mail translation',

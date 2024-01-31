@@ -137,6 +137,13 @@ class FormState implements FormStateInterface {
   protected $response;
 
   /**
+   * Used to ignore destination when redirecting.
+   *
+   * @var bool
+   */
+  protected bool $ignoreDestination = FALSE;
+
+  /**
    * Used to redirect the form on submission.
    *
    * @see self::getRedirect()
@@ -1058,6 +1065,21 @@ class FormState implements FormStateInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setIgnoreDestination(bool $status = TRUE) {
+    $this->ignoreDestination = $status;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIgnoreDestination(): bool {
+    return $this->ignoreDestination;
+  }
+
+  /**
    * Sets the global status of errors.
    *
    * @param bool $errors
@@ -1170,7 +1192,7 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function prepareCallback($callback) {
-    if (is_string($callback) && substr($callback, 0, 2) == '::') {
+    if (is_string($callback) && str_starts_with($callback, '::')) {
       $callback = [$this->getFormObject(), substr($callback, 2)];
     }
     return $callback;

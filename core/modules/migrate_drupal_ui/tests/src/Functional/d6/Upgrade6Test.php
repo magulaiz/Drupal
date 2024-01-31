@@ -11,6 +11,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
@@ -18,13 +19,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'book',
     'config_translation',
     'content_translation',
     'datetime_range',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
     'update',
   ];
@@ -77,7 +76,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 103,
+      'field_config' => 102,
       'field_storage_config' => 71,
       'file' => 7,
       'filter_format' => 7,
@@ -86,7 +85,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
-      'node_type' => 14,
+      'node_type' => 13,
       'search_page' => 3,
       'shortcut' => 2,
       'shortcut_set' => 1,
@@ -95,17 +94,16 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'path_alias' => 8,
       'taxonomy_term' => 15,
       'taxonomy_vocabulary' => 7,
-      'tour' => 6,
       'user' => 7,
       'user_role' => 7,
       'menu_link_content' => 10,
       'view' => 14,
       'date_format' => 12,
-      'entity_form_display' => 30,
+      'entity_form_display' => 29,
       'entity_form_mode' => 1,
-      'entity_view_display' => 57,
+      'entity_view_display' => 55,
       'entity_view_mode' => 12,
-      'base_field_override' => 40,
+      'base_field_override' => 39,
     ];
   }
 
@@ -131,7 +129,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     return [
       'Block',
       'Block translation',
-      'Book',
       'CCK translation',
       'Comment',
       'Contact',
@@ -155,7 +152,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Path',
       'Profile translation',
       'Search',
-      'Statistics',
       'String translation',
       'Synchronize translations',
       'System',
@@ -185,7 +181,9 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Book',
       'Forum',
+      'Statistics',
     ];
   }
 

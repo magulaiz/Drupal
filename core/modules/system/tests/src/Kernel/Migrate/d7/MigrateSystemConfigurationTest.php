@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = ['action', 'file', 'system'];
+  protected static $modules = ['file', 'system'];
 
   protected $expectedConfig = [
     'system.authorize' => [],
@@ -58,6 +58,14 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
     'system.mail' => [
       'interface' => [
         'default' => 'php_mail',
+      ],
+      'mailer_dsn' => [
+        'scheme' => 'sendmail',
+        'host' => 'default',
+        'user' => NULL,
+        'password' => NULL,
+        'port' => NULL,
+        'options' => [],
       ],
     ],
     'system.maintenance' => [
@@ -110,6 +118,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       'admin_compact_mode' => TRUE,
       'weight_select_max' => 100,
       'default_langcode' => 'en',
+      'mail_notification' => NULL,
     ],
   ];
 
