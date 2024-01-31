@@ -16,4 +16,37 @@ trait TestCompatibilityTrait {
     return $this->getName();
   }
 
+  /**
+   * Gets @covers defined on the test class.
+   *
+   * @return string[]
+   *   An array of classes listed with the @covers annotation.
+   */
+  public function getTestClassCovers(): array {
+    $annotations = Test::parseTestMethodAnnotations(static::class, $this->getName());
+    return $annotations['class']['covers'] ?? [];
+  }
+
+  /**
+   * Gets @requires defined on the test class.
+   *
+   * @return string[]
+   *   An array of requirements listed with the @requires annotation.
+   */
+  public function getTestClassRequires(): array {
+    $annotations = Test::parseTestMethodAnnotations(static::class, $this->getName());
+    return $annotations['class']['requires'] ?? [];
+  }
+
+  /**
+   * Gets @requires defined on the test method.
+   *
+   * @return string[]
+   *   An array of requirements listed with the @requires annotation.
+   */
+  public function getTestMethodRequires(): array {
+    $annotations = Test::parseTestMethodAnnotations(static::class, $this->getName());
+    return $annotations['method']['requires'] ?? [];
+  }
+
 }

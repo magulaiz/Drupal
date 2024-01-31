@@ -78,13 +78,9 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    * @return string
    */
   protected function getPluginClass() {
-    $annotations = Test::parseTestMethodAnnotations(
-      static::class,
-      $this->getName()
-    );
-
-    if (isset($annotations['class']['covers'])) {
-      return $annotations['class']['covers'][0];
+    $covers = this->getTestClassCovers();
+    if (!empty($covers)) {
+      return $covers[0];
     }
     else {
       $this->fail('No plugin class was specified');
