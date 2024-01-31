@@ -169,7 +169,7 @@ interface DataDefinitionInterface {
    * @code
    * $constraints = [
    *   'EntityType' => 'node',
-   *   'Bundle' => 'article',
+   *   'Bundle' => ['article'],
    * ];
    * @endcode
    *
