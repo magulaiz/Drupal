@@ -130,7 +130,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($node instanceof NodeInterface && !empty($node->book['bid'])) {
       $current_bid = $node->book['bid'];
     }
-    
+
     if ($this->configuration['block_mode'] == 'all pages') {
       $book_menus = [];
       $pseudo_tree = [0 => ['below' => FALSE]];
@@ -169,7 +169,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
         ->condition('nid', $node->book['bid'], '=')
         ->condition('status', NodeInterface::PUBLISHED)
         ->execute();
-      
+
       // Only show the block if the user has view access for the top-level node.
       if ($nid) {
         $node = $this->routeMatch->getParameter('node');
@@ -178,10 +178,10 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
 
         // There should only be one element at the top level.
         $data = array_shift($tree);
-        $primary_book_nid = array_pop($nid);    
+        $primary_book_nid = array_pop($nid);
         $below = $this->bookManager->bookTreeOutput($data['below']);
-        
-        if ($this->configuration['block_mode'] == 'primary book page') {        
+
+        if ($this->configuration['block_mode'] == 'primary book page') {
           if ($current_nid === $primary_book_nid) {
             return $below;
           }
