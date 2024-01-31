@@ -32,7 +32,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin, static::$maxRows, $this->container->get('serialization.phpserialize'));
+    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin, $this->container->get('serialization.phpserialize'), static::$maxRows);
   }
 
   /**

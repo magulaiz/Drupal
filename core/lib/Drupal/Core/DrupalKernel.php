@@ -81,8 +81,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
           '@database',
           '@cache_tags_provider.container',
           'container',
-          DatabaseBackend::MAXIMUM_NONE,
           '@serialization.phpserialize',
+          DatabaseBackend::MAXIMUM_NONE,
         ],
       ],
       'cache_tags_provider.container' => [
