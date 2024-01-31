@@ -1014,7 +1014,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => array_merge($basic_html_test_case['expected_ckeditor5_settings']['plugins'], ['media_media' => ['allow_view_mode_override' => FALSE]]),
       ],
-      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_superset' => '<drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata>',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
@@ -1030,6 +1030,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'warning' => [
           'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   This attribute: <em class="placeholder"> reversed (for &lt;ol&gt;)</em>; Additional details are available in your logs.',
         ],
+        'warning' => [
+          'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em class="placeholder"> data-link-entity-type (for &lt;drupal-media&gt;), data-link-entity-uuid (for &lt;drupal-media&gt;), data-link-entity-metadata (for &lt;drupal-media&gt;)</em>; Additional details are available in your logs.',
+        ]
       ],
     ];
 
@@ -1053,7 +1056,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'media_media' => ['allow_view_mode_override' => FALSE],
         ],
       ],
-      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_superset' => '<drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata>',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
@@ -1068,6 +1071,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'warning' => [
           'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   This attribute: <em class="placeholder"> reversed (for &lt;ol&gt;)</em>; Additional details are available in your logs.',
+        ],
+        'warning' => [
+          'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em class="placeholder"> data-link-entity-type (for &lt;drupal-media&gt;), data-link-entity-uuid (for &lt;drupal-media&gt;), data-link-entity-metadata (for &lt;drupal-media&gt;)</em>; Additional details are available in your logs.',
         ],
       ]),
       'expected_post_filter_drop_fundamental_compatibility_violations' => [],
@@ -1096,7 +1102,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'media_media' => ['allow_view_mode_override' => FALSE],
         ],
       ],
-      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_superset' => '<drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata>',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
@@ -1111,6 +1117,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'warning' => [
           'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   This attribute: <em class="placeholder"> reversed (for &lt;ol&gt;)</em>; Additional details are available in your logs.',
+        ],
+        'warning' => [
+          'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em class="placeholder"> data-link-entity-type (for &lt;drupal-media&gt;), data-link-entity-uuid (for &lt;drupal-media&gt;), data-link-entity-metadata (for &lt;drupal-media&gt;)</em>; Additional details are available in your logs.',
         ],
       ]),
       'expected_post_filter_drop_fundamental_compatibility_violations' => [],

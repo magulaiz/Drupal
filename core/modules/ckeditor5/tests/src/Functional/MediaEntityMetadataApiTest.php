@@ -115,7 +115,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
           'status' => TRUE,
           'weight' => -10,
           'settings' => [
-            'allowed_html' => "<p> <br> <drupal-media data-entity-type data-entity-uuid data-view-mode alt>",
+            'allowed_html' => "<p> <br> <drupal-media data-entity-type data-entity-uuid data-link-entity-type data-link-entity-uuid data-link-entity-metadata data-view-mode alt>",
             'filter_html_help' => TRUE,
             'filter_html_nofollow' => TRUE,
           ],
