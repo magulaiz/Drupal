@@ -25,10 +25,6 @@ class FloatData extends PrimitiveBase implements FloatInterface {
    */
   #[JsonSchema(['type' => 'number'])]
   public function getCastedValue() {
-    if ($this->value === NULL) {
-      return NULL;
-    }
-
     // Special handling for floats since the configuration system is primarily
     // concerned with saving values from the Form API we have to special-case
     // the meaning of an empty string for numeric types. In PHP this would be
