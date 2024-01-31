@@ -34,7 +34,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
   /**
    * Return the name of a form field.
    *
-   * @see /core/modules/views/src/Form/ViewsFormMainForm.php
+   * @see \Drupal\views\Form\ViewsFormMainForm
    *
    * @return string
    *   The form field name.
@@ -46,7 +46,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
   /**
    * Return a media entity ID from a views result row.
    *
-   * @see /core/modules/views/src/Form/ViewsFormMainForm.php
+   * @see \Drupal\views\Form\ViewsFormMainForm
    *
    * @param int $row_id
    *   The index of a views result row.
