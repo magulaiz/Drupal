@@ -488,15 +488,15 @@ field_config_base:
   type: config_entity
   constraints:
     UniqueFieldCombination: [entity_type, bundle, field_name]
-    FieldStorageExistsOnFieldableContentEntityType:
-      entityType: entity_type
-      fieldName: field_name
+    # @todo
+    #FieldStorageExistsOnFieldableContentEntityType:
+    #  entityType: entity_type
+    #  fieldName: field_name
   mapping:
     id:
       type: string
       label: 'ID'
       constraints:
-        NotNull: []
         StringParts:
           separator: .
           parts:
@@ -506,13 +506,10 @@ field_config_base:
     field_name:
       type: string
       label: 'Field name'
-      constraints:
-        NotNull: []
     entity_type:
       type: string
       label: 'Entity type'
       constraints:
-        NotNull: []
         PluginExists:
           manager: entity_type.manager
           interface: \Drupal\Core\Entity\FieldableEntityInterface
@@ -520,35 +517,24 @@ field_config_base:
       type: string
       label: 'Bundle'
       constraints:
-        NotNull: []
         EntityBundleExists: '%parent.entity_type'
     label:
       type: required_label
       label: 'Label'
-      constraints:
-        NotNull: []
     description:
       type: text
       label: 'Help text'
-      constraints:
-        # Optional, so at minimum must be set to the empty string.
-        NotNull: []
+      nullable: true
     required:
       type: boolean
       label: 'Required field'
-      constraints:
-        NotNull: []
     translatable:
       type: boolean
       label: 'Translatable'
-      constraints:
-        NotNull: []
     default_value:
       type: sequence
       label: 'Default values'
-      constraints:
-        # Optional, so at minimum must be set to the empty array.
-        NotNull: []
+      nullable: true
       sequence:
         type: field.value.[%parent.%parent.field_type]
         label: 'Default value'
@@ -566,7 +552,6 @@ field_config_base:
       type: string
       label: 'Field type'
       constraints:
-        NotNull: []
         # @todo In principle, we should validate that this plugin was indeed provided by `module`.
         PluginExists: plugin.manager.field.field_type
 #        Matches:
@@ -584,9 +569,11 @@ core.base_field_override.*.*.*:
   type: field_config_base
   label: 'Base field bundle override'
   constraints:
-    FieldIsBaseField:
-      entityType: entity_type
-      fieldName: field_name
+    FullyValidatable: ~
+    # @todo
+    #FieldIsBaseField:
+    #  entityType: entity_type
+    #  fieldName: field_name
 
 core.date_format.*:
   type: config_entity

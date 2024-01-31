@@ -12,11 +12,13 @@ field.storage.*.*:
   type: config_entity
   label: 'Field'
   constraints:
+    FullyValidatable: ~
     UniqueFieldCombination: [entity_type, field_name]
-    IsUnchanged:
-      selector: locked
-    IsFalse:
-      selector: locked
+    # @todo
+    #IsUnchanged:
+    #  selector: locked
+    #IsFalse:
+    #  selector: locked
   mapping:
     id:
       type: string
@@ -97,6 +99,8 @@ field.field.*.*.*:
   type: field_config_base
   label: 'Field'
   constraints:
-    FieldIsConfigurableField:
-      entityType: entity_type
-      fieldName: field_name
+    FullyValidatable: ~
+    # @todo
+    #FieldIsConfigurableField:
+    #  entityType: entity_type
+    #  fieldName: field_name

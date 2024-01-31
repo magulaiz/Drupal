@@ -19,6 +19,14 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   /**
    * {@inheritdoc}
    */
+  protected static array $propertiesWithOptionalValues = [
+    'default_value',
+    'description',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -20,6 +20,14 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static array $propertiesWithOptionalValues = [
+    'default_value',
+    'description',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['entity_test', 'field', 'node', 'text', 'user'];
 
   /**
