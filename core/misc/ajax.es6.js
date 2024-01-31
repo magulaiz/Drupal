@@ -983,7 +983,7 @@
     // result array, meaning that index 0 is the highest parent in the hierarchy
     // in this situation it is usually a <form> element.
     const elementParents = $(this.element)
-      .parents('[data-drupal-selector]')
+      .closest('[data-drupal-selector]')
       .addBack()
       .toArray();
 
@@ -1268,7 +1268,7 @@
       // Attach all JavaScript behaviors to the new content, if it was
       // successfully added to the page, this if statement allows
       // `#ajax['wrapper']` to be optional.
-      if ($newContent.parents('html').length) {
+      if ($newContent.closest('html').length) {
         // Attach behaviors to all element nodes.
         $newContent.each((index, element) => {
           if (element.nodeType === Node.ELEMENT_NODE) {

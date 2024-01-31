@@ -64,7 +64,7 @@
   };
 
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
-    $target.parents('details').not('[open]').find('> summary').trigger('click');
+    $target.closest('details').not('[open]').find('> summary').trigger('click');
   };
 
   $('body').on('formFragmentLinkClickOrHashChange.details', handleFragmentLinkClickOrHashChange);

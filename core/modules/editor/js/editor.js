@@ -135,7 +135,7 @@
           }, onTextFormatChange);
         }
 
-        $this.parents('form').on('submit', function (event) {
+        $this.closest('form').on('submit', function (event) {
           if (event.isDefaultPrevented()) {
             return;
           }

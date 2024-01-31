@@ -106,7 +106,7 @@
         instance.options.data.dialogOptions = {};
       }
 
-      instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
+      instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).closest('.settings-tray-editable').attr('id');
       instance.progress = {
         type: 'fullscreen'
       };

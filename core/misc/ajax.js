@@ -439,7 +439,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     $(this.element).prop('disabled', false);
-    var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
+    var elementParents = $(this.element).closest('[data-drupal-selector]').addBack().toArray();
     var focusChanged = false;
     Object.keys(response || {}).forEach(function (i) {
       if (response[i].command && _this.commands[response[i].command]) {
@@ -563,7 +563,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         $newContent[effect.showEffect](effect.showSpeed);
       }
 
-      if ($newContent.parents('html').length) {
+      if ($newContent.closest('html').length) {
         $newContent.each(function (index, element) {
           if (element.nodeType === Node.ELEMENT_NODE) {
             Drupal.attachBehaviors(element, settings);

@@ -197,7 +197,7 @@
         instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(
           instance.element,
         )
-          .parents('.settings-tray-editable')
+          .closest('.settings-tray-editable')
           .attr('id');
         instance.progress = { type: 'fullscreen' };
       });
