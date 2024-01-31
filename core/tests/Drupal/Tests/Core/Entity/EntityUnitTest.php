@@ -515,6 +515,8 @@ class EntityUnitTest extends UnitTestCase {
     $entities = [$this->values['id'] => $this->entity];
     $this->entity->postDelete($storage, $entities);
 
+    // We avoid asserting on the order of array values, just that the values
+    // all exist.
     $this->cacheTagsInvalidator->invalidateTags(Argument::allOf(
       Argument::containing($this->entityTypeId . '_list'),
       Argument::containing($this->entityTypeId . ':' . $this->values['id']),
