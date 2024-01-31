@@ -53,11 +53,11 @@ trait TestRequirementsTrait {
     $root = static::getDrupalRoot();
 
     // Check if required dependencies exist.
-    $classRequirements = this->getTestClassRequires();
+    $classRequirements = $this->getTestClassRequires();
     if (!empty($classRequirements)) {
       $this->checkModuleRequirements($root, $classRequirements);
     }
-    $methodRequirements = this->getTestMethodRequires();
+    $methodRequirements = $this->getTestMethodRequires();
     if (!empty($methodRequirements)) {
       $this->checkModuleRequirements($root, $methodRequirements);
     }

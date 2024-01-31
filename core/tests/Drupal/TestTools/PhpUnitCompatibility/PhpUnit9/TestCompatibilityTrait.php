@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit9;
 
+use PHPUnit\Util\Test;
+
 /**
  * Drupal's forward compatibility layer with multiple versions of PHPUnit.
  */
