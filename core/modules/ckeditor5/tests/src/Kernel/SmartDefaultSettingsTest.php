@@ -1032,7 +1032,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'warning' => [
           'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em class="placeholder"> data-link-entity-type (for &lt;drupal-media&gt;), data-link-entity-uuid (for &lt;drupal-media&gt;), data-link-entity-metadata (for &lt;drupal-media&gt;)</em>; Additional details are available in your logs.',
-        ]
+        ],
       ],
     ];
 
