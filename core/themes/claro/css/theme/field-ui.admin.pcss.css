@@ -14,8 +14,8 @@
 /* 'Manage form display' and 'Manage display' overview */
 .field-plugin-summary {
   float: left; /* LTR */
-  font-size: var(--font-size-s);
   word-break: break-word;
+  font-size: var(--font-size-s);
 }
 [dir="rtl"] .field-plugin-summary {
   float: right;
