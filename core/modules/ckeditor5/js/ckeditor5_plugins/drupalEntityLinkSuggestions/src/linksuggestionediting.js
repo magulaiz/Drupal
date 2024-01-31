@@ -10,6 +10,16 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
       'download',
       'data-entity-metadata',
     ];
+    this.blockLinkAttrs = [
+      'data-link-entity-type',
+      'data-link-entity-uuid',
+      'data-link-entity-metadata',
+    ];
+    this.blockLinkAttrsToModel = {
+      'data-link-entity-type': 'drupalLinkEntityType',
+      'data-link-entity-uuid': 'drupalLinkEntityUuid',
+      'data-link-entity-metadata': 'drupalLinkEntityMetadata',
+    };
     this._allowAndConvertExtraAttributes();
     this._removeExtraAttributesOnUnlinkCommandExecute();
     this._refreshExtraAttributeValues();
@@ -18,7 +28,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
 
   _allowAndConvertExtraAttributes() {
     const { editor } = this;
-
     editor.model.schema.extend('$text', { allowAttributes: this.attrs });
 
     this.attrs.forEach((attribute) => {
@@ -34,7 +43,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
           } else if (value === true) {
             viewAttributes.download = '';
           }
-
           const linkViewElement = writer.createAttributeElement(
             'a',
             viewAttributes,
@@ -106,7 +114,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
           editor.execute('link', ...args);
 
           const firstPosition = selection.getFirstPosition();
-
           this.attrs.forEach((attribute) => {
             if (selection.isCollapsed) {
               const node = firstPosition.textNode || firstPosition.nodeBefore;
@@ -141,6 +148,28 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
               }
             }
           });
+          if (
+            ['drupalImage', 'drupalMedia'].includes(
+              selection.getSelectedElement().name,
+            )
+          ) {
+            const selectedElement = selection.getSelectedElement();
+
+            this.blockLinkAttrs.forEach((attribute) => {
+              if (extraAttributeValues[attribute]) {
+                writer.setAttribute(
+                  this.blockLinkAttrsToModel[attribute],
+                  extraAttributeValues[attribute],
+                  selectedElement,
+                );
+              } else {
+                writer.removeAttribute(
+                  this.blockLinkAttrsToModel[attribute],
+                  selectedElement,
+                );
+              }
+            });
+          }
         });
       },
       { priority: 'high' },

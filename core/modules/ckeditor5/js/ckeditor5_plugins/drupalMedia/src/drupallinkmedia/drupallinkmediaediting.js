@@ -33,7 +33,6 @@ function upcastMediaLink() {
       (evt, data, conversionApi) => {
         const viewLink = data.viewItem;
         const mediaInLink = getFirstMedia(viewLink);
-
         if (!mediaInLink) {
           return;
         }
@@ -96,7 +95,6 @@ function dataDowncastMediaLink() {
         if (!conversionApi.consumable.consume(data.item, evt.name)) {
           return;
         }
-
         // The drupalMedia will be already converted - so it will be present in
         // the view.
         const mediaElement = conversionApi.mapper.toViewElement(data.item);
@@ -105,10 +103,24 @@ function dataDowncastMediaLink() {
         // if the attribute is empty. But if it does not exist. Let's wrap already
         // converted drupalMedia by newly created link element.
         // 1. Create an empty <a> element.
+
+        const additionalAttributes = {};
+        const modelEntityLinkAttrs = {
+          drupalLinkEntityType: 'data-entity-type',
+          drupalLinkEntityUuid: 'data-entity-uuid',
+          drupalLinkEntityMetadata: 'data-entity-metadata',
+        };
+        Object.keys(modelEntityLinkAttrs).forEach((modelAttribute) => {
+          if (data.item.hasAttribute(modelAttribute)) {
+            const viewAttribute = modelEntityLinkAttrs[modelAttribute];
+            const viewValue = data.item.getAttribute(modelAttribute);
+            additionalAttributes[viewAttribute] = viewValue;
+          }
+        });
         const linkElement = writer.createContainerElement('a', {
           href: data.attributeNewValue,
+          ...additionalAttributes,
         });
-
         // 2. Insert <a> before the <drupal-media> element.
         writer.insert(writer.createPositionBefore(mediaElement), linkElement);
 
@@ -172,8 +184,23 @@ function editingDowncastMediaLink() {
             (child) => child.getAttribute('data-drupal-media-preview'),
           );
           // 1. Create an empty <a> element.
+          const additionalAttributes = {};
+          const modelEntityLinkAttrs = {
+            drupalLinkEntityType: 'data-entity-type',
+            drupalLinkEntityUuid: 'data-entity-uuid',
+            drupalLinkEntityMetadata: 'data-entity-metadata',
+          };
+          Object.keys(modelEntityLinkAttrs).forEach((modelAttribute) => {
+            if (data.item.hasAttribute(modelAttribute)) {
+              const viewAttribute = modelEntityLinkAttrs[modelAttribute];
+              const viewValue = data.item.getAttribute(modelAttribute);
+              additionalAttributes[viewAttribute] = viewValue;
+            }
+          });
+
           const linkElement = writer.createContainerElement('a', {
             href: data.attributeNewValue,
+            ...additionalAttributes,
           });
 
           // 2. Insert <a> inside the media container.

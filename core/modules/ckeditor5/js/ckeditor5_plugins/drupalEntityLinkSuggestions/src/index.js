@@ -66,10 +66,44 @@ class DrupalEntityLinkSuggestions extends Plugin {
     previewButton.unbind('label');
 
     const bind = previewButton.bindTemplate;
+
     previewButton.setTemplate({
       tag: 'a',
       attributes: {
         href: bind.to('parentHref', (hrefValue) => {
+          const { selection } = this.editor.model.document;
+
+          // If the active selection is image or media, the link metadata is
+          // stored in the drupalLinkEntityMetadata property.
+          if (
+            selection.getSelectedElement() &&
+            ['drupalImage', 'drupalMedia'].includes(
+              selection.getSelectedElement().name,
+            ) &&
+            selection
+              .getSelectedElement()
+              .hasAttribute('drupalLinkEntityMetadata')
+          ) {
+            const entityMetadata = JSON.parse(
+              selection
+                .getSelectedElement()
+                .getAttribute('drupalLinkEntityMetadata'),
+            );
+            if (entityMetadata.path) {
+              return `/${entityMetadata.path.replace('entity:', '')}`;
+            }
+          } else if (selection.hasAttribute('data-entity-metadata')) {
+            // If the active selection is the link itself, the metadata is
+            // available in its data-entity-metadata attribute.
+            const entityMetadata = JSON.parse(
+              selection.getAttribute('data-entity-metadata'),
+            );
+            if (entityMetadata.path) {
+              return `/${entityMetadata.path.replace('entity:', '')}`;
+            }
+          }
+
+          // If path is not available via metadata, use the hrefValue directly.
           if (hrefValue && hrefValue.startsWith('entity:')) {
             return `/${hrefValue.replace('entity:', '')}`;
           }
@@ -90,11 +124,26 @@ class DrupalEntityLinkSuggestions extends Plugin {
             {
               text: bind.to('parentHref', (parentHref) => {
                 const { selection } = this.editor.model.document;
-                const entityMetadata = selection.hasAttribute(
-                  'data-entity-metadata',
-                )
-                  ? JSON.parse(selection.getAttribute('data-entity-metadata'))
-                  : {};
+                let entityMetadata = {};
+                if (
+                  selection.getSelectedElement() &&
+                  ['drupalImage', 'drupalMedia'].includes(
+                    selection.getSelectedElement().name,
+                  ) &&
+                  selection
+                    .getSelectedElement()
+                    .hasAttribute('drupalLinkEntityMetadata')
+                ) {
+                  entityMetadata = JSON.parse(
+                    selection
+                      .getSelectedElement()
+                      .getAttribute('drupalLinkEntityMetadata'),
+                  );
+                } else if (selection.hasAttribute('data-entity-metadata')) {
+                  entityMetadata = JSON.parse(
+                    selection.getAttribute('data-entity-metadata'),
+                  );
+                }
 
                 if (
                   entityMetadata.label &&
@@ -299,6 +348,9 @@ class DrupalEntityLinkSuggestions extends Plugin {
           'data-entity-uuid': this.entityUuid,
           download: this.drupalEntityLinkDownload,
           'data-entity-metadata': this.entityMetadata,
+          'data-link-entity-type': this.entityType,
+          'data-link-entity-uuid': this.entityUuid,
+          'data-link-entity-metadata': this.entityMetadata,
         };
         // Stop the execution of the link command caused by closing the form.
         // Inject the extra attribute value. The highest priority listener here
