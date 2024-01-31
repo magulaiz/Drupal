@@ -80,7 +80,6 @@ class BlockContentForm extends ContentEntityForm {
         'theme' => $theme,
       ]
     );
-    $form_state->setIgnoreDestination();
   }
 
   /**

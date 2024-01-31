@@ -38,6 +38,7 @@ use Drupal\block_content\BlockContentInterface;
  *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
  *     },
  *     "route_provider" = {
+ *       "html" = "\Drupal\block_content\Routing\BlockContentRouteProvider",
  *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
@@ -50,6 +51,8 @@ use Drupal\block_content\BlockContentInterface;
  *   revision_data_table = "block_content_field_revision",
  *   show_revision_ui = TRUE,
  *   links = {
+ *     "add-page" = "/block/add",
+ *     "add-form" = "/block/add/{block_content_type}",
  *     "canonical" = "/admin/content/block/{block_content}",
  *     "delete-form" = "/admin/content/block/{block_content}/delete",
  *     "edit-form" = "/admin/content/block/{block_content}",

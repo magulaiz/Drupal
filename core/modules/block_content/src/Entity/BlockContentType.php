@@ -40,6 +40,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     "label" = "label"
  *   },
  *   links = {
+ *     "add-form" = "/admin/structure/block-content/add",
  *     "delete-form" = "/admin/structure/block-content/manage/{block_content_type}/delete",
  *     "edit-form" = "/admin/structure/block-content/manage/{block_content_type}",
  *     "entity-permissions-form" = "/admin/structure/block-content/manage/{block_content_type}/permissions",
