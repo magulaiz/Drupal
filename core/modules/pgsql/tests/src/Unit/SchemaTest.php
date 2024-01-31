@@ -6,8 +6,7 @@ namespace Drupal\Tests\pgsql\Unit;
 
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
-
-// cSpell:ignore conname
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\pgsql\Driver\Database\pgsql\Schema
@@ -39,7 +38,7 @@ class SchemaTest extends UnitTestCase {
     $statement->fetchField()->willReturn($max_identifier_length);
     $connection->query('SHOW max_identifier_length')->willReturn($statement->reveal());
 
-    $connection->query("SELECT 1 FROM pg_constraint WHERE conname = '$expected'")
+    $connection->query(Argument::containingString($expected))
       ->willReturn($this->prophesize('\Drupal\Core\Database\StatementInterface')->reveal())
       ->shouldBeCalled();
 
