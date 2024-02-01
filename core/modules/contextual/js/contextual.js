@@ -28,7 +28,7 @@
   }
 
   function adjustIfNestedAndOverlapping($contextual) {
-    var $contextuals = $contextual.parents('.contextual-region').eq(-1).find('.contextual');
+    var $contextuals = $contextual.closest('.contextual-region').eq(-1).find('.contextual');
 
     if ($contextuals.length <= 1) {
       return;

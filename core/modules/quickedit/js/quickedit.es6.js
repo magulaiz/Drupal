@@ -349,11 +349,18 @@
     // outside of "the entity DOM node": it's rendered as the page title. So in
     // this case, we find the lowest common parent element (deepest in the tree)
     // and consider that the entity element.
+    function findLowestCommonParent(el) {
+      const parents = [];
+      while (el !== null) {
+        parents.push(el);
+        el = el.parentElement;
+      }
+      return $(parents).has(fieldElement).first();
+    }
+
     if (entityElement.length === 0) {
-      const $lowestCommonParent = $entityElement
-        .parents()
-        .has(fieldElement)
-        .first();
+      const $elementSelector = document.querySelector(entityElementSelector);
+      const $lowestCommonParent = findLowestCommonParent($elementSelector);
       entityElement = $lowestCommonParent.find($entityElement);
     }
     const entityInstanceID = entityElement

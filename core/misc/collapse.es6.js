@@ -139,7 +139,7 @@
    *   The targeted node as a jQuery object.
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
-    $target.parents('details').not('[open]').find('> summary').trigger('click');
+    $target.closest('details').not('[open]').find('> summary').trigger('click');
   };
 
   /**

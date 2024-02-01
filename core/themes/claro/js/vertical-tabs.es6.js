@@ -72,7 +72,7 @@
    *   The targeted node as a jQuery object.
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
-    $target.parents('.js-vertical-tabs-pane').each((index, pane) => {
+    $target.closest('.js-vertical-tabs-pane').each((index, pane) => {
       $(pane).data('verticalTab').focus();
     });
   };

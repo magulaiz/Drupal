@@ -7,7 +7,7 @@
 
 (function ($, Drupal, drupalSettings) {
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
-    $target.parents('.vertical-tabs__pane').each(function (index, pane) {
+    $target.closest('.vertical-tabs__pane').each(function (index, pane) {
       $(pane).data('verticalTab').focus();
     });
   };
