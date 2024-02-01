@@ -2209,15 +2209,6 @@ parameters:
 			path: modules/system/tests/modules/batch_test/batch_test.callbacks.inc
 
 		-
-			message: """
-				#^Call to deprecated function deprecation_test_function\\(\\)\\:
-				in drupal\\:8\\.4\\.0 and is removed from drupal\\:9\\.0\\.0\\. This is
-				  the deprecation message for deprecated_test_function\\(\\)\\.$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/deprecation_test/src/DeprecatedController.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
@@ -2933,42 +2924,6 @@ parameters:
 			message: "#^Variable \\$project_stabilities might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ClassRequiresAvailable\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ClassRequiresUnavailable\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\MethodRequires\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\UsesCommandRequirements\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
 
 		-
 			message: "#^Variable \\$rawResult on left side of \\?\\? always exists and is not nullable\\.$#"
