@@ -182,8 +182,20 @@
 
     var entityElement = $(fieldElement).closest($entityElement);
 
+    function findLowestCommonParent(el) {
+      var parents = [];
+
+      while (el !== null) {
+        parents.push(el);
+        el = el.parentElement;
+      }
+
+      return $(parents).has(fieldElement).first();
+    }
+
     if (entityElement.length === 0) {
-      var $lowestCommonParent = $entityElement.parents().has(fieldElement).first();
+      var $elementSelector = document.querySelector(entityElementSelector);
+      var $lowestCommonParent = findLowestCommonParent($elementSelector);
       entityElement = $lowestCommonParent.find($entityElement);
     }
 
