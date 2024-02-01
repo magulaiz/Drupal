@@ -3709,6 +3709,11 @@ parameters:
 			path: modules/pgsql/src/Update10101.php
 
 		-
+			message: "#^@dataProvider providerComputedConstraintName related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: modules/pgsql/tests/src/Unit/SchemaTest.php
+
+		-
 			message: "#^@dataProvider providerLongPasswords related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/phpass/tests/src/Unit/PasswordVerifyTest.php

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\BuildTests\Framework\Tests;
 
 use Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +18,16 @@ use PHPUnit\Framework\TestCase;
 class ExternalCommandRequirementTest extends TestCase {
 
   use ExpectDeprecationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    if (RunnerVersion::getMajor() >= 10) {
+      $this->markTestSkipped('This test cannot be executed with PHPUnit 10+.');
+    }
+  }
 
   /**
    * @covers ::checkExternalCommandRequirements
