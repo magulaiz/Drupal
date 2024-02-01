@@ -57,7 +57,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid download>',
+            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata download>',
           ],
         ],
         'entity_links' => [
