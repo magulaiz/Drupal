@@ -41,7 +41,7 @@ class MediaLinkabilityTest extends MediaTestBase {
       $filter_format->setFilterConfig('filter_html', [
         'status' => TRUE,
         'settings' => [
-          'allowed_html' => '<p> <br> <strong> <em> <a href data-foo> <drupal-media data-entity-type data-entity-uuid data-link-entity-type data-link-entity-uuid data-link-entity-metadata data-align data-caption alt data-view-mode> <div data-bar>',
+          'allowed_html' => '<p> <br> <strong> <em> <a href data-foo> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <div data-bar>',
         ],
       ]);
     }
