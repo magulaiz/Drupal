@@ -29,6 +29,7 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
    * @dataProvider provideTestValidate
    */
   public function testValidate(PrimitiveInterface $typed_data, string|TranslatableMarkup|int|float|array|null $value, bool $valid): void {
+    $typed_data->setValue($value);
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->any())
       ->method('getObject')
