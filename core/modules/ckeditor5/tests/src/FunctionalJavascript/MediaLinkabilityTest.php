@@ -219,6 +219,9 @@ class MediaLinkabilityTest extends MediaTestBase {
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $this->assertNotEmpty($xpath->query('//drupal-media'));
     $this->assertEmpty($xpath->query('//a'));
+
+    $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
+    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
   }
 
   public static function providerLinkability(): array {
@@ -298,6 +301,10 @@ class MediaLinkabilityTest extends MediaTestBase {
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $this->assertEmpty($xpath->query('//a'));
     $this->assertNotEmpty($xpath->query('//drupal-media'));
+  }
+
+  public function testWithEntityLinkSuggestions() {
+
   }
 
 }

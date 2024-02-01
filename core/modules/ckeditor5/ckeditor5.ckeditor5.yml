@@ -383,11 +383,22 @@ ckeditor5_linkImage:
           - linkImage
   drupal:
     label: Linked Image
+    elements: false
+    conditions:
+      plugins:
+        - ckeditor5_link
+        - ckeditor5_image
+
+ckeditor5_entityLinkImage:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: Entity-Linked Image
     elements:
       - <img data-link-entity-type data-link-entity-uuid data-link-entity-metadata>
     conditions:
       plugins:
-        - ckeditor5_link
+        - ckeditor5_link_entity_suggestions
         - ckeditor5_image
 
 ckeditor5_linkMedia:

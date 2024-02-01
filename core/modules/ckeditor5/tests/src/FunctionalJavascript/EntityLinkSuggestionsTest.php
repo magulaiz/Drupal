@@ -12,6 +12,7 @@ use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
@@ -123,7 +124,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
   /**
    * Test the entity link suggestions.
    */
-  public function test(): void {
+  public function testStandardLink(): void {
     $session = $this->getSession();
     $assert_session = $this->assertSession();
     $page = $session->getPage();
