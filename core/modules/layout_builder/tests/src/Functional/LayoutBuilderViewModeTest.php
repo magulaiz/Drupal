@@ -3,7 +3,7 @@
 namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
-use Drupal\tests\layout_builder\EnableLayoutBuilderTrait;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 
 /**
  * Tests the Layout Builder UI with view modes.

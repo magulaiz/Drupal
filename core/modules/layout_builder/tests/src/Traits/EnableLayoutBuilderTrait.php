@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\tests\layout_builder;
+namespace Drupal\Tests\layout_builder\Traits;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\tests\layout_builder\EnableLayoutBuilderTrait;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 
 /**
  * Tests the ability for opting in and out of Layout Builder.

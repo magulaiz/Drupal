@@ -4,7 +4,7 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\tests\layout_builder\EnableLayoutBuilderTrait;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 
 /**
  * Tests functionality of the entity view display with regard to Layout Builder.
@@ -79,8 +79,7 @@ class LayoutDisplayTest extends BrowserTestBase {
     $page->pressButton('Save');
 
     // Enable and disable Layout Builder for the new view mode.
-    $this->drupalGet("$field_ui_prefix/new");
-    $this->enableLayoutBuilderFromUi('bundle_with_section_field', 'new');
+    $this->enableLayoutBuilderFromUi('bundle_with_section_field', 'new', FALSE);
     $this->disableLayoutBuilderFromUi('bundle_with_section_field', 'new');
 
     // The node using the default view mode still contains its overrides.
