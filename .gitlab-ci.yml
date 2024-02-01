@@ -411,8 +411,4 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-    - git remote -v
-    - git diff $CI_MERGE_REQUEST_TARGET_BRANCH_SHA --name-only
     - git diff $CI_MERGE_REQUEST_TARGET_BRANCH_SHA --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
-    - exit 1
