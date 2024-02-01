@@ -678,16 +678,3 @@
     }
   });
 })(Drupal, Drupal.debounce, CKEditor5, jQuery, once);
-
-// eslint-disable-next-line no-console
-if (window.console && console.error) {
-  // eslint-disable-next-line no-console
-  const cl = console.error;
-  // eslint-disable-next-line func-names,no-console
-  console.error = function () {
-    // eslint-disable-next-line prefer-rest-params
-    document.querySelector('h1').textContent += arguments[0];
-    // eslint-disable-next-line prefer-rest-params
-    cl.apply(this, arguments);
-  };
-}
