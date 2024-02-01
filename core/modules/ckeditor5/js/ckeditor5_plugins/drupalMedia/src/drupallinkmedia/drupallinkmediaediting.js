@@ -33,6 +33,7 @@ function upcastMediaLink() {
       (evt, data, conversionApi) => {
         const viewLink = data.viewItem;
         const mediaInLink = getFirstMedia(viewLink);
+
         if (!mediaInLink) {
           return;
         }
@@ -95,6 +96,7 @@ function dataDowncastMediaLink() {
         if (!conversionApi.consumable.consume(data.item, evt.name)) {
           return;
         }
+
         // The drupalMedia will be already converted - so it will be present in
         // the view.
         const mediaElement = conversionApi.mapper.toViewElement(data.item);
@@ -121,6 +123,7 @@ function dataDowncastMediaLink() {
           href: data.attributeNewValue,
           ...additionalAttributes,
         });
+
         // 2. Insert <a> before the <drupal-media> element.
         writer.insert(writer.createPositionBefore(mediaElement), linkElement);
 
