@@ -243,6 +243,10 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     $this->assertSame('No content suggestions found. This URL will be used as is.', $results[0]->find('css', '.linkit-result-line--description')->getText());
     // Accept the first autocomplete suggestion.
     $results[0]->click();
+    $assert_session->waitForElementRemoved('css', '.linkit-result-line--title');
+    $assert_session->waitForElementVisible('css', '.ck-link-form .ck-button-save');
+    $link_edit_balloon->pressButton('Save');
+    $this->getSession()->wait(5000, 'document.querySelector(".ck .ui-autocomplete").style.display === "none"');
     $link_edit_balloon->pressButton('Save');
     $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-button-save'));
     // Assert balloon is still visible, but now it's again the link actions one.
