@@ -2,10 +2,17 @@
 
 namespace Drupal\Core\Installer;
 
+@trigger_error('\Drupal\Core\Installer\InstallerRouteBuilder is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. No replacement provided. See https://www.drupal.org/node/3324749', E_USER_DEPRECATED);
+
 use Drupal\Core\Routing\RouteBuilder;
 
 /**
  * Manages the router in the installer.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. No
+ *   replacement provided.
+ *
+ * @see https://www.drupal.org/node/3324749
  */
 class InstallerRouteBuilder extends RouteBuilder {
 
