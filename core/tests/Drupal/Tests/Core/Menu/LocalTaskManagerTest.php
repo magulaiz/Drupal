@@ -184,22 +184,11 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->shouldBeCalled();
     $this->cacheBackend->get('local_task_plugins:en')
       ->shouldBeCalled();
-//    $this->cacheBackend->expects($this->exactly(2))
-//      ->method('get')
-//      ->withConsecutive(
-//        ['local_task_plugins:en:menu_local_task_test_tasks_view'],
-//        ['local_task_plugins:en'],
-//      );
+
     $this->cacheBackend->set('local_task_plugins:en', $definitions, Cache::PERMANENT, ["local_task"])
       ->shouldBeCalled();
     $this->cacheBackend->set('local_task_plugins:en:menu_local_task_test_tasks_view', $this->getLocalTasksCache(), Cache::PERMANENT, ['local_task'])
       ->shouldBeCalled();
-//    $this->cacheBackend->expects($this->exactly(2))
-//      ->method('set')
-//      ->withConsecutive(
-//        ['local_task_plugins:en', $definitions, Cache::PERMANENT],
-//        ['local_task_plugins:en:menu_local_task_test_tasks_view', $this->getLocalTasksCache(), Cache::PERMANENT, ['local_task']],
-//      );
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
     $this->assertEquals($result, $local_tasks);

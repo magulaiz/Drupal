@@ -114,7 +114,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
       $definition_save_1['definitions'],
       $definitions_save_2['definitions'],
     ];
-    $config->expects($this->exactly(2))
+    $config->expects($this->exactly(count($definitions)))
       ->method('set')
       ->with('definitions', $this->callback(function (array $value) use (&$definitions): bool {
         return array_shift($definitions) === $value;
