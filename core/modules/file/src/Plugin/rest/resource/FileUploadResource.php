@@ -208,7 +208,7 @@ class FileUploadResource extends ResourceBase {
     }
     $this->fileValidator = $file_validator;
     if (!$input_stream_file_writer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3380607', E_USER_DEPRECATED);
       $input_stream_file_writer = \Drupal::service('file.input_stream_file_writer');
     }
     $this->inputStreamFileWriter = $input_stream_file_writer;
@@ -330,6 +330,12 @@ class FileUploadResource extends ResourceBase {
     }
 
     $file->setFileUri($file_uri);
+    // Update the filename with any changes as a result of security or renaming
+    // due to an existing file.
+    // @todo Remove this duplication by replacing with FileUploadHandler. See
+    // https://www.drupal.org/project/drupal/issues/3401734
+    $file->setFilename($this->fileSystem->basename($file->getFileUri()));
+
     // Move the file to the correct location after validation. Use
     // FileSystemInterface::EXISTS_ERROR as the file location has already been
     // determined above in FileSystem::getDestinationFilename().
