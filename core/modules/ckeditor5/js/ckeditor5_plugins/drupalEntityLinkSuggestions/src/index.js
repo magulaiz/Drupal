@@ -16,7 +16,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
   init() {
     const { editor } = this;
-    // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to DrupalImage not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
+    // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to imageBlock not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
     editor.plugins.get('LinkUI')._createViews();
 
     // Some of the attributes supported by this plugin are exposed in the UI.
@@ -77,7 +77,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
           // stored in the drupalLinkEntityMetadata property.
           if (
             selection.getSelectedElement() &&
-            ['drupalImage', 'drupalMedia'].includes(
+            ['imageBlock', 'drupalMedia'].includes(
               selection.getSelectedElement().name,
             ) &&
             selection
@@ -127,7 +127,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
                 let entityMetadata = {};
                 if (
                   selection.getSelectedElement() &&
-                  ['drupalImage', 'drupalMedia'].includes(
+                  ['imageBlock', 'drupalMedia'].includes(
                     selection.getSelectedElement().name,
                   ) &&
                   selection

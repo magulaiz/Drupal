@@ -247,7 +247,10 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     $assert_session->waitForElementVisible('css', '.ck-link-form .ck-button-save');
     $link_edit_balloon->pressButton('Save');
     $this->getSession()->wait(5000, '!document.querySelector(".ck .ui-autocomplete") || document.querySelector(".ck .ui-autocomplete").style.display === "none"');
-    $link_edit_balloon->pressButton('Save');
+    $autocomplete_still_present = $this->getSession()->evaluateScript('!!document.querySelector(".ck .ui-autocomplete")');
+    if ($autocomplete_still_present) {
+      $link_edit_balloon->pressButton('Save');
+    }
     $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-button-save'));
     // Assert balloon is still visible, but now it's again the link actions one.
     $this->assertVisibleBalloon('.ck-link-actions');

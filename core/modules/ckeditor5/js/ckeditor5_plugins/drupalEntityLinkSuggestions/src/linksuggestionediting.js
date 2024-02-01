@@ -150,7 +150,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
           });
           if (
             selection.getSelectedElement() &&
-            ['drupalImage', 'drupalMedia'].includes(
+            ['imageBlock', 'drupalMedia'].includes(
               selection.getSelectedElement().name,
             )
           ) {

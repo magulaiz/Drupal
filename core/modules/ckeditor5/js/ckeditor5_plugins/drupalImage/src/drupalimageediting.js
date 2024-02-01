@@ -542,9 +542,24 @@ function downcastBlockImageLink() {
     const image = conversionApi.mapper.toViewElement(data.item);
     const writer = conversionApi.writer;
 
+    const additionalAttributes = {};
+    const modelEntityLinkAttrs = {
+      drupalLinkEntityType: 'data-entity-type',
+      drupalLinkEntityUuid: 'data-entity-uuid',
+      drupalLinkEntityMetadata: 'data-entity-metadata',
+    };
+    Object.keys(modelEntityLinkAttrs).forEach((modelAttribute) => {
+      if (data.item.hasAttribute(modelAttribute)) {
+        const viewAttribute = modelEntityLinkAttrs[modelAttribute];
+        const viewValue = data.item.getAttribute(modelAttribute);
+        additionalAttributes[viewAttribute] = viewValue;
+      }
+    });
+
     // 1. Create an empty link element.
     const linkElement = writer.createContainerElement('a', {
       href: data.attributeNewValue,
+      ...additionalAttributes,
     });
     // 2. Insert link before the associated image.
     writer.insert(writer.createPositionBefore(image), linkElement);
@@ -617,7 +632,14 @@ export default class DrupalImageEditing extends Plugin {
 
     if (schema.isRegistered('imageBlock')) {
       schema.extend('imageBlock', {
-        allowAttributes: ['dataEntityUuid', 'dataEntityType', 'isDecorative'],
+        allowAttributes: [
+          'dataEntityUuid',
+          'dataEntityType',
+          'isDecorative',
+          'drupalLinkEntityType',
+          'drupalLinkEntityUuid',
+          'drupalLinkEntityMetadata',
+        ],
       });
     }
 
