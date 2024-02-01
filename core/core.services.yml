@@ -1789,6 +1789,10 @@ services:
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
+  update:
+    class: Drupal\Core\Update\Update
+    autowire: true
+  Drupal\Core\Update\Update: "@update"
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     factory: ['@update.update_hook_registry_factory', create]
@@ -1799,6 +1803,7 @@ services:
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     factory: ['@update.post_update_registry_factory', create]
+  Drupal\Core\Update\UpdateRegistry: "@update.post_update_registry"
   update.post_update_registry_factory:
     class: Drupal\Core\Update\UpdateRegistryFactory
     parent: container.trait
