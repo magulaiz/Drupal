@@ -200,7 +200,7 @@ export default class DrupalMediaEditing extends Plugin {
       headers: {
         'X-Drupal-MediaPreview-CSRF-Token':
           this.editor.config.get('drupalMedia').previewCsrfToken,
-      },
+      }
     },);
     if (response.ok) {
       const label = response.headers.get('drupal-media-label');
