@@ -92,9 +92,19 @@ class EntityAddUITest extends BrowserTestBase {
       'label' => 'Test3 label',
       'description' => 'My test3 description',
     ])->save();
+
+    // Create a bundle that the user is forbidden from creating (always).
+    EntityTestBundle::create([
+      'id' => 'forbidden_access_bundle',
+      'label' => 'Forbidden to create bundle',
+      'description' => 'A bundle that can never be created',
+    ])->save();
+
     $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists('Test label');
     $this->assertSession()->linkExists('Test2 label');
+    $this->assertSession()->linkNotExists('Forbidden to create bundle');
     $this->assertSession()->linkNotExists('Test3 label');
     $this->clickLink('Test label');
     $this->assertSession()->statusCodeEquals(200);
@@ -114,6 +124,7 @@ class EntityAddUITest extends BrowserTestBase {
     // does not have bundle specific permissions. The add bundle message is
     // present as the user has bundle create permissions.
     $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertSession()->linkNotExists('Forbidden to create bundle');
     $this->assertSession()->linkNotExists('Test label');
     $this->assertSession()->linkNotExists('Test2 label');
     $this->assertSession()->linkNotExists('Test3 label');
@@ -130,7 +141,13 @@ class EntityAddUITest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     entity_test_create_bundle('test', 'Test label', 'entity_test_mul');
-    // Delete the default bundle, so that we can rely on our own.
+    // Delete the default bundle, so that we can rely on our own. The form
+    // display has to be deleted first to prevent schema errors when fields
+    // attached to the deleted bundle are themselves deleted, which triggers
+    // an update of the form display.
+    $this->container->get('entity_display.repository')
+      ->getFormDisplay('entity_test_mul', 'entity_test_mul')
+      ->delete();
     entity_test_delete_bundle('entity_test_mul', 'entity_test_mul');
 
     // One bundle exists, confirm redirection to the add-form.

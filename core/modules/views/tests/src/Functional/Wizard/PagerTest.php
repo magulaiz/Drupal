@@ -32,15 +32,23 @@ class PagerTest extends WizardTestBase {
 
     // This technique for finding the existence of a pager
     // matches that used in Drupal\views_ui\Tests\PreviewTest.php.
+<<<<<<< HEAD
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertNotEmpty($elements, 'Full pager found.');
+=======
+    $this->assertSession()->elementExists('xpath', '//ul[contains(@class, "pager__items")]/li');
+>>>>>>> upstream/11.x
 
     // Make a View that does not have a pager.
     $path_with_no_pager = 'test-view-without-pager';
     $this->createViewAtPath($path_with_no_pager, FALSE);
     $this->drupalGet($path_with_no_pager);
+<<<<<<< HEAD
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertEmpty($elements, 'Full pager not found.');
+=======
+    $this->assertSession()->elementNotExists('xpath', '//ul[contains(@class, "pager__items")]/li');
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -54,7 +62,7 @@ class PagerTest extends WizardTestBase {
   protected function createViewAtPath($path, $pager = TRUE) {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['show[sort]'] = 'node_field_data-created:ASC';
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);

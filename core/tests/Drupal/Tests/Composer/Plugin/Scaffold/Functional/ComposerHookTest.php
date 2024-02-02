@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Composer\Plugin\Scaffold\Functional;
 
 use Composer\Util\Filesystem;
@@ -52,6 +54,8 @@ class ComposerHookTest extends BuildTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->fileSystem = new Filesystem();
     $this->fixtures = new Fixtures();
     $this->fixtures->createIsolatedComposerCacheDir();
@@ -66,6 +70,8 @@ class ComposerHookTest extends BuildTestBase {
   protected function tearDown(): void {
     // Remove any temporary directories et. al. that were created.
     $this->fixtures->tearDown();
+
+    parent::tearDown();
   }
 
   /**
@@ -115,6 +121,7 @@ class ComposerHookTest extends BuildTestBase {
     $this->assertDirectoryExists($sut);
     $this->assertStringContainsString('Scaffolding files for fixtures/drupal-drupal', $stdout);
     $this->assertScaffoldedFile($sut . '/index.php', FALSE, 'Test version of index.php from drupal/core');
+<<<<<<< HEAD
     $topLevelProjectDir = 'composer-hooks-nothing-allowed-fixture';
     $sut = $this->fixturesDir . '/' . $topLevelProjectDir;
     // Run composer install on an empty project.
@@ -125,6 +132,8 @@ class ComposerHookTest extends BuildTestBase {
     $this->assertCommandSuccessful();
     $this->assertFileDoesNotExist($sut . '/sites/default/default.settings.php');
     $this->assertErrorOutputContains('See https://getcomposer.org/allow-plugins');
+=======
+>>>>>>> upstream/11.x
   }
 
   /**

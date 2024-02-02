@@ -2,7 +2,10 @@
 
 namespace Drupal\KernelTests\Core\Extension;
 
+<<<<<<< HEAD
 use Drupal\Core\Extension\ExtensionDiscovery;
+=======
+>>>>>>> upstream/11.x
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -17,12 +20,17 @@ class ModuleLegacyTest extends KernelTestBase {
    */
   public function testModuleLoadInclude() {
     $this->assertFalse($this->container->get('module_handler')->moduleExists('module_test'), 'Ensure module is uninstalled so we test the ability to include uninstalled code.');
+<<<<<<< HEAD
     $this->expectDeprecation('module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/project/drupal/issues/697946');
+=======
+    $this->expectDeprecation('module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/node/2948698');
+>>>>>>> upstream/11.x
     $filename = module_load_include('inc', 'module_test', 'module_test.file');
     $this->assertStringEndsWith("module_test.file.inc", $filename);
 
   }
 
+<<<<<<< HEAD
   /**
    * Test deprecation of module_load_install() function.
    */
@@ -53,4 +61,6 @@ class ModuleLegacyTest extends KernelTestBase {
     $this->assertSame($required, drupal_required_modules());
   }
 
+=======
+>>>>>>> upstream/11.x
 }

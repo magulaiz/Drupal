@@ -14,6 +14,12 @@ class OverrideDisplaysTest extends UITestBase {
    */
   protected $defaultTheme = 'stark';
 
+<<<<<<< HEAD
+=======
+  /**
+   * {@inheritdoc}
+   */
+>>>>>>> upstream/11.x
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
 
@@ -27,7 +33,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Create a basic view that shows all content, with a page and a block
     // display.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
@@ -93,7 +99,7 @@ class OverrideDisplaysTest extends UITestBase {
     // page and feed to inherit their titles from the default display, but the
     // block to override it.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
@@ -192,7 +198,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Because there is both a title on page and block we expect the title on
     // the block be overridden.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);

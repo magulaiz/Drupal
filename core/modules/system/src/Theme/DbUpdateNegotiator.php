@@ -32,6 +32,7 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+<<<<<<< HEAD
    * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $theme_handler
    *   The theme handler.
    */
@@ -41,6 +42,13 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
       @trigger_error('Calling ' . __METHOD__ . '() without the $theme_handler argument is deprecated in drupal:9.4.0 and $theme_handler argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3279699', E_USER_DEPRECATED);
       $theme_handler = \Drupal::service('theme_handler');
     }
+=======
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
+    $this->configFactory = $config_factory;
+>>>>>>> upstream/11.x
     $this->themeHandler = $theme_handler;
   }
 
@@ -55,12 +63,16 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
+<<<<<<< HEAD
     $custom_theme = Settings::get('maintenance_theme');
     if (!$custom_theme) {
       $custom_theme = $this->themeHandler->themeExists('claro') ? 'claro' : 'seven';
     }
 
     return $custom_theme;
+=======
+    return Settings::get('maintenance_theme') ?: 'claro';
+>>>>>>> upstream/11.x
   }
 
 }

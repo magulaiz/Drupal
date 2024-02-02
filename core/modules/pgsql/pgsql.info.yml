@@ -1,5 +1,9 @@
 name: PostgreSQL
 type: module
+<<<<<<< HEAD
 description: 'Database driver for PostgreSQL.'
+=======
+description: 'Provides the PostgreSQL database driver.'
+>>>>>>> upstream/11.x
 package: Core
 version: VERSION

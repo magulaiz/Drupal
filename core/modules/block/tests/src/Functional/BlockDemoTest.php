@@ -44,9 +44,14 @@ class BlockDemoTest extends BrowserTestBase {
 
     // All available themes in core.
     $available_themes = [
+<<<<<<< HEAD
       'bartik',
       'olivero',
       'seven',
+=======
+      'olivero',
+      'claro',
+>>>>>>> upstream/11.x
       'stark',
     ];
 

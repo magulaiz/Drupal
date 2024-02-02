@@ -1,6 +1,16 @@
 <?php
 
+<<<<<<< HEAD
 namespace Drupal\Tests\inline_form_errors\FunctionalJavascript;
+=======
+<<<<<<<< HEAD:core/modules/ckeditor/tests/src/FunctionalJavascript/FormErrorHandlerCKEditorTest.php
+namespace Drupal\Tests\ckeditor\FunctionalJavascript;
+========
+declare(strict_types=1);
+
+namespace Drupal\Tests\inline_form_errors\FunctionalJavascript;
+>>>>>>>> upstream/11.x:core/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php
+>>>>>>> upstream/11.x
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\editor\Entity\Editor;

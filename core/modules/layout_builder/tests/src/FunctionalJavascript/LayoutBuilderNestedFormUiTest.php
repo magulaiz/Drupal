@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -25,6 +27,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'block',
+    'field_ui',
     'node',
     'layout_builder',
     'layout_builder_form_block_test',

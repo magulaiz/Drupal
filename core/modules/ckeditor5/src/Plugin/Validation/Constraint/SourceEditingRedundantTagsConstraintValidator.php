@@ -4,8 +4,14 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
+<<<<<<< HEAD
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+=======
+// cspell:ignore enableable
+
+use Drupal\ckeditor5\HTMLRestrictions;
+>>>>>>> upstream/11.x
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\Validator\Constraint;
@@ -38,6 +44,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     }
 
     $text_editor = $this->createTextEditorObjectFromContext();
+<<<<<<< HEAD
     $enabled_plugins = $this->pluginManager->getEnabledDefinitions($text_editor);
     $disabled_plugins = array_diff_key($this->pluginManager->getDefinitions(), $enabled_plugins);
     // Only consider plugins that can be explicitly enabled by the user: plugins
@@ -57,6 +64,19 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $disabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($disabled_plugins), $text_editor, FALSE));
     $enabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enabled_plugins), $text_editor, FALSE, TRUE));
     $disabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($disabled_plugins), $text_editor, FALSE, TRUE));
+=======
+
+    $other_enabled_plugins = $this->getOtherEnabledPlugins($text_editor, 'ckeditor5_sourceEditing');
+    $enableable_disabled_plugins = $this->getEnableableDisabledPlugins($text_editor);
+
+    // An array of tags enabled by every plugin other than Source Editing.
+    $enabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE));
+    $enabled_plugin_elements_optional = (new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins))))
+      ->diff($enabled_plugin_elements);
+    $disabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE));
+    $enabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE, TRUE));
+    $disabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE, TRUE));
+>>>>>>> upstream/11.x
 
     // The single element for which source editing is enabled, which we are
     // checking now.
@@ -74,6 +94,10 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     }
 
     $enabled_plugin_overlap = $enabled_plugin_elements->intersect($source_enabled_element);
+<<<<<<< HEAD
+=======
+    $enabled_plugin_optional_overlap = $enabled_plugin_elements_optional->intersect($source_enabled_element);
+>>>>>>> upstream/11.x
     $disabled_plugin_overlap = $disabled_plugin_elements
       // Merge the enabled plugins' elements, to allow wildcards to be resolved.
       ->merge($enabled_plugin_elements)
@@ -82,6 +106,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
       // Exclude the enabled plugin tags from the overlap; we merged these
       // previously to be able to resolve wildcards.
       ->diff($enabled_plugin_overlap);
+<<<<<<< HEAD
     foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as $overlap) {
       $checking_enabled = $overlap === $enabled_plugin_overlap;
       if (!$overlap->allowsNothing()) {
@@ -89,12 +114,26 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         $plain_tags_to_check_against = $checking_enabled ? $enabled_plugin_plain_tags : $disabled_plugin_plain_tags;
         $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against, $enabled_plugin_elements);
         $message = $checking_enabled ? $constraint->enabledPluginsMessage : $constraint->availablePluginsMessage;
+=======
+    foreach ([$enabled_plugin_overlap, $enabled_plugin_optional_overlap, $disabled_plugin_overlap] as $overlap) {
+      $checking_enabled = $overlap === $enabled_plugin_overlap || $overlap === $enabled_plugin_optional_overlap;
+      if (!$overlap->allowsNothing()) {
+        $plugins_to_check_against = $checking_enabled ? $other_enabled_plugins : $enableable_disabled_plugins;
+        $plain_tags_to_check_against = $checking_enabled ? $enabled_plugin_plain_tags : $disabled_plugin_plain_tags;
+        $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against, $enabled_plugin_elements);
+        $message = match($overlap) {
+          $enabled_plugin_overlap => $constraint->enabledPluginsMessage,
+          $enabled_plugin_optional_overlap => $constraint->enabledPluginsOptionalMessage,
+          $disabled_plugin_overlap => $constraint->availablePluginsMessage,
+        };
+>>>>>>> upstream/11.x
 
         // Determine which element type is relevant for the violation message.
         assert(count($overlap->getAllowedElements(FALSE)) === 1);
         $overlap_tag = array_keys($overlap->getAllowedElements(FALSE))[0];
         $is_attr_overlap = self::tagHasAttributeRestrictions($overlap, $overlap_tag);
 
+<<<<<<< HEAD
         // If the entirety (so not just the tag but also the attributes, and not
         // just some of the attribute values, but all of them) of the HTML
         // elements being configured to be edited via the Source Editing plugin
@@ -110,6 +149,24 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         if ($is_attr_overlap && !$source_enabled_element->diff($overlap)->allowsNothing()) {
           continue;
         }
+=======
+        // If one or more attributes (and all of the allowed attribute values)
+        // of the HTML elements being configured to be edited via the Source
+        // Editing plugin is supported by a CKEditor 5 plugin, complain. But if
+        // an attribute overlap is detected due to a wildcard attribute, then do
+        // not generate a violation message.
+        // For example:
+        // - value `<ol start foo>` triggers a violation because `<ol start>` is
+        //   supported by the `ckeditor5_list` plugin
+        // - value `<img data-*>` does NOT trigger a violation because only
+        //   concrete `data-`-attributes are supported by the
+        //   `ckeditor5_imageUpload`, `ckeditor5_imageCaption` and
+        //   `ckeditor5_imageAlign` plugins
+        if ($is_attr_overlap && $source_enabled_element->diff($overlap)->getAllowedElements(FALSE) == $source_enabled_element->getAllowedElements(FALSE)) {
+          continue;
+        }
+
+>>>>>>> upstream/11.x
         // If there is overlap, but the plain tag is not supported in the
         // overlap, exit this iteration without generating a violation message.
         // Essentially when assessing a particular value (for example `<span>`),

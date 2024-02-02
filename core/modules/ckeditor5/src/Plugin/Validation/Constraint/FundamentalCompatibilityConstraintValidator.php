@@ -6,6 +6,10 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+<<<<<<< HEAD
+=======
+use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
+>>>>>>> upstream/11.x
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -118,6 +122,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *   The constraint to validate.
    */
   private function checkHtmlRestrictionsAreCompatible(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
+<<<<<<< HEAD
     $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
 
     // @todo Remove in favor of HTMLRestrictions::diff() in https://www.drupal.org/project/drupal/issues/3231336
@@ -139,6 +144,15 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       return;
     }
     if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->allowsNothing()) {
+=======
+    $html_restrictions = HTMLRestrictions::fromTextFormat($text_format);
+    if ($html_restrictions->isUnrestricted()) {
+      return;
+    }
+
+    $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
+    if (!$fundamental->diff($html_restrictions)->allowsNothing()) {
+>>>>>>> upstream/11.x
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $fundamental);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
@@ -162,11 +176,15 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     );
 
     $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($text_editor));
-    $provided = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
+    $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
+    $provided = new HTMLRestrictions($provided_elements);
 
     foreach ($html_restrictor_filters as $filter_plugin_id => $filter) {
       $allowed = HTMLRestrictions::fromFilterPluginInstance($filter);
+<<<<<<< HEAD
       $provided = new HTMLRestrictions($provided);
+=======
+>>>>>>> upstream/11.x
       $diff_allowed = $allowed->diff($provided);
       $diff_elements = $provided->diff($allowed);
 
@@ -214,32 +232,59 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       foreach ($non_creatable_tags->toCKEditor5ElementsArray() as $non_creatable_tag) {
         // Find the plugin which has a non-creatable tag.
         $needle = HTMLRestrictions::fromString($non_creatable_tag);
+<<<<<<< HEAD
         $matching_plugins = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $d) use ($needle) {
           if (!$d->hasElements()) {
             return FALSE;
           }
           $haystack = HTMLRestrictions::fromString(implode($d->getElements()));
           return !$haystack->intersect($needle)->allowsNothing();
+=======
+        $matching_plugins = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $d) use ($needle, $text_editor) {
+          if (!$d->hasElements()) {
+            return FALSE;
+          }
+          $haystack = new HTMLRestrictions($this->pluginManager->getProvidedElements([$d->id()], $text_editor, FALSE, FALSE));
+          return !$haystack->extractPlainTagsSubset()->intersect($needle)->allowsNothing();
+>>>>>>> upstream/11.x
         });
         assert(count($matching_plugins) === 1);
         $plugin_definition = reset($matching_plugins);
         assert($plugin_definition instanceof CKEditor5PluginDefinition);
 
         // Compute which attributes it would be able to create on this tag.
+<<<<<<< HEAD
         $matching_elements = array_filter($plugin_definition->getElements(), function (string $element) use ($needle) {
           $haystack = HTMLRestrictions::fromString($element);
           return !$haystack->intersect($needle)->allowsNothing();
         });
         $attributes_on_tag = HTMLRestrictions::fromString(implode($matching_elements));
+=======
+        $provided_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements([$plugin_definition->id()], $text_editor, FALSE, FALSE));
+        $attributes_on_tag = $provided_elements->intersect(
+          new HTMLRestrictions(array_fill_keys(array_keys($needle->getAllowedElements()), TRUE))
+        );
+>>>>>>> upstream/11.x
 
         $violation = $this->context->buildViolation($constraint->nonCreatableTagMessage)
           ->setParameter('@non_creatable_tag', $non_creatable_tag)
           ->setParameter('%plugin', $plugin_definition->label())
           ->setParameter('@attributes_on_tag', implode(', ', $attributes_on_tag->toCKEditor5ElementsArray()));
 
+<<<<<<< HEAD
         // If this plugin is associated with a toolbar item, associate the
         // violation with the property path pointing to the active toolbar item.
         if ($plugin_definition->hasToolbarItems()) {
+=======
+        // If this plugin has a configurable subset, associate the violation
+        // with the property path pointing to this plugin's settings form.
+        if (is_a($plugin_definition->getClass(), CKEditor5PluginElementsSubsetInterface::class, TRUE)) {
+          $violation->atPath(sprintf('settings.plugins.%s', $plugin_definition->id()));
+        }
+        // If this plugin is associated with a toolbar item, associate the
+        // violation with the property path pointing to the active toolbar item.
+        elseif ($plugin_definition->hasToolbarItems()) {
+>>>>>>> upstream/11.x
           $toolbar_items = $plugin_definition->getToolbarItems();
           $active_toolbar_items = array_intersect(
             $text_editor->getSettings()['toolbar']['items'],
@@ -272,7 +317,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     assert(in_array($filter_type, [
       FilterInterface::TYPE_MARKUP_LANGUAGE,
       FilterInterface::TYPE_HTML_RESTRICTOR,
-      FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
+      FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
       FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
     ]));
     foreach ($text_format->filters() as $id => $filter) {
@@ -287,15 +332,15 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *
    * @param \Drupal\filter\FilterFormatInterface $text_format
    *   A text format whose filters to check for compatibility.
-   * @param string[] $required_tags
-   *   A list of HTML tags that are required.
+   * @param \Drupal\ckeditor5\HTMLRestrictions $required
+   *   A set of HTML restrictions, listing required HTML tags.
    *
    * @return \Drupal\filter\Plugin\FilterInterface
    *   The filter plugin instance not allowing the required tags.
    *
    * @throws \InvalidArgumentException
    */
-  private static function findHtmlRestrictorFilterForbiddingTags(FilterFormatInterface $text_format, array $required_tags): FilterInterface {
+  private static function findHtmlRestrictorFilterNotAllowingTags(FilterFormatInterface $text_format, HTMLRestrictions $required): FilterInterface {
     // Get HTML restrictor filters that actually restrict HTML.
     $filters = static::getFiltersInFormatOfType(
       $text_format,
@@ -306,6 +351,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     );
 
     foreach ($filters as $filter) {
+<<<<<<< HEAD
       $restrictions = $filter->getHTMLRestrictions();
 
       // @todo Fix
@@ -347,6 +393,8 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     );
 
     foreach ($filters as $filter) {
+=======
+>>>>>>> upstream/11.x
       // Return any filter not allowing >=1 of the required tags.
       if (!$required->diff(HTMLRestrictions::fromFilterPluginInstance($filter))->allowsNothing()) {
         return $filter;

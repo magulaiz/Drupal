@@ -12,24 +12,40 @@
  * Allows keyboard users to quickly skip to the main content of the page.
  */
 
+:root {
+  --skip-link-bg-color: var(--color-gray-800);
+  --skip-link-color: var(--color-white);
+  --skip-link-active-bg-color: var(--color-gray);
+}
+
 .skip-link {
   z-index: 50;
   left: 50%;
   padding: 1px 0.625rem 2px;
   transform: translateX(-50%);
-  color: #fff;
+  color: var(--skip-link-color);
   border-radius: 0 0 0.625rem 0.625rem;
+<<<<<<< HEAD
   background: #55565b;
+=======
+  background: var(--skip-link-bg-color);
+>>>>>>> upstream/11.x
   font-size: 0.94em;
 }
 
 .skip-link:hover,
 .skip-link:active {
+<<<<<<< HEAD
   color: #fff;
   background-color: #232429;
+=======
+  color: var(--skip-link-color);
+  background-color: var(--skip-link-active-bg-color);
+>>>>>>> upstream/11.x
 }
 
 .skip-link:focus {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

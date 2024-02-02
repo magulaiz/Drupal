@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
@@ -11,6 +12,7 @@ use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin
  * Tests the basic display plugin.
  *
  * @group views
+ * @group #slow
  */
 class DisplayTest extends ViewTestBase {
 
@@ -33,13 +35,18 @@ class DisplayTest extends ViewTestBase {
    */
   protected $defaultTheme = 'stark';
 
+<<<<<<< HEAD
+=======
+  /**
+   * {@inheritdoc}
+   */
+>>>>>>> upstream/11.x
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser(['administer views']);
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
 
     // Create 10 nodes.
     for ($i = 0; $i <= 10; $i++) {
@@ -107,7 +114,7 @@ class DisplayTest extends ViewTestBase {
     $view->style_plugin->setUsesRowPlugin(FALSE);
 
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
 
     $this->assertStringContainsString('<h1></h1>', $output, 'An empty value for test_option found in output.');
 
@@ -116,7 +123,7 @@ class DisplayTest extends ViewTestBase {
     $view->save();
 
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
 
     // Test we have our custom <h1> tag in the output of the view.
     $this->assertStringContainsString('<h1>Test option title</h1>', $output, 'The test_option value found in display output title.');
@@ -215,7 +222,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', 'node');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
     // Test more link with leading slash.
@@ -223,31 +230,31 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', '/node');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
-    // Test more link with absolute url.
+    // Test more link with absolute URL.
     $view->display_handler->setOption('link_display', 'custom_url');
-    $view->display_handler->setOption('link_url', 'http://drupal.org');
+    $view->display_handler->setOption('link_url', 'http://example.com');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
-    $this->assertStringContainsString('http://drupal.org', $output, 'The read more link with href "http://drupal.org" was found.');
+    $output = (string) $renderer->renderRoot($output);
+    $this->assertStringContainsString('http://example.com', $output, 'The read more link with href "http://example.com" was found.');
 
-    // Test more link with query parameters in the url.
+    // Test more link with query parameters in the URL.
     $view->display_handler->setOption('link_display', 'custom_url');
     $view->display_handler->setOption('link_url', 'node?page=1&foo=bar');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?page=1&amp;foo=bar', $output, 'The read more link with href "/node?page=1&foo=bar" was found.');
 
-    // Test more link with fragment in the url.
+    // Test more link with fragment in the URL.
     $view->display_handler->setOption('link_display', 'custom_url');
     $view->display_handler->setOption('link_url', 'node#target');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node#target', $output, 'The read more link with href "/node#target" was found.');
 
     // Test more link with arguments.
@@ -260,7 +267,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?date=22&amp;foo=bar', $output, 'The read more link with href "/node?date=22&foo=bar" was found.');
 
     // Test more link with 1 dimension array query parameters with arguments.
@@ -273,7 +280,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?f%5B0%5D=foo%3Abar&amp;f%5B1%5D=foo%3A22', $output, 'The read more link with href "/node?f[0]=foo:bar&f[1]=foo:22" was found.');
 
     // Test more link with arguments in path.
@@ -281,7 +288,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node/22?date=22&amp;foo=bar', $output, 'The read more link with href "/node/22?date=22&foo=bar" was found.');
 
     // Test more link with arguments in fragment.
@@ -289,7 +296,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?date=22&amp;foo=bar#22', $output, 'The read more link with href "/node?date=22&foo=bar#22" was found.');
   }
 
@@ -363,8 +370,8 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertCount(2, $errors['default'], 'Error messages found for required relationship');
-    $this->assertEquals(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Last login']), $errors['default'][0]);
-    $this->assertEquals(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Created']), $errors['default'][1]);
+    $this->assertEquals(new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', ['%relationship_name' => 'uid', '%handler_type' => 'field', '%handler' => 'User: Last login', '%display_name' => 'Default']), $errors['default'][0]);
+    $this->assertEquals(new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', ['%relationship_name' => 'uid', '%handler_type' => 'field', '%handler' => 'User: Created', '%display_name' => 'Default']), $errors['default'][1]);
   }
 
   /**

@@ -26,6 +26,9 @@ class MainContentFallbackTest extends BrowserTestBase {
   protected $adminUser;
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -73,9 +76,9 @@ class MainContentFallbackTest extends BrowserTestBase {
     $edit['modules[block][enable]'] = 'block';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->pageTextContains('Module Block has been enabled.');
+    $this->assertSession()->pageTextContains('Module Block has been installed.');
     $this->rebuildContainer();
-    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-installed.');
   }
 
 }

@@ -51,14 +51,22 @@
   color: #fff;
   background: none !important; /* Override background for all states. */
 }
+<<<<<<< HEAD
 .ck .image-alternative-text-missing-wrapper .ck.ck-button:before {
+=======
+.ck .image-alternative-text-missing-wrapper .ck.ck-button::before {
+>>>>>>> upstream/11.x
   width: 16px;
   height: 16px;
   padding-right: 8px;
   content: "";
   background: url("../icons/warning.svg") left center no-repeat;
 }
+<<<<<<< HEAD
 .ck .image-alternative-text-missing-wrapper .ck.ck-button:after {
+=======
+.ck .image-alternative-text-missing-wrapper .ck.ck-button::after {
+>>>>>>> upstream/11.x
   display: inline-block;
   width: 12px;
   height: 12px;

@@ -1,5 +1,9 @@
 /*!
+<<<<<<< HEAD
  * jQuery UI Draggable 1.13.1
+=======
+ * jQuery UI Draggable 1.13.2
+>>>>>>> upstream/11.x
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -40,7 +44,11 @@
 "use strict";
 
 $.widget( "ui.draggable", $.ui.mouse, {
+<<<<<<< HEAD
 	version: "1.13.1",
+=======
+	version: "1.13.2",
+>>>>>>> upstream/11.x
 	widgetEventPrefix: "drag",
 	options: {
 		addClasses: true,

@@ -49,6 +49,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
    */
   public function applies(Route $route) {
     $requirements = $route->getRequirements();
+<<<<<<< HEAD
     // Check for current requirement _csrf_request_header_token and deprecated
     // REST requirement.
     $applicable_requirements = [
@@ -62,6 +63,9 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
     $requirement_keys = array_keys($requirements);
 
     if (array_intersect($applicable_requirements, $requirement_keys)) {
+=======
+    if (array_key_exists('_csrf_request_header_token', $requirements)) {
+>>>>>>> upstream/11.x
       if (isset($requirements['_method'])) {
         // There could be more than one method requirement separated with '|'.
         $methods = explode('|', $requirements['_method']);

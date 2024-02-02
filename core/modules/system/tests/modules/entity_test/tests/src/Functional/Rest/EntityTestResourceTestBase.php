@@ -2,6 +2,11 @@
 
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
+<<<<<<< HEAD
+=======
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\State\StateInterface;
+>>>>>>> upstream/11.x
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\user\Entity\User;
@@ -26,9 +31,23 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
   protected static $patchProtectedFieldNames = [];
 
   /**
+   * The state object.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected StateInterface $state;
+
+  /**
    * @var \Drupal\entity_test\Entity\EntityTest
    */
   protected $entity;
+
+  /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}
@@ -62,15 +81,15 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
     $entity_test = \Drupal::entityTypeManager()
       ->getStorage(static::$entityTypeId)
       ->create([
-      'name' => 'Llama',
-      'type' => static::$entityTypeId,
-      // Set a value for the internal field to confirm that it will not be
-      // returned in normalization.
-      // @see entity_test_entity_base_field_info().
-      'internal_string_field' => [
-        'value' => 'This value shall not be internal!',
-      ],
-    ]);
+        'name' => 'Llama',
+        'type' => static::$entityTypeId,
+        // Set a value for the internal field to confirm that it will not be
+        // returned in normalization.
+        // @see entity_test_entity_base_field_info().
+        'internal_string_field' => [
+          'value' => 'This value shall not be internal!',
+        ],
+      ]);
     $entity_test->setOwnerId(0);
     $entity_test->save();
 
@@ -140,7 +159,7 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
       ],
       'name' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
     ];

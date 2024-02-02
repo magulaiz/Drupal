@@ -45,7 +45,6 @@ class MediaLibraryStateTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('media');
     $this->installConfig([
       'field',
@@ -288,12 +287,16 @@ class MediaLibraryStateTest extends KernelTestBase {
       $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
 
+<<<<<<< HEAD
     // @todo Remove this when Symfony 4 is no longer supported.
     //   See https://www.drupal.org/node/3162981
     $request = new Request();
     $request->query = new InputBag($query);
 
     $state = MediaLibraryState::fromRequest($request);
+=======
+    $state = MediaLibraryState::fromRequest(new Request($query));
+>>>>>>> upstream/11.x
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }
 

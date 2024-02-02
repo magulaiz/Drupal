@@ -2,8 +2,11 @@
 
 namespace Drupal\driver_test\Driver\Database\DrivertestPgsql;
 
+<<<<<<< HEAD
 include_once dirname(__DIR__, 8) . '/pgsql/src/Driver/Database/pgsql/Connection.php';
 
+=======
+>>>>>>> upstream/11.x
 use Drupal\pgsql\Driver\Database\pgsql\Connection as CoreConnection;
 
 /**

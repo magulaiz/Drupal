@@ -49,7 +49,11 @@ class RegisterEntityResolversCompilerPass implements CompilerPassInterface {
    */
   protected function sort($services) {
     krsort($services);
+<<<<<<< HEAD
     return array_merge([], ...$services);
+=======
+    return array_merge(...$services);
+>>>>>>> upstream/11.x
   }
 
 }

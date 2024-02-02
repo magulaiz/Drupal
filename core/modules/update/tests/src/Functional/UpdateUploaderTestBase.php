@@ -12,7 +12,11 @@ abstract class UpdateUploaderTestBase extends UpdateTestBase {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   protected function setUp() {
+=======
+  protected function setUp(): void {
+>>>>>>> upstream/11.x
     parent::setUp();
 
     // Change the root path which Update Manager uses to install and update

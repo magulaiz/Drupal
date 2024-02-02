@@ -37,24 +37,43 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     // Add the additional table schemas.
+<<<<<<< HEAD
     $this->installSchema('system', ['sequences']);
+=======
+>>>>>>> upstream/11.x
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     NodeType::create([
       'type' => 'lorem',
+<<<<<<< HEAD
     ])->save();
     $type = NodeType::create([
       'type' => 'article',
+=======
+      'name' => 'Lorem',
+    ])->save();
+    $type = NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+>>>>>>> upstream/11.x
     ]);
     $type->save();
     $type = NodeType::create([
       'type' => 'page',
+<<<<<<< HEAD
+=======
+      'name' => 'Page',
+>>>>>>> upstream/11.x
     ]);
     $type->save();
     $this->createEntityReferenceField('node', 'article', 'field_relationships', 'Relationship', 'node', 'default', ['target_bundles' => ['article']], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     Role::create([
+<<<<<<< HEAD
       'id' => 'article editor',
+=======
+      'id' => 'article_editor',
+>>>>>>> upstream/11.x
       'label' => 'article editor',
       'permissions' => [
         'access content',
@@ -64,7 +83,11 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     ])->save();
 
     Role::create([
+<<<<<<< HEAD
       'id' => 'page editor',
+=======
+      'id' => 'page_editor',
+>>>>>>> upstream/11.x
       'label' => 'page editor',
       'permissions' => [
         'access content',
@@ -93,14 +116,22 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
       'status' => 1,
       // Do not use UID 1 as that has access to everything.
       'uid' => 2,
+<<<<<<< HEAD
       'roles' => ['article editor'],
+=======
+      'roles' => ['article_editor'],
+>>>>>>> upstream/11.x
     ]);
     $page_editor = User::create([
       'name' => 'page editor',
       'mail' => 'page@localhost',
       'status' => 1,
       'uid' => 3,
+<<<<<<< HEAD
       'roles' => ['page editor'],
+=======
+      'roles' => ['page_editor'],
+>>>>>>> upstream/11.x
     ]);
     $editor = User::create([
       'name' => 'editor',

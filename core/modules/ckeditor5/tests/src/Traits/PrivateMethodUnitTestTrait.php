@@ -1,5 +1,10 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\ckeditor5\Traits;
 
 /**
@@ -23,7 +28,10 @@ trait PrivateMethodUnitTestTrait {
   protected static function getMethod(string $fqcn, string $name): \ReflectionMethod {
     $class = new \ReflectionClass($fqcn);
     $method = $class->getMethod($name);
+<<<<<<< HEAD
     $method->setAccessible(TRUE);
+=======
+>>>>>>> upstream/11.x
     return $method;
   }
 

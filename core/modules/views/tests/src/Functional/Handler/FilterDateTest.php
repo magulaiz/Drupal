@@ -34,7 +34,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The date formatter.
@@ -43,6 +43,22 @@ class FilterDateTest extends ViewTestBase {
    */
   public $dateFormatter;
 
+<<<<<<< HEAD
+=======
+  /**
+   * @var array
+   */
+  protected array $nodes;
+
+  /**
+   * @var array
+   */
+  protected array $map;
+
+  /**
+   * {@inheritdoc}
+   */
+>>>>>>> upstream/11.x
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
     $this->dateFormatter = $this->container->get('date.formatter');

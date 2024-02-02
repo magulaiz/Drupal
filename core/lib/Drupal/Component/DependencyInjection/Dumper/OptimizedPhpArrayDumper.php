@@ -3,6 +3,8 @@
 namespace Drupal\Component\DependencyInjection\Dumper;
 
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -56,7 +58,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * {@inheritdoc}
    */
-  public function dump(array $options = []) {
+  public function dump(array $options = []): string|array {
     return serialize($this->getArray());
   }
 
@@ -155,9 +157,6 @@ class OptimizedPhpArrayDumper extends Dumper {
     foreach ($parameters as $key => $value) {
       if (is_array($value)) {
         $value = $this->prepareParameters($value, $escape);
-      }
-      elseif ($value instanceof Reference) {
-        $value = $this->dumpValue($value);
       }
 
       $filtered[$key] = $value;
@@ -307,6 +306,9 @@ class OptimizedPhpArrayDumper extends Dumper {
     $code = [];
 
     foreach ($collection as $key => $value) {
+      if ($value instanceof IteratorArgument) {
+        $value = $value->getValues();
+      }
       if (is_array($value)) {
         $resolve_collection = FALSE;
         $code[$key] = $this->dumpCollection($value, $resolve_collection);
@@ -410,7 +412,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Parameter) {
       return $this->getParameterCall((string) $value);
     }
-    elseif (is_string($value) && FALSE !== strpos($value, '%')) {
+    elseif (is_string($value) && str_contains($value, '%')) {
       if (preg_match('/^%([^%]+)%$/', $value, $matches)) {
         return $this->getParameterCall($matches[1]);
       }
@@ -430,9 +432,17 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Expression) {
       throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
     }
+    elseif ($value instanceof ServiceClosureArgument) {
+      $reference = $value->getValues();
+      /** @var \Symfony\Component\DependencyInjection\Reference $reference */
+      $reference = reset($reference);
+
+      return $this->getServiceClosureCall((string) $reference, $reference->getInvalidBehavior());
+    }
     elseif (is_object($value)) {
       // Drupal specific: Instantiated objects have a _serviceId parameter.
       if (isset($value->_serviceId)) {
+        @trigger_error('_serviceId is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Drupal\Core\DrupalKernelInterface::getServiceIdMapping() instead. See https://www.drupal.org/node/3292540', E_USER_DEPRECATED);
         return $this->getReferenceCall($value->_serviceId);
       }
       throw new RuntimeException('Unable to dump a service container if a parameter is an object without _serviceId.');
@@ -525,6 +535,25 @@ class OptimizedPhpArrayDumper extends Dumper {
    */
   protected function supportsMachineFormat() {
     return TRUE;
+  }
+
+  /**
+   * Gets a service closure reference in a suitable PHP array format.
+   *
+   * @param string $id
+   *   The ID of the service to get a reference for.
+   * @param int $invalid_behavior
+   *   (optional) The invalid behavior of the service.
+   *
+   * @return string|object
+   *   A suitable representation of the service closure reference.
+   */
+  protected function getServiceClosureCall(string $id, int $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+    return (object) [
+      'type' => 'service_closure',
+      'id' => $id,
+      'invalidBehavior' => $invalid_behavior,
+    ];
   }
 
 }

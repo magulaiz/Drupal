@@ -16,7 +16,10 @@ use Drupal\media\Entity\MediaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+<<<<<<< HEAD
 use Drupal\ckeditor5\HTMLRestrictions;
+=======
+>>>>>>> upstream/11.x
 
 /**
  * CKEditor 5 Media plugin.
@@ -56,7 +59,11 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
   }
 
   /**
+<<<<<<< HEAD
    * {@inheritDoc}
+=======
+   * {@inheritdoc}
+>>>>>>> upstream/11.x
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -194,6 +201,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getElementsSubset(): array {
+<<<<<<< HEAD
     $all_elements = $this->getPluginDefinition()->getElements();
     $subset = HTMLRestrictions::fromString(implode($all_elements));
     $view_mode_override_enabled = $this->getConfiguration()['allow_view_mode_override'];
@@ -202,6 +210,14 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     }
     // @todo Simplify in https://www.drupal.org/project/drupal/issues/3278636, that will allow removing all uses of HTMLRestrictions in this class.
     return array_merge(['<drupal-media>'], $subset->toCKEditor5ElementsArray());
+=======
+    $subset = $this->getPluginDefinition()->getElements();
+    $view_mode_override_enabled = $this->getConfiguration()['allow_view_mode_override'];
+    if (!$view_mode_override_enabled) {
+      $subset = array_diff($subset, ['<drupal-media data-view-mode>']);
+    }
+    return $subset;
+>>>>>>> upstream/11.x
   }
 
   /**

@@ -5,6 +5,11 @@ namespace Drupal\Tests\views\Kernel;
 use Drupal\Core\Config\FileStorage;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+<<<<<<< HEAD
+=======
+use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\Tests\responsive_image\Functional\ViewsIntegrationTest;
+>>>>>>> upstream/11.x
 use Drupal\views\ViewsConfigUpdater;
 
 /**
@@ -16,31 +21,36 @@ use Drupal\views\ViewsConfigUpdater;
 class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
 
   /**
-   * The views config updater.
-   *
-   * @var \Drupal\views\ViewsConfigUpdater
-   */
-  protected $configUpdater;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'views_config_entity_test',
+<<<<<<< HEAD
     'field',
     'file',
     'image',
+=======
+    'entity_test',
+    'breakpoint',
+    'field',
+    'file',
+    'image',
+    'responsive_image',
+    'responsive_image_test_module',
+>>>>>>> upstream/11.x
   ];
 
   /**
-   * {@inheritdoc}
+   * @covers ::needsResponsiveImageLazyLoadFieldUpdate
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp();
-
-    $this->configUpdater = $this->container
+  public function testNeedsResponsiveImageLazyLoadFieldUpdate(): void {
+    $config_updater = $this->container
       ->get('class_resolver')
       ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+<<<<<<< HEAD
+=======
+    assert($config_updater instanceof ViewsConfigUpdater);
+>>>>>>> upstream/11.x
 
     FieldStorageConfig::create([
       'field_name' => 'user_picture',
@@ -53,6 +63,63 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
       'file_directory' => 'pictures/[date:custom:Y]-[date:custom:m]',
       'bundle' => 'user',
     ])->save();
+<<<<<<< HEAD
+=======
+
+    // Create a responsive image style.
+    ResponsiveImageStyle::create([
+      'id' => ViewsIntegrationTest::RESPONSIVE_IMAGE_STYLE_ID,
+      'label' => 'Foo',
+      'breakpoint_group' => 'responsive_image_test_module',
+    ]);
+    // Create an image field to be used with a responsive image formatter.
+    FieldStorageConfig::create([
+      'type' => 'image',
+      'entity_type' => 'entity_test',
+      'field_name' => 'bar',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'field_name' => 'bar',
+    ])->save();
+
+    $test_view = $this->loadTestView('views.view.test_responsive_images');
+    $needs_update = $config_updater->needsResponsiveImageLazyLoadFieldUpdate($test_view);
+    $test_view->save();
+    $this->assertTrue($needs_update);
+
+    $default_display = $test_view->getDisplay('default');
+    self::assertEquals('eager', $default_display['display_options']['fields']['bar']['settings']['image_loading']['attribute']);
+  }
+
+  /**
+   * @covers ::needsRenderedEntityFieldUpdate
+   */
+  public function testNeedsRenderedEntityFieldUpdate(): void {
+    $config_updater = $this->container
+      ->get('class_resolver')
+      ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+    assert($config_updater instanceof ViewsConfigUpdater);
+    $test_view = $this->loadTestView('views.view.test_entity_field_renderered_entity');
+    $needs_update = $config_updater->needsRenderedEntityFieldUpdate($test_view);
+    $test_view->save();
+    $this->assertTrue($needs_update);
+
+    $displays = [
+      'default',
+      'page_1',
+      'page_2',
+      'page_3',
+      'page_4',
+      'page_5',
+      'page_6',
+    ];
+    foreach ($displays as $display) {
+      $display = $test_view->getDisplay($display);
+      self::assertEmpty($display['cache_metadata']['tags']);
+    }
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -78,6 +145,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     return $test_view;
   }
 
+<<<<<<< HEAD
   /**
    * @covers ::needsEntityLinkUrlUpdate
    */
@@ -168,4 +236,6 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     // @todo Improve this in https://www.drupal.org/node/3121008.
   }
 
+=======
+>>>>>>> upstream/11.x
 }

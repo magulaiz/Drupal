@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* cspell:words documentselection */
+=======
+/* cspell:ignore documentselection */
+>>>>>>> upstream/11.x
 /**
  * Checks the schema to see if drupalElementStyle is supported on the element.
  *

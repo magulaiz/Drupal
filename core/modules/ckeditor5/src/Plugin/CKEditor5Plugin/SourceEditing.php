@@ -40,12 +40,19 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Match the config schema structure at ckeditor5.plugin.ckeditor5_heading.
+    // Match the config schema structure at
+    // ckeditor5.plugin.ckeditor5_sourceEditing.
     $form_value = $form_state->getValue('allowed_tags');
+<<<<<<< HEAD
     if (!is_array($form_value)) {
       $config_value = HTMLRestrictions::fromString($form_value)->toCKEditor5ElementsArray();
       $form_state->setValue('allowed_tags', $config_value);
     }
+=======
+    assert(is_string($form_value));
+    $config_value = HTMLRestrictions::fromString($form_value)->toCKEditor5ElementsArray();
+    $form_state->setValue('allowed_tags', $config_value);
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -101,6 +108,11 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
     return [
       'htmlSupport' => [
         'allow' => $concrete_restrictions->toGeneralHtmlSupportConfig(),
+<<<<<<< HEAD
+=======
+        // Any manually created elements are explicitly allowed to be empty.
+        'allowEmpty' => array_keys($concrete_restrictions->getAllowedElements()),
+>>>>>>> upstream/11.x
       ],
     ];
   }

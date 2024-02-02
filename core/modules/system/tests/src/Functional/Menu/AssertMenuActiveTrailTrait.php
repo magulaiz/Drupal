@@ -43,8 +43,12 @@ trait AssertMenuActiveTrailTrait {
         $xpath .= $this->assertSession()->buildXPathQuery($part_xpath, $part_args);
         $i++;
       }
+<<<<<<< HEAD
       $elements = $this->xpath($xpath);
       $this->assertNotEmpty($elements, 'Active trail to current page should be visible in menu tree.');
+=======
+      $this->assertSession()->elementExists('xpath', $xpath);
+>>>>>>> upstream/11.x
 
       // Append prefix for active link asserted below.
       $xpath .= '/following-sibling::ul/descendant::';
@@ -60,8 +64,12 @@ trait AssertMenuActiveTrailTrait {
       ':href' => Url::fromUri('base:' . $active_link_path)->toString(),
       ':title' => $active_link_title,
     ];
+<<<<<<< HEAD
     $elements = $this->xpath($xpath, $args);
     $this->assertNotEmpty($elements, sprintf('Active link %s should be visible in menu tree, including active trail links %s.', $active_link_title, implode(' » ', $tree)));
+=======
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($xpath, $args));
+>>>>>>> upstream/11.x
   }
 
 }

@@ -6,4 +6,7 @@ hidden: true
 install:
   - locale
   - locale_test_translate
+<<<<<<< HEAD
   - tour
+=======
+>>>>>>> upstream/11.x

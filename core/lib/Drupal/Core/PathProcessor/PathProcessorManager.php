@@ -132,7 +132,11 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
    */
   protected function sortProcessors($type) {
     krsort($this->{$type});
+<<<<<<< HEAD
     return array_merge([], ...$this->{$type});
+=======
+    return array_merge(...$this->{$type});
+>>>>>>> upstream/11.x
   }
 
 }

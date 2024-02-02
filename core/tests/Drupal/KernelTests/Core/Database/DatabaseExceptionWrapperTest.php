@@ -14,6 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class DatabaseExceptionWrapperTest extends KernelTestBase {
 
   /**
+<<<<<<< HEAD
    * Tests deprecation of Connection::prepare.
    *
    * @group legacy
@@ -126,6 +127,8 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
   }
 
   /**
+=======
+>>>>>>> upstream/11.x
    * Tests the expected database exception thrown for inexistent tables.
    */
   public function testQueryThrowsDatabaseExceptionWrapperException() {

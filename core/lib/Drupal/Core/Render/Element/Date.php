@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -34,7 +33,6 @@ class Date extends FormElement {
       '#theme' => 'input__date',
       '#process' => [
         [$class, 'processAjaxForm'],
-        [$class, 'processDate'],
       ],
       '#pre_render' => [[$class, 'preRenderDate']],
       '#theme_wrappers' => ['form_element'],
@@ -44,6 +42,7 @@ class Date extends FormElement {
   }
 
   /**
+<<<<<<< HEAD
    * Processes a date form element.
    *
    * @param array $element
@@ -76,6 +75,8 @@ class Date extends FormElement {
   }
 
   /**
+=======
+>>>>>>> upstream/11.x
    * Adds form-specific attributes to a 'date' #type element.
    *
    * Supports HTML5 types of 'date', 'datetime', 'datetime-local', and 'time'.

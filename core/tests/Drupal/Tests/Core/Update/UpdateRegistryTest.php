@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Update;
 
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
@@ -326,6 +328,7 @@ EOS;
 
   /**
    * @covers ::getUpdateFunctions
+<<<<<<< HEAD
    */
   public function testGetUpdateFunctions() {
     $this->setupBasicExtensions();
@@ -348,16 +351,22 @@ EOS;
    */
   public function testGetModuleUpdateFunctions() {
     $this->expectDeprecation('Drupal\Core\Update\UpdateRegistry\getModuleUpdateFunctions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead. See https://www.drupal.org/node/3260162');
+=======
+   */
+  public function testGetUpdateFunctions() {
+>>>>>>> upstream/11.x
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class)->reveal();
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
       'module_b',
+      'theme_d',
     ], $key_value, FALSE);
 
-    $this->assertEquals(['module_a_post_update_a', 'module_a_post_update_b'], array_values($update_registry->getModuleUpdateFunctions('module_a')));
-    $this->assertEquals(['module_b_post_update_a'], array_values($update_registry->getModuleUpdateFunctions('module_b')));
+    $this->assertEquals(['module_a_post_update_a', 'module_a_post_update_b'], array_values($update_registry->getUpdateFunctions('module_a')));
+    $this->assertEquals(['module_b_post_update_a'], array_values($update_registry->getUpdateFunctions('module_b')));
+    $this->assertEquals(['theme_d_post_update_b', 'theme_d_post_update_c'], array_values($update_registry->getUpdateFunctions('theme_d')));
   }
 
   /**
@@ -427,6 +436,7 @@ EOS;
 
   /**
    * @covers ::filterOutInvokedUpdatesByExtension
+<<<<<<< HEAD
    */
   public function testFilterOutInvokedUpdatesByExtension() {
     $this->setupBasicExtensions();
@@ -454,12 +464,16 @@ EOS;
    */
   public function testFilterOutInvokedUpdatesByModule() {
     $this->expectDeprecation('Drupal\Core\Update\UpdateRegistry\filterOutInvokedUpdatesByModule() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension() instead. See https://www.drupal.org/node/3260162');
+=======
+   */
+  public function testFilterOutInvokedUpdatesByExtension() {
+>>>>>>> upstream/11.x
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
     $key_value->get('existing_updates', [])
-      ->willReturn(['module_a_post_update_b', 'module_a_post_update_a', 'module_b_post_update_a'])
+      ->willReturn(['module_a_post_update_b', 'module_a_post_update_a', 'module_b_post_update_a', 'theme_d_post_update_c'])
       ->shouldBeCalledTimes(1);
-    $key_value->set('existing_updates', ['module_b_post_update_a'])
+    $key_value->set('existing_updates', ['module_b_post_update_a', 'theme_d_post_update_c'])
       ->willReturn(NULL)
       ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
@@ -467,9 +481,10 @@ EOS;
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
       'module_b',
+      'theme_d',
     ], $key_value, FALSE);
 
-    $update_registry->filterOutInvokedUpdatesByModule('module_a');
+    $update_registry->filterOutInvokedUpdatesByExtension('module_a');
   }
 
 }

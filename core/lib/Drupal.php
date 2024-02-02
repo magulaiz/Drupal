@@ -75,10 +75,24 @@ class Drupal {
   /**
    * The current system version.
    */
+<<<<<<< HEAD
   const VERSION = '9.5.0-dev';
+=======
+  const VERSION = '11.0-dev';
+>>>>>>> upstream/11.x
 
   /**
    * Core API compatibility.
+   *
+   * This constant is set to '8.x' to provide legacy compatibility with
+   * extensions that use the '8.x-' prefix to denote Drupal core major version
+   * compatibility, for example '8.x-1.0'. These extensions can specify
+   * compatibility with multiple major versions of Drupal core by setting the
+   * version constraint in 'core_version_requirement'. Drupal does not support
+   * using this core major version number prefix with versions greater than 8.
+   * For example '9.x-' prefixed extensions are not supported.
+   *
+   * @todo Remove or rename this constant in https://www.drupal.org/i/3085662
    */
   const CORE_COMPATIBILITY = '8.x';
 
@@ -88,6 +102,7 @@ class Drupal {
   const CORE_MINIMUM_SCHEMA_VERSION = 8000;
 
   /**
+<<<<<<< HEAD
    * Minimum supported version of PHP.
    *
    * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
@@ -98,6 +113,8 @@ class Drupal {
   const MINIMUM_SUPPORTED_PHP = '7.4.0';
 
   /**
+=======
+>>>>>>> upstream/11.x
    * Minimum allowed version of PHP for Drupal to be bootstrapped.
    *
    * Below this version:
@@ -113,7 +130,7 @@ class Drupal {
    * - Once in the error message printed to the user immediately after.
    * Remember to update both whenever this constant is updated.
    */
-  const MINIMUM_PHP = '7.3.0';
+  const MINIMUM_PHP = '8.1.0';
 
   /**
    * Minimum recommended value of PHP memory_limit.
@@ -131,12 +148,16 @@ class Drupal {
    * message, but Drupal can still be installed. Used for (e.g.) PHP versions
    * that have reached their EOL or will in the near future.
    */
+<<<<<<< HEAD
   const RECOMMENDED_PHP = '8.1.6';
+=======
+  const RECOMMENDED_PHP = '8.2.0';
+>>>>>>> upstream/11.x
 
   /**
    * The currently active container object, or NULL if not initialized yet.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
+   * @var \Drupal\Component\DependencyInjection\ContainerInterface|null
    */
   protected static $container;
 
@@ -160,7 +181,7 @@ class Drupal {
   /**
    * Returns the currently active global container.
    *
-   * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   * @return \Drupal\Component\DependencyInjection\ContainerInterface
    *
    * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    */
@@ -394,14 +415,15 @@ class Drupal {
    * Retrieves a configuration object.
    *
    * This is the main entry point to the configuration API. Calling
-   * @code \Drupal::config('book.admin') @endcode will return a configuration
-   * object the Book module can use to read its administrative settings.
+   * @code \Drupal::config('my_module.admin') @endcode will return a
+   * configuration object the my_module module can use to read its
+   * administrative settings.
    *
    * @param string $name
    *   The name of the configuration object to retrieve, which typically
    *   corresponds to a configuration file. For
-   *   @code \Drupal::config('book.admin') @endcode, the configuration
-   *   object returned will contain the content of the book.admin
+   *   @code \Drupal::config('my_module.admin') @endcode, the configuration
+   *   object returned will contain the content of the my_module.admin
    *   configuration file.
    *
    * @return \Drupal\Core\Config\ImmutableConfig
@@ -565,10 +587,10 @@ class Drupal {
   }
 
   /**
-   * Returns the url generator service.
+   * Returns the URL generator service.
    *
    * @return \Drupal\Core\Routing\UrlGeneratorInterface
-   *   The url generator service.
+   *   The URL generator service.
    */
   public static function urlGenerator() {
     return static::getContainer()->get('url_generator');

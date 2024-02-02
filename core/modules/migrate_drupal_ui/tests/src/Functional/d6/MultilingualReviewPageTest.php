@@ -25,12 +25,16 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'content_translation',
     'config_translation',
     'telephone',
+<<<<<<< HEAD
     'book',
     'forum',
     'statistics',
     'syslog',
     // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
     'tracker',
+=======
+    'syslog',
+>>>>>>> upstream/11.x
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
@@ -62,11 +66,13 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Block translation',
       'Blog',
       'Blog API',
-      'Book',
       'CCK translation',
       'Calendar Signup',
+<<<<<<< HEAD
       // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
+=======
+>>>>>>> upstream/11.x
       'Comment',
       'Contact',
       'Content',
@@ -92,7 +98,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'FileField',
       'FileField Meta',
       'Filter',
-      'Forum',
       'Help',
       'ImageAPI',
       'ImageAPI GD2',
@@ -107,6 +112,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Menu translation',
       'Node',
       'Node Reference',
+      'Node Reference URL Widget',
       'Nodeaccess',
       'Number',
       'OpenID',
@@ -119,7 +125,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Profile',
       'Profile translation',
       'Search',
-      'Statistics',
       'String translation',
       'Synchronize translations',
       'Syslog',
@@ -149,11 +154,21 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+<<<<<<< HEAD
+=======
+      'Book',
+>>>>>>> upstream/11.x
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
+      'Color',
       'Devel',
       'Devel generate',
       'Devel node access',
+<<<<<<< HEAD
+=======
+      'Forum',
+      'Statistics',
+>>>>>>> upstream/11.x
       // Option Widgets is set not_finished in migrate_state_not_finished_test.
       'Option Widgets',
       'Views',

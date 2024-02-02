@@ -143,7 +143,18 @@ class TrackChangesTest extends MigrateTestBase {
       ->execute();
 
     // Execute migration again.
-    $this->executeMigration('track_changes_test');
+    $this->executeMigration($this->migration);
+
+    // Check that the all the hashes except for 'Item 2'and 'Item 4' have
+    // changed.
+    for ($i = 1; $i < 5; $i++) {
+      $row = $id_map->getRowBySource(['tid' => $i]);
+      $new_hash[$i] = $row['hash'];
+    }
+    $this->assertNotEquals($original_hash[1], $new_hash[1]);
+    $this->assertEquals($original_hash[2], $new_hash[2]);
+    $this->assertNotEquals($original_hash[3], $new_hash[3]);
+    $this->assertEquals($original_hash[4], $new_hash[4]);
 
     // Check that the all the hashes except for 'Item 2'and 'Item 4' have
     // changed.

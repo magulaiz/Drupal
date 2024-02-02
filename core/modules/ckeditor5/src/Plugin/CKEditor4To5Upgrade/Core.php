@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\filter\FilterFormatInterface;
 
@@ -58,10 +59,18 @@ use Drupal\filter\FilterFormatInterface;
  *     "language",
  *   },
  *   cke5_plugin_elements_subset_configuration = {
+<<<<<<< HEAD
  *    "ckeditor5_heading",
  *    "ckeditor5_alignment",
  *    "ckeditor5_list",
  *    "media_media",
+=======
+ *     "ckeditor5_heading",
+ *     "ckeditor5_alignment",
+ *     "ckeditor5_list",
+ *     "ckeditor5_style",
+ *     "media_media",
+>>>>>>> upstream/11.x
  *   }
  * )
  *
@@ -78,7 +87,11 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
     switch ($cke4_button) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImage
       case 'DrupalImage':
+<<<<<<< HEAD
         return ['uploadImage'];
+=======
+        return ['drupalInsertImage'];
+>>>>>>> upstream/11.x
 
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalLink
       case 'DrupalLink':
@@ -151,11 +164,13 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
       case 'Paste':
       case 'PasteText':
       case 'PasteFromWord':
-      case 'ShowBlocks':
       case 'Maximize':
       case '-':
         // @see https://www.drupal.org/project/ckeditor5/issues/3211049#comment-14167764
         return NULL;
+
+      case 'ShowBlocks':
+        return ['showBlocks'];
 
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\RemoveFormat
       case 'RemoveFormat':
@@ -163,8 +178,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
 
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\StylesCombo
       case 'Styles':
-        // @todo Change in https://www.drupal.org/project/ckeditor5/issues/3222797
-        return NULL;
+        return ['style'];
 
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\specialCharacters
       case 'SpecialChar':
@@ -190,8 +204,17 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
     switch ($cke4_plugin_id) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\StylesCombo
       case 'stylescombo':
-        // @todo Change in https://www.drupal.org/project/ckeditor5/issues/3222797
-        return NULL;
+        if (!isset($cke4_plugin_settings['styles'])) {
+          $styles = [];
+        }
+        else {
+          [$styles] = Style::parseStylesFormValue($cke4_plugin_settings['styles']);
+        }
+        return [
+          'ckeditor5_style' => [
+            'styles' => $styles,
+          ],
+        ];
 
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\Language
       case 'language':
@@ -268,8 +291,13 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           return NULL;
         }
         $configuration = [];
+<<<<<<< HEAD
         $configuration['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
         $configuration['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
+=======
+        $configuration['properties']['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
+        $configuration['properties']['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
+>>>>>>> upstream/11.x
         return $configuration;
 
       case 'media_media':
@@ -284,6 +312,13 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         $configuration['allow_view_mode_override'] = !empty($restrictions['allowed']['drupal-media']['data-view-mode']);
         return $configuration;
 
+<<<<<<< HEAD
+=======
+      case 'ckeditor5_style':
+        // @see mapCKEditor4SettingsToCKEditor5Configuration()
+        return NULL;
+
+>>>>>>> upstream/11.x
       default:
         throw new \OutOfBoundsException();
     }

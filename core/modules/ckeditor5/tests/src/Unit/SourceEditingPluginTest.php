@@ -27,6 +27,10 @@ class SourceEditingPluginTest extends UnitTestCase {
         [
           'htmlSupport' => [
             'allow' => [],
+<<<<<<< HEAD
+=======
+            'allowEmpty' => [],
+>>>>>>> upstream/11.x
           ],
         ],
       ],
@@ -103,6 +107,16 @@ class SourceEditingPluginTest extends UnitTestCase {
                 ],
               ],
             ],
+<<<<<<< HEAD
+=======
+            'allowEmpty' => [
+              'foo1',
+              'foo2',
+              'foo3',
+              'foo4',
+              'foo5',
+            ],
+>>>>>>> upstream/11.x
           ],
         ],
       ],
@@ -136,6 +150,21 @@ class SourceEditingPluginTest extends UnitTestCase {
                 'name' => 'foo2',
                 'attributes' => [
                   [
+<<<<<<< HEAD
+=======
+                    'key' => [
+                      'regexp' => [
+                        'pattern' => '/^bar-.*$/',
+                      ],
+                    ],
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz)$/',
+                      ],
+                    ],
+                  ],
+                  [
+>>>>>>> upstream/11.x
                     'key' => 'bar',
                     'value' => [
                       'regexp' => [
@@ -149,6 +178,21 @@ class SourceEditingPluginTest extends UnitTestCase {
                 'name' => 'foo3',
                 'attributes' => [
                   [
+<<<<<<< HEAD
+=======
+                    'key' => [
+                      'regexp' => [
+                        'pattern' => '/^bar-.*$/',
+                      ],
+                    ],
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz|qux-.*)$/',
+                      ],
+                    ],
+                  ],
+                  [
+>>>>>>> upstream/11.x
                     'key' => 'bar',
                     'value' => [
                       'regexp' => [
@@ -159,6 +203,14 @@ class SourceEditingPluginTest extends UnitTestCase {
                 ],
               ],
             ],
+<<<<<<< HEAD
+=======
+            'allowEmpty' => [
+              'foo1',
+              'foo2',
+              'foo3',
+            ],
+>>>>>>> upstream/11.x
           ],
         ],
       ],

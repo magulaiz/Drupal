@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
@@ -9,6 +10,7 @@ use Drupal\views\Views;
  * Tests the display UI.
  *
  * @group views_ui
+ * @group #slow
  */
 class DisplayTest extends UITestBase {
 
@@ -56,9 +58,9 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView($view);
 
     $this->clickLink('Reorder displays');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-default"]');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-page_1"]');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-block_1"]');
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];
@@ -226,7 +228,7 @@ class DisplayTest extends UITestBase {
       $view->save();
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
-      $escaped = views_ui_truncate($input, 25);
+      $escaped = Unicode::truncate($input, 25, FALSE, TRUE);
       $this->assertSession()->assertEscaped($escaped);
       $this->assertSession()->responseNotContains($xss_markup);
 

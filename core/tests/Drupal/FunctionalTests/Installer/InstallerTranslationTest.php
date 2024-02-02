@@ -15,7 +15,7 @@ class InstallerTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'test_theme';
 
   /**
    * Overrides the language code in which to install Drupal.
@@ -40,8 +40,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEquals('ltr', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'ltr');
   }
 
   /**
@@ -108,7 +107,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('<front>');
-    $this->assertSession()->responseContains('classy/css/components/action-links.css');
+    $this->assertSession()->responseContains('my_theme/css/my-container-inline.css');
 
     // Verify the strings from the translation files were imported.
     $test_samples = ['Save and continue', 'Anonymous'];
@@ -154,7 +153,7 @@ class InstallerTranslationTest extends InstallerTestBase {
    *   Contents for the test .po file.
    */
   protected function getPo($langcode) {
-    return <<<ENDPO
+    return <<<PO
 msgid ""
 msgstr ""
 
@@ -169,7 +168,7 @@ msgstr "Beheben Sie alle Probleme unten, um die Installation fortzusetzen. Infor
 
 msgid "Failed to <strong>CREATE</strong> a test table on your database server with the command %query. The server reports the following message: %error.<p>Are you sure the configured username has the necessary permissions to create tables in the database?</p>"
 msgstr "<strong>CREATE</strong> ein Test-Tabelle auf Ihrem Datenbankserver mit dem Befehl %query fehlgeschlagen."
-ENDPO;
+PO;
   }
 
 }

@@ -3,11 +3,19 @@
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Tests\BrowserTestBase;
+<<<<<<< HEAD
+=======
+use Drupal\user\UserInterface;
+>>>>>>> upstream/11.x
 
 /**
  * Tests the installation of deprecated and experimental modules.
  *
  * @group Module
+<<<<<<< HEAD
+=======
+ * @group #slow
+>>>>>>> upstream/11.x
  */
 class NonStableModulesTest extends BrowserTestBase {
 
@@ -16,7 +24,11 @@ class NonStableModulesTest extends BrowserTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
+<<<<<<< HEAD
   protected $adminUser;
+=======
+  protected UserInterface $adminUser;
+>>>>>>> upstream/11.x
 
   /**
    * {@inheritdoc}
@@ -45,12 +57,20 @@ class NonStableModulesTest extends BrowserTestBase {
     $edit["modules[test_page_test][enable]"] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Module Test page has been enabled.');
+=======
+    $this->assertSession()->pageTextContains('Module Test page has been installed.');
+>>>>>>> upstream/11.x
     $this->assertSession()->pageTextNotContains('Experimental modules are provided for testing purposes only.');
 
     // There should be no warning about enabling experimental or deprecated
     // modules, since there's no confirmation form.
+<<<<<<< HEAD
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable ');
+=======
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install ');
+>>>>>>> upstream/11.x
 
     // Uninstall the module.
     \Drupal::service('module_installer')->uninstall(['test_page_test']);
@@ -65,12 +85,17 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
+<<<<<<< HEAD
     $this->assertSession()->pageTextNotContains('Experimental Test has been enabled.');
+=======
+    $this->assertSession()->pageTextNotContains('Experimental Test has been installed.');
+>>>>>>> upstream/11.x
     $this->assertSession()->pageTextContains('Experimental modules are provided for testing purposes only.');
     $this->assertSession()->pageTextContains('The following module is experimental: Experimental Test');
 
     // There should be a warning about enabling experimental modules, but no
     // warnings about deprecated modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
@@ -81,6 +106,18 @@ class NonStableModulesTest extends BrowserTestBase {
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $this->assertSession()->pageTextContains('Experimental Test has been enabled.');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+
+    // There should be no message about enabling dependencies.
+    $this->assertSession()->pageTextNotContains('You must install');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $this->assertSession()->pageTextContains('Experimental Test has been installed.');
+>>>>>>> upstream/11.x
 
     // Uninstall the module.
     \Drupal::service('module_installer')->uninstall(['experimental_module_test']);
@@ -94,26 +131,44 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
+<<<<<<< HEAD
     $this->assertSession()->pageTextNotContains('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+=======
+    $this->assertSession()->pageTextNotContains('2 modules have been installed: Experimental Dependency Test, Experimental Test');
+>>>>>>> upstream/11.x
     $this->assertSession()->pageTextContains('Experimental modules are provided for testing purposes only.');
     $this->assertSession()->pageTextContains('The following module is experimental: Experimental Test');
 
     // There should be a warning about enabling experimental modules, but no
     // warnings about deprecated modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+>>>>>>> upstream/11.x
 
     // Ensure the non-experimental module is not listed as experimental.
     $this->assertSession()->pageTextNotContains('The following modules are experimental: Experimental Test, Experimental Dependency Test');
     $this->assertSession()->pageTextNotContains('The following module is experimental: Experimental Dependency Test');
 
     // There should be a message about enabling dependencies.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('You must enable the Experimental Test module to install Experimental Dependency Test');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $this->assertSession()->pageTextContains('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+=======
+    $this->assertSession()->pageTextContains('You must install the Experimental Test module to install Experimental Dependency Test');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $this->assertSession()->pageTextContains('2 modules have been installed: Experimental Dependency Test, Experimental Test');
+>>>>>>> upstream/11.x
 
     // Uninstall the modules.
     \Drupal::service('module_installer')->uninstall([
@@ -132,26 +187,44 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
+<<<<<<< HEAD
     $this->assertSession()->pageTextNotContains('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+=======
+    $this->assertSession()->pageTextNotContains('2 modules have been installed: Experimental Dependency Test, Experimental Test');
+>>>>>>> upstream/11.x
     $this->assertSession()->pageTextContains('Experimental modules are provided for testing purposes only.');
     $this->assertSession()->pageTextContains('The following module is experimental: Experimental Test');
 
     // There should be a warning about enabling experimental modules, but no
     // warnings about deprecated modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+>>>>>>> upstream/11.x
 
     // Ensure the non-experimental module is not listed as experimental.
     $this->assertSession()->pageTextNotContains('The following modules are experimental: Experimental Dependency Test, Experimental Test');
     $this->assertSession()->pageTextNotContains('The following module is experimental: Experimental Dependency Test');
 
     // There should be no message about enabling dependencies.
+<<<<<<< HEAD
     $this->assertSession()->pageTextNotContains('You must enable');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $this->assertSession()->pageTextContains('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+=======
+    $this->assertSession()->pageTextNotContains('You must install');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $this->assertSession()->pageTextContains('2 modules have been installed: Experimental Dependency Test, Experimental Test');
+>>>>>>> upstream/11.x
 
     // Try to enable an experimental module that can not be due to
     // hook_requirements().
@@ -184,7 +257,11 @@ class NonStableModulesTest extends BrowserTestBase {
     // The module should not be enabled and there should be a warning and a
     // list of the deprecated modules with only this one.
     $assert = $this->assertSession();
+<<<<<<< HEAD
     $assert->pageTextNotContains('Deprecated module has been enabled.');
+=======
+    $assert->pageTextNotContains('Deprecated module has been installed.');
+>>>>>>> upstream/11.x
     $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of Drupal core. Use at your own risk.');
     $assert->pageTextContains('The Deprecated module module is deprecated');
     $more_information_link = $assert->elementExists('named', [
@@ -195,6 +272,7 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // There should be a warning about enabling deprecated modules, but no
     // warnings about experimental modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
@@ -205,6 +283,18 @@ class NonStableModulesTest extends BrowserTestBase {
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $assert->pageTextContains('Deprecated module has been enabled.');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+
+    // There should be no message about enabling dependencies.
+    $assert->pageTextNotContains('You must install');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $assert->pageTextContains('Deprecated module has been installed.');
+>>>>>>> upstream/11.x
 
     // Uninstall the module.
     \Drupal::service('module_installer')->uninstall(['deprecated_module']);
@@ -218,25 +308,43 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the deprecated modules with only this one.
+<<<<<<< HEAD
     $assert->pageTextNotContains('2 modules have been enabled: Deprecated module dependency, Deprecated module');
+=======
+    $assert->pageTextNotContains('2 modules have been installed: Deprecated module dependency, Deprecated module');
+>>>>>>> upstream/11.x
     $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of Drupal core. Use at your own risk.');
     $assert->pageTextContains('The Deprecated module module is deprecated');
 
     // There should be a warning about enabling deprecated modules, but no
     // warnings about experimental modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+>>>>>>> upstream/11.x
 
     // Ensure the non-deprecated module is not listed as deprecated.
     $assert->pageTextNotContains('The Deprecated module dependency module is deprecated');
 
     // There should be a message about enabling dependencies.
+<<<<<<< HEAD
     $assert->pageTextContains('You must enable the Deprecated module module to install Deprecated module dependency');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $assert->pageTextContains('2 modules have been enabled: Deprecated module dependency, Deprecated module');
+=======
+    $assert->pageTextContains('You must install the Deprecated module module to install Deprecated module dependency');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $assert->pageTextContains('2 modules have been installed: Deprecated module dependency, Deprecated module');
+>>>>>>> upstream/11.x
 
     // Uninstall the modules.
     \Drupal::service('module_installer')->uninstall([
@@ -252,7 +360,11 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the deprecated modules with only this one.
+<<<<<<< HEAD
     $assert->pageTextNotContains('2 modules have been enabled: Deprecated module with non deprecated dependency, Drupal system listing compatible test');
+=======
+    $assert->pageTextNotContains('2 modules have been installed: Deprecated module with non deprecated dependency, Drupal system listing compatible test');
+>>>>>>> upstream/11.x
     $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of Drupal core. Use at your own risk.');
     $assert->pageTextContains('The Deprecated module with non deprecated dependency module is deprecated');
     $more_information_link = $assert->elementExists('named', [
@@ -263,19 +375,33 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // There should be a warning about enabling deprecated modules, but no
     // warnings about experimental modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+>>>>>>> upstream/11.x
 
     // Ensure the non-deprecated dependency module is not listed as deprecated.
     $assert->pageTextNotContains('The Drupal system listing compatible test module is deprecated');
 
     // There should be a message about enabling dependencies.
+<<<<<<< HEAD
     $assert->pageTextContains('You must enable the Drupal system listing compatible test module to install Deprecated module with non deprecated dependency.');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $assert->pageTextContains('2 modules have been enabled: Deprecated module with non deprecated dependency, Drupal system listing compatible test.');
+=======
+    $assert->pageTextContains('You must install the Drupal system listing compatible test module to install Deprecated module with non deprecated dependency.');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $assert->pageTextContains('2 modules have been installed: Deprecated module with non deprecated dependency, Drupal system listing compatible test.');
+>>>>>>> upstream/11.x
 
     // Uninstall the modules.
     \Drupal::service('module_installer')->uninstall([
@@ -294,25 +420,43 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the deprecated modules with only this one.
+<<<<<<< HEAD
     $assert->pageTextNotContains('2 modules have been enabled: Deprecated module dependency, Deprecated module');
+=======
+    $assert->pageTextNotContains('2 modules have been installed: Deprecated module dependency, Deprecated module');
+>>>>>>> upstream/11.x
     $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of Drupal core. Use at your own risk.');
     $assert->pageTextContains('The Deprecated module module is deprecated');
 
     // There should be a warning about enabling deprecated modules, but no
     // warnings about experimental modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable a deprecated module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable an experimental module?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental and deprecated modules?');
+>>>>>>> upstream/11.x
 
     // Ensure the non-deprecated module is not listed as deprecated.
     $assert->pageTextNotContains('The Deprecated module dependency module is deprecated');
 
     // There should be no message about enabling dependencies.
+<<<<<<< HEAD
     $assert->pageTextNotContains('You must enable');
 
     // Enable the modules and confirm that it worked.
     $this->submitForm([], 'Continue');
     $assert->pageTextContains('2 modules have been enabled: Deprecated module, Deprecated module dependency');
+=======
+    $assert->pageTextNotContains('You must install');
+
+    // Enable the modules and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $assert->pageTextContains('2 modules have been installed: Deprecated module, Deprecated module dependency');
+>>>>>>> upstream/11.x
 
     \Drupal::service('module_installer')->uninstall([
       'deprecated_module',
@@ -325,7 +469,11 @@ class NonStableModulesTest extends BrowserTestBase {
     // 'deprecated_module_contrib' to something other than 'core'.
     $this->drupalGet('admin/modules');
     $this->submitForm(["modules[deprecated_module_test][enable]" => TRUE], 'Install');
+<<<<<<< HEAD
     $assert->pageTextContains('Module Deprecated module test has been enabled.');
+=======
+    $assert->pageTextContains('Module Deprecated module test has been installed.');
+>>>>>>> upstream/11.x
 
     // Test installing a non-core deprecated module. There should be a
     // confirmation form with a deprecated warning for a 'project' and not for
@@ -360,7 +508,11 @@ class NonStableModulesTest extends BrowserTestBase {
     // The module should not be enabled and there should be a warning and a
     // list of the deprecated modules with only this one.
     $assert = $this->assertSession();
+<<<<<<< HEAD
     $assert->pageTextNotContains('Deprecated module has been enabled.');
+=======
+    $assert->pageTextNotContains('Deprecated module has been installed.');
+>>>>>>> upstream/11.x
     $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of Drupal core. Use at your own risk.');
     $assert->pageTextContains('The Deprecated module module is deprecated');
     $more_information_link = $assert->elementExists('named', [
@@ -371,13 +523,18 @@ class NonStableModulesTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
+<<<<<<< HEAD
     $assert->pageTextNotContains('Experimental Test has been enabled.');
+=======
+    $assert->pageTextNotContains('Experimental Test has been installed.');
+>>>>>>> upstream/11.x
     $assert->pageTextContains('Experimental modules are provided for testing purposes only.');
     $assert->pageTextContains('The following module is experimental: Experimental Test');
 
     // There should be a warning about enabling experimental and deprecated
     // modules, but no warnings about solitary experimental or deprecated
     // modules.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('Are you sure you wish to enable experimental and deprecated modules?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental modules?');
     $this->assertSession()->pageTextNotContains('Are you sure you wish to enable deprecated modules?');
@@ -388,6 +545,18 @@ class NonStableModulesTest extends BrowserTestBase {
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
     $assert->pageTextContains('2 modules have been enabled: Deprecated module, Experimental Test.');
+=======
+    $this->assertSession()->pageTextContains('Are you sure you wish to install experimental and deprecated modules?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install experimental modules?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to install deprecated modules?');
+
+    // There should be no message about enabling dependencies.
+    $assert->pageTextNotContains('You must install');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $assert->pageTextContains('2 modules have been installed: Deprecated module, Experimental Test.');
+>>>>>>> upstream/11.x
   }
 
 }

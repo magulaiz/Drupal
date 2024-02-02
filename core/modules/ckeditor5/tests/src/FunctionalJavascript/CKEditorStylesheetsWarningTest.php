@@ -1,5 +1,10 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 // cspell:ignore subtheming
@@ -54,7 +59,11 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
   /**
    * Data provider for testWarningFilterUI().
    *
+<<<<<<< HEAD
    * @return \string[][]
+=======
+   * @return string[][]
+>>>>>>> upstream/11.x
    *   An array with the theme to enable and the warning message to check.
    */
   public function providerTestWarningFilterUi() {

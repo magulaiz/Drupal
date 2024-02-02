@@ -1,5 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 // cSpell:words documentselection
+=======
+// cspell:ignore documentselection
+>>>>>>> upstream/11.x
 import { isWidget } from 'ckeditor5/src/widget';
 
 /**
@@ -68,6 +72,14 @@ export function getClosestSelectedDrupalMediaWidget(selection) {
     return viewElement;
   }
 
+<<<<<<< HEAD
+=======
+  // Perhaps nothing is selected.
+  if (selection.getFirstPosition() === null) {
+    return null;
+  }
+
+>>>>>>> upstream/11.x
   let parent = selection.getFirstPosition().parent;
 
   while (parent) {

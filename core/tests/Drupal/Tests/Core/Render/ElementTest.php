@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Access\AccessResult;
@@ -188,6 +190,7 @@ class ElementTest extends UnitTestCase {
   public function providerTestIsEmpty() {
     return [
       [[], TRUE],
+<<<<<<< HEAD
       [['#attached' => []], TRUE],
       [['#cache' => []], TRUE],
       [['#weight' => []], TRUE],
@@ -195,6 +198,15 @@ class ElementTest extends UnitTestCase {
       [['#attached' => [], '#cache' => []], TRUE],
       [['#attached' => [], '#weight' => []], TRUE],
       [['#attached' => [], '#weight' => [], '#cache' => []], TRUE],
+=======
+      [['#attached' => []], FALSE],
+      [['#cache' => []], TRUE],
+      [['#weight' => []], TRUE],
+      // Variations.
+      [['#attached' => [], '#cache' => []], FALSE],
+      [['#attached' => [], '#weight' => []], FALSE],
+      [['#attached' => [], '#weight' => [], '#cache' => []], FALSE],
+>>>>>>> upstream/11.x
       [['#cache' => [], '#weight' => []], TRUE],
       [['#cache' => [], '#weight' => [], '#any_other_property' => []], FALSE],
       [
@@ -207,9 +219,15 @@ class ElementTest extends UnitTestCase {
         FALSE,
       ],
       // Cover sorting.
+<<<<<<< HEAD
       [['#cache' => [], '#weight' => [], '#attached' => []], TRUE],
       [['#attached' => [], '#cache' => [], '#weight' => []], TRUE],
       [['#weight' => [], '#attached' => [], '#cache' => []], TRUE],
+=======
+      [['#cache' => [], '#weight' => [], '#attached' => []], FALSE],
+      [['#cache' => [], '#weight' => []], TRUE],
+      [['#weight' => [], '#cache' => []], TRUE],
+>>>>>>> upstream/11.x
 
       [['#cache' => []], TRUE],
       [['#cache' => ['tags' => ['foo']]], TRUE],

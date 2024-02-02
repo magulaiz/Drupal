@@ -37,6 +37,18 @@ abstract class PagerPluginBase extends PluginBase {
   protected $usesOptions = TRUE;
 
   /**
+   * Options available for setting pagination headers.
+   */
+  protected array $headingOptions = [
+    'h1' => 'H1',
+    'h2' => 'H2',
+    'h3' => 'H3',
+    'h4' => 'H4',
+    'h5' => 'H5',
+    'h6' => 'H6',
+  ];
+
+  /**
    * Get how many items per page this pager will display.
    *
    * All but the leanest pagers should probably return a value here, so
@@ -70,6 +82,23 @@ abstract class PagerPluginBase extends PluginBase {
    */
   public function setOffset($offset) {
     $this->options['offset'] = $offset;
+  }
+
+  /**
+   * Get the pager heading tag.
+   *
+   * @return string
+   *   Heading level for the pager.
+   */
+  public function getHeadingLevel(): string {
+    return $this->options['pagination_heading_level'] ?? 'h4';
+  }
+
+  /**
+   * Set the pager heading.
+   */
+  public function setHeadingLevel($headingLevel): void {
+    $this->options['pagination_heading_level'] = $headingLevel;
   }
 
   /**
@@ -122,8 +151,7 @@ abstract class PagerPluginBase extends PluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Return a string to display as the clickable title for the
-   * pager plugin.
+   * Returns a string to display as the clickable title for the pager plugin.
    */
   public function summaryTitle() {
     return $this->t('Unknown');
@@ -148,8 +176,9 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
-   * Execute the count query, which will be done just prior to the query
-   * itself being executed.
+   * Executes the count query.
+   *
+   * This will be done just prior to the query itself being executed.
    */
   public function executeCountQuery(&$count_query) {
     $this->total_items = $count_query->execute()->fetchField();
@@ -163,6 +192,8 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
+   * Updates the pager information.
+   *
    * If there are pagers that need global values set, this method can
    * be used to set them. It will be called after the query is run.
    */

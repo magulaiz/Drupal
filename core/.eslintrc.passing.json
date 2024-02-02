@@ -13,7 +13,10 @@
     "default-param-last": "off",
     "prefer-destructuring": "off",
     "prefer-regex-literals": "off",
+<<<<<<< HEAD
     "import/named": "off",
+=======
+>>>>>>> upstream/11.x
     "import/no-import-module-exports": "off"
   }
 }

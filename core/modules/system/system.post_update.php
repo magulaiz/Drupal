@@ -7,13 +7,16 @@
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+<<<<<<< HEAD
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+=======
+>>>>>>> upstream/11.x
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Entity\EntityFormModeInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_removed_post_updates().
@@ -37,51 +40,124 @@ function system_removed_post_updates() {
     'system_post_update_clear_menu_cache' => '9.0.0',
     'system_post_update_layout_plugin_schema_change' => '9.0.0',
     'system_post_update_entity_reference_autocomplete_match_limit' => '9.0.0',
+    'system_post_update_extra_fields_form_display' => '10.0.0',
+    'system_post_update_uninstall_simpletest' => '10.0.0',
+    'system_post_update_uninstall_entity_reference_module' => '10.0.0',
+    'system_post_update_entity_revision_metadata_bc_cleanup' => '10.0.0',
+    'system_post_update_uninstall_classy' => '10.0.0',
+    'system_post_update_uninstall_stable' => '10.0.0',
+    'system_post_update_claro_dropbutton_variants' => '10.0.0',
+    'system_post_update_schema_version_int' => '10.0.0',
+    'system_post_update_delete_rss_settings' => '10.0.0',
+    'system_post_update_remove_key_value_expire_all_index' => '10.0.0',
+    'system_post_update_service_advisory_settings' => '10.0.0',
+    'system_post_update_delete_authorize_settings' => '10.0.0',
+    'system_post_update_sort_all_config' => '10.0.0',
+    'system_post_update_enable_provider_database_driver' => '10.0.0',
   ];
 }
 
 /**
- * Update all entity form displays that contain extra fields.
+ * Add new menu linkset endpoint setting.
  */
-function system_post_update_extra_fields_form_display(&$sandbox = NULL) {
-  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-  $entity_field_manager = \Drupal::service('entity_field.manager');
+function system_post_update_linkset_settings() {
+  $config = \Drupal::configFactory()->getEditable('system.feature_flags');
+  $config->set('linkset_endpoint', FALSE)->save();
+}
 
-  $callback = function (EntityDisplayInterface $display) use ($entity_field_manager) {
-    $display_context = $display instanceof EntityViewDisplayInterface ? 'display' : 'form';
-    $extra_fields = $entity_field_manager->getExtraFields($display->getTargetEntityTypeId(), $display->getTargetBundle());
+/**
+ * Update timestamp formatter settings for entity view displays.
+ */
+function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
+  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
 
-    // If any extra fields are used as a component, resave the display with the
-    // updated component information.
-    $needs_save = FALSE;
-    if (!empty($extra_fields[$display_context])) {
-      foreach ($extra_fields[$display_context] as $name => $extra_field) {
-        if ($component = $display->getComponent($name)) {
-          $display->setComponent($name, $component);
-          $needs_save = TRUE;
-        }
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $entity_view_display) use ($field_formatter_manager): bool {
+    $update = FALSE;
+    foreach ($entity_view_display->getComponents() as $name => $component) {
+      if (empty($component['type'])) {
+        continue;
+      }
+
+      $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
+      // Check also potential plugins extending TimestampFormatter.
+      if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+        continue;
+      }
+
+      // The 'tooltip' and 'time_diff' settings might have been set, with their
+      // default values, if this entity has been already saved in a previous
+      // (post)update, such as layout_builder_post_update_timestamp_formatter().
+      // Ensure that existing timestamp formatters doesn't show any tooltip.
+      if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff']) || $component['settings']['tooltip']['date_format'] !== '') {
+        // Existing timestamp formatters don't have tooltip.
+        $component['settings']['tooltip'] = [
+          'date_format' => '',
+          'custom_date_format' => '',
+        ];
+        $entity_view_display->setComponent($name, $component);
+        $update = TRUE;
       }
     }
-    return $needs_save;
+    return $update;
+  });
+}
+
+/**
+ * Enable the password compatibility module.
+ */
+function system_post_update_enable_password_compatibility() {
+  \Drupal::service('module_installer')->install(['phpass']);
+}
+
+/**
+ * Remove redundant asset state and config.
+ */
+function system_post_update_remove_asset_entries() {
+  \Drupal::state()->delete('drupal_css_cache_files');
+  \Drupal::state()->delete('system.js_cache_files');
+  $config = \Drupal::configFactory()->getEditable('system.performance');
+  $config->clear('stale_file_threshold');
+  $config->save();
+}
+
+/**
+ * Remove redundant asset query string state.
+ */
+function system_post_update_remove_asset_query_string() {
+  \Drupal::state()->delete('system.css_js_query_string');
+}
+
+/**
+ * Update description for view modes.
+ */
+function system_post_update_add_description_to_entity_view_mode(array &$sandbox = NULL): void {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+
+  $callback = function (EntityViewModeInterface $entity_view_mode) {
+    return $entity_view_mode->get('description') === NULL;
   };
 
-  $config_entity_updater->update($sandbox, 'entity_form_display', $callback);
+  $config_entity_updater->update($sandbox, 'entity_view_mode', $callback);
 }
 
 /**
- * Uninstall SimpleTest.
- *
- * @see https://www.drupal.org/project/drupal/issues/3110862
+ * Update description for form modes.
  */
-function system_post_update_uninstall_simpletest() {
-  \Drupal::service('module_installer')->uninstall(['simpletest']);
+function system_post_update_add_description_to_entity_form_mode(array &$sandbox = NULL): void {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+
+  $callback = function (EntityFormModeInterface $entity_form_mode) {
+    return $entity_form_mode->get('description') === NULL;
+  };
+
+  $config_entity_updater->update($sandbox, 'entity_form_mode', $callback);
 }
 
 /**
- * Uninstall entity_reference.
- *
- * @see https://www.drupal.org/project/drupal/issues/3111645
+ * Updates system.theme.global:logo.url config if it's still at the default.
  */
+<<<<<<< HEAD
 function system_post_update_uninstall_entity_reference_module() {
   \Drupal::service('module_installer')->uninstall(['entity_reference']);
 }
@@ -111,18 +187,49 @@ function system_post_update_entity_revision_metadata_bc_cleanup() {
     $entity_type = new ContentEntityType($entity_type_definition);
 
     $last_installed_schema_repository->setLastInstalledDefinition($entity_type);
+=======
+function system_post_update_set_blank_log_url_to_null() {
+  $global_theme_settings = \Drupal::configFactory()->getEditable('system.theme.global');
+  if ($global_theme_settings->get('logo.url') === '') {
+    $global_theme_settings
+      ->set('logo.url', NULL)
+      ->save(TRUE);
+>>>>>>> upstream/11.x
   }
 }
 
 /**
- * Uninstall Classy if it is no longer needed.
+ * Add new default mail transport dsn.
  */
-function system_post_update_uninstall_classy() {
-  /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-  $theme_installer = \Drupal::getContainer()->get('theme_installer');
-  try {
-    $theme_installer->uninstall(['classy']);
+function system_post_update_mailer_dsn_settings() {
+}
+
+/**
+ * Add new default mail transport dsn.
+ */
+function system_post_update_mailer_structured_dsn_settings() {
+  $config = \Drupal::configFactory()->getEditable('system.mail');
+  $config->set('mailer_dsn', [
+    'scheme' => 'sendmail',
+    'host' => 'default',
+    'user' => NULL,
+    'password' => NULL,
+    'port' => NULL,
+    'options' => [],
+  ])->save();
+}
+
+/**
+ * Fix path in README.txt in CONFIG_SYNC_DIRECTORY.
+ */
+function system_post_update_amend_config_sync_readme_url() {
+  $configuration_directory = Settings::get('config_sync_directory');
+  $readme_path = $configuration_directory . '/README.txt';
+  if (!file_exists($readme_path)) {
+    // No operation if the original file is not there.
+    return;
   }
+<<<<<<< HEAD
   catch (\InvalidArgumentException | UnknownExtensionException $exception) {
     // Exception is thrown if Classy wasn't installed or if there are themes
     // depending on it.
@@ -258,5 +365,26 @@ function system_post_update_enable_provider_database_driver() {
 
   if ($modules_to_install !== []) {
     \Drupal::service('module_installer')->install(array_keys($modules_to_install));
+=======
+  $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
+  if (!$writable) {
+    // Cannot write the README.txt file, nothing to do.
+    return;
+  }
+  $original_content = file_get_contents($readme_path);
+  $changed_content = str_replace('admin/config/development/configuration/sync', 'admin/config/development/configuration', $original_content);
+  file_put_contents($readme_path, $changed_content);
+  return \t('Amended configuration synchronization readme file content.');
+}
+
+/**
+ * Adds default value for the mail_notification config parameter.
+ */
+function system_post_update_mail_notification_setting() {
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  // If the value doesn't exist it always returns NULL.
+  if (is_null($config->get('mail_notification'))) {
+    $config->set('mail_notification', NULL)->save();
+>>>>>>> upstream/11.x
   }
 }

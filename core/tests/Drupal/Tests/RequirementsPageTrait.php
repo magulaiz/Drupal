@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Core\Utility\PhpRequirements;
@@ -83,7 +85,11 @@ trait RequirementsPageTrait {
    *   The type of requirement, either 'warning' or 'error'.
    */
   protected function assertRequirementSummaries(array $summaries, string $type) {
+<<<<<<< HEAD
     // The selectors are different for Seven and Claro.
+=======
+    // The selectors are different for Claro.
+>>>>>>> upstream/11.x
     $is_claro = stripos($this->getSession()->getPage()->getContent(), 'claro/css/theme/maintenance-page.css') !== FALSE;
 
     $selectors = [];

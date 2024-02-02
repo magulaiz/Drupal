@@ -24,7 +24,6 @@ class ConfigEntityImportTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'action',
     'block',
     'config_test',
     'filter',
@@ -38,8 +37,8 @@ class ConfigEntityImportTest extends KernelTestBase {
    * Runs test methods for each module within a single test run.
    */
   public function testConfigUpdateImport() {
-    $this->installConfig(['action', 'block', 'filter', 'image']);
-    $this->container->get('theme_installer')->install(['bartik']);
+    $this->installConfig(['block', 'filter', 'image']);
+    $this->container->get('theme_installer')->install(['olivero']);
     $config_storage = $this->container->get('config.storage');
     // Ensure the 'system.site' config.
     $config_storage->write('system.site', ['uuid' => (new Php())->generate()]);
@@ -83,7 +82,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     $block = $this->placeBlock('system_powered_by_block', [
       'id' => 'apple',
       'label' => 'Red Delicious',
-      'theme' => 'bartik',
+      'theme' => 'olivero',
     ]);
 
     $this->checkSinglePluginConfigSync($block, 'settings', 'label', 'Red Delicious');

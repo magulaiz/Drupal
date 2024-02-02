@@ -3,14 +3,13 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 trait AssertViewsCacheTagsTrait {
-
-  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Asserts a view's result & render cache items' cache tags.
@@ -46,6 +45,7 @@ trait AssertViewsCacheTagsTrait {
     $request_stack = \Drupal::service('request_stack');
     $request = Request::createFromGlobals();
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $view->setRequest($request);
     $request_stack->push($request);
     $renderer->renderRoot($build);
@@ -126,6 +126,7 @@ trait AssertViewsCacheTagsTrait {
     $request_stack = \Drupal::service('request_stack');
     $request = new Request();
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $request_stack->push($request);
     $renderer->renderRoot($build);
 

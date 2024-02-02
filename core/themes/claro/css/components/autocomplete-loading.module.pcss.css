@@ -5,8 +5,6 @@
  * @see autocomplete.js
  */
 
-@import "../base/variables.pcss.css";
-
 /**
  * Since the autocomplete library is attached conditionally and not globally,
  * we can be 99% sure that the default icon will be used.
@@ -31,15 +29,13 @@
   background-repeat: no-repeat;
   background-position: 100% 50%;
 }
-.js .form-autocomplete::-ms-clear {
-  display: none;
-}
 .js[dir="rtl"] .form-autocomplete {
   background-image: url(../../images/icons/868686/magnifier-rtl.svg);
   background-position: 0 50%;
 }
 .js .form-autocomplete.is-autocompleting {
   background-image: url(../../images/icons/003ecc/spinner.svg);
+<<<<<<< HEAD
 }
 .js[dir="rtl"] .form-autocomplete.is-autocompleting {
   background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
@@ -55,6 +51,13 @@ _:-ms-fullscreen,
 _:-ms-fullscreen,
 .js[dir="rtl"] .form-autocomplete.is-autocompleting {
   background-image: url("../../images/spinner-rtl.gif");
+=======
+  background-position: center right -10px;
+}
+.js[dir="rtl"] .form-autocomplete.is-autocompleting {
+  background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
+  background-position: center left 10px;
+>>>>>>> upstream/11.x
 }
 
 /**

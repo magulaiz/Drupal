@@ -7,10 +7,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Tests\Routing\MockAliasManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * Tests that the Request Path Condition, provided by the system module, is
- * working properly.
+ * Tests system.module's request path condition.
  *
  * @group Plugin
  */
@@ -57,7 +58,6 @@ class RequestPathTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['sequences']);
     $this->installConfig('system');
 
     $this->pluginManager = $this->container->get('plugin.manager.condition');
@@ -85,6 +85,7 @@ class RequestPathTest extends KernelTestBase {
     $pages = "/my/pass/page\r\n/my/pass/page2\r\n/foo";
 
     $request = Request::create('/my/pass/page2');
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->requestStack->push($request);
 
     /** @var \Drupal\system\Plugin\Condition\RequestPath $condition */

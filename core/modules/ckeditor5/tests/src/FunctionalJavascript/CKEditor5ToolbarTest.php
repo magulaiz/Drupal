@@ -1,12 +1,21 @@
 <?php
 
+<<<<<<< HEAD
 declare(strict_types = 1);
+=======
+declare(strict_types=1);
+>>>>>>> upstream/11.x
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
+<<<<<<< HEAD
+=======
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\user\Entity\User;
+>>>>>>> upstream/11.x
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -15,18 +24,42 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
+<<<<<<< HEAD
 class CKEditor5ToolbarTest extends CKEditor5TestBase {
+=======
+class CKEditor5ToolbarTest extends WebDriverTestBase {
+>>>>>>> upstream/11.x
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
+<<<<<<< HEAD
+=======
+    'node',
+    'ckeditor5',
+>>>>>>> upstream/11.x
     'toolbar',
   ];
 
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
+=======
+  protected $defaultTheme = 'stark';
+
+  /**
+   * The admin user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $user;
+
+  /**
+   * {@inheritdoc}
+   */
+>>>>>>> upstream/11.x
   protected function setUp(): void {
     parent::setUp();
 

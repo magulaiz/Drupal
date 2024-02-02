@@ -40,7 +40,11 @@ class ExperimentalThemeTest extends BrowserTestBase {
    *
    * @dataProvider providerTestExperimentalConfirmForm
    */
+<<<<<<< HEAD
   public function testExperimentalConfirmForm(string $theme_name, string $dependency_theme_name, string $machine_theme_name, string $machine_dependency_theme_name): void {
+=======
+  public function testExperimentalConfirmForm(): void {
+>>>>>>> upstream/11.x
     // Only experimental themes should be marked as such with a parenthetical.
     $this->drupalGet('admin/appearance');
     $this->assertSession()->responseContains(sprintf($theme_name . ' %s                (experimental theme)', \Drupal::VERSION));
@@ -61,7 +65,11 @@ class ExperimentalThemeTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
+<<<<<<< HEAD
     $this->assertSession()->pageTextNotContains('The ' . $theme_name . ' theme has been installed.');
+=======
+    $this->assertSession()->pageTextNotContains('The Experimental test theme has been installed.');
+>>>>>>> upstream/11.x
     $this->assertSession()->pageTextContains('Experimental themes are provided for testing purposes only.');
 
     // There should be no message about enabling dependencies.
@@ -106,7 +114,11 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The following themes are experimental: ' . $dependency_theme_name);
 
     // There should be a message about enabling dependencies.
+<<<<<<< HEAD
     $this->assertSession()->pageTextContains('You must enable the ' . $theme_name . ' theme to install ' . $dependency_theme_name);
+=======
+    $this->assertSession()->pageTextContains('You must install the Experimental test theme to install Experimental dependency test');
+>>>>>>> upstream/11.x
 
     // Enable the theme and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -125,7 +137,11 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->config('system.theme')->set('default', 'test_theme')->save();
     \Drupal::service('theme_handler')->refreshInfo();
     \Drupal::service('theme_installer')->uninstall(
+<<<<<<< HEAD
       [$machine_theme_name, $machine_dependency_theme_name]
+=======
+      ['experimental_theme_test', 'experimental_theme_dependency_test']
+>>>>>>> upstream/11.x
     );
 
     // Reinstall the same theme, but this time immediately set it as the

@@ -78,7 +78,11 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    */
   protected function sortTranslators() {
     krsort($this->translators);
+<<<<<<< HEAD
     return array_merge([], ...$this->translators);
+=======
+    return array_merge(...$this->translators);
+>>>>>>> upstream/11.x
   }
 
   /**

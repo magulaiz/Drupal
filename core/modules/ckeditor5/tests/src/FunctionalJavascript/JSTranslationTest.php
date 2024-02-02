@@ -1,6 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 declare(strict_types = 1);
+=======
+declare(strict_types=1);
+>>>>>>> upstream/11.x
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
@@ -46,9 +50,15 @@ class JSTranslationTest extends CKEditor5TestBase {
     $this->createNewTextFormat($page, $assert_session);
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalMedia'));
     $this->click('#edit-filters-media-embed-status');
+<<<<<<< HEAD
     $assert_session->assertWaitOnAjaxRequest();
     $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalMedia', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
+=======
+    $assert_session->assertExpectedAjaxRequest(2);
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalMedia', 'ArrowDown');
+    $assert_session->assertExpectedAjaxRequest(3);
+>>>>>>> upstream/11.x
     $this->saveNewTextFormat($page, $assert_session);
 
     $langcode = 'fr';

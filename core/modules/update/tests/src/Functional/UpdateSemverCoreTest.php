@@ -5,11 +5,15 @@ namespace Drupal\Tests\update\Functional;
 use Drupal\Core\Url;
 
 /**
- * Tests the Update Manager module through a series of functional tests using
- * mock XML data.
+ * Tests edge cases of the Available Updates report UI.
+ *
+ * For example, manually checking for updates, recovering from problems
+ * connecting to the release history server, clearing the disk cache, and more.
  *
  * @group update
+ * @group #slow
  */
+<<<<<<< HEAD
 class UpdateSemverCoreTest extends UpdateSemverTestBase {
 
   /**
@@ -272,23 +276,25 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     return $test_cases;
 
   }
+=======
+class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
+>>>>>>> upstream/11.x
 
   /**
    * Ensures proper results where there are date mismatches among modules.
    */
   public function testDatestampMismatch() {
-    $system_info = [
-      '#all' => [
-        // We need to think we're running a -dev snapshot to see dates.
-        'version' => '8.1.0-dev',
-        'datestamp' => time(),
-      ],
+    $this->mockInstalledExtensionsInfo([
       'block' => [
         // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
         'datestamp' => '1000000000',
       ],
-    ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    ]);
+    // We need to think we're running a -dev snapshot to see dates.
+    $this->mockDefaultExtensionsInfo([
+      'version' => '8.1.0-dev',
+      'datestamp' => time(),
+    ]);
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertSession()->pageTextNotContains('2001-Sep-');
     $this->assertSession()->pageTextContains('Up to date');
@@ -304,9 +310,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.0'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => '0.0']);
 
     $this->cronRun();
     $this->drupalGet('admin/modules');
@@ -339,9 +343,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.0'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => '0.0']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -366,9 +368,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.1'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => '0.1']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -404,9 +404,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => 'sec.0.2'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => 'sec.0.2']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -446,25 +444,25 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * Tests that exactly one fetch task per project is created and not more.
    */
   public function testFetchTasks() {
-    $projecta = [
+    $project_a = [
       'name' => 'aaa_update_test',
     ];
-    $projectb = [
+    $project_b = [
       'name' => 'bbb_update_test',
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
     $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
-    update_create_fetch_task($projecta);
+    update_create_fetch_task($project_a);
     $this->assertEquals(1, $queue->numberOfItems(), 'Queue contains one item');
-    update_create_fetch_task($projectb);
+    update_create_fetch_task($project_b);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
-    update_create_fetch_task($projecta);
+    update_create_fetch_task($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
     update_storage_clear();
-    update_create_fetch_task($projecta);
+    update_create_fetch_task($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 
@@ -477,9 +475,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.1'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => '0.1']);
 
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->pageTextContains('Language');
@@ -526,26 +522,30 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
     // Use update XML that has no information to simulate a broken response from
     // the update server.
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => 'broken'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => 'broken']);
 
     // This will retrieve broken updates.
     $this->cronRun();
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('There was a problem checking available updates for Drupal.');
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => 'sec.0.2'])
-      ->save();
+    $this->mockReleaseHistory(['drupal' => 'sec.0.2']);
     // Simulate the update_available_releases state expiring before cron is run
     // and the state is used by \Drupal\update\UpdateManager::getProjects().
     \Drupal::keyValueExpirable('update_available_releases')->deleteAll();
     // This cron run should retrieve fixed updates.
     $this->cronRun();
-    $this->drupalGet('admin/structure');
+    $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
+  }
+
+  /**
+   * Tests when a dev release does not have a date.
+   */
+  public function testDevNoReleaseDate() {
+    $this->setProjectInstalledVersion('8.0.x-dev');
+    $this->refreshUpdateStatus([$this->updateProject => 'dev-no-date']);
   }
 
 }

@@ -13,7 +13,11 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   protected function setUp() {
+=======
+  protected function setUp(): void {
+>>>>>>> upstream/11.x
     parent::setUp();
 
     // Enable page caching.

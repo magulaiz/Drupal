@@ -23,12 +23,16 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'datetime_range',
     'language',
     'telephone',
+<<<<<<< HEAD
     'book',
     'forum',
     'statistics',
     'syslog',
     // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
     'tracker',
+=======
+    'syslog',
+>>>>>>> upstream/11.x
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
@@ -57,10 +61,12 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     return [
       'Blog',
       'Blog API',
-      'Book',
       'Calendar Signup',
+<<<<<<< HEAD
       // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
+=======
+>>>>>>> upstream/11.x
       'Comment',
       'Contact',
       'Content',
@@ -85,7 +91,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'FileField',
       'FileField Meta',
       'Filter',
-      'Forum',
       'Help',
       'ImageAPI',
       'ImageAPI GD2',
@@ -99,6 +104,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Node',
       'Nodeaccess',
       'Node Reference',
+      'Node Reference URL Widget',
       'Number',
       'OpenID',
       'PHP filter',
@@ -108,7 +114,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Poll',
       'Profile',
       'Search',
-      'Statistics',
       'Syslog',
       'System',
       'Taxonomy',
@@ -145,11 +150,14 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Block translation',
+      'Book',
       'CCK translation',
+      'Color',
       'Content type translation',
       'Devel',
       'Devel generate',
       'Devel node access',
+      'Forum',
       'Internationalization',
       'Menu translation',
       'migrate_status_active_test',
@@ -157,6 +165,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Option Widgets',
       'Poll aggregate',
       'Profile translation',
+      'Statistics',
       'String translation',
       'Synchronize translations',
       'Taxonomy translation',

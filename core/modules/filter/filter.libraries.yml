@@ -6,7 +6,6 @@ drupal.filter.admin:
     - core/jquery
     - core/drupal
     - core/once
-    - core/jquery.once.bc
     - core/drupal.form
 
 drupal.filter.filter_html.admin:
@@ -16,8 +15,11 @@ drupal.filter.filter_html.admin:
   dependencies:
     - core/jquery
     - core/once
+<<<<<<< HEAD
     - core/jquery.once.bc
     - core/drupal.array.includes
+=======
+>>>>>>> upstream/11.x
 
 drupal.filter:
   version: VERSION
@@ -27,7 +29,6 @@ drupal.filter:
     - core/jquery
     - core/drupal
     - core/once
-    - core/jquery.once.bc
 
 caption:
   version: VERSION

@@ -107,7 +107,11 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
       // Sort the builders according to priority.
       krsort($this->builders);
       // Merge nested builders from $this->builders into $this->sortedBuilders.
+<<<<<<< HEAD
       $this->sortedBuilders = array_merge([], ...$this->builders);
+=======
+      $this->sortedBuilders = array_merge(...$this->builders);
+>>>>>>> upstream/11.x
     }
     return $this->sortedBuilders;
   }

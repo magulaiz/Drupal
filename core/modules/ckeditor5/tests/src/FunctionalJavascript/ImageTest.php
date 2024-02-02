@@ -1,24 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
+<<<<<<< HEAD
 use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+=======
+>>>>>>> upstream/11.x
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore imageresize imageupload
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageUpload
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
+<<<<<<< HEAD
 class ImageTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;
@@ -30,6 +37,9 @@ class ImageTest extends CKEditor5TestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
+=======
+class ImageTest extends ImageTestBase {
+>>>>>>> upstream/11.x
 
   /**
    * The sample image File entity to embed.
@@ -37,27 +47,6 @@ class ImageTest extends CKEditor5TestBase {
    * @var \Drupal\file\FileInterface
    */
   protected $file;
-
-  /**
-   * A host entity with a body field to embed images in.
-   *
-   * @var \Drupal\node\NodeInterface
-   */
-  protected $host;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'ckeditor5',
-    'node',
-    'text',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
 
   /**
    * {@inheritdoc}
@@ -85,7 +74,7 @@ class ImageTest extends CKEditor5TestBase {
       'settings' => [
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
             'sourceEditing',
             'link',
             'italic',
@@ -142,6 +131,7 @@ class ImageTest extends CKEditor5TestBase {
   }
 
   /**
+<<<<<<< HEAD
    * Ensures that attributes are retained on conversion.
    */
   public function testAttributeRetentionDuringUpcasting() {
@@ -244,15 +234,13 @@ class ImageTest extends CKEditor5TestBase {
 
   /**
    * Tests linkability of the image CKEditor widget.
+=======
+   * Provides the relevant image attributes.
+>>>>>>> upstream/11.x
    *
-   * Due to the complex overrides that `drupalImage.DrupalImage` is making, this
-   * is explicitly testing the "editingDowncast" and "dataDowncast" results.
-   * These are CKEditor 5 concepts.
-   *
-   * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/architecture/editing-engine.html#conversion
-   *
-   * @dataProvider providerLinkability
+   * @return string[]
    */
+<<<<<<< HEAD
   public function testLinkability(string $image_type, bool $unrestricted) {
     assert($image_type === 'inline' || $image_type === 'block');
 
@@ -499,14 +487,19 @@ class ImageTest extends CKEditor5TestBase {
   }
 
   public function providerLinkability(): array {
+=======
+  protected function imageAttributes() {
+>>>>>>> upstream/11.x
     return [
-      'BLOCK image, restricted' => ['block', FALSE],
-      'BLOCK image, unrestricted' => ['block', TRUE],
-      'INLINE image, restricted' => ['inline', FALSE],
-      'INLINE image, unrestricted' => ['inline', TRUE],
+      'data-entity-type' => 'file',
+      'data-entity-uuid' => $this->file->uuid(),
+      'src' => $this->file->createFileUrl(),
+      'width' => '40',
+      'height' => '20',
     ];
   }
 
+<<<<<<< HEAD
   /**
    * Tests alignment integration.
    *
@@ -711,6 +704,15 @@ class ImageTest extends CKEditor5TestBase {
         'is_resize_enabled' => FALSE,
       ],
     ];
+=======
+  protected function addImage() {
+    $page = $this->getSession()->getPage();
+    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $image = $this->getTestFiles('image')[0];
+    $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
+    // Wait for the image to be uploaded and rendered by CKEditor 5.
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src*="' . $image->filename . '"]'));
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -723,6 +725,7 @@ class ImageTest extends CKEditor5TestBase {
 
     // The image resize and upload plugin settings forms should be present.
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
+<<<<<<< HEAD
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
 
     // Removing the imageUpload button from the toolbar must remove the plugin
@@ -738,6 +741,23 @@ class ImageTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
+=======
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
+
+    // Removing the drupalImageInsert button from the toolbar must remove the
+    // plugin settings forms too.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowUp');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
+
+    // Re-adding the drupalImageInsert button to the toolbar must re-add the
+    // plugin settings forms too.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
+>>>>>>> upstream/11.x
   }
 
 }

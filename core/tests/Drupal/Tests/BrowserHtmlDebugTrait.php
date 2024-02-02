@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Component\Utility\Html;
@@ -137,7 +139,7 @@ trait BrowserHtmlDebugTrait {
    */
   protected function initBrowserOutputFile() {
     $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
-    $this->htmlOutputEnabled = is_file($browser_output_file);
+    $this->htmlOutputEnabled = is_string($browser_output_file) && is_file($browser_output_file);
     $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputFile = $browser_output_file;
@@ -182,7 +184,13 @@ trait BrowserHtmlDebugTrait {
               /** @var \Psr\Http\Message\StreamInterface $stream */
               $stream = $response->getBody();
 
+<<<<<<< HEAD
               // Get the response body as a string.
+=======
+              // Get the response body as a string. The response stream is set
+              // to the sink, which defaults to a readable temp stream but can
+              // be overridden by setting $options['sink'].
+>>>>>>> upstream/11.x
               $body = $stream->isReadable()
                 ? (string) $stream
                 : 'Response is not readable.';

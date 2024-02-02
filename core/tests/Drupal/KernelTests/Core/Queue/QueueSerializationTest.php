@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -24,6 +25,14 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    * @var array
    */
   protected static $modules = ['system', 'user'];
+<<<<<<< HEAD
+=======
+
+  /**
+   * @var \Drupal\Core\Queue\DatabaseQueue
+   */
+  protected DatabaseQueue $queue;
+>>>>>>> upstream/11.x
 
   /**
    * {@inheritdoc}
@@ -70,7 +79,6 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     // We only need a valid \Drupal\Core\Queue\DatabaseQueue object here, not
     // an actual valid queue.

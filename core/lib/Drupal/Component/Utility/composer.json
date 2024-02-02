@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "drupal/core-utility",
   "description": "Mostly static utility classes for string, xss, array, image, and other commonly needed manipulations.",
   "keywords": ["drupal"],
@@ -10,6 +11,27 @@
   "autoload": {
     "psr-4": {
       "Drupal\\Component\\Utility\\": ""
+=======
+    "name": "drupal/core-utility",
+    "description": "Mostly static utility classes for string, xss, array, image, and other commonly needed manipulations.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.1.0",
+        "masterminds/html5": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Utility\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
+>>>>>>> upstream/11.x
     }
-  }
 }

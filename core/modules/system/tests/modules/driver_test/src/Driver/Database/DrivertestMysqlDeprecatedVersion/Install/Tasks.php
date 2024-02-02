@@ -2,8 +2,11 @@
 
 namespace Drupal\driver_test\Driver\Database\DrivertestMysqlDeprecatedVersion\Install;
 
+<<<<<<< HEAD
 include_once dirname(__DIR__, 9) . '/mysql/src/Driver/Database/mysql/Install/Tasks.php';
 
+=======
+>>>>>>> upstream/11.x
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks as CoreTasks;
 
 /**

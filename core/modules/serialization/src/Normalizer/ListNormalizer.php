@@ -18,12 +18,7 @@ class ListNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = ListInterface::class;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $attributes = [];
     foreach ($object as $fieldItem) {
       $attributes[] = $this->serializer->normalize($fieldItem, $format, $context);
@@ -34,8 +29,15 @@ class ListNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public function hasCacheableSupportsMethod(): bool {
     return TRUE;
+=======
+  public function getSupportedTypes(?string $format): array {
+    return [
+      ListInterface::class => TRUE,
+    ];
+>>>>>>> upstream/11.x
   }
 
 }

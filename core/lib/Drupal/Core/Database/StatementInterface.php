@@ -7,12 +7,18 @@ namespace Drupal\Core\Database;
 /**
  * Represents a prepared statement.
  *
+<<<<<<< HEAD
  * Child implementations should either extend StatementWrapper:
  * @code
  * class Drupal\mymodule\Driver\Database\mydriver\Statement extends Drupal\Core\Database\StatementWrapper {}
+=======
+ * Child implementations should either extend StatementWrapperIterator:
+ * @code
+ * class Drupal\mymodule\Driver\Database\mydriver\Statement extends Drupal\Core\Database\StatementWrapperIterator {}
+>>>>>>> upstream/11.x
  * @endcode
  * or define their own class. If defining their own class, they will also have
- * to implement either the Iterator or IteratorAggregate interface before
+ * to implement either the \Iterator or \IteratorAggregate interface before
  * Drupal\Core\Database\StatementInterface:
  * @code
  * class Drupal\mymodule\Driver\Database\mydriver\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
@@ -31,7 +37,7 @@ interface StatementInterface extends \Traversable {
    * @param $options
    *   An array of options for this query.
    *
-   * @return
+   * @return bool
    *   TRUE on success, or FALSE on failure.
    */
   public function execute($args = [], $options = []);
@@ -39,7 +45,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Gets the query string of this statement.
    *
-   * @return
+   * @return string
    *   The query string, in its form with placeholders.
    */
   public function getQueryString();
@@ -50,15 +56,13 @@ interface StatementInterface extends \Traversable {
    * @return string
    *   The target connection string of this statement.
    */
-  // @todo Include this method in the interface in Drupal 10.
-  // @see https://www.drupal.org/project/drupal/issues/3210310
-  // public function getConnectionTarget(): string;
+  public function getConnectionTarget(): string;
 
   /**
-   * Returns the number of rows affected by the last SQL statement.
+   * Returns the number of rows matched by the last SQL statement.
    *
-   * @return
-   *   The number of rows affected by the last DELETE, INSERT, or UPDATE
+   * @return int
+   *   The number of rows matched by the last DELETE, INSERT, or UPDATE
    *   statement executed or throws \Drupal\Core\Database\RowCountException
    *   if the last executed statement was SELECT.
    *
@@ -99,8 +103,8 @@ interface StatementInterface extends \Traversable {
    * @param $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return
-   *   A result, formatted according to $mode.
+   * @return array|object|false
+   *   A result, formatted according to $mode, or FALSE on failure.
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL);
 
@@ -110,7 +114,7 @@ interface StatementInterface extends \Traversable {
    * @param $index
    *   The numeric index of the field to return. Defaults to the first field.
    *
-   * @return
+   * @return mixed
    *   A single field from the next record, or FALSE if there is no next record.
    */
   public function fetchField($index = 0);
@@ -122,11 +126,12 @@ interface StatementInterface extends \Traversable {
    * or stdClass if not specified.
    *
    * phpcs:disable Drupal.Commenting
-   * @todo Remove PHPCS overrides https://www.drupal.org/node/3194677.
+   * @todo Uncomment new method parameters before drupal:11.0.0.
+   * @see https://www.drupal.org/project/drupal/issues/3354672
    *
    * @param string|null $class_name
    *   Name of the created class.
-   * @param array|null $constructor_arguments
+   * @param array $constructor_arguments
    *   Elements of this array are passed to the constructor.
    * phpcs:enable
    *
@@ -134,7 +139,7 @@ interface StatementInterface extends \Traversable {
    *   The object of specified class or \stdClass if not specified. Returns
    *   FALSE or NULL if there is no next row.
    */
-  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = NULL */);
+  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = [] */);
 
   /**
    * Fetches the next row and returns it as an associative array.
@@ -143,7 +148,7 @@ interface StatementInterface extends \Traversable {
    * associative arrays. For some reason \PDOStatement does not have a
    * corresponding array helper method, so one is added.
    *
-   * @return
+   * @return array|bool
    *   An associative array, or FALSE if there is no next row.
    */
   public function fetchAssoc();
@@ -158,7 +163,7 @@ interface StatementInterface extends \Traversable {
    * @param $constructor_arguments
    *   If $mode is \PDO::FETCH_CLASS, the arguments to pass to the constructor.
    *
-   * @return
+   * @return array
    *   An array of results.
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL);
@@ -171,7 +176,7 @@ interface StatementInterface extends \Traversable {
    * @param $index
    *   The index of the column number to fetch.
    *
-   * @return
+   * @return array
    *   An indexed array, or an empty array if there is no result set.
    */
   public function fetchCol($index = 0);
@@ -191,7 +196,7 @@ interface StatementInterface extends \Traversable {
    * @param $value_index
    *   The numeric index of the field to use as the array value.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1);
@@ -205,12 +210,16 @@ interface StatementInterface extends \Traversable {
    * @param $key
    *   The name of the field on which to index the array.
    * @param $fetch
+<<<<<<< HEAD
    *   The fetchmode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
+=======
+   *   The fetch mode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
+>>>>>>> upstream/11.x
    *   \PDO::FETCH_BOTH the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. By default, the fetch mode
    *   set for the query will be used.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllAssoc($key, $fetch = NULL);

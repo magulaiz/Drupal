@@ -23,6 +23,9 @@ class BlockHtmlTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -48,8 +51,12 @@ class BlockHtmlTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//div[@id="block-test-html-block" and @data-custom-attribute="foo"]');
 
     // Ensure expected markup for a menu block.
+<<<<<<< HEAD
     $elements = $this->xpath('//nav[@id="block-test-menu-block"]/ul/li');
     $this->assertNotEmpty($elements, 'The proper block markup was found.');
+=======
+    $this->assertSession()->elementExists('xpath', '//nav[@id="block-test-menu-block"]/ul/li');
+>>>>>>> upstream/11.x
   }
 
 }

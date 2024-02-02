@@ -21,7 +21,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test', 'entity_test', 'user'];
+  protected static $modules = ['config_test', 'entity_test', 'user', 'node', 'views'];
 
   /**
    * Tests that calculating dependencies for system module.
@@ -636,6 +636,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertEquals($entity2->uuid(), $config_entities['delete'][0]->uuid(), 'Entity 2 will be deleted.');
     $this->assertEmpty($config_entities['update'], 'No dependencies of the content entity will be updated.');
     $this->assertEmpty($config_entities['unchanged'], 'No dependencies of the content entity will be unchanged.');
+<<<<<<< HEAD
   }
 
   /**
@@ -656,6 +657,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     $config_manager->findConfigEntityDependentsAsEntities('module', ['system']);
+=======
+>>>>>>> upstream/11.x
   }
 
   /**

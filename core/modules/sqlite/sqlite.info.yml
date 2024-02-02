@@ -1,5 +1,9 @@
 name: SQLite
 type: module
+<<<<<<< HEAD
 description: 'Database driver for SQLite.'
+=======
+description: 'Provides the SQLite database driver.'
+>>>>>>> upstream/11.x
 package: Core
 version: VERSION

@@ -2,6 +2,10 @@
 
 namespace Drupal\FunctionalTests;
 
+<<<<<<< HEAD
+=======
+use Drupal\Core\Database\Connection;
+>>>>>>> upstream/11.x
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
@@ -35,6 +39,22 @@ class ExistingDrupal8StyleDatabaseConnectionInSettingsPhpTest extends BrowserTes
     $namespace_search = "'namespace' => 'Drupal\\\\$driver\\\\Driver\\\\Database\\\\$driver',";
     $namespace_replace = "'namespace' => 'Drupal\\\\Core\\\\Database\\\\Driver\\\\$driver',";
     $contents = str_replace($namespace_search, $namespace_replace, $contents);
+<<<<<<< HEAD
+=======
+
+    // Add a replica connection to the database settings.
+    $contents .= "\$databases['default']['replica'][] = array (\n";
+    $contents .= "  'database' => 'db',\n";
+    $contents .= "  'username' => 'db',\n";
+    $contents .= "  'password' => 'db',\n";
+    $contents .= "  'prefix' => 'test22806835',\n";
+    $contents .= "  'host' => 'db',\n";
+    $contents .= "  'port' => 3306,\n";
+    $contents .= "  $namespace_replace\n";
+    $contents .= "  'driver' => 'mysql',\n";
+    $contents .= ");\n";
+
+>>>>>>> upstream/11.x
     file_put_contents($filename, $contents);
   }
 
@@ -56,4 +76,17 @@ class ExistingDrupal8StyleDatabaseConnectionInSettingsPhpTest extends BrowserTes
     $this->assertStringNotContainsString("'autoload' => 'core/modules/$driver/src/Driver/Database/$driver/", $contents);
   }
 
+<<<<<<< HEAD
+=======
+  /**
+   * Confirms that the replica database connection works.
+   */
+  public function testReplicaDrupal8StyleDatabaseConnectionInSettingsPhp() {
+    $this->drupalLogin($this->drupalCreateUser());
+
+    $replica = Database::getConnection('replica', 'default');
+    $this->assertInstanceOf(Connection::class, $replica);
+  }
+
+>>>>>>> upstream/11.x
 }

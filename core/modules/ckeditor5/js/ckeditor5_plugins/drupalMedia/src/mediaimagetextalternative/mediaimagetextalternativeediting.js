@@ -1,8 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 /* cspell:words mediaimagetextalternativecommand drupalmediametadatarepository insertdrupalmediacommand */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { TooltipView, Template } from 'ckeditor5/src/ui';
+=======
+/* cspell:ignore mediaimagetextalternativecommand drupalmediametadatarepository insertdrupalmediacommand */
+
+import { Plugin } from 'ckeditor5/src/core';
+import { Template } from 'ckeditor5/src/ui';
+>>>>>>> upstream/11.x
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
 import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 import { METADATA_ERROR } from './utils';
@@ -74,10 +81,13 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
             'Not all functionality may be available because some information could not be retrieved.',
           );
 
+<<<<<<< HEAD
           const tooltip = new TooltipView();
           tooltip.text = message;
           tooltip.position = 'sw';
 
+=======
+>>>>>>> upstream/11.x
           const html = new Template({
             tag: 'span',
             children: [
@@ -85,9 +95,15 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
                 tag: 'span',
                 attributes: {
                   class: 'drupal-media__metadata-error-icon',
+<<<<<<< HEAD
                 },
               },
               tooltip,
+=======
+                  'data-cke-tooltip-text': message,
+                },
+              },
+>>>>>>> upstream/11.x
             ],
           }).render();
 

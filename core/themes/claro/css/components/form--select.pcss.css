@@ -3,14 +3,13 @@
  * Select input elements.
  */
 
-@import "../base/variables.pcss.css";
-
 .form-element--type-select {
-  padding-right: calc(2rem - var(--input-border-size));
+  padding-inline-end: calc(2rem - var(--input-border-size));
   background-image: url(../../images/icons/545560/chevron-down.svg);
   background-repeat: no-repeat;
   background-position: 100% 50%;
   background-size: 2.75rem 0.5625rem; /* w: 14px + (2 * 15px), h: 9px */
+<<<<<<< HEAD
 }
 
 [dir="rtl"] .form-element--type-select {
@@ -42,6 +41,40 @@
 }
 .form-element--type-select[disabled] {
   background-image: url(../../images/icons/8e929c/chevron-down.svg);
+=======
+
+  /**
+   * Select states.
+   */
+  &:focus {
+    background-image: url(../../images/icons/003ecc/chevron-down.svg);
+  }
+  &[disabled] {
+    background-image: url(../../images/icons/8e929c/chevron-down.svg);
+  }
+
+  @nest [dir="rtl"] & {
+    background-position: 0 50%;
+  }
+
+  @nest .no-touchevents & {
+    &.form-element--extrasmall,
+    &[name$="][_weight]"] {
+      padding-inline-end: calc(1.5rem - var(--input-border-size));
+      background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .form-element--type-select,
+  .form-element--type-select:focus,
+  .form-element--type-select[disabled] {
+    padding-inline-end: var(--input-padding-horizontal);
+    background-image: none;
+    appearance: revert; /* Revert <select> appearance value for modern browsers. */
+  }
+>>>>>>> upstream/11.x
 }
 
 /* Necessary to show chevron in forced colors mode in modern browsers. */

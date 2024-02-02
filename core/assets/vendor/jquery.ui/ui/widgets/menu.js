@@ -1,5 +1,9 @@
 /*!
+<<<<<<< HEAD
  * jQuery UI Menu 1.13.1
+=======
+ * jQuery UI Menu 1.13.2
+>>>>>>> upstream/11.x
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -40,7 +44,11 @@
 "use strict";
 
 return $.widget( "ui.menu", {
+<<<<<<< HEAD
 	version: "1.13.1",
+=======
+	version: "1.13.2",
+>>>>>>> upstream/11.x
 	defaultElement: "<ul>",
 	delay: 300,
 	options: {

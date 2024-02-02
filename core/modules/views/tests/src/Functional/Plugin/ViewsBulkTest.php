@@ -16,7 +16,7 @@ class ViewsBulkTest extends ViewTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * Modules to enable.
@@ -30,11 +30,18 @@ class ViewsBulkTest extends ViewTestBase {
    */
   protected $defaultTheme = 'stark';
 
+<<<<<<< HEAD
   public function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+=======
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+>>>>>>> upstream/11.x
     parent::setUp($import_test_views, $modules);
 
     $this->drupalCreateContentType(['type' => 'page']);
-    $this->admin_user = $this->createUser(['bypass node access', 'administer nodes', 'access content overview']);
+    $this->adminUser = $this->createUser(['bypass node access', 'administer nodes', 'access content overview']);
   }
 
   /**
@@ -50,7 +57,7 @@ class ViewsBulkTest extends ViewTestBase {
     ]);
 
     // Login as administrator and go to admin/content.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content');
     $this->assertSession()->pageTextContains($node_1->getTitle());
 
@@ -60,6 +67,11 @@ class ViewsBulkTest extends ViewTestBase {
       'title' => 'The second node',
       'changed' => \Drupal::time()->getRequestTime() - 120,
     ]);
+
+    // Select the node deletion action.
+    $action_select = $this->getSession()->getPage()->findField('edit-action');
+    $action_select_name = $action_select->getAttribute('name');
+    $this->getSession()->getPage()->selectFieldOption($action_select_name, 'node_delete_action');
 
     // Now click 'Apply to selected items' and assert the first node is selected
     // on the confirm form.
@@ -78,6 +90,9 @@ class ViewsBulkTest extends ViewTestBase {
       'type' => 'page',
       'title' => 'The third node',
     ]);
+
+    // Select the node deletion action.
+    $this->getSession()->getPage()->selectFieldOption($action_select_name, 'node_delete_action');
 
     // Now click 'Apply to selected items' and assert the second node is
     // selected on the confirm form.

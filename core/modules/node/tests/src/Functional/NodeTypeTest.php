@@ -12,6 +12,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  * Ensures that node type functions work correctly.
  *
  * @group node
+ * @group #slow
  */
 class NodeTypeTest extends NodeTestBase {
 
@@ -88,6 +89,10 @@ class NodeTypeTest extends NodeTestBase {
     ];
     $this->drupalGet('admin/structure/types/add');
     $this->submitForm($edit, 'Save and manage fields');
+
+    // Asserts that form submit redirects to the expected manage fields page.
+    $this->assertSession()->addressEquals('admin/structure/types/manage/' . $edit['name'] . '/fields');
+
     $type_exists = (bool) NodeType::load('foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
@@ -122,7 +127,7 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'Foo',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     $this->drupalGet('node/add/page');
     $assert->pageTextContains('Foo');
@@ -134,7 +139,7 @@ class NodeTypeTest extends NodeTestBase {
       'description' => 'Lorem ipsum.',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     $this->drupalGet('node/add');
     $assert->pageTextContains('Bar');
@@ -159,7 +164,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->submitForm([], 'Delete');
     // Resave the settings for this type.
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm([], 'Save content type');
+    $this->submitForm([], 'Save');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/types/manage/page/fields', [
       $front_page_path => 'Home',
@@ -206,8 +211,8 @@ class NodeTypeTest extends NodeTestBase {
     $locked = \Drupal::state()->get('node.type.locked');
     $locked['default'] = 'default';
     \Drupal::state()->set('node.type.locked', $locked);
-    // Call to flush all caches after installing the forum module in the same
-    // way installing a module through the UI does.
+    // Call to flush all caches after installing the node_test_config module in
+    // the same way installing a module through the UI does.
     $this->resetAll();
     $this->drupalGet('admin/structure/types/manage/default');
     $this->assertSession()->linkNotExists('Delete');

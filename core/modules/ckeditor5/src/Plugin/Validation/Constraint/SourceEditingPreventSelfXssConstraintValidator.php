@@ -101,7 +101,11 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
    */
   private static function isWildcardAttributeName(string $attribute_name): bool {
     assert($attribute_name !== '*');
+<<<<<<< HEAD
     return strpos($attribute_name, '*') !== FALSE;
+=======
+    return str_contains($attribute_name, '*');
+>>>>>>> upstream/11.x
   }
 
   /**

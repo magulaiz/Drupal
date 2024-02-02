@@ -12,7 +12,11 @@
 
 "use strict";
 
+<<<<<<< HEAD
 const glob = require("glob");
+=======
+const { globSync } = require("glob");
+>>>>>>> upstream/11.x
 const log = require("./log");
 const fs = require("fs").promises;
 const child_process = require("child_process");
@@ -26,7 +30,11 @@ async function getContents(files) {
 }
 
 (async () => {
+<<<<<<< HEAD
   const files = glob.sync("./modules/ckeditor5/js/build/*.js");
+=======
+  const files = globSync("./modules/ckeditor5/js/build/*.js").sort();
+>>>>>>> upstream/11.x
 
   const pluginsBefore = await getContents(files);
   // Execute the plugin build script.

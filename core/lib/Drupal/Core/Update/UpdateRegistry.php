@@ -96,7 +96,11 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   A list of post-update functions that have been removed.
    */
   public function getRemovedPostUpdates($extension) {
+<<<<<<< HEAD
     $this->scanExtensionsAndLoadUpdateFiles();
+=======
+    $this->scanExtensionsAndLoadUpdateFiles($extension);
+>>>>>>> upstream/11.x
     $function = "{$extension}_removed_post_updates";
     if (function_exists($function)) {
       return $function();
@@ -238,6 +242,7 @@ class UpdateRegistry implements EventSubscriberInterface {
 
   /**
    * Returns all available updates for a given extension.
+<<<<<<< HEAD
    *
    * @param string $extension_name
    *   The extension name.
@@ -257,9 +262,11 @@ class UpdateRegistry implements EventSubscriberInterface {
 
   /**
    * Returns all available updates for a given module.
+=======
+>>>>>>> upstream/11.x
    *
-   * @param string $module_name
-   *   The module name.
+   * @param string $extension_name
+   *   The extension name.
    *
    * @return callable[]
    *   A list of update functions.
@@ -269,27 +276,58 @@ class UpdateRegistry implements EventSubscriberInterface {
    *
    * @see https://www.drupal.org/node/3260162
    */
+<<<<<<< HEAD
   public function getModuleUpdateFunctions($module_name) {
     @trigger_error(__CLASS__ . '\getModuleUpdateFunctions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead. See https://www.drupal.org/node/3260162', E_USER_DEPRECATED);
     return $this->getUpdateFunctions($module_name);
+=======
+  public function getUpdateFunctions($extension_name) {
+    $this->scanExtensionsAndLoadUpdateFiles($extension_name);
+    $all_functions = $this->getAvailableUpdateFunctions();
+
+    return array_filter($all_functions, function ($function_name) use ($extension_name) {
+      [$function_extension_name] = explode("_{$this->updateType}_", $function_name);
+      return $function_extension_name === $extension_name;
+    });
+>>>>>>> upstream/11.x
   }
 
   /**
    * Scans all module, theme, and profile extensions and load the update files.
+<<<<<<< HEAD
    */
   protected function scanExtensionsAndLoadUpdateFiles() {
     // Scan for extensions.
     $extension_discovery = new ExtensionDiscovery($this->root, FALSE, [], $this->sitePath);
+=======
+   *
+   * @param string|null $extension
+   *   (optional) Limits the extension update files loaded to the provided
+   *   extension.
+   */
+  protected function scanExtensionsAndLoadUpdateFiles(string $extension = NULL) {
+    // Scan for extensions.
+    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], $this->sitePath);
+>>>>>>> upstream/11.x
     $module_extensions = $extension_discovery->scan('module');
     $theme_extensions = $this->includeThemes() ? $extension_discovery->scan('theme') : [];
     $profile_extensions = $extension_discovery->scan('profile');
     $extensions = array_merge($module_extensions, $theme_extensions, $profile_extensions);
+<<<<<<< HEAD
+=======
+
+    // Limit to a single extension.
+    if ($extension) {
+      $extensions = array_intersect_key($extensions, [$extension => TRUE]);
+    }
+>>>>>>> upstream/11.x
 
     $this->loadUpdateFiles($extensions);
   }
 
   /**
    * Filters out already executed update functions by extension.
+<<<<<<< HEAD
    *
    * @param string $extension
    *   The extension name.
@@ -319,6 +357,80 @@ class UpdateRegistry implements EventSubscriberInterface {
   public function filterOutInvokedUpdatesByModule($module) {
     @trigger_error(__CLASS__ . '\filterOutInvokedUpdatesByModule() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension() instead. See https://www.drupal.org/node/3260162', E_USER_DEPRECATED);
     $this->filterOutInvokedUpdatesByExtension($module);
+  }
+
+  /**
+   * @return bool
+   */
+  protected function includeThemes(): bool {
+    return $this->updateType === 'post_update';
+  }
+=======
+   *
+   * @param string $extension
+   *   The extension name.
+   */
+  public function filterOutInvokedUpdatesByExtension(string $extension) {
+    $existing_update_functions = $this->keyValue->get('existing_updates', []);
+
+    $remaining_update_functions = array_filter($existing_update_functions, function ($function_name) use ($extension) {
+      return !str_starts_with($function_name, "{$extension}_{$this->updateType}_");
+    });
+>>>>>>> upstream/11.x
+
+  /**
+   * Processes the list of installed extensions when core.extension changes.
+   *
+   * @param \Drupal\Core\Config\ConfigCrudEvent $event
+   *   The Event to process.
+   */
+  public function onConfigSave(ConfigCrudEvent $event) {
+    $config = $event->getConfig();
+    if ($config->getName() === 'core.extension') {
+      // Build the old extension configuration list from configuration rather
+      // than using $this->enabledExtensions. This ensures that if the
+      // UpdateRegistry is constructed after _drupal_maintenance_theme() has
+      // added a theme to the theme handler it will not be considered as already
+      // installed.
+      $old_extension_list = array_keys($config->getOriginal('module') ?? []);
+      $new_extension_list = array_keys($config->get('module'));
+      if ($this->includeThemes()) {
+        $new_extension_list = array_merge($new_extension_list, array_keys($config->get('theme')));
+        $old_extension_list = array_merge($old_extension_list, array_keys($config->getOriginal('theme') ?? []));
+      }
+
+      // The list of extensions installed or uninstalled. In regular operation
+      // only one of the lists will have a single value. This is because Drupal
+      // can only install one extension at a time.
+      $uninstalled_extensions = array_diff($old_extension_list, $new_extension_list);
+      $installed_extensions = array_diff($new_extension_list, $old_extension_list);
+
+      // Set the list of enabled extensions correctly so update function
+      // discovery works as expected.
+      $this->enabledExtensions = $new_extension_list;
+
+      foreach ($uninstalled_extensions as $uninstalled_extension) {
+        $this->filterOutInvokedUpdatesByExtension($uninstalled_extension);
+      }
+      foreach ($installed_extensions as $installed_extension) {
+        // Ensure that all post_update functions are registered already. This
+        // should include existing post-updates, as well as any specified as
+        // having been previously removed, to ensure that newly installed and
+        // updated sites have the same entries in the registry.
+        $this->registerInvokedUpdates(array_merge(
+          $this->getUpdateFunctions($installed_extension),
+          array_keys($this->getRemovedPostUpdates($installed_extension))
+        ));
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    $events[ConfigEvents::SAVE][] = ['onConfigSave'];
+    return $events;
   }
 
   /**

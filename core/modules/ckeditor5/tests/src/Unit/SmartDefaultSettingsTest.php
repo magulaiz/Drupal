@@ -1,6 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 declare(strict_types = 1);
+=======
+declare(strict_types=1);
+>>>>>>> upstream/11.x
 
 namespace Drupal\Tests\ckeditor5\Unit;
 

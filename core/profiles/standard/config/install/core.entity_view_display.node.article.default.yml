@@ -40,9 +40,14 @@ content:
     label: hidden
     settings:
       image_style: wide
+<<<<<<< HEAD
       image_link: ''
       image_loading:
         attribute: lazy
+=======
+      image_loading:
+        attribute: eager
+>>>>>>> upstream/11.x
     third_party_settings: {  }
     weight: -1
     region: content

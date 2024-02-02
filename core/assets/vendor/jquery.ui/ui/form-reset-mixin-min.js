@@ -1,5 +1,9 @@
 /*!
+<<<<<<< HEAD
  * jQuery UI Form Reset Mixin 1.13.1
+=======
+ * jQuery UI Form Reset Mixin 1.13.2
+>>>>>>> upstream/11.x
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors

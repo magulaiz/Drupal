@@ -35,7 +35,11 @@ module.exports = {
   },
   'Verify default placement of javascript-created messages': (browser) => {
     browser
+<<<<<<< HEAD
       .drupalRelativeURL('/js_message_test_link')
+=======
+      .drupalRelativeURL('/js_message_test_link_with_system_messages')
+>>>>>>> upstream/11.x
       .waitForElementVisible(mainContent)
       .assert.elementPresent(mainMessagesContainer)
 
@@ -63,7 +67,11 @@ module.exports = {
 
   'Verify customized placement of javascript-created messages': (browser) => {
     browser
+<<<<<<< HEAD
       .drupalRelativeURL('/js_message_test_link')
+=======
+      .drupalRelativeURL('/js_message_test_link_with_system_messages')
+>>>>>>> upstream/11.x
       .waitForElementVisible(mainContent)
       .assert.elementPresent(secondaryMessagesContainer)
 

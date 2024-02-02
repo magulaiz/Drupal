@@ -1,5 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 /* cspell:words imagecaption */
+=======
+/* cspell:ignore imagecaption */
+>>>>>>> upstream/11.x
 import { Command } from 'ckeditor5/src/core';
 import { getClosestSelectedDrupalMediaElement, isDrupalMedia } from '../utils';
 import { getMediaCaptionFromModelSelection } from './utils';
@@ -106,7 +110,11 @@ export default class ToggleDrupalMediaCaptionCommand extends Command {
    *
    * @param {module:engine/model/writer~Writer} writer
    *   The model writer.
+<<<<<<< HEAD
    * @param {bool} focusCaptionOnShow
+=======
+   * @param {boolean} focusCaptionOnShow
+>>>>>>> upstream/11.x
    *   Flag indicating whether the caption should be focused.
    */
   _showDrupalMediaCaption(writer, focusCaptionOnShow) {

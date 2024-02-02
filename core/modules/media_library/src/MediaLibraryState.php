@@ -114,6 +114,8 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
       throw new BadRequestHttpException("Invalid media library parameters specified.");
     }
 
+    // @todo: Review parameters passed and remove irrelevant ones in https://www.drupal.org/i/3396650
+
     // Once we have validated the required parameters, we restore the parameters
     // from the request since there might be additional values.
     $state->replace($query->all());
@@ -269,6 +271,7 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    */
   public function getOpenerParameters() {
     return $this->all('media_library_opener_parameters');
+<<<<<<< HEAD
   }
 
   /**
@@ -294,6 +297,8 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
     }
 
     return $value;
+=======
+>>>>>>> upstream/11.x
   }
 
   /**

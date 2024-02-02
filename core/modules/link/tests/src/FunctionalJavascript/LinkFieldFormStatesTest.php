@@ -67,12 +67,20 @@ class LinkFieldFormStatesTest extends WebDriverTestBase {
   public function linkFieldFormStatesData() {
     return [
       'Fill uri, keep title empty' => [
+<<<<<<< HEAD
         'https://drupal.org',
+=======
+        'https://example.com',
+>>>>>>> upstream/11.x
         '',
       ],
       'Fill title, keep uri empty' => [
         '',
+<<<<<<< HEAD
         'https://drupal.org',
+=======
+        'https://example.com',
+>>>>>>> upstream/11.x
       ],
     ];
   }

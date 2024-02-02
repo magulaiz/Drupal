@@ -35,12 +35,17 @@ class MaintenanceMode implements MaintenanceModeInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
+<<<<<<< HEAD
   public function __construct(StateInterface $state, ConfigFactoryInterface $config_factory = NULL) {
     $this->state = $state;
     if (!$config_factory) {
       @trigger_error('Calling MaintenanceMode::__construct() without the $config_factory argument is deprecated in drupal:9.4.0 and the $config_factory argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3255815', E_USER_DEPRECATED);
       $config_factory = \Drupal::service('config.factory');
     }
+=======
+  public function __construct(StateInterface $state, ConfigFactoryInterface $config_factory) {
+    $this->state = $state;
+>>>>>>> upstream/11.x
     $this->config = $config_factory;
   }
 

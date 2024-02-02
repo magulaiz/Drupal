@@ -138,7 +138,11 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
     $this->assertEquals($expected_changelist_spanish_collection, $comparer->getChangelist(NULL, 'language.es'));
 
     // Change a translation and ensure configuration is updated.
+<<<<<<< HEAD
     $po = <<<ENDPO
+=======
+    $po = <<<PO
+>>>>>>> upstream/11.x
 msgid ""
 msgstr ""
 
@@ -148,7 +152,11 @@ msgstr "Anonymous es"
 msgid "Apply"
 msgstr "Aplicar New"
 
+<<<<<<< HEAD
 ENDPO;
+=======
+PO;
+>>>>>>> upstream/11.x
     file_put_contents($this->publicFilesDirectory . '/translations/drupal-8.0.0.es.po', $po);
 
     // Manually update the translation status so can re-run the import.
@@ -194,7 +202,11 @@ ENDPO;
    *   Contents for the test .po file.
    */
   protected function getPo($langcode) {
+<<<<<<< HEAD
     return <<<ENDPO
+=======
+    return <<<PO
+>>>>>>> upstream/11.x
 msgid ""
 msgstr ""
 
@@ -204,7 +216,11 @@ msgstr "Anonymous $langcode"
 msgid "Apply"
 msgstr "Aplicar"
 
+<<<<<<< HEAD
 ENDPO;
+=======
+PO;
+>>>>>>> upstream/11.x
   }
 
 }

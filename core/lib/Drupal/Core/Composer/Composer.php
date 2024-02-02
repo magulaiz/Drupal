@@ -2,12 +2,13 @@
 
 namespace Drupal\Core\Composer;
 
+<<<<<<< HEAD
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Installer\PackageEvent;
+=======
+>>>>>>> upstream/11.x
 use Composer\Script\Event;
 use Composer\Semver\Constraint\Constraint;
-use Composer\Util\ProcessExecutor;
-use Drupal\Component\FileSecurity\FileSecurity;
 
 /**
  * Provides static functions for composer script events.
@@ -15,74 +16,6 @@ use Drupal\Component\FileSecurity\FileSecurity;
  * @see https://getcomposer.org/doc/articles/scripts.md
  */
 class Composer {
-
-  protected static $packageToCleanup = [
-    'behat/mink' => ['tests', 'driver-testsuite'],
-    'behat/mink-selenium2-driver' => ['tests'],
-    'composer/composer' => ['bin'],
-    'drupal/coder' => ['coder_sniffer/Drupal/Test', 'coder_sniffer/DrupalPractice/Test'],
-    'doctrine/instantiator' => ['tests'],
-    'easyrdf/easyrdf' => ['scripts'],
-    'egulias/email-validator' => ['documentation', 'tests'],
-    'friends-of-behat/mink-browserkit-driver' => ['tests'],
-    'guzzlehttp/promises' => ['tests'],
-    'guzzlehttp/psr7' => ['tests'],
-    'instaclick/php-webdriver' => ['doc', 'test'],
-    'justinrainbow/json-schema' => ['demo'],
-    'laminas/laminas-escaper' => ['doc'],
-    'laminas/laminas-feed' => ['doc'],
-    'laminas/laminas-stdlib' => ['doc'],
-    'masterminds/html5' => ['bin', 'test'],
-    'mikey179/vfsStream' => ['src/test'],
-    'myclabs/deep-copy' => ['doc'],
-    'pear/archive_tar' => ['docs', 'tests'],
-    'pear/console_getopt' => ['tests'],
-    'pear/pear-core-minimal' => ['tests'],
-    'pear/pear_exception' => ['tests'],
-    'phar-io/manifest' => ['examples', 'tests'],
-    'phar-io/version' => ['tests'],
-    'phpdocumentor/reflection-docblock' => ['tests'],
-    'phpspec/prophecy' => ['fixtures', 'spec', 'tests'],
-    'phpunit/php-code-coverage' => ['tests'],
-    'phpunit/php-timer' => ['tests'],
-    'phpunit/php-token-stream' => ['tests'],
-    'phpunit/phpunit' => ['tests'],
-    'sebastian/code-unit-reverse-lookup' => ['tests'],
-    'sebastian/comparator' => ['tests'],
-    'sebastian/diff' => ['tests'],
-    'sebastian/environment' => ['tests'],
-    'sebastian/exporter' => ['tests'],
-    'sebastian/global-state' => ['tests'],
-    'sebastian/object-enumerator' => ['tests'],
-    'sebastian/object-reflector' => ['tests'],
-    'sebastian/recursion-context' => ['tests'],
-    'seld/jsonlint' => ['tests'],
-    'squizlabs/php_codesniffer' => ['tests'],
-    'stack/builder' => ['tests'],
-    'symfony/browser-kit' => ['Tests'],
-    'symfony/console' => ['Tests'],
-    'symfony/css-selector' => ['Tests'],
-    'symfony/debug' => ['Tests'],
-    'symfony/dependency-injection' => ['Tests'],
-    'symfony/dom-crawler' => ['Tests'],
-    'symfony/filesystem' => ['Tests'],
-    'symfony/finder' => ['Tests'],
-    'symfony/error-handler' => ['Tests'],
-    'symfony/event-dispatcher' => ['Tests'],
-    'symfony/http-foundation' => ['Tests'],
-    'symfony/http-kernel' => ['Tests'],
-    'symfony/phpunit-bridge' => ['Tests'],
-    'symfony/process' => ['Tests'],
-    'symfony/psr-http-message-bridge' => ['Tests'],
-    'symfony/routing' => ['Tests'],
-    'symfony/serializer' => ['Tests'],
-    'symfony/translation' => ['Tests'],
-    'symfony/validator' => ['Tests', 'Resources'],
-    'symfony/yaml' => ['Tests'],
-    'symfony-cmf/routing' => ['Test', 'Tests'],
-    'theseer/tokenizer' => ['tests'],
-    'twig/twig' => ['doc', 'ext', 'test', 'tests'],
-  ];
 
   /**
    * Add vendor classes to Composer's static classmap.
@@ -141,16 +74,11 @@ class Composer {
         $vendor_dir . '/psr/container/src/ContainerInterface.php',
       ]);
     }
-    if ($repository->findPackage('laminas/laminas-zendframework-bridge', $constraint)) {
-      $autoload['classmap'] = array_merge($autoload['classmap'], [
-        $vendor_dir . '/laminas/laminas-zendframework-bridge/src/Autoloader.php',
-        $vendor_dir . '/laminas/laminas-zendframework-bridge/src/RewriteRules.php',
-      ]);
-    }
     $package->setAutoload($autoload);
   }
 
   /**
+<<<<<<< HEAD
    * Ensures that .htaccess and web.config files are present in Composer root.
    *
    * @param \Composer\Script\Event $event
@@ -314,6 +242,8 @@ class Composer {
   }
 
   /**
+=======
+>>>>>>> upstream/11.x
    * Fires the drupal-phpunit-upgrade script event if necessary.
    *
    * @param \Composer\Script\Event $event

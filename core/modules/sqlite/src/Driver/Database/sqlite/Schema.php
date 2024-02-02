@@ -28,11 +28,19 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public function tableExists($table) {
     $info = $this->getPrefixInfo($table);
 
     // Don't use {} around sqlite_master table.
     return (bool) $this->connection->query('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', [':type' => 'table', ':name' => $info['table']])->fetchField();
+=======
+  public function tableExists($table, $add_prefix = TRUE) {
+    $info = $this->getPrefixInfo($table, $add_prefix);
+
+    // Don't use {} around sqlite_master table.
+    return (bool) $this->connection->query('SELECT 1 FROM [' . $info['schema'] . '].sqlite_master WHERE type = :type AND name = :name', [':type' => 'table', ':name' => $info['table']])->fetchField();
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -44,6 +52,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
+<<<<<<< HEAD
    * Generate SQL to create a new table from a Drupal schema definition.
    *
    * @param $name
@@ -53,6 +62,9 @@ class Schema extends DatabaseSchema {
    *
    * @return
    *   An array of SQL statements to create the table.
+=======
+   * {@inheritdoc}
+>>>>>>> upstream/11.x
    */
   public function createTableSql($name, $table) {
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
@@ -72,12 +84,20 @@ class Schema extends DatabaseSchema {
     $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
+<<<<<<< HEAD
         $sql[] = 'CREATE UNIQUE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . ")\n";
+=======
+        $sql[] = 'CREATE UNIQUE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON [' . $info['table'] . '] (' . $this->createKeySql($fields) . ")\n";
+>>>>>>> upstream/11.x
       }
     }
     if (!empty($schema['indexes'])) {
       foreach ($schema['indexes'] as $key => $fields) {
+<<<<<<< HEAD
         $sql[] = 'CREATE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . ")\n";
+=======
+        $sql[] = 'CREATE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON [' . $info['table'] . '] (' . $this->createKeySql($fields) . ")\n";
+>>>>>>> upstream/11.x
       }
     }
     return $sql;
@@ -114,10 +134,17 @@ class Schema extends DatabaseSchema {
     $return = [];
     foreach ($fields as $field) {
       if (is_array($field)) {
+<<<<<<< HEAD
         $return[] = $field[0];
       }
       else {
         $return[] = $field;
+=======
+        $return[] = '[' . $field[0] . ']';
+      }
+      else {
+        $return[] = '[' . $field . ']';
+>>>>>>> upstream/11.x
       }
     }
     return implode(', ', $return);
@@ -280,7 +307,11 @@ class Schema extends DatabaseSchema {
     // the table with curly braces in case the db_prefix contains a reference
     // to a database outside of our existing database.
     $info = $this->getPrefixInfo($new_name);
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $info['table']);
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO [' . $info['table'] . ']');
+>>>>>>> upstream/11.x
 
     // Drop the indexes, there is no RENAME INDEX command in SQLite.
     if (!empty($schema['unique keys'])) {
@@ -475,7 +506,11 @@ class Schema extends DatabaseSchema {
    * @param $table
    *   Name of the table.
    *
+<<<<<<< HEAD
    * @return
+=======
+   * @return array
+>>>>>>> upstream/11.x
    *   An array representing the schema.
    *
    * @throws \Exception
@@ -491,7 +526,11 @@ class Schema extends DatabaseSchema {
     ];
 
     $info = $this->getPrefixInfo($table);
+<<<<<<< HEAD
     $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.table_info(' . $info['table'] . ')');
+=======
+    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].table_info([' . $info['table'] . '])');
+>>>>>>> upstream/11.x
     foreach ($result as $row) {
       if (preg_match('/^([^(]+)\((.*)\)$/', $row->type, $matches)) {
         $type = $matches[1];
@@ -547,9 +586,15 @@ class Schema extends DatabaseSchema {
     $schema['primary key'] = array_values($schema['primary key']);
 
     $indexes = [];
+<<<<<<< HEAD
     $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_list(' . $info['table'] . ')');
     foreach ($result as $row) {
       if (strpos($row->name, 'sqlite_autoindex_') !== 0) {
+=======
+    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].index_list([' . $info['table'] . '])');
+    foreach ($result as $row) {
+      if (!str_starts_with($row->name, 'sqlite_autoindex_')) {
+>>>>>>> upstream/11.x
         $indexes[] = [
           'schema_key' => $row->unique ? 'unique keys' : 'indexes',
           'name' => $row->name,
@@ -560,7 +605,11 @@ class Schema extends DatabaseSchema {
       $name = $index['name'];
       // Get index name without prefix.
       $index_name = substr($name, strlen($info['table']) + 1);
+<<<<<<< HEAD
       $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $name . ')');
+=======
+      $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].index_info([' . $name . '])');
+>>>>>>> upstream/11.x
       foreach ($result as $row) {
         $schema[$index['schema_key']][$index_name][] = $row->name;
       }
@@ -701,7 +750,11 @@ class Schema extends DatabaseSchema {
   public function indexExists($table, $name) {
     $info = $this->getPrefixInfo($table);
 
+<<<<<<< HEAD
     return $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $info['table'] . '_' . $name . ')')->fetchField() != '';
+=======
+    return $this->connection->query('PRAGMA [' . $info['schema'] . '].index_info([' . $info['table'] . '_' . $name . '])')->fetchField() != '';
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -714,7 +767,11 @@ class Schema extends DatabaseSchema {
 
     $info = $this->getPrefixInfo($table);
 
+<<<<<<< HEAD
     $this->connection->query('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
+=======
+    $this->connection->query('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
+>>>>>>> upstream/11.x
     return TRUE;
   }
 
@@ -746,7 +803,11 @@ class Schema extends DatabaseSchema {
 
     $info = $this->getPrefixInfo($table);
 
+<<<<<<< HEAD
     $this->connection->query('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
+=======
+    $this->connection->query('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
+>>>>>>> upstream/11.x
     return TRUE;
   }
 
@@ -825,7 +886,11 @@ class Schema extends DatabaseSchema {
       // Can't use query placeholders for the schema because the query would
       // have to be :prefixsqlite_master, which does not work. We also need to
       // ignore the internal SQLite tables.
+<<<<<<< HEAD
       $result = $this->connection->query("SELECT name FROM " . $schema . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
+=======
+      $result = $this->connection->query("SELECT name FROM [" . $schema . "].sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
+>>>>>>> upstream/11.x
         ':type' => 'table',
         ':table_name' => $table_expression,
         ':pattern' => 'sqlite_%',

@@ -4,7 +4,6 @@ namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\node\Plugin\views\argument\Vid;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -56,6 +55,7 @@ class ArgumentNodeRevisionIdTest extends ViewsKernelTestBase {
     $this->executeView($view_nid, [$second_revision_id]);
     $this->assertIdenticalResultset($view_nid, [['title' => 'test2']]);
     $this->assertSame('test2', $view_nid->getTitle());
+<<<<<<< HEAD
   }
 
   /**
@@ -69,6 +69,8 @@ class ArgumentNodeRevisionIdTest extends ViewsKernelTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $vid = new Vid([], 'test_plugin', [], $database, $node_storage);
     $this->assertNotNull($vid);
+=======
+>>>>>>> upstream/11.x
   }
 
 }

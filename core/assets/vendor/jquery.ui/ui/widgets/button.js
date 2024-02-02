@@ -1,5 +1,9 @@
 /*!
+<<<<<<< HEAD
  * jQuery UI Button 1.13.1
+=======
+ * jQuery UI Button 1.13.2
+>>>>>>> upstream/11.x
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -42,7 +46,11 @@
 "use strict";
 
 $.widget( "ui.button", {
+<<<<<<< HEAD
 	version: "1.13.1",
+=======
+	version: "1.13.2",
+>>>>>>> upstream/11.x
 	defaultElement: "<button>",
 	options: {
 		classes: {

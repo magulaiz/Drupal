@@ -1,5 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 /* cspell:words drupalimageediting drupalimagealternativetext */
+=======
+/* cspell:ignore drupalimageediting drupalimagealternativetext */
+>>>>>>> upstream/11.x
 
 import { Plugin } from 'ckeditor5/src/core';
 import DrupalImageEditing from './drupalimageediting';

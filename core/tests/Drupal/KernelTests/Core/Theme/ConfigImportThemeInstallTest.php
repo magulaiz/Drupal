@@ -19,6 +19,12 @@ class ConfigImportThemeInstallTest extends KernelTestBase {
    */
   protected static $modules = ['system'];
 
+<<<<<<< HEAD
+=======
+  /**
+   * {@inheritdoc}
+   */
+>>>>>>> upstream/11.x
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);
@@ -47,7 +53,11 @@ class ConfigImportThemeInstallTest extends KernelTestBase {
       $error_message = 'Unable to uninstall the <em class="placeholder">Test Module Required by Theme</em> module because: Required by the theme: Test Theme Depending on Modules.';
       $this->assertStringContainsString($error_message, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $this->configImporter->getErrors();
+<<<<<<< HEAD
       $this->assertEquals([$error_message], $error_log);
+=======
+      $this->assertSame($error_message, (string) $error_log[0]);
+>>>>>>> upstream/11.x
     }
 
     // Remove the other module and the theme.
@@ -70,7 +80,11 @@ class ConfigImportThemeInstallTest extends KernelTestBase {
       $error_message = 'Unable to install the <em class="placeholder">Test Theme Depending on Modules</em> theme since it requires the <em class="placeholder">Test Module Required by Theme</em> module.';
       $this->assertStringContainsString($error_message, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $this->configImporter->getErrors();
+<<<<<<< HEAD
       $this->assertEquals([$error_message], $error_log);
+=======
+      $this->assertSame($error_message, (string) $error_log[0]);
+>>>>>>> upstream/11.x
     }
 
     $extensions['module']['test_module_required_by_theme'] = 0;

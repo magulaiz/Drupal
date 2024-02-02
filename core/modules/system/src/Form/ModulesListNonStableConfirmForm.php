@@ -24,28 +24,44 @@ class ModulesListNonStableConfirmForm extends ModulesListConfirmForm {
    *
    * @var \Drupal\Core\Extension\ModuleExtensionList
    */
+<<<<<<< HEAD
   protected $moduleExtensionList;
+=======
+  protected ModuleExtensionList $moduleExtensionList;
+>>>>>>> upstream/11.x
 
   /**
    * An array of module names to be enabled, keyed by lifecycle.
    *
    * @var array
    */
+<<<<<<< HEAD
   protected $groupedModuleInfo;
+=======
+  protected array $groupedModuleInfo;
+>>>>>>> upstream/11.x
 
   /**
    * Boolean indicating a core deprecated module is being enabled.
    *
    * @var bool
    */
+<<<<<<< HEAD
   protected $coreDeprecatedModules;
+=======
+  protected bool $coreDeprecatedModules;
+>>>>>>> upstream/11.x
 
   /**
    * Boolean indicating a contrib deprecated module is being enabled.
    *
    * @var bool
    */
+<<<<<<< HEAD
   protected $contribDeprecatedModules;
+=======
+  protected bool $contribDeprecatedModules;
+>>>>>>> upstream/11.x
 
   /**
    * Constructs a new ModulesListNonStableConfirmForm.
@@ -84,22 +100,36 @@ class ModulesListNonStableConfirmForm extends ModulesListConfirmForm {
     $hasDeprecatedModulesToEnable = !empty($this->groupedModuleInfo[ExtensionLifecycle::DEPRECATED]);
 
     if ($hasExperimentalModulesToEnable && $hasDeprecatedModulesToEnable) {
+<<<<<<< HEAD
       return $this->t('Are you sure you wish to enable experimental and deprecated modules?');
+=======
+      return $this->t('Are you sure you wish to install experimental and deprecated modules?');
+>>>>>>> upstream/11.x
     }
 
     if ($hasExperimentalModulesToEnable) {
       return $this->formatPlural(
         count($this->groupedModuleInfo[ExtensionLifecycle::EXPERIMENTAL]),
+<<<<<<< HEAD
         'Are you sure you wish to enable an experimental module?',
         'Are you sure you wish to enable experimental modules?'
+=======
+        'Are you sure you wish to install an experimental module?',
+        'Are you sure you wish to install experimental modules?'
+>>>>>>> upstream/11.x
       );
     }
 
     if ($hasDeprecatedModulesToEnable) {
       return $this->formatPlural(
         count($this->groupedModuleInfo[ExtensionLifecycle::DEPRECATED]),
+<<<<<<< HEAD
         'Are you sure you wish to enable a deprecated module?',
         'Are you sure you wish to enable deprecated modules?'
+=======
+        'Are you sure you wish to install a deprecated module?',
+        'Are you sure you wish to install deprecated modules?'
+>>>>>>> upstream/11.x
       );
     }
   }
@@ -184,9 +214,13 @@ class ModulesListNonStableConfirmForm extends ModulesListConfirmForm {
         Url::fromUri($data[$machine_name]->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER], [
           'attributes' =>
             [
+<<<<<<< HEAD
               'aria-label' => ' ' . $this->t('about the status of the @name module', [
                   '@name' => $name,
                 ]),
+=======
+              'aria-label' => ' ' . $this->t('about the status of the @name module', ['@name' => $name]),
+>>>>>>> upstream/11.x
             ],
         ])
       )->toString();

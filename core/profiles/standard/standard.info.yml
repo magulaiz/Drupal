@@ -7,7 +7,11 @@ install:
   - history
   - block
   - breakpoint
+<<<<<<< HEAD
   - ckeditor
+=======
+  - ckeditor5
+>>>>>>> upstream/11.x
   - config
   - comment
   - contextual
@@ -31,11 +35,10 @@ install:
   - toolbar
   - field_ui
   - file
-  - rdf
   - views
   - views_ui
-  - tour
   - automated_cron
+  - announcements_feed
 themes:
   - olivero
   - claro

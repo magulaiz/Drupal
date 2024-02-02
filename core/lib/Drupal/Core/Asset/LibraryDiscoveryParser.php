@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\FileCache\FileCacheInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
@@ -62,6 +64,13 @@ class LibraryDiscoveryParser {
   protected $extensionPathResolver;
 
   /**
+   * The file cache.
+   *
+   * @var \Drupal\Component\FileCache\FileCacheInterface
+   */
+  protected FileCacheInterface $fileCache;
+
+  /**
    * Constructs a new LibraryDiscoveryParser instance.
    *
    * @param string $root
@@ -77,21 +86,14 @@ class LibraryDiscoveryParser {
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder = NULL, ExtensionPathResolver $extension_path_resolver = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->streamWrapperManager = $stream_wrapper_manager;
-    if (!$libraries_directory_file_finder) {
-      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $libraries_directory_file_finder argument is deprecated in drupal:8.9.0. The $libraries_directory_file_finder argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3099614', E_USER_DEPRECATED);
-      $libraries_directory_file_finder = \Drupal::service('library.libraries_directory_file_finder');
-    }
     $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
-    if (!$extension_path_resolver) {
-      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $extension_path_resolver argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-      $extension_path_resolver = \Drupal::service('extension.path.resolver');
-    }
     $this->extensionPathResolver = $extension_path_resolver;
+    $this->fileCache = FileCacheFactory::get('library_parser');
   }
 
   /**
@@ -107,6 +109,18 @@ class LibraryDiscoveryParser {
    *   Thrown when a library has no js/css/setting.
    * @throws \UnexpectedValueException
    *   Thrown when a js file defines a positive weight.
+   * @throws \UnknownExtensionTypeException
+   *   Thrown when the extension type is unknown.
+   * @throws \UnknownExtensionException
+   *   Thrown when the extension is unknown.
+   * @throws \InvalidLibraryFileException
+   *   Thrown when the library file is invalid.
+   * @throws \InvalidLibrariesOverrideSpecificationException
+   *   Thrown when a definition refers to a non-existent library.
+   * @throws \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
+   *   Thrown when a library definition has no license information.
+   * @throws \LogicException
+   *   Thrown when a header key in a library definition is invalid.
    */
   public function buildByExtension($extension) {
     if ($extension === 'core') {
@@ -216,7 +230,7 @@ class LibraryDiscoveryParser {
               if ($source[1] !== '/') {
                 $source = substr($source, 1);
                 // Non core provided libraries can be in multiple locations.
-                if (strpos($source, 'libraries/') === 0) {
+                if (str_starts_with($source, 'libraries/')) {
                   $path_to_source = $this->librariesDirectoryFileFinder->find(substr($source, 10));
                   if ($path_to_source) {
                     $source = $path_to_source;
@@ -354,13 +368,19 @@ class LibraryDiscoveryParser {
     $libraries = [];
 
     $library_file = $path . '/' . $extension . '.libraries.yml';
-    if (file_exists($this->root . '/' . $library_file)) {
-      try {
-        $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file)) ?? [];
-      }
-      catch (InvalidDataTypeException $e) {
-        // Rethrow a more helpful exception to provide context.
-        throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
+    $library_path = $this->root . '/' . $library_file;
+
+    if (file_exists($library_path)) {
+      $libraries = $this->fileCache->get($library_path);
+      if ($libraries === NULL) {
+        try {
+          $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file)) ?? [];
+          $this->fileCache->set($library_path, $libraries);
+        }
+        catch (InvalidDataTypeException $e) {
+          // Rethrow a more helpful exception to provide context.
+          throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
+        }
       }
     }
 
@@ -400,6 +420,7 @@ class LibraryDiscoveryParser {
           if (isset($library['deprecated'])) {
             $override_message = sprintf('Theme "%s" is overriding a deprecated library.', $extension);
             $library_deprecation = str_replace('%library_id%', "$extension/$library_name", $library['deprecated']);
+            // phpcs:ignore Drupal.Semantics.FunctionTriggerError
             @trigger_error("$override_message $library_deprecation", E_USER_DEPRECATED);
           }
           // Active theme defines an override for this library.
@@ -444,19 +465,6 @@ class LibraryDiscoveryParser {
     }
 
     return $libraries;
-  }
-
-  /**
-   * Wraps drupal_get_path().
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
-   *
-   * @see https://www.drupal.org/node/2940438
-   */
-  protected function drupalGetPath($type, $name) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionPathResolver::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-    return $this->extensionPathResolver->getPath($type, $name);
   }
 
   /**

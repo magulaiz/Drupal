@@ -79,6 +79,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       library: 'internal.backbone',
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
+<<<<<<< HEAD
     // Only used to update the version number of the deprecated library.
     {
       pack: 'backbone',
@@ -110,6 +111,8 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'farbtastic.min.js', to: 'farbtastic.js' },
       ],
     },
+=======
+>>>>>>> upstream/11.x
     {
       pack: 'jquery',
       files: [
@@ -127,6 +130,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'src/jquery.form.js', to: 'src/jquery.form.js' },
       ],
     },
+<<<<<<< HEAD
     // Only used to update the version number of the deprecated library.
     {
       pack: 'jquery-form',
@@ -142,6 +146,8 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       library: 'jquery.once',
       files: ['jquery.once.js', 'jquery.once.min.js', 'jquery.once.min.js.map'],
     },
+=======
+>>>>>>> upstream/11.x
     {
       pack: 'js-cookie',
       files: [{ from: 'dist/js.cookie.min.js', to: 'js.cookie.min.js' }],
@@ -162,6 +168,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
+<<<<<<< HEAD
       pack: 'picturefill',
       files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
     },
@@ -176,6 +183,11 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'shepherd.js',
       folder: 'shepherd',
+=======
+      pack: 'shepherd.js',
+      folder: 'shepherd',
+      library: 'internal.shepherd',
+>>>>>>> upstream/11.x
       files: [
         { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
         { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },
@@ -194,15 +206,34 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       library: 'internal.underscore',
       files: ['underscore-min.js', 'underscore-min.js.map'],
     },
+<<<<<<< HEAD
     // Only used to update the version number of the deprecated library.
     {
       pack: 'underscore',
     },
+=======
+>>>>>>> upstream/11.x
     {
       pack: 'loadjs',
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
     {
+<<<<<<< HEAD
+=======
+      pack: 'tua-body-scroll-lock',
+      files: [
+        { from: 'dist/tua-bsl.umd.min.js', to: 'tua-bsl.umd.min.js' },
+      ],
+    },
+    {
+      pack: 'transliteration',
+      files: [
+        { from: 'dist/browser/bundle.umd.min.js', to: 'bundle.umd.min.js' },
+        { from: 'dist/browser/bundle.umd.min.js.map', to: 'bundle.umd.min.js.map' },
+      ],
+    },
+    {
+>>>>>>> upstream/11.x
       pack: 'jquery-ui',
       folder: 'jquery.ui',
       process: {
@@ -238,11 +269,17 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         'ui/keycode.js',
         'ui/labels.js',
         'ui/plugin.js',
+<<<<<<< HEAD
         'ui/position.js',
         'ui/safe-active-element.js',
         'ui/safe-blur.js',
         'ui/scroll-parent.js',
         'ui/tabbable.js',
+=======
+        'ui/safe-active-element.js',
+        'ui/safe-blur.js',
+        'ui/scroll-parent.js',
+>>>>>>> upstream/11.x
         'ui/unique-id.js',
         'ui/version.js',
         'ui/widget.js',
@@ -330,12 +367,15 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         console.log(`Copy ${sourceFolder}/${file.from} to ${destFolder}/${file.to}`);
         await copyFile(sourceFile, destFile);
       }
+<<<<<<< HEAD
 
       // These 2 files come from a zip file that hasn't been updated in years
       // hardcode the permission fix to pass the commit checks.
       if (['jquery.joyride-2.1.js', 'marker.png'].includes(file.to)) {
         await chmod(destFile, 0o644);
       }
+=======
+>>>>>>> upstream/11.x
     }
   }
 

@@ -13,6 +13,13 @@ use Drupal\views\Plugin\views\PluginBase;
 class PluginInstanceTest extends ViewsKernelTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'path_alias',
+  ];
+
+  /**
    * All views plugin types.
    *
    * @var array
@@ -53,6 +60,9 @@ class PluginInstanceTest extends ViewsKernelTestBase {
    */
   protected $definitions;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 

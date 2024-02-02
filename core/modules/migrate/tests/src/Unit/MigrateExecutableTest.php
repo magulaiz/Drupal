@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Utility\Html;
@@ -89,7 +91,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->migration->expects($this->any())
       ->method('getSourcePlugin')
-      ->will($this->returnValue($source));
+      ->willReturn($source);
 
     // Ensure that a message with the proper message was added.
     $exception_message .= " in " . __FILE__ . " line $line";
@@ -115,7 +117,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
 
@@ -140,7 +142,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
 
@@ -168,7 +170,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
 
@@ -196,7 +198,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
 
@@ -270,7 +272,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
 
@@ -293,15 +295,15 @@ class MigrateExecutableTest extends MigrateTestCase {
       $plugins[$key][0] = $this->createMock('Drupal\migrate\Plugin\MigrateProcessInterface');
       $plugins[$key][0]->expects($this->once())
         ->method('getPluginDefinition')
-        ->will($this->returnValue([]));
+        ->willReturn([]);
       $plugins[$key][0]->expects($this->once())
         ->method('transform')
-        ->will($this->returnValue($value));
+        ->willReturn($value);
     }
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
       ->with(NULL)
-      ->will($this->returnValue($plugins));
+      ->willReturn($plugins);
     $row = new Row();
     $this->executable->processRow($row);
     foreach ($expected as $key => $value) {
@@ -317,7 +319,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
       ->with(NULL)
-      ->will($this->returnValue(['test' => []]));
+      ->willReturn(['test' => []]);
     $row = new Row();
     $this->executable->processRow($row);
     $this->assertSame($row->getDestination(), []);
@@ -334,6 +336,8 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->willReturn('transform_return_string');
     $plugin->multiple()->willReturn(TRUE);
     $plugin->getPluginId()->willReturn('plugin_id');
+    $plugin->reset()->shouldBeCalled();
+    $plugin->isPipelineStopped()->willReturn(FALSE);
     $plugin = $plugin->reveal();
     $plugins['destination_id'] = [$plugin, $plugin];
     $this->migration->method('getProcessPlugins')->willReturn($plugins);
@@ -341,6 +345,63 @@ class MigrateExecutableTest extends MigrateTestCase {
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('Pipeline failed at plugin_id plugin for destination destination_id: transform_return_string received instead of an array,');
     $this->executable->processRow($row);
+  }
+
+  /**
+   * Tests a plugin which stops the pipeline.
+   */
+  public function testStopPipeline() {
+    $row = new Row();
+    // Prophesize a plugin that stops the pipeline and returns 'first_plugin'.
+    $stop_plugin = $this->prophesize(MigrateProcessInterface::class);
+    $stop_plugin->getPluginDefinition()->willReturn(['handle_multiples' => FALSE]);
+    $stop_plugin->transform(NULL, $this->executable, $row, 'destination_id')
+      ->willReturn('first_plugin');
+    $stop_plugin->multiple()->willReturn(FALSE);
+    $stop_plugin->reset()->shouldBeCalled();
+    $stop_plugin->isPipelineStopped()->willReturn(TRUE);
+
+    // Prophesize a plugin that transforms 'first_plugin' to 'final_plugin'.
+    $final_plugin = $this->prophesize(MigrateProcessInterface::class);
+    $final_plugin->getPluginDefinition()->willReturn(['handle_multiples' => FALSE]);
+    $final_plugin->transform('first_plugin', $this->executable, $row, 'destination_id')
+      ->willReturn('final_plugin');
+    $plugins['destination_id'] = [$stop_plugin->reveal(), $final_plugin->reveal()];
+    $this->migration->method('getProcessPlugins')->willReturn($plugins);
+
+    // Process the row and confirm that destination value is 'first_plugin'.
+    $this->executable->processRow($row);
+    $this->assertEquals('first_plugin', $row->getDestinationProperty('destination_id'));
+  }
+
+  /**
+   * Tests a plugin which does not stop the pipeline.
+   */
+  public function testContinuePipeline() {
+    $row = new Row();
+    // Prophesize a plugin that does not stop the pipeline.
+    $continue_plugin = $this->prophesize(MigrateProcessInterface::class);
+    $continue_plugin->getPluginDefinition()->willReturn(['handle_multiples' => FALSE]);
+    $continue_plugin->transform(NULL, $this->executable, $row, 'destination_id')
+      ->willReturn('first_plugin');
+    $continue_plugin->multiple()->willReturn(FALSE);
+    $continue_plugin->reset()->shouldBeCalled();
+    $continue_plugin->isPipelineStopped()->willReturn(FALSE);
+
+    // Prophesize a plugin that transforms 'first_plugin' to 'final_plugin'.
+    $final_plugin = $this->prophesize(MigrateProcessInterface::class);
+    $final_plugin->getPluginDefinition()->willReturn(['handle_multiples' => FALSE]);
+    $final_plugin->transform('first_plugin', $this->executable, $row, 'destination_id')
+      ->willReturn('final_plugin');
+    $final_plugin->multiple()->willReturn(FALSE);
+    $final_plugin->reset()->shouldBeCalled();
+    $final_plugin->isPipelineStopped()->willReturn(FALSE);
+    $plugins['destination_id'] = [$continue_plugin->reveal(), $final_plugin->reveal()];
+    $this->migration->method('getProcessPlugins')->willReturn($plugins);
+
+    // Process the row and confirm that the destination value is 'final_plugin'.
+    $this->executable->processRow($row);
+    $this->assertEquals('final_plugin', $row->getDestinationProperty('destination_id'));
   }
 
   /**
@@ -359,6 +420,8 @@ class MigrateExecutableTest extends MigrateTestCase {
       $plugin->getPluginDefinition()->willReturn([]);
       $plugin->transform(NULL, $this->executable, $row, $key)->willReturn($value);
       $plugin->multiple()->willReturn(TRUE);
+      $plugin->reset()->shouldBeCalled();
+      $plugin->isPipelineStopped()->willReturn(FALSE);
       $plugins[$key][0] = $plugin->reveal();
     }
     $this->migration->method('getProcessPlugins')->willReturn($plugins);
@@ -386,10 +449,10 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->getMockForAbstractClass();
     $source->expects($this->once())
       ->method('rewind')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $source->expects($this->any())
       ->method('initializeIterator')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $source->expects($this->any())
       ->method('valid')
       ->will($this->onConsecutiveCalls(TRUE, FALSE));

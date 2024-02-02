@@ -26,10 +26,24 @@ class SourceEditingRedundantTagsConstraint extends Constraint {
   public $enabledPluginsMessage = 'The following @element_type(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: %overlapping_tags.';
 
   /**
+<<<<<<< HEAD
    * When a Source Editing element is added that a disabled plugin supports.
    *
    * @var string
    */
+=======
+   * When a Source Editing element is added that an enabled plugin optionally supports.
+   *
+   * @var string
+   */
+  public $enabledPluginsOptionalMessage = 'The following @element_type(s) can optionally be supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: %overlapping_tags.';
+
+  /**
+   * When a Source Editing element is added that a disabled plugin supports.
+   *
+   * @var string
+   */
+>>>>>>> upstream/11.x
   public $availablePluginsMessage = 'The following @element_type(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these @element_types: %overlapping_tags.';
 
 }

@@ -36,14 +36,21 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
    * @var array
    */
   protected $stateFileRequired = [
+<<<<<<< HEAD
     // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
     'aggregator',
+=======
+>>>>>>> upstream/11.x
     'ban',
     'block',
     'block_content',
+    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
     'book',
+<<<<<<< HEAD
     // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
     'color',
+=======
+>>>>>>> upstream/11.x
     'comment',
     'config_translation',
     'contact',
@@ -53,6 +60,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'field',
     'file',
     'filter',
+    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
     'forum',
     'image',
     'language',
@@ -66,11 +74,15 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'node',
     'options',
     'path',
+<<<<<<< HEAD
     // @todo Remove RDF in https://www.drupal.org/node/3267515
     'rdf',
+=======
+>>>>>>> upstream/11.x
     'responsive_image',
     'search',
     'shortcut',
+    // @todo Remove statistics in https://www.drupal.org/project/drupal/issues/3341092
     'statistics',
     'syslog',
     'system',

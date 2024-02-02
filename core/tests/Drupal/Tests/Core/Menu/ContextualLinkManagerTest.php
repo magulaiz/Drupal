@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
@@ -11,7 +13,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Core\Menu\ContextualLinkManager;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Constraint\Count;
+use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -44,7 +46,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $moduleHandler;
 
@@ -62,7 +64,11 @@ class ContextualLinkManagerTest extends UnitTestCase {
    */
   protected $account;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
+<<<<<<< HEAD
     $language_manager = $this->createMock(LanguageManagerInterface::class);
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
@@ -73,6 +79,16 @@ class ContextualLinkManagerTest extends UnitTestCase {
       ->method('getModuleDirectories')
       ->willReturn([]);
 
+=======
+    parent::setUp();
+
+    $language_manager = $this->createMock(LanguageManagerInterface::class);
+    $language_manager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->willReturn(new Language(['id' => 'en']));
+
+    $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
+>>>>>>> upstream/11.x
     $this->pluginDiscovery = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
@@ -80,7 +96,11 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->contextualLinkManager = new ContextualLinkManager(
       $this->createMock(ControllerResolverInterface::class),
+<<<<<<< HEAD
       $this->moduleHandler,
+=======
+      $this->moduleHandler->reveal(),
+>>>>>>> upstream/11.x
       $this->cacheBackend,
       $language_manager,
       $this->accessManager,
@@ -89,7 +109,10 @@ class ContextualLinkManagerTest extends UnitTestCase {
     );
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\ContextualLinkManager', 'discovery');
+<<<<<<< HEAD
     $property->setAccessible(TRUE);
+=======
+>>>>>>> upstream/11.x
     $property->setValue($this->contextualLinkManager, $this->pluginDiscovery);
   }
 
@@ -121,7 +144,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     ];
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     // Test with a non existing group.
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group_non_existing');
@@ -156,7 +179,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with('contextual_links_plugins:en:group1')
-      ->will($this->returnValue((object) ['data' => $definitions]));
+      ->willReturn((object) ['data' => $definitions]);
 
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group1');
     $this->assertEquals($definitions, $result);
@@ -235,18 +258,25 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
 
+<<<<<<< HEAD
     $this->moduleHandler->expects($this->exactly(2))
       ->method('alter')
       ->withConsecutive(
         ['contextual_links_plugins'],
         ['contextual_links', new Count(2), 'group1', ['key' => 'value']],
       );
+=======
+    $this->moduleHandler->alter('contextual_links_plugins', Argument::cetera())
+      ->shouldBeCalledOnce();
+    $this->moduleHandler->alter('contextual_links', Argument::size(2), 'group1', ['key' => 'value'])
+      ->shouldBeCalledOnce();
+>>>>>>> upstream/11.x
 
     $result = $this->contextualLinkManager->getContextualLinksArrayByGroup('group1', ['key' => 'value']);
     $this->assertCount(2, $result);
@@ -288,7 +318,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
@@ -320,11 +350,10 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
-    $this->moduleHandler->expects($this->once())
-      ->method('alter')
-      ->with('contextual_links_plugins', $definitions);
+    $this->moduleHandler->alter('contextual_links_plugins', $definitions)
+      ->shouldBeCalledOnce();
 
     $this->contextualLinkManager->getDefinition('test_plugin');
   }

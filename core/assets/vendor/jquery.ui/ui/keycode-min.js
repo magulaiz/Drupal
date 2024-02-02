@@ -1,5 +1,9 @@
 /*!
+<<<<<<< HEAD
  * jQuery UI Keycode 1.13.1
+=======
+ * jQuery UI Keycode 1.13.2
+>>>>>>> upstream/11.x
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors

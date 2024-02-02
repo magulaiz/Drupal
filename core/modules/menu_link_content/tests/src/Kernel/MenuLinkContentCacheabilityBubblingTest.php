@@ -12,11 +12,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 
 /**
- * Ensures that rendered menu links bubble the necessary bubbleable metadata
- * for outbound path/route processing.
+ * Ensures that rendered menu links bubble the necessary bubbleable metadata.
+ *
+ * This for outbound path/route processing.
  *
  * @group menu_link_content
  */
@@ -61,6 +64,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     $request = Request::create('/');
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/'));
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $request_stack->push($request);
     $request_context->fromRequest($request);
 

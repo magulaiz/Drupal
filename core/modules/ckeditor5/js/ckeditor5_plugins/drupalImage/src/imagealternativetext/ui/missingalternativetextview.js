@@ -1,5 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 /* cspell:words imagetextalternative missingalternativetextview imagealternativetext */
+=======
+/* cspell:ignore imagetextalternative missingalternativetextview imagealternativetext */
+>>>>>>> upstream/11.x
 
 import { View, ButtonView } from 'ckeditor5/src/ui';
 

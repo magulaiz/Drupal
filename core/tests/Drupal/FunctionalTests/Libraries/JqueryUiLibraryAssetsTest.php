@@ -56,16 +56,9 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
 
     // All the core libraries that use jQuery UI assets.
     $libraries_to_check = [
+      'internal.jquery_ui',
       'drupal.autocomplete',
       'drupal.dialog',
-      'jquery.ui',
-      'jquery.ui.autocomplete',
-      'jquery.ui.button',
-      'jquery.ui.dialog',
-      'jquery.ui.menu',
-      'jquery.ui.mouse',
-      'jquery.ui.resizable',
-      'jquery.ui.widget',
     ];
 
     $this->coreLibrariesWithJqueryUiAssets = array_filter($core_libraries, function ($key) use ($libraries_to_check) {
@@ -78,7 +71,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       foreach (['js', 'css'] as $type) {
         foreach ($library[$type] as $asset) {
           $file = $asset['data'];
-          if (strpos($file, 'jquery.ui') === FALSE) {
+          if (!str_contains($file, 'jquery.ui')) {
             continue;
           }
           $weight = $asset['weight'];
@@ -183,7 +176,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
         foreach ($library[$type] as $asset) {
           $file = $asset['data'];
 
-          if (strpos($file, 'jquery.ui') !== FALSE) {
+          if (str_contains($file, 'jquery.ui')) {
             // If this is the first time a given file is checked, add the weight
             // value to an array.
             if (!isset($asset_weights[$file])) {
@@ -228,7 +221,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // A pipe character in $libraries is delimiting multiple library names.
-    $libraries = strpos($library, '|') !== FALSE ? explode('|', $library) : [$library];
+    $libraries = str_contains($library, '|') ? explode('|', $library) : [$library];
     $files_to_check = [];
 
     // Populate an array with the filenames of every jQuery UI asset in the
@@ -238,7 +231,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       foreach (['css', 'js'] as $type) {
         $assets = $this->coreLibrariesWithJqueryUiAssets[$library_name][$type];
         foreach ($assets as $asset) {
-          if (strpos($asset['data'], 'jquery.ui') !== FALSE) {
+          if (str_contains($asset['data'], 'jquery.ui')) {
             $files_to_check[$asset['data']] = TRUE;
           }
         }
@@ -288,7 +281,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * Confirms jQuery UI assets load as expected.
    *
    * Compares the jQuery assets that currently load against a list of the assets
-   * that loaded prior to the the deprecation of all remaining core jQuery UI
+   * that loaded prior to the deprecation of all remaining core jQuery UI
    * libraries.
    *
    * While this is similar to testLibraryAssetLoadingOrder(), it is a separate
@@ -418,6 +411,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js',
         ],
       ],
+<<<<<<< HEAD
       'jquery.ui' => [
         'library' => 'jquery.ui',
         'expected_css' => [
@@ -667,6 +661,13 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       ],
       'drupal.autocomplete|jquery.ui|jquery.ui.autocomplete|drupal.dialog' => [
         'library' => 'drupal.autocomplete|jquery.ui|jquery.ui.autocomplete|drupal.dialog',
+=======
+      // A few instances of multiple libraries being checked simultaneously are
+      // here to ensure that multiple libraries requesting the same asset does
+      // not impact the expected loading order.
+      'drupal.autocomplete|drupal.dialog' => [
+        'library' => 'drupal.autocomplete|drupal.dialog',
+>>>>>>> upstream/11.x
         'expected_css' => [
           'core/assets/vendor/jquery.ui/themes/base/core.css',
           'core/assets/vendor/jquery.ui/themes/base/menu.css',
@@ -706,6 +707,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js',
         ],
       ],
+<<<<<<< HEAD
       'jquery.ui.widget|jquery.ui.resizable|jquery.ui.mouse|jquery.ui.menu|jquery.ui.dialog|jquery.ui.button|jquery.ui.autocomplete|jquery.ui|drupal.dialog|drupal.autocomplete' => [
         'library' => 'jquery.ui.widget|jquery.ui.resizable|jquery.ui.mouse|jquery.ui.menu|jquery.ui.dialog|jquery.ui.button|jquery.ui.autocomplete|jquery.ui|drupal.dialog|drupal.autocomplete',
         'expected_css' => [
@@ -747,6 +749,8 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js',
         ],
       ],
+=======
+>>>>>>> upstream/11.x
     ];
 
   }

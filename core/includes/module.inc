@@ -5,6 +5,7 @@
  * API for loading and interacting with Drupal modules.
  */
 
+<<<<<<< HEAD
 use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
@@ -39,6 +40,8 @@ function module_load_install($module) {
   return FALSE;
 }
 
+=======
+>>>>>>> upstream/11.x
 /**
  * Loads a module include file.
  *
@@ -63,7 +66,11 @@ function module_load_install($module) {
  *   (optional) The base file name (without the $type extension). If omitted,
  *   $module is used; i.e., resulting in "$module.$type" by default.
  *
+<<<<<<< HEAD
  * @return string|false
+=======
+ * @return bool|string
+>>>>>>> upstream/11.x
  *   The name of the included file, if successful; FALSE otherwise.
  *
  * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0.
@@ -74,7 +81,11 @@ function module_load_install($module) {
  * @see https://www.drupal.org/node/2948698
  */
 function module_load_include($type, $module, $name = NULL) {
+<<<<<<< HEAD
   @trigger_error("module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
+=======
+  @trigger_error("module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/node/2948698", E_USER_DEPRECATED);
+>>>>>>> upstream/11.x
   if (!isset($name)) {
     $name = $module;
   }
@@ -92,6 +103,7 @@ function module_load_include($type, $module, $name = NULL) {
 }
 
 /**
+<<<<<<< HEAD
  * Returns an array of modules required by core.
  *
  * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There's no
@@ -122,6 +134,8 @@ function drupal_required_modules() {
 }
 
 /**
+=======
+>>>>>>> upstream/11.x
  * Sets weight of a particular module.
  *
  * The weight of uninstalled modules cannot be changed.

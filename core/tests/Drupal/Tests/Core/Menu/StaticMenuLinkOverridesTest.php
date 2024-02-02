@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\StaticMenuLinkOverrides;
@@ -108,12 +110,15 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
         $definition_save_1['definitions'],
         $definition_save_1['definitions'],
       );
-    $config->expects($this->exactly(2))
+    $definitions = [
+      $definition_save_1['definitions'],
+      $definitions_save_2['definitions'],
+    ];
+    $config->expects($this->exactly(count($definitions)))
       ->method('set')
-      ->withConsecutive(
-        ['definitions', $definition_save_1['definitions']],
-        ['definitions', $definitions_save_2['definitions']],
-      )
+      ->with('definitions', $this->callback(function (array $value) use (&$definitions): bool {
+        return array_shift($definitions) === $value;
+      }))
       ->will($this->returnSelf());
     $config->expects($this->exactly(2))
       ->method('save');
@@ -121,7 +126,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())
       ->method('getEditable')
-      ->will($this->returnValue($config));
+      ->willReturn($config);
 
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
@@ -148,7 +153,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config->expects($this->once())
       ->method('get')
       ->with('definitions')
-      ->will($this->returnValue($old_definitions));
+      ->willReturn($old_definitions);
 
     // Only save if the definitions changes.
     $config->expects($old_definitions != $new_definitions ? $this->once() : $this->never())
@@ -161,7 +166,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())
       ->method('getEditable')
-      ->will($this->returnValue($config));
+      ->willReturn($config);
 
     $static_override = new StaticMenuLinkOverrides($config_factory);
 

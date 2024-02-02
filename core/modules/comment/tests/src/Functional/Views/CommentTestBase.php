@@ -55,7 +55,14 @@ abstract class CommentTestBase extends ViewTestBase {
    */
   protected $comment;
 
+<<<<<<< HEAD
   protected function setUp($import_test_views = TRUE, $modules = ['comment_test_views']) {
+=======
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['comment_test_views']): void {
+>>>>>>> upstream/11.x
     parent::setUp($import_test_views, $modules);
 
     // Add two users, create a node with the user1 as author and another node

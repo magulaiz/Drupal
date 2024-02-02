@@ -1,5 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 /* cspell:words drupalmediametadatarepository */
+=======
+/* cspell:ignore drupalmediametadatarepository */
+>>>>>>> upstream/11.x
 
 import { Plugin } from 'ckeditor5/src/core';
 

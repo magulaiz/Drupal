@@ -1,5 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
+<<<<<<< HEAD
 /* cspell:words drupalimagealternativetextui contextualballoon componentfactory imagealternativetextformview missingalternativetextview imagetextalternativeui imagealternativetext */
+=======
+/* cspell:ignore drupalimagealternativetextui contextualballoon componentfactory imagealternativetextformview missingalternativetextview imagetextalternativeui imagealternativetext */
+>>>>>>> upstream/11.x
 
 /**
  * @module drupalImage/imagealternativetext/drupalimagealternativetextui
@@ -61,6 +65,7 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
     this._createForm();
     this._createMissingAltTextComponent();
 
+<<<<<<< HEAD
     if (this.editor.plugins.has('ImageUploadEditing')) {
       const imageUploadEditing = this.editor.plugins.get('ImageUploadEditing');
       const imageUtils = this.editor.plugins.get('ImageUtils');
@@ -75,6 +80,28 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
           this._showForm();
         }
       });
+=======
+    const showAlternativeTextForm = () => {
+      const imageUtils = this.editor.plugins.get('ImageUtils');
+      // Show form after upload if there's an image widget in the current
+      // selection.
+      if (
+        imageUtils.getClosestSelectedImageWidget(
+          this.editor.editing.view.document.selection,
+        )
+      ) {
+        this._showForm();
+      }
+    };
+
+    if (this.editor.commands.get('insertImage')) {
+      const insertImage = this.editor.commands.get('insertImage');
+      insertImage.on('execute', showAlternativeTextForm);
+    }
+    if (this.editor.plugins.has('ImageUploadEditing')) {
+      const imageUploadEditing = this.editor.plugins.get('ImageUploadEditing');
+      imageUploadEditing.on('uploadComplete', showAlternativeTextForm);
+>>>>>>> upstream/11.x
     }
   }
 

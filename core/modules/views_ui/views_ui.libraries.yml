@@ -9,7 +9,10 @@ views_ui.admin:
     - core/drupal
     - core/drupalSettings
     - core/once
+<<<<<<< HEAD
     - core/jquery.once.bc
+=======
+>>>>>>> upstream/11.x
     - core/internal.jquery.form
     - core/drupal.form
     - core/drupal.ajax
@@ -17,6 +20,7 @@ views_ui.admin:
     - core/drupal.nodelist.foreach
     - views/views.ajax
     - views_ui/admin.styling
+    - core/drupal.dialog
 
 views_ui.listing:
   version: VERSION
@@ -27,7 +31,6 @@ views_ui.listing:
     - core/drupal
     - core/drupal.string.includes
     - core/once
-    - core/jquery.once.bc
     - views_ui/admin.styling
 
 admin.styling:

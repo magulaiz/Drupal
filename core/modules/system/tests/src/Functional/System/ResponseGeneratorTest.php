@@ -58,6 +58,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
 
+<<<<<<< HEAD
     // Create a cookie-based authentication for the entity:node REST resource.
     // @todo Turn this back in to an optional config YAML file in D10 to have an
     //   example config for REST endpoints and adjust
@@ -81,6 +82,13 @@ class ResponseGeneratorTest extends BrowserTestBase {
     ];
 
     RestResourceConfig::create($resource_config_values)->save();
+=======
+    // Enable cookie-based authentication for the entity:node REST resource.
+    $resource_config = RestResourceConfig::load('entity.node');
+    $configuration = $resource_config->get('configuration');
+    $configuration['authentication'][] = 'cookie';
+    $resource_config->set('configuration', $configuration)->save();
+>>>>>>> upstream/11.x
     $this->rebuildAll();
 
     // Check to see if the header is also added for a non-HTML request.

@@ -2,6 +2,7 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
+<<<<<<< HEAD
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -11,6 +12,18 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\TransactionNoActiveException;
+=======
+use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseAccessDeniedException;
+use Drupal\Core\Database\DatabaseConnectionRefusedException;
+use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\StatementWrapperIterator;
+use Drupal\Core\Database\SupportsTemporaryTablesInterface;
+use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+>>>>>>> upstream/11.x
 
 /**
  * @addtogroup database
@@ -20,7 +33,11 @@ use Drupal\Core\Database\TransactionNoActiveException;
 /**
  * MySQL implementation of \Drupal\Core\Database\Connection.
  */
+<<<<<<< HEAD
 class Connection extends DatabaseConnection {
+=======
+class Connection extends DatabaseConnection implements SupportsTemporaryTablesInterface {
+>>>>>>> upstream/11.x
 
   /**
    * Error code for "Unknown database" error.
@@ -33,6 +50,14 @@ class Connection extends DatabaseConnection {
   const ACCESS_DENIED = 1045;
 
   /**
+<<<<<<< HEAD
+=======
+   * Error code for "Connection refused".
+   */
+  const CONNECTION_REFUSED = 2002;
+
+  /**
+>>>>>>> upstream/11.x
    * Error code for "Can't initialize character set" error.
    */
   const UNSUPPORTED_CHARSET = 2019;
@@ -50,17 +75,29 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   protected $statementClass = NULL;
 
   /**
    * {@inheritdoc}
    */
   protected $statementWrapperClass = StatementWrapper::class;
+=======
+  protected $statementWrapperClass = StatementWrapperIterator::class;
+>>>>>>> upstream/11.x
 
   /**
    * Flag to indicate if the cleanup function in __destruct() should run.
    *
    * @var bool
+<<<<<<< HEAD
+=======
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There's no
+   *    replacement.
+   *
+   * @see https://www.drupal.org/node/3349345
+>>>>>>> upstream/11.x
    */
   protected $needsCleanup = FALSE;
 
@@ -102,6 +139,7 @@ class Connection extends DatabaseConnection {
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
     $is_ansi_quotes_mode = FALSE;
+<<<<<<< HEAD
     foreach ($ansi_quotes_modes as $mode) {
       // None of the modes in $ansi_quotes_modes are substrings of other modes
       // that are not in $ansi_quotes_modes, so a simple stripos() does not
@@ -111,6 +149,20 @@ class Connection extends DatabaseConnection {
         break;
       }
     }
+=======
+    if (isset($connection_options['init_commands']['sql_mode'])) {
+      foreach ($ansi_quotes_modes as $mode) {
+        // None of the modes in $ansi_quotes_modes are substrings of other modes
+        // that are not in $ansi_quotes_modes, so a simple stripos() does not
+        // return false positives.
+        if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
+          $is_ansi_quotes_mode = TRUE;
+          break;
+        }
+      }
+    }
+
+>>>>>>> upstream/11.x
     if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
       $this->identifierQuotes = ['`', '`'];
     }
@@ -120,6 +172,7 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
     // In case of attempted INSERT of a record with an undefined column and no
     // default value indicated in schema, MySql returns a 1364 error code.
@@ -139,6 +192,8 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
+=======
+>>>>>>> upstream/11.x
   public static function open(array &$connection_options = []) {
     if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
       // Only used during the installer version check, as a fallback from utf8mb4.
@@ -189,6 +244,7 @@ class Connection extends DatabaseConnection {
       $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
     }
     catch (\PDOException $e) {
+<<<<<<< HEAD
       if ($e->getCode() == static::DATABASE_NOT_FOUND) {
         throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
       }
@@ -196,6 +252,38 @@ class Connection extends DatabaseConnection {
         throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
       }
       throw $e;
+=======
+      switch ($e->getCode()) {
+        case static::CONNECTION_REFUSED:
+          if (isset($connection_options['unix_socket'])) {
+            // Show message for socket connection via 'unix_socket' option.
+            $message = 'Drupal is configured to connect to the database server via a socket, but the socket file could not be found.';
+            $message .= ' This message normally means that there is no MySQL server running on the system or that you are using an incorrect Unix socket file name when trying to connect to the server.';
+            throw new DatabaseConnectionRefusedException($e->getMessage() . ' [Tip: ' . $message . '] ', $e->getCode(), $e);
+          }
+          if (isset($connection_options['host']) && in_array(strtolower($connection_options['host']), ['', 'localhost'], TRUE)) {
+            // Show message for socket connection via 'host' option.
+            $message = 'Drupal was attempting to connect to the database server via a socket, but the socket file could not be found.';
+            $message .= ' A Unix socket file is used if you do not specify a host name or if you specify the special host name localhost.';
+            $message .= ' To connect via TPC/IP use an IP address (127.0.0.1 for IPv4) instead of "localhost".';
+            $message .= ' This message normally means that there is no MySQL server running on the system or that you are using an incorrect Unix socket file name when trying to connect to the server.';
+            throw new DatabaseConnectionRefusedException($e->getMessage() . ' [Tip: ' . $message . '] ', $e->getCode(), $e);
+          }
+          // Show message for TCP/IP connection.
+          $message = 'This message normally means that there is no MySQL server running on the system or that you are using an incorrect host name or port number when trying to connect to the server.';
+          $message .= ' You should also check that the TCP/IP port you are using has not been blocked by a firewall or port blocking service.';
+          throw new DatabaseConnectionRefusedException($e->getMessage() . ' [Tip: ' . $message . '] ', $e->getCode(), $e);
+
+        case static::DATABASE_NOT_FOUND:
+          throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
+
+        case static::ACCESS_DENIED:
+          throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
+
+        default:
+          throw $e;
+      }
+>>>>>>> upstream/11.x
     }
 
     // Force MySQL to use the UTF-8 character set. Also set the collation, if a
@@ -224,6 +312,14 @@ class Connection extends DatabaseConnection {
     $connection_options['init_commands'] += [
       'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
+<<<<<<< HEAD
+=======
+    if (!empty($connection_options['isolation_level'])) {
+      $connection_options['init_commands'] += [
+        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
+      ];
+    }
+>>>>>>> upstream/11.x
 
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
@@ -251,8 +347,12 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function queryTemporary($query, array $args = [], array $options = []) {
+<<<<<<< HEAD
     @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
     $tablename = $this->generateTemporaryTableName();
+=======
+    $tablename = 'db_temporary_' . uniqid();
+>>>>>>> upstream/11.x
     $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY ' . $query, $args, $options);
     return $tablename;
   }
@@ -342,7 +442,15 @@ class Connection extends DatabaseConnection {
     return NULL;
   }
 
+<<<<<<< HEAD
   public function nextId($existing_id = 0) {
+=======
+  /**
+   * {@inheritdoc}
+   */
+  public function nextId($existing_id = 0) {
+    @trigger_error('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
+>>>>>>> upstream/11.x
     $this->query('INSERT INTO {sequences} () VALUES ()');
     $new_id = $this->lastInsertId();
     // This should only happen after an import or similar event.
@@ -363,6 +471,10 @@ class Connection extends DatabaseConnection {
   }
 
   public function nextIdDelete() {
+<<<<<<< HEAD
+=======
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
+>>>>>>> upstream/11.x
     // While we want to clean up the table to keep it up from occupying too
     // much storage and memory, we must keep the highest value in the table
     // because InnoDB uses an in-memory auto-increment counter as long as the
@@ -387,6 +499,7 @@ class Connection extends DatabaseConnection {
   }
 
   /**
+<<<<<<< HEAD
    * Overridden to work around issues to MySQL not supporting transactional DDL.
    */
   protected function popCommittableTransactions() {
@@ -429,11 +542,18 @@ class Connection extends DatabaseConnection {
         }
       }
     }
+=======
+   * {@inheritdoc}
+   */
+  public function exceptionHandler() {
+    return new ExceptionHandler();
+>>>>>>> upstream/11.x
   }
 
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public function rollBack($savepoint_name = 'drupal_transaction') {
     // MySQL will automatically commit transactions when tables are altered or
     // created (DDL transactions are not supported). Prevent triggering an
@@ -459,11 +579,16 @@ class Connection extends DatabaseConnection {
       return;
     }
     return parent::rollBack($savepoint_name);
+=======
+  public function select($table, $alias = NULL, array $options = []) {
+    return new Select($this, $table, $alias, $options);
+>>>>>>> upstream/11.x
   }
 
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   protected function doCommit() {
     // MySQL will automatically commit transactions when tables are altered or
     // created (DDL transactions are not supported). Prevent triggering an
@@ -487,6 +612,76 @@ class Connection extends DatabaseConnection {
       }
     }
     return $success;
+=======
+  public function insert($table, array $options = []) {
+    return new Insert($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function merge($table, array $options = []) {
+    return new Merge($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function upsert($table, array $options = []) {
+    return new Upsert($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function update($table, array $options = []) {
+    return new Update($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete($table, array $options = []) {
+    return new Delete($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function truncate($table, array $options = []) {
+    return new Truncate($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function schema() {
+    if (empty($this->schema)) {
+      $this->schema = new Schema($this);
+    }
+    return $this->schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function condition($conjunction) {
+    return new Condition($conjunction);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function driverTransactionManager(): TransactionManagerInterface {
+    return new TransactionManager($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function startTransaction($name = '') {
+    return $this->transactionManager()->push($name);
+>>>>>>> upstream/11.x
   }
 
 }

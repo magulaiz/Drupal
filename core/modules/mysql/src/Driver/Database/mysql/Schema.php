@@ -2,12 +2,21 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
+<<<<<<< HEAD
+=======
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+>>>>>>> upstream/11.x
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 use Drupal\Component\Utility\Unicode;
 
+<<<<<<< HEAD
+=======
+// cspell:ignore gipk
+
+>>>>>>> upstream/11.x
 /**
  * @addtogroup schemaapi
  * @{
@@ -44,11 +53,19 @@ class Schema extends DatabaseSchema {
   /**
    * Get information about the table and database name from the prefix.
    *
+<<<<<<< HEAD
    * @return
    *   A keyed array with information about the database, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
     $info = ['prefix' => $this->connection->tablePrefix($table)];
+=======
+   * @return array
+   *   A keyed array with information about the database, table name and prefix.
+   */
+  protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
+    $info = ['prefix' => $this->connection->getPrefix()];
+>>>>>>> upstream/11.x
     if ($add_prefix) {
       $table = $info['prefix'] . $table;
     }
@@ -81,6 +98,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
+<<<<<<< HEAD
    * Generate SQL to create a new table from a Drupal schema definition.
    *
    * @param $name
@@ -90,6 +108,9 @@ class Schema extends DatabaseSchema {
    *
    * @return
    *   An array of SQL statements to create the table.
+=======
+   * {@inheritdoc}
+>>>>>>> upstream/11.x
    */
   protected function createTableSql($name, $table) {
     $info = $this->connection->getConnectionOptions();
@@ -146,7 +167,11 @@ class Schema extends DatabaseSchema {
    *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
+<<<<<<< HEAD
     $sql = "`" . $name . "` " . $spec['mysql_type'];
+=======
+    $sql = "[" . $name . "] " . $spec['mysql_type'];
+>>>>>>> upstream/11.x
 
     if (in_array($spec['mysql_type'], $this->mysqlStringTypes)) {
       if (isset($spec['length'])) {
@@ -284,13 +309,21 @@ class Schema extends DatabaseSchema {
     }
     if (!empty($spec['unique keys'])) {
       foreach ($spec['unique keys'] as $key => $fields) {
+<<<<<<< HEAD
         $keys[] = 'UNIQUE KEY `' . $key . '` (' . $this->createKeySql($fields) . ')';
+=======
+        $keys[] = 'UNIQUE KEY [' . $key . '] (' . $this->createKeySql($fields) . ')';
+>>>>>>> upstream/11.x
       }
     }
     if (!empty($spec['indexes'])) {
       $indexes = $this->getNormalizedIndexes($spec);
       foreach ($indexes as $index => $fields) {
+<<<<<<< HEAD
         $keys[] = 'INDEX `' . $index . '` (' . $this->createKeySql($fields) . ')';
+=======
+        $keys[] = 'INDEX [' . $index . '] (' . $this->createKeySql($fields) . ')';
+>>>>>>> upstream/11.x
       }
     }
 
@@ -364,10 +397,17 @@ class Schema extends DatabaseSchema {
     $return = [];
     foreach ($fields as $field) {
       if (is_array($field)) {
+<<<<<<< HEAD
         $return[] = '`' . $field[0] . '`(' . $field[1] . ')';
       }
       else {
         $return[] = '`' . $field . '`';
+=======
+        $return[] = '[' . $field[0] . '] (' . $field[1] . ')';
+      }
+      else {
+        $return[] = '[' . $field . ']';
+>>>>>>> upstream/11.x
       }
     }
     return implode(', ', $return);
@@ -385,7 +425,11 @@ class Schema extends DatabaseSchema {
     }
 
     $info = $this->getPrefixInfo($new_name);
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO `' . $info['table'] . '`');
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO [' . $info['table'] . ']');
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -417,9 +461,15 @@ class Schema extends DatabaseSchema {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $spec]);
     }
 
+<<<<<<< HEAD
     $fixnull = FALSE;
     if (!empty($spec['not null']) && !isset($spec['default']) && !$is_primary_key) {
       $fixnull = TRUE;
+=======
+    $fix_null = FALSE;
+    if (!empty($spec['not null']) && !isset($spec['default']) && !$is_primary_key) {
+      $fix_null = TRUE;
+>>>>>>> upstream/11.x
       $spec['not null'] = FALSE;
     }
     $query = 'ALTER TABLE {' . $table . '} ADD ';
@@ -434,7 +484,25 @@ class Schema extends DatabaseSchema {
 
       $query .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
+<<<<<<< HEAD
     $this->connection->query($query);
+=======
+    try {
+      $this->connection->query($query);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // MySQL error number 4111 (ER_DROP_PK_COLUMN_TO_DROP_GIPK) indicates that
+      // when dropping and adding a primary key, the generated invisible primary
+      // key (GIPK) column must also be dropped.
+      if (isset($e->getPrevious()->errorInfo[1]) && $e->getPrevious()->errorInfo[1] === 4111 && isset($keys_new['primary key']) && $this->indexExists($table, 'PRIMARY') && $this->findPrimaryKeyColumns($table) === ['my_row_id']) {
+        $this->connection->query($query . ', DROP COLUMN [my_row_id]');
+      }
+      else {
+        throw $e;
+      }
+    }
+
+>>>>>>> upstream/11.x
     if (isset($spec['initial_from_field'])) {
       if (isset($spec['initial'])) {
         $expression = 'COALESCE(' . $spec['initial_from_field'] . ', :default_initial_value)';
@@ -453,7 +521,11 @@ class Schema extends DatabaseSchema {
         ->fields([$field => $spec['initial']])
         ->execute();
     }
+<<<<<<< HEAD
     if ($fixnull) {
+=======
+    if ($fix_null) {
+>>>>>>> upstream/11.x
       $spec['not null'] = TRUE;
       $this->changeField($table, $field, $field, $spec);
     }
@@ -479,7 +551,11 @@ class Schema extends DatabaseSchema {
       $this->dropPrimaryKey($table);
     }
 
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} DROP `' . $field . '`');
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP [' . $field . ']');
+>>>>>>> upstream/11.x
     return TRUE;
   }
 
@@ -541,7 +617,11 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException("Cannot add unique key '$name' to table '$table': unique key already exists.");
     }
 
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY [' . $name . '] (' . $this->createKeySql($fields) . ')');
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -552,7 +632,11 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
 
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} DROP KEY `' . $name . '`');
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP KEY [' . $name . ']');
+>>>>>>> upstream/11.x
     return TRUE;
   }
 
@@ -570,7 +654,11 @@ class Schema extends DatabaseSchema {
     $spec['indexes'][$name] = $fields;
     $indexes = $this->getNormalizedIndexes($spec);
 
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($indexes[$name]) . ')');
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX [' . $name . '] (' . $this->createKeySql($indexes[$name]) . ')');
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -581,7 +669,11 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
 
+<<<<<<< HEAD
     $this->connection->query('ALTER TABLE {' . $table . '} DROP INDEX `' . $name . '`');
+=======
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP INDEX [' . $name . ']');
+>>>>>>> upstream/11.x
     return TRUE;
   }
 
@@ -629,7 +721,11 @@ class Schema extends DatabaseSchema {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field_new => $spec]);
     }
 
+<<<<<<< HEAD
     $sql = 'ALTER TABLE {' . $table . '} CHANGE `' . $field . '` ' . $this->createFieldSql($field_new, $this->processField($spec));
+=======
+    $sql = 'ALTER TABLE {' . $table . '} CHANGE [' . $field . '] ' . $this->createFieldSql($field_new, $this->processField($spec));
+>>>>>>> upstream/11.x
     if ($keys_sql = $this->createKeysSql($keys_new)) {
       $sql .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
@@ -647,7 +743,11 @@ class Schema extends DatabaseSchema {
   public function prepareComment($comment, $length = NULL) {
     // Truncate comment to maximum comment length.
     if (isset($length)) {
+<<<<<<< HEAD
       // Add table prefixes before truncating.
+=======
+      // Add table prefix before truncating.
+>>>>>>> upstream/11.x
       $comment = Unicode::truncate($this->connection->prefixTables($comment), $length, TRUE, TRUE);
     }
     // Remove semicolons to avoid triggering multi-statement check.

@@ -18,8 +18,11 @@ class UserBatchActionTest extends BrowserTestBase {
    * @var array
    */
   protected static $modules = [
+<<<<<<< HEAD
     // @todo Remove this in https://www.drupal.org/node/3219959
     'block',
+=======
+>>>>>>> upstream/11.x
     'user',
     'user_batch_action_test',
     'views',
@@ -34,7 +37,11 @@ class UserBatchActionTest extends BrowserTestBase {
    * Tests user admin batch.
    */
   public function testUserAction() {
+<<<<<<< HEAD
     $themes = ['bartik', 'classy', 'olivero', 'seven', 'test_subseven'];
+=======
+    $themes = ['stark', 'olivero', 'claro'];
+>>>>>>> upstream/11.x
     $this->container->get('theme_installer')->install($themes);
 
     $this->drupalLogin($this->rootUser);

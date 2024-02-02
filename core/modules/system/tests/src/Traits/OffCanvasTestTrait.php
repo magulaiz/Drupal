@@ -1,5 +1,10 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\system\Traits;
 
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Render\MetadataBubblingUrlGenerator;
@@ -55,7 +57,11 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
 
     $this->renderer->expects($this->exactly($invocations))
       ->method('render')
+<<<<<<< HEAD
       ->willReturnCallback(function ($build) use ($self) {
+=======
+      ->willReturnCallback(function ($build) {
+>>>>>>> upstream/11.x
         $this->assertArrayHasKey('#cache', $build);
       });
 

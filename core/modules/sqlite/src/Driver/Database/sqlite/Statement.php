@@ -2,8 +2,13 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+<<<<<<< HEAD
 use Drupal\Core\Database\StatementPrefetch;
 use Drupal\Core\Database\StatementInterface;
+=======
+use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\StatementPrefetchIterator;
+>>>>>>> upstream/11.x
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Statement.
@@ -14,7 +19,11 @@ use Drupal\Core\Database\StatementInterface;
  * user-space mock of PDOStatement that buffers all the data and doesn't
  * have those limitations.
  */
+<<<<<<< HEAD
 class Statement extends StatementPrefetch implements StatementInterface {
+=======
+class Statement extends StatementPrefetchIterator implements StatementInterface {
+>>>>>>> upstream/11.x
 
   /**
    * {@inheritdoc}
@@ -26,7 +35,11 @@ class Statement extends StatementPrefetch implements StatementInterface {
    *
    * See http://bugs.php.net/bug.php?id=45259 for more details.
    */
+<<<<<<< HEAD
   protected function getStatement($query, &$args = []) {
+=======
+  protected function getStatement(string $query, ?array &$args = []): object {
+>>>>>>> upstream/11.x
     if (is_array($args) && !empty($args)) {
       // Check if $args is a simple numeric array.
       if (range(0, count($args) - 1) === array_keys($args)) {
@@ -79,7 +92,11 @@ class Statement extends StatementPrefetch implements StatementInterface {
       }
     }
 
+<<<<<<< HEAD
     return $this->pdoConnection->prepare($query);
+=======
+    return $this->clientConnection->prepare($query);
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -106,6 +123,7 @@ class Statement extends StatementPrefetch implements StatementInterface {
       }
     }
 
+<<<<<<< HEAD
     // In some weird cases, SQLite will prefix some column names by the name
     // of the table. We post-process the data, by renaming the column names
     // using the same convention as MySQL and PostgreSQL.
@@ -145,6 +163,8 @@ class Statement extends StatementPrefetch implements StatementInterface {
       unset($this->data[0]);
     }
 
+=======
+>>>>>>> upstream/11.x
     return $return;
   }
 

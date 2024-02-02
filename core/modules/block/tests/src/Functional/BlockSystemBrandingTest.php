@@ -31,7 +31,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
       ->set('slogan', 'Community plumbing')
       ->save();
     // Add the system branding block to the page.
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site_branding']);
   }
 
   /**
@@ -44,12 +44,20 @@ class BlockSystemBrandingTest extends BlockTestBase {
 
     // Set default block settings.
     $this->drupalGet('');
+<<<<<<< HEAD
     $site_logo_element = $this->xpath($site_logo_xpath);
     $site_name_element = $this->xpath($site_name_xpath);
 
     // Test that all branding elements are displayed.
     $this->assertNotEmpty($site_logo_element, 'The branding block logo was found.');
     $this->assertNotEmpty($site_name_element, 'The branding block site name was found.');
+=======
+
+    // Test that all branding elements are displayed.
+    $this->assertSession()->elementExists('xpath', $site_logo_xpath);
+    $this->assertSession()->elementExists('xpath', $site_name_xpath);
+    $this->assertSession()->elementExists('xpath', $site_slogan_xpath);
+>>>>>>> upstream/11.x
     $this->assertSession()->elementTextContains('xpath', $site_slogan_xpath, 'Community plumbing');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
     // Just this once, assert that the img src of the logo is as expected.
@@ -61,62 +69,96 @@ class BlockSystemBrandingTest extends BlockTestBase {
       ->set('slogan', '<script>alert("Community carpentry");</script>')
       ->save();
     $this->drupalGet('');
+<<<<<<< HEAD
     $this->assertSession()->elementTextContains('xpath', $site_slogan_xpath, 'alert("Community carpentry");');
     $this->assertSession()->responseNotContains('<script>alert("Community carpentry");</script>');
+=======
+    $this->assertSession()->elementTextEquals('xpath', $site_slogan_xpath, 'alert("Community carpentry");');
+    $this->assertSession()->responseNotContains('<script>alert("Community carpentry");</script>');
+
+>>>>>>> upstream/11.x
     // Turn just the logo off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_logo', 0)
       ->save();
     $this->drupalGet('');
+<<<<<<< HEAD
     $site_logo_element = $this->xpath($site_logo_xpath);
     $site_name_element = $this->xpath($site_name_xpath);
     // Re-test all branding elements.
     $this->assertEmpty($site_logo_element, 'The branding block logo was disabled.');
     $this->assertNotEmpty($site_name_element, 'The branding block site name was found.');
+=======
+
+    // Re-test all branding elements.
+    $this->assertSession()->elementNotExists('xpath', $site_logo_xpath);
+    $this->assertSession()->elementExists('xpath', $site_name_xpath);
+>>>>>>> upstream/11.x
     $this->assertSession()->elementTextContains('xpath', $site_slogan_xpath, 'alert("Community carpentry");');
     $this->assertSession()->responseNotContains('<script>alert("Community carpentry");</script>');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site name off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_logo', 1)
       ->set('settings.use_site_name', 0)
       ->save();
     $this->drupalGet('');
+<<<<<<< HEAD
     $site_logo_element = $this->xpath($site_logo_xpath);
     $site_name_element = $this->xpath($site_name_xpath);
     // Re-test all branding elements.
     $this->assertNotEmpty($site_logo_element, 'The branding block logo was found.');
     $this->assertEmpty($site_name_element, 'The branding block site name was disabled.');
+=======
+
+    // Re-test all branding elements.
+    $this->assertSession()->elementExists('xpath', $site_logo_xpath);
+    $this->assertSession()->elementNotExists('xpath', $site_name_xpath);
+>>>>>>> upstream/11.x
     $this->assertSession()->elementTextContains('xpath', $site_slogan_xpath, 'alert("Community carpentry");');
     $this->assertSession()->responseNotContains('<script>alert("Community carpentry");</script>');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site slogan off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_name', 1)
       ->set('settings.use_site_slogan', 0)
       ->save();
     $this->drupalGet('');
+<<<<<<< HEAD
     $site_logo_element = $this->xpath($site_logo_xpath);
     $site_name_element = $this->xpath($site_name_xpath);
     // Re-test all branding elements.
     $this->assertNotEmpty($site_logo_element, 'The branding block logo was found.');
     $this->assertNotEmpty($site_name_element, 'The branding block site name was found.');
+=======
+
+    // Re-test all branding elements.
+    $this->assertSession()->elementExists('xpath', $site_logo_xpath);
+    $this->assertSession()->elementExists('xpath', $site_name_xpath);
+>>>>>>> upstream/11.x
     $this->assertSession()->elementTextNotContains('xpath', $site_slogan_xpath, 'Community carpentry');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn the site name and the site slogan off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_name', 0)
       ->set('settings.use_site_slogan', 0)
       ->save();
     $this->drupalGet('');
+<<<<<<< HEAD
     $site_logo_element = $this->xpath($site_logo_xpath);
     $site_name_element = $this->xpath($site_name_xpath);
     // Re-test all branding elements.
     $this->assertNotEmpty($site_logo_element, 'The branding block logo was found.');
     $this->assertEmpty($site_name_element, 'The branding block site name was disabled.');
+=======
+
+    // Re-test all branding elements.
+    $this->assertSession()->elementExists('xpath', $site_logo_xpath);
+    $this->assertSession()->elementNotExists('xpath', $site_name_xpath);
+>>>>>>> upstream/11.x
     $this->assertSession()->elementTextNotContains('xpath', $site_slogan_xpath, 'Community carpentry');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
   }

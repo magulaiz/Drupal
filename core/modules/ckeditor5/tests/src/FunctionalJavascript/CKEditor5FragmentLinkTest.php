@@ -1,5 +1,10 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -10,6 +15,10 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\TestFileCreationTrait;
+<<<<<<< HEAD
+=======
+use Drupal\user\Entity\User;
+>>>>>>> upstream/11.x
 use Drupal\user\RoleInterface;
 
 /**
@@ -33,6 +42,16 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
   protected static $modules = ['node', 'ckeditor5'];
 
   /**
+<<<<<<< HEAD
+=======
+   * The admin user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $account;
+
+  /**
+>>>>>>> upstream/11.x
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -90,25 +109,41 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
 
     $this->drupalGet('node/add/page');
 
+<<<<<<< HEAD
     $session->getPage();
 
+=======
+>>>>>>> upstream/11.x
     // Add a bottom margin to the title field to be sure the body field is not
     // visible.
     $session->executeScript("document.getElementById('edit-title-0-value').style.marginBottom = window.innerHeight*2 +'px';");
 
     $this->assertSession()->waitForElementVisible('css', $ckeditor_id);
+<<<<<<< HEAD
     // Check that the CKEditor5-enabled body field is currently not visible in
     // the viewport.
     $web_assert->assertNotVisibleInViewport('css', $ckeditor_class, 'topLeft', 'CKEditor5-enabled body field is visible.');
+=======
+    // Check that the CKEditor 5-enabled body field is currently not visible in
+    // the viewport.
+    $web_assert->assertNotVisibleInViewport('css', $ckeditor_class, 'topLeft', 'CKEditor 5-enabled body field is visible.');
+>>>>>>> upstream/11.x
 
     $before_url = $session->getCurrentUrl();
 
     // Trigger a hash change with as target the hidden textarea.
     $session->executeScript("location.hash = '#edit-body-0-value';");
 
+<<<<<<< HEAD
     // Check that the CKEditor5-enabled body field is visible in the viewport.
     // The hash change adds an ID to the CKEditor 5 instance so check its visibility using the ID now.
     $web_assert->assertVisibleInViewport('css', $ckeditor_id, 'topLeft', 'CKEditor5-enabled body field is not visible.');
+=======
+    // Check that the CKEditor 5-enabled body field is visible in the viewport.
+    // The hash change adds an ID to the CKEditor 5 instance so check its
+    // visibility using the ID now.
+    $web_assert->assertVisibleInViewport('css', $ckeditor_id, 'topLeft', 'CKEditor 5-enabled body field is not visible.');
+>>>>>>> upstream/11.x
 
     // Use JavaScript to go back in the history instead of
     // \Behat\Mink\Session::back() because that function doesn't work after a

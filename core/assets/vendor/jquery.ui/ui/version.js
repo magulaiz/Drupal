@@ -15,6 +15,10 @@
 
 $.ui = $.ui || {};
 
+<<<<<<< HEAD
 return $.ui.version = "1.13.1";
+=======
+return $.ui.version = "1.13.2";
+>>>>>>> upstream/11.x
 
 } );

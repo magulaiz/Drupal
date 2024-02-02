@@ -1,5 +1,10 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d6;
 
 use Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings;
@@ -17,14 +22,22 @@ use Drupal\Tests\UnitTestCase;
 class FieldInstanceSettingsTest extends UnitTestCase {
 
   /**
+<<<<<<< HEAD
    * @covers ::getSettings
+=======
+   * @covers \Drupal\Core\Field\BaseFieldDefinition::getSettings
+>>>>>>> upstream/11.x
    *
    * @dataProvider getSettingsProvider
    */
   public function testGetSettings($field_type, $instance_settings, $expected) {
     $instance_settings = unserialize($instance_settings);
     $migration = $this->createMock(MigrationInterface::class);
+<<<<<<< HEAD
     $plugin = new FieldInstanceSettings([], 'd6_field_field_settings', [], $migration);
+=======
+    $plugin = new FieldInstanceSettings([], 'd6_field_field_settings', []);
+>>>>>>> upstream/11.x
 
     $executable = $this->createMock(MigrateExecutableInterface::class);
     $row = $this->getMockBuilder(Row::class)

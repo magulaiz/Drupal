@@ -1,11 +1,19 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
+<<<<<<< HEAD
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+=======
+>>>>>>> upstream/11.x
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -13,6 +21,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+<<<<<<< HEAD
  * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
  * @group ckeditor5
  * @internal
@@ -122,6 +131,14 @@ class SourceEditingTest extends CKEditor5TestBase {
 
     $this->drupalLogin($this->adminUser);
   }
+=======
+ * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
+ * @group ckeditor5
+ * @group #slow
+ * @internal
+ */
+class SourceEditingTest extends SourceEditingTestBase {
+>>>>>>> upstream/11.x
 
   /**
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
@@ -133,7 +150,10 @@ class SourceEditingTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
+<<<<<<< HEAD
     $assert_session->assertWaitOnAjaxRequest();
+=======
+>>>>>>> upstream/11.x
 
     // The Source Editing plugin settings form should not be present.
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting"]');
@@ -320,7 +340,11 @@ JS;
       ],
 
       // Edge case: `style`.
+<<<<<<< HEAD
       // @todo https://www.drupal.org/project/drupal/issues/3260857
+=======
+      // @todo https://www.drupal.org/project/drupal/issues/3304832
+>>>>>>> upstream/11.x
 
       // Edge case: `type` attribute on lists.
       // @todo Remove in https://www.drupal.org/project/drupal/issues/3274635.

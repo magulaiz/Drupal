@@ -53,7 +53,11 @@ class MigrateMenuLinkLocalizedTest extends MigrateNodeTestBase {
       'attributes' => ['title' => 'fr - Test menu link 1'],
       'langcode' => 'fr',
       'alter' => TRUE,
+<<<<<<< HEAD
     ], 'internal:/user/login', -49, 0);
+=======
+    ], 'internal:/user/login', -49);
+>>>>>>> upstream/11.x
   }
 
 }

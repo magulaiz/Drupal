@@ -2,9 +2,21 @@ langcode: en
 status: true
 dependencies:
   config:
+<<<<<<< HEAD
     - taxonomy.vocabulary.tags
   module:
     - taxonomy
+=======
+<<<<<<<< HEAD:core/modules/views/tests/fixtures/update/views.view.test_user_multi_value.yml
+    - field.storage.user.user_picture
+  module:
+    - image
+========
+    - taxonomy.vocabulary.tags
+  module:
+    - taxonomy
+>>>>>>>> upstream/11.x:core/modules/taxonomy/tests/modules/taxonomy_test_views/test_views/views.view.test_taxonomy_name_argument.yml
+>>>>>>> upstream/11.x
     - user
 id: test_taxonomy_name_argument
 label: 'Test taxonomy term argument'
@@ -125,7 +137,81 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+<<<<<<< HEAD
           convert_spaces: false
+=======
+<<<<<<<< HEAD:core/modules/views/tests/fixtures/update/views.view.test_user_multi_value.yml
+          entity_type: user
+          entity_field: roles
+          plugin_id: field
+        user_picture:
+          id: user_picture
+          table: user__user_picture
+          field: user_picture
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: image
+          settings:
+            image_style: ''
+            image_link: ''
+          group_column: ''
+          group_columns: { }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+========
+          convert_spaces: false
+>>>>>>>> upstream/11.x:core/modules/taxonomy/tests/modules/taxonomy_test_views/test_views/views.view.test_taxonomy_name_argument.yml
+>>>>>>> upstream/11.x
       filters:
         vid:
           id: vid
@@ -192,7 +278,10 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
+<<<<<<< HEAD
           default_argument_skip_url: false
+=======
+>>>>>>> upstream/11.x
           summary_options:
             base_path: ''
             count: true
@@ -232,4 +321,9 @@ display:
         - url
         - url.query_args
         - user.permissions
+<<<<<<< HEAD
       tags: {  }
+=======
+      tags:
+        - 'config:field.storage.user.user_picture'
+>>>>>>> upstream/11.x

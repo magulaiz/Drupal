@@ -2,12 +2,18 @@
 
 namespace Drupal\Core\Password;
 
+@trigger_error('\Drupal\Core\Password\PhpassHashedPassword is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. The password compatibility service has been moved to the phpass module. Use \Drupal\phpass\Password\PhpassHashedPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
+
 /**
- * Secure password hashing functions based on the Portable PHP password
- * hashing framework.
+ * Deprecated legacy password hashing framework.
  *
- * @see http://www.openwall.com/phpass/
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. The
+ *   password compatibility service has been moved to the phpass module.
+ *   Use \Drupal\phpass\Password\PhpassHashedPassword instead.
+ *
+ * @see https://www.drupal.org/node/3322420
  */
+<<<<<<< HEAD
 class PhpassHashedPassword implements PasswordInterface {
   /**
    * The minimum allowed log2 number of iterations for password stretching.
@@ -269,3 +275,6 @@ class PhpassHashedPassword implements PasswordInterface {
   }
 
 }
+=======
+class PhpassHashedPassword extends PhpassHashedPasswordBase {}
+>>>>>>> upstream/11.x

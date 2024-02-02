@@ -2,7 +2,6 @@
 
 namespace Drupal\user\EventSubscriber;
 
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
@@ -44,7 +43,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Logout users if site is in maintenance mode.
+   * Logout users if site is in maintenance mode and user is not exempt.
    *
    * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event to process.
@@ -54,6 +53,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *
    * @see https://www.drupal.org/node/3255799
    */
+<<<<<<< HEAD
   public function onKernelRequestMaintenance(RequestEvent $event) {
     @trigger_error('\Drupal\user\EventSubscriber::onKernelRequestMaintenance() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\user\EventSubscriber::onMaintenanceModeRequest() instead. See https://www.drupal.org/node/3255799', E_USER_DEPRECATED);
     $request = $event->getRequest();
@@ -67,6 +67,16 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
           new RedirectResponse(Url::fromRoute('<front>')->toString())
         );
       }
+=======
+  public function onMaintenanceModeRequest(RequestEvent $event) {
+    // If the site is offline, log out unprivileged users.
+    if ($this->account->isAuthenticated()) {
+      user_logout();
+      // Redirect to homepage.
+      $event->setResponse(
+        new RedirectResponse(Url::fromRoute('<front>')->toString())
+      );
+>>>>>>> upstream/11.x
     }
   }
 
@@ -90,7 +100,11 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public static function getSubscribedEvents() {
+=======
+  public static function getSubscribedEvents(): array {
+>>>>>>> upstream/11.x
     $events[MaintenanceModeEvents::MAINTENANCE_MODE_REQUEST][] = [
       'onMaintenanceModeRequest',
       -900,

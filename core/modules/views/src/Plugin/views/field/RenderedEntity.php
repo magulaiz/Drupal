@@ -129,15 +129,17 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $entity = $this->getEntityTranslation($this->getEntity($values), $values);
+    $entity = $this->getEntity($values);
+    if ($entity === NULL) {
+      return '';
+    }
+    $entity = $this->getEntityTranslationByRelationship($entity, $values);
     $build = [];
-    if (isset($entity)) {
-      $access = $entity->access('view', NULL, TRUE);
-      $build['#access'] = $access;
-      if ($access->isAllowed()) {
-        $view_builder = $this->entityTypeManager->getViewBuilder($this->getEntityTypeId());
-        $build += $view_builder->view($entity, $this->options['view_mode'], $entity->language()->getId());
-      }
+    $access = $entity->access('view', NULL, TRUE);
+    $build['#access'] = $access;
+    if ($access->isAllowed()) {
+      $view_builder = $this->entityTypeManager->getViewBuilder($this->getEntityTypeId());
+      $build += $view_builder->view($entity, $this->options['view_mode'], $entity->language()->getId());
     }
     return $build;
   }
@@ -153,6 +155,7 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * {@inheritdoc}
    */
   public function getCacheTags() {
+<<<<<<< HEAD
     $view_display_storage = $this->entityTypeManager->getStorage('entity_view_display');
     $view_displays = $view_display_storage->loadMultiple($view_display_storage
       ->getQuery()
@@ -164,6 +167,11 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
       $tags[] = $view_display->getCacheTags();
     }
     return array_merge([], ...$tags);
+=======
+    // On render, tags that get invalidated on entity view display save are
+    // bubbled up, so there is no need to add view display cache tags here.
+    return [];
+>>>>>>> upstream/11.x
   }
 
   /**

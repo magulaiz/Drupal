@@ -11,6 +11,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Create a node and test saving it.
  *
  * @group node
+ * @group #slow
  */
 class NodeCreationTest extends NodeTestBase {
 
@@ -35,6 +36,9 @@ class NodeCreationTest extends NodeTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

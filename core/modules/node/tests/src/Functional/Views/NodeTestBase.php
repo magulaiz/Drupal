@@ -17,7 +17,11 @@ abstract class NodeTestBase extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']) {
+=======
+  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
+>>>>>>> upstream/11.x
     parent::setUp($import_test_views, $modules);
   }
 

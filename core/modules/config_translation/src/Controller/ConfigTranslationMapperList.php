@@ -71,7 +71,11 @@ class ConfigTranslationMapperList extends ControllerBase {
       $mappers[$weight] = $mapper;
     }
 
+<<<<<<< HEAD
     $build['#rows'] = array_merge([], ...$mappers);
+=======
+    $build['#rows'] = array_merge(...$mappers);
+>>>>>>> upstream/11.x
 
     return $build;
   }

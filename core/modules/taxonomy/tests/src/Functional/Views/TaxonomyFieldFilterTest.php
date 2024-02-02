@@ -57,7 +57,14 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
    */
   public $termNames = [];
 
+<<<<<<< HEAD
   public function setUp($import_test_views = TRUE, $modules = []): void {
+=======
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+>>>>>>> upstream/11.x
     parent::setUp($import_test_views, $modules);
 
     // Add two new languages.

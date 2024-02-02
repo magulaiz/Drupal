@@ -18,7 +18,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
   protected static $entityTypeId = 'block_content_type';
 
   /**
-   * @var \Drupal\block_content\Entity\BlockContentTypeInterface
+   * @var \Drupal\block_content\BlockContentTypeInterface
    */
   protected $entity;
 
@@ -26,7 +26,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
+    $this->grantPermissionsToTestedRole(['administer block types']);
   }
 
   /**
@@ -55,7 +55,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
       'id' => 'pascal',
       'label' => 'Pascal',
       'langcode' => 'en',
-      'revision' => 0,
+      'revision' => FALSE,
       'status' => TRUE,
       'uuid' => $this->entity->uuid(),
     ];

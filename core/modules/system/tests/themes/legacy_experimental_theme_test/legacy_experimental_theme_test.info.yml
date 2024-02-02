@@ -4,3 +4,7 @@ description: 'Legacy experimental test theme.'
 version: VERSION
 base theme: false
 experimental: true
+<<<<<<< HEAD
+=======
+hidden: true
+>>>>>>> upstream/11.x

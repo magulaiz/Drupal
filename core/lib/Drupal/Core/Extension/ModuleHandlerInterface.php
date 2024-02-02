@@ -103,7 +103,7 @@ interface ModuleHandlerInterface {
    *   information discovered during a Drupal\Core\Extension\ExtensionDiscovery
    *   scan.
    *
-   * @return
+   * @return array
    *   The same array with the new keys for each module:
    *   - requires: An array with the keys being the modules that this module
    *     requires.
@@ -173,6 +173,7 @@ interface ModuleHandlerInterface {
   public function getHookInfo();
 
   /**
+<<<<<<< HEAD
    * Determines which modules are implementing a hook.
    *
    * @param string $hook
@@ -191,6 +192,8 @@ interface ModuleHandlerInterface {
   public function getImplementations($hook);
 
   /**
+=======
+>>>>>>> upstream/11.x
    * Write the hook implementation info to the cache.
    */
   public function writeCache();
@@ -202,6 +205,7 @@ interface ModuleHandlerInterface {
 
   /**
    * Determines whether there are implementations of a hook.
+<<<<<<< HEAD
    *
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
@@ -219,13 +223,18 @@ interface ModuleHandlerInterface {
 
   /**
    * Returns whether a given module implements a given hook.
+=======
+>>>>>>> upstream/11.x
    *
-   * @param string $module
-   *   The name of the module (without the .module extension).
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
+   * @param string|string[]|null $modules
+   *   (optional) A single module or multiple modules to check if they have any
+   *   implementations of a hook. Use NULL to check if any enabled module has
+   *   implementations.
    *
    * @return bool
+<<<<<<< HEAD
    *   TRUE if the module is both installed and enabled, and the hook is
    *   implemented in that module.
    *
@@ -233,8 +242,30 @@ interface ModuleHandlerInterface {
    *   hasImplementations() methods instead with the $modules argument.
    *
    * @see https://www.drupal.org/node/3000490
+=======
+   *   If $modules is provided, then TRUE if there are any implementations by
+   *   the module(s) provided. Or if $modules if NULL, then TRUE if there are
+   *   any implementations. Otherwise FALSE.
+>>>>>>> upstream/11.x
    */
-  public function implementsHook($module, $hook);
+  public function hasImplementations(string $hook, $modules = NULL): bool;
+
+  /**
+   * Executes a callback for each implementation of a hook.
+   *
+   * The callback is passed two arguments, a closure which executes a hook
+   * implementation. And the module name.
+   *
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param callable $callback
+   *   A callable that invokes a hook implementation. Such that
+   *   $callback is callable(callable, string): mixed.
+   *   Arguments:
+   *    - Closure to a hook implementation.
+   *    - Implementation module machine name.
+   */
+  public function invokeAllWith(string $hook, callable $callback): void;
 
   /**
    * Executes a callback for each implementation of a hook.
@@ -425,8 +456,10 @@ interface ModuleHandlerInterface {
   public function alterDeprecated($description, $type, &$data, &$context1 = NULL, &$context2 = NULL);
 
   /**
-   * Returns an array of directories for all enabled modules. Useful for
-   * tasks such as finding a file that exists in all module directories.
+   * Returns an array of directories for all enabled modules.
+   *
+   * This is useful for tasks such as finding a file that exists in all module
+   * directories.
    *
    * @return array
    */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
@@ -27,8 +29,14 @@ class GenerateThemeTest extends QuickStartTestBase {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public function setUp(): void {
     if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+=======
+  protected function setUp(): void {
+    $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
+    if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+>>>>>>> upstream/11.x
       $this->markTestSkipped();
     }
     parent::setUp();
@@ -45,7 +53,11 @@ class GenerateThemeTest extends QuickStartTestBase {
    * @return \Symfony\Component\Process\Process
    *   The PHP process
    */
+<<<<<<< HEAD
   private function generateThemeFromStarterkit() : Process {
+=======
+  private function generateThemeFromStarterkit($env = NULL) : Process {
+>>>>>>> upstream/11.x
     $install_command = [
       $this->php,
       'core/scripts/drupal',
@@ -54,7 +66,7 @@ class GenerateThemeTest extends QuickStartTestBase {
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
     ];
-    $process = new Process($install_command, NULL);
+    $process = new Process($install_command, NULL, $env);
     $process->setTimeout(60);
     return $process;
   }
@@ -98,6 +110,13 @@ class GenerateThemeTest extends QuickStartTestBase {
     self::assertArrayNotHasKey('hidden', $info);
     self::assertArrayHasKey('generator', $info);
     self::assertEquals('starterkit_theme:9.4.0', $info['generator']);
+<<<<<<< HEAD
+=======
+
+    // Confirm readme is rewritten.
+    $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
+    $this->assertSame('test_custom_theme theme, generated from starterkit_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+>>>>>>> upstream/11.x
 
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
@@ -122,6 +141,43 @@ class GenerateThemeTest extends QuickStartTestBase {
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Tests generating a theme from another Starterkit enabled theme.
+   */
+  public function testGeneratingFromAnotherTheme() {
+    // Do not rely on \Drupal::VERSION: change the version to a concrete version
+    // number, to simulate using a tagged core release.
+    $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
+    $info = Yaml::decode(file_get_contents($starterkit_info_yml));
+    $info['version'] = '9.4.0';
+    file_put_contents($starterkit_info_yml, Yaml::encode($info));
+
+    $process = $this->generateThemeFromStarterkit();
+    $exit_code = $process->run();
+    $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertSame(0, $exit_code);
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'generate-theme',
+      'generated_from_another_theme',
+      '--name="Generated from another theme"',
+      '--description="Custom theme generated from a theme other than starterkit_theme"',
+      '--starterkit=test_custom_theme',
+    ];
+    $process = new Process($install_command);
+    $exit_code = $process->run();
+    $this->assertSame('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertSame(0, $exit_code);
+
+    // Confirm readme is rewritten.
+    $readme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/README.md';
+    $this->assertSame('generated_from_another_theme theme, generated from test_custom_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+  }
+
+  /**
+>>>>>>> upstream/11.x
    * Tests the generate-theme command on a dev snapshot of Drupal core.
    */
   public function testDevSnapshot() {
@@ -224,6 +280,7 @@ exit 127
 SH;
     file_put_contents($unavailableGitPath . '/git', $bash);
     chmod($unavailableGitPath . '/git', 0755);
+<<<<<<< HEAD
     $oldPath = getenv('PATH');
     putenv('PATH=' . $unavailableGitPath . ':' . getenv('PATH'));
     // Confirm that 'git' is no longer available.
@@ -232,12 +289,30 @@ SH;
     $this->assertEquals(127, $status);
 
     $process = $this->generateThemeFromStarterkit();
+=======
+    // Confirm that 'git' is no longer available.
+    $env = [
+      'PATH' => $unavailableGitPath . ':' . getenv('PATH'),
+      'COLUMNS' => 80,
+    ];
+    $process = new Process([
+      'git',
+      '--help',
+    ], NULL, $env);
+    $process->run();
+    $this->assertEquals(127, $process->getExitCode(), 'Fake git used by process.');
+
+    $process = $this->generateThemeFromStarterkit($env);
+>>>>>>> upstream/11.x
     $result = $process->run();
     $this->assertEquals("[ERROR] The source theme starterkit_theme has a development version number     \n         (7.x-dev). Determining a specific commit is not possible because git is\n         not installed. Either install git or use a tagged release to generate a\n         theme.", trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(1, $result);
     $this->assertFileDoesNotExist($this->getWorkspaceDirectory() . "/themes/test_custom_theme");
+<<<<<<< HEAD
 
     putenv('PATH=' . $oldPath . ':' . getenv('PATH'));
+=======
+>>>>>>> upstream/11.x
   }
 
   /**
@@ -311,12 +386,20 @@ SH;
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
       '--starterkit',
+<<<<<<< HEAD
       'bartik',
+=======
+      'olivero',
+>>>>>>> upstream/11.x
     ];
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
     $result = $process->run();
+<<<<<<< HEAD
     $this->assertStringContainsString('Theme source theme bartik is not a valid starter kit.', trim($process->getErrorOutput()));
+=======
+    $this->assertStringContainsString('Theme source theme olivero is not a valid starter kit.', trim($process->getErrorOutput()));
+>>>>>>> upstream/11.x
     $this->assertSame(1, $result);
   }
 

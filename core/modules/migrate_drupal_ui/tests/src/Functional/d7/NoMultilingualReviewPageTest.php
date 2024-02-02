@@ -4,7 +4,7 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
-// cspell:ignore Filefield Multiupload Imagefield
+// cspell:ignore Filefield Multiupload Imagefield rulesets
 
 /**
  * Tests Drupal 7 upgrade without translations.
@@ -19,15 +19,16 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+<<<<<<< HEAD
     'book',
+=======
+>>>>>>> upstream/11.x
     'config_translation',
     'content_translation',
     'datetime_range',
     'file',
-    'forum',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
   ];
 
@@ -56,7 +57,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     return [
       'Block',
       'Block languages',
-      'Book',
       'Bulk Export',
       'Chaos Tools (CTools) AJAX Example',
       'Chaos tools',
@@ -85,7 +85,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Field SQL storage',
       'File',
       'Filter',
-      'Forum',
       'Image',
       'Internationalization',
       'Link',
@@ -109,7 +108,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Search',
       'Search embedded form',
       'Shortcut',
-      'Statistics',
       'String translation',
       'Stylizer',
       'Synchronize translations',
@@ -156,13 +154,19 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+<<<<<<< HEAD
       'Breakpoints',
       // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
+=======
+      'Book',
+      'Breakpoints',
+>>>>>>> upstream/11.x
       'Color',
       'Contact translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',
       'FlexSlider Picture',
+      'Forum',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',
@@ -171,6 +175,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'RDF',
       'References',
       'References UUID',
+      'Statistics',
       'Translation redirect',
       'Translation sets',
       'User mail translation',

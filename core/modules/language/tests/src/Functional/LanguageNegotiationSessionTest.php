@@ -2,12 +2,16 @@
 
 namespace Drupal\Tests\language\Functional;
 
+<<<<<<< HEAD
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSession;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+=======
+use Drupal\language\Entity\ConfigurableLanguage;
+>>>>>>> upstream/11.x
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -51,6 +55,7 @@ class LanguageNegotiationSessionTest extends BrowserTestBase {
    * Tests language negotiation via query/session parameters.
    */
   public function testSessionLanguageNegotiationMethod() {
+<<<<<<< HEAD
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable Session and Selected language for interface language detection.
@@ -69,6 +74,17 @@ class LanguageNegotiationSessionTest extends BrowserTestBase {
       LanguageNegotiationSelected::METHOD_ID => 12,
     ]);
     $config->save();
+=======
+    // Enable Session and Selected language for interface language detection.
+    $this->drupalGet('admin/config/regional/language/detection');
+    $edit = [
+      'language_interface[enabled][language-session]' => 1,
+      'language_interface[enabled][language-selected]' => 1,
+      'language_interface[weight][language-session]' => -6,
+      'language_interface[weight][language-selected]' => 12,
+    ];
+    $this->submitForm($edit, 'Save settings');
+>>>>>>> upstream/11.x
 
     // Set language via query parameter.
     $this->drupalGet('user/' . $this->adminUser->id(), ['query' => ['language' => 'fr']]);

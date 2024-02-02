@@ -2,14 +2,12 @@
 
 namespace Drupal\Tests\update\Functional;
 
-use Drupal\Core\Link;
-use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
- * Common test methods for projects that use semver version releases.
+ * Common setup and utility methods to test projects that use semver releases.
  *
- * For classes that extend this class, the XML fixtures they will start with
+ * For classes that extend this class, the XML fixtures they use will start with
  * ::$projectTitle.
  *
  * @group update
@@ -17,6 +15,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
 abstract class UpdateSemverTestBase extends UpdateTestBase {
 
   use CronRunTrait;
+  use UpdateTestTrait;
 
   /**
    * Modules to enable.
@@ -37,17 +36,25 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    */
   protected $projectTitle;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'view update notifications',
+<<<<<<< HEAD
       ]);
+=======
+    ]);
+>>>>>>> upstream/11.x
     $this->drupalLogin($admin_user);
     $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**
+<<<<<<< HEAD
    * Tests the Update Manager module when no updates are available.
    *
    * The XML fixture file 'drupal.1.0.xml' which is one of the XML files this
@@ -436,6 +443,8 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
   }
 
   /**
+=======
+>>>>>>> upstream/11.x
    * {@inheritdoc}
    */
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {

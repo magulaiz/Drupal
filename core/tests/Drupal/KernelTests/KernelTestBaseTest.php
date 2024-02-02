@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
 use GuzzleHttp\Exception\GuzzleException;
 use Drupal\Tests\StreamCapturer;
@@ -10,6 +11,7 @@ use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
@@ -17,6 +19,7 @@ use PHPUnit\Framework\SkippedTestError;
  * @group PHPUnit
  * @group Test
  * @group KernelTests
+ * @group #slow
  */
 class KernelTestBaseTest extends KernelTestBase {
 
@@ -87,13 +90,6 @@ class KernelTestBaseTest extends KernelTestBase {
       ],
     ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
-
-    // Ensure that the database tasks have been run during set up. Neither MySQL
-    // nor SQLite make changes that are testable.
-    if ($database->driver() == 'pgsql') {
-      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
-    }
 
     $this->assertNotNull(FileCacheFactory::getPrefix());
   }
@@ -209,8 +205,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
 
-    $this->assertEquals($expected, $build['#markup']);
-    $this->assertEquals($expected, $output);
+    $this->assertSame($expected, (string) $build['#markup']);
+    $this->assertSame($expected, (string) $output);
   }
 
   /**
@@ -242,6 +238,34 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
+   * Tests that a usable session is on the request.
+   *
+   * @covers ::bootKernel
+   */
+  public function testSessionOnRequest(): void {
+    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+    $session = $this->container->get('request_stack')->getSession();
+
+    $session->set('some-val', 'do-not-cleanup');
+    $this->assertEquals('do-not-cleanup', $session->get('some-val'));
+
+    $session->set('some-other-val', 'do-cleanup');
+    $this->assertEquals('do-cleanup', $session->remove('some-other-val'));
+  }
+
+  /**
+   * Tests deprecation of modified request stack lacking a session.
+   *
+   * @covers ::tearDown
+   *
+   * @group legacy
+   */
+  public function testDeprecatedSessionMissing(): void {
+    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
+    $this->container->get('request_stack')->push(Request::create('/'));
+  }
+
+  /**
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
   public function testLocalTimeZone() {
@@ -261,6 +285,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testMethodRequiresModule() {
     require __DIR__ . '/../../fixtures/KernelMissingDependentModuleMethodTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new KernelMissingDependentModuleMethodTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');
@@ -288,6 +313,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testRequiresModule() {
     require __DIR__ . '/../../fixtures/KernelMissingDependentModuleTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new KernelMissingDependentModuleTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');
@@ -316,10 +342,18 @@ class KernelTestBaseTest extends KernelTestBase {
     if ($connection->databaseType() === 'sqlite') {
       $result = $connection->query("SELECT name FROM " . $this->databasePrefix .
         ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
+<<<<<<< HEAD
         ':type' => 'table',
         ':table_name' => '%',
         ':pattern' => 'sqlite_%',
       ])->fetchAllKeyed(0, 0);
+=======
+          ':type' => 'table',
+          ':table_name' => '%',
+          ':pattern' => 'sqlite_%',
+        ]
+      )->fetchAllKeyed(0, 0);
+>>>>>>> upstream/11.x
       $this->assertEmpty($result, 'All test tables have been removed.');
     }
     else {
@@ -337,88 +371,6 @@ class KernelTestBaseTest extends KernelTestBase {
       'core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml',
       \Drupal::service('extension.list.module')->getPathname('demo_umami_content')
     );
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assert.
-   *
-   * @group legacy
-   */
-  public function testAssert() {
-    $this->expectDeprecation('AssertLegacyTrait::assert() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertTrue() instead. See https://www.drupal.org/node/3129738');
-    $this->assert(TRUE);
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
-   *
-   * @group legacy
-   */
-  public function testAssertIdenticalObject() {
-    $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertEqual.
-   *
-   * @group legacy
-   */
-  public function testAssertEqual() {
-    $this->expectDeprecation('AssertLegacyTrait::assertEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertEqual('0', 0);
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertNotEqual.
-   *
-   * @group legacy
-   */
-  public function testAssertNotEqual() {
-    $this->expectDeprecation('AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertNotEqual('foo', 'bar');
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertIdentical.
-   *
-   * @group legacy
-   */
-  public function testAssertIdentical() {
-    $this->expectDeprecation('AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738');
-    $this->assertIdentical('foo', 'foo');
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertNotIdentical.
-   *
-   * @group legacy
-   */
-  public function testAssertNotIdentical() {
-    $this->expectDeprecation('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738');
-    $this->assertNotIdentical('foo', 'bar');
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::verbose().
-   *
-   * @group legacy
-   */
-  public function testVerbose() {
-    $this->expectDeprecation('AssertLegacyTrait::verbose() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514');
-    $this->verbose('The show must go on');
-  }
-
-  /**
-   * Tests the deprecation of ::installSchema with the tables key_value(_expire).
-   *
-   * @group legacy
-   */
-  public function testKernelTestBaseInstallSchema() {
-    $this->expectDeprecation('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286');
-    $this->enableModules(['system']);
-    $this->installSchema('system', ['key_value', 'key_value_expire']);
-    $this->assertFalse(Database::getConnection()->schema()->tableExists('key_value'));
   }
 
   /**
@@ -451,4 +403,20 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertSame(1, \Drupal::service('extension.list.module')->get($module)->status);
   }
 
+<<<<<<< HEAD
+=======
+  /**
+   * Tests the deprecation of accessing the randomGenerator property directly.
+   *
+   * @group legacy
+   */
+  public function testGetRandomGeneratorPropertyDeprecation() {
+    $this->expectDeprecation('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445');
+    // We purposely test accessing an undefined property here. We need to tell
+    // PHPStan to ignore that.
+    // @phpstan-ignore-next-line
+    $this->assertInstanceOf(Random::class, $this->randomGenerator);
+  }
+
+>>>>>>> upstream/11.x
 }

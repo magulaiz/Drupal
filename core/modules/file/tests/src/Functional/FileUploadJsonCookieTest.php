@@ -7,6 +7,7 @@ use Drupal\Tests\rest\Functional\FileUploadResourceTestBase;
 
 /**
  * @group file
+ * @group #slow
  */
 class FileUploadJsonCookieTest extends FileUploadResourceTestBase {
 
@@ -31,5 +32,12 @@ class FileUploadJsonCookieTest extends FileUploadResourceTestBase {
    * {@inheritdoc}
    */
   protected static $auth = 'cookie';
+
+  /**
+   * Entity type ID for this storage.
+   *
+   * @var string
+   */
+  protected static string $entityTypeId;
 
 }

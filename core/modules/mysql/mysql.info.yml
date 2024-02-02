@@ -1,5 +1,9 @@
 name: MySQL
 type: module
+<<<<<<< HEAD
 description: 'Database driver for MySQL.'
+=======
+description: 'Provides the MySQL database driver.'
+>>>>>>> upstream/11.x
 package: Core
 version: VERSION

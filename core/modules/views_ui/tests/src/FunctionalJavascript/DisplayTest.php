@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -44,7 +46,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     ViewTestData::createTestViews(self::class, ['views_test_config']);
@@ -72,7 +74,7 @@ class DisplayTest extends WebDriverTestBase {
     $page->find('css', '#views-display-menu-tabs .add')->click();
 
     // Wait for the animation to complete.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->wait(1000, "jQuery(':animated').length === 0;");
 
     // Add the display.
     $page->find('css', '#edit-displays-top-add-display-block')->click();
@@ -156,28 +158,53 @@ class DisplayTest extends WebDriverTestBase {
   }
 
   /**
-   * Confirms that form_alter is triggered after ajax rebuilds.
+   * Test if 'add' translations are filtered from multilingual display options.
    */
-  public function testAjaxRebuild() {
-    \Drupal::service('theme_installer')->install(['views_test_classy_subtheme']);
+  public function testAddDisplayBlockTranslation() {
 
-    $this->config('system.theme')
-      ->set('default', 'views_test_classy_subtheme')
-      ->save();
+    // Set up an additional language (Hungarian).
+    $langcode = 'hu';
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
+    $config = $this->config('language.negotiation');
+    $config->set('url.prefixes', [$langcode => $langcode])->save();
+    \Drupal::service('kernel')->rebuildContainer();
+    \Drupal::languageManager()->reset();
 
+    // Add Hungarian translations.
+    $this->addTranslation($langcode, 'Block', 'Blokk');
+    $this->addTranslation($langcode, 'Add @display', '@display hozzáadása');
+
+    $this->drupalGet('hu/admin/structure/views/view/test_display');
     $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
 
-    $this->drupalGet('admin/structure/views/view/content');
-    $assert_session->pageTextContains('This is text added to the display tabs at the top');
-    $assert_session->pageTextContains('This is text added to the display edit form');
-    $page->clickLink('Content: Title (Title)');
-    $assert_session->waitForElementVisible('css', '.views-ui-dialog');
-    $page->fillField('Label', 'New Title');
-    $page->find('css', '.ui-dialog-buttonset button:contains("Apply")')->press();
-    $assert_session->waitForElementRemoved('css', '.views-ui-dialog');
-    $assert_session->pageTextContains('This is text added to the display tabs at the top');
-    $assert_session->pageTextContains('This is text added to the display edit form');
+    $page->find('css', '#views-display-menu-tabs .add')->click();
+
+    // Wait for the animation to complete.
+    $this->getSession()->wait(1000, "jQuery(':animated').length === 0;");
+
+    // Look for the input element, always in second spot.
+    $elements = $page->findAll('css', '.add ul input');
+    $this->assertEquals('Blokk', $elements[1]->getAttribute('value'));
+  }
+
+  /**
+   * Helper function for adding interface text translations.
+   */
+  private function addTranslation($langcode, $source_string, $translation_string) {
+    $storage = \Drupal::service('locale.storage');
+    $string = $storage->findString(['source' => $source_string]);
+    if (is_null($string)) {
+      $string = new SourceString();
+      $string
+        ->setString($source_string)
+        ->setStorage($storage)
+        ->save();
+    }
+    $storage->createTranslation([
+      'lid' => $string->getId(),
+      'language' => $langcode,
+      'translation' => $translation_string,
+    ])->save();
   }
 
   /**

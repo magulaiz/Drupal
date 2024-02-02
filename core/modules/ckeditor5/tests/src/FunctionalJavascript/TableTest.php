@@ -1,10 +1,19 @@
 <?php
 
+<<<<<<< HEAD
+=======
+declare(strict_types=1);
+
+>>>>>>> upstream/11.x
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
+<<<<<<< HEAD
+=======
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+>>>>>>> upstream/11.x
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -14,7 +23,11 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
+<<<<<<< HEAD
 class TableTest extends CKEditor5TestBase {
+=======
+class TableTest extends WebDriverTestBase {
+>>>>>>> upstream/11.x
 
   use CKEditor5TestTrait;
 
@@ -53,9 +66,20 @@ class TableTest extends CKEditor5TestBase {
    */
   protected $defaultTheme = 'stark';
 
+<<<<<<< HEAD
   protected function setUp(): void {
     parent::setUp();
 
+=======
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page']);
+
+>>>>>>> upstream/11.x
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'Test format',
@@ -166,11 +190,22 @@ class TableTest extends CKEditor5TestBase {
     $caption_button->click();
     $caption = $assert_session->waitForElementVisible('css', 'figure.table > figcaption');
     $this->assertEmpty($caption->getText());
+<<<<<<< HEAD
     $this->getSession()->getDriver()->executeScript("document.querySelector('figure.table > figcaption').innerText = '$this->captionText'");
     $this->assertEquals($this->captionText, $caption->getText());
 
     // Update table cell content.
     $this->getSession()->getDriver()->executeScript("document.querySelector('.ck-editor__nested-editable .ck-table-bogus-paragraph').innerText = '$this->tableCellText'");
+=======
+    $caption->setValue($this->captionText);
+    $this->assertEquals($this->captionText, $caption->getText());
+
+    // Update table cell content.
+    $table_cell = $assert_session->waitForElement('css', '.ck-editor__nested-editable .ck-table-bogus-paragraph');
+    $this->assertNotEmpty($table_cell);
+    $table_cell->click();
+    $table_cell->setValue($this->tableCellText);
+>>>>>>> upstream/11.x
     $table_cell = $page->find('css', 'figure.table > table > tbody > tr > td');
     $this->assertEquals($this->tableCellText, $table_cell->getText());
 

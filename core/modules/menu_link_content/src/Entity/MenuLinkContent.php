@@ -12,7 +12,11 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
 /**
  * Defines the menu link content entity class.
  *
+<<<<<<< HEAD
  * @property \Drupal\link\LinkItemInterface $link
+=======
+ * @property \Drupal\Core\Field\FieldItemList $link
+>>>>>>> upstream/11.x
  * @property \Drupal\Core\Field\FieldItemList $rediscover
  *
  * @ContentEntityType(
@@ -32,7 +36,8 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *     "form" = {
  *       "default" = "Drupal\menu_link_content\Form\MenuLinkContentForm",
  *       "delete" = "Drupal\menu_link_content\Form\MenuLinkContentDeleteForm"
- *     }
+ *     },
+ *     "list_builder" = "Drupal\menu_link_content\MenuLinkListBuilder"
  *   },
  *   admin_permission = "administer menu",
  *   base_table = "menu_link_content",

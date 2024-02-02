@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -66,6 +65,7 @@ class CKEditor5MediaController extends ControllerBase {
   }
 
   /**
+<<<<<<< HEAD
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -77,6 +77,8 @@ class CKEditor5MediaController extends ControllerBase {
   }
 
   /**
+=======
+>>>>>>> upstream/11.x
    * Returns JSON response containing metadata about media entity.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -103,10 +105,24 @@ class CKEditor5MediaController extends ControllerBase {
     $image_field = $this->getMediaImageSourceFieldName($media);
     $response = [];
     $response['type'] = $media->bundle();
+<<<<<<< HEAD
     if ($image_field) {
       $response['imageSourceMetadata'] = [
         'alt' => $this->entityRepository->getTranslationFromContext($media)->{$image_field}->alt,
       ];
+=======
+    // If this uses the image media source and the "alt" field is enabled,
+    // expose additional metadata.
+    // @see \Drupal\media\Plugin\media\Source\Image
+    // @see core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativeui.js
+    if ($image_field) {
+      $settings = $media->{$image_field}->getItemDefinition()->getSettings();
+      if (!empty($settings['alt_field'])) {
+        $response['imageSourceMetadata'] = [
+          'alt' => $this->entityRepository->getTranslationFromContext($media)->{$image_field}->alt,
+        ];
+      }
+>>>>>>> upstream/11.x
     }
 
     // Note that we intentionally do not use:

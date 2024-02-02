@@ -3,15 +3,12 @@
 namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser as SymfonyMimeTypeGuesser;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface as LegacyMimeTypeGuesserInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface as MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Defines a MIME type guesser that also supports stream wrapper paths.
  */
-class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesserInterface {
+class MimeTypeGuesser implements MimeTypeGuesserInterface {
 
   /**
    * An array of arrays of registered guessers keyed by priority.
@@ -25,7 +22,7 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
    *
    * If this is NULL a rebuild will be triggered.
    *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface[]
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface[]
    *
    * @see \Drupal\Core\File\MimeType\MimeTypeGuesser::addGuesser()
    * @see \Drupal\Core\File\MimeType\MimeTypeGuesser::sortGuessers()
@@ -73,16 +70,14 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
         return $mime_type;
       }
     }
+<<<<<<< HEAD
 
     return NULL;
   }
+=======
+>>>>>>> upstream/11.x
 
-  /**
-   * {@inheritdoc}
-   */
-  public function guess($path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::guessMimeType() instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-    return $this->guessMimeType($path);
+    return NULL;
   }
 
   /**
@@ -105,29 +100,6 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
   }
 
   /**
-   * Appends a MIME type guesser to the guessers chain.
-   *
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $guesser
-   *   The guesser to be appended.
-   * @param int $priority
-   *   The priority of the guesser being added.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
-   * ::addMimeTypeGuesser() instead.
-   *
-   * @see https://www.drupal.org/node/3133341
-   */
-  public function addGuesser(LegacyMimeTypeGuesserInterface $guesser, $priority = 0) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::addMimeTypeGuesser() instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-    $this->guessers[$priority][] = $guesser;
-    // Mark sorted guessers for rebuild.
-    $this->sortedGuessers = NULL;
-    return $this;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function isGuesserSupported(): bool {
@@ -142,6 +114,7 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
    */
   protected function sortGuessers() {
     krsort($this->guessers);
+<<<<<<< HEAD
     return array_merge([], ...$this->guessers);
   }
 
@@ -159,6 +132,9 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
     SymfonyMimeTypeGuesser::reset();
     $singleton = SymfonyMimeTypeGuesser::getInstance();
     $singleton->register($container->get('file.mime_type.guesser'));
+=======
+    return array_merge(...$this->guessers);
+>>>>>>> upstream/11.x
   }
 
 }
