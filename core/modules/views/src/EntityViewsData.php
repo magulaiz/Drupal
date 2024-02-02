@@ -457,7 +457,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Check if the field has a target entity entity.
     $field_storage = $field_definition->getFieldStorageDefinition();
     $target_entity_type_id = $field_storage->getSetting('target_type');
-    if ($target_entity_type_id) {
+    if ($target_entity_type_id && $this->entityTypeManager->hasDefinition($target_entity_type_id)) {
       $target_entity_type = $this->entityTypeManager->getDefinition($target_entity_type_id);
       if ($target_entity_type instanceof EntityTypeInterface) {
         foreach ($table_data as $table_field_name => $table_field_data) {
