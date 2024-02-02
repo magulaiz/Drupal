@@ -862,6 +862,7 @@ class MediaTest extends MediaTestBase {
     // Test that setting the view mode back to the default removes the
     // `data-view-mode` attribute.
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $assert_session->waitForElement('css', 'article.media--view-mode-view-mode-1');
     $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
 
     // Check that the toolbar status matches "no view mode".
@@ -931,6 +932,7 @@ class MediaTest extends MediaTestBase {
     $this->host->save();
     $this->getSession()->reload();
     $this->waitForEditor();
+    $assert_session->waitForElement('css', 'article.media--view-mode-view-mode-1');
     $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
 
     $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
