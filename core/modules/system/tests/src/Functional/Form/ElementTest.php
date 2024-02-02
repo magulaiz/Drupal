@@ -36,6 +36,32 @@ class ElementTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the element order.
+   */
+  public function testElementOrder() {
+    $this->drupalGet('form-test/form-weights');
+
+    // Verify that the elements appear in the order of their weights.
+    $elements = $this->xpath('//input');
+    $expected_values = ['3', '1', '2'];
+    foreach ($elements as $element) {
+      $expected = array_shift($expected_values);
+      $this->assertSame($expected, (string) $element->getAttribute('value'));
+    }
+
+    // Enable the form alter hook for this form.
+    $this->drupalGet('form-test/form-weights/alter');
+
+    // The form alter hook moved element 1 to the end.
+    $elements = $this->xpath('//input');
+    $expected_values = ['3', '2', '1'];
+    foreach ($elements as $element) {
+      $expected = array_shift($expected_values);
+      $this->assertSame($expected, (string) $element->getAttribute('value'));
+    }
+  }
+
+  /**
    * Tests expansion of #options for #type checkboxes and radios.
    */
   public function testOptions() {
