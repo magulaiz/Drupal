@@ -181,17 +181,14 @@ export default class DrupalMediaEditing extends Plugin {
       uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
     };
 
-    const response = await fetch(
-      this.previewUrl,
-      {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'X-Drupal-MediaPreview-CSRF-Token':
-            this.editor.config.get('drupalMedia').previewCsrfToken,
-        },
+    const response = await fetch(this.previewUrl, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'X-Drupal-MediaPreview-CSRF-Token':
+          this.editor.config.get('drupalMedia').previewCsrfToken,
       },
-    );
+    });
     if (response.ok) {
       const label = response.headers.get('drupal-media-label');
       const preview = await response.text();
