@@ -682,47 +682,4 @@ class SelectTest extends DatabaseTestBase {
     $this->connection->condition('AND')->compare('some_field', 'other_field', $operator);
   }
 
-  /**
-   * @covers \Drupal\Core\Database\Query\Select::join
-   * @group legacy
-   */
-  public function testJoinWithStringConditionDeprecated() {
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::join() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::addJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $query = $this->connection->select('test_task', 't');
-    $query->join('test', 'p', 't.pid = p.id');
-  }
-
-  /**
-   * @covers \Drupal\Core\Database\Query\Select::innerJoin
-   * @group legacy
-   */
-  public function testInnerJoinWithStringConditionDeprecated() {
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::innerJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::addJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $query = $this->connection->select('test_task', 't');
-    $query->innerJoin('test', 'p', 't.pid = p.id');
-  }
-
-  /**
-   * @covers \Drupal\Core\Database\Query\Select::leftJoin
-   * @group legacy
-   */
-  public function testLeftJoinWithStringConditionDeprecated() {
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::leftJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::addJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $query = $this->connection->select('test_task', 't');
-    $query->leftJoin('test', 'p', 't.pid = p.id');
-  }
-
-  /**
-   * @covers \Drupal\Core\Database\Query\Select::addJoin
-   * @group legacy
-   */
-  public function testAddJoinWithStringConditionDeprecated() {
-    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Select::addJoin() without the $condition argument being an instance of ConditionInterface is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/12345678');
-    $query = $this->connection->select('test_task', 't');
-    $query->addJoin('INNER', 'test', 'p', 't.pid = p.id');
-  }
-
 }

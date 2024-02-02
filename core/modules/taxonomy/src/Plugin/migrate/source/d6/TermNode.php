@@ -63,12 +63,10 @@ class TermNode extends DrupalSqlBase {
         ->condition('td.vid', $this->configuration['vid'])
     );
 
-    // Start of BC layer.
     if (is_string(static::JOIN)) {
       $query->innerJoin('node', 'n', static::JOIN);
     }
     else {
-      // End of BC layer.
       $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {
@@ -103,12 +101,10 @@ class TermNode extends DrupalSqlBase {
       ->fields('tn', ['tid'])
       ->condition('n.nid', $row->getSourceProperty('nid'));
 
-    // Start of BC layer.
     if (is_string(static::JOIN)) {
       $query->join('node', 'n', static::JOIN);
     }
     else {
-      // End of BC layer.
       $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {

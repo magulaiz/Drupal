@@ -112,12 +112,10 @@ class Node extends DrupalSqlBase {
   public function query() {
     $query = $this->select('node_revisions', 'nr');
 
-    // Start of BC layer.
     if (is_string(static::JOIN)) {
       $query->innerJoin('node', 'n', static::JOIN);
     }
     else {
-      // End of BC layer.
       $condition = $query->joinCondition();
       foreach (static::JOIN as $join) {
         if (isset($join['field2'])) {

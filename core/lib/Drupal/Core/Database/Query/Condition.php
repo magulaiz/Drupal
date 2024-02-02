@@ -164,7 +164,7 @@ class Condition implements ConditionInterface, \Countable {
   }
 
   /**
-   * Update the alias placeholder in the condition and its children.
+   * Resolve the alias placeholder in the condition and its children.
    *
    * @param string $placeholder
    *   The value of the placeholder.
@@ -173,7 +173,7 @@ class Condition implements ConditionInterface, \Countable {
    *
    * @internal
    */
-  public function updateAliasPlaceholder(string $placeholder, string $alias): void {
+  public function resolveAlias(string $placeholder, string $alias): void {
     foreach ($this->conditions as &$condition) {
       if (isset($condition['field']) && $condition['field'] instanceof ConditionInterface) {
         $condition['field']->updateAliasPlaceholder($placeholder, $alias);

@@ -400,13 +400,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
     if ($entity_type->isTranslatable() && $this->languageManager->isMultilingual()) {
       $langcode_field = $entity_type->getKey('langcode');
-      $definition['extra'] = [
-        [
-          'field' => $langcode_field,
-          'field2' => "$relationship.$langcode_field",
-          'operator' => '=',
-        ],
-      ];
+      $definition['extra'] = "$table.$langcode_field = $relationship.$langcode_field";
     }
 
     /** @var \Drupal\views\Plugin\views\join\JoinPluginInterface $join */
