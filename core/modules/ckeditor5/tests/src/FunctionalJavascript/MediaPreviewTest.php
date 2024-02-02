@@ -126,11 +126,14 @@ class MediaPreviewTest extends MediaTestBase {
     // want to verify that Media preview responses are cached on the client side
     // so it is essential that rerendering occurs. To achieve this, we append a
     // single space.
-    $source_text_area = $this->getSession()->getPage()->find('css', '[name="body[0][value]"] + .ck-editor textarea');
-    $source_text_area->setValue($source_text_area->getValue() . ' ');
-    $this->pressEditorButton('Source');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
-    $this->assertSame(0, $this->getLastPreviewRequestTransferSize());
+    // @todo re-enable this once https://www.drupal.org/project/drupal/issues/3395776
+    //   lands because the preview fetch request is now POST and not cached.
+    //  $source_text_area = $this->getSession()->getPage()->find('css', '[name="body[0][value]"] + .ck-editor textarea');
+    //  $source_text_area->setValue($source_text_area->getValue() . ' ');
+    //  $this->pressEditorButton('Source');
+    //  $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
+    //  $test = $this->getLastPreviewRequestTransferSize();
+    //  $this->assertSame(0, $this->getLastPreviewRequestTransferSize());
   }
 
   /**
