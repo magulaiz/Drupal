@@ -68,7 +68,6 @@
       if (table.length) {
         const $table = $(table);
         const $tableBodies = $table.find('tbody');
-
         // Open/close the description details by toggling a tr class.
         $tableBodies.on('click keydown', '.description', function (e) {
           if (e.keyCode && e.keyCode !== 13 && e.keyCode !== 32) {
@@ -76,8 +75,7 @@
           }
           e.preventDefault();
           const $tr = $(this).closest('tr');
-
-          $tr.toggleClass('expanded');
+          $tr[0].classList.toggle('expanded');
 
           const $localePrefix = $tr.find('.locale-translation-update__prefix');
           if ($localePrefix.length) {

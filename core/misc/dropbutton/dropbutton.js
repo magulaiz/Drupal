@@ -104,7 +104,7 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+    $(e.target).closest('.dropbutton-wrapper')[0].classList.toggle('open');
   }
 
   /**

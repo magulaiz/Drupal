@@ -158,9 +158,11 @@
      * @return {undefined}
      */
     render({ settings }) {
-      $(
-        '.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar',
-      ).toggleClass('ui-dialog-empty-title', !settings.title);
+      $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar')
+        .toArray()
+        .forEach((element) => {
+          element.classList.toggle('ui-dialog-empty-title', !settings.title);
+        });
       $('.ui-dialog-off-canvas').attr('id', 'drupal-off-canvas-wrapper');
     },
 
