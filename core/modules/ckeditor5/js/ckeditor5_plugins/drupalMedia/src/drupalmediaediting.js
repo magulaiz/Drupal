@@ -186,7 +186,7 @@ export default class DrupalMediaEditing extends Plugin {
     const previewUrlParts = this.previewUrl.split('?');
     if (previewUrlParts.length > 1) {
       const existingQuery = new URLSearchParams(previewUrlParts[1]);
-      existingQuery.forEach(( value, key) => {
+      existingQuery.forEach((value, key) => {
         queryParams[key] = value;
       });
     }
@@ -196,13 +196,12 @@ export default class DrupalMediaEditing extends Plugin {
       query.append(key, queryParams[key]);
     });
 
-    const response = await fetch(
-      `${previewUrlParts[0]}?${query}`, {
+    const response = await fetch(`${previewUrlParts[0]}?${query}`, {
       headers: {
         'X-Drupal-MediaPreview-CSRF-Token':
           this.editor.config.get('drupalMedia').previewCsrfToken,
       },
-      },);
+    },);
     if (response.ok) {
       const label = response.headers.get('drupal-media-label');
       const preview = await response.text();
