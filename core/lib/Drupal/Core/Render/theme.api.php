@@ -1221,16 +1221,9 @@ function hook_page_bottom(array &$page_bottom) {
  *     suggestion, then this suggestion's template will be used to generate the
  *     rendered output.
  *   - pattern: A regular expression pattern to be used to allow this theme
- *     implementation to have a dynamic name. The convention is to use __ to
- *     differentiate the dynamic portion of the theme. For example, to allow
- *     forums to be themed individually, the pattern might be: 'forum__'. Then,
- *     when the forum is rendered, following render array can be used:
- *     @code
- *     $render_array = array(
- *       '#theme' => array('forum__' . $tid, 'forum'),
- *       '#forum' => $forum,
- *     );
- *     @endcode
+ *     implementation to have a dynamic name. The default is to use __ to
+ *     differentiate the dynamic portion of the theme. Implementations
+ *     can specify a different pattern if required.
  *   - preprocess functions: A list of functions used to preprocess this data.
  *     Ordinarily this won't be used; it's automatically filled in. By default,
  *     for a module this will be filled in as template_preprocess_HOOK. For
