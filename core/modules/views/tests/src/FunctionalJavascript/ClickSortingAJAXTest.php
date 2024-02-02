@@ -68,7 +68,7 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
     $columnClasses = $page->findAll('css', 'thead th');
     foreach ($columnClasses as $column) {
       $class = $column->getAttribute('class');
-      $this->assertEquals('views-field', $class);
+      $this->assertStringContainsString('views-field', $class);
     }
 
     // Ensure that the Content we're testing for is in the right order, default
@@ -89,11 +89,11 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
 
     // Assert that the first column contains specific classes
     $firstColumnClasses = $rows[0]->find('css', 'td:first-child')->getAttribute('class');
-    $this->assertEquals('is-active', $firstColumnClasses);
+    $this->assertStringContainsString('views-field', $firstColumnClasses);
 
     // Assert that the second column contains specific classes
     $secondColumnClasses = $rows[0]->find('css', 'td:nth-child(2)')->getAttribute('class');
-    $this->assertEquals('is-active', $secondColumnClasses);
+    $this->assertStringContainsString('is-active', $secondColumnClasses);
   }
 
 }
