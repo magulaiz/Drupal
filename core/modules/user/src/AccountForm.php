@@ -131,6 +131,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         '#title' => $this->t('Password'),
         '#description' => $this->t('To change the current user password, enter the new password.'),
         '#attributes' => [
+          'spellcheck' => 'false',
           'data-drupal-strength-indicator' => TRUE,
         ],
       ];

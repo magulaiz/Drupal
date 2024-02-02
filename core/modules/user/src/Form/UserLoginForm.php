@@ -130,6 +130,7 @@ class UserLoginForm extends FormBase {
       '#size' => 60,
       '#attributes' => [
         'data-drupal-strength-indicator' => TRUE,
+        'spellcheck' => 'false',
         'autocomplete' => 'current-password',
       ],
     ];

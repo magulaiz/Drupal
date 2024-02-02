@@ -34,34 +34,15 @@
     );
   };
   const unmaskButton = function unmaskButton(element) {
-    const trigger = Drupal.theme.triggerElement(element);
-    const wrapperButton = Drupal.theme.buttonWrapper(trigger);
+    const wrapperButton = Drupal.theme.buttonWrapper(element);
     element.insertAdjacentElement('afterend', wrapperButton);
-    trigger.addEventListener('click', () => {
-      return unmaskClickHandler(element, trigger);
+    wrapperButton.addEventListener('click', () => {
+      return unmaskClickHandler(element, wrapperButton);
     });
   };
 
   /**
    * Theme function for a button-wrapper.
-   *
-   * @param {HTMLElement} triggerElement
-   *   The trigger element.
-   *
-   * @return {HTMLElement}
-   *   A DOM Node.
-   */
-  Drupal.theme.buttonWrapper = (triggerElement) => {
-    const wrapperButton = document.createElement('button');
-    wrapperButton.setAttribute('type', 'button');
-    wrapperButton.setAttribute('class', 'link password-wrapper');
-    wrapperButton.appendChild(triggerElement);
-    wrapperButton.setAttribute('style', 'margin-inline-start:10px');
-    return wrapperButton;
-  };
-
-  /**
-   * Theme function for a trigger element.
    *
    * @param {HTMLElement} element
    *   The input element.
@@ -69,20 +50,23 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.triggerElement = (element) => {
-    const trigger = document.createElement('span');
-    trigger.setAttribute(
+  Drupal.theme.buttonWrapper = (element) => {
+    const wrapperButton = document.createElement('button');
+    wrapperButton.setAttribute('type', 'button');
+    wrapperButton.setAttribute('class', 'link password-wrapper');
+    wrapperButton.setAttribute('style', 'margin-inline-start:10px');
+    wrapperButton.setAttribute(
       'class',
       'action-link action-link--extrasmall action-link--icon-show toggle-password',
     );
-    trigger.setAttribute(
+    wrapperButton.setAttribute(
       'aria-checked',
       element.getAttribute('type') === 'password' ? 'true' : 'false',
     );
-    trigger.setAttribute('aria-label', Drupal.t('make password visible'));
-    trigger.setAttribute('role', 'switch');
-    trigger.textContent = showPass;
-    return trigger;
+    wrapperButton.textContent = showPass;
+    wrapperButton.setAttribute('aria-label', Drupal.t('make password visible'));
+    wrapperButton.setAttribute('role', 'switch');
+    return wrapperButton;
   };
 
   Drupal.behaviors.passwordUnmask = {
@@ -91,7 +75,7 @@
         'password-unmask',
         'input[type=password][data-drupal-password-unmask]',
         context,
-      ).forEach(function (password) {
+      ).forEach((password) => {
         unmaskButton(password);
       });
     },
