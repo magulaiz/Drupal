@@ -24,9 +24,7 @@ interface AttachmentsResponseProcessorInterface {
    * The available keys are:
    * - 'library' (asset libraries): The value should be a string.
    *   @code
-   *   $build['#attached']['library'][] = [
-   *     'library' => ['core/jquery']
-   *   ];
+   *   $build['#attached']['library'][] = 'core/jquery';
    *   @endcode
    * - 'drupalSettings' (JavaScript settings): The value should be given in
    *   key-value format.
