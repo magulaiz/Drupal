@@ -88,7 +88,8 @@ class FieldOrLanguageJoin extends JoinPluginBase {
 
       if (count($extras) > 1) {
         $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
-      } elseif ($extras) {
+      }
+      elseif ($extras) {
         $condition .= ' AND ' . array_shift($extras);
       }
 
