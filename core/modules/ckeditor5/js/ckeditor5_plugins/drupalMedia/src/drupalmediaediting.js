@@ -176,14 +176,16 @@ export default class DrupalMediaEditing extends Plugin {
    * @private
    */
   async _fetchPreview(modelElement) {
-    const query = {
+    const data = {
       text: this._renderElement(modelElement),
       uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
     };
 
     const response = await fetch(
-      `${this.previewUrl}?${new URLSearchParams(query)}`,
+      this.previewUrl,
       {
+        method: 'POST',
+        body: JSON.stringify(data),
         headers: {
           'X-Drupal-MediaPreview-CSRF-Token':
             this.editor.config.get('drupalMedia').previewCsrfToken,
