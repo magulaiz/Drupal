@@ -32,12 +32,12 @@ interface AttachmentsResponseProcessorInterface {
    *   $build['#attached']['drupalSettings']['foo'] = 'bar';
    *   @endcode
    * - 'feed' (RSS feeds): The value should be an array in the format
-   *   ['url', 'title'].
+   *   [$url, $title].
    *   @code
    *   $build['#attached']['feed'][] = [$url, $this->t('Feed title')];
    *   @endcode
    * - 'html_head' (tags in HTML <head>): The value should be an array in the
-   *   format ['tag_data', 'key']. The key is a unique string used to identify
+   *   format [$tag_data, $key]. The key is a unique string used to identify
    *   the element in implementations of 'hook_page_attachments_alter'.
    *   @code
    *   $build['#attached']['html_head'][] = [
