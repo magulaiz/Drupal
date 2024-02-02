@@ -191,20 +191,18 @@ export default class DrupalMediaEditing extends Plugin {
       });
     }
 
-    let query = new URLSearchParams();
+    const query = new URLSearchParams();
     Object.keys(queryParams).forEach((key) => {
       query.append(key, queryParams[key]);
     });
 
     const response = await fetch(
-      `${previewUrlParts[0]}?${query}`,
-      {
-        headers: {
-          'X-Drupal-MediaPreview-CSRF-Token':
-            this.editor.config.get('drupalMedia').previewCsrfToken,
-        },
+      `${previewUrlParts[0]}?${query}`, {
+      headers: {
+        'X-Drupal-MediaPreview-CSRF-Token':
+          this.editor.config.get('drupalMedia').previewCsrfToken,
       },
-    );
+      },);
     if (response.ok) {
       const label = response.headers.get('drupal-media-label');
       const preview = await response.text();
