@@ -258,11 +258,12 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
     }
 
-    // Do not auto process any required exposed filter that has input.
+    // Do not auto process the form if there are any required exposed filters
+    // that do not have input.
     if (!empty($exposed_required_filters)) {
       $form_values = $form_state->getUserInput();
       foreach ($exposed_required_filters as $key => $required_filter) {
-        if (!$form_values || empty($form_values[$key])) {
+        if (empty($form_values[$key])) {
           $form_state->setAlwaysProcess(FALSE);
           break;
         }
