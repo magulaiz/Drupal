@@ -86,9 +86,10 @@ class Email extends FormElement {
     // If field is multiple, validate each address individually.
     // Email addresses could be only comma-separated.
     // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple#email_input
-    $emails = empty($element['#multiple'])
-      ? [$value]
-      : array_map('trim', explode(',', $value));
+    $multiple = $element['#multiple'];
+    $emails = $multiple
+      ? array_map('trim', explode(',', $value))
+      : [$value];
 
     // Make sure all email addresses are non-empty.
     if (in_array('', $emails)) {
@@ -113,10 +114,11 @@ class Email extends FormElement {
     $form_state->setValueForElement($element, implode(',', $emails));
 
     if ($invalid_emails) {
+      $multiple_error_suffix = $multiple ? ' and separate by comma multiple values.' : '.';
       $form_state->setError($element, new PluralTranslatableMarkup(
         count($invalid_emails),
-        'The email address %mails is not valid. Use the format user@example.com.',
-        'The email addresses %mails are not valid. Use the format user@example.com.',
+        'The email address %mails is not valid. Use the format user@example.com' . $multiple_error_suffix,
+        'The email addresses %mails are not valid. Use the format user@example.com' . $multiple_error_suffix,
         ['%mails' => implode(', ', $invalid_emails)],
       ));
     }
