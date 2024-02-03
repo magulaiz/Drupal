@@ -30,6 +30,30 @@ class FieldUI {
   }
 
   /**
+   * Returns the route info for the field display of a given entity bundle.
+   *
+   * @param string $entity_type_id
+   *   An entity type.
+   * @param string $bundle
+   *   The entity bundle.
+   * @param bool $view_mode
+   *   Is view mode.
+   *
+   * @return \Drupal\Core\Url|null
+   *   A URL object, or NULL if there is no route.
+   */
+  public static function getDisplayRouteInfo(string $entity_type_id, string $bundle, bool $view_mode): ?Url {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    if (!$entity_type->get('field_ui_base_route')) {
+      return NULL;
+    }
+    return new Url(
+      'entity.entity_' . ($view_mode ? 'view' : 'form') . "_display.{$entity_type_id}.default",
+      static::getRouteBundleParameter($entity_type, $bundle),
+    );
+  }
+
+  /**
    * Returns the next redirect path in a multipage sequence.
    *
    * @param array $destinations

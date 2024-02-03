@@ -4,20 +4,22 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\TabledragWarningCommand;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 
 /**
@@ -221,32 +223,53 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $form['fields'] = $table;
 
     // Custom display settings.
-    if ($this->entity->getMode() == 'default') {
-      // Only show the settings if there is at least one custom display mode.
-      $display_mode_options = $this->getDisplayModeOptions();
-      // Unset default option.
-      unset($display_mode_options['default']);
-      if ($display_mode_options) {
-        $form['modes'] = [
-          '#type' => 'details',
-          '#title' => $this->t('Custom display settings'),
-        ];
-        // Prepare default values for the 'Custom display settings' checkboxes.
-        $default = [];
-        if ($enabled_displays = array_filter($this->getDisplayStatuses())) {
-          $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
-        }
-        natcasesort($display_mode_options);
-        $form['modes']['display_modes_custom'] = [
-          '#type' => 'checkboxes',
-          '#title' => $this->t('Use custom display settings for the following @display_context modes', ['@display_context' => $this->displayContext]),
-          '#options' => $display_mode_options,
-          '#default_value' => $default,
-        ];
-        // Provide link to manage display modes.
-        $form['modes']['display_modes_link'] = $this->getDisplayModesLink();
-      }
+    $display_mode_options = $this->getDisplayModeOptions();
+    // Unset default option.
+    unset($display_mode_options['default']);
+
+    $form['modes'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Display settings'),
+    ];
+    // Prepare default values for the 'Custom display settings' checkboxes.
+    $default = [];
+    if ($enabled_displays = array_filter($this->getDisplayStatuses())) {
+      $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
     }
+    natcasesort($display_mode_options);
+    if ($display_mode_options) {
+      $form['modes']['display_modes_custom'] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Use custom display settings for the following @display_context modes', ['@display_context' => $this->displayContext]),
+        '#options' => $display_mode_options,
+        '#default_value' => $default,
+      ];
+    }
+
+    // Create a URL for the form route.
+    $url = Url::fromRoute(
+        "entity.entity_{$this->displayContext}_mode.add_form",
+        ['entity_type_id' => $this->entity->getTargetEntityTypeId()],
+        ['query' => ['bundle' => $this->entity->getTargetBundle()]],
+      );
+    $form['modes']['add_new_display_mode'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Add new @display_context mode', ['@display_context' => $this->displayContext]),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-options' => Json::encode([
+          'width' => 880,
+          'modal' => TRUE,
+        ]),
+          // @todo Remove this once https://www.drupal.org/project/drupal/issues/2805219 lands.
+          // The jQuery UI dialog automatically moves focus to the first
+          // :tabbable element of the modal, so we need to disable refocus on
+          // the button.
+        'data-disable-refocus' => 'true',
+      ],
+    ];
 
     // In overviews involving nested rows from contributed modules (i.e
     // field_group), the 'plugin type' selects can trigger a series of changes
