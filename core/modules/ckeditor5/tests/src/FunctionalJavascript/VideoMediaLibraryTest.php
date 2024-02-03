@@ -53,7 +53,7 @@ class VideoMediaLibraryTest extends MediaSourceTestBase {
     'media',
     'text',
     'media_library',
-    'ckeditor5'
+    'ckeditor5',
   ];
 
   /**
@@ -61,7 +61,6 @@ class VideoMediaLibraryTest extends MediaSourceTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
 
     FilterFormat::create([
       'format' => 'test_format',
@@ -96,13 +95,13 @@ class VideoMediaLibraryTest extends MediaSourceTestBase {
       ))
     ));
 
-     // Create node type blog
+    // Create node type blog
     $this->drupalCreateContentType(['type' => 'blog']);
 
     $this->user = $this->drupalCreateUser(
       array_merge(self::$adminUserPermissions, [
-          'use text format test_format',
-          'create blog content',
+        'use text format test_format',
+        'create blog content',
       ])
     );
     $this->drupalLogin($this->user);
