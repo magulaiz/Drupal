@@ -88,7 +88,7 @@ class Email extends FormElement {
     // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple#email_input
     $emails = empty($element['#multiple'])
       ? [$value]
-      : explode(',', $value);
+      : array_map('trim', explode(',', $value));
 
     // Make sure all email addresses are non-empty.
     if (in_array('', $emails)) {
@@ -99,9 +99,11 @@ class Email extends FormElement {
     /** @var \Drupal\Component\Utility\EmailValidator $validator */
     $validator = \Drupal::service('email.validator');
     $invalid_emails = [];
-    foreach ($emails as $delta => $email) {
-      $email = trim($email);
-      $emails[$delta] = $email;
+    foreach ($emails as $email) {
+      if (empty($email)) {
+        // Skip empty email addresses. They are already validated.
+        continue;
+      }
       if (!$validator->isValid($email)) {
         $invalid_emails[] = $email;
       }

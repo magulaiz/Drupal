@@ -48,7 +48,7 @@ class EmailTest extends BrowserTestBase {
 
     $edit = [];
     $edit['email_required'] = 'example@drupal.org,example2@drupal.org';
-    $edit['email_multiple'] = 'foo.bar@example.com,,bar.bar@example.com';
+    $edit['email_multiple'] = 'foo.bar@example.com, ,bar.bar@example.com';
     $this->drupalGet('form-test/email');
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->pageTextContains('The email address example@drupal.org,example2@drupal.org is not valid. Use the format user@example.com.');
