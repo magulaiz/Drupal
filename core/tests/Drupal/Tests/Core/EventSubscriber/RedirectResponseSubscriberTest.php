@@ -125,7 +125,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
     $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new ResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
-    $this->expectException(\AssertionError::class);
+    $this->expectError();
     $dispatcher->dispatch($event, KernelEvents::RESPONSE);
   }
 
@@ -173,7 +173,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
     $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new ResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
-    $this->expectException(\AssertionError::class);
+    $this->expectError();
     $dispatcher->dispatch($event, KernelEvents::RESPONSE);
   }
 
