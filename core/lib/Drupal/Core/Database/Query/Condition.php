@@ -263,7 +263,7 @@ class Condition implements ConditionInterface, \Countable {
             // your site is broken.
             // On top of that the database API relies on __toString() which
             // does not allow to throw exceptions.
-            assert(FALSE, 'Invalid characters in query operator: ' . $condition['operator']);
+            trigger_error('Invalid characters in query operator: ' . $condition['operator'], E_USER_ERROR);
             return;
           }
 

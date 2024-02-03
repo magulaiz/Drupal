@@ -91,10 +91,10 @@ class Element {
           // the insertion order.
           $child_weights[$key] = floor($weight * 1000) + $i / $count;
         }
-        // Only trigger an error if the value is not null.
+        // Assert the value is not null.
         // @see https://www.drupal.org/node/1283892
-        elseif (isset($value)) {
-          assert(FALSE, "\"{$key}\" is an invalid render array key");
+        else {
+          assert(is_null($value), "\"{$key}\" is an invalid render array key");
         }
       }
       $i++;

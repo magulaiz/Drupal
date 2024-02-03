@@ -87,12 +87,13 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
         }
         catch (\InvalidArgumentException $e) {
           // If the above failed, it's because the redirect target wasn't
-          // local. Do not follow that redirect.  We're already catching one
-          // exception, so assert() rather than throw another one.
-          // We don't throw an exception, because this is a client error rather
-          // than a server error.
+          // local. Do not follow that redirect. Display an error message
+          // instead. We're already catching one exception, so trigger_error()
+          // rather than throw another one.
+          // We don't throw an exception, because this is a client error rather than a
+          // server error.
           $message = 'Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.';
-          assert(FALSE, $message);
+          trigger_error($message, E_USER_ERROR);
           $safe_response = new Response($message, 400);
         }
         $event->setResponse($safe_response);
