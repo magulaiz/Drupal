@@ -15,15 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block to display 'Clear cache' elements.
- *
- * @Block(
- *   id = "system_clear_cache_block",
- *   admin_label = @Translation("Clear cache"),
- * )
- */
-
-/**
- * Provides a block to display 'Clear cache' elements.
  */
 #[Block(
   id: "system_clear_cache_block",
