@@ -44,14 +44,16 @@ class FieldType extends DataType {
    *
    * @ingroup plugin_translatable
    *
-   * @var \Drupal\Core\Annotation\Translation|array
+   * @var \Drupal\Core\Annotation\Translation|\Drupal\Core\Annotation\Translation[]
    */
   public $description;
 
   /**
    * The category under which the field type should be listed in the UI.
    *
-   * @var string
+   * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation|string
    */
   public $category = '';
 
