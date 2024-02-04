@@ -233,7 +233,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $this->treeTerms[$vid] = [];
         $query = $this->database->select($this->getDataTable(), 't');
         $query->join('taxonomy_term__parent', 'p', '[t].[tid] = [p].[entity_id]');
-        $query->addExpression('parent_target_id', 'parent');
+        $query->addExpression('[parent_target_id]', 'parent');
         $query->addTag('taxonomy_term_access');
         $query->fields('t');
         $query->condition('t.vid', $vid);
