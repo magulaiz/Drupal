@@ -331,7 +331,6 @@ class MenuUiNodeTest extends BrowserTestBase {
     $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
-      'menu[weight]' => 17,
     ];
     $options = ['language' => $languages[$langcodes[0]]];
     $url = $node->toUrl('edit-form', $options);
@@ -342,7 +341,6 @@ class MenuUiNodeTest extends BrowserTestBase {
     $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $translated_node_title,
-      'menu[weight]' => 17,
     ];
     $options = ['language' => $languages[$langcodes[1]]];
     $url = $node->toUrl('edit-form', $options);
