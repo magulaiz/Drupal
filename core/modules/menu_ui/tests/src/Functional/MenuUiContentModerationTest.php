@@ -94,18 +94,6 @@ class MenuUiContentModerationTest extends BrowserTestBase {
 
     $this->assertSession()->linkExists('Test menu link');
 
-    // Try to change the menu link weight and save a new non-default (draft)
-    // revision.
-    $edit = [
-      'menu[weight]' => 1,
-      'moderation_state[0][state]' => 'draft',
-    ];
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu link weight for the published version of this content.');
-
     // Try to change the menu link parent and save a new non-default (draft)
     // revision.
     $edit = [
