@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\Session\ResponseKeepSessionOpenInterface;
 
 /**
  * Wrap session logic around a HTTP request.
@@ -58,7 +59,7 @@ class Session implements HttpKernelInterface {
 
     $result = $this->httpKernel->handle($request, $type, $catch);
 
-    if ($type === self::MAIN_REQUEST && PHP_SAPI !== 'cli' && $request->hasSession()) {
+    if ($type === self::MAIN_REQUEST && !$result instanceof ResponseKeepSessionOpenInterface && PHP_SAPI !== 'cli' && $request->hasSession()) {
       $request->getSession()->save();
     }
 
