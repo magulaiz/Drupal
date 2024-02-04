@@ -244,6 +244,62 @@ display:
           sub_handler_settings:
             target_bundles: null
             auto_create: false
+        uid_reference:
+          id: uid_reference
+          table: node_field_data
+          field: uid_reference
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: uid
+          plugin_id: entity_reference
+          operator: or
+          value: { }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: uid_reference_op
+            label: 'Authored by as a Reference filter'
+            description: ''
+            use_operator: false
+            operator: uid_reference_op
+            operator_limit_selection: false
+            operator_list: { }
+            identifier: uid_reference
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: { }
+            group_items: { }
+          reduce_duplicates: false
+          sub_handler: 'default:user'
+          widget: select
+          sub_handler_settings:
+            target_bundles: null
+            sort:
+              field: _none
+              direction: ASC
+            auto_create: false
+            filter:
+              type: _none
+            include_anonymous: true
       sorts:
         created:
           id: created

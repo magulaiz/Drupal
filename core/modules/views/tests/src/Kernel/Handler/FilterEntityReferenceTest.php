@@ -57,6 +57,20 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
   protected $targetNodes;
 
   /**
+   * First test user as node author.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user1;
+
+  /**
+   * Second test user as node author.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user2;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
@@ -80,7 +94,8 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
     $this->createEntityReferenceField('node', 'page', 'field_test', 'Test reference', 'node', $selection_handler = 'default', $selection_handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Create user 1.
-    $admin = $this->createUser();
+    $this->user1 = $this->createUser();
+    $this->user2 = $this->createUser();
 
     // Create target nodes to be referenced.
     foreach (range(0, 5) as $count) {
@@ -88,6 +103,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
         'type' => 'article',
         'title' => 'Article ' . $count,
         'status' => 1,
+        'uid' => $this->user1,
       ]);
     }
 
@@ -101,6 +117,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
         $this->targetNodes[0]->id(),
         $this->targetNodes[1]->id(),
       ],
+      'uid' => $this->user2,
     ]);
 
     // Create a page referencing Article 1, Article 2, and Article 3.
@@ -114,6 +131,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
         $this->targetNodes[2]->id(),
         $this->targetNodes[3]->id(),
       ],
+      'uid' => $this->user2,
     ]);
 
     // Create a page referencing nothing.
@@ -122,6 +140,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
       'title' => 'Page 2',
       'status' => 1,
       'created' => time() - 200,
+      'uid' => $this->user2,
     ]);
   }
 
@@ -160,6 +179,32 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
     $expected = [
       ['title' => 'Page 0'],
       ['title' => 'Page 1'],
+    ];
+    $this->assertIdenticalResultset($view, $expected, [
+      'title' => 'title',
+    ]);
+
+    // Change to filtering by user 1 base field.
+    $view = Views::getView('test_filter_entity_reference');
+    $view->setDisplay();
+    $view->setExposedInput([
+      'uid_reference' => $this->user1->id(),
+    ]);
+    $this->executeView($view);
+
+    // Change to filtering by user 1 base field.
+    $view = Views::getView('test_filter_entity_reference');
+    $view->setDisplay();
+    $view->setExposedInput([
+      'uid_reference' => $this->user2->id(),
+    ]);
+    $this->executeView($view);
+
+    // Expect to have only the articles referenced.
+    $expected = [
+      ['title' => 'Page 0'],
+      ['title' => 'Page 1'],
+      ['title' => 'Page 2'],
     ];
     $this->assertIdenticalResultset($view, $expected, [
       'title' => 'title',
