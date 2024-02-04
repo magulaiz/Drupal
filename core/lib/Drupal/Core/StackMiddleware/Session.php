@@ -2,11 +2,11 @@
 
 namespace Drupal\Core\StackMiddleware;
 
+use Drupal\Core\Session\ResponseKeepSessionOpenInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Drupal\Session\ResponseKeepSessionOpenInterface;
 
 /**
  * Wrap session logic around a HTTP request.
