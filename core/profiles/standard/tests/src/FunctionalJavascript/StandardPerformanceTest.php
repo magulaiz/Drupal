@@ -146,7 +146,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () use ($account) {
       $this->submitLoginForm($account);
     });
-    $this->assertCountBetween(31, 34, $performance_data->getQueryCount());
+    $this->assertCountBetween(30, 33, $performance_data->getQueryCount());
     $this->assertSame(85, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
