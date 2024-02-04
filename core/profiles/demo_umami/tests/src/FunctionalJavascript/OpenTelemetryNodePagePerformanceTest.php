@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
+use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
 /**
@@ -44,10 +45,14 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // the browser cache.
     $this->drupalGet('node/1');
     $this->drupalGet('node/1');
-    $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('/node/1');
     }, 'umamiNodePageHotCache');
     $this->assertSession()->pageTextContains('quiche');
+    $this->assertSame($performance_data->getQueryCount(), 1);
+    $this->assertSame($performance_data->getCacheGetCount(), 1);
+    $this->assertSame($performance_data->getCacheSetCount(), 0);
+    $this->assertSame($performance_data->getCacheDeleteCount(), 0);
   }
 
   /**
