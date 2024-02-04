@@ -698,7 +698,7 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
     }
 
     // @see ckeditor5_post_update_list_type()
-    if (array_key_exists('ckeditor5_list', $settings['plugins']) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
+    if (array_key_exists('ckeditor5_list', $settings['plugins']) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']) && !array_key_exists('styles', $settings['plugins']['ckeditor5_list']['properties'])) {
       $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
       $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
 
