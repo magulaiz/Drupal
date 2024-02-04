@@ -452,29 +452,30 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $table_data[$schema_field_name] = NestedArray::mergeDeep($table_data[$schema_field_name], $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition));
       $table_data[$schema_field_name]['entity field'] = $field_name;
       $first = FALSE;
-    }
 
-    // Check if the field has a target entity.
-    $field_storage = $field_definition->getFieldStorageDefinition();
-    $target_entity_type_id = $field_storage->getSetting('target_type');
-    if ($target_entity_type_id && $field_storage->isBaseField()) {
-      $target_entity_type = $this->entityTypeManager->getDefinition($target_entity_type_id, FALSE);
-      if ($target_entity_type instanceof EntityTypeInterface) {
-        foreach ($table_data as $table_field_name => $table_field_data) {
-          if (
-            isset($table_field_data['filter'])
-            && $table_field_name != 'delta'
-            && $table_field_data['filter']['id'] != 'entity_reference'
-          ) {
-            // Create separate views data to allow use of the entity_reference
-            // filter. Numeric filter should still be available for use.
-            // @see core_field_views_data().
-            $entity_reference = $table_field_data;
-            $entity_reference['filter']['id'] = 'entity_reference';
-            $entity_reference['title'] = $entity_reference['title'] . ' ' . t('as a Reference filter');
-            $table_data[$table_field_name . '_reference'] = $entity_reference;
-          }
+      // Duplicate numeric filter data to allow the entity reference filter
+      // handler.
+      if (
+        isset($table_data[$schema_field_name]['filter']['id'])
+        && $table_data[$schema_field_name]['filter']['id'] === 'numeric'
+        && $field_definition->getItemDefinition()->getSetting('target_type')
+      ) {
+
+        // Copy the table data, removing the handler options for all but
+        // the filter handler.
+        $entity_reference = $table_data[$schema_field_name];
+        $handler_types = Views::getHandlerTypes();
+        foreach (array_keys($handler_types) as $handler_type) {
+          unset($entity_reference[$handler_type]);
         }
+        $entity_reference['filter'] = $table_data[$schema_field_name]['filter'];
+
+        // Set the filter handler settings to allow the entity
+        // reference plugin.
+        $entity_reference['filter']['id'] = 'entity_reference';
+        $entity_reference['title'] = $entity_reference['title'] . ' ' . t('as a Reference filter');
+        $entity_reference['filter']['field'] = $schema_field_name;
+        $table_data[$schema_field_name . '_reference'] = $entity_reference;
       }
     }
   }
