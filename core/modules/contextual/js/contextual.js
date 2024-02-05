@@ -46,7 +46,7 @@
   function adjustIfNestedAndOverlapping($contextual) {
     const $contextuals = $contextual
       // @todo confirm that .closest() is not sufficient
-      .parents('.contextual-region')
+      .closest('.contextual-region')
       .eq(-1)
       .find('.contextual');
 

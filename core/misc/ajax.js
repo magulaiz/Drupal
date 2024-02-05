@@ -1003,8 +1003,8 @@
     this.progress.element = $(
       Drupal.theme('ajaxProgressThrobber', this.progress.message),
     );
-    if ($(this.element).closest('[data-drupal-ajax-container]').length) {
-      $(this.element)
+    if ($(this.element)[0].closest('[data-drupal-ajax-container]').length) {
+      $(this.element)[0]
         .closest('[data-drupal-ajax-container]')
         .after(this.progress.element);
     } else {
@@ -1075,8 +1075,8 @@
     // we can try to refocus one of its parents. Using addBack reverse the
     // result array, meaning that index 0 is the highest parent in the hierarchy
     // in this situation it is usually a <form> element.
-    const elementParents = $(this.element)
-      .parents('[data-drupal-selector]')
+    const elementParents = $(this.element)[0]
+      .closest('[data-drupal-selector]')
       .addBack()
       .toArray();
 
@@ -1380,7 +1380,7 @@
       // Attach all JavaScript behaviors to the new content, if it was
       // successfully added to the page, this if statement allows
       // `#ajax['wrapper']` to be optional.
-      if ($newContent.parents('html').length) {
+      if ($newContent.closest('html').length) {
         // Attach behaviors to all element nodes.
         $newContent.each((index, element) => {
           if (element.nodeType === Node.ELEMENT_NODE) {
