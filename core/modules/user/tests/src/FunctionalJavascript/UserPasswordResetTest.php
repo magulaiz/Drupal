@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
 

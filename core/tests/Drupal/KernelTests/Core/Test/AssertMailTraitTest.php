@@ -2,15 +2,15 @@
 
 namespace Drupal\KernelTests\Core\Test;
 
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\AssertMailTrait;
 
 /**
- * Tests \Drupal\Core\Test\AssertMailTrait works.
+ * Tests \Drupal\Tests\AssertMailTrait works.
  *
  * @group Test
  *
- * @coversDefaultClass \Drupal\Core\Test\AssertMailTrait
+ * @coversDefaultClass \Drupal\Tests\AssertMailTrait
  */
 class AssertMailTraitTest extends KernelTestBase {
   use AssertMailTrait;
@@ -33,7 +33,7 @@ class AssertMailTraitTest extends KernelTestBase {
       'body' => $body,
     ];
 
-    // Before we send the email, \Drupal\Core\Test\AssertMailTrait::getMails()
+    // Before we send the email, \Drupal\Tests\AssertMailTrait::getMails()
     // should return an empty array.
     $captured_emails = $this->getMails();
     $this->assertCount(0, $captured_emails, 'The captured emails queue is empty.');
@@ -74,7 +74,7 @@ class AssertMailTraitTest extends KernelTestBase {
     $this->assertCount(6, $captured_emails, 'All emails were captured.');
 
     // Test different ways of getting filtered emails via
-    // \Drupal\Core\Test\AssertMailTrait::getMails().
+    // \Drupal\Tests\AssertMailTrait::getMails().
     $captured_emails = $this->getMails(['id' => 'drupal_mail_test']);
     $this->assertCount(1, $captured_emails, 'Only one email is returned when filtering by id.');
     $captured_emails = $this->getMails(['id' => 'drupal_mail_test', 'subject' => $subject]);
@@ -87,7 +87,7 @@ class AssertMailTraitTest extends KernelTestBase {
     $this->assertCount(0, $captured_emails, 'No emails are returned when querying with an unused from address.');
 
     // Send the last email again, so we can confirm that
-    // \Drupal\Core\Test\AssertMailTrait::getMails() filters correctly returns
+    // \Drupal\Tests\AssertMailTrait::getMails() filters correctly returns
     // all emails with a given property/value.
     $mail_service->getInstance(['module' => 'drupal_mail_test', 'key' => $index])->mail($message);
     $captured_emails = $this->getMails(['id' => 'drupal_mail_test_4']);

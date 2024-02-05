@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Core\Test;
+namespace Drupal\Tests;
 
 use Drupal\Component\Render\FormattableMarkup;
 

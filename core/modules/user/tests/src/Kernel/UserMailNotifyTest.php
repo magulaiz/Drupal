@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\user\Kernel;
 
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\Locale;
+use Drupal\Tests\AssertMailTrait;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.

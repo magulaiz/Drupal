@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\user\Functional;
 
-use Drupal\Core\Flood\DatabaseBackend;
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Url;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Controller\UserAuthenticationController;
 use GuzzleHttp\Cookie\CookieJar;
