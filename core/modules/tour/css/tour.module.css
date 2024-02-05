@@ -3,14 +3,6 @@
  * Styling for tour module.
  */
 
-/* Tab appearance. */
-.toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
-  float: right; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
-  float: left;
-}
-
 /* Style the tour progress indicator. */
 .tour-progress {
   position: absolute;
