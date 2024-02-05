@@ -385,6 +385,18 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     if (count($module_list) > 1) {
+      // Refresh the container so static caches are rebuilt. This means we have
+      // to rebuild the container twice for each module list but this prevents
+      // static caches like those in \Drupal\views\ViewsData() from having
+      // stale data.
+      // @todo Ideally we'd be able to clear static caches after installing
+      //   without rebuilding the container. Maybe we could investigate having a
+      //   way to remove all the services and ensure they are re-instantiated
+      //   after this point as the container is not changing at this point.
+      //   Adding this code fixed
+      //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
+      $this->updateKernel($module_filenames);
+
       // Record the fact that it was multi-installed.
       // @todo this feels for testing purposes only. Maybe remove later.
       \Drupal::logger('system')->info('%modules installed with a single container rebuild.', ['%modules' => implode(', ', $module_list)]);
