@@ -278,10 +278,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     foreach ($module_list as $module) {
-      // Load the module's .module and .install files.
+      // Load the module's .module and .install files. Do this for all modules
+      // prior to calling hook_module_preinstall() in order to not pollute the
+      // cache.
       $this->moduleHandler->load($module);
       $this->moduleHandler->loadInclude($module, 'install');
+    }
 
+    foreach ($module_list as $module) {
       // Allow modules to react prior to the installation of a module.
       $this->moduleHandler->invokeAll('module_preinstall', [$module, $sync_status]);
 
