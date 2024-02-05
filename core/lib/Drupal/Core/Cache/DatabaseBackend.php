@@ -97,7 +97,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
     if (is_int($serializer)) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $max_rows as 3rd argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' with the $max_rows as 3rd argument is deprecated in drupal:10.3.0 and it will be the 4th argument in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
       $max_rows = $serializer;
       $serializer = \Drupal::service('serialization.phpserialize');
     }
