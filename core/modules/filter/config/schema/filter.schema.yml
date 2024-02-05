@@ -7,11 +7,16 @@ filter.settings:
     FullyValidatable: ~
   mapping:
     fallback_format:
-      type: string
+      type: machine_name
       label: 'Fallback text format'
+      # Filter format machine names can be up to 255 characters.
+      # @see \Drupal\filter\FilterFormatFormBase::form()
       constraints:
-        ConfigExists:
-          prefix: filter.format.
+        Length:
+          max: 255
+        # TRICKY: simple config cannot have dependencies on any other config
+        #ConfigExists:
+        #  prefix: filter.format.
     always_show_fallback_choice:
       type: boolean
       label: 'Always show fallback choice'
