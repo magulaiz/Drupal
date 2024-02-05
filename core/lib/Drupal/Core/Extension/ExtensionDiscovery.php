@@ -174,7 +174,7 @@ class ExtensionDiscovery {
     // test site environment, because the site directories are not the same.
     // Therefore, add the site directory of the parent site to the search paths,
     // so that contained extensions are still discovered.
-    // @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareSettings().
+    // @see \Drupal\Tests\FunctionalTestSetupTrait::prepareSettings().
     if ($parent_site = Settings::get('test_parent_site')) {
       $search_dirs[static::ORIGIN_PARENT_SITE] = $parent_site;
     }

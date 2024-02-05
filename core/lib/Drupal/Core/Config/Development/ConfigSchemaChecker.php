@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * is invalid.
  *
  * @see \Drupal\KernelTests\KernelTestBase::register()
- * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareSettings()
+ * @see \Drupal\Tests\FunctionalTestSetupTrait::prepareSettings()
  */
 class ConfigSchemaChecker implements EventSubscriberInterface {
   use SchemaCheckTrait;
