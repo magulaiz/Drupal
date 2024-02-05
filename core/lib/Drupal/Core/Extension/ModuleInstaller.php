@@ -397,6 +397,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
       //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
       $this->updateKernel($module_filenames);
 
+      // Rebuilding the container above means the loaded flag is not properly
+      // set.
+      // @todo consider replacing the loaded flag with something determined from
+      //   the keys in ModuleHandler. This fixes
+      //   \Drupal\Tests\search\Functional\SearchAdvancedSearchFormTest::testNodeType().
+      //   Note, previously this flag is set due to calling hook_install() and
+      //   rebuilding all the module handler statics above.
+      $this->moduleHandler->loadAll();
+
       // Record the fact that it was multi-installed.
       // @todo this feels for testing purposes only. Maybe remove later.
       \Drupal::logger('system')->info('%modules installed with a single container rebuild.', ['%modules' => implode(', ', $module_list)]);
