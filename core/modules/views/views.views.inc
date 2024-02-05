@@ -857,13 +857,13 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
 /**
  * Add an Entity Reference filter for a given Entity Reference Views Table Data.
  *
-   * @param string $field_name
-   *   The name of the field to add new  entity reference filter for.
+ * @param string $field_name
+ *   The name of the field to add new  entity reference filter for.
  * @param $field_table_data
  *   A Views table data array for an entity reference field to add the new
  *   Entity Reference filter data.
  */
-function _views_add_entity_reference_filter_data(string  $field_name, array &$field_table_data) {
+function _views_add_entity_reference_filter_data(string $field_name, array &$field_table_data) {
   $field_data = $field_table_data[$field_name];
   if (isset($field_data['filter']) && $field_data['filter']['id'] != 'entity_reference') {
     // Create separate views data to allow use of the entity_reference
@@ -874,7 +874,7 @@ function _views_add_entity_reference_filter_data(string  $field_name, array &$fi
     if (!isset($entity_reference['filter']['field'])) {
       $entity_reference['filter']['field'] = $field_name;
     }
-     $entity_reference['entity field'] = $field_data['entity field'];
+    $entity_reference['entity field'] = $field_data['entity field'];
     $field_table_data[$field_name . '_reference'] = $entity_reference;
   }
 }
