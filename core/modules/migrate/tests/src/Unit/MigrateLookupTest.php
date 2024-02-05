@@ -76,6 +76,10 @@ class MigrateLookupTest extends MigrateTestCase {
         ['bad_plugin'],
         "Plugin ID 'bad_plugin' was not found.",
       ],
+      'test' => [
+        'bad_plugin',
+        "Plugin ID 'bad_plugin' was found.",
+      ],
     ];
   }
 
