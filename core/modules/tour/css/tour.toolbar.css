@@ -1,0 +1,12 @@
+/**
+* @file
+* Styling for tour module's toolbar tab.
+*/
+
+/* Tab appearance. */
+.toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
+ float: right; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
+ float: left;
+}

@@ -16,3 +16,4 @@ tour-styling:
   css:
     component:
       css/tour.module.css: { media: screen }
+      css/tour.toolbar.css: {}

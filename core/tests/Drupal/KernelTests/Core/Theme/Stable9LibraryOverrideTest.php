@@ -77,7 +77,13 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
         $library_after = $libraries_after[$extension][$library_name];
 
         // Check that all the CSS assets are overridden.
-        foreach ($library['css'] as $index => $asset) {
+        foreach ($library_after['css'] as $index => $asset) {
+          // Allow removing CSS files in Stable. This can be useful for example
+          // when a new CSS file is added, and it shouldn't be loaded in
+          // existing themes.
+          if (!isset($library_after['css'][$index])) {
+            continue;
+          }
           $clean_path = $asset['data'];
           $stable_path = $library_after['css'][$index]['data'];
           // Make core/misc assets look like they are coming from a "core"

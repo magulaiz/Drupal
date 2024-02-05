@@ -1,20 +1,4 @@
 /**
- * @file
- * Styling for the shortcut module icons.
- */
-
-/**
- * Toolbar tab icon.
- */
-.toolbar-bar .toolbar-icon-shortcut::before {
-  background-image: url(../../../misc/icons/bebebe/star.svg);
-}
-.toolbar-bar .toolbar-icon-shortcut:active::before,
-.toolbar-bar .toolbar-icon-shortcut.is-active::before {
-  background-image: url(../../../misc/icons/ffffff/star.svg);
-}
-
-/**
  * Add/remove links.
  */
 .shortcut-action__icon {
