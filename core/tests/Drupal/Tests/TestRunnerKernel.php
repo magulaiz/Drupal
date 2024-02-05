@@ -1,10 +1,13 @@
 <?php
 
-namespace Drupal\Core\Test;
+declare(strict_types=1);
+
+namespace Drupal\Tests;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Test\TestDiscovery;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
