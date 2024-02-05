@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\PasswordConfirm;
+use Drupal\Core\Render\Element\PasswordUnmask;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -21,7 +21,7 @@ class PasswordConfirmTest extends UnitTestCase {
    */
   public function testValueCallback($expected, $element, $input) {
     $form_state = $this->prophesize(FormStateInterface::class)->reveal();
-    $this->assertSame($expected, PasswordConfirm::valueCallback($element, $input, $form_state));
+    $this->assertSame($expected, PasswordUnmask::valueCallback($element, $input, $form_state));
   }
 
   /**
