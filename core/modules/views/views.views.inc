@@ -798,12 +798,8 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
     if ($target_entity_type instanceof EntityTypeInterface) {
       foreach ($table_data as $table_field_name => $table_field_data) {
         if (isset($table_field_data['filter']) && $table_field_name != 'delta') {
-          // Create separate views data to allow use of the entity_reference
-          // filter. Numeric filter should still be available for use.
-          $entity_reference = $data[$table_name][$table_field_name];
-          $entity_reference['filter']['id'] = 'entity_reference';
-          $entity_reference['title'] = $entity_reference['title'] . ' ' . t('as a Reference filter');
-          $data[$table_name][$table_field_name . '_reference'] = $entity_reference;
+          // Add "entity_reference" filter.
+          _views_add_entity_reference_filter_data($table_field_name, $data[$table_name]);
         }
       }
     }
@@ -856,4 +852,29 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
   }
 
   return $data;
+}
+
+/**
+ * Add an Entity Reference filter for a given Entity Reference Views Table Data.
+ *
+   * @param string $field_name
+   *   The name of the field to add new  entity reference filter for.
+ * @param $field_table_data
+ *   A Views table data array for an entity reference field to add the new
+ *   Entity Reference filter data.
+ */
+function _views_add_entity_reference_filter_data(string  $field_name, array &$field_table_data) {
+  $field_data = $field_table_data[$field_name];
+  if (isset($field_data['filter']) && $field_data['filter']['id'] != 'entity_reference') {
+    // Create separate views data to allow use of the entity_reference
+    // filter. Numeric filter should still be available for use.
+    $entity_reference['filter'] = $field_data['filter'];
+    $entity_reference['filter']['id'] = 'entity_reference';
+    $entity_reference['title'] = $field_data['title'] . ' ' . t('as a Reference filter');
+    if (!isset($entity_reference['filter']['field'])) {
+      $entity_reference['filter']['field'] = $field_name;
+    }
+     $entity_reference['entity field'] = $field_data['entity field'];
+    $field_table_data[$field_name . '_reference'] = $entity_reference;
+  }
 }

@@ -453,29 +453,9 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $table_data[$schema_field_name]['entity field'] = $field_name;
       $first = FALSE;
 
-      // Duplicate numeric filter data to allow the entity reference filter
-      // handler.
-      if (
-        isset($table_data[$schema_field_name]['filter']['id'])
-        && $table_data[$schema_field_name]['filter']['id'] === 'numeric'
-        && $field_definition->getItemDefinition()->getSetting('target_type')
-      ) {
-
-        // Copy the table data, removing the handler options for all but
-        // the filter handler.
-        $entity_reference = $table_data[$schema_field_name];
-        $handler_types = Views::getHandlerTypes();
-        foreach (array_keys($handler_types) as $handler_type) {
-          unset($entity_reference[$handler_type]);
-        }
-        $entity_reference['filter'] = $table_data[$schema_field_name]['filter'];
-
-        // Set the filter handler settings to allow the entity
-        // reference plugin.
-        $entity_reference['filter']['id'] = 'entity_reference';
-        $entity_reference['title'] = $entity_reference['title'] . ' ' . t('as a Reference filter');
-        $entity_reference['filter']['field'] = $schema_field_name;
-        $table_data[$schema_field_name . '_reference'] = $entity_reference;
+      if ($field_definition_type === 'entity_reference') {
+        // Add "entity_reference" filter.
+        _views_add_entity_reference_filter_data($schema_field_name, $table_data);
       }
     }
   }
