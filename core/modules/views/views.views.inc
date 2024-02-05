@@ -853,4 +853,3 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
 
   return $data;
 }
-
