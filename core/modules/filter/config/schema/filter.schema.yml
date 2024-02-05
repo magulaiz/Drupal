@@ -3,6 +3,8 @@
 filter.settings:
   type: config_object
   label: 'Filter settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     fallback_format:
       type: string
