@@ -362,7 +362,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // @see \Drupal\Core\Config\TypedConfigManager::replaceVariable
     // @see \Drupal\Core\Config\TypedConfigManager::getPossibleTypes
     foreach ($all_types_in_subtree as $used_type) {
-      $possible_types = $this->findPossibleTypes($used_type);
+      $possible_types = $this->getPossibleTypes($used_type);
       if (in_array($id, $possible_types, TRUE)) {
         throw new \LogicException(sprintf('Config schema type "%s" has a circular type reference, where it uses the type "%s".', $id, $used_type));
       }
@@ -593,7 +593,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *   If a fallback name is available, that will be returned too. In this
    *   example, that would be `core_date_format_pattern.*`.
    */
-  private function findPossibleTypes(string $name): array {
+  public function getPossibleTypes(string $name): array {
     // First, parse from e.g.
     // `module.something.foo_[%parent.locked]`
     // this:
