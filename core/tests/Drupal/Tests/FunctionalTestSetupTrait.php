@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Config\FileStorage;
@@ -473,7 +474,7 @@ trait FunctionalTestSetupTrait {
       $modules = array_unique($modules);
       try {
         $success = $container->get('module_installer')->install($modules, TRUE);
-        $this->assertTrue($success, new FormattableMarkup('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
+        $this->assertTrue($success, 'Enabled modules: ' . implode(', ', $modules));
       }
       catch (MissingDependencyException $e) {
         // The exception message has all the details.
