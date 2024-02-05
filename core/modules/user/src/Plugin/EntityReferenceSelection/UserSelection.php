@@ -117,7 +117,7 @@ class UserSelection extends DefaultSelection {
         '_none' => $this->t('- None -'),
         'role' => $this->t('User role'),
       ],
-      '#ajax' => TRUE,
+      '#ajax' => [],
       '#limit_validation_errors' => [],
       '#default_value' => $configuration['filter']['type'],
     ];
