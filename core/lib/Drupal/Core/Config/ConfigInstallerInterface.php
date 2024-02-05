@@ -108,8 +108,8 @@ interface ConfigInstallerInterface {
    *
    * @param string $type
    *   Type of extension to install.
-   * @param string $name
-   *   Name of extension to install.
+   * @param string|array $name
+   *   Name or names of extensions to install.
    *
    * @throws \Drupal\Core\Config\UnmetDependenciesException
    * @throws \Drupal\Core\Config\PreExistingConfigException
