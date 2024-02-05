@@ -205,48 +205,50 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (isset($installed_themes[$module])) {
         throw new ExtensionNameReservedException("Module name $module is already in use by an installed theme.");
       }
+    }
 
-      // Load a new config object for each iteration, otherwise changes made
-      // in hook_install() are not reflected in $extension_config.
-      $extension_config = \Drupal::configFactory()
-        ->getEditable('core.extension');
+    // Load a new config object for each iteration, otherwise changes made
+    // in hook_install() are not reflected in $extension_config.
+    $extension_config = \Drupal::configFactory()
+      ->getEditable('core.extension');
 
-      // Check the validity of the default configuration. This will throw
-      // exceptions if the configuration is not valid.
-      $config_installer->checkConfigurationToInstall('module', $module);
+    // Check the validity of the default configuration. This will throw
+    // exceptions if the configuration is not valid.
+    $config_installer->checkConfigurationToInstall('module', $module_list);
 
-      // Save this data without checking schema. This is a performance
-      // improvement for module installation.
-      $extension_config
-        ->set("module.$module", 0)
-        ->set('module', module_config_sort($extension_config->get('module')))
-        ->save(TRUE);
+    // Save this data without checking schema. This is a performance
+    // improvement for module installation.
+    $extension_config
+      ->set('module', module_config_sort(array_merge(
+        array_fill_keys($module_list, 0),
+        $extension_config->get('module')
+      )))
+      ->save(TRUE);
 
-      // Prepare the new module list, sorted by weight, including filenames.
-      // This list is used for both the ModuleHandler and DrupalKernel. It
-      // needs to be kept in sync between both. A DrupalKernel reboot or
-      // rebuild will automatically re-instantiate a new ModuleHandler that
-      // uses the new module list of the kernel. However, DrupalKernel does
-      // not cause any modules to be loaded.
-      // Furthermore, the currently active (fixed) module list can be
-      // different from the configured list of enabled modules. For all active
-      // modules not contained in the configured enabled modules, we assume a
-      // weight of 0.
-      $current_module_filenames = $this->moduleHandler->getModuleList();
-      $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-      $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
-      $module_filenames = [];
-      foreach ($current_modules as $name => $weight) {
-        if (isset($current_module_filenames[$name])) {
-          $module_filenames[$name] = $current_module_filenames[$name];
-        }
-        else {
-          $module_path = \Drupal::service('extension.list.module')
-            ->getPath($name);
-          $pathname = "$module_path/$name.info.yml";
-          $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
-          $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
-        }
+    // Prepare the new module list, sorted by weight, including filenames.
+    // This list is used for both the ModuleHandler and DrupalKernel. It
+    // needs to be kept in sync between both. A DrupalKernel reboot or
+    // rebuild will automatically re-instantiate a new ModuleHandler that
+    // uses the new module list of the kernel. However, DrupalKernel does
+    // not cause any modules to be loaded.
+    // Furthermore, the currently active (fixed) module list can be
+    // different from the configured list of enabled modules. For all active
+    // modules not contained in the configured enabled modules, we assume a
+    // weight of 0.
+    $current_module_filenames = $this->moduleHandler->getModuleList();
+    $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
+    $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+    $module_filenames = [];
+    foreach ($current_modules as $name => $weight) {
+      if (isset($current_module_filenames[$name])) {
+        $module_filenames[$name] = $current_module_filenames[$name];
+      }
+      else {
+        $module_path = \Drupal::service('extension.list.module')
+          ->getPath($name);
+        $pathname = "$module_path/$name.info.yml";
+        $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
+        $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
       }
     }
 
