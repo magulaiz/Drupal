@@ -35,9 +35,9 @@ class NullGenerator extends UrlGenerator {
    *   - <front>: The site's front page.
    *   - <current>: The current page.
    *   - <none>: The path that make links relative to the current URL.
-   *   - <nolink>: Used to create text that appears as a link,
-   *   but does not lead to an actual URL, only the text
-   *   of the link is displayed without an actual link.
+   *   - <nolink>: Used to create text that appears as a link, but does not
+   *     lead to an actual URL, only the text of the link is displayed without
+   *     an actual link.
    */
   protected function getRoute($name) {
     if ($name === '<front>') {
