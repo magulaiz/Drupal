@@ -874,7 +874,9 @@ function _views_add_entity_reference_filter_data(string $field_name, array &$fie
     if (!isset($entity_reference['filter']['field'])) {
       $entity_reference['filter']['field'] = $field_name;
     }
-    $entity_reference['entity field'] = $field_data['entity field'];
+    if (isset($field_data['entity field'])) {
+      $entity_reference['entity field'] = $field_data['entity field'];
+    }
     $field_table_data[$field_name . '_reference'] = $entity_reference;
   }
 }
