@@ -93,7 +93,7 @@ class EntityUnitTest extends UnitTestCase {
     parent::setUp();
 
     $this->values = [
-      'id' => 1,
+      'id' => '1',
       'langcode' => 'en',
       'uuid' => '3bb9ee60-bea5-4622-b89b-a63319d10b3a',
     ];
@@ -603,7 +603,7 @@ class EntityUnitTest extends UnitTestCase {
 }
 
 class EntityBaseTest extends EntityBase {
-  public $id;
+  public ?string $id;
   public $langcode;
   public $uuid;
   public $label;

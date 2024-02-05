@@ -43,13 +43,6 @@ use Drupal\tour\TourInterface;
 class Tour extends ConfigEntityBase implements TourInterface {
 
   /**
-   * The name (plugin ID) of the tour.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The module which this tour is assigned to.
    *
    * @var string

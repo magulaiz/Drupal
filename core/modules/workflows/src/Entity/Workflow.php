@@ -66,13 +66,6 @@ use Drupal\workflows\WorkflowInterface;
 class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWithPluginCollectionInterface {
 
   /**
-   * The Workflow ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The workflow label.
    *
    * @var string

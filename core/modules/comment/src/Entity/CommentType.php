@@ -54,13 +54,6 @@ use Drupal\comment\CommentTypeInterface;
 class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface {
 
   /**
-   * The comment type ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The comment type label.
    *
    * @var string

@@ -48,6 +48,11 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
+   * The machine name of the entity.
+   */
+  protected ?string $id;
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values

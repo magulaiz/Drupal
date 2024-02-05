@@ -49,13 +49,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
 
   /**
-   * The machine name for the configuration entity.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable name of the configuration entity.
    *
    * @var string

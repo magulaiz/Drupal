@@ -62,13 +62,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 class Block extends ConfigEntityBase implements BlockInterface, EntityWithPluginCollectionInterface {
 
   /**
-   * The ID of the block.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The plugin instance settings.
    *
    * @var array

@@ -15,17 +15,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   use FieldInputValueNormalizerTrait;
 
   /**
-   * The field ID.
-   *
-   * The ID consists of 3 parts: the entity type, bundle and the field name.
-   *
-   * Example: node.article.body, user.user.field_main_image.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The field name.
    *
    * @var string

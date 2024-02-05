@@ -64,17 +64,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   const NAME_MAX_LENGTH = 32;
 
   /**
-   * The field ID.
-   *
-   * The ID consists of 2 parts: the entity type and the field name.
-   *
-   * Example: node.body, user.field_main_image.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The field name.
    *
    * This is the name of the property under which the field values are placed in

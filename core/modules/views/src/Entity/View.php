@@ -53,13 +53,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
   protected $base_table = 'node';
 
   /**
-   * The unique ID of the view.
-   *
-   * @var string
-   */
-  protected $id = NULL;
-
-  /**
    * The label of the view.
    *
    * @var string

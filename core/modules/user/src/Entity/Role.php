@@ -54,13 +54,6 @@ use Drupal\user\RoleInterface;
 class Role extends ConfigEntityBase implements RoleInterface {
 
   /**
-   * The machine name of this role.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable label of this role.
    *
    * @var string

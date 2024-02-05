@@ -21,13 +21,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   const CUSTOM_MODE = '_custom';
 
   /**
-   * Unique ID for the config entity.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * Entity type to be displayed.
    *
    * @var string

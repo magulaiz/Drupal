@@ -36,13 +36,6 @@ use Drupal\rest\RestResourceConfigInterface;
 class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigInterface {
 
   /**
-   * The REST resource config id.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The REST resource plugin id.
    *
    * @var string

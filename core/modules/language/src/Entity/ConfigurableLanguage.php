@@ -56,13 +56,6 @@ use Drupal\language\ConfigurableLanguageInterface;
 class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLanguageInterface {
 
   /**
-   * The language ID (machine name).
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The human-readable label for the language.
    *
    * @var string

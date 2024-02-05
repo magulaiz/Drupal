@@ -532,7 +532,6 @@ class EntityUrlTest extends UnitTestCase {
 }
 
 class UrlTestEntity extends EntityBase {
-  public $id;
   public $langcode;
   public $uuid;
   public $label;
