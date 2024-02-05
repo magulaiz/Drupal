@@ -513,6 +513,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $previous_config_names = [];
 
     foreach ($names as $name) {
+      // Add the extension that will be enabled to the list of enabled extensions.
+      $enabled_extensions[] = $name;
+
       $config_install_path = $this->getDefaultConfigDirectory($type, $name);
       if (!is_dir($config_install_path)) {
         continue;
@@ -534,8 +537,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
       $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
 
-      // Add the extension that will be enabled to the list of enabled extensions.
-      $enabled_extensions[] = $name;
       // Gets profile storages to search for overrides if necessary.
       $profile_storages = $this->getProfileStorages($name);
 
