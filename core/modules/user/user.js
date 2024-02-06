@@ -71,6 +71,8 @@
         const $passwordWidget = $mainInput.closest(
           '.js-form-type-password-unmask',
         );
+        // @todo Remove all the code related to PasswordConfirm in
+        //   https://www.drupal.org/project/drupal/issues/3419469.
         const $passwordWidgetConfirm = $mainInput.closest(
           '.js-form-type-password-confirm',
         );
