@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Tests\TestSetupTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the TestSetupTrait trait.
  *
- * @coversDefaultClass \Drupal\Core\Test\TestSetupTrait
+ * @coversDefaultClass \Drupal\Tests\TestSetupTrait
  * @group Testing
  *
  * Run in a separate process as this test involves Database statics and

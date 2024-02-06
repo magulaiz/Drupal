@@ -12,7 +12,6 @@ use Behat\Mink\Session;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\Tests\block\Traits\BlockCreationTrait;

@@ -2,13 +2,13 @@
 
 namespace Drupal\KernelTests\Core\Test;
 
-use Drupal\Core\Test\TestSetupTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\TestSetupTrait;
 
 /**
  * Tests the TestSetupTrait trait.
  *
- * @coversDefaultClass \Drupal\Core\Test\TestSetupTrait
+ * @coversDefaultClass \Drupal\Tests\TestSetupTrait
  * @group Testing
  *
  * Run in a separate process as this test involves Database statics and
