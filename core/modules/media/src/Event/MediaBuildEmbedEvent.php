@@ -6,22 +6,49 @@ use Drupal\Component\EventDispatcher\Event;
 use Drupal\media\MediaInterface;
 
 /**
- * Base implementation of entity browser events.
+ * Event that gets triggered when a media is about to be embedded in ckeditor5.
  */
 class MediaBuildEmbedEvent extends Event {
 
+  /**
+   * The view mode the embedded media will be rendered with.
+   *
+   * @var string
+   */
   protected string $viewMode;
+
+  /**
+   * The media which will be embedded.
+   *
+   * @var \Drupal\media\MediaInterface
+   */
   protected MediaInterface $media;
+
+  /**
+   * The build array of the media before it gets rendered for embedding.
+   *
+   * @var array
+   */
   protected array $build;
+
+  /**
+   * The <drupal-media> DOM node that gets replaced by the embed.
+   *
+   * @var \DOMElement
+   */
   protected \DOMElement $node;
 
   /**
-   * Constructs a EntitySelectionEvent object.
+   * Construct a MediaBuildEmbedEvent object.
    *
-   * @param string $entity_browser_id
-   *   Entity browser ID.
-   * @param string $instance_uuid
-   *   Entity browser instance UUID.
+   * @param string $viewMode
+   *   The view mode the embedded media will be rendered with.
+   * @param \Drupal\media\MediaInterface $media
+   *   The media which will be embedded.
+   * @param array $build
+   *   The build array of the media before it gets rendered for embedding.
+   * @param \DOMElement $node
+   *   The <drupal-media> DOM node that gets replaced by the embed.
    */
   public function __construct(string $viewMode, MediaInterface $media, array $build, \DOMElement $node) {
     $this->viewMode = $viewMode;
@@ -31,36 +58,35 @@ class MediaBuildEmbedEvent extends Event {
   }
 
   /**
-   * @return string
+   * Getter for the view mode.
    */
   public function getViewMode(): string {
     return $this->viewMode;
   }
 
-
   /**
-   * @return \Drupal\media\MediaInterface
+   * Gets the media.
    */
   public function getMedia(): MediaInterface {
     return $this->media;
   }
 
   /**
-   * @return array
+   * Gets the build.
    */
   public function getBuild(): array {
     return $this->build;
   }
 
   /**
-   * @param array $build
+   * Sets the build.
    */
   public function setBuild(array $build): void {
     $this->build = $build;
   }
 
   /**
-   * @return \DOMElement
+   * Gets the <drupal-media> DOM node.
    */
   public function getNode(): \DOMElement {
     return $this->node;
