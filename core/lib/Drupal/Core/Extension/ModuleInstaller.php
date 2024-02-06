@@ -421,6 +421,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // page was sent already.
         \Drupal::service('router.builder')->rebuild();
       }
+      else {
+        // Rebuild the router immediately if it is marked as needing a rebuild.
+        // @todo Work this through a bit more. This fixes
+        //   \Drupal\Tests\standard\Functional\StandardTest::testStandard()
+        //   after separately out the optional configuration install.
+        \Drupal::service('router.builder')->rebuildIfNeeded();
+      }
     }
 
     $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
