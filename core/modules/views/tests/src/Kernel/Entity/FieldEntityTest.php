@@ -167,6 +167,10 @@ class FieldEntityTest extends ViewsKernelTestBase {
     // First row will be $node since the other is now deleted.
     $row = $view->result[0];
     $this->assertNull($view->field['nid']->getEntity($row));
+
+    // @todo This test should be a kernel test and swapping a service out this
+    //   way is not correct. Rebuild the container to fix it.
+    $this->rebuildContainer();
   }
 
 }
