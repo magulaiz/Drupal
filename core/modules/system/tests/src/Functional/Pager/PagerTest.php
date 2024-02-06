@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Pager;
 
 use Behat\Mink\Element\NodeElement;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
@@ -41,6 +43,9 @@ class PagerTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // Start from a clean log.
+    \Drupal::database()->delete('watchdog')->execute();
 
     // Insert 300 log messages.
     $logger = $this->container->get('logger.factory')->get('pager_test');
