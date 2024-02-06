@@ -306,7 +306,7 @@
   ) {
     const dialogOptions = response.dialogOptions || {};
     const elementSettings = {
-      progress: { type: 'fullscreen' },
+      progress: { type: 'throbber' },
       dialogType: 'modal',
       dialog: dialogOptions,
       url: response.url,
