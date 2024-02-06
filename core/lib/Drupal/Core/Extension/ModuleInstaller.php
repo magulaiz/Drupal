@@ -336,7 +336,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       // Install default configuration of the module.
       $config_installer = \Drupal::service('config.installer');
-      $config_installer->installDefaultConfig('module', $module);
+      $config_installer->installDefaultConfig('module', $module, 1);
 
       // If the module has no current updates, but has some that were
       // previously removed, set the version to the value of
@@ -397,6 +397,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Record the fact that it was multi-installed.
       // @todo this feels for testing purposes only. Maybe remove later.
       \Drupal::logger('system')->info('%modules installed with a single container rebuild.', ['%modules' => implode(', ', $module_list)]);
+    }
+
+    // Install optional configuration once all the modules have been properly
+    // installed. This is often where soft dependencies lie.
+    // @todo Make $mode an enum.
+    $config_installer = \Drupal::service('config.installer');
+    foreach ($module_list as $module) {
+      $config_installer->installDefaultConfig('module', $module, 2);
     }
 
     if (!InstallerKernel::installationAttempted()) {
