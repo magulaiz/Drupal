@@ -401,6 +401,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
       $this->updateKernel($module_filenames);
 
+      // Refresh anything cached with core.extension. This prevents caches in
+      // things like \Drupal\views\ViewsData() from having stale data.
+      // @todo This fixes \Drupal\Tests\views\Functional\ViewsFormAlterTest().
+      Cache::invalidateTags(['config:core.extension']);
+
       // Rebuilding the container above means the loaded flag is not properly
       // set.
       // @todo consider replacing the loaded flag with something determined from
