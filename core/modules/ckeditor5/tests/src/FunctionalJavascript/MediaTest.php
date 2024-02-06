@@ -1008,20 +1008,26 @@ class MediaTest extends MediaTestBase {
    * Tests inline embedding.
    */
   public function testInlineMedia() {
+    // Reconfigure the text format to suit our needs.
+    /** @var \Drupal\filter\FilterFormatInterface $format */
+    $format = FilterFormat::load($this->host->body->format);
+    $filter_html = $format->get('filters')['filter_html'];
+    $filter_html['settings']['allowed_html'] = $filter_html['settings']['allowed_html'] . '<ul> <li>';
+    $format->setFilterConfig('filter_html', $filter_html);
+    $format->save();
     $assert_session = $this->assertSession();
     $original_value = $this->host->body->value;
     $inline_value = \str_replace('drupal-media', 'drupal-media-inline', $original_value);
-    $wrapper_class = 'inline-media-wrapper';
-    $this->host->body->value = '<p class="' . $wrapper_class . '">' . $inline_value . '</p>';
+    $this->host->body->value = '<p>' . $inline_value . '</p><ul><li>This is a list item ' . $inline_value . ' containing an inline media</li></ul>';
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
     // Confirm data-foo is present in the drupal-media preview.
-    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media.media-embedded-inline'));
-//    $this->assertNotEmpty($preview = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media > [data-drupal-media-preview="ready"] > .media', 30000));
+    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media-inline'));
 
     // Confirm that the media is wrapped by the div on the editing view.
-    $assert_session->elementExists('css', 'p.' . $wrapper_class . ' > .drupal-media');
+    $assert_session->elementExists('css', 'p > .drupal-media-inline');
+    $assert_session->elementExists('css', 'ul > li > .drupal-media-inline');
   }
 
   /**
