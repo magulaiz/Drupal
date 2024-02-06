@@ -489,7 +489,7 @@
               parentCell.removeAttribute('data-drupal-ckeditor5-cell');
             };
             editorFitInTable();
-            window.ddEventListener('resize', editorFitInTable);
+            window.addEventListener('resize', editorFitInTable);
           }
         })
         .catch((error) => {
