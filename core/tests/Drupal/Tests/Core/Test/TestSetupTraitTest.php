@@ -46,7 +46,7 @@ class TestSetupTraitTest extends UnitTestCase {
     $method->invoke($test_setup);
 
     // Ensure that SIMPLETEST_DB defines the default database connection after
-    // calling \Drupal\Core\Test\TestSetupTrait::changeDatabasePrefix().
+    // calling \Drupal\Tests\TestSetupTrait::changeDatabasePrefix().
     $this->assertEquals('pgsql', Database::getConnectionInfo()['default']['driver']);
     $this->assertEquals('127.0.0.1', Database::getConnectionInfo()['default']['host']);
   }
