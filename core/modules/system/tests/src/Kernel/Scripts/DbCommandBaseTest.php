@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\Scripts\DbCommandBaseTest.
- */
-
 namespace Drupal\Tests\system\Kernel\Scripts;
 
 use Drupal\Core\Command\DbCommandBase;
@@ -55,7 +50,7 @@ class DbCommandBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests supplying database connection as a url.
+   * Tests supplying database connection as a URL.
    */
   public function testSpecifyDbUrl() {
     $command = new DbCommandBaseTester();

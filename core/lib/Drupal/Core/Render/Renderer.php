@@ -233,6 +233,15 @@ class Renderer implements RendererInterface {
       if ($elements['#access'] instanceof AccessResultInterface) {
         $this->addCacheableDependency($elements, $elements['#access']);
         if (!$elements['#access']->isAllowed()) {
+          // Abort, but bubble new cache metadata from the access result.
+          $context = $this->getCurrentRenderContext();
+          if (!isset($context)) {
+            trigger_error("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.", E_USER_WARNING);
+            return '';
+          }
+          $context->push(new BubbleableMetadata());
+          $context->update($elements);
+          $context->bubble();
           return '';
         }
       }
@@ -327,6 +336,7 @@ class Renderer implements RendererInterface {
         '#cache',
         '#create_placeholder',
         '#lazy_builder_preview',
+        '#preview',
         // The keys below are not actually supported, but these are added
         // automatically by the Renderer. Adding them as though they are
         // supported allows us to avoid throwing an exception 100% of the time.
@@ -580,10 +590,7 @@ class Renderer implements RendererInterface {
     // Set the provided context and call the callable, it will use that context.
     $this->setCurrentRenderContext($context);
     $result = $callable();
-    // @todo Convert to an assertion in https://www.drupal.org/node/2408013
-    if ($context->count() > 1) {
-      throw new \LogicException('Bubbling failed.');
-    }
+    assert($context->count() <= 1, 'Bubbling failed.');
 
     // Restore the original render context.
     $this->setCurrentRenderContext($previous_context);
@@ -594,7 +601,7 @@ class Renderer implements RendererInterface {
   /**
    * Returns the current render context.
    *
-   * @return \Drupal\Core\Render\RenderContext
+   * @return \Drupal\Core\Render\RenderContext|null
    *   The current render context.
    */
   protected function getCurrentRenderContext() {
@@ -634,7 +641,7 @@ class Renderer implements RendererInterface {
    *   bubbleable metadata associated with the markup that replaced the
    *   placeholders.
    *
-   * @returns bool
+   * @return bool
    *   Whether placeholders were replaced.
    *
    * @see \Drupal\Core\Render\Renderer::renderPlaceholder()

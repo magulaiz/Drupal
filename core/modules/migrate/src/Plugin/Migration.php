@@ -205,8 +205,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $destinationIds = [];
 
   /**
-   * Specify value of source_row_status for current map row. Usually set by
-   * MigrateFieldHandler implementations.
+   * The source_row_status for the current map row.
    *
    * @var int
    */
@@ -271,19 +270,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * @var array
    */
   protected $migration_dependencies = [];
-
-  /**
-   * The migration's configuration dependencies.
-   *
-   * These store any dependencies on modules or other configuration (including
-   * other migrations) that must be available before the migration can be
-   * created.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
-   *
-   * @var array
-   */
-  protected $dependencies = [];
 
   /**
    * The migration plugin manager for loading other migration plugins.

@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Tests the serializer style plugin.
  *
  * @group rest
+ * @group #slow
  * @see \Drupal\rest\Plugin\views\display\RestExport
  * @see \Drupal\rest\Plugin\views\style\Serializer
  * @see \Drupal\rest\Plugin\views\row\DataEntityRow
@@ -721,7 +722,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
 
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
-    $this->assertSame($node->body->count(), count($result[2]['body']), 'Expected count of values');
+    $this->assertCount($node->body->count(), $result[2]['body']);
     $this->assertEquals($result[2]['body'], array_map(function ($item) {
       return $item['value'];
     }, $node->body->getValue()), 'Expected raw body values found.');
