@@ -628,7 +628,10 @@ class ConfigImporter {
     $operation = $this->getNextExtensionOperation();
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
-      $context['message'] = $this->t('Synchronizing extensions: @op @name.', ['@op' => $operation['op'], '@name' => $operation['name']]);
+      // @todo Improve this fix for
+      //   Drupal\Tests\config\Functional\ConfigImportAllTest.
+      $names = implode(', ', (array) $operation['name']);
+      $context['message'] = $this->t('Synchronizing extensions: @op @name.', ['@op' => $operation['op'], '@name' => $names]);
       $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
       $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
