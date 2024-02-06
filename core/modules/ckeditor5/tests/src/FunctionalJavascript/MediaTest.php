@@ -98,7 +98,7 @@ class MediaTest extends MediaTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <ol> <ul> <li>',
+        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <drupal-media-inline data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <ol> <ul> <li>',
       ],
     ]);
     $filter_format->save();
@@ -153,7 +153,7 @@ class MediaTest extends MediaTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo data-view-mode> <div data-bar>',
+        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo data-view-mode> <drupal-media-inline data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <div data-bar>',
       ],
     ]);
     $filter_format->save();
@@ -688,7 +688,7 @@ class MediaTest extends MediaTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-view-mode alt class="layercake-side">',
+        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-view-mode alt class="layercake-side"> <drupal-media-inline data-entity-type data-entity-uuid data-align data-caption data-view-mode alt>',
       ],
     ]);
     $filter_format->save();
