@@ -52,7 +52,14 @@
               $link.closest('.js-layout-builder-category')[0],
             )
           ) {
-            $link.closest('.js-layout-builder-category').show();
+            const closestLayoutBuilderCategory = $link.closest(
+              '.js-layout-builder-category',
+            );
+
+            if (closestLayoutBuilderCategory) {
+              closestLayoutBuilderCategory.style.display = 'block';
+            }
+            // $link.closest('.js-layout-builder-category').show();
           }
           // Toggle the li tag of the matching link.
           $link.parent().toggle(textMatch);
@@ -93,9 +100,18 @@
             .removeAttr('open')
             .removeAttr('remember-closed');
           // Show all categories since filter is turned off.
-          $categories.find('.js-layout-builder-category').show();
+          // $categories.find('.js-layout-builder-category').show();
+          [].forEach.call(
+            $categories.find('.js-layout-builder-category'),
+            (el) => {
+              el.style.display = 'block';
+            },
+          );
           // Show all li tags since filter is turned off.
-          $filterLinks.parent().show();
+          // $filterLinks.parent().show();
+          [].forEach.call($filterLinks, (el) => {
+            el.parentNode.style.display = 'block';
+          });
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
@@ -403,7 +419,8 @@
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
-            $(element).children().show();
+            // $(element).children().show();
+            element.children.style.display = 'block';
           },
         );
       };

@@ -118,7 +118,8 @@
               .find('.operations :input[name$="[language_alterable]"]')
               .prop('checked', true);
             $fieldSettings.find('.translatable :input').prop('checked', true);
-            $settings.show();
+            // $settings.show();
+            $settings[0].style.display = 'block';
           } else {
             $settings.hide();
           }
@@ -130,7 +131,8 @@
             '.field-settings, .bundle-settings',
           );
           if (e.target.checked) {
-            $columnSettings.show();
+            // $columnSettings.show();
+            $columnSettings[0].style.display = 'block';
           } else {
             $columnSettings.hide();
           }

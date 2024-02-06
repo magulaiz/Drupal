@@ -12,7 +12,13 @@
    */
   Drupal.behaviors.js_webassert_test_wait_for_element = {
     attach(context) {
-      $('#js_webassert_test_element_invisible').show();
+      // $('#js_webassert_test_element_invisible').show();
+      const element = document.querySelector(
+        '#js_webassert_test_element_invisible',
+      );
+      if (element) {
+        element.style.display = 'block';
+      }
     },
   };
 })(jQuery, Drupal, drupalSettings);

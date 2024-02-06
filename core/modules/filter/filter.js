@@ -15,14 +15,31 @@
   Drupal.behaviors.filterGuidelines = {
     attach(context) {
       function updateFilterGuidelines(event) {
-        const $this = $(event.target);
         const { value } = event.target;
-        $this
-          .closest('.js-filter-wrapper')
-          .find('[data-drupal-format-id]')
-          .hide()
-          .filter(`[data-drupal-format-id="${value}"]`)
-          .show();
+        const element = event.target;
+        const filterWrapper = element.closest('.js-filter-wrapper');
+        const formatElements = filterWrapper.querySelectorAll(
+          '[data-drupal-format-id]',
+        );
+
+        for (let i = 0; i < formatElements.length; i++) {
+          formatElements[i].style.display = 'none';
+        }
+
+        const filteredElement = filterWrapper.querySelector(
+          `[data-drupal-format-id="${value}"]`,
+        );
+        if (filteredElement) {
+          filteredElement.style.display = 'block';
+        }
+        // const $this = $(event.target);
+        // const { value } = event.target;
+        // $this
+        //   .closest('.js-filter-wrapper')
+        //   .find('[data-drupal-format-id]')
+        //   .hide()
+        //   .filter(`[data-drupal-format-id="${value}"]`)
+        //   .show();
       }
 
       $(once('filter-guidelines', '.js-filter-guidelines', context))

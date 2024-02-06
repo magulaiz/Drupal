@@ -1371,7 +1371,8 @@
       const $ajaxNewContent = $newContent.find('.ajax-new-content');
       if ($ajaxNewContent.length) {
         $ajaxNewContent.hide();
-        $newContent.show();
+        // $newContent.show();
+        $newContent[0].style.display = 'block';
         $ajaxNewContent[effect.showEffect](effect.showSpeed);
       } else if (effect.showEffect !== 'show') {
         $newContent[effect.showEffect](effect.showSpeed);

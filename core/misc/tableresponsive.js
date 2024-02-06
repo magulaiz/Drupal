@@ -108,7 +108,8 @@
         // If the table has hidden columns, associate an action link with the
         // table to show the columns.
         if (hiddenLength > 0) {
-          this.$link.show();
+          // this.$link.show();
+          this.$link[0].style.display = 'block';
           this.$link[0].textContent = this.showText;
         }
         // When the toggle is pegged, its presence is maintained because the user
@@ -142,11 +143,13 @@
             const position = $header.prevAll('th').length;
             self.$table.find('tbody tr').each(function () {
               const $cells = $(this).find('td').eq(position);
-              $cells.show();
+              // $cells.show();
+              $cells[0].style.display = 'block';
               // Keep track of the revealed cells, so they can be hidden later.
               self.$revealedCells = $().add(self.$revealedCells).add($cells);
             });
-            $header.show();
+            // $header.show();
+            $header[0].style.display = 'block';
             // Keep track of the revealed headers, so they can be hidden later.
             self.$revealedCells = $().add(self.$revealedCells).add($header);
           });

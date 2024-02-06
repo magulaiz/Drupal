@@ -148,7 +148,8 @@
         const query = e.target.value;
         if (query.length === 0) {
           // Reset table when the textbox is cleared.
-          $rows.show();
+          // $rows.show();
+          $rows[0].style.display = 'block';
         }
         // Case insensitive expression to find query at the beginning of a word.
         const re = new RegExp(`\\b${query}`, 'i');
@@ -161,7 +162,8 @@
           }
         }
         // Search over all rows.
-        $rows.show();
+        // $rows.show();
+        $rows[0].style.display = 'block';
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
