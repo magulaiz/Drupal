@@ -965,7 +965,9 @@
    *   The drop target row, if found.
    */
   Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
-    const rows = $(this.table.tBodies[0].rows).not(':hidden');
+    const rows = Array.from(this.table.tBodies[0].rows).filter((row) => {
+      return getComputedStyle(row).display !== 'none';
+    });
     for (let n = 0; n < rows.length; n++) {
       let row = rows[n];
       let $row = $(row);
@@ -1300,16 +1302,19 @@
     // :even and :odd are reversed because jQuery counts from 0 and
     // we count from 1, so we're out of sync.
     // Match immediate children of the parent element to allow nesting.
-    $(this.table)
-      .find('> tbody > tr.draggable, > tr.draggable')
-      .filter(':visible')
-      .filter(':odd')
-      .removeClass('odd')
-      .addClass('even')
-      .end()
-      .filter(':even')
-      .removeClass('even')
-      .addClass('odd');
+    const rows = Array.from(
+      this.table.querySelectorAll('tbody > tr.draggable, tr.draggable'),
+    ).filter((row) => getComputedStyle(row).display !== 'none');
+
+    Array.from(rows).forEach((row, index) => {
+      if (index % 2 === 0) {
+        row.classList.remove('odd');
+        row.classList.add('even');
+      } else {
+        row.classList.remove('even');
+        row.classList.add('odd');
+      }
+    });
   };
 
   /**

@@ -1672,14 +1672,18 @@
       // :even and :odd are reversed because jQuery counts from 0 and
       // we count from 1, so we're out of sync.
       // Match immediate children of the parent element to allow nesting.
-      $(response.selector)
-        .find('> tbody > tr:visible, > tr:visible')
-        .removeClass('odd even')
-        .filter(':even')
-        .addClass('odd')
-        .end()
-        .filter(':odd')
-        .addClass('even');
+      const rows = Array.from(
+        response.selector.querySelectorAll('tbody > tr:visible, tr:visible'),
+      );
+
+      Array.from(rows).forEach((row, index) => {
+        row.classList.remove('odd', 'even');
+        if (index % 2 === 0) {
+          row.classList.add('odd');
+        } else {
+          row.classList.add('even');
+        }
+      });
     },
 
     /**
