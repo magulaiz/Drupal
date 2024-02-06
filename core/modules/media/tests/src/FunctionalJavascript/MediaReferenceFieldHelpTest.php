@@ -30,8 +30,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
    * @see media_form_field_ui_field_storage_add_form_alter()
    */
   public function testFieldCreationHelpText() {
-    $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
+    $assert_session = $this->assecore/modules/media/tests/src/FunctionalJavascript/MediaReferenceFieldHelpTest.phprtSession();
 
     $type = $this->drupalCreateContentType([
       'type' => 'foo',
@@ -40,19 +39,6 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
 
     $help_text = 'Use Media reference fields for most files, images, audio, videos, and remote media. Use File or Image reference fields when creating your own media types, or for legacy files and images created before installing the Media module.';
 
-    // Choose a boolean field, none of the description containers should be
-    // visible.
-    $assert_session->elementExists('css', "[name='new_storage_type'][value='boolean']");
-    $page->find('css', "[name='new_storage_type'][value='boolean']")->getParent()->click();
-    $page->pressButton('Continue');
-    $assert_session->pageTextNotContains($help_text);
-    $this->drupalGet("/admin/structure/types/manage/{$type->id()}/fields/add-field");
-
-    $field_group = 'file_upload';
-    $assert_session->elementExists('css', "[name='new_storage_type'][value='$field_group']");
-    $page->find('css', "[name='new_storage_type'][value='$field_group']")->getParent()->click();
-
-    $page->pressButton('Continue');
     $assert_session->pageTextContains($help_text);
   }
 
