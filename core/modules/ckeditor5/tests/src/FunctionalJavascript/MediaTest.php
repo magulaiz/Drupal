@@ -1020,10 +1020,12 @@ class MediaTest extends MediaTestBase {
     $assert_session = $this->assertSession();
     $original_value = $this->host->body->value;
     $inline_value = \str_replace('drupal-media', 'drupal-media-inline', $original_value);
+    // @todo Captions on inline media are not supported yet.
+    $inline_value = \str_replace('data-caption="baz"', '', $inline_value);
     $this->host->body->value = <<<END
         <div>
             $original_value
-            <p>$inline_value</p>
+            <p>This is a paragraph $inline_value with an inline media</p>
             <ul>
                 <li>This is a list item $inline_value containing an inline media</li>
             </ul>
@@ -1032,12 +1034,24 @@ END;
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
-    // Confirm data-foo is present in the drupal-media preview.
-    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media-inline'));
+    // Wait until media previews are fetched.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media-inline'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media'));
 
-    // Confirm that the media is wrapped by the div on the editing view.
+    // Confirm that the inline media is contained as phrasing content inside
+    // flow content.
     $assert_session->elementExists('css', 'p > .drupal-media-inline');
     $assert_session->elementExists('css', 'ul > li > .drupal-media-inline');
+    // Also ensure that a media not embedded inside flow content is still
+    // rendered not using the inline templates.
+    $assert_session->elementExists('css', 'div > .drupal-media');
+
+    // Verify the rendered inline media is rendered with markup that is using
+    // the dedicated inline media and field templates.
+    $this->drupalGet($this->host->toUrl('canonical'));
+    $assert_session->elementExists('css', 'p > span.media-embedded-inline span img[src*="image-test.png"]');
+    $assert_session->elementExists('css', 'ul > li > span.media-embedded-inline span img[src*="image-test.png"]');
+    $assert_session->elementExists('css', 'div > figure.caption-drupal-media article.media img[src*="image-test.png"]');
   }
 
   /**
