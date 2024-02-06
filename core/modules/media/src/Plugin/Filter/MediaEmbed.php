@@ -336,12 +336,14 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         }
       }
 
-      $build = $media && ($view_mode || $view_mode_id === EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE)
-        ? $this->renderMedia($media, $view_mode_id, $langcode)
-        : $this->renderMissingMediaIndicator();
-
-      $event = $this->eventDispatcher->dispatch(new MediaBuildEmbedEvent($view_mode_id, $media, $build, $node));
-      $build = $event->getBuild();
+      if ($media && ($view_mode || $view_mode_id === EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE)) {
+        $build = $this->renderMedia($media, $view_mode_id, $langcode);
+        $event = $this->eventDispatcher->dispatch(new MediaBuildEmbedEvent($view_mode_id, $media, $build, $node));
+        $build = $event->getBuild();
+      }
+      else {
+        $build = $this->renderMissingMediaIndicator();
+      }
 
       if (empty($build['#attributes']['class'])) {
         $build['#attributes']['class'] = [];
