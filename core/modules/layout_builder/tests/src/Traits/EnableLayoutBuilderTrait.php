@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Traits;
 
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 
 /**
- * Test trait to enable Layout Builder on an entity.
+ * Test trait to enable or disable Layout Builder on an entity view display.
  */
 trait EnableLayoutBuilderTrait {
 
   /**
-   * Enables Layout Builder on an entity.
+   * Enables Layout Builder on an entity view display.
    *
-   * @param \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $display
+   * @param \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display
    *   The entity view display.
    */
-  protected function enableLayoutBuilder(LayoutBuilderEntityViewDisplay $display): void {
+  protected function enableLayoutBuilder(LayoutEntityDisplayInterface $display): void {
     $display
       ->enableLayoutBuilder()
       ->setOverridable()

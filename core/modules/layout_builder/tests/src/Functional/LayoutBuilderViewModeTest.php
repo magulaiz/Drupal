@@ -60,7 +60,7 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $page->checkField('display_modes_custom[full]');
     $page->pressButton('Save');
 
-    // Allow LB for the full view mode.
+    // Enable Layout Builder for the full view mode.
     $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.full');
     $this->enableLayoutBuilder($display);
     $this->drupalGet("$field_ui_prefix/display/full");
