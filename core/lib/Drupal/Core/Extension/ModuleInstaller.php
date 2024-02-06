@@ -372,13 +372,20 @@ class ModuleInstaller implements ModuleInstallerInterface {
       \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
     }
 
-    // Install optional configuration once all the modules have been properly
-    // installed. This is often where soft dependencies lie.
+    // Install optional configuration from modules once all the modules have
+    // been properly installed. This is often where soft dependencies lie.
     // @todo Make $mode an enum. This code fixes
     //   \Drupal\Tests\help\Functional\HelpTest::testHelp().
     $config_installer = \Drupal::service('config.installer');
     foreach ($module_list as $module) {
       $config_installer->installDefaultConfig('module', $module, 2);
+    }
+    // Install optional configuration from other modules once all the modules
+    // have been properly installed. This is often where soft dependencies lie.
+    // @todo Make $mode an enum. This code fixes
+    //   \Drupal\Tests\forum\Functional\Module\DependencyTest::testUninstallDependents().
+    foreach ($module_list as $module) {
+      $config_installer->installDefaultConfig('module', $module, 3);
     }
 
     if (count($module_list) > 1) {
