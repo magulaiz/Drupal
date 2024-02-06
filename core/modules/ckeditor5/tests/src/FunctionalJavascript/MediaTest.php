@@ -1015,10 +1015,20 @@ class MediaTest extends MediaTestBase {
     $filter_html['settings']['allowed_html'] = $filter_html['settings']['allowed_html'] . '<ul> <li>';
     $format->setFilterConfig('filter_html', $filter_html);
     $format->save();
+
+    // Setup the test content containing inline and normal media in the editor.
     $assert_session = $this->assertSession();
     $original_value = $this->host->body->value;
     $inline_value = \str_replace('drupal-media', 'drupal-media-inline', $original_value);
-    $this->host->body->value = '<p>' . $inline_value . '</p><ul><li>This is a list item ' . $inline_value . ' containing an inline media</li></ul>';
+    $this->host->body->value = <<<END
+        <div>
+            $original_value
+            <p>$inline_value</p>
+            <ul>
+                <li>This is a list item $inline_value containing an inline media</li>
+            </ul>
+        </div>
+END;
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
