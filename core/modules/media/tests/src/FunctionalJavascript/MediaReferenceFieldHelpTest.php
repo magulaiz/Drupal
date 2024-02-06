@@ -30,7 +30,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
    * @see media_form_field_ui_field_storage_add_form_alter()
    */
   public function testFieldCreationHelpText() {
-    $assert_session = $this->assecore/modules/media/tests/src/FunctionalJavascript/MediaReferenceFieldHelpTest.phprtSession();
+    $assert_session = $this->assertSession();
 
     $type = $this->drupalCreateContentType([
       'type' => 'foo',
