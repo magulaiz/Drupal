@@ -1,4 +1,9 @@
 services:
+  block_content.missing_entities_subscriber:
+    class: Drupal\block_content\MissingBlockContentEntitySubscriber
+    arguments: ['@state', '@plugin.manager.block']
+    tags:
+      - { name: event_subscriber }
   block_content.uuid_lookup:
     class: \Drupal\block_content\BlockContentUuidLookup
     arguments: ['@cache.bootstrap', '@lock', '@entity_type.manager']
