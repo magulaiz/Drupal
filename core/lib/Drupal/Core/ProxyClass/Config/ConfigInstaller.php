@@ -70,9 +70,9 @@ namespace Drupal\Core\ProxyClass\Config {
         /**
          * {@inheritdoc}
          */
-        public function installDefaultConfig($type, $name)
+        public function installDefaultConfig($type, $name, int $mode = 0)
         {
-            return $this->lazyLoadItself()->installDefaultConfig($type, $name);
+            return $this->lazyLoadItself()->installDefaultConfig($type, $name, $mode);
         }
 
         /**

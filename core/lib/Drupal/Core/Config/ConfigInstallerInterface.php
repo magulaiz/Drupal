@@ -27,10 +27,13 @@ interface ConfigInstallerInterface {
    *   The extension type; e.g., 'module' or 'theme'.
    * @param string $name
    *   The name of the module or theme to install default configuration for.
+   * @param int $mode
+   *   The value 0 means install both install and optional configuration. The
+   *   value 1 means install only default and 2 means install only optional.
    *
    * @see \Drupal\Core\Config\ExtensionInstallStorage
    */
-  public function installDefaultConfig($type, $name);
+  public function installDefaultConfig($type, $name, int $mode = 0);
 
   /**
    * Installs optional configuration.
