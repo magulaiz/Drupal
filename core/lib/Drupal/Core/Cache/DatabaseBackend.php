@@ -83,13 +83,13 @@ class DatabaseBackend implements CacheBackendInterface {
    *   The cache tags checksum provider.
    * @param string $bin
    *   The cache bin for which the object is created.
-   * @param \Drupal\Component\Serialization\ObjectAwareSerializationInterface|int|null $serializer
+   * @param \Drupal\Component\Serialization\ObjectAwareSerializationInterface|int $serializer
    *   (optional) The serializer to use.
    * @param int $max_rows
    *   (optional) The maximum number of rows that are allowed in this cache bin
    *   table.
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, ObjectAwareSerializationInterface|int $serializer = NULL, $max_rows = NULL) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, ObjectAwareSerializationInterface|int $serializer, $max_rows = NULL) {
     // All cache tables should be prefixed with 'cache_'.
     $bin = 'cache_' . $bin;
 
@@ -97,13 +97,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
     if (is_int($serializer)) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $max_rows as 3rd argument is deprecated in drupal:10.3.0 and it will be the 4th argument in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
       $max_rows = $serializer;
-      $serializer = \Drupal::service('serialization.phpserialize');
-    }
-    elseif ($serializer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $serializer = \Drupal::service('serialization.phpserialize');
     }
     $this->serializer = $serializer;
     $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
