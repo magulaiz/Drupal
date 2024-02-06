@@ -166,6 +166,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
           $this->installOptionalConfig($storage, '');
         }
+      }
+    }
+
+    if ($mode === 3 || $mode === 0) {
+      // During a drupal installation optional configuration is installed at the
+      // end of the installation process. Once the install profile is installed
+      // optional configuration should be installed as usual.
+      // @see install_install_profile()
+      $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
+      if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
         // Install any optional configuration entities whose dependencies can now
         // be met. This searches all the installed modules config/optional
         // directories.
