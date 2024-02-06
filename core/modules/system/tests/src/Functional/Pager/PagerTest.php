@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Pager;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
