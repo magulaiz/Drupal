@@ -1005,6 +1005,26 @@ class MediaTest extends MediaTestBase {
   }
 
   /**
+   * Tests inline embedding.
+   */
+  public function testInlineMedia() {
+    $assert_session = $this->assertSession();
+    $original_value = $this->host->body->value;
+    $inline_value = \str_replace('drupal-media', 'drupal-media-inline', $original_value);
+    $wrapper_class = 'inline-media-wrapper';
+    $this->host->body->value = '<p class="' . $wrapper_class . '">' . $inline_value . '</p>';
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+
+    // Confirm data-foo is present in the drupal-media preview.
+    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media.media-embedded-inline'));
+//    $this->assertNotEmpty($preview = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media > [data-drupal-media-preview="ready"] > .media', 30000));
+
+    // Confirm that the media is wrapped by the div on the editing view.
+    $assert_session->elementExists('css', 'p.' . $wrapper_class . ' > .drupal-media');
+  }
+
+  /**
    * For testing view modes in different scenarios.
    */
   public static function providerTestViewMode(): array {
