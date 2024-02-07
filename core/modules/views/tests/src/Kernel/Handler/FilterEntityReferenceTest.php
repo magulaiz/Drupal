@@ -240,4 +240,40 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
     ]);
   }
 
+  /**
+   * Tests that content dependencies are added to the view.
+   */
+  public function testViewContentDependencies() {
+    $view = Views::getView('test_filter_entity_reference');
+    $value = [
+      $this->targetNodes[0]->id(),
+      $this->targetNodes[3]->id(),
+    ];
+    $view->setHandlerOption(
+      'default',
+      'filter',
+      'field_test_target_id',
+      'value',
+      $value
+    );
+
+    // Dependencies are sorted.
+    $content_dependencies = [
+      $this->targetNodes[0]->getConfigDependencyName(),
+      $this->targetNodes[3]->getConfigDependencyName(),
+    ];
+    sort($content_dependencies);
+
+    $this->assertEquals([
+      'config' => [
+        'node.type.page',
+      ],
+      'content' => $content_dependencies,
+      'module' => [
+        'node',
+        'user',
+      ],
+    ], $view->getDependencies());
+  }
+
 }
