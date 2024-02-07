@@ -411,6 +411,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
       //   after this point as the container is not changing at this point.
       //   Adding this code fixed
       //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
+      //   \Drupal\Component\DependencyInjection\Container::reset() seems to
+      //   offer a way to do this but it is broken for the following reasons:
+      //   1. Needs to set itself to 'service_container' like the constructor.
+      //   2. Needs to persist services, user and session like
+      //      DrupalKernel::initializeContainer()
+      //   3. Needs to work out how to work with things like
+      //      KernelTestBase::register() which set synthetic like services.
       $this->updateKernel($this->moduleHandler->getModuleList());
 
       // Refresh anything cached with core.extension. This prevents caches in
