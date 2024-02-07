@@ -1608,7 +1608,7 @@ function install_profile_modules(&$install_state) {
   arsort($non_required);
 
   $batch_builder = new BatchBuilder();
-  $module_groups = array_chunk($required + $non_required, Settings::get('core.multi-module-install', 1000), TRUE);
+  $module_groups = array_chunk($required + $non_required, Settings::get('core.multi-module-install', 20), TRUE);
 
   foreach ($module_groups as $module_group) {
     $names = [];

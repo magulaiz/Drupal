@@ -756,7 +756,7 @@ class ConfigImporter {
         $unprocessed = $this->getUnprocessedExtensions($type);
         if (!empty($unprocessed[$op])) {
           if ($type === 'module' && $op === 'install') {
-            $name = array_slice($unprocessed[$op], 0, Settings::get('core.multi-module-install', 1000));
+            $name = array_slice($unprocessed[$op], 0, Settings::get('core.multi-module-install', 20));
           }
           else {
             $name = array_shift($unprocessed[$op]);
