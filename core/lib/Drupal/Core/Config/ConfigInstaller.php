@@ -136,7 +136,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $collection_info = $this->configManager->getConfigCollectionInfo();
         foreach ($collection_info->getCollectionNames() as $collection) {
           $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storages);
-          if ($name == $this->drupalGetProfile()) {
+          if ($name === $this->drupalGetProfile()) {
             // If we're installing a profile ensure simple configuration that
             // already exists is excluded as it will have already been written.
             // This means that if the configuration is changed by something else
@@ -565,7 +565,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
       // Install profiles can not have config clashes. Configuration that
       // has the same name as a module's configuration will be used instead.
-      if ($name != $this->drupalGetProfile()) {
+      if ($name !== $this->drupalGetProfile()) {
         // Throw an exception if the module being installed contains configuration
         // that already exists. Additionally, can not continue installing more
         // modules because those may depend on the current module being installed.
