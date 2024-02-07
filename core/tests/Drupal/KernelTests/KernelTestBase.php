@@ -21,7 +21,6 @@ use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\SchemaInspector;
@@ -90,7 +89,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use ConfigTestTrait;
   use ExtensionListTestTrait;
   use TestRequirementsTrait;
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;

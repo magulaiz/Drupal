@@ -5335,11 +5335,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/BuildTestBase.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/BuildTestBase.php
-
-		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 2
 			path: tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php
@@ -5869,11 +5864,6 @@ parameters:
 			path: tests/Drupal/KernelTests/KernelTestBase.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:getMissingRequirements\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
@@ -5921,11 +5911,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:getName\\(\\)\\.$#"
 			count: 4
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
 		-
@@ -6091,11 +6076,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Diff/Engine/DiffEngineTest.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Diff/Engine/DiffOpTest.php
-
-		-
 			message: "#^@dataProvider provideAddWords related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Diff/Engine/HWLDFWordAccumulatorTest.php
@@ -6137,11 +6117,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\FileStorageTest\\:\\:expectWarningMessage\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php
-
-		-
-			message: "#^Call to an undefined static method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\PhpStorageTestBase\\:\\:addWarning\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php
 
@@ -6696,11 +6671,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ManageGitIgnoreTest.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ManageGitIgnoreTest.php
-
-		-
 			message: "#^@dataProvider scaffoldAppendTestValues related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldTest.php
@@ -6721,39 +6691,9 @@ parameters:
 			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldTest.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Composer\\\\Plugin\\\\Scaffold\\\\Functional\\\\ScaffoldUpgradeTest\\:\\:getName\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldUpgradeTest.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldUpgradeTest.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Integration/AppendOpTest.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Integration/ReplaceOpTest.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Integration/SkipOpTest.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/VendorHardening/ConfigTest.php
 
 		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
@@ -6762,11 +6702,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerFindBinOverlap related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/VendorHardening/VendorHardeningPluginTest.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/Plugin/VendorHardening/VendorHardeningPluginTest.php
 
@@ -8946,11 +8881,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/DrupalTestBrowser.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Framework\\\\TestCase\\:\\:addWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/UnitTestCase.php
 
 		-
 			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\BuildTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"

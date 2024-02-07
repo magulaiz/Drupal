@@ -6,7 +6,6 @@ namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +27,6 @@ class DiffOpTest extends TestCase {
 
   use ExpectDeprecationTrait;
   use PhpUnitCompatibilityTrait;
-  use PhpUnitWarnings;
 
   /**
    * {@inheritdoc}

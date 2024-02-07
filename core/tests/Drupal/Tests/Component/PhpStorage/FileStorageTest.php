@@ -6,7 +6,6 @@ namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Random;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use org\bovigo\vfs\vfsStreamDirectory;
 
@@ -17,7 +16,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
  */
 class FileStorageTest extends PhpStorageTestBase {
 
-  use PhpUnitWarnings, ExpectDeprecationTrait;
+  use ExpectDeprecationTrait;
 
   /**
    * Standard test settings to pass to storage instances.

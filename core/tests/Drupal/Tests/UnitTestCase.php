@@ -10,7 +10,6 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +26,6 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 abstract class UnitTestCase extends TestCase {
 
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
