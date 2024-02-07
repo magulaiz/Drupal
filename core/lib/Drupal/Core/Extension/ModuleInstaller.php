@@ -4,6 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\DefaultConfigMode;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -343,7 +344,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       // Install default configuration of the module.
       $config_installer = \Drupal::service('config.installer');
-      $config_installer->installDefaultConfig('module', $module, 1);
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::Install);
 
       // If the module has no current updates, but has some that were
       // previously removed, set the version to the value of
@@ -386,18 +387,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // Install optional configuration from modules once all the modules have
     // been properly installed. This is often where soft dependencies lie.
-    // @todo Make $mode an enum. This code fixes
-    //   \Drupal\Tests\help\Functional\HelpTest::testHelp().
+    // @todo This code fixes \Drupal\Tests\help\Functional\HelpTest::testHelp().
     $config_installer = \Drupal::service('config.installer');
     foreach ($module_list as $module) {
-      $config_installer->installDefaultConfig('module', $module, 2);
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::Optional);
     }
     // Install optional configuration from other modules once all the modules
     // have been properly installed. This is often where soft dependencies lie.
-    // @todo Make $mode an enum. This code fixes
+    // @todo This code fixes
     //   \Drupal\Tests\forum\Functional\Module\DependencyTest::testUninstallDependents().
     foreach ($module_list as $module) {
-      $config_installer->installDefaultConfig('module', $module, 3);
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::SiteOptional);
     }
 
     if (count($module_list) > 1) {
