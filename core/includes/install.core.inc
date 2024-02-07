@@ -1901,11 +1901,10 @@ function install_finished(&$install_state) {
  *
  * Performs batch installation of modules.
  */
-function _install_module_batch($module, $module_name, &$context) {
-  $module = (array) $module;
-  \Drupal::service('module_installer')->install($module, FALSE);
-  $context['results'] = array_merge($context['results'], $module);
-  $context['message'] = t('Installed %module module(s).', ['%module' => implode(', ', $module_name)]);
+function _install_module_batch(array $modules, array $module_names, array &$context) {
+  \Drupal::service('module_installer')->install($modules, FALSE);
+  $context['results'] = array_merge($context['results'], $modules);
+  $context['message'] = t('Installed %module module(s).', ['%module' => implode(', ', $module_names)]);
 }
 
 /**
