@@ -74,7 +74,10 @@ class QueryTest extends DatabaseTestBase {
 
     $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno) use (&$previous_error_handler) {
       // Normalize the filename to use UNIX directory separators.
-      if (preg_match('@core/lib/Drupal/Core/Database/Query/Condition.php$@', str_replace(DIRECTORY_SEPARATOR, '/', $filename))) {
+      if (
+        preg_match('@core/lib/Drupal/Core/Database/Query/Condition.php$@', str_replace(DIRECTORY_SEPARATOR, '/', $filename)) &&
+        $severity === E_USER_WARNING
+      ) {
         // Convert errors to exceptions for testing purposes below.
         throw new \ErrorException($message, 0, $severity, $filename, $lineno);
       }
@@ -91,6 +94,7 @@ class QueryTest extends DatabaseTestBase {
     }
     catch (\ErrorException $e) {
       // Expected exception; just continue testing.
+      $this->assertStringContainsString('Invalid characters in query operator', $e->getMessage());
     }
 
     // Test that the insert query that was used in the SQL injection attempt did
@@ -119,6 +123,7 @@ class QueryTest extends DatabaseTestBase {
     }
     catch (\ErrorException $e) {
       // Expected exception; just continue testing.
+      $this->assertStringContainsString('Invalid characters in query operator', $e->getMessage());
     }
 
     // Attempt SQLi via union query - uppercase tablename.
@@ -136,6 +141,7 @@ class QueryTest extends DatabaseTestBase {
     }
     catch (\ErrorException $e) {
       // Expected exception; just continue testing.
+      $this->assertStringContainsString('Invalid characters in query operator', $e->getMessage());
     }
     restore_error_handler();
   }
