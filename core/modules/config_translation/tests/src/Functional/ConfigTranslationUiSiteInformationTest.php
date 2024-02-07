@@ -203,7 +203,7 @@ class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase
     $edit = [
       'site_slogan'  => $this->randomMachineName(255),
     ];
-    //First we will test the defult slogan field maxlength
+    // First we will test the defult slogan field maxlength.
     $this->drupalGet("admin/config/system/site-information");
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
@@ -212,7 +212,7 @@ class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase
       'translation[config_names][system.site][slogan]'  => $this->randomMachineName(255),
     ];
     $translation_base_url = 'admin/config/system/site-information/translate';
-    // Second we will test the translation slogan field maxlength
+    // Second we will test the translation slogan field maxlength.
     $this->drupalGet("{$translation_base_url}/fr/add");
     $this->submitForm($edit, 'Save translation');
     $this->assertSession()->pageTextContains('Successfully saved French translation.');
