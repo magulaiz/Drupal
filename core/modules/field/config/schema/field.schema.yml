@@ -54,9 +54,8 @@ field.storage.*.*:
     module:
       type: string
       label: 'Module'
-      constraints: {}
-      # @todo Make ExtensionExistsConstraintValidator aware that `core` is ALWAYS installed 🙄, then enable this constraint again.
-      # ExtensionExists: 'module'
+      constraints:
+        ExtensionExists: 'module'
     locked:
       type: boolean
       label: 'Locked'
