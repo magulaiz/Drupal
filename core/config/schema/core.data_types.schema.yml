@@ -554,13 +554,6 @@ field_config_base:
       constraints:
         # @todo In principle, we should validate that this plugin was indeed provided by `module`.
         PluginExists: plugin.manager.field.field_type
-        MatchesOtherConfigValue:
-          # This field_storage_config entity must exist. This is already guaranteed.
-          # @see \Drupal\field\Entity\FieldConfig
-          # @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraint
-          prefix: field.storage.
-          id: ['%parent.entity_type', '%parent.field_name']
-          propertyPath: type
 
 core.base_field_override.*.*.*:
   type: field_config_base
