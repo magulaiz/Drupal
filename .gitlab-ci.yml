@@ -411,6 +411,9 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-    - git fetch -vn --depth=$GIT_DEPTH origin "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
-    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+    - if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_SHA" ]; then
+        echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_TARGET_BRANCH_SHA is ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA}";
+      else
+        echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
+      fi;
+    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin

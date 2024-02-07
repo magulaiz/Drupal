@@ -14,11 +14,7 @@ ajaxing
 allwords
 alphadecimal
 alternatif
-amphibius
 ampm
-anonyme
-anothermodule
-antilop
 anyall
 applix
 archiver
@@ -31,7 +27,6 @@ arrowreturnthick
 arrowstop
 arrowthick
 arrowthickstop
-arrr
 assertable
 autocompletefocus
 autocompleteselect
@@ -139,7 +134,6 @@ chumillas
 chvotes
 cidhash
 cids
-cillum
 circlesmall
 ckeditor
 classloader
@@ -183,7 +177,6 @@ curlopt
 customevent
 customrequest
 cweagans
-cádiz
 dailymotion
 databasename
 datelist
@@ -213,7 +206,6 @@ desaturates
 desaturating
 descoping
 destructable
-deutsch
 devel
 deviantart
 dflt
@@ -227,7 +219,6 @@ dnumber
 dockerhub
 docroot
 docroots
-dolore
 dotenv
 downcasting
 doxygen
@@ -251,11 +242,9 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-drépal
 détruire
 editables
 egulias
-eins
 elbonia
 elems
 encapsed
@@ -267,7 +256,6 @@ endlink
 endmacro
 endset
 endtrans
-enim
 enoki
 entitytype
 entityviewedit
@@ -427,6 +415,7 @@ lnumber
 loadjs
 localemark
 localetranslatedirty
+logicalcpu
 lolspeak
 longblob
 longerthan
@@ -498,7 +487,6 @@ multivalue
 multivalued
 muuuh
 myclabs
-mymodule
 mysqladmin
 mysqldump
 mystarterkit
@@ -884,18 +872,11 @@ typehints
 tzid
 uids
 ulwa
-unassigning
-unassigns
 unban
-unbans
-unbundleable
 uncacheable
 uncategorized
-unclickable
-uncollapsible
 undoable
 unfieldable
-ungenerated
 ungroup
 ungroupable
 unindexed
@@ -904,13 +885,10 @@ uninstallations
 unmanaged
 unminified
 unmoderated
-unparseable
 unpromote
-unpromoted
 unpublish
 unpublishes
 unpublishing
-unregisters
 unrevisionable
 unrouted
 unsanitized
@@ -922,8 +900,6 @@ unsets
 unsetting
 unsticky
 untabbable
-unvalidated
-unwrapper
 upcasted
 upcasting
 updateprogress
@@ -938,7 +914,6 @@ userinfo
 userref
 vampirize
 varchar
-veniam
 versionable
 versionless
 verygreatdrupalmodule
@@ -970,8 +945,6 @@ xmlhttprequest
 xpsdocument
 xtmpl
 yamls
-yarhar
-yarr
 yearless
 yokotsoko
 yottabyte
