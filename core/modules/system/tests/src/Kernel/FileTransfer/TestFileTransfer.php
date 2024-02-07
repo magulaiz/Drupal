@@ -34,6 +34,8 @@ class TestFileTransfer extends FileTransfer implements ChmodInterface {
 
   /**
    * The connection.
+   *
+   * @var \Drupal\Tests\system\Kernel\FileTransfer\MockTestConnection
    */
   protected MockTestConnection $connection;
 
