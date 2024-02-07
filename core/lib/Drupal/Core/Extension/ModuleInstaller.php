@@ -114,6 +114,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   public function install(array $module_list, $enable_dependencies = TRUE) {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+
+    // Remove any modules that are already installed.
+    $installed_modules = $extension_config->get('module') ?: [];
+    // Only process currently uninstalled modules.
+    $module_list = array_diff($module_list, array_keys($installed_modules));
+
+    if (empty($module_list)) {
+      // Nothing to do. All modules already installed.
+      return TRUE;
+    }
+
     // Get all module data so we can find dependencies and sort and find the
     // core requirements. The module list needs to be reset so that it can
     // re-scan and include any new modules that may have been added directly
@@ -136,13 +147,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
         throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
-      }
-
-      // Only process currently uninstalled modules.
-      $installed_modules = $extension_config->get('module') ?: [];
-      if (!$module_list = array_diff_key($module_list, $installed_modules)) {
-        // Nothing to do. All modules already installed.
-        return TRUE;
       }
 
       // Add dependencies to the list. The new modules will be processed as
@@ -174,13 +178,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $module_list = array_keys($module_list);
     }
 
-    // Remove any modules that are already installed.
-    $module_list = array_diff($module_list, array_keys($extension_config->get('module')));
-
-    if (empty($module_list)) {
-      return TRUE;
-    }
-
     // Required for module installation checks.
     include_once $this->root . '/core/includes/install.inc';
 
@@ -210,7 +207,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $extension_config
       ->set('module', module_config_sort(array_merge(
         array_fill_keys($module_list, 0),
-        $extension_config->get('module')
+        $installed_modules
       )))
       ->save(TRUE);
 
