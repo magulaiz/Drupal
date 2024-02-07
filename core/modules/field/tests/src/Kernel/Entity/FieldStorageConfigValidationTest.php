@@ -36,11 +36,11 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = []): void {
+  public function testImmutableProperties(array $valid_values = [], ?array $additional_expected_validation_errors_when_modified = NULL): void {
     parent::testImmutableProperties($valid_values + [
       'entity_type' => 'entity_test_with_bundle',
       'type' => 'email',
-    ]);
+    ], $additional_expected_validation_errors_when_modified);
   }
 
   /**

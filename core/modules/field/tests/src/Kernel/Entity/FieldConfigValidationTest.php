@@ -92,7 +92,10 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->entity->set('settings', []);
     $this->assertValidationErrors([
       '' => "The 'field_type' property cannot be changed.",
-      'field_type' => "The 'non_existent' plugin does not exist.",
+      'field_type' => [
+        "The 'non_existent' plugin does not exist.",
+        "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'non_existent'.",
+      ],
     ]);
   }
 
@@ -106,19 +109,18 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     // Ensure the target entity type is valid to begin with.
     $this->assertValidationErrors([]);
 
-    $this->entity->set('entity_type', 'strange_entity');
+    // Ensure that it is at least plausible that the `entity_type` is modified:
+    // a corresponding FieldStorageConfig must exist due to the entity-level
+    // `RequiredConfigDependencies` constraint.
+    FieldStorageConfig::create([
+      'type' => 'boolean',
+      'field_name' => 'test',
+      'entity_type' => 'entity_test',
+    ])->save();
+    $this->entity->set('entity_type', 'entity_test');
     $this->assertValidationErrors([
       '' => "The 'entity_type' property cannot be changed.",
-      'entity_type' => "The 'strange_entity' plugin does not exist.",
-      'bundle' => "The 'one' bundle does not exist on the 'strange_entity' entity type.",
-    ]);
-
-    // A valid, but non-fieldable, entity type should raise an error.
-    $this->entity->set('entity_type', 'field_config');
-    $this->assertValidationErrors([
-      '' => "The 'entity_type' property cannot be changed.",
-      'entity_type' => "The 'field_config' plugin must implement or extend \Drupal\Core\Entity\FieldableEntityInterface.",
-      'bundle' => "The 'one' bundle does not exist on the 'field_config' entity type.",
+      'bundle' => "The 'one' bundle does not exist on the 'entity_test' entity type.",
     ]);
   }
 
@@ -204,15 +206,36 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = []): void {
+  public function testImmutableProperties(array $valid_values = [], ?array $additional_expected_validation_errors_when_modified = NULL): void {
     // If we don't clear the previous settings here, we will get unrelated
     // validation errors (in addition to the one we're expecting), because the
     // settings from the *old* field_type won't match the config schema for the
     // settings of the *new* field_type.
     $this->entity->set('settings', []);
+
+    // Ensure that it is at least plausible that the `entity_type` is modified:
+    // a corresponding FieldStorageConfig must exist due to the entity-level
+    // `RequiredConfigDependencies` constraint.
+    FieldStorageConfig::create([
+      'type' => 'boolean',
+      'field_name' => 'test',
+      'entity_type' => 'entity_test_with_bundle',
+    ])->save();
+    // Same thing for `field_name`.
+    FieldStorageConfig::create([
+      'type' => 'boolean',
+      'field_name' => 'foobar',
+      'entity_type' => 'entity_test_mul_with_bundle',
+    ])->save();
+
     parent::testImmutableProperties([
       'bundle' => 'another',
       'field_type' => 'email',
+      'field_name' => 'foobar',
+    ], [
+      'field_type' => [
+        'field_type' => "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'email'.",
+      ],
     ]);
   }
 
