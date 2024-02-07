@@ -28,8 +28,8 @@ field.storage.*.*:
         StringParts:
           separator: .
           parts:
-            - entity_type
-            - field_name
+            - '%parent.entity_type'
+            - '%parent.field_name'
     field_name:
       type: string
       label: 'Field name'
