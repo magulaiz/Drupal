@@ -1198,6 +1198,71 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
+  public function resetContainer(): ContainerInterface {
+    $session_started = FALSE;
+    // Save the id of the currently logged in user.
+    if ($this->container->initialized('current_user')) {
+      $current_user_id = $this->container->get('current_user')->id();
+    }
+    // After rebuilding the container some objects will have stale services.
+    // Record a map of objects to service IDs prior to rebuilding the
+    // container in order to ensure
+    // \Drupal\Core\DependencyInjection\DependencySerializationTrait works as
+    // expected.
+    $this->container->get(ReverseContainer::class)->recordContainer();
+
+    // If there is a session, close and save it.
+    if ($this->container->initialized('session')) {
+      $session = $this->container->get('session');
+      if ($session->isStarted()) {
+        $session_started = TRUE;
+        $session->save();
+      }
+      unset($session);
+    }
+
+    $all_messages = $this->container->get('messenger')->all();
+
+    $persist = $this->getServicesToPersist($this->container);
+    $this->container->reset();
+    $this->persistServices($this->container, $persist);
+
+    $this->container->set('kernel', $this);
+
+    // Set the class loader which was registered as a synthetic service.
+    $this->container->set('class_loader', $this->classLoader);
+
+    if ($session_started) {
+      $this->container->get('session')->start();
+    }
+
+    // The request stack is preserved across container rebuilds. Re-inject the
+    // new session into the main request if one was present before.
+    if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
+      if ($request = $request_stack->getMainRequest()) {
+        if ($request->hasSession()) {
+          $request->setSession($this->container->get('session'));
+        }
+      }
+    }
+
+    if (!empty($current_user_id)) {
+      $this->container->get('current_user')->setInitialAccountId($current_user_id);
+    }
+
+    // Re-add messages.
+    foreach ($all_messages as $type => $messages) {
+      foreach ($messages as $message) {
+        $this->container->get('messenger')->addMessage($message, $type);
+      }
+    }
+
+    return $this->container;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function invalidateContainer() {
     // An invalidated container needs a rebuild.
     $this->containerNeedsRebuild = TRUE;
