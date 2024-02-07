@@ -401,17 +401,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     if (count($module_list) > 1) {
-      // Refresh the container so static caches are rebuilt. This means we have
-      // to rebuild the container twice for each module list but this prevents
-      // static caches like those in \Drupal\views\ViewsData() from having
-      // stale data.
-      // @todo Ideally we'd be able to clear static caches after installing
-      //   without rebuilding the container. Maybe we could investigate having a
-      //   way to remove all the services and ensure they are re-instantiated
-      //   after this point as the container is not changing at this point.
-      //   Adding this code fixed
+      // Reset the container so static caches are rebuilt. This prevents static
+      // caches like those in \Drupal\views\ViewsData() from having stale data.
+      // @todo Adding this code fixed
       //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
-      $this->updateKernel($this->moduleHandler->getModuleList());
+      $this->updateKernel([]);
 
       // Refresh anything cached with core.extension. This prevents caches in
       // things like \Drupal\views\ViewsData() from having stale data.
@@ -691,14 +685,20 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $sync_status = $config_installer->isSyncing();
     $source_storage = $config_installer->getSourceStorage();
 
-    // This reboots the kernel to register the module's bundle and its services
-    // in the service container. The $module_filenames argument is taken over as
-    // %container.modules% parameter, which is passed to a fresh ModuleHandler
-    // instance upon first retrieval.
-    $this->kernel->updateModules($module_filenames, $module_filenames);
+    if (!empty($module_filenames)) {
+      // This reboots the kernel to register the module's bundle and its services
+      // in the service container. The $module_filenames argument is taken over as
+      // %container.modules% parameter, which is passed to a fresh ModuleHandler
+      // instance upon first retrieval.
+      $this->kernel->updateModules($module_filenames, $module_filenames);
+      $container = $this->kernel->getContainer();
+    }
+    else {
+      $container = $this->kernel->resetContainer();
+    }
+
     // After rebuilding the container we need to update the injected
     // dependencies.
-    $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
     $this->updateRegistry = $container->get('update.update_hook_registry');
