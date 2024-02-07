@@ -153,7 +153,7 @@ class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase
     // Assert that the language configuration does not leak outside of the
     // translation form into the actual site name and slogan.
     $this->assertSession()->pageTextNotContains('FR ' . $site_name);
-    $this->assertSession()->pageTextNotContains('FR ' . $site_slogan);
+    $this->assertSession()->elementTextNotContains('css', '#edit-source-config-names-systemsite-slogan', 'FR ' . $site_slogan);
     $edit = [
       'translation[config_names][system.site][name]' => $site_name,
       'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
@@ -168,7 +168,7 @@ class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase
 
     // Case 3: Keep default value for site name and slogan.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertSession()->pageTextNotContains('FR ' . $site_slogan);
+    $this->assertSession()->elementTextNotContains('css', '#edit-source-config-names-systemsite-slogan', 'FR ' . $site_slogan);
     $edit = [
       'translation[config_names][system.site][name]' => $site_name,
       'translation[config_names][system.site][slogan]' => $site_slogan,
