@@ -259,7 +259,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     if (!InstallerKernel::installationAttempted()) {
       // Replace the route provider service with a version that will rebuild
-      // if routes used during installation. This ensures that a module's
+      // if routes are used during installation. This ensures that a module's
       // routes are available during installation. This has to occur before
       // any services that depend on it are instantiated otherwise those
       // services will have the old route provider injected. Note that, since
