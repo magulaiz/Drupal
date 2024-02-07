@@ -37,8 +37,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class EntityResourceTest extends JsonapiKernelTestBase {
 
-  use ExpectDeprecationTrait;
-
   /**
    * Static UUIDs to use in testing.
    *
