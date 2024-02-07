@@ -343,7 +343,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * Tests multilingual JSON:API calls.
    */
-  public function testMultilingualGet() {
+  public function testMultilingualGet(): void {
     $titles = [
       [
         'en' => 'Apple',
