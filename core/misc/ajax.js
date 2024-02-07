@@ -767,7 +767,7 @@
   function submitForm(form, options) {
     const $form = $(form);
 
-   // @todo Keep for BC with the jQuery Form plugin, or remove it?
+   // @todo Keep for BC with the jQuery Form plugin, or remove it.
     const veto = {};
     $form.trigger('form-pre-serialize', [$form, options, veto]);
     if (veto.veto) {
