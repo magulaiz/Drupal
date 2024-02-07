@@ -399,7 +399,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       //   after this point as the container is not changing at this point.
       //   Adding this code fixed
       //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
-      $this->updateKernel($module_filenames);
+      $this->updateKernel($this->moduleHandler->getModuleList());
 
       // Refresh anything cached with core.extension. This prevents caches in
       // things like \Drupal\views\ViewsData() from having stale data.
