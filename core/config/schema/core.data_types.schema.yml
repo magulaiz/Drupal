@@ -488,10 +488,6 @@ field_config_base:
   type: config_entity
   constraints:
     UniqueFieldCombination: [entity_type, bundle, field_name]
-    # @todo
-    #FieldStorageExistsOnFieldableContentEntityType:
-    #  entityType: entity_type
-    #  fieldName: field_name
   mapping:
     id:
       type: string
@@ -552,7 +548,6 @@ field_config_base:
       type: string
       label: 'Field type'
       constraints:
-        # @todo In principle, we should validate that this plugin was indeed provided by `module`.
         PluginExists: plugin.manager.field.field_type
 
 core.base_field_override.*.*.*:
@@ -560,7 +555,7 @@ core.base_field_override.*.*.*:
   label: 'Base field bundle override'
   constraints:
     FullyValidatable: ~
-    # @todo
+    # @todo Implement this using \Drupal\Core\Entity\EntityFieldManagerInterface::getBaseFieldDefinitions()
     #FieldIsBaseField:
     #  entityType: entity_type
     #  fieldName: field_name
