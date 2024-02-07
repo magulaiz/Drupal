@@ -824,6 +824,11 @@
     }
 
     // Send the request.
+    //
+    // @todo figure out which of these are really necessary and where they
+    // should be set.
+    options.enctype = 'multipart/form-data';
+    options.processData = false;
     options.data = formData;
     $.ajax(options);
 
