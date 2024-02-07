@@ -202,6 +202,8 @@ class Container implements ContainerInterface, ResetInterface {
    */
   public function reset(): void {
     $this->services = [];
+    // Register the service_container with itself.
+    $this->services['service_container'] = $this;
   }
 
   /**
