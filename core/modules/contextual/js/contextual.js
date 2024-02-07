@@ -44,7 +44,7 @@
    *   contextual links as rendered by the server.
    */
   function adjustIfNestedAndOverlapping($contextual) {
-    const $contextuals = $contextual
+    const $contextuals = $($contextual)
       // @todo confirm that .closest() is not sufficient
       .parents('.contextual-region')
       .eq(-1)
@@ -79,24 +79,23 @@
   /**
    * Initializes a contextual link: updates its DOM, sets up model and views.
    *
-   * @param {jQuery} $contextual
+   * @param {jQuery} contextualEl
    *   A contextual links placeholder DOM element, containing the actual
    *   contextual links as rendered by the server.
    * @param {string} html
    *   The server-side rendered HTML for this contextual link.
    */
-  function initContextual($contextual, html) {
-    const $region = $contextual.closest('.contextual-region');
+  function initContextual(contextualEl, html) {
+    const $region = contextualEl.closest('.contextual-region');
     const contextual = Drupal.contextual;
-
-    $contextual
-      // Update the placeholder to contain its rendered contextual links.
-      .html(html)
-      // Use the placeholder as a wrapper with a specific class to provide
-      // positioning and behavior attachment context.
-      .addClass('contextual')
-      // Ensure a trigger element exists before the actual contextual links.
-      .prepend(Drupal.theme('contextualTrigger'));
+    const $contextual = $(contextualEl);
+    // Update the placeholder to contain its rendered contextual links.
+    $contextual.html(html);
+    // Use the placeholder as a wrapper with a specific class to provide
+    // positioning and behavior attachment context.
+    $contextual.addClass('contextual');
+    // Ensure a trigger element exists before the actual contextual links.
+    $contextual.prepend(Drupal.theme('contextualTrigger'));
 
     // Set the destination parameter on each of the contextual links.
     const destination = `destination=${Drupal.encodePath(
@@ -109,7 +108,7 @@
     });
 
     let title = '';
-    const $regionHeading = $region.find('h2');
+    const $regionHeading = $($region).find('h2');
     if ($regionHeading.length) {
       title = $regionHeading[0].textContent.trim();
     }
@@ -117,7 +116,7 @@
     const model = new contextual.StateModel({
       title,
     });
-    const viewOptions = $.extend({ el: $contextual, model }, options);
+    const viewOptions = $.extend({ el: contextualEl, model }, options);
     contextual.views.push({
       visual: new contextual.VisualView(viewOptions),
       aural: new contextual.AuralView(viewOptions),
@@ -148,7 +147,7 @@
     );
 
     // Fix visual collisions between contextual link triggers.
-    adjustIfNestedAndOverlapping($contextual);
+    adjustIfNestedAndOverlapping(contextualEl);
   }
 
   /**
@@ -196,9 +195,9 @@
           // Drupal.contextual.collection.
           window.setTimeout(() => {
             initContextual(
-              $context
-                .find(`[data-contextual-id="${contextualID.id}"]:empty`)
-                .eq(0),
+              $context.find(
+                `[data-contextual-id="${contextualID.id}"]:empty`,
+              )[0],
               html,
             );
           });

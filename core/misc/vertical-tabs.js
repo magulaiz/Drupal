@@ -106,9 +106,14 @@
           if (!tabFocus) {
             // If the current URL has a fragment and one of the tabs contains an
             // element that matches the URL fragment, activate that tab.
-            const $locationHash = $this.find(window.location.hash);
-            if (window.location.hash && $locationHash.length) {
-              tabFocus = $locationHash.closest('.vertical-tabs__pane');
+            const locationHashElement = window.location.hash
+              ? document.querySelector(window.location.hash)
+              : '';
+            if (window.location.hash && locationHashElement) {
+              tabFocus = locationHashElement.closest(
+                locationHashElement,
+                '.vertical-tabs__pane',
+              );
             } else {
               tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
             }

@@ -30,7 +30,9 @@
 
       // Special behaviors specific when attaching content within a dialog.
       // These behaviors usually fire after a validation error inside a dialog.
-      const $dialog = $context.closest('.ui-dialog-content');
+      const contextElement = $(context);
+      // console.log(contextElement);
+      const $dialog = contextElement.closest('.ui-dialog-content');
       if ($dialog.length) {
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
@@ -55,10 +57,10 @@
       settings.dialog.close = function (event, ...args) {
         originalClose.apply(settings.dialog, [event, ...args]);
         // Check if the opener element is inside an AJAX container.
-        const $element = $(event.target);
-        const ajaxContainer = $element.data('uiDialog')
-          ? $element
-              .data('uiDialog')
+        const element = event.target;
+        const ajaxContainer = element.dataset.uiDialog
+          ? element.dataset.uiDialog
+              .split(' ')[0]
               .opener.closest('[data-drupal-ajax-container]')
           : [];
 

@@ -22,9 +22,11 @@
       ).forEach((checkbox) => {
         const $checkbox = $(checkbox);
         // Retrieve the tabledrag row belonging to this filter.
-        const $row = $context
-          .find(`#${$checkbox.attr('id').replace(/-status$/, '-weight')}`)
-          .closest('tr');
+        const $checkboxEl = $context.find(
+          `#${$checkbox.attr('id').replace(/-status$/, '-weight')}`,
+        )[0];
+        const closestRow = $checkboxEl.closest('tr');
+        const $row = $(closestRow);
         // Retrieve the vertical tab belonging to this filter.
         const $filterSettings = $context.find(
           `[data-drupal-selector='${$checkbox
