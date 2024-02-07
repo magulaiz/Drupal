@@ -7388,6 +7388,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/Entity/EntityTypeBundleInfoTest.php
 
 		-
+			message: "#^@dataProvider provideMissingHandlerData related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Entity/EntityTypeManagerTest.php
+
+		-
 			message: "#^@dataProvider providerTestGetDefinition related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityTypeManagerTest.php
