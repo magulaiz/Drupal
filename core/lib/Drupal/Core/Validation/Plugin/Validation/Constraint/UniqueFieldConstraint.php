@@ -25,4 +25,17 @@ class UniqueFieldConstraint extends Constraint {
     return '\Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator';
   }
 
+  /**
+   * Checks if uniqueness should ignore case.
+   *
+   * To determine uniqueness without considering case, override this method and
+   * return TRUE.
+   *
+   * @return bool
+   *   TRUE if case should not be considered when determining uniqueness.
+   */
+  public function shouldIgnoreCase(): bool {
+    return FALSE;
+  }
+
 }
