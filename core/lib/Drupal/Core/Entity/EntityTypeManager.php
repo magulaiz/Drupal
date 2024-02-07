@@ -79,7 +79,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The entity last installed schema repository.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
-   *    The service container.
+   *   The service container.
    */
   public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, TranslationInterface $string_translation, ClassResolverInterface $class_resolver, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, protected ?ContainerInterface $container = NULL) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface');

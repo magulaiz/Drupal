@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
