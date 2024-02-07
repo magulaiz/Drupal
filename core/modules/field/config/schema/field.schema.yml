@@ -19,7 +19,6 @@ field.storage.*.*:
       type: string
       label: 'ID'
       constraints:
-        NotNull: []
         StringParts:
           separator: .
           parts:
@@ -28,13 +27,16 @@ field.storage.*.*:
     field_name:
       type: string
       label: 'Field name'
+
       constraints:
-        NotNull: []
+        NotBlank: {}
+        Length:
+          # @see \Drupal\field\Entity\FieldStorageConfig::NAME_MAX_LENGTH
+          max: 32
     entity_type:
       type: string
       label: 'Entity type'
       constraints:
-        NotNull: []
         PluginExists:
           manager: entity_type.manager
           interface: '\Drupal\Core\Entity\FieldableEntityInterface'
@@ -54,19 +56,15 @@ field.storage.*.*:
     locked:
       type: boolean
       label: 'Locked'
-      constraints:
-        NotNull: []
     cardinality:
       type: integer
       label: 'Maximum number of values users can enter'
-      constraints:
-        NotNull: []
-        # NoEntitiesExistYetWithHigherCardinality: []
+      constraints: {}
+      # @todo Create this constraint.
+      # NoEntitiesExistYetWithHigherCardinality: []
     translatable:
       type: boolean
       label: 'Translatable'
-      constraints:
-        NotNull: []
     indexes:
       type: sequence
       label: 'Indexes'
@@ -80,13 +78,9 @@ field.storage.*.*:
     persist_with_no_fields:
       type: boolean
       label: 'Persist field storage with no fields'
-      constraints:
-        NotNull: []
     custom_storage:
       type: boolean
       label: 'Enable custom storage'
-      constraints:
-        NotNull: []
 
 field.field.*.*.*:
   type: field_config_base
