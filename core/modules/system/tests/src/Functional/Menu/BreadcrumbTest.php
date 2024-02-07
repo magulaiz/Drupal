@@ -9,6 +9,8 @@ use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
+use Drupal\views\Entity\View;
+use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -21,7 +23,14 @@ class BreadcrumbTest extends BrowserTestBase {
   use AssertBreadcrumbTrait;
 
   /**
-   * {@inheritdoc}
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = ['test_menu_link'];
+
+  /**
+   * {@inehritdoc}
    */
   protected static $modules = [
     'block',
@@ -56,6 +65,19 @@ class BreadcrumbTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Define the schema and views data variable before enabling the test
+    // module.
+    \Drupal::state()->set('views_test_data_schema', ViewTestData::schemaDefinition());
+    \Drupal::state()->set('views_test_data_views_data', ViewTestData::viewsData());
+
+    \Drupal::service('module_installer')->install([
+      'views_test_config',
+      'views_test_data',
+    ]);
+    $this->resetAll();
+    $this->rebuildContainer();
+    $this->container->get('module_handler')->reload();
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Install 'claro' and configure it as administrative theme.
     $this->container->get('theme_installer')->install(['claro']);
@@ -226,6 +248,21 @@ class BreadcrumbTest extends BrowserTestBase {
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => 'Root']);
     $link = reset($menu_links);
 
+    // Add a views powered menu link under the root entry.
+    $view = View::load('test_menu_link');
+    $display = &$view->getDisplay('page_1');
+    $display['display_options']['menu'] = [
+      'type' => 'normal',
+      'title' => 'Sub views menu',
+      'menu_name' => $menu,
+      'parent' => $link->getPluginId(),
+    ];
+    $view->save();
+    \Drupal::service('plugin.manager.menu.link')->rebuild();
+
+    $this->drupalGet("admin/structure/menu/manage/{$menu}/add");
+    $this->submitForm($edit, 'Save');
+
     $edit = [
       'menu[menu_parent]' => $link->getMenuName() . ':' . $link->getPluginId(),
     ];
@@ -311,6 +348,13 @@ class BreadcrumbTest extends BrowserTestBase {
         $link_path => $term->getName(),
       ];
     }
+
+    $this->drupalGet('/node');
+    $this->assertBreadcrumb('/node', [], 'Home', ['node' => 'Root'], TRUE, 'menu__item--active-trail');
+    $this->assertBreadcrumb('/test-menu-link', ['' => 'Home'], NULL, [
+      'node' => 'Root',
+      'test-menu-link' => 'Sub views menu',
+    ], TRUE, 'menu__item--active-trail');
 
     // Verify breadcrumbs on user and user/%.
     // We need to log back in and out below, and cannot simply grant the
