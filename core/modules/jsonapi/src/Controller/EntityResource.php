@@ -9,10 +9,12 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -22,6 +24,8 @@ use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -152,6 +156,13 @@ class EntityResource {
   protected $user;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Instantiates an EntityResource object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -176,8 +187,10 @@ class EntityResource {
    *   The time service.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user account.
+   * @param \Drupal\Core\Language\LanguageManagerInterface|null $language_manager
+   *   The language manager service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, LanguageManagerInterface $language_manager = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
@@ -189,6 +202,11 @@ class EntityResource {
     $this->serializer = $serializer;
     $this->time = $time;
     $this->user = $user;
+    if ($language_manager === NULL) {
+      @trigger_error(__NAMESPACE__ . '\EntityResource::__construct() without the language_manager service is deprecated in drupal:10.2.3 The language_manager dependency was added in drupal:10.2.3 and will be required before drupal:11.0.0. See https://www.drupal.org/node/3357049', E_USER_DEPRECATED);
+      $language_manager = \Drupal::service('language_manager');
+    }
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -902,7 +920,20 @@ class EntityResource {
       foreach ($sort->fields() as $field) {
         $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type, $field[Sort::PATH_KEY]);
         $direction = $field[Sort::DIRECTION_KEY] ?? 'ASC';
-        $langcode = $field[Sort::LANGUAGE_KEY] ?? NULL;
+        assert($entity_type instanceof EntityTypeInterface);
+        $langcode = NULL;
+
+        if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+          // Get the name of the sort field.
+          $sort_field = explode(".", $path)[0];
+          $fields = $this->fieldManager->getFieldDefinitions($entity_type->id(), $resource_type->getBundle());
+
+          // Only when the sort field is translatable, pass the langcode to the query.
+          if ($fields[$sort_field]->isTranslatable()) {
+            $language_type = $entity_type instanceof ContentEntityTypeInterface ? LanguageInterface::TYPE_CONTENT : LanguageInterface::TYPE_INTERFACE;
+            $langcode = $field[Sort::LANGUAGE_KEY] ?? $this->languageManager->getCurrentLanguage($language_type)->getId();
+          }
+        }
         $query->sort($path, $direction, $langcode);
       }
     }

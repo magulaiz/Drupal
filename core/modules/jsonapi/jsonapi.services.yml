@@ -198,6 +198,7 @@ services:
       - '@jsonapi.serializer'
       - '@datetime.time'
       - '@current_user'
+      - '@language_manager'
   Drupal\jsonapi\Controller\EntityResource: '@jsonapi.entity_resource'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload
