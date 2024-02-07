@@ -47,7 +47,6 @@ field.storage.*.*:
       type: string
       label: 'Type'
       constraints:
-        NotBlank: []
         # @todo In principle, we should validate that this plugin was indeed provided by `module`.
         PluginExists: plugin.manager.field.field_type
     settings:
@@ -55,9 +54,9 @@ field.storage.*.*:
     module:
       type: string
       label: 'Module'
-      constraints:
-        NotBlank: []
-        # ExtensionExists: 'module'
+      constraints: {}
+      # @todo Make ExtensionExistsConstraintValidator aware that `core` is ALWAYS installed 🙄, then enable this constraint again.
+      # ExtensionExists: 'module'
     locked:
       type: boolean
       label: 'Locked'

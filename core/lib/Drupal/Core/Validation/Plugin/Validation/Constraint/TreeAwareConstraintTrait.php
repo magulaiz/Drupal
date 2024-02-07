@@ -51,11 +51,12 @@ trait TreeAwareConstraintTrait {
     $elements = $tree->getElements();
     $name = array_shift($property_path);
 
-    // Check if it exists.
     if (!isset($elements[$name])) {
       throw new \OutOfRangeException();
     }
-
+    if (empty($property_path)) {
+      return $elements[$name];
+    }
     return self::findPropertyForPath($elements[$name], $property_path);
   }
 
