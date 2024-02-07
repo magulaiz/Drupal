@@ -105,7 +105,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function installDefaultConfig($type, $name, int $mode = 0) {
+  public function installDefaultConfig($type, $name, DefaultConfigMode $mode = DefaultConfigMode::All) {
     $extension_path = $this->extensionPathResolver->getPath($type, $name);
     // Refresh the schema cache if the extension provides configuration schema
     // or is a theme.
@@ -113,7 +113,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $this->typedConfig->clearCachedDefinitions();
     }
 
-    if ($mode === 1 || $mode === 0) {
+    if ($mode->createInstallConfig()) {
       $default_install_path = $this->getDefaultConfigDirectory($type, $name);
       if (is_dir($default_install_path)) {
         if (!$this->isSyncing()) {
@@ -153,7 +153,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
     }
 
-    if ($mode === 2 || $mode === 0) {
+    if ($mode->createOptionalConfig()) {
       // During a drupal installation optional configuration is installed at the
       // end of the installation process. Once the install profile is installed
       // optional configuration should be installed as usual.
@@ -169,7 +169,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
     }
 
-    if ($mode === 3 || $mode === 0) {
+    if ($mode->createSiteOptionalConfig()) {
       // During a drupal installation optional configuration is installed at the
       // end of the installation process. Once the install profile is installed
       // optional configuration should be installed as usual.
