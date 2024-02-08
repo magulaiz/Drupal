@@ -21,7 +21,7 @@ class PageCacheVaryTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['test_page_test', 'system_test', 'entity_test'];
+  protected static $modules = ['test_page_test', 'system_test', 'entity_test'];
 
   /**
    * {@inheritdoc}
