@@ -875,17 +875,23 @@
    * Note: This method *always* returns an array. If no valid value can be determined the
    *	array will be empty, otherwise it will contain one or more values.
    */
-  $.fn.fieldValue = function(successful) {
-    for (var val = [], i = 0, max = this.length; i < max; i++) {
-      var el = this[i];
-      var v = $.fieldValue(el, successful);
+  $.fn.fieldValue = function (successful) {
+    const val = [];
+    const max = this.length;
+    for (let i = 0; i < max; i++) {
+      const el = this[i];
+      const v = $.fieldValue(el, successful);
 
-      if (v === null || typeof v === 'undefined' || (v.constructor === Array && !v.length)) {
+      if (
+        v === null ||
+        typeof v === 'undefined' ||
+        (v.constructor === Array && !v.length)
+      ) {
         continue;
       }
 
       if (v.constructor === Array) {
-        $.merge(val, v);
+        Array.concat(val, v);
       } else {
         val.push(v);
       }
@@ -897,42 +903,41 @@
   /**
    * Returns the value of the field element.
    */
-  $.fieldValue = function(el, successful) {
-    var n = el.name, t = el.type, tag = el.tagName.toLowerCase();
+  $.fieldValue = function (el, successful) {
+    const n = el.name;
+    const t = el.type;
+    const tag = el.tagName.toLowerCase();
 
     if (typeof successful === 'undefined') {
       successful = true;
     }
 
-    /* eslint-disable no-mixed-operators */
-    if (successful && (!n || el.disabled || t === 'reset' || t === 'button' ||
-      (t === 'checkbox' || t === 'radio') && !el.checked ||
-      (t === 'submit' || t === 'image') && el.form && el.form.clk !== el ||
-      tag === 'select' && el.selectedIndex === -1)) {
-    /* eslint-enable no-mixed-operators */
+    if (
+      successful &&
+      /* eslint-disable */
+      (!n || el.disabled || t === 'reset' || t === 'button' || (t === 'checkbox' || t === 'radio') && !el.checked || (t === 'submit' || t === 'image') && el.form && el.form.clk !== el || tag === 'select' && el.selectedIndex === -1)
+    ) {
+    /* eslint-enable */
       return null;
     }
 
     if (tag === 'select') {
-      var index = el.selectedIndex;
+      const index = el.selectedIndex;
 
       if (index < 0) {
         return null;
       }
 
-      var a = [], ops = el.options;
-      var one = (t === 'select-one');
-      var max = (one ? index + 1 : ops.length);
+      const a = [];
+      const ops = el.options;
+      const one = t === 'select-one';
+      const max = one ? index + 1 : ops.length;
 
-      for (var i = (one ? index : 0); i < max; i++) {
-        var op = ops[i];
+      for (let i = one ? index : 0; i < max; i++) {
+        const op = ops[i];
 
         if (op.selected && !op.disabled) {
-          var v = op.value;
-
-          if (!v) { // extra pain for IE...
-            v = (op.attributes && op.attributes.value && !(op.attributes.value.specified)) ? op.text : op.value;
-          }
+          const v = op.value;
 
           if (one) {
             return v;
@@ -945,7 +950,7 @@
       return a;
     }
 
-    return $(el).val().replace(rCRLF, '\r\n');
+    return $(el).value().replace('/\r?\n/g;', '\r\n');
   };
 
   /**
