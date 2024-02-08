@@ -5,7 +5,7 @@
 
 ((Drupal, debounce, CKEditor5, $, once) => {
   /**
-   * The CKEditor 5 instances.
+   * The CKEditor 5 instance.
    *
    * @type {Map}
    */
