@@ -819,16 +819,14 @@
     let dataString = '';
     // Convert the possibly modified formValues to a data string for $.ajax().
     const formData = new FormData();
-    formValues.forEach(
-      ({ name, value }) =>
-        (dataString += `${dataString.length ? '&' : ''}${name}=${value}`),
-    );
+    formValues.forEach(({ name, value }) => {
+      dataString += `${dataString.length ? '&' : ''}${name}=${value}`;
+    });
     if (options.extraData) {
       const entries = Object.entries(options.extraData);
-      entries.forEach(
-        ([name, value]) =>
-          (dataString += `${dataString.length ? '&' : ''}${name}=${value}`),
-      );
+      entries.forEach(([name, value]) => {
+        dataString += `${dataString.length ? '&' : ''}${name}=${value}`;
+      });
     }
     // Send the request.
     options.processData = false;
@@ -1006,12 +1004,10 @@
         // (i.e., if that library has been added to the page).
         if (ajax.$form.ajaxSubmit) {
           ajax.$form.ajaxSubmit(ajax.options);
-        } else {
-          if (element.form) {
-            submitForm(element.form, ajax.options);
-          } else if (element.tagName === 'FORM') {
-            submitForm(element, ajax.options);
-          }
+        } else if (element.form) {
+          submitForm(element.form, ajax.options);
+        } else if (element.tagName === 'FORM') {
+          submitForm(element, ajax.options);
         }
       } else {
         ajax.beforeSerialize(ajax.element, ajax.options);
