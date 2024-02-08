@@ -159,7 +159,7 @@
 		method = options.method || options.type || this.attr2('method');
 		action = options.url || this.attr2('action');
 
-		url = (typeof action === 'string') ? $.trim(action) : '';
+    url = (typeof action === 'string') ? action.trim() : '';
 		url = url || window.location.href || '';
 		if (url) {
 			// clean url (don't include hash vaue)
@@ -268,8 +268,8 @@
 			});
 
 		} else if (options.success) {
-			if ($.isArray(options.success)) {
-				$.merge(callbacks, options.success);
+			if (Array.isArray(options.success)) {
+				callbacks.append(options.success);
 			} else {
 				callbacks.push(options.success);
 			}
@@ -1280,7 +1280,7 @@
 			}
 
 			if (v.constructor === Array) {
-				$.merge(val, v);
+				val.append(v);
 			} else {
 				val.push(v);
 			}
