@@ -48,11 +48,18 @@ class PageCache implements HttpKernelInterface {
   protected $responsePolicy;
 
   /**
-   * The cache ID for the (master) request.
+   * The cache IDs for the (main) request.
    *
-   * @var string
+   * @var string[]
    */
-  protected $cid;
+  protected $cids;
+
+  /**
+   * The request used for generating the cache ID.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $requestUsedForCid;
 
   /**
    * Constructs a PageCache object.
@@ -371,34 +378,53 @@ class PageCache implements HttpKernelInterface {
    *   The cache ID for this request.
    */
   protected function getCacheId(Request $request, array $vary_headers = []) {
+    // Get the cache IDs key.
+    $key = '|';
+    if (!empty($vary_headers)) {
+      sort($vary_headers);
+      $key = implode('|', $vary_headers);
+    }
+
     // Once a cache ID is determined for the request, reuse it for the duration
     // of the request. This ensures that when the cache is written, it is only
     // keyed on request data that was available when it was read. For example,
     // the request format might be NULL during cache lookup and then set during
     // routing, in which case we want to key on NULL during writing, since that
     // will be the value during lookups for subsequent requests.
-    if (!isset($this->cid)) {
-      $cid_parts = [
-        $request->getSchemeAndHttpHost() . $request->getRequestUri(),
-        $request->getRequestFormat(NULL),
-      ];
-      // Need to separate cache IDs for responses that contain Vary headers.
-      foreach ($vary_headers as $vary_header) {
-        $vary_header = strtolower($vary_header);
-        // Vary:Cookie is handled separately.
-        // @see PageCache::get()
-        if ($vary_header === 'cookie') {
-          continue;
-        }
-        $request_header = $request->headers->get($vary_header);
-        if (!$request_header) {
-          $request_header = '_';
-        }
-        $cid_parts[] = $vary_header . ':' . $request_header;
-      }
-      $this->cid = implode(':', $cid_parts);
+    if (isset($this->cids[$key])) {
+      return $this->cids[$key];
     }
-    return $this->cid;
+
+    if (!isset($this->requestUsedForCid)) {
+      $this->requestUsedForCid = clone $request;
+    }
+
+    $cid_parts = [
+      $this->requestUsedForCid->getSchemeAndHttpHost() . $this->requestUsedForCid->getRequestUri(),
+      $this->requestUsedForCid->getRequestFormat(NULL),
+    ];
+
+    // Need to separate cache IDs for responses that contain Vary headers.
+    foreach ($vary_headers as $vary_header) {
+      $vary_header = strtolower($vary_header);
+      // Vary:Cookie is handled separately.
+      // @see PageCache::get()
+      if ($vary_header === 'cookie') {
+        continue;
+      }
+
+      $request_header = $this->requestUsedForCid->headers->get($vary_header);
+
+      if (!$request_header) {
+        $request_header = '_';
+      }
+
+      $cid_parts[] = $vary_header . ':' . $request_header;
+    }
+
+    $this->cids[$key] = implode(':', $cid_parts);
+
+    return $this->cids[$key];
   }
 
 }
