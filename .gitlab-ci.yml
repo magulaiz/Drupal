@@ -310,6 +310,7 @@ default:
   script:
       - composer validate
       - composer install
+      - [ -n "$COMPOSER_UPDATE" ] && composer update
 
 '📦️ Yarn':
   variables:
@@ -417,3 +418,13 @@ default:
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
       fi;
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+
+# Re-run the pipeline, but with Composer updates.
+'Run with updated dependencies':
+  <<: *default-stage
+  when: manual
+  allow_failure: true
+  variables:
+    COMPOSER_UPDATE: "1"
+  trigger:
+    include: .gitlab-ci.yml
