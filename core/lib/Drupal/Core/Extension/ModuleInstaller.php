@@ -184,7 +184,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     /** @var \Drupal\Core\Config\ConfigInstaller $config_installer */
     $config_installer = \Drupal::service('config.installer');
     $sync_status = $config_installer->isSyncing();
-    $modules_installed = [];
     foreach ($module_list as $module) {
       // Throw an exception if the module name is too long.
       if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
@@ -343,26 +342,25 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $version = max($version, $last_removed);
       }
       $this->updateRegistry->setInstalledVersion($module, $version);
+    }
 
-      // Record the fact that it was installed.
-      $modules_installed[] = $module;
+    // Drupal's stream wrappers needs to be re-registered in case a
+    // module-provided stream wrapper is used later in the same request. In
+    // particular, this happens when installing Drupal via Drush, as the
+    // 'translations' stream wrapper is provided by Interface Translation
+    // module and is later used to import translations.
+    \Drupal::service('stream_wrapper_manager')->register();
 
-      // Drupal's stream wrappers needs to be re-registered in case a
-      // module-provided stream wrapper is used later in the same request. In
-      // particular, this happens when installing Drupal via Drush, as the
-      // 'translations' stream wrapper is provided by Interface Translation
-      // module and is later used to import translations.
-      \Drupal::service('stream_wrapper_manager')->register();
+    // Update the theme registry to include it.
+    \Drupal::service('theme.registry')->reset();
 
-      // Update the theme registry to include it.
-      \Drupal::service('theme.registry')->reset();
+    // Modules can alter theme info, so refresh theme data.
+    // @todo ThemeHandler cannot be injected into ModuleHandler, since that
+    //   causes a circular service dependency.
+    // @see https://www.drupal.org/node/2208429
+    \Drupal::service('theme_handler')->refreshInfo();
 
-      // Modules can alter theme info, so refresh theme data.
-      // @todo ThemeHandler cannot be injected into ModuleHandler, since that
-      //   causes a circular service dependency.
-      // @see https://www.drupal.org/node/2208429
-      \Drupal::service('theme_handler')->refreshInfo();
-
+    foreach ($module_list as $module) {
       // Allow the module to perform install tasks.
       $this->moduleHandler->invoke($module, 'install', [$sync_status]);
 
@@ -436,7 +434,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
 
-    $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
+    $this->moduleHandler->invokeAll('modules_installed', [$module_list, $sync_status]);
 
     return TRUE;
   }
