@@ -716,6 +716,25 @@ class ContainerTest extends TestCase {
   }
 
   /**
+   * Tests Container::reset().
+   *
+   * @covers ::reset
+   */
+  public function testReset() {
+    $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
+    $this->container->get('late.service');
+    $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
+
+    // Reset the container. All initialized services will be reset.
+    $this->container->reset();
+
+    $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
+    $this->container->get('late.service');
+    $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
+    $this->assertSame($this->container, $this->container->get('service_container'));
+  }
+
+  /**
    * Gets a mock container definition.
    *
    * @return array
