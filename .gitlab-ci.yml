@@ -379,7 +379,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  # Run on push, or on MRs if JavaScript or YAML files have changed.
+  # Run on push, or on MRs if CSS files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -388,6 +388,8 @@ default:
         - core/yarn.lock
         - "**/*.js"
         - "**/*.yml"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
   script:
     - yarn --cwd=./core run -s check:ckeditor5
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
@@ -400,7 +402,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  # Run on push, or on MRs if CSS files have changed.
+  # Run on push, or on MRs if CSS files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -408,6 +410,8 @@ default:
         - core/package.json
         - core/yarn.lock
         - "**/*.css"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
   script:
     - yarn run --cwd=./core build:css --check
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
