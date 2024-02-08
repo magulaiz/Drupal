@@ -92,7 +92,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     $this->classResolver = $class_resolver;
     $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
     if ($this->container === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/123123', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
       $this->container = \Drupal::getContainer();
     }
   }
@@ -295,10 +295,10 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    *    Instead, you should pass the container as an argument in the
    *    __construct() method.
    *
-   * @see https://www.drupal.org/node/123123
+   * @see https://www.drupal.org/node/3419963
    */
   public function setContainer(?ContainerInterface $container): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/123123', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
     $this->container = $container;
   }
 
