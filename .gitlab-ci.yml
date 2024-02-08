@@ -329,6 +329,7 @@ default:
       - composer install
       - if [ -n "$COMPOSER_UPDATE" ]; then
           composer update;
+          composer outdated;
         fi
 
 '📦️ Yarn':
