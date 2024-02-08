@@ -816,14 +816,18 @@
       return;
     }
 
-    let dataString = ''
+    let dataString = '';
     // Convert the possibly modified formValues to a data string for $.ajax().
     const formData = new FormData();
-    formValues.forEach(({ name, value }) => dataString += `${dataString.length ? '&' : ''}${name}=${value}`);
+    formValues.forEach(
+      ({ name, value }) =>
+        (dataString += `${dataString.length ? '&' : ''}${name}=${value}`),
+    );
     if (options.extraData) {
       const entries = Object.entries(options.extraData);
-      entries.forEach(([name, value]) =>
-        dataString += `${dataString.length ? '&' : ''}${name}=${value}`
+      entries.forEach(
+        ([name, value]) =>
+          (dataString += `${dataString.length ? '&' : ''}${name}=${value}`),
       );
     }
     // Send the request.
@@ -913,9 +917,15 @@
     if (
       successful &&
       /* eslint-disable */
-      (!n || el.disabled || t === 'reset' || t === 'button' || (t === 'checkbox' || t === 'radio') && !el.checked || (t === 'submit' || t === 'image') && el.form && el.form.clk !== el || tag === 'select' && el.selectedIndex === -1)
+      (!n ||
+        el.disabled ||
+        t === 'reset' ||
+        t === 'button' ||
+        ((t === 'checkbox' || t === 'radio') && !el.checked) ||
+        ((t === 'submit' || t === 'image') && el.form && el.form.clk !== el) ||
+        (tag === 'select' && el.selectedIndex === -1))
     ) {
-    /* eslint-enable */
+      /* eslint-enable */
       return null;
     }
 
@@ -999,8 +1009,7 @@
         } else {
           if (element.form) {
             submitForm(element.form, ajax.options);
-          }
-          else if (element.tagName === 'FORM') {
+          } else if (element.tagName === 'FORM') {
             submitForm(element, ajax.options);
           }
         }
