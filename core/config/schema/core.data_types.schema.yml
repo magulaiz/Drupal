@@ -728,7 +728,7 @@ field.field_settings.entity_reference:
           manager: plugin.manager.entity_reference_selection
           interface: 'Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface'
           # @todo Remove this line and explicitly require valid entity reference
-          # selection plugin IDs in core wherever it makes sense.
+          # selection plugin IDs in https://drupal.org/i/3420198.
           allowFallback: true
     handler_settings:
       type: entity_reference_selection.[%parent.handler]
