@@ -308,6 +308,7 @@ default:
     paths:
       - vendor/
   script:
+      - export
       - composer validate
       - composer install
 
