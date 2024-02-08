@@ -54,6 +54,8 @@ core.entity_view_display.*.*.*:
     bundle:
       type: string
       label: 'Bundle'
+      constraints:
+        EntityBundleExists: '%parent.targetEntityType'
     mode:
       type: string
       label: 'View or form mode machine name'
@@ -119,6 +121,8 @@ core.entity_form_display.*.*.*:
     bundle:
       type: string
       label: 'Bundle'
+      constraints:
+        EntityBundleExists: '%parent.targetEntityType'
     mode:
       type: string
       label: 'View or form mode machine name'
