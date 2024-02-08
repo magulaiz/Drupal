@@ -24,11 +24,8 @@
 ################
 
 include:
-  - project: $_GITLAB_TEMPLATES_REPO
-    ref: $_GITLAB_TEMPLATES_REF
-    file:
-      - '/includes/include.drupalci.variables.yml'
-      - '/includes/include.drupalci.workflows.yml'
+  - '/.gitlab-ci/include.variables.yml'
+  - '/.gitlab-ci/include.workflows.yml'
 
 ################
 # Variables

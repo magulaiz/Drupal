@@ -1,0 +1,462 @@
+################
+# Defining Variables for GitLabCI pipelines
+#
+# https://docs.gitlab.com/ee/ci/variables/
+# Predefined variables: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+################
+
+################
+# Variables
+#
+# These variables provide 'Semantic Labels' to help you automatically track the current supported and development versions of Drupal, as well as the current min/max system requirements for PHP, database, etc.
+#
+# If this file is updated, your testing configuration will automatically follow these changes.
+#
+# Overriding variables
+#   - To override one or more of these variables, simply declare your own variables keyword.
+#   - Keywords declared directly in .gitlab-ci.yml take precedence over include files.
+#   - Documentation:  https://docs.gitlab.com/ee/ci/variables/
+#     - Predefined variables: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+#
+################
+
+variables:
+    ################
+    # Pipeline configuration variables
+    #
+    # These are the variables provided to the Run Pipeline form that a user may want to override.
+    #
+    # The defaults are set using 'variables in variables' so that they use semantic labels by default, but can be overriden by the maintainer.
+    ################
+    _TARGET_CORE:
+        value: "$CORE_SUPPORTED"
+        description: "Default: The current supported version of Drupal core. May be overridden with a version string(e.g: 9.4.1 or 10.0.x)."
+
+    _TARGET_D7_CORE:
+        value: "$CORE_LEG_STABLE"
+        description: "Default: The current supported version of Drupal 7 core. May be overridden with a version string (e.g: 7.99)."
+
+    _TARGET_PHP:
+        value: "$CORE_PHP_MIN"
+        description: "Default: The current minimum version of PHP for Drupal core. May be overriden with any semantic label from: https://git.drupalcode.org/project/gitlab_templates/-/raw/main/includes/include.drupalci.variables.yml"
+
+    _TARGET_DB_TYPE:
+        value: "$MYSQL_PERCONA_MARIADB"
+        description: "Default: MariaDB is the default database testing environment. May be overridden with any semantic label from: https://git.drupalcode.org/project/gitlab_templates/-/raw/main/includes/include.drupalci.variables.yml"
+
+    _TARGET_DB_VERSION:
+        value: "$CORE_MYSQL_TEST_DEFAULT"
+        description: "Default: The current minimum version of MariaDB for Drupal core. May be overridden with any semantic label from: https://git.drupalcode.org/project/gitlab_templates/-/raw/main/includes/include.drupalci.variables.yml"
+
+    _WEB_ROOT:
+        value: "web"
+        description: "The web root directory where Drupal will be installed"
+
+    _PHPUNIT_TESTGROUPS:
+        value: "--all"
+        description: "Comma-separated list of test @group(s) to execute, for example 'group1,group2'. Enter '--all' for all tests in the module (this is the default value). Leave blank if providing test groups via a parallel job matrix."
+
+    _PHPUNIT_EXTRA:
+        value: ""
+        description: "Additional options that are appended to the `phpunit` job call. If _PHPUNIT_CONCURRENT is set to 0, `phpunit` options are allowed. If _PHPUNIT_CONCURRENT is set to 1, `DRUPAL-CORE-CODE/core/scripts/run-tests.sh` options are allowed."
+
+    _PHPUNIT_CONCURRENT:
+        value: "0"
+        description: "(Experimental) Run the phpunit job leveraging concurrency. Turned off by default, set to 1 to enable concurrency. This will use the Drupal core `run-tests.sh` script currently used in DrupalCI for both core and contrib."
+
+    _PARALLEL_LINT_EXTRA:
+        value: ""
+        description: "Additional options that are appended to the `parallel-lint` job call."
+
+    _SHOW_ENVIRONMENT_VARIABLES:
+        value: "0"
+        description: "Set to 1 to show all the environment variables in the Composer and PhpUnit jobs. Known variables with Personal Identifiable Information will still be hidden. The default is 0 for no output at all."
+
+    _D7_DRUPAL_COMPOSER_NEEDED:
+        value: "0"
+        description: "Set to 1 to require the drupal/composer package that will make `drush composer` available. This variable only affects Drupal 7."
+
+    ################
+    # Skip variables
+    #
+    # These variables allow you to skip specific jobs within the pipeline
+    #
+    ################
+
+    SKIP_COMPOSER:
+        value: "0"
+        description: "DEPRECATED - DO NOT USE: This variable is no longer needed. The composer step will run when it is needed by other jobs."
+
+    SKIP_COMPOSER_LINT:
+        value: "0"
+        description: "Set to 1 to skip the composer lint CI job"
+
+    SKIP_PAGES:
+        value: "0"
+        description: "Set to 1 to skip the Composer pages CI job"
+
+    SKIP_PHPCS:
+        value: "0"
+        description: "Set to 1 to skip the phpcs CI job"
+
+    SKIP_PHPSTAN:
+      value: "0"
+      description: "Set to 1 to skip the phpstan CI job"
+
+    SKIP_STYLELINT:
+        value: "0"
+        description: "Set to 1 to skip the stylelint CI job"
+
+    SKIP_ESLINT:
+        value: "0"
+        description: "Set to 1 to skip the ESLINT CI job"
+
+    SKIP_PHPUNIT:
+        value: "0"
+        description: "Set to 1 to skip the PHPUNIT CI job"
+
+    SKIP_NIGHTWATCH:
+        value: "0"
+        description: "Set to 1 to skip the nightwatch CI job"
+
+    ################
+    # Opt in variables
+    #
+    # These variables allow you to opt in to specific jobs within the pipeline. The current minor is tested by default.
+    #
+    ################
+
+    OPT_IN_TEST_CURRENT:
+        value: "1"
+        description: "Set to 0 to opt out testing against the current Drupal core version."
+
+    OPT_IN_TEST_PREVIOUS_MINOR:
+        value: "0"
+        description: "Set to 1 to opt in testing against the previous minor Drupal core version."
+
+    OPT_IN_TEST_NEXT_MINOR:
+        value: "0"
+        description: "Set to 1 to opt in testing against the next minor Drupal core version."
+
+    OPT_IN_TEST_PREVIOUS_MAJOR:
+        value: "0"
+        description: "Set to 1 to opt in testing against the previous major Drupal core version."
+
+    OPT_IN_TEST_NEXT_MAJOR:
+        value: "0"
+        description: "Set to 1 to opt in testing against the next major Drupal core version."
+
+    OPT_IN_TEST_MAX_PHP:
+        value: "0"
+        description: "Set to 1 to opt in testing against the maximum/latest supported version of PHP for the current stable version of Drupal."
+
+    ################
+    # Lenient Variables
+    #
+    # These variables allow you to enable and configure support for the lenient plugin.
+    #
+    ################
+
+    LENIENT_ALLOW_LIST:
+        value: "0"
+        description: "Set to a comma-separated list of module names, that the lenient plugin should allow."
+
+    ################
+    # Composer Patch File
+    #
+    # These variables allow you to enable composer patches.
+    #
+    ################
+
+    COMPOSER_PATCHES_FILE:
+      value: "0"
+      description: 'Set the file name of the composer patches file that should be applied. That file must be a local file in the project, preferably located in the recommended "./.gitlab-ci/" subdirectory. The path should be relative to the module root or the recommended folder.'
+
+    ################
+    # We do not recommend overriding the following variables:
+    #
+    # @TO DO: Would it be better to set these up as 'Masked'? They are not secrets, but they also should never need to be overridden by the end user.
+    ################
+
+    ################
+    # Experimenting with setting the dockerhub image root using a variable
+    #
+    # Ultimately may not be practical because the docker image names don't necessarily follow the same patterns across different namespaces, so replacement may not work. (e.g: wodby/php:$VERSION vs drupalci/php-$VERSION-apache:production)
+    ################
+
+    _CONFIG_DOCKERHUB_ROOT:
+        value: "drupalci"
+        description: "The root namespace on Dockerhub to pull containers from."
+
+    ################
+    # Semantic Labels for Core Versions
+    # https://www.drupal.org/drupalorg/docs/drupal-ci/drupalorg-testing-policy#CodeTargets
+    ################
+    CORE_STABLE:
+        value: "10.2.3"
+        description: "The most recent, stable version of Drupal. Do not override."
+    CORE_SECURITY:
+        value: "10.2.2"
+        description: "The most recent security release in the latest major version of Drupal. Do not override."
+    CORE_SECURITY_PREVIOUS_MINOR:
+        value: "10.1.8"
+        description: "The most recent security release in the previous minor of the latest major version of Drupal. Do not override."
+    CORE_SUPPORTED:
+        value: "10.2.x-dev"
+        description: "Development branch for patch level development/bugfixes. Do not override."
+    CORE_MINOR:
+        value: "11.x-dev"
+        description: "Development branch for next minor version of Drupal. Do not override."
+    # @todo: Update below to 10.3.x-dev once 10.3.x is out.
+    CORE_NEXT_MINOR:
+        value: "10.2.x-dev"
+        description: "Once the current minor-dev branch enters a beta phase, this is the dev branch for the *next* minor version. Do not override."
+    CORE_MAJOR_DEVELOPMENT:
+        value: "11.x-dev"
+        description: "Development branch for next major version of Drupal. Do not override."
+    CORE_PREVIOUS_STABLE:
+        value: "9.5.11"
+        description: "The most recent, stable previous major version of Drupal. Do not override."
+    CORE_PREVIOUS_SECURITY:
+        value: "9.5.11"
+        description: "The most recent security release in the previous major version of Drupal. Do not override."
+    CORE_LEG_STABLE:
+        value: "7.99"
+        description: "Most recent stable release of the legacy version of Drupal (7). Do not override."
+    CORE_LEG_PATCH:
+        value: "7.x-dev"
+        description: "Patch development for the legacy version of Drupal (7.x-dev). Do not override."
+    CORE_LEG_MINOR:
+        value: "7.x-dev"
+        description: "Minor development for the legacy version of Drupal (7.x-dev). Do not override."
+
+    ################
+    # Semantic Labels for PHP Versions
+    # https://www.drupal.org/drupalorg/docs/drupal-ci/drupalorg-testing-policy#s-core-supported-environments
+    ################
+
+    #################
+    # Modern Drupal
+    # PHP Requirements: https://www.drupal.org/docs/system-requirements/php-requirements#versions
+    #################
+    CORE_PHP_MIN:
+        value: "8.1"
+        description: "The minimum supported version of PHP for the current stable version of Drupal. Do not override."
+    CORE_PHP_MAX:
+        value: "8.3"
+        description: "The maximum/latest supported version of PHP for the current stable version of Drupal. Do not override."
+    CORE_PHP_NEXT:
+        value: "8.3"
+        description: "The next/prerelease version of PHP targeted for support by the current stable version of Drupal. Do not override."
+    CORE_NEXT_PHP_MIN:
+        value: "9.0"
+        description: "The minimum version of PHP targeted for support by the next Major release of Drupal. Do not override."
+    CORE_NEXT_PHP_MAX:
+        value: "9.0"
+        description: "The maximum/latest version of PHP targeted for support. Do not override."
+    CORE_NEXT_PHP_NEXT:
+        value: "9.0"
+        description: "The next/prelease version of PHP targeted for support by the next Major release of Drupal. Do not override."
+    #################
+    # Previous Drupal core version
+    # PHP Requirements: https://www.drupal.org/docs/7/system-requirements/php-requirements
+    #################
+    CORE_PREVIOUS_PHP_MIN:
+        value: "7.4"
+        description: "The minimum supported version of PHP for the previous stable major version of Drupal. Do not override."
+    CORE_PREVIOUS_PHP_MAX:
+        value: "8.1"
+        description: "The maximum/latest supported version of PHP for the previous stable version of Drupal. Do not override."
+    #################
+    # Legacy Drupal
+    # PHP Requirements: https://www.drupal.org/docs/7/system-requirements/php-requirements
+    #################
+    CORE_LEG_PHP_MIN:
+        value: "5.6"
+        description: "The minimum supported version of PHP for legacy Drupal. Do not override."
+    CORE_LEG_PHP_MAX:
+        value: "8.2"
+        description: "The maximum/latest supported version of PHP for legacy Drupal. Do not override."
+    CORE_LEG_PHP_NEXT:
+        value: "8.3"
+        description: "The next/prelease version of PHP targetted for support by legacy Drupal. Do not override."
+
+    ################
+    # Semantic Labels for Database Versions
+    # https://www.drupal.org/drupalorg/docs/drupal-ci/drupalorg-testing-policy#s-core-supported-environments
+    ################
+    MYSQL_PERCONA_MARIADB:
+        value: "mysql"
+        description: "Container for running mysql/percona/maria environments. Do not override."
+    POSTGRESQL:
+        value: "pgsql"
+        description: "Container for running PostgreSQL environments. Do not override."
+    SQLITE:
+        value: "sqlite"
+        description: "Run against built-in SQLite. Do not override."
+
+
+    ################
+    # MySQL/Percona
+    # Version constraints for MySQL/Percona vs. MariaDB differ significantly, so variables are provided for both.
+    # The values here need to have a matching image in https://git.drupalcode.org/project/drupalci_environments
+    ################
+    CORE_MYSQL_MIN:
+        value: "5.7"
+        description: "The minimum version of MySQL supported by modern Drupal. Do not override."
+    CORE_MYSQL_MAX:
+        value: "8"
+        description: "The maximum version of MySQL supported by modern Drupal. Do not override."
+    CORE_MYSQL_NEXT:
+        value: "n/a"
+        description: "The next/prerelease targetted version of MySQL for modern Drupal. Do not override."
+    CORE_MYSQL_TEST_DEFAULT:
+        value: "5.7"
+        description: "The current recommended test version of mysql for modern Drupal."
+    CORE_LEG_MYSQL_MIN:
+        value: "5.5"
+        description: "The minimum vrsion of MySQL supported by legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_MYSQL_MAX:
+        value: "8"
+        description: "The maximum version of MySQL supported by legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_MYSQL_NEXT:
+        value: "n/a"
+        description: "The next/prerelease targetted version of MySQL on legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_MYSQL_TEST_DEFAULT:
+        value: "5.7"
+        description: "The current recommended test version of mysql for legacy Drupal"
+
+    ################
+    # MariaDB
+    ################
+    CORE_MARIADB_MIN:
+        value: "10.2.7"
+        description: "The minimum version of MariaDB supported by modern Drupal. Do not override."
+    CORE_MARIADB_MAX:
+        value: "10.3.22"
+        description: "The maximum version of MariaDB supported by modern Drupal. Do not override."
+    CORE_MARIADB_NEXT:
+        value: "n/a"
+        description: "The next/prelease version of MariaDB targetted for modern Drupal. Do not override."
+    CORE_MARIADB_MIN_TEST_DEFAULT:
+        value: "10.3.22"
+        description: "The current recommended test version of mariadb for modern Drupal."
+    CORE_LEG_MARIADB_MIN:
+        value: "10.2.7"
+        description: "The minimum version of MariaDB supported by legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_MARIADB_MAX:
+        value: "10.3.22"
+        description: "The minimum version of MariaDB supported by legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_MARIADB_NEXT:
+        value: "n/a"
+        description: "The next/prerelease targetted version of MariaDB for legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_MARIADB_MIN_TEST_DEFAULT:
+        value: "10.3.22"
+        description: "The current recommended test version of mariadb for legacy Drupal."
+
+    ################
+    # PostgreSQL/pgSQL
+    ################
+    CORE_PGSQL_MIN:
+        value: "14.1"
+        description: "The minimum version of PostgreSQL supported by modern Drupal. Do not override."
+    CORE_PGSQL_MAX:
+        value: "16"
+        description: "The maximum version of PostgreSQL supported by modern Drupal. Do not override."
+    CORE_PGSQL_NEXT:
+        value: "n/a"
+        description: "The next/prelease version of PostgreSQL targetted for modern Drupal. Do not override."
+    CORE_LEG_PGSQL_MIN:
+        value: "9.1"
+        description: "The minimum version of PostgreSQL supported by legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_PGSQL_MAX:
+        value: "14.1"
+        description: "The maximum version of PostgreSQL supported by legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_PGSQL_NEXT:
+        value: "n/a"
+        description: "The next/prerelease targetted version of PostgreSQL on legacy Drupal (Drupal 7). Do not override."
+
+    ################
+    # SQLite
+    ################
+    CORE_SQLITE_MIN:
+        value: "3"
+        description: "The miminum supported version of SQLite on modern Drupal. Do not override."
+    CORE_SQLITE_MAX:
+        value: "3"
+        description: "The maximum supported version of SQLite on modern Drupal. Do not override."
+    CORE_SQLITE_NEXT:
+        value: "n/a"
+        description: "The next/prerelease targetted version of SQLite for modern Drupal. Do not override."
+    CORE_LEG_SQLITE_MIN:
+        value: "3"
+        description: "The miminum supported version of SQLite on legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_SQLITE_MAX:
+        value: "3"
+        description: "The maximum supported version of SQLite on legacy Drupal (Drupal 7). Do not override."
+    CORE_LEG_SQLITE_NEXT:
+        value: "n/a"
+        description: "The next/prerelease targetted version of SQLite for legacy Drupal (Drupal 7). Do not override."
+
+    ################
+    # Composer Requirements
+    # https://www.drupal.org/docs/system-requirements/composer-requirements
+    ################
+    CORE_COMPOSER_MIN:
+        value: "2.2.18"
+        description: "The minimum supported version of Composer on modern Drupal. Do not override."
+    CORE_COMPOSER_MIN_NEXT:
+        value: "2.3.6"
+        description: "The next/prerelease targetted version of Composer for modern Drupal. Do not override."
+    COMPOSER_PLUGIN_CONSTRAINT:
+        value: "^2"
+        description: "Major version constraint for Composer for use with modern Drupal. Do not override."
+    COMPOSER_EXTRA:
+        value: ""
+        description: "Additional options that are appended to the `composer` job call."
+
+    ################
+    # Semantic Labels for Core Composer Constraints
+    # https://www.drupal.org/drupalorg/docs/drupal-ci/drupalorg-testing-policy#CodeTargets
+    ################
+    CONSTRAINT_CORE_MAJOR:
+        value: "^9"
+        description: "Constrain Composer requirements to current minimum supported major branch. Do not override."
+    CONSTRAINT_CORE_MAJOR_NEXT:
+        value: "^11"
+        description: "Constrain Composer requirements to the next major branch. Do not override."
+    CONSTRAINT_CORE_LEGACY:
+        value: "^7"
+        description: "Constrain Composer requirements to legacy major branch (Drupal 7). Do not override."
+
+    ################
+    # Gitlab templates
+    #
+    # https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+    #
+    # These variables are only applied when used on:
+    # - Trigger variables.
+    # - Scheduled pipeline variables.
+    # - Manual pipeline run variables.
+    # - Variables added when creating a pipeline with the API.
+    #
+    # They cannot be overriden in a .gitlab-ci.yml template.
+    ################
+    _GITLAB_TEMPLATES_REPO:
+        value: "project/gitlab_templates"
+        description: "Only to be used in manual, triggered, downstream or scheduled pipelines, otherwise ignored due to the priority of global variables. The org and machine name of the repo that holds the gitlab CI project. The default is project/gitlab_templates, use issue/gitlab_templates-nnnnnnn for an issue fork."
+    _GITLAB_TEMPLATES_REF:
+        value: "default-ref"
+        description: "Only to be used in manual, triggered, downstream or scheduled pipelines, otherwise ignored due to the priority of global variables. The branch/ref to use during CI. The default is default-ref. For issue testing, the format is often nnnnnnn-some-text"
+
+    ################
+    # Gitlab templates repo and ref used by CURL to get gitlab templates script files.
+    #
+    # These variables can be overriden in a .gitlab-ci.yml template.
+    ################
+    _CURL_TEMPLATES_REPO:
+        value: ""
+        description: "Empty by default. Set this to a value in your .gitlab-ci.yml if you are testing a gitlab_templates MR."
+    _CURL_TEMPLATES_REF:
+        value: ""
+        description: "Empty by default. Override this to match `ref:` if you are using a specific non-default tag such as `main` or `1.0.x-latest`, or when testing a gitlab_templates MR."
