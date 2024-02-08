@@ -145,14 +145,16 @@
       const $view = $(context).hasClass('.js-media-library-view')
         ? $(context)
         : $('.js-media-library-view', context);
+      const view = $view[0];
 
       // Add a class to the view to allow it to be replaced via AJAX.
       // @todo Remove the custom ID when the AJAX system allows replacing
       //    elements by selector.
       //    https://www.drupal.org/project/drupal/issues/2821793
-      $view
-        .closest('.views-element-container')
-        .attr('id', 'media-library-view');
+      if (view) {
+        const closestEl = view.closest('.views-element-container');
+        $(closestEl).attr('id', 'media-library-view');
+      }
 
       // We would ideally use a generic JavaScript specific class to detect the
       // display links. Since we have no good way of altering display links yet,
@@ -252,7 +254,6 @@
         '.js-media-library-item input[type="checkbox"]',
         $form,
       );
-
       /**
        * Disable media items.
        *
@@ -260,10 +261,13 @@
        *   A jQuery object representing the media items that should be disabled.
        */
       function disableItems($items) {
-        $items
-          .prop('disabled', true)
-          .closest('.js-media-library-item')
-          .addClass('media-library-item--disabled');
+        const items = $items.toArray();
+        $items.prop('disabled', true);
+        items.forEach(function (el) {
+          el.closest('.js-media-library-item').classList.add(
+            'media-library-item--disabled',
+          );
+        });
       }
 
       /**
@@ -273,10 +277,13 @@
        *   A jQuery object representing the media items that should be enabled.
        */
       function enableItems($items) {
-        $items
-          .prop('disabled', false)
-          .closest('.js-media-library-item')
-          .removeClass('media-library-item--disabled');
+        const items = $items.toArray();
+        $items.prop('disabled', false);
+        items.forEach(function (el) {
+          el.closest('.js-media-library-item').classList.remove(
+            'media-library-item--disabled',
+          );
+        });
       }
 
       /**

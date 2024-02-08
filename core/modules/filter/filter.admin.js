@@ -22,10 +22,10 @@
       ).forEach((checkbox) => {
         const $checkbox = $(checkbox);
         // Retrieve the tabledrag row belonging to this filter.
-        const $checkboxEl = $context.find(
+        const checkboxEl = $context.find(
           `#${$checkbox.attr('id').replace(/-status$/, '-weight')}`,
         )[0];
-        const closestRow = $checkboxEl.closest('tr');
+        const closestRow = checkboxEl.closest('tr');
         const $row = $(closestRow);
         // Retrieve the vertical tab belonging to this filter.
         const $filterSettings = $context.find(

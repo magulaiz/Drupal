@@ -29,10 +29,10 @@
             const $moveSelectedCount = $selectedCount.detach();
             $buttonPane.prepend($moveSelectedCount);
           };
+          const el = $element[0];
+          const closestWidget = el.closest('.media-library-widget-modal');
+          const $buttonPane = $(closestWidget).find('.ui-dialog-buttonpane');
 
-          const $buttonPane = $element
-            .closest('.media-library-widget-modal')
-            .find('.ui-dialog-buttonpane');
           if (!$buttonPane.length) {
             return;
           }
