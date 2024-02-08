@@ -412,10 +412,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       //   Note, previously this flag is set due to calling hook_install() and
       //   rebuilding all the module handler statics above.
       $this->moduleHandler->loadAll();
-
-      // Record the fact that it was multi-installed.
-      // @todo this feels for testing purposes only. Maybe remove later.
-      \Drupal::logger('system')->info('%modules installed with a single container rebuild.', ['%modules' => implode(', ', $module_list)]);
     }
 
     if (!InstallerKernel::installationAttempted()) {
