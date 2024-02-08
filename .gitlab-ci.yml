@@ -156,7 +156,6 @@ default:
       allow_failure: true
   variables:
     COMPOSER_UPDATE: "1"
-    DAILY_TEST: "0"
   trigger:
     include: .gitlab-ci.yml
 
