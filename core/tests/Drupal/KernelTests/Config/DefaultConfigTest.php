@@ -49,8 +49,7 @@ class DefaultConfigTest extends KernelTestBase {
   /**
    * Tests if installed config is equal to the exported config.
    *
-   * @_dataProvider moduleListDataProvider
-   * @testWith ["media"]
+   * @dataProvider moduleListDataProvider
    */
   public function testModuleConfig(string $module): void {
     $this->assertExtensionConfig($module, 'module');
