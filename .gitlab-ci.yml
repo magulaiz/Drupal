@@ -388,8 +388,7 @@ default:
         - core/yarn.lock
         - "**/*.js"
         - "**/*.yml"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
+    - when: manual
       allow_failure: true
   script:
     - yarn --cwd=./core run -s check:ckeditor5
@@ -411,8 +410,7 @@ default:
         - core/package.json
         - core/yarn.lock
         - "**/*.css"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
+    - when: manual
       allow_failure: true
   script:
     - yarn run --cwd=./core build:css --check
