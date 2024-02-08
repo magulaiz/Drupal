@@ -28,32 +28,6 @@ enum DefaultConfigMode {
   }
 
   /**
-   * Determines if simple config in /install directory should be created.
-   *
-   * @return bool
-   *   TRUE to create simple config in /install directory, FALSE if not.
-   */
-  public function createInstallSimpleConfig(): bool {
-    return match($this) {
-      DefaultConfigMode::All, DefaultConfigMode::InstallSimple => TRUE,
-      default => FALSE,
-    };
-  }
-
-  /**
-   * Determines if simple config in /install directory should be created.
-   *
-   * @return bool
-   *   TRUE to create simple config in /install directory, FALSE if not.
-   */
-  public function createInstallConfigEntities(): bool {
-    return match($this) {
-      DefaultConfigMode::All, DefaultConfigMode::InstallEntities => TRUE,
-      default => FALSE,
-    };
-  }
-
-  /**
    * Determines if config in /optional directory should be created.
    *
    * @return bool
