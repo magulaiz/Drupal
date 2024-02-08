@@ -675,7 +675,7 @@ class ContainerTest extends TestCase {
    * @covers ::getServiceIds
    */
   public function testGetServiceIds() {
-    $service_definition_keys = array_keys($this->containerDefinition['services']);
+    $service_definition_keys = array_merge(['service_container'], array_keys($this->containerDefinition['services']));
     $this->assertEquals($service_definition_keys, $this->container->getServiceIds(), 'Retrieved service IDs match definition.');
 
     $mock_service = new MockService();
@@ -733,9 +733,6 @@ class ContainerTest extends TestCase {
     $parameters['service_from_parameter'] = $this->getServiceCall('service.provider_alias');
 
     $services = [];
-    $services['service_container'] = [
-      'class' => '\Drupal\service_container\DependencyInjection\Container',
-    ];
     $services['other.service'] = [
       'class' => get_class($fake_service),
     ];
