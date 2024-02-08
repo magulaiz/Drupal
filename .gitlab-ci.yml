@@ -310,7 +310,9 @@ default:
   script:
       - composer validate
       - composer install
-      - [ -n "$COMPOSER_UPDATE" ] && composer update
+      - if [ -n "$COMPOSER_UPDATE" ]; then
+          composer update;
+        fi
 
 '📦️ Yarn':
   variables:
