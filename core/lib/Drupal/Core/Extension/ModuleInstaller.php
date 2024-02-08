@@ -333,7 +333,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       // Install default configuration of the module.
       $config_installer = \Drupal::service('config.installer');
-      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::Install);
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::InstallSimple);
 
       // If the module has no current updates, but has some that were
       // previously removed, set the version to the value of
@@ -360,7 +360,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // @see https://www.drupal.org/node/2208429
     \Drupal::service('theme_handler')->refreshInfo();
 
+    $config_installer = \Drupal::service('config.installer');
     foreach ($module_list as $module) {
+      // Create config entities a module has in the /install directory.
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::InstallEntities);
+
       // Allow the module to perform install tasks.
       $this->moduleHandler->invoke($module, 'install', [$sync_status]);
 
@@ -371,7 +375,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Install optional configuration from modules once all the modules have
     // been properly installed. This is often where soft dependencies lie.
     // @todo This code fixes \Drupal\Tests\help\Functional\HelpTest::testHelp().
-    $config_installer = \Drupal::service('config.installer');
     foreach ($module_list as $module) {
       $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::Optional);
     }
