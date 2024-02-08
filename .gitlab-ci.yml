@@ -24,7 +24,6 @@
 ################
 
 include:
-  - '/.gitlab-ci/include.variables.yml'
   - '/.gitlab-ci/include.workflows.yml'
 
 ################
@@ -39,7 +38,7 @@ include:
 ################
 
 variables:
-  COMPOSER: composer.json
+  _CONFIG_DOCKERHUB_ROOT: "drupalci"
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   CONCURRENCY: 24
