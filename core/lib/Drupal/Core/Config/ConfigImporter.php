@@ -367,11 +367,12 @@ class ConfigImporter {
    *   The type of extension, either 'theme' or 'module'.
    * @param string $op
    *   The change operation performed, either install or uninstall.
-   * @param string $name
-   *   The name of the extension processed.
+   * @param string|array $name
+   *   The name or names of the extension processed.
    */
   protected function setProcessedExtension($type, $op, $name) {
-    $this->processedExtensions[$type][$op][] = $name;
+    $name = (array) $name;
+    $this->processedExtensions[$type][$op] = array_merge($this->processedExtensions[$type][$op], $name);
   }
 
   /**
@@ -907,9 +908,7 @@ class ConfigImporter {
       }
       \Drupal::service('theme_installer')->$op($names);
     }
-    foreach ($names as $name) {
-      $this->setProcessedExtension($type, $op, $name);
-    }
+    $this->setProcessedExtension($type, $op, $names);
   }
 
   /**
