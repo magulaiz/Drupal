@@ -91,7 +91,7 @@ class PagerManager implements PagerManagerInterface {
     // from the current request. In case of collision, the parameters passed
     // into this function take precedence.
     if ($current_query = $this->pagerParams->getQueryParameters()) {
-      $query = array_merge($current_query, $query);
+      $query = $query + $current_query;
     }
     return $query;
   }
