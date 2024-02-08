@@ -146,9 +146,14 @@ default:
 
 # Re-run the pipeline, but with Composer updates.
 'DEFAULT: Updated dependencies (PHP 8.2 MySQL 8)':
-  <<: [ *default-stage, *run-on-mr, *run-daily ]
-  when: manual
-  allow_failure: true
+  <<: *default-stage
+  # Run daily and allow manual runs on MRs.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
   variables:
     COMPOSER_UPDATE: "1"
     DAILY_TEST: "0"
