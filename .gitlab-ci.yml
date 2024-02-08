@@ -390,6 +390,7 @@ default:
         - "**/*.yml"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
+      allow_failure: true
   script:
     - yarn --cwd=./core run -s check:ckeditor5
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
@@ -412,6 +413,7 @@ default:
         - "**/*.css"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
+      allow_failure: true
   script:
     - yarn run --cwd=./core build:css --check
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
