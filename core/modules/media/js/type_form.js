@@ -35,12 +35,12 @@
         .find('#edit-language')
         .drupalSetSummary((context) => {
           const values = [];
-
-          values.push(
-            $(context).find(
-              '.js-form-item-language-configuration-langcode select option:selected',
-            )[0].textContent,
+          const selectElement = context.querySelector(
+            '..js-form-item-language-configuration-langcode select',
           );
+          const selectedOption =
+            selectElement.options[selectElement.selectedIndex];
+          values.push(selectedOption.textContent);
 
           $(context)
             .find('input:checked')

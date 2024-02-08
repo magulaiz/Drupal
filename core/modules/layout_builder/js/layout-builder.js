@@ -72,14 +72,18 @@
 
           // Only display categories containing visible links.
           $categories
-            .find(
+            .querySelectorAll(
               '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
             )
-            .hide();
+            .forEach(function (element) {
+              element.style.display = 'none';
+            });
 
           announce(
             formatPlural(
-              $categories.find('.js-layout-builder-block-link:visible').length,
+              $categories.find(
+                '.js-layout-builder-block-link:not([style*="display: none"])',
+              ).length,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),
