@@ -355,6 +355,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
@@ -384,6 +385,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - vendor/bin/phpcs --version
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     reports:
