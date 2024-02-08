@@ -206,7 +206,7 @@
 		var qx, a = this.formToArray(options.semantic, elements, options.filtering);
 
 		if (options.data) {
-			var optionsData = $.isFunction(options.data) ? options.data(a) : options.data;
+			var optionsData = typeof(options.data) === "function" ? options.data(a) : options.data;
 
 			options.extraData = optionsData;
 			qx = $.param(optionsData, traditional);
