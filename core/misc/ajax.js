@@ -816,21 +816,19 @@
       return;
     }
 
-    // Convert the possibly modified formValues back to a FormData object.
+    let dataString = ''
+    // Convert the possibly modified formValues to a data string for $.ajax().
     const formData = new FormData();
-    formValues.forEach(({ name, value }) => formData.append(name, value));
+    formValues.forEach(({ name, value }) => dataString += `${dataString.length ? '&' : ''}${name}=${value}`);
     if (options.extraData) {
       const entries = Object.entries(options.extraData);
-      entries.forEach(([name, value]) => formData.append(name, value));
+      entries.forEach(([name, value]) =>
+        dataString += `${dataString.length ? '&' : ''}${name}=${value}`
+      );
     }
-
     // Send the request.
-    //
-    // @todo figure out which of these are really necessary and where they
-    // should be set.
-    options.enctype = 'multipart/form-data';
     options.processData = false;
-    options.data = formData;
+    options.data = dataString;
     $.ajax(options);
 
     // @todo Keep for BC with the jQuery Form plugin, or remove it?
@@ -999,7 +997,12 @@
         if (ajax.$form.ajaxSubmit) {
           ajax.$form.ajaxSubmit(ajax.options);
         } else {
-          submitForm(element.form, ajax.options);
+          if (element.form) {
+            submitForm(element.form, ajax.options);
+          }
+          else if (element.tagName === 'FORM') {
+            submitForm(element, ajax.options);
+          }
         }
       } else {
         ajax.beforeSerialize(ajax.element, ajax.options);
