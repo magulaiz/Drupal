@@ -9,7 +9,8 @@ namespace Drupal\Core\Config;
  */
 enum DefaultConfigMode {
   case All;
-  case Install;
+  case InstallSimple;
+  case InstallEntities;
   case Optional;
   case SiteOptional;
 
@@ -21,8 +22,34 @@ enum DefaultConfigMode {
    */
   public function createInstallConfig(): bool {
     return match($this) {
-      DefaultConfigMode::All, DefaultConfigMode::Install => TRUE,
-      DefaultConfigMode::Optional, DefaultConfigMode::SiteOptional => FALSE,
+      DefaultConfigMode::All, DefaultConfigMode::InstallSimple, DefaultConfigMode::InstallEntities => TRUE,
+      default => FALSE,
+    };
+  }
+
+  /**
+   * Determines if simple config in /install directory should be created.
+   *
+   * @return bool
+   *   TRUE to create simple config in /install directory, FALSE if not.
+   */
+  public function createInstallSimpleConfig(): bool {
+    return match($this) {
+      DefaultConfigMode::All, DefaultConfigMode::InstallSimple => TRUE,
+      default => FALSE,
+    };
+  }
+
+  /**
+   * Determines if simple config in /install directory should be created.
+   *
+   * @return bool
+   *   TRUE to create simple config in /install directory, FALSE if not.
+   */
+  public function createInstallConfigEntities(): bool {
+    return match($this) {
+      DefaultConfigMode::All, DefaultConfigMode::InstallEntities => TRUE,
+      default => FALSE,
     };
   }
 
@@ -35,7 +62,7 @@ enum DefaultConfigMode {
   public function createOptionalConfig(): bool {
     return match($this) {
       DefaultConfigMode::All, DefaultConfigMode::Optional => TRUE,
-      DefaultConfigMode::Install, DefaultConfigMode::SiteOptional => FALSE,
+      default => FALSE,
     };
   }
 
@@ -49,7 +76,7 @@ enum DefaultConfigMode {
   public function createSiteOptionalConfig(): bool {
     return match($this) {
       DefaultConfigMode::All, DefaultConfigMode::SiteOptional => TRUE,
-      DefaultConfigMode::Install, DefaultConfigMode::Optional => FALSE,
+      default => FALSE,
     };
   }
 

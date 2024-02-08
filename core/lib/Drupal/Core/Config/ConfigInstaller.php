@@ -147,7 +147,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
             $config_to_create = array_diff_key($config_to_create, array_flip($existing_configuration));
           }
           if (!empty($config_to_create)) {
-            $this->createConfiguration($collection, $config_to_create);
+            $this->createConfiguration($collection, $config_to_create, $mode);
           }
         }
       }
@@ -338,8 +338,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The configuration collection.
    * @param array $config_to_create
    *   An array of configuration data to create, keyed by name.
+   * @param \Drupal\Core\Config\DefaultConfigMode $mode
+   *   (optional) The default config mode. Used to control the creation of
+   *   config entities when installing modules.
    */
-  protected function createConfiguration($collection, array $config_to_create) {
+  protected function createConfiguration($collection, array $config_to_create, ?DefaultConfigMode $mode = NULL) {
     // Order the configuration to install in the order of dependencies.
     if ($collection == StorageInterface::DEFAULT_COLLECTION) {
       $dependency_manager = new ConfigDependencyManager();
@@ -384,6 +387,13 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($this->isSyncing()) {
           continue;
         }
+
+        // The module installer installs simple configuration first, and then it
+        // installs configuration entities later.
+        if (isset($mode) && !$mode->createInstallConfigEntities()) {
+          continue;
+        }
+
         /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entity_storage */
         $entity_storage = $this->configManager
           ->getEntityTypeManager()
