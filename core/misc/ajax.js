@@ -950,7 +950,7 @@
       return a;
     }
 
-    return $(el).value().replace('/\r?\n/g;', '\r\n');
+    return el.value.replace('/\r?\n/g;', '\r\n');
   };
 
   /**
