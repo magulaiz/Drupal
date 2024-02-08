@@ -830,7 +830,7 @@
     }
     // Send the request.
     options.processData = false;
-    options.data = dataString;
+    options.data = encodeURIComponent(dataString);
     $.ajax(options);
 
     // @todo Keep for BC with the jQuery Form plugin, or remove it?
