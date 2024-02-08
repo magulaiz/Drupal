@@ -368,7 +368,7 @@ class AttachedAssetsTest extends KernelTestBase {
     // Verify that lighter JavaScript assets are rendered first.
     $this->assertLessThan(strpos($rendered_js, 'first.js'), strpos($rendered_js, 'lighter.js'));
     // Verify that a JavaScript file is rendered before jQuery.
-    $this->assertLessThan(strpos($rendered_js, 'misc/juery.form.js'), strpos($rendered_js, 'before-jquery.js'));
+    $this->assertLessThan(strpos($rendered_js, 'misc/jquery.form.js'), strpos($rendered_js, 'before-jquery.js'));
   }
 
   /**
