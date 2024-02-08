@@ -379,7 +379,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  # Run on push, or on MRs if JavaScript files have changed.
+  # Run on push, or on MRs if JavaScript or YAML files have changed.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -387,6 +387,7 @@ default:
         - core/package.json
         - core/yarn.lock
         - "**/*.js"
+        - "**/*.yml"
   script:
     - yarn --cwd=./core run -s check:ckeditor5
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
