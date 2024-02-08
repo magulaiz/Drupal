@@ -54,8 +54,8 @@
           $filterRows.each(toggleBlockEntry);
           Drupal.announce(
             Drupal.formatPlural(
-              $table.find('tr').each(function (row) {
-                return row.style.display !== 'none';
+              $table.find('tr').filter(function (row) {
+                return getComputedStyle(this).display !== 'none';
               }).length - 1,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',

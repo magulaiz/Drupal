@@ -71,11 +71,11 @@
           $filterLinks.each(toggleBlockEntry);
 
           // Only display categories containing visible links.
+          // eslint-disable-next-line jquery/no-sizzle
           $categories
-            .find('.js-layout-builder-category')
-            .filter((i, link) => {
-              return link.style.display === 'none';
-            })
+            .find(
+              '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
+            )
             .hide();
 
           announce(
