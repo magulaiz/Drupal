@@ -755,6 +755,7 @@
       $(element).trigger(ajax.elementSettings.event);
     }
   };
+
   /**
    * Submits a form via Ajax.
    *
@@ -835,6 +836,117 @@
     // @todo Keep for BC with the jQuery Form plugin, or remove it?
     $form.trigger('form-submit-notify', [$form, options]);
   }
+
+  /**
+   * Returns the value(s) of the element in the matched set. For example, consider the following form:
+   *
+   *	<form><fieldset>
+   *		<input name="A" type="text">
+   *		<input name="A" type="text">
+   *		<input name="B" type="checkbox" value="B1">
+   *		<input name="B" type="checkbox" value="B2">
+   *		<input name="C" type="radio" value="C1">
+   *		<input name="C" type="radio" value="C2">
+   *	</fieldset></form>
+   *
+   *	var v = $('input[type=text]').fieldValue();
+   *	// if no values are entered into the text inputs
+   *	v === ['','']
+   *	// if values entered into the text inputs are 'foo' and 'bar'
+   *	v === ['foo','bar']
+   *
+   *	var v = $('input[type=checkbox]').fieldValue();
+   *	// if neither checkbox is checked
+   *	v === undefined
+   *	// if both checkboxes are checked
+   *	v === ['B1', 'B2']
+   *
+   *	var v = $('input[type=radio]').fieldValue();
+   *	// if neither radio is checked
+   *	v === undefined
+   *	// if first radio is checked
+   *	v === ['C1']
+   *
+   * The successful argument controls whether or not the field element must be 'successful'
+   * (per http://www.w3.org/TR/html4/interact/forms.html#successful-controls).
+   * The default value of the successful argument is true. If this value is false the value(s)
+   * for each element is returned.
+   *
+   * Note: This method *always* returns an array. If no valid value can be determined the
+   *	array will be empty, otherwise it will contain one or more values.
+   */
+  $.fn.fieldValue = function(successful) {
+    for (var val = [], i = 0, max = this.length; i < max; i++) {
+      var el = this[i];
+      var v = $.fieldValue(el, successful);
+
+      if (v === null || typeof v === 'undefined' || (v.constructor === Array && !v.length)) {
+        continue;
+      }
+
+      if (v.constructor === Array) {
+        $.merge(val, v);
+      } else {
+        val.push(v);
+      }
+    }
+
+    return val;
+  };
+
+  /**
+   * Returns the value of the field element.
+   */
+  $.fieldValue = function(el, successful) {
+    var n = el.name, t = el.type, tag = el.tagName.toLowerCase();
+
+    if (typeof successful === 'undefined') {
+      successful = true;
+    }
+
+    /* eslint-disable no-mixed-operators */
+    if (successful && (!n || el.disabled || t === 'reset' || t === 'button' ||
+      (t === 'checkbox' || t === 'radio') && !el.checked ||
+      (t === 'submit' || t === 'image') && el.form && el.form.clk !== el ||
+      tag === 'select' && el.selectedIndex === -1)) {
+    /* eslint-enable no-mixed-operators */
+      return null;
+    }
+
+    if (tag === 'select') {
+      var index = el.selectedIndex;
+
+      if (index < 0) {
+        return null;
+      }
+
+      var a = [], ops = el.options;
+      var one = (t === 'select-one');
+      var max = (one ? index + 1 : ops.length);
+
+      for (var i = (one ? index : 0); i < max; i++) {
+        var op = ops[i];
+
+        if (op.selected && !op.disabled) {
+          var v = op.value;
+
+          if (!v) { // extra pain for IE...
+            v = (op.attributes && op.attributes.value && !(op.attributes.value.specified)) ? op.text : op.value;
+          }
+
+          if (one) {
+            return v;
+          }
+
+          a.push(v);
+        }
+      }
+
+      return a;
+    }
+
+    return $(el).val().replace(rCRLF, '\r\n');
+  };
 
   /**
    * Handle an event that triggers an Ajax response.
