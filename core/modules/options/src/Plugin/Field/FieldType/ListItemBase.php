@@ -125,6 +125,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         'id' => 'allowed-values-order',
         'data-field-list-table' => TRUE,
         'class' => ['allowed-values-table'],
+        'data-drag-orientation' => 'drag-y',
       ],
       '#tabledrag' => [
         [
