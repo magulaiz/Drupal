@@ -132,10 +132,31 @@ class ConfigInstaller implements ConfigInstallerInterface {
         // Gets profile storages to search for overrides if necessary.
         $profile_storages = $this->getProfileStorages($name);
 
-        // Gather information about all the supported collections.
-        $collection_info = $this->configManager->getConfigCollectionInfo();
-        foreach ($collection_info->getCollectionNames() as $collection) {
+        if ($mode === DefaultConfigMode::InstallEntities) {
+          // This is an optimization. If we're installing only config entities
+          // then we're only interested in the default collection.
+          $collections = [StorageInterface::DEFAULT_COLLECTION];
+        }
+        else {
+          // Gather information about all the supported collections.
+          $collections = $this->configManager->getConfigCollectionInfo()->getCollectionNames();
+        }
+
+        foreach ($collections as $collection) {
           $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storages);
+
+          if ($collection === StorageInterface::DEFAULT_COLLECTION && ($mode === DefaultConfigMode::InstallEntities || $mode === DefaultConfigMode::InstallSimple)) {
+            // Filter out config depending on the mode. The mode can be used to
+            // only install simple config or config entities.
+            $config_to_create = array_filter($config_to_create, function ($config_name) use ($mode) {
+              $is_config_entity = $this->configManager->getEntityTypeIdByName($config_name) !== NULL;
+              if ($is_config_entity) {
+                return $mode === DefaultConfigMode::InstallEntities;
+              }
+              return $mode === DefaultConfigMode::InstallSimple;
+            }, ARRAY_FILTER_USE_KEY);
+          }
+
           if ($name === $this->drupalGetProfile()) {
             // If we're installing a profile ensure simple configuration that
             // already exists is excluded as it will have already been written.
@@ -146,8 +167,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
             });
             $config_to_create = array_diff_key($config_to_create, array_flip($existing_configuration));
           }
+
           if (!empty($config_to_create)) {
-            $this->createConfiguration($collection, $config_to_create, $mode);
+            $this->createConfiguration($collection, $config_to_create);
           }
         }
       }
@@ -338,11 +360,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The configuration collection.
    * @param array $config_to_create
    *   An array of configuration data to create, keyed by name.
-   * @param \Drupal\Core\Config\DefaultConfigMode $mode
-   *   (optional) The default config mode. Used to control the creation of
-   *   config entities when installing modules.
    */
-  protected function createConfiguration($collection, array $config_to_create, ?DefaultConfigMode $mode = NULL) {
+  protected function createConfiguration($collection, array $config_to_create) {
     // Order the configuration to install in the order of dependencies.
     if ($collection == StorageInterface::DEFAULT_COLLECTION) {
       $dependency_manager = new ConfigDependencyManager();
@@ -385,12 +404,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
         // module has been enabled and before the config entity has been
         // imported.
         if ($this->isSyncing()) {
-          continue;
-        }
-
-        // The module installer installs simple configuration first, and then it
-        // installs configuration entities later.
-        if (isset($mode) && !$mode->createInstallConfigEntities()) {
           continue;
         }
 
