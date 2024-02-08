@@ -134,13 +134,14 @@ default:
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
-  # Run on MR, schedule, push and performance test.
+  # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
     - if: $PERFORMANCE_TEST == "1"
 
 # Special job for MRs for test-only checks.
