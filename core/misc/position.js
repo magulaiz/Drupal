@@ -54,7 +54,7 @@
         offset: { top: 0, left: 0 },
       };
     }
-    if (raw && raw === raw.window) {
+    if (!!raw && raw === raw.window) {
       return {
         width: elem.width(),
         height: elem.height(),
@@ -346,7 +346,8 @@
     },
     getWithinInfo(element) {
       const withinElement = $(element || window);
-      const isWindow = withinElement[0] && withinElement[0] === withinElement[0].window  ;
+      const isWindow =
+        !!withinElement[0] && withinElement[0] === withinElement[0].window;
       const isDocument = !!withinElement[0] && withinElement[0].nodeType === 9;
       const hasOffset = !isWindow && !isDocument;
       return {
