@@ -280,7 +280,6 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->assertValidationErrors([
       'field_type' => [
         "The 'invalid' plugin does not exist.",
-        // @todo I'm not sure this error should be here.
         "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'invalid'.",
       ],
     ]);
@@ -301,7 +300,6 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
       ->set('settings', ['handler' => 'non_existent']);
 
     $this->assertValidationErrors([
-      // @todo I'm not sure this field_type error should be here.
       'field_type' => "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'entity_reference'.",
       'settings.handler' => "The 'non_existent' plugin does not exist.",
     ]);
