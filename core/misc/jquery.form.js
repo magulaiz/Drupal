@@ -1123,7 +1123,7 @@
 			return a;
 		}
 
-		if ($.isFunction(filtering)) {
+		if (typeof(filtering) === "function") {
 			els = $.map(els, filtering);
 		}
 
