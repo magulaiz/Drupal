@@ -35,7 +35,7 @@ class DisplayTest extends ViewTestBase {
    */
   protected static $configSchemaCheckerExclusions = [
     // The availability of Views display plugins is validated by the config
-    // system, but one of our test cases saves view with an invalid display
+    // system, but one of our test cases saves a view with an invalid display
     // plugin ID, to see how Views handles that. Therefore, allow that one view
     // to be saved with an invalid display plugin without angering the config
     // schema checker.
