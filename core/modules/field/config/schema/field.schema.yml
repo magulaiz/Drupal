@@ -45,7 +45,9 @@ field.storage.*.*:
       label: 'Type'
       constraints:
         # @todo In principle, we should validate that this plugin was indeed provided by `module`.
-        PluginExists: plugin.manager.field.field_type
+        PluginExists:
+          manager: plugin.manager.field.field_type
+          interface: '\Drupal\Core\Field\FieldItemInterface'
     settings:
       type: field.storage_settings.[%parent.type]
     module:

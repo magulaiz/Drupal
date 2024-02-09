@@ -265,4 +265,46 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ]);
   }
 
+  /**
+   * Tests that the field type plugin's existence is validated.
+   */
+  public function testFieldTypePluginIsValidated(): void {
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its immutable properties.
+    $this->entity = $this->entity->createDuplicate()
+      // We need to clear the current settings, or we will get validation errors
+      // because the old settings are not supported by the new field type.
+      ->set('settings', [])
+      ->set('field_type', 'invalid');
+
+    $this->assertValidationErrors([
+      'field_type' => [
+        "The 'invalid' plugin does not exist.",
+        // @todo I'm not sure this error should be here.
+        "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'invalid'.",
+      ],
+    ]);
+  }
+
+  /**
+   * Tests that entity reference selection handler plugin IDs are validated.
+   */
+  public function testEntityReferenceSelectionHandlerIsValidated(): void {
+    $this->container->get('state')
+      ->set('field_test_disable_broken_entity_reference_handler', TRUE);
+    $this->enableModules(['field_test']);
+
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its immutable properties.
+    $this->entity = $this->entity->createDuplicate()
+      ->set('field_type', 'entity_reference')
+      ->set('settings', ['handler' => 'non_existent']);
+
+    $this->assertValidationErrors([
+      // @todo I'm not sure this field_type error should be here.
+      'field_type' => "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'entity_reference'.",
+      'settings.handler' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }

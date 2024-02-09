@@ -46,7 +46,7 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
     $fields = $this->container->get('entity_field.manager')
       ->getBaseFieldDefinitions('node');
 
-    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'one');
+    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition($fields['uuid'], 'one');
     $this->entity->save();
   }
 
@@ -93,6 +93,19 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
       'entity_type' => 'entity_test_with_bundle',
       'bundle' => 'another',
       'field_type' => 'email',
+    ]);
+  }
+
+  /**
+   * Tests that the field type plugin's existence is validated.
+   */
+  public function testFieldTypePluginIsValidated(): void {
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its field_type property to some invalid value.
+    $this->entity = $this->entity->createDuplicate()
+      ->set('field_type', 'invalid');
+    $this->assertValidationErrors([
+      'field_type' => "The 'invalid' plugin does not exist.",
     ]);
   }
 
