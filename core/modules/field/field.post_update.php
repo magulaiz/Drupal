@@ -20,7 +20,7 @@ function field_post_update_set_field_config_empty_description_to_null(array &$sa
         return TRUE;
       }
       return FALSE;
-  });
+    });
 }
 
 /**
