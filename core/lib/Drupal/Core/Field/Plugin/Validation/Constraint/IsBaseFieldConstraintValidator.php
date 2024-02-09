@@ -38,7 +38,7 @@ class IsBaseFieldConstraintValidator extends ConstraintValidator implements Cont
   public function validate(mixed $value, Constraint $constraint): void {
     assert($constraint instanceof IsBaseFieldConstraint);
 
-    if (!$value instanceof FieldDefinitionInterface::class) {
+    if (!$value instanceof FieldDefinitionInterface) {
       throw new UnexpectedTypeException($value, FieldDefinitionInterface::class);
     }
     $field_name = $value->getName();
