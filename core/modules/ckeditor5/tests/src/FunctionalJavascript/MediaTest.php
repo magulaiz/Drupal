@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -81,8 +83,11 @@ class MediaTest extends MediaTestBase {
 
     // Add lists to the editor.
     $settings['plugins']['ckeditor5_list'] = [
-      'reversed' => FALSE,
-      'startIndex' => FALSE,
+      'properties' => [
+        'reversed' => FALSE,
+        'startIndex' => FALSE,
+      ],
+      'multiBlock' => TRUE,
     ];
     $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], ['bulletedList', 'numberedList']);
     $editor->setSettings($settings);

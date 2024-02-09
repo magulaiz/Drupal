@@ -21,6 +21,7 @@ use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
  * Tools menu, checks their data, and deletes them using the UI.
  *
  * @group menu_ui
+ * @group #slow
  */
 class MenuUiTest extends BrowserTestBase {
 
@@ -696,7 +697,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Make sure menu shows up with new name in block addition.
     $default_theme = $this->config('system.theme')->get('default');
-    $this->drupalget('admin/structure/block/list/' . $default_theme);
+    $this->drupalGet('admin/structure/block/list/' . $default_theme);
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($edit['label']);
   }

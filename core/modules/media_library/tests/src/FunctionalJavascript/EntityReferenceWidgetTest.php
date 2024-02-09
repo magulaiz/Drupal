@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
@@ -210,7 +212,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->assertAnnounceContains('Showing Type Three media.');
     $this->switchToMediaType('One');
     $this->assertAnnounceContains('Showing Type One media.');
-    // Assert the links can be triggered by via the spacebar.
+    // Assert the links can be triggered by via the space bar.
     $assert_session->elementExists('named', ['link', 'Type Three'])->keyPress(32);
     $this->assertAnnounceContains('Showing Type Three media.');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
