@@ -5,7 +5,7 @@
 (function (Drupal, once) {
   const hidePass = Drupal.t('Hide password');
   const showPass = Drupal.t('Show password');
-  const unmaskClickHandler = function unmaskClickHandler(element, trigger) {
+  const unmaskClickHandler = (element, trigger) =>  {
     element.setAttribute(
       'type',
       element.getAttribute('type') === 'password' ? 'text' : 'password',
@@ -16,23 +16,11 @@
       'aria-checked',
       element.getAttribute('type') === 'password' ? 'true' : 'false',
     );
-    trigger.classList.add(
-      element.getAttribute('type') === 'password'
-        ? 'action-link--icon-show'
-        : 'action-link--icon-hide',
-    );
-    trigger.classList.remove(
-      element.getAttribute('type') === 'password'
-        ? 'action-link--icon-hide'
-        : 'action-link--icon-show',
-    );
-    element.setAttribute(
-      'aria-description',
-      element.getAttribute('type') === 'password'
-        ? 'Password is hidden'
-        : 'Password is visible',
-    );
-  };
+    const isPassword = element.getAttribute('type') === 'password';
+    trigger.classList.toggle('action-link--icon-show', !isPassword)
+    trigger.classList.toggle('action-link--icon-hide', isPassword)
+   const ariaDescription = element.getAttribute('type') === 'password' ? Drupal.t('Password is hidden') : Drupal.t('Password is visible');
+element.setAttribute('aria-description', ariaDescription);
   const unmaskButton = function unmaskButton(element) {
     const wrapperButton = Drupal.theme.buttonWrapper(element);
     element.insertAdjacentElement('afterend', wrapperButton);
