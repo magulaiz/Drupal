@@ -12,7 +12,7 @@ field.settings:
       constraints:
         NotNull: []
         Range:
-          min: 0
+          min: 1
 
 field.storage.*.*:
   type: config_entity
