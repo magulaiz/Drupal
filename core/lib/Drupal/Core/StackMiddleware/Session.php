@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\StackMiddleware;
 
-use Drupal\Core\Session\ResponseKeepSessionOpenInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,10 +57,6 @@ class Session implements HttpKernelInterface {
     }
 
     $result = $this->httpKernel->handle($request, $type, $catch);
-
-    if ($type === self::MAIN_REQUEST && !$result instanceof ResponseKeepSessionOpenInterface && PHP_SAPI !== 'cli' && $request->hasSession()) {
-      $request->getSession()->save();
-    }
 
     return $result;
   }
