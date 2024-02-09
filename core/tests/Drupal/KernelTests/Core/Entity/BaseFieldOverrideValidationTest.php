@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
@@ -106,6 +108,32 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
       ->set('field_type', 'invalid');
     $this->assertValidationErrors([
       'field_type' => "The 'invalid' plugin does not exist.",
+    ]);
+  }
+
+  /**
+   * Tests that base field overrides must be overriding, well, base fields.
+   */
+  public function testOverriddenFieldMustBeABaseField(): void {
+    $storage = FieldStorageConfig::create([
+      'entity_type' => 'node',
+      'field_name' => 'field_mail',
+      'type' => 'email',
+    ]);
+    $storage->save();
+
+    $field = FieldConfig::create([
+      'field_storage' => $storage,
+      'bundle' => 'one',
+    ]);
+    $field->save();
+
+    // The `field_name` property is immutable, so we need to clone the entity
+    // in order to change it.
+    $this->entity = $this->entity->createDuplicate()
+      ->set('field_name', 'field_mail');
+    $this->assertValidationErrors([
+      '' => "'field_mail' is not a base field of the node entity type.",
     ]);
   }
 

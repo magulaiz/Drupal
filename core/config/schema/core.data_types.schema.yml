@@ -565,10 +565,6 @@ core.base_field_override.*.*.*:
   label: 'Base field bundle override'
   constraints:
     FullyValidatable: ~
-    # @todo Implement this using \Drupal\Core\Entity\EntityFieldManagerInterface::getBaseFieldDefinitions()
-    #FieldIsBaseField:
-    #  entityType: entity_type
-    #  fieldName: field_name
 
 core.date_format.*:
   type: config_entity
