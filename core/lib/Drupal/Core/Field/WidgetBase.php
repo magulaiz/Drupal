@@ -174,6 +174,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $parents = $form['#parents'];
 
     // Determine the number of widgets to display.
+    $field_state = static::getWidgetState($parents, $field_name, $form_state);
+    $max = $field_state['items_count'];
     switch ($cardinality) {
       case FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED:
         $field_state = static::getWidgetState($parents, $field_name, $form_state);
@@ -182,7 +184,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
         break;
 
       default:
-        $max = $cardinality - 1;
+        $max = min($max, $cardinality - 1);
         break;
     }
 
@@ -234,7 +236,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           ];
 
           // Add 'remove' button, if not working with a programmed form.
-          if ($is_unlimited_not_programmed) {
+          $is_unlimited = $cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
+          if (($is_unlimited || $max < $cardinality - 1) && !$form_state->isProgrammed()) {
             $remove_button = [
               '#delta' => $delta,
               '#name' => str_replace('-', '_', $id_prefix) . "_{$delta}_remove_button",
@@ -321,6 +324,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $button = $form_state->getTriggeringElement();
 
     // Go one level up in the form, to the widgets container.
+    $cardinality = $element['#cardinality'];
+    $delta = $element['#max_delta'];
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     $field_name = $element['#field_name'];
     $parents = $element['#field_parents'];
@@ -346,12 +351,11 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
 
     // Ensure the widget allows adding additional items.
-    if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+    if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && $delta > $cardinality - 1) {
       return;
     }
 
     // Add a DIV around the delta receiving the Ajax effect.
-    $delta = $element['#max_delta'];
     // Construct an attribute to add to div for use as selector to set the focus on.
     $button_parent = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     $focus_attribute = 'data-drupal-selector="field-' . $button_parent['#field_name'] . '-more-focus-target"';
