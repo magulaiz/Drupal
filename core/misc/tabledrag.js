@@ -507,7 +507,7 @@
     // Add a class to the title link.
     $item.find('td:first-of-type').find('a').addClass('menu-item__link');
     // Create the handle.
-    const $handle = $(Drupal.theme('tableDragHandle'));
+    const $handle = $(Drupal.theme('tableDragHandle', this.dragOrientation));
     if (this.dragOrientation === 'drag-y') {
       $handle.addClass('tabledrag-handle-y');
     }
@@ -1771,8 +1771,9 @@
        * @return {string}
        *   HTML markup for a tableDrag handle.
        */
-      tableDragHandle() {
-        return `<a href="#" title="${Drupal.t('Drag to re-order')}"
+      tableDragHandle(dragOrientation = 'drag') {
+        const title = dragOrientation === 'drag-y' ? Drupal.t('Change order') : Drupal.t('Move in any direction');
+        return `<a href="#" title="${title}"
         class="tabledrag-handle"><div class="handle"></div></a>`;
       },
     },
