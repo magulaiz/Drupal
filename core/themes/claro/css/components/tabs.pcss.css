@@ -2,7 +2,7 @@
  * Tabs.
  */
 
-:root {
+ :root {
   /**
   * Tabs.
   */
@@ -124,11 +124,6 @@
     & .tabs__tab.is-active::before {
       border-bottom-left-radius: 0;
     }
-  }
-}
-.tabs--secondary {
-  & .tabs__tab:not(.is-active) {
-    display: block;
   }
 }
 .tabs.is-open > .tabs__tab {

@@ -18,14 +18,14 @@
 {%
   set classes = [
     'tabs__tab',
-    level == 'primary' ? 'js-tab',
+    'js-tab',
     is_active ? 'is-active',
     is_active ? 'js-active-tab',
   ]
 %}
 <li{{ attributes.addClass(classes) }}>
   {{ link }}
-  {% if is_active and level == 'primary' %}
+  {% if is_active  %}
     <button class="reset-appearance tabs__trigger" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
       {% include "@claro/../images/src/hamburger-menu.svg" %}
     </button>
