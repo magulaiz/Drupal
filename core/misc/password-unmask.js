@@ -17,8 +17,8 @@
       element.getAttribute('type') === 'password' ? 'true' : 'false',
     );
     const isPassword = element.getAttribute('type') === 'password';
-    trigger.classList.toggle('action-link--icon-show', !isPassword)
-    trigger.classList.toggle('action-link--icon-hide', isPassword)
+    trigger.classList.toggle('action-link--icon-show', !isPassword);
+    trigger.classList.toggle('action-link--icon-hide', isPassword);
     const ariaDescription =
       element.getAttribute('type') === 'password'
         ? Drupal.t('Password is hidden')
