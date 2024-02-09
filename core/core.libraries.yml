@@ -395,6 +395,7 @@ drupal.ajax:
     - core/drupalSettings
     - core/drupal.progress
     - core/once
+    - core/internal.jquery.form
     - core/tabbable
     - core/loadjs
     - core/drupal.message
