@@ -42,7 +42,7 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Tests that a various plugin IDs making up a view display are validated.
+   * Tests that the various plugin IDs making up a view display are validated.
    *
    * @param string ...$parents
    *   The array parents of the property of the view's default display which
