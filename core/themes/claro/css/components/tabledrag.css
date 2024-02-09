@@ -133,21 +133,21 @@ a.region-filter-control {
 }
 
 .js-input-filter-goto-element.has-block-results {
+  position: relative;
+  padding-right: 1.1875rem;
   cursor: pointer;
   color: #55565c;
-  padding-right: 1.1875rem;
-  position: relative;
 }
 
 .js-input-filter-goto-element.has-block-results::before {
-  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e") no-repeat center;
-  content: "";
+  position: absolute;
+  top: 0.1875rem;
+  right: 0;
   display: inline-block;
   width: var(--space-s);
   height: var(--space-s);
-  position: absolute;
-  right: 0;
-  top: 0.1875rem;
+  content: "";
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e") no-repeat center;
 }
 
 /* Make sure of the disabled block has the success style when filtered. */

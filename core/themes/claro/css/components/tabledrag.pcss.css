@@ -112,21 +112,21 @@ a.region-filter-control {
   font-style: italic;
 }
 .js-input-filter-goto-element.has-block-results {
+  position: relative;
+  padding-right: 19px;
   cursor: pointer;
   color: #55565c;
-  padding-right: 19px;
-  position: relative;
 }
 
 .js-input-filter-goto-element.has-block-results::before {
-  background: url(../../images/icons/545560/chevron-down.svg) no-repeat center;
-  content: "";
+  position: absolute;
+  top: 3px;
+  right: 0;
   display: inline-block;
   width: var(--space-s);
   height: var(--space-s);
-  position: absolute;
-  right: 0;
-  top: 3px;
+  content: "";
+  background: url(../../images/icons/545560/chevron-down.svg) no-repeat center;
 }
 
 /* Make sure of the disabled block has the success style when filtered. */
