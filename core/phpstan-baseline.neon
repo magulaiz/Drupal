@@ -345,11 +345,6 @@ parameters:
 			path: lib/Drupal/Core/Config/ExtensionInstallStorage.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Config\\\\TypedConfigManager\\:\\:replaceVariable\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Config/TypedConfigManager.php
-
-		-
 			message: """
 				#^Access to deprecated property \\$transactionLayers of class Drupal\\\\Core\\\\Database\\\\Connection\\:
 				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. The
