@@ -335,6 +335,7 @@ class GroupwiseMax extends RelationshipPluginBase {
         $part = '"' . str_replace('.', $this->subquery_namespace . '".', $part);
       }
     }
+
     return implode(' = ', $parts);
   }
 
