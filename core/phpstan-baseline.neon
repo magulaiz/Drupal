@@ -8718,16 +8718,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Test/TestSetupTraitTest.php
 
 		-
-			message: "#^@dataProvider provideCoreTests related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/TestSuiteBaseTest.php
-
-		-
-			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\Core\\\\Test\\\\StubTestSuiteBase via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/TestSuiteBaseTest.php
-
-		-
 			message: "#^@dataProvider extractCookiesDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/XdebugRequestTraitTest.php
@@ -8886,31 +8876,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/DrupalTestBrowser.php
-
-		-
-			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\BuildTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
-			count: 1
-			path: tests/TestSuites/BuildTestSuite.php
-
-		-
-			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalJavascriptTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
-			count: 1
-			path: tests/TestSuites/FunctionalJavascriptTestSuite.php
-
-		-
-			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
-			count: 1
-			path: tests/TestSuites/FunctionalTestSuite.php
-
-		-
-			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\KernelTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
-			count: 1
-			path: tests/TestSuites/KernelTestSuite.php
-
-		-
-			message: "#^Cannot instantiate class Drupal\\\\Tests\\\\TestSuites\\\\UnitTestSuite via private constructor PHPUnit\\\\Framework\\\\TestSuite\\:\\:__construct\\(\\)\\.$#"
-			count: 1
-			path: tests/TestSuites/UnitTestSuite.php
 
 		-
 			message: "#^@dataProvider hexCodes related method must be static in PHPUnit 10 and newer\\.$#"
