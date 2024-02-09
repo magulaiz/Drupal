@@ -22,8 +22,9 @@
    *   The click event.
    */
   function preventClick(event) {
+    const target = event.target.closest('.contextual-links');
     // Do not prevent contextual links.
-    if ($(event.target).closest('.contextual-links').length) {
+    if ($(target).length) {
       return;
     }
     event.preventDefault();
@@ -90,9 +91,10 @@
         $editables
           .not(contextualItemsSelector)
           .on('click.settingstray', (e) => {
+            const contextualEl = e.target.closest('.contextual');
             // Contextual links are allowed to function in Edit mode.
             if (
-              $(e.target).closest('.contextual').length ||
+              $(contextualEl).length ||
               !localStorage.getItem('Drupal.contextualToolbar.isViewing')
             ) {
               return;

@@ -17,10 +17,11 @@
    *   The placeholder element passed in as a parameter.
    */
   function hide($placeholder) {
+    const placeholder = $placeholder;
+    // Find the parent <li>.
+    const parentItem = placeholder.closest('.comment-new-comments');
     return (
-      $placeholder
-        // Find the parent <li>.
-        .closest('.comment-new-comments')
+      $(parentItem)
         // Find the preceding <li>, if any, and give it the 'last' class.
         .prev()
         .addClass('last')
@@ -50,10 +51,11 @@
    *   The placeholder element passed in as a parameter.
    */
   function show($placeholder) {
+    const placeholder = $placeholder;
+    // Find the parent <li>.
+    const parentItem = placeholder.closest('.comment-new-comments');
     return (
-      $placeholder
-        // Find the parent <li>.
-        .closest('.comment-new-comments')
+      $(parentItem)
         // Find the preceding <li>, if any, and remove its 'last' class, if any.
         .prev()
         .removeClass('last')
@@ -81,9 +83,8 @@
         10,
       );
       fieldName = $placeholder.attr('data-history-node-field-name');
-      const nodeID = $placeholder
-        .closest('[data-history-node-id]')
-        .attr('data-history-node-id');
+      const closestEl = placeholder.closest('[data-history-node-id]');
+      const nodeID = $(closestEl).attr('data-history-node-id');
       const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       // Queue this placeholder's "X new comments" link to be downloaded from
@@ -167,9 +168,8 @@
           $placeholder.attr('data-history-node-last-comment-timestamp'),
           10,
         );
-        const nodeID = $placeholder
-          .closest('[data-history-node-id]')
-          .attr('data-history-node-id');
+        const closestEl = placeholder.closest('[data-history-node-id]');
+        const nodeID = $(closestEl).attr('data-history-node-id');
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
           nodeIDs.push(nodeID);
           // Hide this placeholder link until it is certain we'll need it.

@@ -50,7 +50,8 @@
             sourcesConcat += ` ${item.textContent}`;
           });
           const textMatch = sourcesConcat.search(re) !== -1;
-          $(row).closest('tr').toggle(textMatch);
+          const closestRow = row.closest('tr');
+          $(closestRow).toggle(textMatch);
         }
         // Search over all rows and packages.
         $rowsAndDetails.show();
