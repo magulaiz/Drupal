@@ -4,7 +4,7 @@ namespace Drupal\Core\Field\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -38,13 +38,12 @@ class IsBaseFieldConstraintValidator extends ConstraintValidator implements Cont
   public function validate(mixed $value, Constraint $constraint): void {
     assert($constraint instanceof IsBaseFieldConstraint);
 
-    if (!$value instanceof BaseFieldOverride) {
-      throw new UnexpectedTypeException($value, BaseFieldOverride::class);
+    if (!$value instanceof FieldDefinitionInterface::class) {
+      throw new UnexpectedTypeException($value, FieldDefinitionInterface::class);
     }
     $field_name = $value->getName();
     $entity_type_id = $value->getTargetEntityTypeId();
-    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
-    if (!array_key_exists($field_name, $base_fields)) {
+    if (!array_key_exists($field_name, $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id))) {
       $this->context->addViolation($constraint->message, [
         '@field_name' => $field_name,
         '@entity_type' => $entity_type_id,
