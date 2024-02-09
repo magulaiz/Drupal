@@ -53,11 +53,10 @@
   Drupal.theme.buttonWrapper = (element) => {
     const wrapperButton = document.createElement('button');
     wrapperButton.setAttribute('type', 'button');
-    wrapperButton.setAttribute('class', 'link password-wrapper');
     wrapperButton.setAttribute('style', 'margin-inline-start:10px');
     wrapperButton.setAttribute(
       'class',
-      'action-link action-link--extrasmall action-link--icon-show toggle-password',
+      'link password-wrapper action-link action-link--extrasmall action-link--icon-show toggle-password',
     );
     wrapperButton.setAttribute(
       'aria-checked',
