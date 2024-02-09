@@ -95,6 +95,7 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
       'entity_type' => 'entity_test_with_bundle',
       'bundle' => 'another',
       'field_type' => 'email',
+      'field_name' => 'title',
     ]);
   }
 
