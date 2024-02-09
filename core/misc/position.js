@@ -346,7 +346,7 @@
     },
     getWithinInfo(element) {
       const withinElement = $(element || window);
-      const isWindow = $.isWindow(withinElement[0]);
+      const isWindow = withinElement[0] && withinElement[0] === withinElement[0].window  ;
       const isDocument = !!withinElement[0] && withinElement[0].nodeType === 9;
       const hasOffset = !isWindow && !isDocument;
       return {
