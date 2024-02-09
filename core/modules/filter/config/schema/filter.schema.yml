@@ -6,6 +6,7 @@ filter.settings:
   constraints:
     FullyValidatable: ~
   mapping:
+    # @todo Simple config cannot have dependencies on any other config. Remove this in https://www.drupal.org/project/drupal/issues/1932544.
     fallback_format:
       type: machine_name
       label: 'Fallback text format'
@@ -14,9 +15,6 @@ filter.settings:
       constraints:
         Length:
           max: 255
-        # TRICKY: simple config cannot have dependencies on any other config
-        #ConfigExists:
-        #  prefix: filter.format.
     always_show_fallback_choice:
       type: boolean
       label: 'Always show fallback choice'
