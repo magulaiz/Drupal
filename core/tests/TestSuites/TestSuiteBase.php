@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\TestSuites;
 
 use Drupal\Core\Test\TestDiscovery;
@@ -7,8 +9,18 @@ use PHPUnit\Framework\TestSuite;
 
 /**
  * Base class for Drupal test suites.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+ *   replacement and test discovery will be handled differently in PHPUnit 10.
+ *
+ * @see https://www.drupal.org/node/3405829
  */
 abstract class TestSuiteBase extends TestSuite {
+
+  public function __construct($theClass = '', string $name = '') {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement and test discovery will be handled differently in PHPUnit 10. See https://www.drupal.org/node/3405829', E_USER_DEPRECATED);
+    parent::__construct($theClass, $name);
+  }
 
   /**
    * Finds extensions in a Drupal installation.
