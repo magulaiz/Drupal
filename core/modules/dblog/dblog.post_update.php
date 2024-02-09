@@ -8,7 +8,7 @@
 /**
  * Ensures the `dblog.settings` config has a langcode.
  */
-function dblog_add_langcode_to_settings(): void {
+function dblog_post_update_add_langcode_to_settings(): void {
   $config = \Drupal::configFactory()->getEditable('dblog.settings');
   if ($config->get('langcode')) {
     return;
