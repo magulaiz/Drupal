@@ -363,6 +363,14 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     if (isset($this->definition['field_name']) && isset($base_fields[$this->definition['field_name']])) {
       return $base_fields[$this->definition['field_name']]->getFieldStorageDefinition();
     }
+
+    if (isset($this->definition['field_name']) && isset($this->definition['bundle'])) {
+      $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $this->definition['bundle']);
+      if (isset($bundle_fields[$this->definition['field_name']])) {
+        return $bundle_fields[$this->definition['field_name']]->getFieldStorageDefinition();
+      }
+    }
+
   }
 
   /**

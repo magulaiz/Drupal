@@ -131,6 +131,16 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     if (!isset($this->fieldStorageDefinitions)) {
       $this->fieldStorageDefinitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType->id());
     }
+
+    if ($this->entityType->hasKey('bundle')) {
+      $bundle_field_definitions = [];
+      foreach ($this->entityTypeBundleInfo->getBundleInfo($this->entityType->id()) as $bundle_id => $bundle_info) {
+        $bundle_field_definitions += $this->entityFieldManager->getFieldDefinitions($this->entityType->id(), $bundle_id);
+      }
+
+      $this->fieldStorageDefinitions += $bundle_field_definitions;
+    }
+
     return $this->fieldStorageDefinitions;
   }
 
@@ -478,6 +488,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $table_data = $table_data ?: [];
       $table_data += [$schema_field_name => []];
       $table_data[$schema_field_name] = NestedArray::mergeDeep($table_data[$schema_field_name], $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition));
+
       $table_data[$schema_field_name]['entity field'] = $field_name;
       $first = FALSE;
     }
@@ -612,6 +623,14 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $process_method = 'processViewsDataFor' . Container::camelize($field_type);
     if (method_exists($this, $process_method)) {
       $this->{$process_method}($table, $field_definition, $views_field, $column_name);
+    }
+
+    $target_bundle = $field_definition->getTargetBundle();
+    if (!empty($target_bundle)) {
+      $views_field['field']['bundle'] = $field_definition->getTargetBundle();
+      $views_field['filter']['bundle'] = $field_definition->getTargetBundle();
+      $views_field['sort']['bundle'] = $field_definition->getTargetBundle();
+      $views_field['argument']['bundle'] = $field_definition->getTargetBundle();
     }
 
     return $views_field;
