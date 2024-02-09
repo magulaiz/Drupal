@@ -1772,7 +1772,10 @@
        *   HTML markup for a tableDrag handle.
        */
       tableDragHandle(dragOrientation = 'drag') {
-        const title = dragOrientation === 'drag-y' ? Drupal.t('Change order') : Drupal.t('Move in any direction');
+        const title =
+          dragOrientation === 'drag-y'
+            ? Drupal.t('Change order')
+            : Drupal.t('Move in any direction');
         return `<a href="#" title="${title}"
         class="tabledrag-handle"><div class="handle"></div></a>`;
       },
