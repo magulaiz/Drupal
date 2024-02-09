@@ -54,7 +54,7 @@
         offset: { top: 0, left: 0 },
       };
     }
-    if ($.isWindow(raw)) {
+    if (raw && raw === raw.window) {
       return {
         width: elem.width(),
         height: elem.height(),
