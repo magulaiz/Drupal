@@ -293,17 +293,7 @@ class NodeViewsData extends EntityViewsData {
             'left_field' => 'nid',
             'field' => 'sid',
             'table' => 'search_index',
-            'extra' => [
-              [
-                'field' => 'type',
-                'value' => 'node_search',
-                'operator' => '=',
-              ],
-              [
-                'field' => 'langcode',
-                'field2' => 'langcode',
-              ],
-            ],
+            'extra' => "node_search_index.type = 'node_search' AND node_search_index.langcode = node_field_data.langcode",
           ],
         ];
 
@@ -320,18 +310,7 @@ class NodeViewsData extends EntityViewsData {
             'left_table' => 'node_search_index',
             'field' => 'sid',
             'table' => 'search_dataset',
-            'extra' => [
-              [
-                'field' => 'type',
-                'field2' => 'type',
-                'operator' => '=',
-              ],
-              [
-                'field' => 'langcode',
-                'field2' => 'langcode',
-                'operator' => '=',
-              ],
-            ],
+            'extra' => 'node_search_index.type = node_search_dataset.type AND node_search_index.langcode = node_search_dataset.langcode',
             'type' => 'INNER',
           ],
         ];
