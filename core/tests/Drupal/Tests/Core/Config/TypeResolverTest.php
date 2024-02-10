@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class TypeResolverTest extends UnitTestCase {
 
   /**
-   * @dataProvider provideInvalidTypes
+   * @dataProvider providerInvalidTypes
    */
   public function testInvalidType($name, $message, $data = []): void {
     $this->expectException(\LogicException::class);
@@ -22,7 +22,7 @@ class TypeResolverTest extends UnitTestCase {
     TypeResolver::resolveDynamicTypeName($name, $data);
   }
 
-  public function provideInvalidTypes() {
+  public function providerInvalidTypes() {
     return [
       'invalid %variable' => [
         '[foo.%bar.qux]',
