@@ -148,6 +148,9 @@ class Condition implements ConditionInterface, \Countable {
    *   If passed invalid arguments, such as an empty array as $value.
    */
   public function compare(string $field, string $field2, ?string $operator = '=') {
+    if (empty($operator)) {
+      $operator = '=';
+    }
     if (!in_array($operator, ['=', '<', '>', '>=', '<=', '<>'], TRUE)) {
       throw new InvalidQueryException(sprintf("In a query compare '%s %s %s' the operator must be one of the following: '=', '<', '>', '>=', '<=', '<>'.", $field, $operator, $field2));
     }
@@ -176,7 +179,7 @@ class Condition implements ConditionInterface, \Countable {
   public function resolveAlias(string $placeholder, string $alias): void {
     foreach ($this->conditions as &$condition) {
       if (isset($condition['field']) && $condition['field'] instanceof ConditionInterface) {
-        $condition['field']->updateAliasPlaceholder($placeholder, $alias);
+        $condition['field']->resolveAlias($placeholder, $alias);
       }
       else {
         if (isset($condition['field'])) {
@@ -287,13 +290,7 @@ class Condition implements ConditionInterface, \Countable {
           // @see ConditionInterface::condition() method (and thus have the
           // default value as defined over there) it is assumed to be a valid
           // condition on its own: ignore the operator and value parts.
-          $ignore_operator = $condition['operator'] === '=' && $condition['value'] === NULL;
-        }
-        elseif (isset($condition['field2'])) {
-          // The key field2 is only set when we are comparing 2 fields with each
-          // other.
-          $condition_fragments[] = trim(implode(' ', [$connection->escapeField($condition['field']), $condition['operator'], $connection->escapeField($condition['field2'])]));
-          continue;
+          $ignore_operator = ($condition['operator'] === '=' && $condition['value'] === NULL) || ($condition['operator'] === NULL && $condition['value'] === []);
         }
         elseif (!isset($condition['operator'])) {
           // Left hand part is a literal string added with the
@@ -356,7 +353,12 @@ class Condition implements ConditionInterface, \Countable {
 
         // Process value.
         $value_fragment = '';
-        if ($operator['use_value']) {
+        if (isset($condition['field2'])) {
+          // The key field2 is only set when we are comparing two fields with each
+          // other. The value part of the condition will be the second field.
+          $value_fragment = $connection->escapeField($condition['field2']);
+        }
+        elseif ($operator['use_value']) {
           // For simplicity, we first convert to an array, so that we can handle
           // the single and multi value cases the same.
           if (!is_array($condition['value'])) {
