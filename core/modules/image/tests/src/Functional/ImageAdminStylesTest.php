@@ -91,7 +91,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'image_scale' => [
         'width' => 110,
         'height' => 111,
-        'upscale' => 1,
+        'upscale' => TRUE,
       ],
       'image_scale_and_crop' => [
         'width' => 120,
@@ -107,7 +107,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       ],
       'image_rotate' => [
         'degrees' => 5,
-        'random' => 1,
+        'random' => TRUE,
         'bgcolor' => '#FFFF00',
       ],
     ];
@@ -266,7 +266,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Additional test on Rotate effect, for transparent background.
     $edit = [
       'data[degrees]' => 5,
-      'data[random]' => 0,
+      'data[random]' => FALSE,
       'data[bgcolor]' => '',
     ];
     $this->drupalGet($style_path);

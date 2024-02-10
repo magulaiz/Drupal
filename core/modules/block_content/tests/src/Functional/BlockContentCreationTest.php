@@ -103,7 +103,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Set test_view_mode as a custom display to be available on the list.
     $this->drupalGet('admin/structure/block-content/manage/basic/display');
     $custom_view_mode = [
-      'display_modes_custom[test_view_mode]' => 1,
+      'display_modes_custom[test_view_mode]' => TRUE,
     ];
     $this->submitForm($custom_view_mode, 'Save');
 

@@ -215,7 +215,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
 
     // Enable language selector on the page edit form.
     $edit = [
-      'language_configuration[language_alterable]' => 1,
+      'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save');

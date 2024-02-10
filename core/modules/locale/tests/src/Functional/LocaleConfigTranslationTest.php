@@ -144,7 +144,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Enable the image module.
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[image][enable]' => "1"], 'Install');
+    $this->submitForm(['modules[image][enable]' => TRUE], 'Install');
     $this->rebuildContainer();
 
     $string = $this->storage->findString(['source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration']);
@@ -191,7 +191,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Uninstall the module.
     $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[image]' => "image"], 'Uninstall');
+    $this->submitForm(['uninstall[image]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
 
     // Ensure that the translated configuration has been removed.
@@ -233,13 +233,13 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertNodeConfig(FALSE, FALSE);
     // Enable the node module.
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[node][enable]' => "1"], 'Install');
+    $this->submitForm(['modules[node][enable]' => TRUE], 'Install');
     $this->submitForm([], 'Continue');
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, FALSE);
     // Enable the views module (which node provides some optional config for).
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[views][enable]' => "1"], 'Install');
+    $this->submitForm(['modules[views][enable]' => TRUE], 'Install');
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, TRUE);
   }

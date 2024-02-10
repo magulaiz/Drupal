@@ -71,7 +71,7 @@ class FilterSecurityTest extends BrowserTestBase {
 
     // Enable the filter_test_replace filter.
     $edit = [
-      'filters[filter_test_replace][status]' => 1,
+      'filters[filter_test_replace][status]' => TRUE,
     ];
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $this->submitForm($edit, 'Save configuration');

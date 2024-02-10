@@ -81,7 +81,7 @@ class LocaleExportTest extends BrowserTestBase {
     $this->submitForm([
       'langcode' => 'fr',
       'files[file]' => $name,
-      'customized' => 1,
+      'customized' => TRUE,
     ], 'Import');
     $file_system->unlink($name);
 

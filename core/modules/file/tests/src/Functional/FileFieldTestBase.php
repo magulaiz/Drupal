@@ -106,7 +106,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    *   A numeric node id to upload files to an existing node, or a string
    *   indicating the desired bundle for a new node.
    * @param bool $new_revision
-   *   The revision number.
+   *   Whether a new revision should be made.
    * @param array $extras
    *   Additional values when a new node is created.
    *
@@ -128,7 +128,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    *   A numeric node id to upload files to an existing node, or a string
    *   indicating the desired bundle for a new node.
    * @param bool $new_revision
-   *   The revision number.
+   *   Whether a new revision should be made.
    * @param array $extras
    *   Additional values when a new node is created.
    *
@@ -138,7 +138,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   public function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
-      'revision' => (string) (int) $new_revision,
+      'revision' => $new_revision,
     ];
 
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -194,7 +194,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    */
   public function removeNodeFile($nid, $new_revision = TRUE) {
     $edit = [
-      'revision' => (string) (int) $new_revision,
+      'revision' => $new_revision,
     ];
 
     $this->drupalGet('node/' . $nid . '/edit');
@@ -208,7 +208,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   public function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = [
       'files[' . $field_name . '_0]' => \Drupal::service('file_system')->realpath($file->getFileUri()),
-      'revision' => (string) (int) $new_revision,
+      'revision' => $new_revision,
     ];
 
     $this->drupalGet('node/' . $nid . '/edit');

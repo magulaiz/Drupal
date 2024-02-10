@@ -201,7 +201,7 @@ class BreadcrumbTest extends BrowserTestBase {
         'type' => $type,
         'title' => $title,
         'menu' => [
-          'enabled' => 1,
+          'enabled' => TRUE,
           'title' => 'Parent ' . $title,
           'description' => '',
           'menu_name' => $menu,
@@ -268,7 +268,7 @@ class BreadcrumbTest extends BrowserTestBase {
         'title[0][value]' => "$name link",
         'link[0][uri]' => "/taxonomy/term/{$term->id()}",
         'menu_parent' => "$menu:{$parent_mlid}",
-        'enabled[value]' => 1,
+        'enabled[value]' => TRUE,
       ];
       $this->drupalGet("admin/structure/menu/manage/{$menu}/add");
       $this->submitForm($edit, 'Save');

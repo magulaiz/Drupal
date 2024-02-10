@@ -61,7 +61,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
     $edit = [
       'title[0][value]' => 'a',
       'promote[value]' => FALSE,
-      'sticky[value]' => 1,
+      'sticky[value]' => TRUE,
       "{$this->fieldName}[0][value]" => $this->randomString(32),
     ];
     $this->drupalGet('node/add/page');

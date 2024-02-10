@@ -70,7 +70,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
       'image_scale' => [
         'data[width]' => 110,
         'data[height]' => 111,
-        'data[upscale]' => 1,
+        'data[upscale]' => TRUE,
       ],
     ];
 

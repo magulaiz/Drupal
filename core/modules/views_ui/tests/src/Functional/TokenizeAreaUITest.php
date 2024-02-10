@@ -38,11 +38,11 @@ class TokenizeAreaUITest extends UITestBase {
 
     // Add a global NULL argument to the view for testing argument tokens.
     $this->drupalGet("admin/structure/views/nojs/add-handler/{$id}/page_1/argument");
-    $this->submitForm(['name[views.null]' => 1], 'Add and configure contextual filters');
+    $this->submitForm(['name[views.null]' => TRUE], 'Add and configure contextual filters');
     $this->submitForm([], 'Apply');
 
     $this->drupalGet("admin/structure/views/nojs/add-handler/{$id}/page_1/header");
-    $this->submitForm(['name[views.area]' => 'views.area'], 'Add and configure header');
+    $this->submitForm(['name[views.area]' => TRUE], 'Add and configure header');
     // Test that field tokens are shown.
     $this->assertSession()->pageTextContains('{{ title }} == Content: Title');
     // Test that argument tokens are shown.

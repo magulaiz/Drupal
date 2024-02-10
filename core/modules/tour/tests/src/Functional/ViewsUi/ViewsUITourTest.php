@@ -58,7 +58,7 @@ class ViewsUITourTest extends TourTestBase {
     // display.
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
@@ -98,7 +98,7 @@ class ViewsUITourTest extends TourTestBase {
     // display.
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomMachineName(16);
     // Load the page in dutch.
     $this->drupalGet($langcode . '/admin/structure/views/add');

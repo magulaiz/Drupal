@@ -159,7 +159,7 @@ class TaggedWithTest extends WizardTestBase {
     $view1['id'] = $this->randomMachineName(16);
     $view1['description'] = $this->randomMachineName(16);
     $view1['show[tagged_with]'] = 'tag1';
-    $view1['page[create]'] = 1;
+    $view1['page[create]'] = TRUE;
     $view1['page[title]'] = $this->randomMachineName(16);
     $view1['page[path]'] = $this->randomMachineName(16);
     $this->submitForm($view1, 'Save and edit');
@@ -182,7 +182,7 @@ class TaggedWithTest extends WizardTestBase {
     $view2['id'] = $this->randomMachineName(16);
     $view2['description'] = $this->randomMachineName(16);
     $view2['show[tagged_with]'] = 'tag2';
-    $view2['page[create]'] = 1;
+    $view2['page[create]'] = TRUE;
     $view2['page[title]'] = $this->randomMachineName(16);
     $view2['page[path]'] = $this->randomMachineName(16);
     $this->submitForm($view2, 'Save and edit');

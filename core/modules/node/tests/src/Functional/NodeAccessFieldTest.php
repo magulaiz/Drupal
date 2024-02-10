@@ -107,7 +107,7 @@ class NodeAccessFieldTest extends NodeTestBase {
 
     // Modify the field default as the content admin.
     $edit = [
-      'set_default_value' => '1',
+      'set_default_value' => TRUE,
     ];
     $default = 'Sometimes words have two meanings';
     $edit["default_value_input[{$this->fieldName}][0][value]"] = $default;

@@ -42,7 +42,7 @@ class DependencyTest extends ModuleTestBase {
   public function testEnableWithoutDependency() {
     // Attempt to enable Content Translation without Language enabled.
     $edit = [];
-    $edit['modules[content_translation][enable]'] = 'content_translation';
+    $edit['modules[content_translation][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Some required modules must be installed');
@@ -147,8 +147,8 @@ class DependencyTest extends ModuleTestBase {
     $this->assertSession()->pageTextContains('System no module version test');
 
     // Ensure the modules can actually be installed.
-    $edit['modules[system_no_module_version_test][enable]'] = 'system_no_module_version_test';
-    $edit['modules[system_no_module_version_dependency_test][enable]'] = 'system_no_module_version_dependency_test';
+    $edit['modules[system_no_module_version_test][enable]'] = TRUE;
+    $edit['modules[system_no_module_version_dependency_test][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('2 modules have been installed: System no module version dependency test, System no module version test.');
@@ -185,8 +185,8 @@ class DependencyTest extends ModuleTestBase {
     $assert_session->fieldEnabled('modules[system_core_semver_test][enable]');
 
     // Ensure the modules can actually be installed.
-    $edit['modules[common_test][enable]'] = 'common_test';
-    $edit['modules[system_core_semver_test][enable]'] = 'system_core_semver_test';
+    $edit['modules[common_test][enable]'] = TRUE;
+    $edit['modules[system_core_semver_test][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertModules(['common_test', 'system_core_semver_test'], TRUE);
@@ -218,8 +218,8 @@ class DependencyTest extends ModuleTestBase {
 
     // Attempt to install both modules at the same time.
     $edit = [];
-    $edit['modules[requirements1_test][enable]'] = 'requirements1_test';
-    $edit['modules[requirements2_test][enable]'] = 'requirements2_test';
+    $edit['modules[requirements1_test][enable]'] = TRUE;
+    $edit['modules[requirements2_test][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
 
@@ -251,7 +251,7 @@ class DependencyTest extends ModuleTestBase {
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
     $edit = [];
-    $edit['modules[dblog][enable]'] = 'dblog';
+    $edit['modules[dblog][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertModules(['dblog'], FALSE);
@@ -259,8 +259,8 @@ class DependencyTest extends ModuleTestBase {
     // message.
     $this->assertSession()->pageTextContains('You must install the Configuration Manager, Help modules to install Database Logging.');
 
-    $edit['modules[config][enable]'] = 'config';
-    $edit['modules[help][enable]'] = 'help';
+    $edit['modules[config][enable]'] = TRUE;
+    $edit['modules[help][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertModules(['dblog', 'config', 'help'], TRUE);

@@ -330,7 +330,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Enable a module.
     $edit = [
-      'modules[locale_test_translate][enable]' => 'locale_test_translate',
+      'modules[locale_test_translate][enable]' => TRUE,
     ];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
@@ -341,7 +341,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertTranslation('Tuesday', 'Dienstag', 'de');
 
     $edit = [
-      'uninstall[locale_test_translate]' => 1,
+      'uninstall[locale_test_translate]' => TRUE,
     ];
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
@@ -367,7 +367,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Enable a module.
     $edit = [
-      'modules[locale_test_translate][enable]' => 'locale_test_translate',
+      'modules[locale_test_translate][enable]' => TRUE,
     ];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
@@ -425,7 +425,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Enable a module.
     $edit = [
-      'modules[locale_test_translate][enable]' => 'locale_test_translate',
+      'modules[locale_test_translate][enable]' => TRUE,
     ];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');

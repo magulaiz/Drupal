@@ -35,7 +35,7 @@ class UserPermissionsAdminTest extends BrowserTestBase {
 
     // Add a permission that is near the start of the alphabet.
     $this->submitForm([
-      'test_role[change own username]' => 1,
+      'test_role[change own username]' => TRUE,
     ], 'Save permissions');
 
     // Check that permissions are sorted alphabetically.
@@ -50,7 +50,7 @@ class UserPermissionsAdminTest extends BrowserTestBase {
     // Remove the first permission, resulting in a single permission in the first
     // key of the array.
     $this->submitForm([
-      'test_role[change own username]' => 0,
+      'test_role[change own username]' => FALSE,
     ], 'Save permissions');
     /** @var \Drupal\user\Entity\Role $role */
     $role = $storage->loadUnchanged($role->id());

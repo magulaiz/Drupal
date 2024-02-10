@@ -40,7 +40,7 @@ class SortingTest extends WizardTestBase {
     $view1['id'] = $this->randomMachineName(16);
     $view1['description'] = $this->randomMachineName(16);
     $view1['show[sort]'] = 'node_field_data-created:ASC';
-    $view1['page[create]'] = 1;
+    $view1['page[create]'] = TRUE;
     $view1['page[title]'] = $this->randomMachineName(16);
     $view1['page[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
@@ -67,7 +67,7 @@ class SortingTest extends WizardTestBase {
     $view2['id'] = $this->randomMachineName(16);
     $view2['description'] = $this->randomMachineName(16);
     $view2['show[sort]'] = 'node_field_data-created:DESC';
-    $view2['page[create]'] = 1;
+    $view2['page[create]'] = TRUE;
     $view2['page[title]'] = $this->randomMachineName(16);
     $view2['page[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');

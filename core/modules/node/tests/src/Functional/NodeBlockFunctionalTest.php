@@ -150,7 +150,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $edit = [
       'id' => $this->randomMachineName(),
       'region' => 'sidebar_first',
-      'visibility[entity_bundle:node][bundles][article]' => 'article',
+      'visibility[entity_bundle:node][bundles][article]' => TRUE,
     ];
     $this->submitForm($edit, 'Save block');
 

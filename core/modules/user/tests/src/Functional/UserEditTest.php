@@ -222,7 +222,7 @@ class UserEditTest extends BrowserTestBase {
 
     // Enable translation for user accounts.
     $edit = [
-      'language[content_translation]' => 1,
+      'language[content_translation]' => TRUE,
     ];
     $this->drupalGet('admin/config/people/accounts');
     $this->submitForm($edit, 'Save configuration');

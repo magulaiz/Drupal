@@ -266,7 +266,7 @@ class TextFieldTest extends StringFieldTest {
     // Change field to allow only one format.
     $path = "entity_test/structure/entity_test/fields/entity_test.entity_test.$field_name";
     $this->drupalGet($path);
-    $this->submitForm(["settings[allowed_formats][{$format1->id()}]" => $format1->id()], 'Save settings');
+    $this->submitForm(["settings[allowed_formats][{$format1->id()}]" => TRUE], 'Save settings');
     $this->drupalGet($path);
     // Display the creation form.
     $this->drupalLogin($this->webUser);

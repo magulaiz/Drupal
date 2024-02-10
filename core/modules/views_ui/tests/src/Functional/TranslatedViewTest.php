@@ -109,7 +109,7 @@ class TranslatedViewTest extends UITestBase {
       'override[dropdown]' => 'block_1',
       'options[type]' => 'string',
       'options[alter][path]' => '/node',
-      'options[alter][make_link]' => 1,
+      'options[alter][make_link]' => TRUE,
     ];
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');

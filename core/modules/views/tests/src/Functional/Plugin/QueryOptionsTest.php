@@ -51,7 +51,7 @@ class QueryOptionsTest extends ViewTestBase {
     $this->assertSession()->checkboxNotChecked('query[options][distinct]');
     $edit = [
       'override[dropdown]' => 'page_1',
-      'query[options][distinct]' => 1,
+      'query[options][distinct]' => TRUE,
     ];
     $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/query');

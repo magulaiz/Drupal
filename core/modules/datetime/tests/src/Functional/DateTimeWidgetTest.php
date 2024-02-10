@@ -64,7 +64,7 @@ class DateTimeWidgetTest extends DateTestBase {
 
     // Set now as default_value.
     $edit = [
-      'set_default_value' => '1',
+      'set_default_value' => TRUE,
       'default_value_input[default_date_type]' => 'now',
     ];
     $this->drupalGet('admin/structure/types/manage/date_only_content/fields/node.date_only_content.field_date_only');

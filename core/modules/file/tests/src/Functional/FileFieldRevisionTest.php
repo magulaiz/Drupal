@@ -76,7 +76,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Save a new version of the node without any changes.
     // Check that the file is still the same as the previous revision.
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->submitForm(['revision' => '1'], 'Save');
+    $this->submitForm(['revision' => TRUE], 'Save');
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r3 = File::load($node->{$field_name}->target_id);

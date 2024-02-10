@@ -314,7 +314,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $field_name = 'field_user_reference';
 
     $field_edit = [
-      'set_default_value' => '1',
+      'set_default_value' => TRUE,
       "default_value_input[$field_name][0][target_id]" => $this->adminUser->label() . ' (' . $this->adminUser->id() . ')',
     ];
     $this->fieldUIAddNewField($bundle_path, 'user_reference', NULL, 'field_ui:entity_reference:user', [], $field_edit);

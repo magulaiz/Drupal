@@ -42,7 +42,7 @@ class DisplayAttachmentTest extends UITestBase {
 
     // Save the attachments and test the value on the view.
     $this->drupalGet($attachment_display_url);
-    $this->submitForm(['displays[page_1]' => 1], 'Apply');
+    $this->submitForm(['displays[page_1]' => TRUE], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertSession()->responseNotContains('<em>Page</em>');
@@ -55,8 +55,8 @@ class DisplayAttachmentTest extends UITestBase {
 
     $this->drupalGet($attachment_display_url);
     $this->submitForm([
-      'displays[default]' => 1,
-      'displays[page_1]' => 1,
+      'displays[default]' => TRUE,
+      'displays[page_1]' => TRUE,
     ], 'Apply');
     $this->assertSession()->elementAttributeContains('xpath', '//a[@id = "views-attachment-1-displays"]', 'title', 'Multiple displays');
     $this->submitForm([], 'Save');
@@ -82,7 +82,7 @@ class DisplayAttachmentTest extends UITestBase {
 
     // Attach the Attachment to the Page display.
     $this->drupalGet($attachment_display_url);
-    $this->submitForm(['displays[page_1]' => 1], 'Apply');
+    $this->submitForm(['displays[page_1]' => TRUE], 'Apply');
     $this->submitForm([], 'Save');
 
     // Open the Page display and mark it as deleted.

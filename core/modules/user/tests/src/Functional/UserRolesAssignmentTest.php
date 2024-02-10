@@ -37,7 +37,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
+    $this->submitForm(["roles[{$rid}]" => TRUE], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
     $this->assertSession()->checkboxChecked('edit-roles-' . $rid);
     $this->userLoadAndCheckRoleAssigned($account, $rid);
@@ -61,7 +61,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
       'mail' => $this->randomMachineName() . '@example.com',
       'pass[pass1]' => $pass = $this->randomString(),
       'pass[pass2]' => $pass,
-      "roles[$rid]" => $rid,
+      "roles[$rid]" => TRUE,
     ];
     $this->drupalGet('admin/people/create');
     $this->submitForm($edit, 'Create new account');

@@ -762,7 +762,7 @@ class MenuUiTest extends BrowserTestBase {
       'link[0][uri]' => $path,
       'title[0][value]' => $title,
       'description[0][value]' => '',
-      'enabled[value]' => 1,
+      'enabled[value]' => TRUE,
       'expanded[value]' => $expanded,
       'menu_parent' => $menu_name . ':' . $parent,
       'weight[0][value]' => $weight,
@@ -817,7 +817,7 @@ class MenuUiTest extends BrowserTestBase {
         'title[0][value]' => $title,
         'menu_parent' => $parent,
         'description[0][value]' => '',
-        'enabled[value]' => 1,
+        'enabled[value]' => TRUE,
         'expanded[value]' => FALSE,
         'weight[0][value]' => '0',
       ];
@@ -1088,7 +1088,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->submitForm([
       'settings[depth]' => 2,
       'settings[level]' => 1,
-      'settings[expand_all_items]' => 1,
+      'settings[expand_all_items]' => TRUE,
     ], 'Save block');
 
     // Ensure the setting is persisted.

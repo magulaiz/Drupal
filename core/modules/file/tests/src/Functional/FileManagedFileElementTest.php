@@ -86,7 +86,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $remove_edit = [];
           if ($multiple) {
             $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $last_fid . '][selected]';
-            $remove_edit = [$selected_checkbox => '1'];
+            $remove_edit = [$selected_checkbox => TRUE];
           }
           $this->drupalGet($path . '/' . $last_fid);
           $this->submitForm($remove_edit, $remove_button_title);
@@ -100,7 +100,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $remove_edit = [];
           if ($multiple) {
             $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $this->getLastFileId() . '][selected]';
-            $remove_edit = [$selected_checkbox => '1'];
+            $remove_edit = [$selected_checkbox => TRUE];
           }
           $this->submitForm($remove_edit, $remove_button_title);
 
@@ -134,7 +134,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     // Delete only the first file.
     $edit = [
-      'nested[file][file_' . $fid_list[0] . '][selected]' => '1',
+      'nested[file][file_' . $fid_list[0] . '][selected]' => TRUE,
     ];
     $this->drupalGet($path . '/' . implode(',', $fid_list));
     $this->submitForm($edit, 'Remove selected');

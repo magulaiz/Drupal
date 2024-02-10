@@ -601,7 +601,7 @@ class UpdateScriptTest extends BrowserTestBase {
     if ($extension_type === 'module') {
       $edit = [];
       foreach ($extension_machine_names as $extension_machine_name) {
-        $edit["modules[$extension_machine_name][enable]"] = $extension_machine_name;
+        $edit["modules[$extension_machine_name][enable]"] = TRUE;
       }
       $this->drupalGet('admin/modules');
       $this->submitForm($edit, 'Install');
@@ -626,7 +626,7 @@ class UpdateScriptTest extends BrowserTestBase {
     foreach ($extension_info as $info) {
       if ($info['type'] === 'module') {
         $machine_name = $info['machine_name'];
-        $edit["modules[$machine_name][enable]"] = $machine_name;
+        $edit["modules[$machine_name][enable]"] = TRUE;
       }
       if (!empty($edit)) {
         $this->drupalGet('admin/modules');

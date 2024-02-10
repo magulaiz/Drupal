@@ -355,7 +355,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Unpublish the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $this->submitForm(["status[value]" => 0], 'Save');
+    $this->submitForm(["status[value]" => FALSE], 'Save');
     // Check that the term is now unpublished in the list.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $this->assertSession()->elementTextContains('css', "#edit-terms-tid{$term->id()}0-status", 'Unpublished');

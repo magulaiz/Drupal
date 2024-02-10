@@ -224,7 +224,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
-    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
+    $this->submitForm(["roles[{$rid}]" => TRUE], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -265,7 +265,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalGet('user/' . $admin_user_id . '/edit');
-    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
+    $this->submitForm(["roles[{$rid}]" => TRUE], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Log in adminUser and assert that the subtrees hash has changed.

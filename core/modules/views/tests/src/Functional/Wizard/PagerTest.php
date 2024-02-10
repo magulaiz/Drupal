@@ -54,7 +54,7 @@ class PagerTest extends WizardTestBase {
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);
     $view['show[sort]'] = 'node_field_data-created:ASC';
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $path;
     $view['page[pager]'] = $pager;

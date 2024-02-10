@@ -72,7 +72,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->saveNativeLanguageName('fr', 'français');
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => '1'];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 
@@ -377,7 +377,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add language');
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => '1'];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 
@@ -397,7 +397,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add language');
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => '1'];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 

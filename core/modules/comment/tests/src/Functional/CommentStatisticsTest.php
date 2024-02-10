@@ -81,9 +81,9 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/people/permissions');
     $edit = [
-      'anonymous[access comments]' => 1,
-      'anonymous[post comments]' => 1,
-      'anonymous[skip comment approval]' => 0,
+      'anonymous[access comments]' => TRUE,
+      'anonymous[post comments]' => TRUE,
+      'anonymous[skip comment approval]' => FALSE,
     ];
     $this->submitForm($edit, 'Save permissions');
     $this->drupalLogout();
@@ -110,7 +110,7 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/people/permissions');
     $edit = [
-      'anonymous[skip comment approval]' => 1,
+      'anonymous[skip comment approval]' => TRUE,
     ];
     $this->submitForm($edit, 'Save permissions');
     $this->drupalLogout();

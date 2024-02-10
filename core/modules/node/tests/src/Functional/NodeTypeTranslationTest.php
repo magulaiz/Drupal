@@ -121,7 +121,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Check the name is translated without admin theme for editing.
     $this->drupalGet('admin/appearance');
-    $this->submitForm(['use_admin_theme' => '0'], 'Save configuration');
+    $this->submitForm(['use_admin_theme' => FALSE], 'Save configuration');
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
@@ -129,7 +129,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Check the name is translated with admin theme for editing.
     $this->drupalGet('admin/appearance');
-    $this->submitForm(['use_admin_theme' => '1'], 'Save configuration');
+    $this->submitForm(['use_admin_theme' => TRUE], 'Save configuration');
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.

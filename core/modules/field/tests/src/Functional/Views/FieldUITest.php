@@ -107,7 +107,7 @@ class FieldUITest extends FieldTestBase {
    */
   public function testHandlerUIAggregation() {
     // Enable aggregation.
-    $edit = ['group_by' => '1'];
+    $edit = ['group_by' => TRUE];
     $this->drupalGet('admin/structure/views/nojs/display/test_view_fieldapi/default/group_by');
     $this->submitForm($edit, 'Apply');
 
