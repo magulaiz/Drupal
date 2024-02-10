@@ -74,7 +74,6 @@ class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
    *   a bundle.
    *
    * @testWith ["%parent.entity_type_id", "entity_test_with_bundle"]
-   *   ["%paren.entity_type_id", "%paren.entity_type_id"]
    */
   public function testEntityTypeIdFromParent(string $constraint_value, string $resolved_entity_type_id): void {
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager */
