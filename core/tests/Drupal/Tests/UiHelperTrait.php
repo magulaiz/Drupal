@@ -84,12 +84,9 @@ trait UiHelperTrait {
     foreach ($edit as $name => $value) {
       $field = $assert_session->fieldExists($name, $form);
 
-      // Provide support for the values '1' and '0' for checkboxes instead of
-      // TRUE and FALSE.
-      // @todo Get rid of supporting 1/0 by converting all tests cases using
-      // this to boolean values.
       $field_type = $field->getAttribute('type');
-      if ($field_type === 'checkbox') {
+      if ($field_type === 'checkbox' && !is_bool($value)) {
+        @trigger_error("Setting a checkbox with a non-boolean value in " . __METHOD__ . "() is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Checkbox '$name' was set with value '$value'. See https://www.drupal.org/node/123123", E_USER_DEPRECATED);
         $value = (bool) $value;
       }
 
