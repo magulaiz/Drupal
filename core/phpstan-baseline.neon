@@ -4529,16 +4529,6 @@ parameters:
 			path: modules/user/tests/src/Kernel/UserMailNotifyTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\HandlerFilterRolesTest\\:\\:expectWarning\\(\\)\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\HandlerFilterRolesTest\\:\\:expectWarningMessage\\(\\)\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php
-
-		-
 			message: "#^@dataProvider providerTestPermissionsByProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/Form/EntityPermissionsFormTest.php
@@ -5516,16 +5506,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigInstallTest\\:\\:expectWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigInstallTest\\:\\:expectWarningMessage\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php
-
-		-
 			message: "#^@dataProvider providerCheckConfigSchema related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Config/SchemaCheckTraitTest.php
@@ -5579,6 +5559,16 @@ parameters:
 			message: "#^@dataProvider providerRegularExpressionCondition related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Database/SelectTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\StatementTest\\:\\:expectError\\(\\)\\.$#"
+			count: 3
+			path: tests/Drupal/KernelTests/Core/Database/StatementTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\StatementTest\\:\\:expectErrorMessage\\(\\)\\.$#"
+			count: 3
+			path: tests/Drupal/KernelTests/Core/Database/StatementTest.php
 
 		-
 			message: "#^@dataProvider providerUntrusted related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5787,6 +5777,11 @@ parameters:
 			message: "#^@dataProvider providerHasContextValue related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Plugin/ContextTypedDataTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\Element\\\\MachineNameTest\\:\\:expectErrorMessage\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
 
 		-
 			message: "#^@dataProvider providerDuplicateRoutePaths related method must be static in PHPUnit 10 and newer\\.$#"
@@ -6074,6 +6069,11 @@ parameters:
 			message: "#^@dataProvider provideTestDiff related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Diff/Engine/DiffEngineTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Diff\\\\Engine\\\\DiffOpTest\\:\\:expectError\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Component/Diff/Engine/DiffOpTest.php
 
 		-
 			message: "#^@dataProvider provideAddWords related method must be static in PHPUnit 10 and newer\\.$#"
@@ -6972,6 +6972,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/Config/ConfigTest.php
 
 		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Config\\\\ConfigTest\\:\\:expectError\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Config/ConfigTest.php
+
+		-
 			message: "#^@dataProvider providerCalculateDependenciesWithPluginCollections related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
@@ -7099,6 +7104,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
 
 		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConditionTest\\:\\:expectError\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
+
+		-
 			message: "#^@dataProvider provideQueriesToTrim related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
@@ -7155,6 +7165,11 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerTestPrefixTables related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectError\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
 
@@ -7593,6 +7608,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php
 
 		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriberTest\\:\\:expectError\\(\\)\\.$#"
+			count: 2
+			path: tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php
+
+		-
 			message: "#^@dataProvider providerTestOnResponse related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/EventSubscriber/RssResponseRelativeUrlFilterTest.php
@@ -7604,16 +7624,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerTestOnRouteBuildingValidVariables related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\SpecialAttributesRouteSubscriberTest\\:\\:expectWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\SpecialAttributesRouteSubscriberTest\\:\\:expectWarningMessage\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
 
@@ -8339,6 +8349,16 @@ parameters:
 			path: tests/Drupal/Tests/Core/Render/ElementTest.php
 
 		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Render\\\\ElementTest\\:\\:expectError\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/ElementTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Render\\\\ElementTest\\:\\:expectErrorMessage\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/ElementTest.php
+
+		-
 			message: "#^@dataProvider providerUrlBubbleableMetadataBubbling related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/MetadataBubblingUrlGeneratorTest.php
@@ -8465,16 +8485,6 @@ parameters:
 
 		-
 			message: "#^@dataProvider providerTestUntrustedCallbacks related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Security\\\\DoTrustedCallbackTraitTest\\:\\:expectWarning\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Security\\\\DoTrustedCallbackTraitTest\\:\\:expectWarningMessage\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
 
