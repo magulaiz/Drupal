@@ -92,7 +92,7 @@ class TypeResolver {
         throw new \LogicException('The only valid usages of a variable value with a `%` in it are `%parent`, `%key`, and `%type` in `' . $expression . '`');
       }
       if ($name === '%type' && $previous_name !== '%parent') {
-        throw new \LogicException('`%type` can only used when immediately proceeded by `%parent` in `' . $expression .'`');
+        throw new \LogicException('`%type` can only used when immediately proceeded by `%parent` in `' . $expression . '`');
       }
       $previous_name = $name;
       if (!is_array($data) || !isset($data[$name])) {
