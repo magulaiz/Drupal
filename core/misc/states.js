@@ -134,9 +134,9 @@
   states.Dependent = function (args) {
     $.extend(this, { values: {}, oldValue: null }, args);
 
-    this.dependees = this.getDependees();
-    Object.keys(this.dependees || {}).forEach((selector) => {
-      this.initializeDependee(selector, this.dependees[selector]);
+    this.dependents = this.getDependents();
+    Object.keys(this.dependents || {}).forEach((selector) => {
+      this.initializeDependent(selector, this.dependents[selector]);
     });
   };
 
@@ -178,20 +178,20 @@
      * @memberof Drupal.states.Dependent#
      *
      * @param {string} selector
-     *   The CSS selector describing the dependee.
-     * @param {object} dependeeStates
+     *   The CSS selector describing the dependent selector.
+     * @param {object} dependentStates
      *   The list of states that have to be monitored for tracking the
-     *   dependee's compliance status.
+     *   dependent's compliance status.
      */
-    initializeDependee(selector, dependeeStates) {
-      // Cache for the states of this dependee.
+    initializeDependent(selector, dependentStates) {
+      // Cache for the states of this dependent.
       this.values[selector] = {};
 
-      Object.keys(dependeeStates).forEach((i) => {
-        let state = dependeeStates[i];
+      Object.keys(dependentStates).forEach((i) => {
+        let state = dependentStates[i];
         // Make sure we're not initializing this selector/state combination
         // twice.
-        if ($.inArray(state, dependeeStates) === -1) {
+        if ($.inArray(state, dependentStates) === -1) {
           return;
         }
 
@@ -200,7 +200,7 @@
         // Initialize the value of this state.
         this.values[selector][state.name] = null;
 
-        // Monitor state changes of the specified state for this dependee.
+        // Monitor state changes of the specified state for this dependent.
         $(selector).on(`state:${state}`, { selector, state }, (e) => {
           this.update(e.data.selector, e.data.state, e.value);
         });
@@ -218,9 +218,9 @@
      * @param {object} reference
      *   The value used for reference.
      * @param {string} selector
-     *   CSS selector describing the dependee.
+     *   CSS selector describing the dependent.
      * @param {Drupal.states.State} state
-     *   A State object describing the dependee's updated state.
+     *   A State object describing the dependent's updated state.
      *
      * @return {boolean}
      *   true or false.
@@ -240,16 +240,16 @@
     },
 
     /**
-     * Update the value of a dependee's state.
+     * Update the value of a dependent's state.
      *
      * @memberof Drupal.states.Dependent#
      *
      * @param {string} selector
-     *   CSS selector describing the dependee.
+     *   CSS selector describing the dependent.
      * @param {Drupal.states.state} state
-     *   A State object describing the dependee's updated state.
+     *   A State object describing the dependent's updated state.
      * @param {string} value
-     *   The new value for the dependee's updated state.
+     *   The new value for the dependent's updated state.
      */
     update(selector, state, value) {
       // Only act when the 'new' value is actually new.
@@ -398,7 +398,7 @@
      * @return {object}
      *   An object describing the required triggers.
      */
-    getDependees() {
+    getDependents() {
       const cache = {};
       // Swivel the lookup function so that we can record all available
       // selector- state combinations for initialization.
@@ -507,7 +507,7 @@
   /**
    * This list of states contains functions that are used to monitor the state
    * of an element. Whenever an element depends on the state of another element,
-   * one of these trigger functions is added to the dependee so that the
+   * one of these trigger functions is added to the dependency so that the
    * dependent element can be updated.
    *
    * @name Drupal.states.Trigger.states
