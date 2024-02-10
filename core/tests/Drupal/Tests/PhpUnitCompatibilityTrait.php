@@ -19,20 +19,7 @@ if (FALSE) {
    */
   trait PhpUnitCompatibilityTrait {
 
-    public function setUpErrorHandler(): void {
-    }
-
-    public function tearDownErrorHandler(): void {
-    }
-
-    public function expectError(): void {
-    }
-
-    public function expectErrorMessage(string $message): void {
-    }
-
-    public function expectErrorMessageMatches(string $regularExpression): void {
-    }
+    use \Drupal\TestTools\PhpUnitCompatibility\PhpUnit10\TestCompatibilityTrait;
 
   }
 

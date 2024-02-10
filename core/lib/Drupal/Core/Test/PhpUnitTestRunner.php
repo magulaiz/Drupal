@@ -129,7 +129,9 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
 
     $command = [
       $phpunit_bin,
+      '--display-warnings',
       '--display-deprecations',
+      '--fail-on-warning',
       '--fail-on-deprecation',
       '--log-junit',
       $phpunit_file,
