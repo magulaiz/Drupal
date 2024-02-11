@@ -2,8 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Theme;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\claro\ClaroPreRender;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests Claro specific table functionality.
@@ -40,7 +40,7 @@ class ClaroTableTest extends KernelTestBase {
   }
 
   /**
-   * Confirm that Claro prerender table callback is not executed for non-array class attribute.
+   * Confirm Claro prerender callback is not executed for non-array class.
    */
   public function testThemeTablePositionStickyPreRender() {
     // Enable the Claro theme.
@@ -69,8 +69,10 @@ class ClaroTableTest extends KernelTestBase {
 
       // Confirm that table is rendered.
       $this->assertStringContainsString('class="class"', $renderedTable);
-    } catch (\Error $e) {
+    }
+    catch (\Error $e) {
       $this->fail('PHP Error was thrown.');
     }
   }
+
 }
