@@ -439,7 +439,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    *
    * @group legacy
    */
-  public function testMigrationDeprecation() {
+  public function testMigrationDeprecation(): void {
     $this->expectDeprecation('foo');
 
     $this->migration->method('isDeprecated')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -20,7 +22,7 @@ class TypedDataDeprecationTest extends KernelTestBase {
   /**
    * Test plugin deprecation.
    */
-  public function testTypeDataDeprecation() {
+  public function testTypeDataDeprecation(): void {
     $this->expectDeprecation('The test_deprecated_data_type plugin is deprecated');
 
     // Create a data definition for the data type plugin.

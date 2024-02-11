@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\typed_data_deprecation_test\Plugin\DataType;
 
 use Drupal\Core\TypedData\TypedData;

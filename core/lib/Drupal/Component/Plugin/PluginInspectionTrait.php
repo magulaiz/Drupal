@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\Plugin;
 
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
@@ -53,7 +55,7 @@ trait PluginInspectionTrait {
    * This is intended to be used as part of plugin construction. Simply add a
    * call to this method in your plugin base class's constructor.
    */
-  protected function checkDeprecation() {
+  protected function checkDeprecation(): void {
     $message = $this->getDeprecationMessage();
     if (!is_null($message)) {
       @trigger_error($message, E_USER_DEPRECATED);

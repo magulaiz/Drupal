@@ -75,7 +75,7 @@ class MigrationPluginManagerTest extends MigrateTestBase {
    *
    * @group legacy
    */
-  public function testMigrationDeprecation() {
+  public function testMigrationDeprecation(): void {
     $this->enableModules(['migrate_deprecate_test']);
     $this->expectDeprecation('some deprecation message');
     $this->migrationPluginManager->createInstance('deprecated');

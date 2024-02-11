@@ -23,7 +23,7 @@ class PluginInspectionTraitTest extends TestCase {
    *
    * @dataProvider providerTestDeprecated
    */
-  public function testDeprecated($plugin_definition, $deprecation_message) {
+  public function testDeprecated($plugin_definition, $deprecation_message): void {
     $this->expectDeprecation($deprecation_message);
     $this->getMockForAbstractClass(PluginBase::class, [
       [],
@@ -35,7 +35,7 @@ class PluginInspectionTraitTest extends TestCase {
   /**
    * Provides data for testDeprecated.
    */
-  public function providerTestDeprecated() {
+  public function providerTestDeprecated(): array {
     $message = 'This is a deprecation message for PluginInspectionTraitTest.';
     $plugin_definition = $this->getMockBuilder(LegacyPluginDefinition::class)
       ->getMock();
@@ -74,7 +74,7 @@ class LegacyPluginDefinition extends PluginDefinition {
 class LegacyPluginDefinitionAdditional extends PluginDefinition {
   public array $additional = [];
 
-  public function get($property) {
+  public function get($property): mixed {
     if (property_exists($this, $property)) {
       $value = $this->{$property} ?? NULL;
     }
