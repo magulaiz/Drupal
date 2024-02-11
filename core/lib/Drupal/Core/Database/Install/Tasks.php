@@ -154,7 +154,7 @@ abstract class Tasks {
         }
         if (method_exists($this, $task['function'])) {
           // Returning false is fatal. No other tasks can run.
-          if (FALSE === call_user_func_array([$this, $task['function']], $task['arguments'])) {
+          if (FALSE === $this->{$task['function']}(...$task['arguments'])) {
             break;
           }
         }

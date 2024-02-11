@@ -292,7 +292,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     $revision_id = NULL;
     foreach ($sequence as $index => $step) {
       $this->stepIndex = $index;
-      $revision_id = call_user_func_array([$this, 'doEditStep'], $step);
+      $revision_id = $this->doEditStep(...$step);
     }
     return (int) $revision_id;
   }
@@ -488,8 +488,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     array_shift($args);
     $params = array_merge($args, $this->stepInfo);
     array_unshift($params, $this->stepIndex + 1);
-    array_unshift($params, '[Step %d] ' . $message . ' (langcode: %s, default_revision: %d, untranslatable_update: %d, valid: %d)');
-    return call_user_func_array('sprintf', $params);
+    return sprintf('[Step %d] ' . $message . ' (langcode: %s, default_revision: %d, untranslatable_update: %d, valid: %d)', ...$params);
   }
 
   /**

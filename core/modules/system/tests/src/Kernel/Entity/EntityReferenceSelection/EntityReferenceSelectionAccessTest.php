@@ -97,10 +97,10 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
-        $result = call_user_func_array([$handler, 'getReferenceableEntities'], $arguments);
+        $result = $handler->getReferenceableEntities(...$arguments);
         $this->assertEquals($test['result'], $result, "Valid result set returned by $handler_name.");
 
-        $result = call_user_func_array([$handler, 'countReferenceableEntities'], $arguments);
+        $result = $handler->countReferenceableEntities(...$arguments);
         if (!empty($test['result'])) {
           $bundle = key($test['result']);
           $count = count($test['result'][$bundle]);

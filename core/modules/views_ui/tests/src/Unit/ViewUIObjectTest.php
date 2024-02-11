@@ -64,7 +64,7 @@ class ViewUIObjectTest extends UnitTestCase {
       foreach ($args as $arg) {
         $method_mock->with($this->equalTo($arg));
       }
-      call_user_func_array([$view_ui, $method], $args);
+      $view_ui->$method(...$args);
     }
 
     $storage->expects($this->once())

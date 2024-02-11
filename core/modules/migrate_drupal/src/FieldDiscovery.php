@@ -145,14 +145,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
       if ($plugin) {
         $method = $plugin_definition['field_plugin_method'] ?? 'defineValueProcessPipeline';
 
-        call_user_func_array([
-          $plugin,
-          $method,
-        ], [
-          $migration,
-          $field_name,
-          $field_info,
-        ]);
+        $plugin->$method($migration, $field_name, $field_info);
       }
       else {
         // Default to a get process plugin if this is a value migration.

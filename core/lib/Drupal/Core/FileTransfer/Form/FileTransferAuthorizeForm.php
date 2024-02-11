@@ -321,7 +321,7 @@ class FileTransferAuthorizeForm extends FormBase {
     $operation = $this->getRequest()->getSession()->remove('authorize_operation');
 
     require_once $operation['file'];
-    return call_user_func_array($operation['callback'], array_merge([$filetransfer], $operation['arguments']));
+    return $operation['callback']($filetransfer, ...$operation['arguments']);
   }
 
 }

@@ -261,7 +261,7 @@ class ViewUI implements ViewEntityInterface {
     }
 
     $submit_handler = [$form_state->getFormObject(), 'submitForm'];
-    call_user_func_array($submit_handler, [&$form, $form_state]);
+    $submit_handler($form, $form_state);
   }
 
   /**
@@ -908,7 +908,7 @@ class ViewUI implements ViewEntityInterface {
    * Passes through all unknown calls onto the storage object.
    */
   public function __call($method, $args) {
-    return call_user_func_array([$this->storage, $method], $args);
+    return $this->storage->$method(...$args);
   }
 
   /**

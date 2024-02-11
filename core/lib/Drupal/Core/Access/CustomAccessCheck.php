@@ -81,7 +81,7 @@ class CustomAccessCheck implements RoutingAccessInterface {
     $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account, $request);
     $arguments = $arguments_resolver->getArguments($callable);
 
-    return call_user_func_array($callable, $arguments);
+    return $callable(...$arguments);
   }
 
 }

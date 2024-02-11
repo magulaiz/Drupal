@@ -307,7 +307,7 @@ class NestedArray {
    * - NestedArray::mergeDeepArray(array($a, $b));
    *
    * The following are also equivalent:
-   * - call_user_func_array('NestedArray::mergeDeep', $arrays_to_merge);
+   * - NestedArray::mergeDeep(...$arrays_to_merge);
    * - NestedArray::mergeDeepArray($arrays_to_merge);
    *
    * @param array $arrays

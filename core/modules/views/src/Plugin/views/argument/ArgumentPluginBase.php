@@ -760,7 +760,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     }
 
     if (!empty($info['method args'])) {
-      return call_user_func_array([&$this, $info['method']], $info['method args']);
+      return $this->{$info['method']}(...$info['method args']);
     }
     else {
       return $this->{$info['method']}();

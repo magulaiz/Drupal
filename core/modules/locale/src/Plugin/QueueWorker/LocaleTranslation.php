@@ -104,7 +104,7 @@ class LocaleTranslation extends QueueWorkerBase implements ContainerFactoryPlugi
     $args = array_merge($args, [&$batch_context]);
 
     // Call the batch operation function.
-    call_user_func_array($function, $args);
+    $function(...$args);
 
     // If the batch operation is not finished we create a new queue task to
     // continue the task. This is typically the translation import task.

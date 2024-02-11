@@ -159,7 +159,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   public function getTitle(LocalActionInterface $local_action) {
     $controller = [$local_action, 'getTitle'];
     $arguments = $this->argumentResolver->getArguments($this->requestStack->getCurrentRequest(), $controller);
-    return call_user_func_array($controller, $arguments);
+    return $controller(...$arguments);
   }
 
   /**

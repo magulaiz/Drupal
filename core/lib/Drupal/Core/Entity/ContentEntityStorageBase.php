@@ -933,9 +933,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       // fields should be invoked only on the default entity translation.
       $fields = $translation->isDefaultTranslation() ? $translation->getFields() : $translation->getTranslatableFields();
       foreach ($fields as $name => $items) {
-        // call_user_func_array() is way slower than a direct call so we avoid
-        // using it if have no parameters.
-        $result[$langcode][$name] = $args ? call_user_func_array([$items, $method], $args) : $items->{$method}();
+        $result[$langcode][$name] = $items->$method(...$args);
       }
     }
 

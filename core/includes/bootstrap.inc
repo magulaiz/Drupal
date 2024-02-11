@@ -540,7 +540,7 @@ function _drupal_shutdown_function() {
     // Do not use foreach() here because it is possible that the callback will
     // add to the $callbacks array via drupal_register_shutdown_function().
     while ($callback = current($callbacks)) {
-      call_user_func_array($callback['callback'], $callback['arguments']);
+      $callback['callback'](...$callback['arguments']);
       next($callbacks);
     }
   }

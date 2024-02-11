@@ -55,7 +55,7 @@ class TitleResolver implements TitleResolverInterface {
     if ($callback = $route->getDefault('_title_callback')) {
       $callable = $this->controllerResolver->getControllerFromDefinition($callback);
       $arguments = $this->argumentResolver->getArguments($request, $callable);
-      $route_title = call_user_func_array($callable, $arguments);
+      $route_title = $callable(...$arguments);
     }
     elseif ($route->hasDefault('_title') && strlen($route->getDefault('_title')) > 0) {
       $title = $route->getDefault('_title');
