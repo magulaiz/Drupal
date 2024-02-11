@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Template;
 
+use Symfony\Component\VarDumper\VarDumper;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -12,15 +13,6 @@ use Twig\TwigFunction;
 final class DebugExtension extends AbstractExtension {
 
   /**
-   * The Symfony VarDumper class.
-   *
-   * Defined as a string because the Symfony VarDumper does not always exist.
-   *
-   * @var string
-   */
-  private const SYMFONY_VAR_DUMPER_CLASS = '\Symfony\Component\VarDumper\VarDumper';
-
-  /**
    * {@inheritdoc}
    */
   public function getFunctions(): array {
@@ -28,7 +20,7 @@ final class DebugExtension extends AbstractExtension {
     // improve developer experience.
     // @see \Twig\Extension\DebugExtension
     // @see \Symfony\Component\VarDumper\VarDumper
-    if (class_exists(self::SYMFONY_VAR_DUMPER_CLASS)) {
+    if (class_exists(VarDumper::class)) {
       return [
         new TwigFunction('dump', [self::class, 'dump'], ['needs_context' => TRUE, 'needs_environment' => TRUE, 'is_variadic' => TRUE]),
       ];
@@ -52,12 +44,12 @@ final class DebugExtension extends AbstractExtension {
       return;
     }
 
-    if (class_exists(self::SYMFONY_VAR_DUMPER_CLASS)) {
+    if (class_exists(VarDumper::class)) {
       if (func_num_args() === 2) {
-        call_user_func(self::SYMFONY_VAR_DUMPER_CLASS . '::dump', $context);
+        VarDumper::dump($context);
       }
       else {
-        array_walk($variables, self::SYMFONY_VAR_DUMPER_CLASS . '::dump');
+        array_walk($variables, VarDumper::dump(...));
       }
     }
     else {
