@@ -54,15 +54,19 @@ class ClaroTableTest extends KernelTestBase {
       '#rows' => $rows,
       '#sticky' => TRUE,
       '#attributes' => [
-        'class' => 'class'
+        'class' => 'class',
       ],
       '#pre_render' => [
-        [ClaroPreRender::class, 'tablePositionSticky'],
+        [
+          ClaroPreRender::class,
+          'tablePositionSticky',
+        ],
       ],
     ];
 
     try {
       $renderedTable = \Drupal::service('renderer')->renderRoot($table);
+
       // Confirm that table is rendered.
       $this->assertStringContainsString('class="class"', $renderedTable);
     } catch (\Error $e) {
