@@ -10,8 +10,7 @@ use Drupal\claro\ClaroPreRender;
  *
  * @group Theme
  */
-class ClaroTableTest extends KernelTestBase
-{
+class ClaroTableTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
