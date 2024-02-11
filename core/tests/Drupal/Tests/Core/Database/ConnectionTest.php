@@ -892,7 +892,7 @@ class ConnectionTest extends UnitTestCase {
     $this->expectDeprecation('\\Drupal\\Core\\Database\\StatementWrapper is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \\Drupal\\Core\\Database\\StatementWrapperIterator instead. See https://www.drupal.org/node/3265938');
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, []);
-    $this->expectError();
+    $this->expectException(\Error::class);
     $connection->prepareStatement('boing', []);
   }
 

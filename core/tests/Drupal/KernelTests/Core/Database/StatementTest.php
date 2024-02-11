@@ -168,8 +168,8 @@ class StatementTest extends DatabaseTestBase {
     }
 
     // Trying to iterate through the same statement again should fail.
-    $this->expectError();
-    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $this->expectWarning();
+    $this->expectWarningMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     foreach ($statement as $row) {
       $this->assertNotNull($row);
     }
@@ -204,8 +204,8 @@ class StatementTest extends DatabaseTestBase {
     $rowCount = iterator_count($statement);
     $this->assertSame(4, $rowCount);
 
-    $this->expectError();
-    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $this->expectWarning();
+    $this->expectWarningMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     $rowCount = iterator_count($statement);
   }
 
@@ -242,8 +242,8 @@ class StatementTest extends DatabaseTestBase {
     // Restart iterating through the same statement. The foreach loop will try
     // rewinding the statement which should fail, and the counter should not be
     // increased.
-    $this->expectError();
-    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $this->expectWarning();
+    $this->expectWarningMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     foreach ($statement as $row) {
       // No-op.
     }

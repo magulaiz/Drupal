@@ -2238,14 +2238,6 @@ parameters:
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
 
 		-
-			message: """
-				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
-
-		-
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
@@ -2269,6 +2261,14 @@ parameters:
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php
+
+		-
+			message: """
+				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
+				since Symfony 6\\.4, use dependency injection instead$#
+			"""
+			count: 1
+			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
 
 		-
 			message: """
@@ -2997,21 +2997,13 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php
 
 		-
-			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/ConnectionTest.php
-
-		-
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
 
 		-
 			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
+				#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
 			"""
 			count: 3
@@ -3019,7 +3011,7 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method expectErrorMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
+				#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
 			"""
 			count: 3
@@ -3084,14 +3076,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
-
-		-
-			message: """
-				#^Call to deprecated method expectErrorMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -3233,14 +3217,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/ConfigTest.php
-
-		-
-			message: """
 				#^Class Drupal\\\\Tests\\\\Core\\\\Controller\\\\MockContainerAware implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
 				since Symfony 6\\.4, use dependency injection instead$#
 			"""
@@ -3367,20 +3343,9 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
 
 		-
-			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/ElementTest.php
-
-		-
-			message: """
-				#^Call to deprecated method expectErrorMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/ElementTest.php
+			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			count: 3
+			path: tests/Drupal/Tests/Core/Routing/RouteBuilderTest.php
 
 		-
 			message: """

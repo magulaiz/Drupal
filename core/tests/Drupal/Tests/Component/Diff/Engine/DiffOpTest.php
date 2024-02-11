@@ -33,7 +33,7 @@ class DiffOpTest extends TestCase {
    */
   public function testReverse() {
     $this->expectDeprecation('Drupal\Component\Diff\Engine\DiffOp::reverse() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942');
-    $this->expectError();
+    $this->expectException(\RuntimeException::class);
     $op = new DiffOp();
     $result = $op->reverse();
   }
