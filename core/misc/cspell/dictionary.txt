@@ -14,10 +14,7 @@ ajaxing
 allwords
 alphadecimal
 alternatif
-amphibius
 ampm
-anonyme
-antilop
 anyall
 applix
 archiver
@@ -30,7 +27,6 @@ arrowreturnthick
 arrowstop
 arrowthick
 arrowthickstop
-arrr
 assertable
 autocompletefocus
 autocompleteselect
@@ -138,7 +134,6 @@ chumillas
 chvotes
 cidhash
 cids
-cillum
 circlesmall
 ckeditor
 classloader
@@ -182,9 +177,7 @@ curlopt
 customevent
 customrequest
 cweagans
-cádiz
 dailymotion
-databasename
 datelist
 daterange
 datestamp
@@ -210,9 +203,7 @@ desaturate
 desaturated
 desaturates
 desaturating
-descoping
 destructable
-deutsch
 devel
 deviantart
 dflt
@@ -226,7 +217,6 @@ dnumber
 dockerhub
 docroot
 docroots
-dolore
 dotenv
 downcasting
 doxygen
@@ -250,11 +240,9 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-drépal
 détruire
 editables
 egulias
-eins
 elbonia
 elems
 encapsed
@@ -266,9 +254,7 @@ endlink
 endmacro
 endset
 endtrans
-enim
 enoki
-entitytype
 entityviewedit
 errmode
 etag
@@ -304,7 +290,6 @@ fieldlinks
 fieldnames
 fieldsets
 filemime
-filesort
 filesystems
 filetransfer
 findwith
@@ -350,7 +335,6 @@ hmac
 hoglet
 hookname
 hosters
-hostnames
 hrefs
 htkey
 htmlcorrector
@@ -390,7 +374,6 @@ johansson
 jqueryui
 jsonlint
 jssdk
-jumplinks
 justinrainbow
 kangarookitten
 kernighan
@@ -408,7 +391,6 @@ kword
 lamoids
 languageswitcher
 libc
-libmysqlclient
 licious
 lified
 lightninggreen
@@ -426,6 +408,7 @@ lnumber
 loadjs
 localemark
 localetranslatedirty
+logicalcpu
 lolspeak
 longblob
 longerthan
@@ -462,7 +445,6 @@ metatags
 mglaman
 micheh
 mikey
-milli
 mimetypes
 minifyzombies
 minusthick
@@ -488,7 +470,6 @@ multibyte
 multicardinality
 multifield
 multilanguage
-multipage
 multipass
 multisite
 multistar
@@ -504,7 +485,6 @@ namespacing
 navs
 ndocs
 necolas
-negotiatiors
 newcol
 newfieldinitial
 newnode
@@ -569,7 +549,6 @@ parseable
 parsererror
 pastafazoul
 pathauto
-pathnames
 pcre
 pcss
 peast
@@ -728,7 +707,6 @@ smalldatetime
 somecompany
 sortablejs
 sourceediting
-spacebar
 specialchars
 spiffiness
 splitbutton
@@ -873,12 +851,9 @@ trgm
 trid
 troopal
 truecolor
-turbolinks
 twistie
 twocol
 typehint
-typehinted
-typehints
 tzid
 uids
 ulwa
@@ -913,18 +888,15 @@ untabbable
 upcasted
 upcasting
 updateprogress
-updatetype
 uploaders
 uploadprogress
 upscaling
 urandom
-usecase
 userid
 userinfo
 userref
 vampirize
 varchar
-veniam
 versionable
 versionless
 verygreatdrupalmodule
@@ -956,8 +928,6 @@ xmlhttprequest
 xpsdocument
 xtmpl
 yamls
-yarhar
-yarr
 yearless
 yokotsoko
 yottabyte
