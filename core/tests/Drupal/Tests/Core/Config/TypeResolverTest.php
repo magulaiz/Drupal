@@ -26,12 +26,12 @@ class TypeResolverTest extends UnitTestCase {
     return [
       'invalid %variable' => [
         '[foo.%bar.qux]',
-        'The only valid usages of a variable value with a `%` in it are `%parent`, `%key`, and `%type` in `foo.%bar.qux`',
+        '`foo.%bar.qux` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`',
         ['foo' => 'foo'],
       ],
       'misspelling' => [
         '[%paren.field_type]',
-        'The only valid usages of a variable value with a `%` in it are `%parent`, `%key`, and `%type` in `%paren.field_type`',
+        '`%paren.field_type` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`',
       ],
       'type without parent' => [
         '[something.%type]',

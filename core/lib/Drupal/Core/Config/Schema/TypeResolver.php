@@ -89,7 +89,7 @@ class TypeResolver {
     // Process each value part, one at a time.
     while ($name = array_shift($parts)) {
       if (str_starts_with($name, '%') && !in_array($name, ['%parent', '%key', '%type'])) {
-        throw new \LogicException('The only valid usages of a variable value with a `%` in it are `%parent`, `%key`, and `%type` in `' . $expression . '`');
+        throw new \LogicException('`' . $expression .'` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`');
       }
       if ($name === '%type' && $previous_name !== '%parent') {
         throw new \LogicException('`%type` can only used when immediately proceeded by `%parent` in `' . $expression . '`');
