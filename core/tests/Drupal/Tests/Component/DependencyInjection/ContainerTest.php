@@ -602,7 +602,7 @@ class ContainerTest extends TestCase {
     $other_service = $this->container->get('other.service');
     $factory_function = $service->getSomeOtherService();
     $this->assertInstanceOf(\Closure::class, $factory_function);
-    $this->assertEquals($other_service, call_user_func($factory_function));
+    $this->assertEquals($other_service, $factory_function());
   }
 
   /**

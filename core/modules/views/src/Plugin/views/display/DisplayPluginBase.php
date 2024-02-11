@@ -2688,7 +2688,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $type = $type_map[$type];
       }
 
-      call_user_func($definition['merge_defaults'], $type);
+      $definition['merge_defaults']($type);
     }
   }
 

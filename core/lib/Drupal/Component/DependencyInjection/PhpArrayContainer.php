@@ -116,7 +116,7 @@ class PhpArrayContainer extends Container {
         throw new InvalidArgumentException(sprintf('The configurator for class "%s" is not a callable.', get_class($service)));
       }
 
-      call_user_func($callable, $service);
+      $callable($service);
     }
 
     return $service;

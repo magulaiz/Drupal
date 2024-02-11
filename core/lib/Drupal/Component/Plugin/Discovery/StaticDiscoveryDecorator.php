@@ -40,7 +40,7 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
    */
   public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE) {
     if (isset($this->registerDefinitions)) {
-      call_user_func($this->registerDefinitions);
+      ($this->registerDefinitions)();
     }
     $this->definitions += $this->decorated->getDefinitions();
     return parent::getDefinition($base_plugin_id, $exception_on_invalid);
@@ -51,7 +51,7 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
    */
   public function getDefinitions() {
     if (isset($this->registerDefinitions)) {
-      call_user_func($this->registerDefinitions);
+      ($this->registerDefinitions)();
     }
     $this->definitions += $this->decorated->getDefinitions();
     return parent::getDefinitions();

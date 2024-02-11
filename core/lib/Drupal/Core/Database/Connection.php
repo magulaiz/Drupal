@@ -1520,7 +1520,7 @@ abstract class Connection {
     $callbacks = $this->rootTransactionEndCallbacks;
     $this->rootTransactionEndCallbacks = [];
     foreach ($callbacks as $callback) {
-      call_user_func($callback, FALSE);
+      $callback(FALSE);
     }
 
     $this->connection->rollBack();
@@ -1682,7 +1682,7 @@ abstract class Connection {
       $callbacks = $this->rootTransactionEndCallbacks;
       $this->rootTransactionEndCallbacks = [];
       foreach ($callbacks as $callback) {
-        call_user_func($callback, $success);
+        $callback($success);
       }
     }
 

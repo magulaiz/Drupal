@@ -25,7 +25,7 @@ class BootstrapConfigStorageFactory {
     $bootstrap_config_storage = Settings::get('bootstrap_config_storage');
     $storage_backend = FALSE;
     if (!empty($bootstrap_config_storage) && is_callable($bootstrap_config_storage)) {
-      $storage_backend = call_user_func($bootstrap_config_storage, $class_loader);
+      $storage_backend = $bootstrap_config_storage($class_loader);
     }
     // Fallback to the DatabaseStorage.
     return $storage_backend ?: self::getDatabaseStorage();

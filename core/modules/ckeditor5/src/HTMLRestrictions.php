@@ -1391,7 +1391,7 @@ final class HTMLRestrictions {
    */
   private static function getWildcardTags(string $wildcard): array {
     $wildcard_element_method = self::WILDCARD_ELEMENT_METHODS[$wildcard];
-    return call_user_func([self::class, $wildcard_element_method]);
+    return self::$wildcard_element_method();
   }
 
 }

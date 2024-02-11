@@ -108,7 +108,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
             $definition['callable'][0] = $definition['callable'][0]();
           }
 
-          call_user_func($definition['callable'], $event, $event_name, $this);
+          $definition['callable']($event, $event_name, $this);
           if ($stoppable && $event->isPropagationStopped()) {
             return $event;
           }
