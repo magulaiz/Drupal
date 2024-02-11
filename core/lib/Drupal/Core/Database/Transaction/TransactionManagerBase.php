@@ -522,4 +522,17 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     $this->processPostTransactionCallbacks();
   }
 
+  /**
+   * Removes all the Drupal transactions from the stack.
+   *
+   * This is used by \Drupal\Core\Database\Connection::__destruct()
+   *
+   * @internal
+   */
+  public function unPileStack(): void {
+    foreach (array_reverse($this->stack()) as $id => $item) {
+      $this->unpile($item->name, $id);
+    }
+  }
+
 }
